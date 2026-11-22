@@ -1,51 +1,63 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>키 바인딩</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="키 바인딩; 키 바인딩 목록; 입력 문자; 출력 문자열; 붙여넣기; 엔 기호; 백슬래시; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm" class="current">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>키 바인딩</h1>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Key Bindings</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="key binding">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<p>키 바인딩을 사용하면 문자 하나를 입력했을 때 다른 텍스트가 삽입됩니다. TeXShop에 들어 있는 목록에서는 <code>^</code>를 입력하면 <code>^{}</code>가 입력되고 삽입 위치가 중괄호 사이에 놓이며, <code>"</code>를 입력하면 삽입 위치 양쪽에 TeX 따옴표 <code>``''</code>가, <code>ä</code>를 입력하면 <code>\"a</code>가 입력됩니다. 키 바인딩은 선택한 텍스트를 안에 넣을 수도 있습니다. 단어를 선택하고 <code>^</code>를 입력하면 <code>^{단어}</code>가 됩니다. 목록에는 45개의 키 바인딩이 있습니다.</p>
 
-<BODY>
-		<div id="content_border">
-		<P>Greg Landweber has added key bindings to the TeXShop editor. Typing a double quote will produce a pair of double quotes with the cursor positioned between them. Typing the ^ symbol will produce ^{  }  with the cursor positioned between the brackets. Etc. Thirty-nine such bindings are currently available.</P>
-		<p>Key Bindings can be turned off or on with an item in the Settings window. The default is off.  </p>
-		<p> Key Bindings can also be turned on or off on a file by file basis by the Key Bindings item in the Source menu. This facility is
-		provided because Key Bindings reconfigures keys on the keyboard; turn if off if you need keys to input their standard characters.
-		</p>
-		<p>Key Bindings are user configurable. Open Settings and select &#53412;&#48372;&#46300;. The Key Bindings section lists each input character with its output string, under "&#51077;&#47141; &#47928;&#51088;" and "&#52636;&#47141; &#47928;&#51088;&#50676;". Double-click a cell to edit it in place; press + below the list to add a key binding and &#8722; to delete the selected ones, and drag rows to change their order. An input character is a single character. Changes are saved at once and take effect immediately; &#54200;&#51665; &#8250; &#49892;&#54665; &#52712;&#49548; reverts them.</p>
-		<p>In an output string, #SEL# (the selected text), #INS# (where the insertion point goes), #PASTE# (the text on the clipboard), &#8226; (a mark), line breaks and tabs are shown as small labels. Add them with "&#49341;&#51077;" below the list, or type them: Option-Return enters a line break and Option-Tab a tab. The ? button lists them all. The list is stored in ~/Library/TeXShop/Keyboard/autocompletion.plist, in the same form as before.</p>
-		
-		</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Key Bindings</div>
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
-	</BODY>
+<p>키 바인딩은 처음에 꺼져 있습니다. 여는 모든 문서에서 키 바인딩을 사용하려면 설정 › 키보드에서 “키 바인딩 사용(새 문서의 기본값)”을 켜십시오. 소스 › 키 바인딩은 맨 앞 문서의 키 바인딩을 켜거나 끕니다. 키 바인딩이 지정된 문자를 그대로 입력하고 싶을 때 등에 사용합니다. 도구 막대에 추가할 수 있는 키 바인딩 항목도 같은 일을 합니다.</p>
 
-</HTML>
+<h2>키 바인딩 목록</h2>
+
+<p>설정 › 키보드의 키 바인딩 그룹에는 키 바인딩이 입력 문자와 출력 문자열의 쌍으로 나열됩니다. 셀을 이중 클릭하면 편집할 수 있습니다. 목록 아래의 + 를 클릭하면 키 바인딩이 추가되고 − 를 클릭하면 선택한 키 바인딩이 삭제되며, 행을 드래그하면 순서가 바뀝니다. 입력 문자는 문자 하나입니다. 변경 내용은 즉시 저장되고 열려 있는 문서에도 바로 적용되며, 편집 › 실행 취소로 되돌릴 수 있습니다.</p>
+
+<p>출력 문자열에서 특수 항목은 작은 레이블로 표시됩니다. 선택한 텍스트, 삽입 위치, 클립보드의 텍스트, 편집 › 마크에서 사용하는 마크(•), 줄바꿈, 탭입니다. 목록 아래의 삽입에서 추가하거나 <code>#SEL#</code>, <code>#INS#</code>, <code>#PASTE#</code>, <code>•</code>를 직접 입력하고, 줄바꿈은 Option-Return, 탭은 Option-Tab으로 입력합니다. ? 버튼을 클릭하면 모든 항목이 나열됩니다.</p>
+
+<p>붙여넣기 열을 체크하면 소스에 붙여넣거나 드롭한 텍스트에도 키 바인딩이 적용되어, 입력 문자가 나올 때마다 출력 문자열로 바뀝니다. 입력할 때와 마찬가지로 그 문서의 키 바인딩이 켜져 있을 때만 적용됩니다. 출력 문자열에 선택 영역, 삽입 위치, 클립보드, 마크가 들어 있는 키 바인딩은 체크할 수 없습니다.</p>
+
+<h2>엔 기호</h2>
+
+<p>일본어 키보드에서는 백슬래시 키를 누르면 엔 기호(¥)가 입력되기도 합니다. TeXShop에 들어 있는 목록에서 ¥은 백슬래시 하나로 바뀌며, 붙여넣기도 체크되어 있습니다. 따라서 새 문서의 인코딩이 UTF-8이면 키 바인딩을 켜기만 해도 소스에 입력하거나 붙여넣은 ¥이 \로 바뀝니다. 목록을 이전 버전의 TeXShop에서 가져왔다면 ¥의 출력 문자열을 백슬래시 하나로 바꾸고 붙여넣기를 직접 체크하십시오.</p>
+
+<p>목록은 ~/Library/TeXShop/Keyboard/autocompletion.plist에 저장됩니다. <a href="configure_autocompletion.htm">키 바인딩 수정</a>을 참조하십시오.</p>
+</main>
+</body>
+</html>

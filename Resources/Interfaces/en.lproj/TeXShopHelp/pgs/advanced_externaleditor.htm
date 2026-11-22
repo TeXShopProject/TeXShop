@@ -1,85 +1,77 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Using an External Editor</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="external editor; Open for Preview; Configure for External Editor; Always Watch for PDF Changes by Other Apps; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
+<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
+<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
+<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
+<li><a href="advanced_externaleditor.htm" class="current">Using an External Editor</a></li>
+<li><a href="advanced_experiments.htm">Experiments</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
+<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
+<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Using an External Editor</h1>
+<p>You can write in another editor and use TeXShop to typeset and to show the PDF.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Using an External Editor</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="external editor">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Opening only the preview</h2>
+<p>File › Open for Preview… asks for a source file and opens only its Preview window. If the file has not been typeset yet, or the PDF is older than the source, TeXShop typesets it first. Edit the source in your editor; to typeset, save it there and press Typeset in the Preview window or press <kbd>⌘T</kbd>. TeXShop never opens or changes the source file in this mode. If the toolbar of the Preview window has no Typeset button, add one with Window › Customize Toolbar….</p>
+<p>If you always work this way, turn on Settings › General › Startup › “Configure for External Editor”. File › Open… and Open Recent then open source files for preview only, and File › Open for Preview… becomes Open for Editing…, which opens a source file in TeXShop’s own editor when you need it. Other files, such as PDF, graphics and log files, open as before.</p>
 
-<BODY>
-		<div id="content_border">
-		<P>TeXShop can be configured for an external editor in several ways. Some features below will be useful and others not depending on how your editor works. In the future, your editor may come with configuration instructions.  
-</p>
+<h2>Keeping the preview current</h2>
+<p>When the PDF is rewritten by another program, for instance by your editor or by latexmk in Terminal, TeXShop reloads it when you return to TeXShop or to the Preview window, keeping the page and the magnification. With Settings › Preview › Refresh › “Always Watch for PDF Changes by Other Apps” on, it reloads the PDF as soon as it changes, even while TeXShop is in the background, for instance when the preview is placed beside your editor. A preview with annotations that have not been saved is not reloaded, so the annotations are not lost.</p>
+<p>TeXShop also watches the source files open in its own editor. When another editor changes such a file, TeXShop reloads it, unless the copy in TeXShop has unsaved changes.</p>
 
-<P>
- There is a menu item named &quot;Open for Preview...&quot; When this item is chosen, you will be asked to select a .tex source file. But only the associated pdf preview window opens. If the source has not yet been typeset or if the pdf is out of date, TeXShop will typeset the file as it is opened. You can open your source file in any editor. When it is time to typeset, save the changes in your editor, switch to the preview window, and typeset. In this mode, TeXShop never opens or modifies the source file. It simply passes this file to the Unix TeX or LaTeX process.
-</P>
+<h2>Synchronizing with the editor</h2>
+<p>Command-click in the Preview window can take you to the line in your editor, and Goto Error in the console can open the line of an error there. This needs “Configure for External Editor”, a hidden setting, and a command line program of the editor:</p>
+<ul>
+<li>For TextMate, whose command <code>mate</code> is in <code>/usr/local/bin</code>: <code>defaults write TeXShop TextMateSync YES</code>.</li>
+<li>For any other editor: <code>defaults write TeXShop OtherEditorSync YES</code>, and an executable script <code>/usr/local/bin/othereditor</code> that receives the line number as <code>$1</code> and the full path of the file as <code>$2</code>. For BBEdit it reads:
+<pre>#!/bin/sh
+/usr/local/bin/bbedit "$2:$1"</pre></li>
+</ul>
+<p>For the other direction, from a line in the editor to the Preview window, the editor calls TeXShop through AppleScript with the commands <code>sync_preview_line</code>, <code>sync_preview_index</code> and <code>sync_preview_name</code>. The chapter “Using an External Editor” of Help › TeXShop Manual has a complete script.</p>
+<p>The folder <code>~/Library/TeXShop/ExternalEditorScripts</code> contains ready-made support with documentation: AppleScripts that typeset and preview a document of BBEdit in TeXShop, and a plug-in for Vim.</p>
 
-<P>The preview window can be configured to contain a typesetting button. If such a button is not there, use "Customize Toolbar..." in the Windows menu to add one.</P>
-		<p>For users who prefer external editors most of the time, there is a setting called &quot;Configure for External Editor.&quot; When this setting is chosen, the &quot;Open&quot; and &quot;Open Recent...&quot; menus open tex source files in the above manner for editing with an external editor. Moreover, the  &quot;Open for Preview...&quot; menu becomes &quot;Open for Editing...&quot; and opens the source file in TeXShop's internal editor for those rare occasions when the internal editor is desired. The &quot;Open&quot; and &quot;Open Recent...&quot; menus can also open jpg, tiff, ps, pdf, dvi, log, and other files; selecting the new setting does not change this behavior.</p>
-		<p>Some editors are able to call Unix typesetting commands directly. The setting "Always Watch for PDF Changes by Other Apps" in the Preview settings (called "Automatic Preview Update" before TeXShop 6.00) improves your experience with these editors. When this item is active and a .tex file is opened using "Open for Preview", the pdf preview display automatically updates whenever the pdf file is rewritten. Thus you can typeset with an external editor and the preview window will automatically show changes. The setting also applies to .pdf files opened in TeXShop, and if TeXShop is configured to use an external editor, the setting applies to .tex files opened with "Open". Starting with TeXShop 6.00, the setting also applies to source files opened in TeXShop's own editor: when the pdf file is rewritten by another application, for instance by latexmk running in Terminal, the preview is reloaded, keeping the page being viewed and the magnification. If the preview contains annotations which have not been saved, it is not reloaded, so the annotations are not lost. Even when this preference is off, the preview is brought up to date when you return to TeXShop or to the preview window: if another application has rewritten the pdf file, it is reloaded, keeping the page being viewed and the magnification. If the pdf file is still being written, TeXShop waits until it is complete, and it also shows the output of further typesetting passes made soon afterwards. Turn the preference on to reload the preview also while TeXShop is in the background, for instance when the preview is placed beside the external editor.
- </p>
-<p> The following applescript commands have been added to
-TeXShop so editors can call TeXShop directly:
+<h2>AppleScript commands for editors</h2>
+<p>An editor can call these AppleScript commands of a TeXShop document:</p>
 <dl>
-<dd> typesetinteractive
-<dd> texinteractive
-<dd> latexinteractive
-<dd> contextinteractive
-<dd> bibtexinteractive
-<dd> makeindexinteractive
-<dd> metapostinteractive
-<dd> taskdone
-<dd> refreshpdf
-<dd> open_for_externaleditor
+<dt><code>typesetinteractive</code>, <code>texinteractive</code>, <code>latexinteractive</code>, <code>bibtexinteractive</code>, <code>makeindexinteractive</code>, <code>metapostinteractive</code></dt>
+<dd>Typeset, or run plain TeX, LaTeX, BibTeX, MakeIndex or MetaPost. The call returns at once, without waiting for typesetting to end; the preview is refreshed when it ends.</dd>
+<dt><code>taskdone</code></dt><dd>Returns NO while typesetting is running and YES when it has finished.</dd>
+<dt><code>refreshpdf</code></dt><dd>Reloads the PDF and brings the Preview window to the front.</dd>
+<dt><code>refreshpdfbackground</code></dt><dd>Reloads the PDF without bringing TeXShop to the front, when the Preview window is already open.</dd>
+<dt><code>refreshtext</code></dt><dd>Reads the source file again from disk.</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Opens a source file as File › Open for Preview… does.</dd>
 </dl>
-The first seven commands activate TeXShop typesetting commands. Applescript will return immediately
-after these calls without waiting for typesetting to complete. The "taskdone" call can be used to
-test completion; it returns NO while typesetting is being done, and YES when it is finished. Each of
-these calls refreshes the preview window at the end of typesetting. If your editor calls TeXShop to typeset, the "Always Watch for PDF Changes by Other Apps" setting can be turned off.
-</p>
-<p>If the external editor modifies the pdf output directly, it can call "refreshpdf" to refresh the pdf display. This is only needed if "Always Watch for PDF Changes by Other Apps" is off. Finally "open_for_externaleditor" opens a tex file by calling "Open for Preview".
- </p>
-
-<p>The Tcl code to make these calls from AlphaX
-in included in the AlphaTcl folder inside the TeXShop_Folder of the TeXShop distribution. Read the
-first lines of this file to see how to configure AlphaX for this purpose.
- </p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Using an External Editor</div>
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_Japan.htm">Settings for Japan</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<p>When the editor typesets through TeXShop, “Always Watch for PDF Changes by Other Apps” is not needed. See also <a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a>.</p>
+</main>
+</body>
+</html>

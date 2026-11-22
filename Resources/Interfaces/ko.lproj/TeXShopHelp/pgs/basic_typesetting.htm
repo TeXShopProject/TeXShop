@@ -1,99 +1,95 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>문서 조판</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="조판; 첫 문서; 조판하기; 콘솔; 오류; 오류 지점으로 이동; 강제종료; 부수파일 삭제; 엔진 프로파일; % !TEX program; 루트 파일; SyncTeX; 편집/보기 윈도우 통합">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm" class="current">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>문서 조판</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Typesetting Documents</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="typesetting; tag; open; multiple files; modify behavior">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>첫 문서</h2>
 
-<BODY>
-	<div id="content_border">
-		<P>To use TeXShop, type your LaTeX input in the editing window it provides. Then push the &quot;Typeset&quot; button at the top of the window. The input will be saved and pdflatex will run. A second window will open displaying messages from tex. If there are errors, pdflatex will halt; push &quot;return&quot; to skip the errors one by one, or type one of the standard TeX inputs to quit, run continuously, etc. After the document has been typeset, a new window will appear showing the resulting pdf file. You can switch between the two windows by typing command-1.</P>
-		
-<p> A standard editing session consists of repeating this operation over and over. New additions
-are made to the source, when enough additions are made the document is typeset again, and the preview window is consulted to see if the additions typeset correctly. Some users like to enter substantial amounts of information before typesetting, while others tend to typeset after every new line. LaTeX can typeset 400 page books in just a few seconds, so it is not "expensive" to typeset often.
-</p>
-<p> Because typesetting is so common, there is a keyboard shortcut to do it: push command-T,
-the command key and the "T" key simultaneously, to typeset. Later on it will turn out
-that there are many typesetting engines: TeX, LaTeX, XeTeX, LuaTeX, and on an on. TeXShop has been designed so the choice of typesetting engine can be made once, and from then on the menu command command-T typesets with the correct engine. So this shortcut always works.
-</p>
-<p> When LaTeX typesets, it goes through the source just once. But a few operations require multiple passes. For instance, if a document has a table of contents, LaTeX has to read through the entire document to determine chapter titles, and their starting pages. LaTeX records this information in a file with extension ".aux". When the document is typeset again, this file is read and the additional information needed is filled in. 
-</p>
-<p>
-While the document is being written, this structure can be ignored, and a single typeset suffices. Occasionally references to future material will be off a few pages. When the document is ready to final checking, it will be run through LaTeX two or three times to update all necessary information.
-</p>
-<p> It is common to find typesetting errors which must be fixed before proceeding. Even the
-best TeX users run into them often. On very rare occasions, these errors can corrupt the .aux
-file, so that even after the error is fixed, the document will not typeset. In these situations,
-it is necessary to throw away the .aux file before proceeding. TeXShop has several commands to
-do this, but the easiest is to use the keyboard shortcut option-command-T to typeset; this
-command throws away the .aux file and then typesets. Notice that option-command-T should only
-be used if you suspect a corrupt aux file, since the aux file is required to for typesetting
-operations which require multiple passes.
-</p>
+<p>파일 › 새 파일을 선택합니다. 새 윈도우의 도구 막대에 있는 템플릿 메뉴에서 LatexTemplate을 선택하면, 모든 LaTeX 문서에 필요한 행이 윈도우에 채워집니다. 본문은 <code>\begin{document}</code>와 <code>\end{document}</code> 사이에 씁니다. 빈 행을 넣으면 새 문단이 시작됩니다.</p>
 
+<p>도구 막대의 조판을 클릭하거나 <kbd>⌘T</kbd>(조판 › 조판하기)를 누릅니다. 처음에는 TeXShop이 문서를 저장할 위치를 묻습니다. TeX는 소스 옆에 여러 파일을 만들므로 문서마다 별도의 폴더를 마련하십시오. 이어서 TeXShop이 TeX를 실행하고, 조판된 문서를 미리보기 윈도우에 엽니다.</p>
 
-		<p>After typesetting, press the mouse on a section of the pdf output display to magnify the region near the cursor. Double click to magnify a larger region; triple click to magnify a still larger region. Notice that the default region size can be selected using
-an element of the toolbar at the top of the page. </p>
-		<p>To typeset a TeX document, push the button labeled LaTeX and select TeX instead of LaTeX. If you usually use TeX, choose it as your default program in the Settings window.</p>
-		<p>If you notice an error, you can immediately fix it in the editing window and push the &quot;Typeset&quot; button again without halting the first invocation of pdflatex. The program will kill that invocation and run another. </p>
-		<p>TeXShop remembers the source lines of the first twenty errors. To cycle through these lines in the source file, choose &quot;Go To Error&quot; in the Edit menu or type the keyboard shortcut for this menu item.</p>
-		<p>When you fix errors and typeset again, the viewer will remember the page you were previously viewing.</p>
-		<p>If a line in the source begins with the characters &quot;%:&quot;, TeXShop interprets the remaining word or words on the line as a &quot;tag&quot; and adds these words to the Tag pulldown menu. Choosing a tag entry in this menu will scroll to the appropriate line in the source file. Lines which begin with the words \section, \subsection, \subsubsection, or \chapter are automatically added to the Tag menu. However, this behavior can be changed by typing the following command in Apple's Terminal program:</p>
-		<dl>
-			<dd><tt>defaults write TeXShop TagSections NO</tt>
-		</dl>
-		<p>TeXShop can show multiple documents. If you choose &quot;New&quot; or &quot;Open,&quot;  your original document will remain and additional windows for the new document will open. If you open a TeX file in a folder which contains a pdf file with the same name, this pdf will also appear.</p>
-		<p>Some users like to divide their source into multiple files controlled by a master file using an \input command. TeXShop always saves the source file before typesetting.</p>
-		<p>You can start TeXShop by double clicking on a document with extension &quot;.tex&quot;. The program will open that input document and (if it exists) the associated pdf document.</p>
-		<p>You can close the pdf window at any time. It will reappear when the document is typeset again. If you close the input window then both the input and output windows will close (windows from other TeX documents will remain open). Therefore, if an input source window is cluttering the screen, hide it instead of closing it.</p>
-		<p>pdftex and pdflatex are unix programs derived from Knuth's TeX program. The syntax of TeX does not allow spaces in filenames, so source files created with TeXShop should be given names without spaces. TeXShop itself has no problem with spaces in filenames.</p>
-	<p>
-	The preview window's behavior can be changed using the "Magnification" and "Display Format" items in the Preview menu. For example, you can configure the scroller to scroll through all of the document pages; the preview window can show two pages at a time; resizing the window can be made to change the preview magnification. Experiment until you find the mode you prefer, and then select this mode in Settings to make it permanent.
-</p>
-	<p>
-	Use the magnification tools in the Preview window's toolbar to magnify portions of text. By double or triple clicking before holding down the mouse, a larger portion of the text will be magnified. The
-magnified region can be changed during magnification by pushing the apple, option, control, and shift keys.
-</p>
-	<p>
-	Use the pdf selection tool to select a portion of the preview window and drag it to the desktop or another program's window. The selection can also be copied and then pasted into another document. By default, this selected region contains only foreground text in pdf format. This is useful, for example, when dragging text to Keynote; the slide's background will show behind the text and the text can be
-resized without losing clarity. 
-</p>
-	<p>
-	Use the text selection tool to select text in the preview window. This text can be copied and then pasted to a word processor. If the preview contains links, these links can be activated by clicking with the text selection tool. Use the Back/Forward commands to return to the original page. Use the Find command in the window's drawer to search for text in the pdf document. 
-</p>
+<p>그다음부터는 쓰고, 조판하고, 결과를 확인하는 일을 반복합니다. TeXShop은 조판할 때마다 먼저 소스를 저장하며, 미리보기는 읽고 있던 페이지에 그대로 머뭅니다. <kbd>⌘T</kbd>는 소스, 미리보기, 콘솔 어디에서나 사용할 수 있고, <kbd>⌘1</kbd>(윈도우 › 편집/보기 윈도우 맞바꾸기)은 소스와 그 미리보기 사이를 전환합니다. TeX가 끝났을 때 어느 윈도우를 앞으로 가져올지는 설정 › 조판 › 조판 후 동작에서 선택합니다.</p>
 
-<p> You can jump between the source and preview windows by holding down the Apple command key while clicking on a word or phrase. If the phrase is in the source window, the preview window will scroll to the appropriate spot and the typeset phrase will be circled in red. If the phrase is in the preview window, the source window will open (if necessary) and scroll to the appropriate spot, and the source phrase will
-be highlighted in yellow.</p>  
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Typesetting Documents</div>
+<p>.tex 파일을 열면 같은 이름의 PDF 파일이 있을 경우 그 파일도 함께 열립니다. 미리보기 윈도우를 닫아도 소스는 열린 채로 남고, 다음에 조판하면 미리보기가 다시 나타납니다. 소스 윈도우를 닫으면 문서가 닫힙니다.</p>
 
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
-	</BODY>
+<h2>콘솔</h2>
+
+<p>TeX가 실행되는 동안 그 메시지가 콘솔에 표시됩니다. 설정 › 콘솔 › 콘솔 표시에서 조판할 때마다 콘솔을 앞으로 가져올지(항상 보이기), TeX가 오류를 보고할 때만 가져올지(오류 발생시 보이기)를 선택합니다. 파일 › 콘솔 보이기(<kbd>⌘0</kbd>)는 활성 문서의 콘솔을 앞으로 가져오며, 콘솔에서 <kbd>⌘0</kbd>을 누르면 원래 윈도우로 돌아갑니다. 콘솔의 텍스트는 언제든지 선택하여 복사할 수 있습니다.</p>
+
+<p>TeX는 오류를 발견하면 콘솔 끝에 메시지를 출력하고 응답을 기다립니다. 콘솔 아래쪽의 필드에 응답을 입력하고 Return을 누르십시오. Return만 누르면 다음 오류로 넘어가며, 필드에는 TeX가 받아들이는 다른 응답이 표시되어 있습니다. TeX를 멈추려면 콘솔의 강제종료를 클릭하거나 파일 › 조판 중단(<kbd>⌃⌥⌘A</kbd>)을 선택합니다.</p>
+
+<h2>오류 찾기</h2>
+
+<p>콘솔의 “에러 위치로” 버튼이나 편집 › 오류 지점으로 이동(<kbd>⌃⌘E</kbd>)을 사용하면 소스가 첫 번째 오류가 있는 행으로 스크롤되고 그 행이 강조됩니다. 다시 선택하면 다음 오류로 이동합니다. 오류가 프로젝트의 다른 파일에 있으면 그 파일이 열립니다. 오류 하나가 다른 오류를 여럿 일으킬 수 있으므로, 오류를 몇 개 고친 뒤 다시 조판하는 편이 대개 빠릅니다. 이 기능은 TeX가 <code>-file-line-error</code> 옵션으로 출력하는 파일 이름과 행 번호를 이용하며, TeXShop의 명령과 엔진 파일은 이 옵션을 사용합니다.</p>
+
+<p>LaTeX는 목차나 상호 참조 등 다음 실행에 필요한 정보를 .aux 파일 등의 부수 파일에 기록하므로, 모든 참조가 맞기까지 문서를 두세 번 조판해야 할 수도 있습니다. 오류 때문에 이 파일들이 손상되면, 오류를 고친 뒤에도 문서가 조판되지 않을 수 있습니다. 그럴 때는 조판 › 부수 파일 삭제 후 조판(<kbd>⌥⌘T</kbd>)을 선택하여 부수 파일을 휴지통으로 옮기고 다시 조판하거나, 파일 › 부수파일 삭제(<kbd>⌃⌘A</kbd>)를 선택합니다. 콘솔에도 같은 기능의 버튼이 있습니다. <a href="advanced_removeaux.htm">부수 파일 삭제</a>를 참조하십시오.</p>
+
+<h2 id="engine">엔진 선택</h2>
+
+<p>설정 › 조판 › 엔진 프로파일을 사용하면 한 번에 엔진에 맞는 조판 설정을 할 수 있습니다. 사용하는 엔진의 프로파일을 선택하면 프로파일이 설정하는 값이 시트에 나열되고, 확인을 클릭하면 그 값이 설정됩니다. 시트에서 “LaTeX 실행”을 “latexmk 사용”으로 하면 latexmk가 BibTeX, 색인 작성, 추가 조판을 필요에 따라 실행합니다. 이 값 중 하나라도 바꾸면 메뉴에 “사용자화”가 표시됩니다. 각 프로파일이 설정하는 값은 TeXShop 설명서에 정리되어 있습니다.</p>
+
+<p>한 문서에만 다른 엔진을 쓰려면 도구 막대의 조판 옆에 있는 프로그램 팝업 메뉴에서 엔진을 선택합니다. 이 메뉴에는 LaTeX, plain TeX와 함께 ~/Library/TeXShop/Engines에 있는 LuaLaTeX, XeLaTeX 등의 엔진 파일이 나열되며, 선택은 그 윈도우에만 적용됩니다. 엔진을 문서의 일부로 지정하려면 소스의 처음 20행 안에 다음과 같은 행을 넣습니다.</p>
+
+<pre>% !TEX program = LuaLaTeX</pre>
+
+<p>그러면 <kbd>⌘T</kbd>는 항상 그 엔진으로 파일을 조판합니다. 이름에는 엔진 파일의 이름을 쓰거나, 내장된 LaTeX와 plain TeX를 위한 <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code>, <code>tex</code> 중 하나를 씁니다(<a href="basic_alternatetypeset.htm">대체 조판 방식</a> 참조). 매크로 › Program을 선택하면 목록에서 고른 엔진으로 이 행을 삽입합니다. 이런 행이 없는 문서의 엔진은 설정 › 조판 › 새 문서 조판에서 정합니다. 엔진 파일에 대해서는 <a href="advanced_addengine.htm">조판 엔진 추가하기</a>를 참조하십시오.</p>
+
+<p>조판 메뉴에서는 문서에 BibTeX, MakeIndex, MetaPost를 실행할 수도 있습니다. <a href="advanced_bibtex.htm">BibTeX</a>와 <a href="advanced_makeindex.htm">MakeIndex</a>를 참조하십시오.</p>
+
+<h2>여러 파일로 된 문서</h2>
+
+<p>책은 흔히 프리앰블이 있는 루트 파일과, 루트 파일이 <code>\include</code>나 <code>\input</code>으로 읽어 들이는 장 파일로 나뉩니다. 각 장 파일의 맨 위에 <code>% !TEX root = ../Book.tex</code> 같은 행을 넣고, 장 파일에서 본 루트 파일의 경로를 적으십시오. 그러면 장 파일에서 <kbd>⌘T</kbd>를 눌러도 루트 파일이 조판되고, 오류 지점으로 이동과 SyncTeX도 올바른 장 파일을 찾습니다. <a href="advanced_root.htm">프로젝트 루트 파일 설정</a>을 참조하십시오.</p>
+
+<h2>소스와 미리보기 사이 이동</h2>
+
+<p>소스의 단어를 Command-클릭하면 미리보기가 조판된 해당 텍스트로 스크롤되고 그 위치가 표시됩니다. 미리보기에서 Command-클릭하면 소스가 앞으로 오고 대응하는 텍스트가 표시됩니다. 장 파일이 있는 문서에서는 필요하면 장 파일이 열립니다. 대응이 항상 정확하지는 않으므로 표시된 위치 주변을 살펴보십시오. 표시 색상은 설정 › 테마 › SyncTeX에서 설정합니다.</p>
+
+<p>이 기능은 SyncTeX를 이용합니다. 엔진을 <code>-synctex=1</code> 옵션으로 실행하면 SyncTeX가 동작하며, TeXShop의 명령과 엔진 파일은 이 옵션을 사용합니다. 설정 › 조판 › Sync 방식은 “SyncTeX(권장)”으로 두십시오. 문서의 SyncTeX 파일에는 파일들의 위치가 기록되므로, 프로젝트 폴더를 옮긴 후에는 동기화하기 전에 한 번 더 조판하십시오.</p>
+
+<h2>윈도우 배치</h2>
+
+<p>윈도우 › 편집/보기 윈도우 통합을 선택하면 소스와 그 미리보기가 한 윈도우에 나란히 표시되고, 윈도우 › 편집/보기 윈도우 분리를 선택하면 다시 나뉩니다. 모든 문서를 이렇게 열려면 설정 › 일반 › 윈도우 › 소스와 미리보기를 “단일 창으로”로 설정합니다. “통합 윈도우에서 소스의 위치”에서 소스를 왼쪽에 둘지 오른쪽에 둘지 정합니다. 구분선을 드래그하면 소스가 차지하는 폭을 조절할 수 있으며, TeXShop은 모든 통합 윈도우를 같은 비율로 엽니다. 장 파일이 있는 문서는 한 윈도우에서 제대로 동작하지 않으므로 별도의 윈도우를 사용하십시오. 파일 › 새 파일은 소스 윈도우만 엽니다. 새 문서를 먼저 조판한 다음 편집/보기 윈도우 통합을 선택하십시오.</p>
+
+<p>별도의 윈도우를 사용할 때는 소스 윈도우와 미리보기 윈도우를 원하는 위치와 크기로 배치한 후 소스 › 소스 편집 윈도우 위치 고정과 보기 › 보기 윈도우 위치 고정을 선택하십시오. 새 윈도우가 그 위치에 열립니다.</p>
+</main>
+</body>
+</html>

@@ -1,85 +1,85 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>タイプセットエンジンを追加する</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="エンジン; エンジンファイル; .engine; Enginesフォルダ; % !TEX program; % !TEX parameter; 代替エンジン; Inactive; シェルスクリプト">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
+<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
+<li><a href="advanced_addengine.htm" class="current">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
+<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
+<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
+<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
+<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>タイプセットエンジンを追加する</h1>
+<p>TeXShopは、plain TeXとLaTeXのほかに、<em>エンジン</em>でもタイプセットします。エンジンは、<code>~/Library/TeXShop/Engines</code>フォルダにある拡張子<code>.engine</code>の小さなシェルスクリプトです。1つのプログラムだけを実行するものも、LuaLaTeX、Biber、LuaLaTeXをさらに2回、のように一連のプログラムを実行するものも作れます。TeXShopにはLuaLaTeX、XeLaTeX、pdflatexmkなどのエンジンが付属し、<code>Inactive</code>サブフォルダにはさらに多くのエンジンがあります。</p>
 
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>追加のタイプセットエンジン</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="タイプセットエンジン; engine; TS-program; Engines">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<h2>エンジンを選ぶ</h2>
+<p>ソースのウインドウのツールバーで、「タイプセット」ボタンの横のポップアップメニューにエンジンが並んでいます。1つ選んで「タイプセット」を押すか、<kbd>⌘T</kbd>を押します。この選択はその書類だけに働きます。</p>
+<p>新しい書類をエンジンでタイプセットするには、「設定」→「タイプセット」→「エンジン」の「新しい書類のタイプセット」で「エンジンファイル」を選び、その下の「エンジンファイル」メニューでエンジンを選びます。「エンジン一覧を編集…」を押すと、FinderでEnginesフォルダが開きます。「エンジンファイル」メニューは、このフォルダでファイルを追加・削除・名称変更すると、それに合わせて変わります。選んでいたエンジンファイルがフォルダからなくなると、メニューには「（見つかりません）」と表示され、書類はLaTeXでタイプセットされます。</p>
+<p>書類を特定のエンジンと結び付けるには、最初の20行のどこかに次のような行を書きます。</p>
+<pre>% !TEX program = XeLaTeX</pre>
+<p>名前は、エンジンファイルの名前から<code>.engine</code>を除いたものです。<code>tex</code>と<code>latex</code>はplain TeXとLaTeXをDVI経由で、<code>pdftex</code>と<code>pdflatex</code>はPDF直接生成でタイプセットします。この行は、ツールバー、設定、「代替エンジンでタイプセット」のいずれよりも優先されます。<code>% !TEX TS-program =</code>という形も同じように読み取られます。行は書いてあるとおりに、等号の両側に空白を1つずつ入れて書いてください。「マクロ」メニューの「Program」マクロでエンジンの一覧から選べば、この行を入力してくれます。ルートファイルのあるプロジェクトでは、この行はルートファイルにだけ書けば十分です。</p>
+<p>「タイプセット」→「代替エンジンでタイプセット」（<kbd>⌃⌥⌘T</kbd>）は、ツールバーの選択を変えずに、「設定」→「タイプセット」→「エンジン」の「代替エンジン」で指定したエンジン（初期値はpdflatexmk）で1回だけタイプセットします。ふだんは手早く1回だけタイプセットし、ときどきlatexmkで完全にタイプセットする書類に向いています。</p>
 
+<h2>エンジンを書く</h2>
+<p>エンジンを作るいちばん簡単な方法は、FinderでEnginesフォルダにあるエンジンを複製し、名前を変え、TeXShopで開いて編集することです。エンジンファイルには拡張子<code>.engine</code>と実行権限が必要ですが、複製すれば実行権限は引き継がれます。新しいエンジンは、そのあとに開いた書類のツールバーに表示されます。XeLaTeX.engineの内容は次のとおりです。</p>
+<pre>#!/bin/tcsh
 
-<body>	
-
-<div id="content_border">
-
-<p>TeXShopには文書をタイプセットする方式がいくつか組み込まれていますが、タイプセットの方式を追加することもできます。追加した方式を「エンジン」と呼びます。</p>
-
-<p>エンジンは、TeXのソースファイルから始まってPDFファイルで終わる一連の処理の中で、どのようなプログラムでも呼び出せます。厳密には最後のPDFファイルさえ必須ではありません。TeXShopに付属するエンジンの1つは、TeX Liveのプログラムtex4htを使ってLaTeXのソースをHTMLファイルに変換し、TeXShopはそのHTMLファイルを自分のHTMLウインドウに、PDFと並べて表示します。エンジンが呼び出すプログラムの手順はシェルスクリプトに書きます。</p>
-
-<p>~/Library/TeXShopにはEnginesというフォルダがあり、その中のファイルはタイプセットプログラムを呼び出すシェルスクリプトです。TeXShopは起動時にこのフォルダを調べ、中にあるスクリプトの名前をタイプセット方式のポップアップメニューに加えます。その項目を選んで「タイプセット」ボタンを押すと、スクリプトが呼び出されます。自分で書いたスクリプトをEnginesフォルダに加えることもできます。スクリプトの名前には空白を含めず、拡張子を「.engine」にし、実行権限を付けておく必要があります。</p>
-
-<p>~/Library/TeXShop/Enginesにある項目は、TeXShopの設定でデフォルトのタイプセット方式として選ぶこともできます。設定に表示される方式の名前には拡張子が付きません。</p>
-
-<p>ソースの最初の20行のどこかに次のような行を書くと、その文書で使うプログラムを指定できます。</p>
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+xelatex  -file-line-error -synctex=1 "$1"</pre>
+<p>1行目には、スクリプトのシェルまたは言語を書きます。スクリプトがその言語で書かれていれば、zsh、bash、tcsh、Perlなど何でも使えます。TeXShopはエンジンをソースファイルのフォルダで実行し、次の3つの値を渡します。</p>
 <dl>
-<dd> % !TEX TS-program = xelatex
+<dt><code>$1</code></dt><dd>ソースファイルの名前。拡張子は付き、フォルダは付きません（<code>main.tex</code>など）。ほかのフォルダに移動するスクリプトでは、先に完全なパスを<code>"$PWD/$1"</code>のように控えておく必要があります。プロジェクトでは、ルートファイルの名前です。</dd>
+<dt><code>$2</code></dt><dd>ソース（ルートファイル）の先頭近くにある<code>% !TEX parameter = …</code>の行の残りの部分です。<code>% !TEX parameter = -shell-escape</code>のように書き、複数のフラグは空白で区切ります。この行がなければ空白1つです。</dd>
+<dt><code>$3</code></dt><dd>「設定」→「タイプセット」→「パス」の「TeXエンジン」欄のフォルダです。書類に<code>% !TEX useAlternatePath</code>の行があるときは、「第二のTeXエンジン」欄のフォルダです。</dd>
 </dl>
+<p>エンジンが終わると、TeXShopはソースと同じ名前で拡張子が<code>.pdf</code>のPDFファイルをプレビューのウインドウに開き（ファイルがあれば）、タイプセット前に表示していた位置までスクロールします。ほかの出力を作るスクリプトでは、次の行で何を表示するかを指定できます。エンジンのどこに書いてもかまいませんが、その言語のコメントの中に書きます。</p>
+<table>
+<tr><th>行</th><th>働き</th></tr>
+<tr><td><code>!TEX-noPreview</code></td><td>プレビューのウインドウを表示しません。以下のほかの行があっても同じです</td></tr>
+<tr><td><code>!TEX-pdfPreview</code></td><td>PDFファイルを表示します</td></tr>
+<tr><td><code>!TEX-htmlPreview</code></td><td>同じ名前のHTMLファイルをHTMLウインドウに表示します</td></tr>
+<tr><td><code>!TEX-bothPreview</code></td><td>PDFファイルとHTMLファイルの両方を表示します</td></tr>
+<tr><td><code>!TEX-noConsole</code></td><td>コンソールを表示しません</td></tr>
+</table>
+<p>たとえば、LuaLaTeX、Biber、LuaLaTeXをさらに2回実行するエンジンは、zshでは次のように書けます。<code>${1:r}</code>は拡張子を除いた名前です。</p>
+<pre>#!/bin/zsh
+export PATH="/Library/TeX/texbin:$PATH"
+lualatex -file-line-error -synctex=1 "$1"
+biber "${1:r}"
+lualatex -file-line-error -synctex=1 "$1"
+lualatex -file-line-error -synctex=1 "$1"</pre>
 
-<p>等号の前後には空白を1つずつ入れます。TeXShopに付属するマクロを使うと、この行を簡単に追加できます。このマクロは有効なエンジンをすべて一覧にするので、ダイアログのリストから目的のエンジンを選べます。</p>
-
-<p>この書式はのちにTeXworksなどのフロントエンドでも採用されました。共同作業をしやすくするため、TeXShopはTeXworks形式の次の行も受け付けます。</p>
-<dl>
-<dd> % !TEX program = xelatex
-</dl>
-
-<p>「% !TEX TS-program = ...」の行は、ツールバーで選んだタイプセット方式より優先されます。たとえば上のようにxelatexを指定する行がソースにあれば、ツールバーのポップアップメニューでpdflatexを選んでいても、「タイプセット」ボタンを押したとき、「タイプセット」メニューの「タイプセット」を選んだとき、そのキーボードショートカットを使ったときのいずれもxelatexでタイプセットされます。ルートファイルと複数の章ファイルからなるプロジェクトでは、ルートファイルにだけ「% !TEX TS-program」の行を書けば十分です。</p>
-
-<p>新しいエンジンファイルを書くときは、~/Library/TeXShop/Enginesにある既存のエンジンを複製して始めると便利です。複製したファイルには実行権限が自動的に付いています。そのファイルをTeXShopで編集して新しいエンジンを作ります。</p>
-
-<p>~/Library/TeXShop/EnginesフォルダにはInactiveというサブフォルダがあり、追加のエンジンスクリプトが多数入っています。これらを見ると、エンジンファイルの書き方が実例でわかります。エンジンが呼び出されると、変数「$1」には、そのとき作業中だったソースファイルの名前（フォルダを含まないファイル名）が入り、エンジンはそのファイルがあるフォルダを作業ディレクトリとして起動します。たとえば/Users/me/paper/main.texなら、「$1」はmain.texで、エンジンは/Users/me/paperで実行されます。そのため、スクリプトで別のフォルダに移動する場合は、先に「$PWD/$1」などとしてフルパスを控えておく必要があります。このファイルの拡張子は「.tex」とは限りません。エンジンスクリプトでは、いくつもの中間段階を経て各種の補助ファイルを作り、それを別のコマンドラインプログラムで処理してもかまいません。TeXShopは、最終的にソースファイルと同じ名前で拡張子が「.pdf」のPDFファイルができることを想定しています。その場合、TeXShopはエンジンの実行が終わると自動的にPDFファイルを開き、タイプセット前のPDFと同じ位置までスクロールします。PDFファイルができなかった場合、TeXShopはこの手順を省きます。そのときは、必要に応じて結果を適切なプログラムで開く処理をエンジンスクリプトに書いてください。</p>
-
-<p>エンジンスクリプトはどのような言語で書いてもかまいません。ほとんどのエンジンはtcshかzshを使っていますが、perlなどの言語で書いたスクリプトも動作します。</p>
-
-<p>エンジンでは次のような方法がよく使われます。入力ファイルをタイプセットして、同じ名前で拡張子の違う補助ファイルを作り、その補助ファイルを別のプログラムで処理するという方法です。Inactiveフォルダにあるsageエンジンがその例で、補助ファイルの拡張子は「.sage」で、数式処理システムSageで処理する必要があります。このような場合には、sageエンジンにある次のコードが役立ちます。</p>
-<dl>
-<dd> sagename=${filename/%tex/sagetex.sage}
-</dl>
-
-<p>ここで${filename/%tex/sagetex.sage}は、ファイル名の末尾の「tex」を、sagetexが書き出すファイルの名前の「sagetex.sage」に置き換えます。</p>
-
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title">追加のタイプセットエンジン</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
-			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
-			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
-			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
-			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
-			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
-			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
-			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
-			<li><a href="advanced_plist.htm">Plistファイル</a>
-			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-		</ul>
-	</div>
-	</body>
-
-</HTML>
+<h2>Inactiveフォルダ</h2>
+<p><code>Engines/Inactive</code>サブフォルダには、特別な作業のためのエンジンが、多くはドキュメントやサンプルとともに入っています。latexmk、ConTeXt、Sage、PreTeXt、pythontex、Typstなどのためのものです。使うときは、そのフォルダからEnginesフォルダの直下に移動します。TeXShopをアップデートするとInactiveフォルダは最新の版に置き換わりますが、Enginesフォルダの直下にあるファイルには手を付けないので、編集したエンジンは残ります。</p>
+<p>エンジンについて詳しくは、「ヘルプ」→「TeXShopマニュアル（英語）」のタイプセットエンジンの章を参照してください。</p>
+</main>
+</body>
+</html>

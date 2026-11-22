@@ -44,7 +44,7 @@ def strings(path):
 
 def read_help(path, language):
     raw = path.read_bytes()
-    match = re.search(br'charset=([^"\s>]+)', raw, re.I)
+    match = re.search(br'charset=["\x27]?([^"\x27\s>]+)', raw, re.I)
     encoding = match[1].decode() if match else ('utf-8' if language == 'ja' else 'latin-1')
     encoding = {'x-sjis': 'cp932', 'shift_jis': 'cp932'}.get(encoding.lower(), encoding)
     decoded = raw.decode(encoding)  # No replacement of invalid bytes.
@@ -128,8 +128,9 @@ for language in LANGUAGES:
         pages[path.stem] = text
         page_count += 1
     if language in ('en', 'ko'):
-        route = 'Settings > Typesetting > Related Tools > BibTeX Engine' if language == 'en' else 'Settings > 조판 > 관련 도구 > BibTeX 엔진'
-        assert route in pages['advanced_bibtex'], (language, 'BibTeX Engine route')
+        route = 'Settings > Typesetting > Related Tools > BibTeX Engine' if language == 'en' else '설정 > 조판 > 관련 도구 > BibTeX 엔진'
+        # The help writes menu and Settings paths with ›, with the names the interface shows (설정 in Korean).
+        assert route in pages['advanced_bibtex'] or route.replace(' > ', ' › ') in pages['advanced_bibtex'], (language, 'BibTeX Engine route')
     overview=pages['basic_preferences']
     assert 'id="settings-search"' in overview,(language,'central search instructions')
     for key in CATEGORIES: assert categories[key] in overview,(language,'overview',key)
@@ -178,13 +179,13 @@ for language in LANGUAGES:
                 if self.stack[i][0]==tag:self.stack=self.stack[:i];break
         def handle_data(self,text):
             if not text.strip() or not any(t=='body' for t,i in self.stack):return
-            if any(i=='content_border' or t in ('script','style') for t,i in self.stack):return
-            chrome=any(i in {'header_background','header_logo','header_chapter','header_title','menu_border'} for t,i in self.stack)
+            if any((t,i)==('main','content') or t in ('script','style') for t,i in self.stack):return
+            chrome=any((t,i) in {('header','header'),('nav','menu')} for t,i in self.stack)
             # Chrome contains navigation links or headings, never body paragraphs.
-            heading_or_link=any(t in ('a','h1','h2','h3','h4') for t,i in self.stack) or self.stack[-1][1] in {'header_chapter','header_title'}
+            heading_or_link=any(t in ('a','h1','h2','h3','h4') for t,i in self.stack) or (self.stack[-1][0]=='span' and any((t,i)==('header','header') for t,i in self.stack))
             if not (chrome and heading_or_link and not any(t in ('p','dd','dt') for t,i in self.stack)):self.outside.append(text.strip()[:80])
     for name in ('basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden'):
-        parser=ContentParser();parser.feed(pages[name]);assert not parser.outside,(language,name,'body text outside content_border',parser.outside)
+        parser=ContentParser();parser.feed(pages[name]);assert not parser.outside,(language,name,'body text outside the content area',parser.outside)
     # Older de/es key-binding articles do not describe the list; the others name its
     # columns as Settings shows them. Every command-completion article uses the
     # current button label.
@@ -203,7 +204,7 @@ overrides=json.loads((ROOT/'Tests/Fixtures/SettingsClassificationStrings.json').
 assert overrides['ko']=='LaTeX 구문을 고려한 맞춤법 검사 사용(권장)' and overrides['zh_CN']==method, 'classification fixture method names'
 
 # The help pages on the otf conversion name its group and item as the Settings window shows them.
-for language,table,page in (('ja','ja.lproj','advanced_unicode'),('en','Base.lproj','advanced_Japan')):
+for language,table,page in (('ja','ja.lproj','basic_j_ptex'),('en','Base.lproj','advanced_Japan')):
     help_text=read_help(ROOT/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/{page}.htm',language)
     names=strings(ROOT/'Resources/Interfaces'/table/'SettingsCategories.strings')
     for key in ('group.typesetting.9.title','catalog.typesetting.9.0.title'):

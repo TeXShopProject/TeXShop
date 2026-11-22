@@ -1,43 +1,43 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Einführung</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeXShop konfigurieren; Fenster Einstellungen; Einstellungen suchen; ~/Library/TeXShop; beschädigte Dateien; Backups; versteckte Einstellungen; magische Kommentare">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Wie konfiguriere ich TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm" class="current">Einführung</a></li>
+<li><a href="configure_prefchanges.htm">Empfohlene Änderungen an den Einstellungen</a></li>
+<li><a href="configure_correctinstall.htm">Neue Objekte für die Library</a></li>
+<li><a href="configure_hidden.htm">Versteckte Einstellungen</a></li>
+<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a></li>
+<li><a href="configure_autocompletion.htm">Tastenbelegungen anpassen</a></li>
+<li><a href="configure_menushortcuts.htm">Tastaturkurzbefehle für Menüs ändern</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Einführung</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Einleitung</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Allgemeine Informationen zur Konfiguration von TeXShop.">
-				<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<p>Dieses Kapitel erklärt, wie Sie TeXShop an Ihre Arbeitsweise anpassen: die Einstellungen, die Sie zuerst prüfen sollten, wie TeXShop die Dateien in ~/Library/TeXShop aktuell hält, die versteckten Einstellungen und wie Sie die LaTeX Palette, die Tastenbelegungen und die Menükurzbefehle ändern.</p>
 
-<BODY>
+<h2 id="settings">Das Fenster „Einstellungen“</h2>
+<p>Wählen Sie TeXShop › Einstellungen..., um das Fenster „Einstellungen“ zu öffnen. Seine Seitenleiste hat zehn Kategorien: Allgemein, Dokumente und Sichern, Editor, Tastatur, Rechtschreibung, Themen, Satz, Konsole, Vorschau und Updates. Um eine Einstellung zu finden, ohne ihre Kategorie zu kennen, tippen Sie ein Wort in das Feld „Einstellungen suchen“ über der Seitenleiste und wählen ein Ergebnis: Die Einstellungen zeigen die Einstellung und heben sie hervor. Siehe <a href="basic_preferences.htm#settings-search">Einstellungen suchen</a>.</p>
+<p>Zu vielen Einstellungen gibt es einen passenden Menübefehl, etwa Quelltext › Zeilennummerierung einblenden und die Einstellung „Zeilennummerierung“ unter „Editor“. Der Menübefehl ändert nur das aktive Dokument, solange es geöffnet ist; die Einstellung legt fest, wie Dokumente beim Öffnen aussehen und sich verhalten.</p>
+<p>Fast alles, wofür man früher eine Datei bearbeiten musste, erledigen Sie jetzt in TeXShop selbst. Einstellungen › Tastatur enthält die Tastenbelegungen, die Liste der Befehlsvervollständigung („Befehlsvervollständigung bearbeiten…“) und die Menükurzbefehle; Makros bearbeiten Sie im Makro-Editor (Makros › Makro-Editor öffnen...), Farbthemen unter Einstellungen › Themen.</p>
 
-<div id="content_border">
-		<P>Haben Sie TeXShop zum ersten Mal installiert, so lesen Sie bitte diese zwei Abschnitte sowie die darauf folgenden vier. Wenn Sie sich mit TeXShop gut auskennen und es anpassen wollen, dann lesen Sie auch die &uuml;brigen Abschnitte.</P>
-		<p>Wenn TeXShop zum ersten Mal gestartet wird, so legt es Standardeinstellungen, Makros, Standardvorlagen und Dokumentsatzprogramme im &bdquo;Library&ldquo;-Ordner des Benutzers an. Wird das Programm sp&auml;ter aktualisiert, so werden diese Dateien nicht &uuml;berschrieben, weil der Benutzer sie eventuell an seine Bed&uuml;rfnisse angepasst hat. In seltenen F&auml;llen werden an diesen Standard-Dateien Ver&auml;nderungen vorgenommen. Diese Ver&auml;nderungen werden hier aufgef&uuml;hrt, sodass Benutzer der voherigen Version ihre angepassten Standard-Dateien entsprechend ver&auml;ndern k&ouml;nnen k&ouml;nnen.</p>
-		<p>TeXShop verf&uuml;gt &uuml;ber versteckte Einstellungen f&uuml;r erfahrene Benutzer. Hierdurch kann das Programmverhalten durch die Installation verschiedener .plist-Dateien beeinflusst werden. Details hier&uuml;ber erfahren Sie in den entsprechenden Abschnitten.</p>
-		<p>Neue Versionen von TeXShop beinhalten hin und wieder neue Men&uuml;eintr&auml;ge oder andere neue Komponenten der Benutzeroberfl&auml;che. Diese neuen Komponenten sind manchmal noch nicht lokalisiert auch wenn der Rest des Programms in Ihrer Sprache vorliegt. &Uuml;bersetzungen dieser Eintr&auml;ge nehmen wir gern als Issue auf <a href="https://github.com/TeXShopProject/TeXShop/issues">GitHub</a> entgegen.</p>
-</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Wie konfiguriere ich TeXShop?</div>
-<div id="header_title">Einleitung</div>
+<h2 id="library">Der Ordner ~/Library/TeXShop</h2>
+<p>Vorlagen, Makros, Engines, die Datei der LaTeX Palette, Tastenbelegungen, die Liste der Befehlsvervollständigung, Themen und andere Dateien, die Sie ändern können, liegen in ~/Library/TeXShop, dem Ordner TeXShop im Ordner „Library“ Ihres Benutzerordners. TeXShop › Den Ordner „~/Library/TeXShop“ im Finder öffnen öffnet ihn im Finder. Eine neue Version von TeXShop behält Ihre Änderungen dort bei; <a href="configure_correctinstall.htm">Neue Objekte für die Library</a> erklärt, welche Dateien sie aktualisiert.</p>
+<p>Fehlt eine Datei, die TeXShop braucht, etwa die Makros, die Datei der LaTeX Palette, die Tastenbelegungen oder ein Thema, oder ist sie beschädigt, ersetzt TeXShop sie beim Start ohne Meldung durch seine eigene Kopie. Die beschädigte Datei wird in ~/Library/TeXShop/Backups aufbewahrt, sodass Sie Ihre Änderungen daraus zurückholen können.</p>
+<p>Um zum Standardinhalt eines Ordners zurückzukehren, beenden Sie TeXShop, bewegen den Ordner (zum Beispiel Templates) aus ~/Library/TeXShop heraus, etwa auf den Schreibtisch, und starten TeXShop erneut. TeXShop legt den Ordner mit seinem Standardinhalt neu an; kopieren Sie aus dem verschobenen Ordner zurück, was Sie behalten möchten.</p>
 
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="configure_preliminaries.htm">Einleitung</a>
-			<li><a href="configure_correctinstall.htm">Neue Objekte in ~/Library/TeXShop erhalten</a>
-			<li><a href="configure_prefchanges.htm">Empfohlene &Auml;nderung von Einstellungen</a>
-			<LI><a href="configure_convertgraphics.htm">Grafikformate automatisch konvertieren</a>
-			<LI><a href="configure_defaults.htm">Standardeinstellungen</a>
-			<LI><a href="configure_latextemplate.htm">Die Standard-LaTeX-Vorlage</a>
-			<li><a href="configure_hidden.htm">Versteckte Einstellungen</a>
-			<li><a href="configure_plist.htm">.plist-Dateien</a>
-			<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a>
-			<li><a href="configure_autocompletion.htm">Die automatische Vervollst&auml;ndigung anpassen</a>
-			<li><a href="configure_menushortcuts.htm">Tastaturk&uuml;rzel neu festlegen</a>
-			<li><a href="configure_macros.htm">Das Makro-Men&uuml; ver&auml;ndern</a>
-		</ul>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2 id="more">Versteckte Einstellungen und magische Kommentare</h2>
+<p>Einige Einstellungen sind nicht im Fenster „Einstellungen“; sie werden mit einem Befehl im Terminal geändert. Siehe <a href="configure_hidden.htm">Versteckte Einstellungen</a>. Magische Kommentare wie <code>% !TEX program = lualatex</code> am Anfang einer Quelltextdatei legen die Engine, die Kodierung, die Hauptdatei und mehr nur für diese Datei fest. Hilfe › Kommentarzeilen und versteckte Einstellungen (Englisch) listet alle magischen Kommentare und versteckten Einstellungen auf.</p>
+</main>
+</body>
+</html>

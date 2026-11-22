@@ -1,48 +1,67 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Einführung</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="was TeXShop ist; TeX Live; MacTeX; pdfLaTeX; PDF; macOS 14.6; Überblick über die Hilfe">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm" class="current">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
+<li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
+<li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
+<li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_macros.htm">Makros</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
+<li><a href="basic_printing.htm">Drucken</a></li>
+<li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
+<li><a href="basic_license.htm">Lizenz</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Einführung</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Einf&uuml;hrung</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Mit TeXShop k&ouml;nnen Sie auf elgante Art Dokumente mit LaTeX setzen. Das Ergebnis ist ein Dokument im pdf-Format.">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">
-		<p>TeXShop ist ein Programm f&uuml;r Mac OS X, welches TeX und LaTeX Dateien setzen kann. Die Ausgabe wird am Bildschirm dargestellt. Normalerweise benutzt das Programm pdftex oder pdflatex anstelle von tex oder latex. Pdftex und pdflatex erzeugen pdf-Dateien anstelle der sonst &uuml;blichen dvi-Dateien. Da pdf das native Ausgabeformat unter Mac OS X darstellt ist es einfach diese Dateien auf dem Bildschirm auszugeben. Pdftex und pdflatex wurden von Han The Thanh, Petr Sojka und Jiri Zlatuska geschrieben.</p>
-		<p>Die pdf-Dateien, die TeXShop erzeugt, sind Standard-pdf-Dateien, die einfach auf verschiedensten Computersystemen angezeigt werden k&ouml;nnen. So k&ouml;nnen Dateien problemlos ausgetauscht werden. Unter anderem wird zum Beispiel der Adobe Reader unterst&uuml;tzt.</p>
-		<p>TeXShop beinhaltet nicht TeX. Es kann jedoch mit jeder Standard-TeX-Distribution benutzt werden. Wo Sie die Standard-TeX-Distributionen f&uuml;r Mac OS X bekommen, erfahren Sie im n&auml;chsten Abschnitt.</p>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Grundlagen</div>
-<div id="header_title">Einf&uuml;hrung</div>
+<p>TeXShop ist ein macOS-Programm, mit dem Sie Dokumente in TeX und LaTeX schreiben. Sie schreiben den Quelltext in einem Editorfenster, setzen ihn mit einem Klick oder mit <kbd>⌘T</kbd> und lesen das Ergebnis in einem Vorschaufenster daneben. Ein Klick mit gedrückter Befehlstaste in einem der beiden Fenster zeigt die passende Stelle im anderen.</p>
 
+<p>TeXShop enthält selbst kein TeX. Es ruft die Programme einer TeX-Distribution auf, normalerweise TeX Live, das mit dem MacTeX-Installationsprogramm auf den Mac kommt; siehe <a href="basic_installtetex.htm">TeX Live installieren</a>. TeXShop benötigt macOS 14.6 oder neuer.</p>
 
-	<div id="menu_border">
-		<UL>
-			<LI><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-			<LI><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-			<LI><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
-			<LI><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-			<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-			<li><a href="basic_spelling.htm">Rechtschreibpr&uuml;fung</a></li>
-			<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-			<li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
-			<li><a href="basic_macros.htm">Makros</a></li>
-			<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-			<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
-			<li><a href="basic_printing.htm">Drucken</a></li>
-			<li><a href="basic_preferences.htm">Einstellungen &auml;ndern</a></li>
-			<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-			<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
-			<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-			<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
-			<li><a href="basic_bugs.htm">Fehlerbericht &uuml;bermitteln</a></li>
-			<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
-			<li><a href="basic_license.htm">Lizenz</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+<p>Nach der Installation setzt TeXShop LaTeX-Dokumente mit pdfLaTeX, das direkt eine PDF-Datei schreibt; das Vorschaufenster zeigt diese Datei. Es ist eine gewöhnliche PDF-Datei, die Sie weitergeben und auf jedem Computer lesen können. Um mit einer anderen Engine wie LuaLaTeX zu setzen, wählen Sie in den Einstellungen ein Engine-Profil oder nennen die Engine am Anfang des Dokuments; siehe <a href="basic_typesetting.htm#engine">Dokumente setzen</a>.</p>
+
+<h2>Was diese Hilfe enthält</h2>
+<dl>
+<dt><a href="basic.htm">Grundlagen</a></dt>
+<dd>TeX Live und TeXShop installieren, setzen, das Vorschaufenster, bearbeiten, suchen und ersetzen, Rechtschreibprüfung, Tastenbelegungen und Befehlsvervollständigung, die Paletten, Makros, Drucken und die Einstellungen.</dd>
+<dt><a href="advanced.htm">Erweitert</a></dt>
+<dd>Satz-Engines, Projekte mit einer Hauptdatei, BibTeX und MakeIndex, Kodierungen, externe Editoren, Syntaxhervorhebung und weitere Themen.</dd>
+<dt><a href="macros.htm">Hilfe zu Makros</a></dt>
+<dd>Das Menü „Makros“, der Makro-Editor und Makros in AppleScript.</dd>
+<dt><a href="configure.htm">Wie konfiguriere ich TeXShop?</a></dt>
+<dd>Empfohlene Einstellungen, neue Objekte für ~/Library/TeXShop, versteckte Einstellungen, Tastenbelegungen und Tastaturkurzbefehle.</dd>
+</dl>
+
+<p>Das Menü „Hilfe“ öffnet weitere Dokumente, die auf Englisch vorliegen. Das TeXShop Handbuch beschreibt alle Funktionen ausführlich. „Erste Schritte mit TeXShop“ ist eine kurze Einführung für neue Benutzer. „Über diese Version“ sagt, ob nach einem Update etwas zu tun ist, und „Änderungen“ führt auf, was jede Version geändert hat. „Kommentarzeilen und versteckte Einstellungen“ listet die magischen Kommentarzeilen wie <code>% !TEX program =</code> und die Einstellungen, die das Fenster „Einstellungen“ nicht zeigt.</p>
+
+<p>Die Website von TeXShop ist <a href="https://texshop.app/">texshop.app</a>.</p>
+</main>
+</body>
+</html>

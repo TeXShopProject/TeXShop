@@ -1,114 +1,70 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>個人用のファイルをTeX Liveに追加する</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="個人用texmfツリー; ~/Library/texmf; TEXMFHOME; styファイルの追加; クラスの追加; bibファイル; bstファイル; kpsewhich">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm" class="current">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
+<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
+<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
+<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
+<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
+<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>個人用のファイルをTeX Liveに追加する</h1>
+<p>TeX Liveに含まれないスタイルファイル、クラス、文献データベースなどは、個人用のTeXツリー、つまりホームフォルダのライブラリフォルダにある<code>texmf</code>フォルダ（<code>~/Library/texmf</code>）に置きます。TeX Liveのどのプログラムもここにあるファイルを見つけ、TeX Live自身にある同じ名前のファイルよりも優先して使います。ファイルを追加したあとに登録の作業は要りません。次のタイプセットで見つかります。</p>
+<p>ライブラリフォルダはFinderでは隠されています。開くには、Finderで「移動」→「フォルダへ移動…」を選び、<code>~/Library</code>と入力します。<code>texmf</code>フォルダがまだなければ、そこに作ります。</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-		<TITLE>スタイルとマクロをTeX Liveに追加する</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="ローカルなtexmfフォルダと環境変数について">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<h2>パッケージを追加する前に</h2>
+<p>CTANにあるパッケージのほとんどはTeX Liveにすでに含まれていて、MacTeXはそのすべてをインストールします。TeXがあるファイルをすでに持っているかどうかは、TeXShopで「ファイル」→「スタイルファイルを開く...」を選び、<code>hyperref.sty</code>のようにファイル名を入力すれば分かります。TeXが使うファイルが開きます。個人用のツリーにパッケージを追加するのは、TeX Liveにないときか、独自の版が必要なときだけにします。自分のコピーが優先されるので、TeX Liveの版が追いついたら削除してください。そのままでは古い版を使い続けることになります。</p>
 
-<body>	
-
-<div id="content_border">
-<p>
-どのTeXディストリビューションも、個人的に追加したもの（自作のスタイルファイルや、メインのディストリビューションに含まれていないパッケージなど）は、ローカルなフォルダ（ディレクトリ）の中にあるものとしています。このフォルダの名前は「texmf」で、TeXのプログラムがファイルを正しく見つけられるように、決まった構造のサブフォルダを持っています。
-</p>
-
-<p>
-Macでは、ローカルなtexmfフォルダはホームディレクトリのライブラリフォルダの中にあります。これはふつう「~/Library/texmf」と表記されます。「~」は「ホームディレクトリ」（Finderウインドウでホームのアイコンをクリックしたときに開くフォルダ）を意味します。
-</p>
-
-<h2>ローカルなtexmfに置くのはどんなときか？</h2>
-
-<p>
-ローカルなtexmfフォルダに何かを置く前に、そのパッケージがすでにTeX Liveの一部になっていないか──つまりMacTeXディストリビューションに含まれていないか──を確認してください。いちばん簡単なのはTeX Live Utilityを使う方法です。特にCTANにあるパッケージは、そのほとんどがTeX Liveに含まれており、すでに利用できるはずです。
-</p>
-
-<p>
-パッケージがTeX Liveに含まれていないとわかっている場合は、ローカルなtexmfフォルダに置いてください。
-</p>
-
-<h2>何をどこに置くか？</h2>
-
-<p>
-texmfフォルダはいくつかのフォルダを含み、それらのフォルダがさらに別のフォルダを含んでいます。たいていのユーザにとって重要なのは、次の3つの最上位フォルダです。
-</p>
-
+<h2>ファイルを置く場所</h2>
+<p><code>texmf</code>の中のフォルダは、TeX Liveと同じ構成にします。必要なフォルダを作ってください。</p>
 <table>
-<tr><th>フォルダ</th><th>置くもの</th></tr>
-<tr><th>bibtex</th><td>bibファイルとbstファイルを置く場所です。少なくとも次のフォルダが必要です：</td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>bst</td><td>bstファイルをここに置きます。</td></tr>
-<tr><td>bib</td><td>bibファイルをここに置きます。</td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><th>tex</th><td>新しいパッケージを置く場所です。次のフォルダが必要です：</td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>latex</td><td>LaTeXのパッケージをここに置きます。</td></tr>
-<tr><td>plain</td><td>plain TeXのファイルをここに置きます。</td></tr>
-<tr><td>xelatex</td><td>XeLaTeX専用のパッケージをここに置きます。</td></tr>
-<tr><td>xetex</td><td>plain XeTeXのファイルをここに置きます。</td></tr>
-<tr><td>context</td><td>ConTeXtのファイルをここに置きます。</td></tr>
-<tr><td>generic</td><td>どの種類のTeXでも使えるファイルをここに置きます。</td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><th>doc</th><td>texフォルダにインストールしたパッケージのドキュメントをここに置きます。ここに置いておくと、texdocの仕組み（あるいはTeXShopのヘルプメニューの「パッケージのヘルプを表示...」）でドキュメントが見つかるようになります。</td></tr>
+<tr><th>フォルダ</th><th>内容</th></tr>
+<tr><td><code>tex/latex/</code></td><td>LaTeXのパッケージとクラス（.sty、.cls）。パッケージごとにフォルダを分けます</td></tr>
+<tr><td><code>tex/plain/</code></td><td>plain TeX用のファイル</td></tr>
+<tr><td><code>tex/generic/</code></td><td>どのフォーマットでも使えるファイル</td></tr>
+<tr><td><code>bibtex/bib/</code></td><td>文献データベース（.bib）</td></tr>
+<tr><td><code>bibtex/bst/</code></td><td>文献スタイル（.bst）</td></tr>
+<tr><td><code>doc/</code></td><td>追加したパッケージのドキュメント。「ヘルプ」→「パッケージのヘルプを表示...」でここにあるものも開けます</td></tr>
 </table>
+<p>たとえば、自作のマクロのパッケージと文献データベースは次のように置きます。</p>
+<pre>~/Library/texmf/tex/latex/mymacros/mymacros.sty
+~/Library/texmf/bibtex/bib/mybibliography.bib</pre>
+<p>こうすると、どこに保存した書類でも<code>\usepackage{mymacros}</code>や<code>\bibliography{mybibliography}</code>が使えます。</p>
 
-<p>
-その他の最上位フォルダには、fonts、scripts、sourceがあります。
-</p>
-
-<h2>環境変数</h2>
-
-<p>
-他のUNIXマシンでは、個人的な入力ファイルの所在を、環境変数（TEXINPUTS・BSTINPUTSおよびBIBINPUTS）の設定によってTeXに知らせることがあります。TeX Liveではまずその必要はありません。代わりに、個人的な入力ファイルを ~/Library/texmf の適切なサブディレクトリに置いてください。
-</p>
-
-<p>
-ごく特殊な状況では、これらの環境変数を設定することもできます。Mac OS Xでは、ホームディレクトリに ~/.MacOSX/environment.plist というファイルを作成することで、プログラムに環境変数を知らせることができます。これらの環境変数はすべてのユーザシェルとすべてのCarbonおよびCocoaプログラムに読み込まれるので、このファイルを作成する際には注意が必要です。
-</p>
-
-<p>
-下にあるのはNathan Potterさんが送ってくれたenvironment.plistファイルのサンプルです ； ありがとう！ さらなる詳細については
-<a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>
-でお調べください。
-</p>
-
-<br>
-<center><img align=center src="environment.tiff" border=3></center>
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title">スタイルとマクロをTeX Liveに追加する</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
-			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
-			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
-			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
-			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
-			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
-			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
-			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
-			<li><a href="advanced_plist.htm">Plistファイル</a>
-			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-		</ul>
-	</div>
-	</body>
-
-</HTML>
+<h2>フォルダを確かめる</h2>
+<p>TeXが個人用のツリーとして使うフォルダは、ターミナルで次のように入力すると分かります。</p>
+<pre>kpsewhich -var-value TEXMFHOME</pre>
+<p>インストールで別の設定をしていなければ、Macでは<code>~/Library/texmf</code>です。あるファイルのどのコピーをTeXが読むかは、たとえば<code>kpsewhich mymacros.sty</code>と入力すれば分かります。</p>
+<p>TeX Live自身のフォルダにはファイルを追加しないでください。<a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a>を参照してください。</p>
+</main>
+</body>
+</html>

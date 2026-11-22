@@ -1,48 +1,65 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel matrices</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="panel matrices; matriz; array; tabular; tabla; delimitadores; matriz identidad; hoja de cálculo; matrixpanel_1.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edición</a></li>
+<li><a href="basic_find.htm">Buscar y reemplazar</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Autocompletado de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm" class="current">Panel matrices</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
+<li><a href="basic_license.htm">Licencia</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Panel matrices</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Panel matrices</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="panel matrices; matriz">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<p>Ventana › Panel matrices... abre un panel que escribe matrices y tablas por usted. Rellene las entradas en su tabla, elija qué aspecto debe tener el resultado e insértelo en el código fuente en el punto de inserción.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>En el men&uacute; Ventana podemos encontrar el &iacute;tem &laquo;Panel matrices...&raquo;. Eligi&eacute;ndolo, se abre un panel que facilita la creaci&oacute;n de matrices. El espacio para cada entrada de la matriz es muy peque&ntilde;o; si queremos escribir algo m&aacute;s grande, una buena idea es editarlo en otro sitio, copiarlo, y pegarlo en la matriz. Este magn&iacute;fico panel ha sido fruto del trabajo de Jonas Zimmermann, cuyo correo electr&oacute;nico es <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a>.</P>
-<p> En TeXShop 1.35, &laquo;Panel matrices...&raquo; tambi&eacute;n puede crear tablas. 
-Este panel se puede configurar usando el archivo &laquo;matrixpanel_1.plist&raquo; de ~/Library/TeXShop/MatrixPanel. La estructura de este archivo ha sido revisado en TeXShop 1.35; posiblemente tambi&eacute;n tengas un archivo antiguo llamado &laquo;matrixpanel.plist&raquo;, que provendr&aacute; de TeXShop 1.34.</p>
-<p>La tabla funciona como una hoja de c&aacute;lculo. Haz clic en una celda para elegirla, arrastra o haz clic con May&uacute;sculas para elegir varias, y escribe para reemplazar el valor; haz doble clic, pulsa F2 o pulsa Control-U para editarlo. Retorno baja, Tabulador va a la derecha y las flechas mueven en cualquier direcci&oacute;n; Suprimir vac&iacute;a las celdas elegidas. Copiar y Pegar intercambian celdas con aplicaciones de hojas de c&aacute;lculo. Arrastra el n&uacute;mero de una fila para moverla, y pulsa Comando-Retorno para insertar la matriz. Una matriz puede tener hasta 999 filas y columnas; las celdas fuera de la matriz conservan sus valores, mostrados en gris.</p> 
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda b&aacute;sica</div><div id="header_title">Panel matrices</div>
-		<div id="menu_border">
-		<ul>
-			<LI><a href="basic_preliminaries.htm">Preliminares</a>
-			<LI><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">C&oacute;mo obtener e instalar TeXShop</a>
-			<li><a href="basic_typesetting.htm">Componer (&lsquo;typeset&rsquo;) documentos</a>
-			<li><a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a>
-			<li><a href="basic_spelling.htm">Correcci&oacute;n ortogr&aacute;fica</a>
-			<li><a href="basic_latexpanel.htm">Panel LaTeX</a>
-			<li><a href="basic_matrixpanel.htm">Panel matrices</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a>
-			<li><a href="basic_graphics.htm">Inclusi&oacute;n de gr&aacute;ficos</a>
-			<li><a href="basic_printing.htm">Imprimir</a>
-			<li><a href="basic_preferences.htm">Establecer ajustes</a>
-			<li><a href="basic_templates.htm">Personalizaci&oacute;n del men&uacute; Plantillas</a>
-			<li><a href="basic_edittricks.htm">Trucos de edici&oacute;n</a>
-			<li><a href="basic_autocompletion.htm">Autocompleci&oacute;n</a>
-			<li><a href="basic_commandcompletion.htm">Compleci&oacute;n de comandos</a>
-			<li><a href="basic_bugs.htm">Notificaci&oacute;n de errores (&lsquo;bugs&rsquo;)</a>
-			<li><a href="basic_websites.htm">Sitios web &uacute;tiles</a>
-			<li><a href="basic_license.htm">Licencia</a>
-			<li><a href="basic_thistranslation.htm">Sobre la traducci&oacute;n a espa&ntilde;ol</a>
-		</UL>
-	</div>
-	</BODY>
+<h2>Crear una matriz o una tabla</h2>
+<ol>
+<li>Indique el tamaño en Filas y Columnas, hasta 999 de cada.</li>
+<li>En Entorno, elija matrix para una matriz dentro de una fórmula (un entorno <code>array</code>) o tabular para una tabla de texto. Con tabular, «Embeber en entorno table» pone la tabla dentro de un flotante <code>table</code> con un pie y una etiqueta.</li>
+<li>Para una matriz, elija los delimitadores izquierdo y derecho. El punto deja ese lado sin delimitador, y el último botón usa el delimitador escrito en el campo que tiene al lado.</li>
+<li>Los dos botones con dibujos de una matriz añaden un borde alrededor de las entradas y líneas entre ellas.</li>
+<li>Rellene las entradas. Borrar las vacía todas; Matriz identidad y Matriz cero las rellenan con una matriz identidad o con ceros.</li>
+<li>Haga clic en Insertar o pulse <kbd>⌘Retorno</kbd>.</li>
+</ol>
 
-</HTML>
+<h2>Trabajar en la tabla</h2>
+<p>La tabla funciona como una hoja de cálculo. Haga clic en una celda para elegirla, arrastre o haga clic con Mayúsculas para elegir varias, y escriba para sustituir el valor; haga doble clic, pulse F2 o pulse Control-U para editarlo. Retorno baja, Tabulador va a la derecha y las teclas de flecha mueven en cualquier dirección; la tecla de borrar vacía las celdas elegidas. Copiar y Pegar intercambian celdas con aplicaciones de hoja de cálculo. Arrastre el número de una fila para mover la fila. Deshacer y Rehacer funcionan en la tabla mientras el panel está activo.</p>
+<p>Cuando se reduce la matriz, las celdas que quedan fuera conservan sus valores, que se muestran en gris, y vuelven cuando se amplía de nuevo. Agrande el panel para ver más parte de la tabla.</p>
+
+<h2>Personalizar el código insertado</h2>
+<p>El código que el panel escribe alrededor de las entradas se guarda en <code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code>: el principio y el final de los entornos, los delimitadores, los separadores entre entradas y entre filas, las líneas de un borde o una cuadrícula, y la letra <code>c</code> que establece la alineación de cada columna. Por ejemplo, cambie <code>c</code> por <code>r</code> para alinear las columnas a la derecha. Mantenga el número y el orden de las cadenas del archivo, y reinicie TeXShop después de modificarlo. Consulte <a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

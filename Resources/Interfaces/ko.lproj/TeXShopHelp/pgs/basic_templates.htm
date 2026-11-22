@@ -1,59 +1,60 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>템플릿과 스테이셔너리</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="템플릿; 템플릿 메뉴; ~/Library/TeXShop/Templates; More; 템플릿에서 새 파일; 스테이셔너리; Stationery 폴더">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm" class="current">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>템플릿과 스테이셔너리</h1>
+<h2>템플릿</h2>
+<p>소스 윈도우 도구 막대의 템플릿 메뉴는 삽입 위치에 템플릿을 삽입하며, 현재 행과 같은 들여쓰기를 적용합니다. TeXShop에는 다음 템플릿이 들어 있습니다.</p>
+<ul>
+<li>LatexTemplate, XeLaTeX Template, LatexSpanishTemplate, BeamerTemplate: LaTeX 논문, XeLaTeX 문서, 스페인어 LaTeX 논문, Beamer 프레젠테이션의 첫 부분</li>
+<li>TexTemplate: plain TeX 문서를 끝맺는 <code>\end</code></li>
+<li>GraphicsTemplate: 그림을 넣는 코드</li>
+<li>TeX4ht-Header, TeX4ht-Interactive: TeX4ht로 HTML로 변환할 문서를 위한 코드</li>
+<li>More: 프리앰블, article, letter, memoir 같은 문서 클래스, 플로트 그림과 표, <code>align</code>이나 행렬 같은 수식 배치를 모은 하위 메뉴</li>
+</ul>
+<p>템플릿은 <code>~/Library/TeXShop/Templates</code>에 있는 일반 파일입니다. TeXShop › ~/라이브러리/TeXshop 폴더열기를 선택하면 그 폴더로 갈 수 있습니다. 모든 논문에 쓰는 프리앰블처럼 자신만의 템플릿을 만들려면 확장자가 <code>.tex</code>인 파일을 이 폴더에 저장하거나, 템플릿을 복제하여 고칩니다. 하위 폴더는 하위 메뉴가 됩니다. 추가하거나 이름을 바꾸거나 제거한 템플릿은 그 후에 여는 윈도우의 메뉴에 반영됩니다.</p>
+<p>TeXShop을 업데이트해도 이 폴더는 변경되지 않으므로 사용자의 템플릿은 그대로 유지됩니다. 원래 템플릿을 되찾으려면 Templates 폴더를 <code>~/Library/TeXShop</code> 밖으로, 예를 들어 데스크탑으로 옮기고 TeXShop을 다시 시작하십시오. TeXShop이 자체 템플릿으로 폴더를 다시 만듭니다.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Modifying the Templates Menu</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="modifying templates; template files; hierarchical menu; subfolder">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-	<div id="content_border">
-		<P>When TeXShop runs for the first time, it creates a folder</P>
-		<dl>
-			<dd>~/Library/TeXShop/Templates
-		</dl>
-		<p>and places the files Graphics.tex  and LatexTemplate.tex (and a folder named "More" of additional files) in this folder. The names of these files are shown under the Templates pull down menu at the top of the input window. Choosing one of these items inserts the contents of the template file at the current cursor position in the source. The Graphics and LaTeX templates were recently revised by Will Robertson to follow modern
-TeX practices; Robertson provided the templates in the More subdirectory.</p>
-		<p>Template files are standard TeX files which can be opened and edited by TeXShop. Additional TeX files can be inserted into the Templates folder; they will also appear under the Templates pull down menu provided their names end with the extension &quot;.tex&quot;.  The original template files can be removed if desired.</p>
-<p>To create a hierarchical structure in the Templates menu, place some of the template files in subfolders of ~/Library/TeXShop/Templates.</p>
-		<p>To restore the original template files, delete the Templates folder and run TeXShop again. It will recreate the folder and restore its original contents. </p>
-		<p>When users upgrade TeXShop, the templates folder is not updated because the user may have
-modified it. If an upgrade changes default templates, the new templates will appear in ~/Library/TeXShop/New. Drag those you want into the Templates folder. Changes will be reported in "About This Release" under the Help menu.</p>
-<p> The commands \usepackage{amssymb} and \usepackage{graphicx} mentioned earlier are included in recent copies of the LatexTemplate, but not in copies from very old versions of TeXShop.</p>
-		<ul>
-			
-		</ul>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Modifying the Templates Menu</div>
-
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>스테이셔너리</h2>
+<p>파일 › 템플릿에서 새 파일...은 완성된 견본으로 새 문서를 시작합니다. 각 견본의 설명이 표시된 목록에서 하나를 선택하고 확인을 클릭하십시오. 새 문서는 이름이 없는 상태이므로 원하는 곳에 저장합니다. TeXShop에는 AMS 논문, Beamer 프레젠테이션, 편지, PreTeXt 문서, 루트 파일과 장 하나로 된 프로젝트, XeLaTeX 문서의 스테이셔너리가 들어 있습니다.</p>
+<p>스테이셔너리는 <code>~/Library/TeXShop/Stationery</code>에 보관됩니다. 자신만의 스테이셔너리를 추가하려면 <code>Report.tex</code> 같은 파일을 그 폴더에 넣고, 그 파일을 설명하는 한 문장을 담은 <code>Report.comment</code> 파일을 함께 넣으십시오.</p>
+</main>
+</body>
+</html>

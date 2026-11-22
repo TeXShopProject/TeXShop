@@ -1,92 +1,86 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adding Typesetting Engines</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="engine; engine file; .engine; Engines folder; % !TEX program; % !TEX parameter; Alternate Engine; Inactive; shell script">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
+<li><a href="advanced_addengine.htm" class="current">Adding Typesetting Engines</a></li>
+<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
+<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
+<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
+<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
+<li><a href="advanced_experiments.htm">Experiments</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
+<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
+<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Adding Typesetting Engines</h1>
+<p>Besides plain TeX and LaTeX, TeXShop typesets with <em>engines</em>: small shell scripts with the extension <code>.engine</code> in the folder <code>~/Library/TeXShop/Engines</code>. An engine can run a single program, or a chain of programs, for instance LuaLaTeX, then Biber, then LuaLaTeX twice more. TeXShop comes with engines such as LuaLaTeX, XeLaTeX and pdflatexmk; the subfolder <code>Inactive</code> holds many more.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Adding Additional Typesetting Engines</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="bibtex; bibliography; citation">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Choosing an engine</h2>
+<p>The pop-up menu beside the Typeset button in the toolbar of the source window lists the engines. Choose one and press Typeset or <kbd>⌘T</kbd>. The choice applies to that document only.</p>
+<p>To typeset new documents with an engine, choose “Engine File” in Settings › Typesetting › Engine › Typeset New Documents With, and choose the engine in the Engine File menu below it. “Edit Engine List…” opens the Engines folder in the Finder; the Engine File menu follows the folder as you add, remove or rename files. If the chosen engine file is no longer in the folder, the menu shows it as not found and documents are typeset with LaTeX.</p>
+<p>To tie a document to an engine, put a line like this in one of its first twenty lines:</p>
+<pre>% !TEX program = XeLaTeX</pre>
+<p>The name is the name of the engine file without <code>.engine</code>; <code>tex</code> and <code>latex</code> typeset plain TeX and LaTeX Via DVI, and <code>pdftex</code> and <code>pdflatex</code> typeset them Direct PDF. The line takes precedence over the toolbar, over Settings and over Typeset with Alternate Engine. The form <code>% !TEX TS-program =</code> is read the same way. Write the line exactly as shown, with one space on each side of the equals sign; the Program macro in the Macros menu lists the engines and inserts the line for you. In a project with a root file, only the root file needs the line.</p>
+<p>Typeset › Typeset with Alternate Engine (<kbd>⌃⌥⌘T</kbd>) typesets once with the engine in Settings › Typesetting › Engine › Alternate Engine, pdflatexmk by default, without changing the toolbar. It suits documents that are usually typeset in one fast pass and occasionally completely, with latexmk.</p>
 
-<BODY>
-	<div id="content_border">
-	
-<p> TeXShop has several build-in methods to typeset documents. But it is possible to add additional typesetting methods; these new methods are called "engines."</p>
+<h2>Writing an engine</h2>
+<p>The easiest way to make an engine is to duplicate one in the Engines folder in the Finder, rename the copy, and open it in TeXShop to edit it. An engine file must have the extension <code>.engine</code> and permission to be executed, which a duplicate keeps. Documents opened afterwards list the new engine in their toolbar. Here is XeLaTeX.engine:</p>
+<pre>#!/bin/tcsh
 
-<p> An engine can call any sequence of programs in a processing chain which starts from a tex source file and ends with a pdf output file. Strictly speaking, even this pdf output file is optional; one engine supplied with TeXShop uses the TeX Live program tex4ht to convert LaTeX source to an html file; TeXShop then shows the html file in its HTML window, beside the pdf. Instructions for the sequence of programs called by an engine are given in a shell script.</p> 
-
-<p>There is a folder in ~/Library/TeXShop named Engines; the files in this folder are shell
-scripts which call typesetting programs. When TeXShop first starts, it examines this folder and adds
-the script names of files it contains to the pull-down typesetting menu. Choosing one of these
-items and pushing the Typeset button calls the script. Users can write their own scripts and add them
-to the Engines folder. Each such script must have a name without spaces, and extension ".engine",
-and have the executable bit set.</p>
-
-<p> Items in ~/Library/TeXShop/Engines can be chosen as the default typesetting method in TeXShop Settings.
-Notice that when a method is listed in Settings, its name is given without the extension.</p>
-
-<p> The default program can be set on one of the first twenty lines of the source code by writing
-a line like </p>
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+xelatex  -file-line-error -synctex=1 "$1"</pre>
+<p>The first line names the shell or language of the script; zsh, bash, tcsh, Perl and others all work, as long as the script is written in that language. TeXShop runs the engine in the folder of the source file and passes it three values:</p>
 <dl>
-<dd> % !TEX TS-program = xelatex
+<dt><code>$1</code></dt><dd>The name of the source file with its extension, without its folder, such as <code>main.tex</code>. A script that changes to another folder must note the full path first, for instance as <code>"$PWD/$1"</code>. In a project, this is the root file.</dd>
+<dt><code>$2</code></dt><dd>The rest of a line <code>% !TEX parameter = …</code> near the top of the source (root file), with several flags separated by spaces, for instance <code>% !TEX parameter = -shell-escape</code>. Without such a line it is a single space.</dd>
+<dt><code>$3</code></dt><dd>The folder in the TeX Engines field of Settings › Typesetting › Paths, or the folder in Second TeX Engines when the document contains the line <code>% !TEX useAlternatePath</code>.</dd>
 </dl>
-<p> There must be one space before and one space after the equal sign. A Macro supplied with TeXShop makes adding this line easy; the Macro lists all active engines, making it possible to select the desired engine from a dialog list.</p>
+<p>When the engine ends, TeXShop opens the PDF file with the name of the source and the extension <code>.pdf</code> in the Preview window, if there is one, and scrolls to the place shown before typesetting. A script that produces other output can say what to show with the following lines, written anywhere in the engine inside a comment of its language:</p>
+<table>
+<tr><th>Line</th><th>Effect</th></tr>
+<tr><td><code>!TEX-noPreview</code></td><td>no Preview window, even if other lines below are present</td></tr>
+<tr><td><code>!TEX-pdfPreview</code></td><td>show the PDF file</td></tr>
+<tr><td><code>!TEX-htmlPreview</code></td><td>show the HTML file of the same name in the HTML window</td></tr>
+<tr><td><code>!TEX-bothPreview</code></td><td>show both the PDF file and the HTML file</td></tr>
+<tr><td><code>!TEX-noConsole</code></td><td>do not show the console</td></tr>
+</table>
+<p>For example, an engine that runs LuaLaTeX, Biber and LuaLaTeX twice more could read, in zsh, where <code>${1:r}</code> is the name without its extension:</p>
+<pre>#!/bin/zsh
+export PATH="/Library/TeX/texbin:$PATH"
+lualatex -file-line-error -synctex=1 "$1"
+biber "${1:r}"
+lualatex -file-line-error -synctex=1 "$1"
+lualatex -file-line-error -synctex=1 "$1"</pre>
 
-<p> This syntax was later adopted by TeXworks and other front ends. To make life easier when
-collaborating, TeXShop also accepts the TeXworks form of the command:
-<dl>
-<dd> % !TEX program = xelatex
-</dl>
-
-
-<p> The "% !TEX TS-program = ..." line takes precedence over the typesetting method selected in the toolbar. For example, if the above line selecting "xelatex" is in the source document, then hitting the typeset button or selecting "Typeset" in the typesetting menu, or selecting the keyboard equivalent of this command, will typeset the document using xelatex, even if pdflatex is the default typesetting method selected in the toolbar's pulldown menu. If a project contains a root file and several associated chapter files, only the root file needs a "% !TEX TS-program " line.</p>
-
-<p>When writing a new engine file, it is convenient to start by duplicating an existing engine in ~/Library/TeXShop/Engines. The resulting file will automatically have its execute bit set. The file can then be edited with TeXShop to create the new engine.</p>
-
-<p> The ~/Library/TeXShop/Engines folder contains a subfolder named "Inactive" with many additional engine scripts. Examining these scripts will show by example how engine files are written. When an engine is called, the variable "$1" contains the name of the source file active when the engine was called, without its folder, and the engine starts in the folder that holds this file. For example, for /Users/me/paper/main.tex, "$1" is main.tex and the engine runs in /Users/me/paper. A script that changes to another folder must therefore first note the full path, for instance as "$PWD/$1". The extension of this file may or may not be ".tex". The engine script may contain many intermediate steps, creating various auxiliary files and processing them with alternate command line programs. TeXShop assumes that in the end a pdf file will be created with the same name as the source file but extension ".pdf". In that case TeXShop will automatically open the pdf file when the engine run ends and scroll to the same spot in this pdf file as in the previous pdf before typesetting. But if no pdf file is produced, TeXShop will ignore this step. In that case, it is up to the engine script to open the result in an appropriate program if desired.</p>
-
-<p> Engine scripts can be written in any convenient language. Most engines use tcsh or zsh, but scripts written in perl and other languages will also work.</p>
-
-<p>Engines sometimes use the follow strategy: they typeset  an input file, creating an auxiliary file with the same name but some other extension, and then process this  auxiliary file using some other program. The sage engine in the "Inactive" folder shows an example;  the auxiliary file has extension ".sage" and must be processed by the Sage symbolic mathematics engine. The following code snippet from the sage engine is useful in this kind of situation: </p>
-<dl>
-<dd> sagename=${filename/%tex/sagetex.sage}
-</dl>
-<p> Here ${filename/%tex/sagetex.sage} replaces the "tex" at the end of the name of the file with "sagetex.sage", the name of the file that sagetex writes.</p>
-
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Additional Typesetting Engines</div>
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_Japan.htm">Settings for Japan</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>The Inactive folder</h2>
+<p>The subfolder <code>Engines/Inactive</code> contains engines for special workflows, often with documentation and samples, for instance for latexmk, ConTeXt, Sage, PreTeXt, pythontex and Typst. To use one, move it from its folder to the Engines folder itself. When TeXShop is updated, the Inactive folder is replaced with the current version, while the files directly in the Engines folder are never touched, so engines you edited are kept.</p>
+<p>For more about engines, see the chapters on typesetting engines in Help › TeXShop Manual.</p>
+</main>
+</body>
+</html>

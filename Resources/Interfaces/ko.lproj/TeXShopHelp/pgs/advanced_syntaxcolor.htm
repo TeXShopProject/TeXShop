@@ -1,59 +1,67 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>구문 하이라이트</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="구문 하이라이트; 구문 색상; 색상; 테마; expl3; 색인 항목; 각주; 마커; 괄호; 전각; SyntaxColoringEnabled">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm" class="current">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>구문 하이라이트</h1>
+<p>소스 윈도우는 TeX를 색으로 구분하여 보여 줍니다. 주석, 명령, 각주, 마커 <code>$</code>와 <code>&amp;</code>, 괄호 <code>( )</code>, <code>{ }</code>, <code>[ ]</code>가 각각 고유한 색으로 표시됩니다. 소스 › 구문 하이라이트는 현재 문서의 하이라이트를 켜거나 끕니다. 문서는 하이라이트가 켜진 상태로 열리며, 꺼진 상태로 열려면 다음 숨겨진 설정을 사용합니다.</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-		<TITLE>Syntax Highlighting</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="syntax highlighting; syntax color; defaults; changing syntax colors">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>하이라이트되는 것</h2>
+<ul>
+<li>명령은 백슬래시 뒤에 영문자가 이어진 것입니다. 설정 › 편집기 › 구문 하이라이트 › “@를 명령 이름의 일부로 취급”을 켜면, 패키지의 내부 명령처럼 <code>@</code>도 영문자로 취급합니다.</li>
+<li><code>\footnote</code>, <code>\footcite</code>, <code>\autocite</code>의 텍스트는 각주 색상으로 표시됩니다. 숨겨진 설정 <code>defaults write TeXShop SyntaxColorFootnote NO</code>를 사용하면 명령에만 색이 칠해집니다.</li>
+<li>소스 › 색인 항목 하이라이트는 <code>\index</code>와 <code>\esindex</code>의 인수를 인덱스 색상으로 표시합니다. 설정 › 편집기 › 구문 하이라이트 › “기본으로 색인 항목 하이라이트”를 켜면 문서를 열 때 이 기능이 켜집니다.</li>
+<li>소스 › expl3 코드 하이라이트는 패키지를 작성하는 사용자를 위해, LaTeX의 프로그래밍 계층인 expl3 코드의 함수, 변수 등에도 색을 칠합니다. 같은 그룹의 “기본으로 expl3 코드 하이라이트”를 켜면 문서를 열 때 이 기능이 켜집니다.</li>
+<li>같은 그룹의 “전각 영숫자·기호 강조”는 일본어 텍스트에서 ASCII 문자와 혼동하기 쉬운 전각 영문자, 숫자, 기호를 전각 영숫자·기호 색상으로 표시합니다.</li>
+</ul>
+<p>색인 항목 하이라이트와 expl3 코드 하이라이트는 현재 문서에 적용되며, 소스 윈도우마다 따로 선택합니다. 로그 파일처럼 TeX 소스가 아닌 파일은 하이라이트되지 않습니다. 확장자 목록과 확장자를 추가하는 방법은 <a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a>를 참고하십시오.</p>
 
-<BODY>
-	<div id="content_border">
-<h2>Changing the colors of syntax highlighting</h2>
-		<P>When syntax highlighting is turned on in the source window, comments, commands, and the symbols $, {, and } are shown in their own colors. These colors belong to the theme. To change them, use the “구문 하이라이트” (Syntax Highlighting) group in the “테마” (Themes) category of the Settings window. Each theme has its own colors, so the theme for Light Mode and the theme for Dark Mode can use different colors.</P>
-		<p>Earlier versions of TeXShop set these colors with hidden settings such as markerred, markergreen and markerblue. They are no longer used.</p>
-<h2>Adding to the list of file types</h2>
-<p>There is a hidden setting to add file extensions to the list of files that TeXShop recognizes as source files which can be typeset and syntax colored.  This is useful when you want to use syntax highlighting when editing TeX files with non-standard extensions. For example,</p>
-		<dl>
-			<dd>defaults write TeXShop OtherTeXExtensions -array-add "lbx"
-		</dl>
-<p>tells TeXShop to syntax color biblatex 'lbx' files.<p>
-
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Syntax Highlighting</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>색상 바꾸기</h2>
+<p>색상은 테마에 속하며, 설정 › 테마에서 선택합니다.</p>
+<ul>
+<li>구문 하이라이트 그룹: 주석문, 명령어, 각주, 마커, 인덱스</li>
+<li>괄호 그룹: <code>( )</code>, <code>{ }</code>, <code>[ ]</code>의 색상</li>
+<li>expl3 그룹: function, __function, key, variable, __variable, argument, msg</li>
+<li>강조 그룹: 전각 영숫자·기호 색상 등</li>
+<li>XML 구문 그룹: HTML 파일과 XML 파일의 색상</li>
+</ul>
+<p>테마마다 색상이 따로 있으므로, 밝은 테마와 어두운 테마의 색상을 다르게 할 수 있습니다.</p>
+</main>
+</body>
+</html>

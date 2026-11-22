@@ -1,64 +1,111 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tipps zur Bearbeitung</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Bearbeitungstipps; Klammerpaare; Zeilen auswählen; Kommentar; Einrückung; Menü Markierungen; Aktuelle Umgebung schließen; geteilter Quelltext; Ziehen und Ablegen; Statusleiste; Statistik; Mit Zwischenablage tauschen; Mit Stil kopieren; Zeichentyp umwandeln; Sicherungsdatei">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
+<li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm" class="current">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
+<li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
+<li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_macros.htm">Makros</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
+<li><a href="basic_printing.htm">Drucken</a></li>
+<li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
+<li><a href="basic_license.htm">Lizenz</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Tipps zur Bearbeitung</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Bearbeitungstipps</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Kommentare in Ihren Quelltext einf&uuml;gen, Bilder integrieren oder einfach das Editor-Fenster teilen. Alles ist M&ouml;glich mit dem Editor von TeXShop.">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">
-			<p>Die erweiterte Suchmaske, die Sie unter Einstellungen &gt; Editor &gt; Suchoberfl&auml;che w&auml;hlen, sucht und ersetzt mit regul&auml;ren Ausdr&uuml;cken. Alle Benutzer beginnen mit ihr: Beim ersten Start von TeXShop 6.00 wechseln auch Benutzer fr&uuml;herer Versionen einmal zu ihr, gleich welche Methode sie hatten, und k&ouml;nnen dort wieder eine andere w&auml;hlen. Wer die OgreKit Suchmaske benutzt hat, findet in &bdquo;Weitere Optionen&ldquo; die Ersetzungssyntax OgreKit (\1) gew&auml;hlt. &bdquo;Alle suchen&ldquo; listet alle Treffer mit ihrer Zeilennummer in der Suchmaske auf; ein Klick auf eine Zeile w&auml;hlt den Treffer aus. &bdquo;Alle hervorheben&ldquo;, &bdquo;Alle ausw&auml;hlen&ldquo; und &bdquo;Hervorhebungen entfernen&ldquo; befinden sich im Men&uuml; von &bdquo;Alle suchen&ldquo;. &bdquo;Alles ersetzen&ldquo; wird mit einem einzigen &bdquo;Widerrufen&ldquo; r&uuml;ckg&auml;ngig gemacht. Die Optionen unter den Feldern und hinter der Taste mit den drei Punkten werden gesichert und stehen Ihnen beim n&auml;chsten Start wieder zur Verf&uuml;gung. Ein Klick in das Quelltextfenster legt die Suchmaske hinter dieses Fenster; soll sie vor den Dokumentfenstern bleiben, aktivieren Sie unter Einstellungen &gt; Editor &bdquo;Erweiterte Suchmaske immer im Vordergrund halten&ldquo;.</p>
-			<p>Die Suchmaske verwendet die regul&auml;ren Ausdr&uuml;cke von ICU. Eine geschweifte Klammer, die nicht Teil einer Wiederholung ist, muss als \{ oder \} geschrieben werden. Im Ersatztext stehen $1, $2, ... f&uuml;r die Gruppen und \$ f&uuml;r ein Dollarzeichen; die OgreKit-Syntax mit \1, \2, ... und einem $, das f&uuml;r sich selbst steht, kann in den Optionen gew&auml;hlt werden. Ein Backslash im Ersatztext wird doppelt geschrieben. Die Taste &bdquo;?&ldquo; neben &bdquo;Regul&auml;rer Ausdruck&ldquo; &ouml;ffnet eine Kurzreferenz der Syntax und des Ersatztextes, die auch zeigt, worin sich ICU und OgreKit unterscheiden. Die Felder verwenden eine nichtproportionale Schrift in der Gr&ouml;&szlig;e der Schrift der Quelle und die Farben ihres Themas. Ist &bdquo;Regul&auml;rer Ausdruck&ldquo; ausgeschaltet, werden sie wie TeX in der Quelle eingef&auml;rbt; ist er eingeschaltet, zeigen sie die Teile eines Musters in den Farben des Themas, Fehler in Rot und das, was OgreKit anders liest, in Orange; die Zeile unter den Optionen erkl&auml;rt die Farben.</p>
-			<p><a name="multiplereplace"></a>&bdquo;Mehrfach ersetzen bearbeiten &hellip;&ldquo; im Untermen&uuml; &bdquo;Suchen&ldquo; verwaltet Regels&auml;tze aus Paaren von Suchtext und Ersatztext, die der Reihe nach angewendet und mit einem einzigen &bdquo;Widerrufen&ldquo; r&uuml;ckg&auml;ngig gemacht werden. Die Taste &bdquo;Mehrfach ersetzen &hellip;&ldquo; rechts neben &bdquo;Alles ersetzen&ldquo; in der erweiterten Suchmaske f&uuml;hrt ebenfalls dorthin. Die Regels&auml;tze sind Dateien in ~/Library/TeXShop/MultipleReplace im JSON-Format der Ersetzungsdefinitionen von CotEditor. Das Untermen&uuml; &bdquo;Mehrfach ersetzen&ldquo; wendet einen Regelsatz auf einmal auf den ganzen Text an.</p>
-			<p>Wie Sie in allen Dateien eines in Kapiteldateien geteilten Dokuments suchen und ersetzen, beschreibt <a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a>.</p>
-			<p>&bdquo;Alles ersetzen&ldquo;, &bdquo;Alle suchen&ldquo; und &bdquo;Mehrfach ersetzen&ldquo; laufen im Hintergrund, und das Dokument kann erst bearbeitet werden, wenn sie beendet sind. Dauert einer dieser Vorg&auml;nge l&auml;nger, zeigt ein Dialog am Dokumentfenster, wie viele Treffer er gefunden oder wie viele Regeln er ausgef&uuml;hrt hat; die Taste &bdquo;Abbrechen&ldquo; des Dialogs oder die Escape-Taste h&auml;lt ihn an und l&auml;sst den Text, wie er war.</p>
-			<p>Die Suchmaske sucht auch in den Fenstern der Konsole, der Log-Datei und von Experiment. In der Konsole, der Log-Datei und der Experiment-Konsole, die die Ausgabe von TeX zeigen, ist das Ersetzen abgeblendet.</p>
-			<p>Die OgreKit-Suchmaske von Isao Sonobe steht in den Einstellungen weiterhin als veraltete Wahl zur Verf&uuml;gung; der Wechsel zu ihr oder von ihr zu einer anderen Suche erfordert einen Neustart von TeXShop. Das TeXShop-Handbuch beschreibt die erweiterte Suchmaske ausf&uuml;hrlich.</p>
-			<p>Ganze Zeilengruppen k&ouml;nnen mit einem einfachen Men&uuml;-Befehl auskommentiert werden und sp&auml;ter wieder aktiviert werden. Zeilengruppen k&ouml;nnen mit einem Men&uuml;-Befehl einger&uuml;ckt werden und sp&auml;ter wieder zur&uuml;ck. Wenn eine Zeile mit einer Reihe von Tabulatorspr&uuml;ngen oder Leerzeichen beginnt, so werden nachfolgende Zeilen an der selben Stelle beginnen bis dies durch Dr&uuml;cken der R&uuml;ckstelltaste r&uuml;ckg&auml;ngig gemacht wird. Diese Funktion wurde von Nicol&aacute;s Ojeda B&auml;r aus Argentinien hinzugef&uuml;gt. er ist unter <a href="mailto:lojedaortiz@interlink.com.ar">lojedaortiz@interlink.com.ar</a> zu erreichen. Danke!</p>
-			<p>Das Quelltext-Fenster kann mit Hilfe des Aufteilungswerkzeugs in der Werkzeugleiste in zwei Teile aufgeteilt werden. Nach der Auffteilung wird zwei Mal der selbe Quelltext angezeigt. Wenn Sie auf einer Seite etwas &auml;ndern, wird diese &Auml;nderung auf der anderen Seite sogleich &uuml;bernommen. So k&ouml;nnen Sie eine Stelle bearbeiten und gleichzeitig eine andere betrachten.</p>
-		<p>TeXShop kann bei jedem Sichern eine Sicherungskopie anlegen. Wenn &bdquo;Automatisch sichern und Versionen aktivieren&ldquo; ausgeschaltet ist, schalten Sie unter Einstellungen &gt; Dokumente und Sichern &bdquo;Beim Sichern die vorherige Datei als &sbquo;Name~&lsquo; behalten&ldquo; ein. Die Sicherungskopie hat den Namen der Datei, gefolgt von einer Tilde.</p>
-			<p>Eine Statusleiste unter dem Quelltext zeigt die Zeilen, Zeichen und W&ouml;rter des Dokuments, in Klammern die Anzahl in der Auswahl, sowie Position, Zeile und Spalte der Einf&uuml;gemarke. Zeichen werden so gez&auml;hlt, wie man sie sieht: Ein Buchstabe mit Akzent oder ein Emoji z&auml;hlt als eines, und TeX-Befehle werden so gez&auml;hlt, wie sie geschrieben sind. Rechts steht die Gr&ouml;&szlig;e der gesicherten Datei. &bdquo;Quelltext &gt; Statusleiste einblenden&ldquo; blendet die Statusleiste in allen Fenstern ein oder aus.</p>
-			<p>&bdquo;Textstatistik &hellip;&ldquo; in der Statusleiste oder &bdquo;Bearbeiten &gt; Statistik ...&ldquo; z&auml;hlt den Text ohne die TeX-Befehle. Das TeX-Live-Programm detex entfernt sie aus dem Dokument oder aus der Auswahl und nimmt die mit \input und \include gelesenen Dateien hinzu; TeXShop z&auml;hlt den Rest so wie die Statusleiste. Das Dokument muss nicht gesichert werden. Gez&auml;hlt wird, wenn sich das Popover &ouml;ffnet und wenn man auf die Taste zum Aktualisieren klickt; oben steht die Uhrzeit der Z&auml;hlung.</p>
-			<p>Dateisymbole k&ouml;nnen per &bdquo;Drag and Drop&ldquo; in den Quelltext eingef&uuml;gt werden. Ist die einzuf&uuml;gende Datei ein tex-Dokument, wird der &bdquo;\input&ldquo;-Befehl zusammen mit dem relativen Pfad eingef&uuml;gt. Handelt es sich bei der einzuf&uuml;genden Datei um eine Grafik, so wird der Befehl &bdquo;\includegraphics&ldquo; eingef&uuml;gt. Folgende Grafikformate werden unterst&uuml;tzt: pdf, jpg, jpeg, tif, tiff, eps, ps. </p>
-			<p>Wird eine cls-Datei eingef&uuml;gt, so wird der Befehl &bdquo;\documentclass&ldquo; mit einer Dateireferenz hinzugef&uuml;gt. Eine sty-Datei produziert &bdquo;\usepackage&ldquo; eine bib-Datei &bdquo;\bibliographystyle&ldquo; und eine Text-Datei &bdquo;\input&ldquo;.</p>
-			<p>Drag &amp; drop l&ouml;st Aliase auf. Das bedeutet, das eine per drag&amp;drop eingef&uuml;gte Grafik, die eigentlich ein Alias ist, korrekt gesetzt wird und zu keiner Fehlermeldung f&uuml;hrt. TeX selbst kann zwar keine Aliase, jedoch smbolische Verkn&uuml;pfungen aufl&ouml;sen. Wird also der Name der (Alias-)Datei direkt im Quelltext eingegeben, wird beim Setzen ein Fehler angezeigt.</p>
-			<p>Das Verhalten bei &bdquo;Drag and Drop&ldquo; kann an Ihre Bed&uuml;rfnisse angepasst werden. Dies geschieht &uuml;ber das Makro-Men&uuml;. F&uuml;gen Sie hier ein neues Untermen&uuml; mit dem Namen &bdquo;Drag &amp; Drop&ldquo; ein.  In diesem Untermen&uuml; m&uuml;ssen Sie einzelne Objekte mit dem Suffix-Namen der Datei erstellen, deren Verhalten Sie anpassen m&ouml;chten. Erstellen Sie den entsprechenden Code hierzu in diesem Objekt. Ist das Objekt z. B. &bdquo;pdf&ldquo;, so w&auml;re der Code &bdquo;\includegraphics[#INS#]{%r}&ldquo;. Hierbei k&ouml;nnen folgende Abk&uuml;rzungen benutzt werden:</p>
-		<dl>
-			<dd>%F der volle Pfad der einzuf&uuml;genden Datei<dd>%f der Dateiname der einzuf&uuml;genden Datei<dd>%r der relative Pfad der einzuf&uuml;genden Datei<dd>%n der Dateiname der einzuf&uuml;genden Datei ohne Suffix<dd>%e das Suffix der einzuf&uuml;genden Datei</dl>
-		<p>Wird im Makro-Editor ein Suffix nicht aufgef&uuml;hrt, so werden die jeweiligen Dateien wie oben Beschrieben normal behandelt. Daher werden die meisten kein Makro-&bdquo;Drag &amp; Drop&ldquo;-Men&uuml; ben&ouml;tigen.</p>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Grundlagen</div>
-<div id="header_title">Bearbeitungstipps</div>
+<h2>Auswählen</h2>
 
+<p>Doppelklicken Sie auf eine Klammer wie ( oder }, um alles zwischen ihr und der zugehörigen Klammer auszuwählen; so finden Sie leicht eine fehlende Klammer. Doppelklicken Sie mit gedrückter Wahltaste, um nur die Klammer auszuwählen. Klicken oder ziehen Sie über die Zeilennummern, um ganze Zeilen auszuwählen. Die Gruppe „Klammerzuordnung“ unter Einstellungen › Editor legt fest, wie zusammengehörende Klammern beim Tippen angezeigt werden.</p>
 
-	<div id="menu_border">
-		<UL>
-			<LI><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-			<LI><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-			<LI><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
-			<LI><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-			<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-			<li><a href="basic_spelling.htm">Rechtschreibpr&uuml;fung</a></li>
-			<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-			<li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
-			<li><a href="basic_macros.htm">Makros</a></li>
-			<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-			<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
-			<li><a href="basic_printing.htm">Drucken</a></li>
-			<li><a href="basic_preferences.htm">Einstellungen &auml;ndern</a></li>
-			<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-			<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
-			<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-			<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
-			<li><a href="basic_bugs.htm">Fehlerbericht &uuml;bermitteln</a></li>
-			<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
-			<li><a href="basic_license.htm">Lizenz</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2>Kommentare und Einrückung</h2>
+
+<p>Quelltext › Kommentar (<kbd>⌘{</kbd>) setzt % an den Anfang der ausgewählten Zeilen, und Quelltext › Kein Kommentar (<kbd>⌘}</kbd>) entfernt es. Quelltext › Einrückung erhöhen und Quelltext › Einrückung reduzieren rücken die ausgewählten Zeilen nach rechts oder links, um einen Tabulator, wenn „Tabs für Einzugmenü verwenden“ unter Einstellungen › Editor › Absatzstil eingeschaltet ist, sonst um so viele Leerzeichen, wie „Tab-Größe“ angibt. Eine neue Zeile beginnt mit denselben Tabulatoren und Leerzeichen wie die Zeile davor; drücken Sie die Rückschritttaste, um sie zu entfernen.</p>
+
+<h2>Im Quelltext navigieren</h2>
+
+<p>Das Menü „Markierungen“ in der Symbolleiste listet die Kapitel, Abschnitte und anderen Gliederungsteile des Dokuments auf; wählen Sie einen aus, um dorthin zu gehen. Eine Zeile, die mit <code>%:</code> beginnt, fügt den Rest der Zeile als eigene Markierung zum Menü hinzu. Die Einstellung „Markierungen“ im Menü anzeigen unter Einstellungen › Editor › Darstellung zeigt dasselbe Menü in der Menüleiste. Das Objekt „Labels“ der Symbolleiste listet die Labels des Dokuments auf. Bearbeiten › Gehe zu Zeile... (<kbd>⌘L</kbd>) springt zu einer Zeile mit ihrer Nummer.</p>
+
+<p>Fenster › Geteiltes Fenster (<kbd>⌃2</kbd>) oder das Objekt „Geteilter Quelltext“ der Symbolleiste teilt das Quelltextfenster in zwei Teile, die denselben Text zeigen; so können Sie einen Teil des Dokuments lesen, während Sie an einem anderen schreiben. Halten Sie die Wahltaste gedrückt, um es nebeneinander zu teilen. Was Sie in einem Teil tippen, erscheint auch im anderen.</p>
+
+<h2>Weniger tippen</h2>
+
+<p>Quelltext › Aktuelle Umgebung schließen (<kbd>⌃⌘C</kbd>) fügt die <code>\end</code>-Zeile der noch offenen Umgebung ein, zum Beispiel <code>\end{itemize}</code> nach einer Liste. Die Befehlsvervollständigung ergänzt Befehle und Umgebungen, die Sie zu tippen begonnen haben; siehe <a href="basic_commandcompletion.htm">Befehlsvervollständigung</a>. Tastenbelegungen ersetzen ein getipptes Zeichen durch einen Text; siehe <a href="basic_autocompletion.htm">Tastenbelegungen</a>. Die LaTeX Palette, die Matrix Palette und das Menü „Makros“ fügen längere Textstücke ein.</p>
+
+<h2>Dateien auf dem Quelltext ablegen</h2>
+
+<p>Ziehen Sie eine Datei aus dem Finder auf den Quelltext, um einen Befehl für sie einzufügen:</p>
+
+<table>
+<tr><th>Datei</th><th>Eingefügter Befehl</th></tr>
+<tr><td>.pdf, .png, .jpg, .jpeg, .tif, .tiff, .eps, .ps</td><td><code>\includegraphics[]{<var>Pfad</var>}</code></td></tr>
+<tr><td>.bib</td><td><code>\bibliography{<var>Name</var>}</code></td></tr>
+<tr><td>.bst</td><td><code>\bibliographystyle{<var>Name</var>}</code></td></tr>
+<tr><td>.sty</td><td><code>\usepackage{<var>Name</var>}</code></td></tr>
+<tr><td>.cls</td><td><code>\documentclass{<var>Name</var>}</code></td></tr>
+<tr><td>andere Dateien, etwa .tex</td><td><code>\input{<var>Pfad</var>}</code></td></tr>
+</table>
+
+<p>Dabei ist <var>Pfad</var> der Pfad der Datei vom Ordner der Quelltextdatei aus und <var>Name</var> der Dateiname ohne Endung. Ein abgelegtes Alias wird durch die Datei ersetzt, für die es steht, da TeX sie selbst nicht finden könnte. Eine Datei, deren Pfad ein Leerzeichen enthält, wird nicht eingefügt; TeXShop zeigt stattdessen eine Warnung.</p>
+
+<p>Um für eine Dateiart etwas anderes einzufügen, öffnen Sie den Makro-Editor (Makros › Makro-Editor öffnen...) und fügen ein Untermenü namens <code>Drag &amp; Drop</code> hinzu. Fügen Sie darin einen Eintrag hinzu, der nach der Endung benannt ist, etwa <code>.pdf</code>, und dessen Inhalt der einzufügende Text ist, zum Beispiel <code>\includegraphics[#INS#]{%r}</code>; ein Eintrag namens <code>.*</code> gilt für jede Endung ohne eigenen Eintrag. Im Inhalt können Sie diese Abkürzungen verwenden:</p>
+
+<dl>
+<dt><code>%F</code></dt><dd>der vollständige Pfad der abgelegten Datei</dd>
+<dt><code>%f</code></dt><dd>der Name der Datei</dd>
+<dt><code>%r</code></dt><dd>der Pfad der Datei vom Ordner der Quelltextdatei aus</dd>
+<dt><code>%n</code></dt><dd>der Name der Datei ohne Endung</dd>
+<dt><code>%e</code></dt><dd>die Endung</dd>
+</dl>
+
+<h2>Die Statusleiste und die Textstatistik</h2>
+
+<p>Die Statusleiste unter dem Quelltext zeigt die Zeilen, Zeichen und Wörter des Dokuments, in Klammern die Anzahl in der Auswahl, sowie Position, Zeile und Spalte der Einfügemarke. Zeichen werden so gezählt, wie man sie sieht, ein Buchstabe mit Akzent oder ein Emoji zählt also als eines, und TeX-Befehle werden so gezählt, wie sie geschrieben sind; ein Emoji zählt auch als Wort. Rechts steht die Größe der gesicherten Datei. Quelltext › Statusleiste einblenden blendet die Statusleiste in allen Fenstern ein oder aus.</p>
+
+<p>„Textstatistik …“ in der Statusleiste oder Bearbeiten › Statistik... zählt den Text ohne die TeX-Befehle. Das TeX-Live-Programm detex entfernt sie aus dem Dokument oder aus der Auswahl und nimmt die mit <code>\input</code> und <code>\include</code> gelesenen Dateien hinzu; TeXShop zählt den Rest auf dieselbe Weise wie die Statusleiste. Das Dokument muss nicht gesichert sein. Gezählt wird, wenn sich das Popover öffnet und wenn Sie auf seine Taste zum Aktualisieren klicken.</p>
+
+<h2>Die Zwischenablage</h2>
+
+<p>Bearbeiten › Mit Zwischenablage tauschen ersetzt die Auswahl durch den Text in der Zwischenablage und legt die Auswahl in die Zwischenablage. Um zwei Textstücke zu vertauschen, kopieren Sie das erste, wählen das zweite aus und wählen „Mit Zwischenablage tauschen“; dann wählen Sie die Stelle des ersten aus und setzen ein. Ist nichts ausgewählt, setzt der Befehl ein.</p>
+
+<p>Bearbeiten › Mit Stil kopieren kopiert die Auswahl in der Schrift des Quelltexts und mit den Farben des Hellmodus- oder Dunkelmodus-Themas, mit oder ohne Hintergrundfarbe, um sie in eine Textverarbeitung, eine Präsentation oder eine E-Mail einzusetzen. Jedem seiner vier Einträge können Sie unter Einstellungen › Tastatur einen Kurzbefehl geben.</p>
+
+<h2>Zeichen umwandeln</h2>
+
+<p>Die Untermenüs „Zeichentyp umwandeln“ und „Unicode-Normalisierung“ des Menüs „Bearbeiten“, die auch im Kontextmenü des Quelltexts stehen, schreiben die Auswahl um; ist nichts ausgewählt, fragt TeXShop, ob das ganze Dokument umgeschrieben werden soll. „Zeichentyp umwandeln“ ist vor allem für japanische Dokumente gedacht. Es wandelt zwischen Hiragana und Katakana um, zwischen Ziffern und Buchstaben voller und halber Breite, zwischen Zeichen wie eingekreisten Zahlen und den Befehlen des Pakets ajmacros sowie zwischen Zeichen außerhalb von JIS X 0208 und den Befehlen <code>\UTF</code> und <code>\CID</code> des Pakets otf. Außerdem macht es aus typografischen Anführungszeichen TeX-Anführungszeichen. „Unicode-Normalisierung“ wandelt die Auswahl in NFC, NFD, NFKC oder NFKD um oder in Modified NFC oder Modified NFD, die CJK-Kompatibilitätsideogramme unverändert lassen. Beides lässt sich widerrufen.</p>
+
+<h2>Sicherungsdateien</h2>
+
+<p>Ist „Automatisch sichern und Versionen aktivieren“ unter Einstellungen › Dokumente und Sichern ausgeschaltet, schalten Sie dort „Beim Sichern die vorherige Datei als „Name~“ behalten“ ein, um bei jedem Sichern die vorherige Fassung einer Datei zu behalten. Die Sicherungsdatei hat den Namen der Datei, gefolgt von einer Tilde.</p>
+
+<p>Suchen und Ersetzen mit regulären Ausdrücken und „Mehrfach ersetzen“ beschreibt <a href="basic_find.htm">Suchen und Ersetzen</a>.</p>
+</main>
+</body>
+</html>

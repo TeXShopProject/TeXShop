@@ -1,51 +1,62 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schutz vor Shell Escape</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="Shell Escape; -shell-escape; --shell-escape; Bei Shell-Escape nachfragen; Sicherheit; % !TEX parameter">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm" class="current">Schutz vor Shell Escape</a></li>
+<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Schutz vor Shell Escape</h1>
+<p>Während des Setzens kann TeX andere Programme starten. Als Vorgabe erlaubt TeX Live nur eine kurze Liste vertrauenswürdiger Programme, etwa um EPS-Grafiken in PDF umzuwandeln. Pakete, die andere Programme starten müssen, verlangen die Option <code>-shell-escape</code> (auch <code>--shell-escape</code> geschrieben).</p>
+<p>Mit dieser Option kann ein Dokument jeden beliebigen Befehl ausführen, zum Beispiel einen, der alle Dateien in Ihrem Benutzerordner löscht. Verwenden Sie sie nur für Dokumente, denen Sie vertrauen, und nicht für Dateien, die Sie von anderen erhalten.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Shell Escape Schutz</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Sichern Sie Ihr System mit Hilfe des Shell-Escape-Schutzes ab.">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">	
-<P>In TeX Live k&ouml;nnen pdftex, pdflatex und andere TeX-Programme seit 2011 w&auml;hrend des Setzens eine kleine Liste vertrauensw&uuml;rdiger Programme aufrufen. So d&uuml;rfen diese Programme zum Beispiel Ghostscript aufrufen, um eps-Dateien in pdf-Dateien umzuwandeln.</P>
+<h2>Die Option hinzufügen</h2>
+<ul>
+<li>Im Befehl für LaTeX oder plain TeX unter Einstellungen › Satz › PDF direkt, für jedes Dokument, das „PDF direkt“ gesetzt wird.</li>
+<li>In einer Engine-Datei, für jedes Dokument, das mit dieser Engine gesetzt wird; siehe <a href="advanced_addengine.htm">Satz-Engines hinzufügen</a>.</li>
+<li>Für ein einzelnes Dokument, das mit einer der latexmk-Engines wie pdflatexmk gesetzt wird, mit der Zeile <code>% !TEX parameter = -shell-escape</code> am Anfang des Quelltexts.</li>
+</ul>
 
-<P>pdftex, pdflatex und andere Programme lassen sich so einrichten, dass sie w&auml;hrend des Setzens beliebige Shell-Befehle aufrufen k&ouml;nnen. Dazu muss dem Aufruf die Option &bdquo;-shell-escape&ldquo; hinzugef&uuml;gt werden, entweder in der Kategorie &bdquo;Satz&ldquo; der Einstellungen von TeXShop oder in einzelnen Engine-Skripten. Diese Option ist jedoch ein ernstes Sicherheitsrisiko, da sie die Ausf&uuml;hrung beliebiger Shell-Programme erlaubt, zum Beispiel auch eines kurzen Programms, das alle Dateien im Benutzerordner l&ouml;scht. Ist die Option gesetzt, k&ouml;nnte eine b&ouml;swillige Website eine TeX-Quelldatei anbieten, die diese Dateien beim Setzen l&ouml;scht.</P>
-
-<P>Wir raten davon ab, die Option zu setzen, doch einige ungew&ouml;hnliche Pakete ben&ouml;tigen sie m&ouml;glicherweise. F&uuml;r diesen Fall bietet TeXShop einen Schutz: In der Gruppe &bdquo;PDF direkt&ldquo; der Kategorie &bdquo;Satz&ldquo; gibt es die Einstellung &bdquo;Bei Shell-Escape nachfragen&ldquo;. Sie ist bei Auslieferung von TeXShop ausgeschaltet. Sie pr&uuml;ft nur die Befehle f&uuml;r plain TeX und LaTeX in dieser Gruppe, die verwendet werden, wenn eine Datei mit TeX oder LaTeX &uuml;ber &bdquo;PDF direkt&ldquo; gesetzt wird. Engine-Skripte (.engine-Dateien) werden nicht gepr&uuml;ft, auch wenn sie &bdquo;-shell-escape&ldquo; enthalten. Ist die Einstellung eingeschaltet und enth&auml;lt der verwendete Befehl &bdquo;-shell-escape&ldquo;, erscheint beim ersten Setzen einer Datei w&auml;hrend einer TeXShop-Sitzung ein Warndialog, in dem Sie Shell-Escape f&uuml;r diese Datei ausschalten k&ouml;nnen. W&auml;hrend der Sitzung erscheint der Dialog f&uuml;r diese Datei nicht noch einmal. So k&ouml;nnen Sie Ihre eigenen Dateien mit Shell-Escape setzen und per E-Mail erhaltene Dateien ohne Shell-Escape.</P>
-</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Erweitert</div>
-<div id="header_title">Shell Escape Schutz</div>
-
-
-	<div id="menu_border">
-		<UL>
-			<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</a></li>
-			<LI><a href="advanced_addengine.htm">Zus�tzliche Schriftsatz-Programme</a>
-			<LI><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a>
-			<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-			<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-			<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-			<li><a href="advanced_unicode.htm">Unicode</a></li>
-			<li><a href="advanced_bibtex.htm">BibTeX</a></li>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-			<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
-			<li><a href="advanced_mathematica.htm">Mathematica</a></li>
-			<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
-			<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung </a></li>
-			<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
-			<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-			<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-			<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-			<li><a href="advanced_plist.htm">Plist Dateien</a></li>
-			<li><a href="advanced_menushortcuts.htm">Tastaturk&uuml;rzel neubelegen</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2>Bei Shell-Escape nachfragen</h2>
+<p>Einstellungen › Satz › PDF direkt › „Bei Shell-Escape nachfragen“, als Vorgabe ausgeschaltet, schützt die Befehle der Gruppe „PDF direkt“. Ist die Einstellung eingeschaltet und enthält der Befehl für plain TeX oder LaTeX dort <code>-shell-escape</code> oder <code>--shell-escape</code>, fragt TeXShop nach, bevor es ein Dokument nach dem Öffnen zum ersten Mal setzt:</p>
+<ul>
+<li>„OK“ setzt mit der Option.</li>
+<li>„Shell Escape nicht benutzen“ setzt ohne sie.</li>
+<li>„Abbrechen“ setzt nicht.</li>
+</ul>
+<p>Haben Sie „OK“ oder „Shell Escape nicht benutzen“ gewählt, gilt die Antwort für dieses Dokument, bis es geschlossen wird; so können Sie Ihre eigenen Dokumente mit der Option setzen und Dokumente von anderen ohne sie. Engine-Dateien werden nicht geprüft, auch wenn sie <code>-shell-escape</code> enthalten.</p>
+</main>
+</body>
+</html>

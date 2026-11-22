@@ -1,52 +1,51 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neue Objekte für die Library</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop; Update; Ordner New; bin; Scripts; Engines Inactive; Makros; beschädigte Dateien; Backups; Standardinhalt eines Ordners">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Wie konfiguriere ich TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Einführung</a></li>
+<li><a href="configure_prefchanges.htm">Empfohlene Änderungen an den Einstellungen</a></li>
+<li><a href="configure_correctinstall.htm" class="current">Neue Objekte für die Library</a></li>
+<li><a href="configure_hidden.htm">Versteckte Einstellungen</a></li>
+<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a></li>
+<li><a href="configure_autocompletion.htm">Tastenbelegungen anpassen</a></li>
+<li><a href="configure_menushortcuts.htm">Tastaturkurzbefehle für Menüs ändern</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Neue Objekte für die Library</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Neue Objekte in ~/Library/TeXShop erhalten</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="~/Library/TeXShop; New; Templates; Aktualisierung">
-				<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<p>TeXShop bewahrt die Dateien, die Sie ändern können, etwa Vorlagen, Makros, Engines, Tastenbelegungen, die Datei der LaTeX Palette und Themen, in ~/Library/TeXShop auf, dem Ordner TeXShop im Ordner „Library“ Ihres Benutzerordners. TeXShop › Den Ordner „~/Library/TeXShop“ im Finder öffnen öffnet ihn im Finder. Beim ersten Start legt TeXShop diesen Ordner mit dem Standardinhalt an.</p>
 
-<BODY>
+<h2 id="updates">Was eine neue Version ändert</h2>
+<p>Eine neue Version von TeXShop lässt den größten Teil von ~/Library/TeXShop unberührt, sodass Ihre Änderungen erhalten bleiben. Einige Stellen enthalten die eigenen Hilfsdateien von TeXShop oder optionale Objekte, und eine neue Version bringt sie auf den neuesten Stand:</p>
+<ul>
+<li>die Ordner bin, Documents, ExternalEditorScripts und Scripts;</li>
+<li>Engines/Inactive und HTML/Inactive mit Engines und HTML-Dateien, die Sie in Gebrauch nehmen können;</li>
+<li>HTML/Help.html, die Seite, die Hilfe › HTML-Befehle (Englisch) zeigt;</li>
+<li>den Ordner New, der als Ganzes ersetzt wird.</li>
+</ul>
+<p>An diesen Stellen wird jede Datei, die mit TeXShop kommt, durch ihre neue Version ersetzt; Änderungen, die Sie an einer solchen Datei vorgenommen haben, gehen also verloren. Neue Dateien werden hinzugefügt, und Dateien, die Sie unter anderen Namen hinzugefügt haben, bleiben, wie sie sind. Um Ihre eigene Fassung einer dieser Dateien zu behalten, sichern Sie sie unter einem anderen Namen.</p>
+<p>Die verwendeten Engines im Ordner Engines selbst werden nicht geändert. Nur wenn der Ordner zuletzt von einer Version von TeXShop vor 6.00 aktualisiert wurde, fügt TeXShop einmalig html.engine zu Engines hinzu, und nur, wenn dort keine Datei dieses Namens liegt. Im Ordner Macros können Makros, die mit TeXShop kamen und nie bearbeitet wurden, auf ihren aktuellen Text gebracht werden; bearbeitete und eigene Makros bleiben, wie sie sind. Alles andere behält Ihre Änderungen.</p>
+<p>TeXShop hält seine Version in einer unsichtbaren Datei <code>.Version</code> in ~/Library/TeXShop/New fest und aktualisiert den Ordner nur, wenn es neuer ist als die dort festgehaltene Version. So wird ~/Library/TeXShop nicht bei jedem Start von TeXShop neu geschrieben, und eine ältere Version von TeXShop kann laufen, ohne ihn zu ändern.</p>
 
-<div id="content_border">
+<h2 id="new">Der Ordner New</h2>
+<p>Der Ordner New enthält Objekte, die Sie vielleicht selbst hinzufügen möchten, etwa neue Vorlagen. Bewegen Sie ein solches Objekt in den richtigen Ordner, etwa Templates, und bearbeiten Sie es nach Belieben. Hilfe › Über diese Version (Englisch) sagt, wann es etwas zu übernehmen gibt.</p>
 
-<p>Das Standardverhalten von TeXShop l&auml;sst sich auf zwei Arten &auml;ndern: &uuml;ber die Einstellungen und durch Bearbeiten von Dateien in ~/Library/TeXShop. Dabei ist ~/Library der Ordner &bdquo;Library&ldquo; in Ihrem Benutzerordner.</p>
+<h2 id="repair">Fehlende und beschädigte Dateien</h2>
+<p>Fehlt eine Datei, die TeXShop braucht, etwa die Makros, die Datei der LaTeX Palette, die Tastenbelegungen, KeyEquivalents.plist oder ein Thema, oder ist sie beschädigt, ersetzt TeXShop sie beim Start ohne Meldung durch seine eigene Kopie. Die beschädigte Datei wird in ~/Library/TeXShop/Backups aufbewahrt, sodass Sie Ihre Änderungen daraus zurückholen können.</p>
 
-<p>Neue Versionen von TeXShop &auml;ndern diese Anpassungen in der Regel nicht, denn niemand mag &Auml;nderungen hinter seinem R&uuml;cken. Manchmal erfordern neue Funktionen aber einige Anpassungen. Sie werden im Dokument &bdquo;&Uuml;ber diese Version (Englisch)&ldquo; im Men&uuml; &bdquo;Hilfe&ldquo; beschrieben, das f&uuml;r jede Version von TeXShop neu geschrieben wird. TeXShop funktioniert auch dann, wenn die dort beschriebenen Anpassungen nicht vorgenommen werden; einige neue Funktionen arbeiten dann aber m&ouml;glicherweise nicht wie beschrieben.</p>
-
-<p>TeXShop aktualisiert die Objekte in ~/Library/TeXShop normalerweise nicht, mit einigen Ausnahmen: Jede neue Version aktualisiert die Ordner bin, Documents, Engines/Inactive, ExternalEditorScripts, HTML/Inactive und Scripts sowie die Datei HTML/Help.html, die Seite, die &bdquo;Hilfe&ldquo; &gt; &bdquo;HTML-Befehle (Englisch)&ldquo; anzeigt. Dort wird jede Datei, die TeXShop mitbringt, durch ihre neue Version ersetzt; &Auml;nderungen, die Sie an einer solchen Datei vorgenommen haben, gehen also verloren. Neue Standarddateien kommen hinzu, und Dateien, die Sie unter anderen Namen hinzugef&uuml;gt haben, bleiben unver&auml;ndert. Wenn Sie eine eigene Fassung einer dieser Dateien behalten m&ouml;chten, etwa von Help.html, sichern Sie sie unter einem anderen Namen. Aktive Engine-Dateien werden nicht ge&auml;ndert, da sie im Ordner Engines liegen und nicht im Unterordner Inactive; nur wenn eine Library aktualisiert wird, die zuletzt von einer Version vor 6.00 beta 10 aktualisiert wurde, kopiert TeXShop einmalig html.engine in den Ordner Engines, sofern dort noch keine Datei dieses Namens liegt. Im Ordner Macros k&ouml;nnen Makros, die mit einer fr&uuml;heren Version von TeXShop kamen und nie bearbeitet wurden, auf ihren aktuellen Text gebracht werden; bearbeitete und eigene Makros bleiben, wie sie sind. Alles andere in ~/Library/TeXShop beh&auml;lt Ihre &Auml;nderungen.</p>
-
-<p>Der Vorteil dieses Aufbaus: Manche Engines legen Hilfsdateien in den Ordnern bin und Scripts ab. Bei einer Aktualisierung von TeXShop werden diese Hilfsdateien automatisch erneuert, ohne dass Sie etwas tun m&uuml;ssen. Ebenso kommen gelegentlich neue Engines in den Ordner Engines/Inactive, die Sie automatisch erhalten.</p>
-
-<p>Jede neue Version von TeXShop schreibt den Ordner ~/Library/TeXShop/New neu. Er enth&auml;lt neue Objekte, die Sie vielleicht in Ihre anderen Konfigurationsordner &uuml;bernehmen m&ouml;chten. Neue Vorlagen erscheinen zum Beispiel in ~/Library/TeXShop/New. Wenn Sie diese Vorlagen verwenden m&ouml;chten, verschieben Sie sie nach ~/Library/TeXShop/Templates und passen Sie sie nach Bedarf an. Der Inhalt von ~/Library/TeXShop/New wird immer in &bdquo;&Uuml;ber diese Version (Englisch)&ldquo; beschrieben; Sie m&uuml;ssen den Ordner also nur ansehen, wenn Sie dort dazu aufgefordert werden.</p>
-
-<p>Ein technisches Detail ist n&uuml;tzlich zu wissen: Eine unsichtbare Datei in ~/Library/TeXShop/New enth&auml;lt die Versionsnummer der TeXShop-Version, die den Ordner geschrieben hat. ~/Library/TeXShop wird nur aktualisiert, wenn die Versionsnummer von TeXShop h&ouml;her ist als die in dieser Datei. Deshalb wird ~/Library/TeXShop nicht bei jedem Start von TeXShop aktualisiert, und &auml;ltere Versionen von TeXShop k&ouml;nnen gefahrlos gestartet werden, ohne ~/Library/TeXShop zu ver&auml;ndern.</p>
-
-<p>In seltenen F&auml;llen m&ouml;chten Sie vielleicht die neuesten Standarddateien eines Ordners in ~/Library/TeXShop erhalten. Verschieben Sie diesen Ordner auf den Schreibtisch; beim n&auml;chsten Start legt TeXShop ihn neu an. Danach k&ouml;nnen Sie Ihre eigenen &Auml;nderungen aus der Kopie auf dem Schreibtisch &uuml;bernehmen. Verschieben Sie zum Beispiel den Ordner Templates aus ~/Library/TeXShop auf den Schreibtisch, so erzeugt der n&auml;chste Start von TeXShop den neuesten Standardordner Templates. Dieser drastische Schritt ist zum Gl&uuml;ck nur selten n&ouml;tig.</p>
-
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Wie konfiguriere ich TeXShop?</div><div id="header_title">Neue Objekte in ~/Library/TeXShop erhalten</div>
-
-<div id="menu_border">
-		<ul>
-			<LI><a href="configure_preliminaries.htm">Einleitung</a>
-			<li><a href="configure_correctinstall.htm">Neue Objekte in ~/Library/TeXShop erhalten</a>
-			<li><a href="configure_prefchanges.htm">Empfohlene &Auml;nderung von Einstellungen</a>
-			<LI><a href="configure_convertgraphics.htm">Grafikformate automatisch konvertieren</a>
-			<LI><a href="configure_defaults.htm">Standardeinstellungen</a>
-			<LI><a href="configure_latextemplate.htm">Die Standard-LaTeX-Vorlage</a>
-			<li><a href="configure_hidden.htm">Versteckte Einstellungen</a>
-			<li><a href="configure_plist.htm">.plist-Dateien</a>
-			<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a>
-			<li><a href="configure_autocompletion.htm">Die automatische Vervollst&auml;ndigung anpassen</a>
-			<li><a href="configure_menushortcuts.htm">Tastaturk&uuml;rzel neu festlegen</a>
-			<li><a href="configure_macros.htm">Das Makro-Men&uuml; ver&auml;ndern</a>
-		</ul>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2 id="defaults">Den Standardinhalt eines Ordners erhalten</h2>
+<p>Um den neuesten Standardinhalt eines Ordners zu erhalten, etwa von Templates, beenden Sie TeXShop, bewegen diesen Ordner aus ~/Library/TeXShop heraus (zum Beispiel auf den Schreibtisch) und starten TeXShop erneut. Es legt den Ordner mit seinem Standardinhalt an. Kopieren Sie dann aus dem verschobenen Ordner zurück, was Sie behalten möchten.</p>
+</main>
+</body>
+</html>

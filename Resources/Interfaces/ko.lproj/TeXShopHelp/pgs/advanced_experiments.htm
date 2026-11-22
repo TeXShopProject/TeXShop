@@ -1,83 +1,64 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실험</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="실험; 수식 시험; 코드 조각; 소스 패널; 미리보기 패널; 실험 콘솔">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm" class="current">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>실험</h1>
+<p>편집 › 실험...을 사용하면 수식, 표, TikZ 그림처럼 짧지만 까다로운 LaTeX 코드를 문서에 넣기 전에 시험해 볼 수 있습니다. 이 명령은 소스 윈도우가 활성화되어 있을 때 사용할 수 있습니다.</p>
+<p>이 명령은 소스 패널을 엽니다. 소스 윈도우에서 텍스트를 선택해 두었으면 그 텍스트가 패널에 복사되고, 그렇지 않으면 지난번에 패널에 남겨 둔 내용이 표시됩니다. <code>$$\sqrt{x^2 + y^2}$$</code> 같은 코드 조각을 입력하거나 고친 다음, 패널 아래쪽의 조판 버튼을 누릅니다. 미리보기 패널에 결과가 표시됩니다. 처음에는 첫 페이지의 맨 위가 표시되고, 다시 조판하면 보고 있던 부분이 그대로 유지됩니다. 코드 조각은 수식 하나에서 여러 페이지까지 무엇이든 될 수 있습니다.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Experiments</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="experiment; input language; utf-8">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>코드 조각을 조판하는 방식</h2>
+<p>TeXShop은 문서의 프리앰블, 즉 <code>\begin{document}</code>까지의 모든 내용 뒤에 코드 조각과 <code>\end{document}</code>를 붙인 파일을 조판합니다. 루트 파일이 있는 프로젝트에서는 루트 파일의 프리앰블을 사용합니다. 문서와 그 폴더는 변경되지 않습니다.</p>
+<ul>
+<li>이 파일은 문서 옆에 있는 파일과 폴더의 사본이 들어 있는 임시 폴더에서 조판됩니다. 따라서 <code>./</code>로 시작하는 경로를 포함하여, 문서를 조판할 때와 마찬가지로 그림을 찾을 수 있습니다. 항목이 5000개를 넘는 폴더와, 다른 디스크에 있는 파일이나 클라우드 서비스의 온라인 전용 파일처럼 이 방식으로 복사할 수 없는 항목은 복사하지 않습니다. 이 경우에도 문서 옆의 파일은 찾을 수 있지만, <code>./</code>로 시작하는 경로로는 찾을 수 없습니다.</li>
+<li>문서를 마지막으로 조판할 때 생긴 <code>.aux</code> 파일의 사본을 읽으므로, <code>\ref</code>, <code>\pageref</code>, <code>\cite</code>에 문서의 번호가 표시됩니다.</li>
+</ul>
+<p>엔진은 문서가 사용하는 엔진입니다. 소스 첫머리에 <code>% !TEX program</code> 줄이 있으면 그 엔진을, 없으면 소스 윈도우 도구 막대에서 선택한 엔진을 사용합니다. LaTeX에서는 문서의 조판 방식인 PDF 직접 생성, DVI 경유, 사용자 스크립트 중 하나를 따릅니다. BibTeX나 MakeIndex가 선택되어 있으면 pdfLaTeX를 사용합니다. ConTeXt, MetaPost, plain TeX는 실험에 사용할 수 없습니다. 직접 만든 엔진도 시도하지만, LaTeX를 전제로 하지 않거나 PDF 파일을 만들지 않는 엔진이라면 실패할 수 있습니다.</p>
 
-<BODY>
-	<div id="content_border">
-	
-<p>	The menu item "Experiment..." in the Edit menu,    available when the source window is active, allows users to experiment with short, but complicated, fragments of TeX before copying the source into the main document. 
+<h2>패널</h2>
+<p>소스 패널은 소스 윈도우와 같은 방식으로 텍스트를 보여 줍니다. 서체, 탭, 줄 간격, 워드랩, 구문 색상, 현재 줄 강조, 블럭 커서, 숨김 문자, 행 번호, 괄호 짝 맞추기가 모두 같으며, 메뉴나 설정에서 이를 바꾸면 패널에도 반영됩니다. <kbd>⌘+</kbd>와 <kbd>⌘-</kbd>로 텍스트를 크게 하거나 작게 할 수 있는데, 서체 패널에서 선택한 서체와 마찬가지로 소스 윈도우에도 적용됩니다. 키 바인딩, 명령어 완성, 편집 › 레이블 또는 인용 키 완성도 패널에서 작동합니다. 명령어 완성에는 설정 › 키보드 › 호출 키에서 선택한 키를 사용합니다.</p>
+<p>미리보기 패널의 도구 막대에는 미리보기 윈도우와 같은 도구인 스크롤, 글자 선택, 확대경, 영역 선택이 있습니다. 확대경은 마우스 버튼을 누르고 있는 동안 포인터 아래의 페이지를 150%로 보여 주며, Command, Option, Control 키를 함께 누르면 각각 200%, 250%, 300%로 보여 줍니다. 더블클릭하면 더 큰 확대경이 나타납니다. 영역 선택으로 사각형을 그리면 그 부분을 보기 › 파일 형식에서 선택한 형식으로 복사할 수 있습니다. 패널은 미리보기 윈도우와 별도로 선택한 도구를 기억합니다. 도구 옆에는 축소, 확대, 내용에 맞게 확대/축소, 내용 너비에 맞게 확대/축소가 있습니다. 내용에 맞게 확대/축소는 페이지의 조판된 부분이 패널에 가득 차도록 확대하고, 내용 너비에 맞게 확대/축소는 조판된 부분을 패널의 너비에 맞춥니다. 마우스와 트랙패드 제스처로도 패널을 스크롤하고 확대/축소할 수 있습니다.</p>
+<p>조판 출력은 별도의 콘솔인 실험 콘솔에 표시됩니다. 조판이 시작되면 실험 콘솔이 앞으로 오며, 패널을 클릭하면 그 패널이 다시 앞으로 옵니다. 패널에서 <kbd>⌘0</kbd>(파일 › 콘솔 보이기)을 누르면 실험 콘솔이 앞으로 오고, 다시 누르면 패널로 돌아갑니다. 설정 › 콘솔 › 콘솔 표시가 “오류 발생시 보이기”로 되어 있으면, TeX가 오류를 보고하거나 입력을 기다릴 때까지 실험 콘솔은 나타나지 않습니다.</p>
+<p>패널과 실험 콘솔은 문서 윈도우 위에 떠 있습니다. 이동하거나 크기를 조절할 수 있으며, TeXShop은 그 크기와 위치를 기억합니다. 패널은 닫기 버튼이나 <kbd>⌘W</kbd>로 닫습니다. Escape 키로도 미리보기 패널을 닫을 수 있고, 명령어 완성에 Tab 키를 사용할 때는 소스 패널도 닫을 수 있습니다. Escape 키가 호출 키이면 소스 패널에서 Escape 키는 명령어를 완성합니다.</p>
 
-<p>
-When the item is chosen, a panel appears. Type a TeX fragment into the panel, say $$\sqrt{x^2 + y^2}$$. Push the Typeset button at the bottom of the panel, and a second panel appears showing the result of typesetting the fragment. After the first typesetting, the second panel shows the top of the first page; when the fragment is typeset again, it keeps the part of the page being viewed. The fragment can contain anything: a displayed formula, ordinary text, several pages of mixed material.
-To typeset, TeXShop creates a new source file with the header of the current document up until "\begin{document}", the new fragment, and a final "\end{document}." This also works in a project with a root file. In that case the contents of the root file up until "\begin{document}" are used.
-
-<p>The toolbar of the second panel has four tools, as in the Preview window: Scroll, Select Text, Magnify and Select PDF. Magnify is the magnifying glass of the Preview window: while the mouse button is held, it shows the page under the pointer at 150% of its size on screen, or 200%, 250% and 300% with Command, Option and Control; double-click for a larger lens. Select PDF draws a rectangle; Copy then copies it in the format chosen in the Copy Format submenu of the Preview menu. The panel remembers its tool separately from the Preview window. Next to the tools are Zoom Out, Zoom In and Zoom to Content, which enlarges the typeset part of the page to fill the panel.
-
-<p> Both panels have close buttons, and command-W closes them. The "escape" key also closes the preview panel, and it closes the source panel when command completion uses the "tab" key.
-
-<p> Although the two panels do not have resize buttons, they can both be resized. TeXShop will remember
-the new sizes and locations and use them the next time "Experiment..." is selected. The source panel shows text as the source window does, with the same font, tabs, line spacing, wrapping, syntax colors, current line highlight, block cursor, invisible characters, line numbers and brace matching. Changing any of these from a menu or in Settings changes the source panel at once. The keyboard shortcuts "command +" and "command -" work in the source panel to enlarge the text if desired; like a font chosen there with the Font panel, they change the source window too. Key bindings, command completion and &#54200;&#51665; &#8250; &#47112;&#51060;&#48660; &#46608;&#45716; &#51064;&#50857; &#53412; &#50756;&#49457; are available in the source panel. Command completion uses the same trigger key as the source window, chosen with "&#54840;&#52636; &#53412;" in the &#53412;&#48372;&#46300; category of TeXShop Settings. When this key is "escape", the escape key completes commands in the source panel and does not close it; close the panel with command-W or its close button.
-
-<p> The "Experiment..." feature requires a latex-like engine. It will not work with ordinary plain tex. The
-source panel's Typeset button looks at the main source window's toolbar to determine a typesetting engine.,
-and also uses the "% $TEX engine = ..." mechanism if available at the top of the source window.
-If "plain TeX" or "Context" is selected, nothing happens. If "bibtex" or "make index" are chosen, pdflatex is used. 
-Obviousy "pdflatex, xelatex, and lualatex" can be used. The panel will try to use any user-defined engine selected, but  some such engines may fail if they don't expect latex-like code or don't output pdf.
-
-<p> The preview panel understands mouse scroll commands and trackpad gesture commands to scroll and resize. It understands "command-shift +" and "command-shift -" to resize contents. 
-
-<p> If you close a panel during work and later reopen it, the contents will be remembered. But the contents
-are lost when quitting TeXShop. It is assumed that the panels will be used for short fragments of work; when
-users are satisfied, they will transfer the source to the main document using copy and paste. Panel
-contents are not auto-saved and cannot be manually saved except via the copy mechanism.
-
-<p> Each document has its own source and preview panels, so if you have multiple documents open, you could also have multiple source and preview panels open, leading to a confusing mess. I expect users to exercise common sense and only experiment with one fragment at a time.  One way to avoid confusion would be to hide the panels when a document becomes inactive. I didn't want to do that because  a user  constructing
-a complicated example might want to temporarily open a second document and copy source from that
-document into the panel as a starting point.
-
-
-	
-	
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Experiment</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>결과 보관하기</h2>
+<p>코드 조각이 완성되면 소스 패널에서 복사하여 문서에 붙여 넣습니다. 패널은 닫았다가 다시 열어도 내용을 유지하지만, TeXShop을 종료하면 내용이 사라지며 패널의 내용을 저장할 수는 없습니다.</p>
+<p>문서마다 패널이 따로 있습니다. 여러 문서를 열어 두었다면 어느 문서의 실험인지 헷갈리지 않도록 더 이상 필요 없는 패널은 닫으십시오.</p>
+</main>
+</body>
+</html>

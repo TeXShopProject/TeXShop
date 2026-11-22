@@ -1,155 +1,50 @@
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
-<title>
-			Hidden Settings
-		</title>
-<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="hidden setting; syntax highlighting; background color" name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>숨겨진 설정</title>
+<meta name="description" content="숨겨진 설정; defaults write; 터미널; 매직 코멘트와 숨겨진 설정; OtherTrashExtensions; ConTeXtTags; RedConsoleAfterError; RefreshTime">
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<div id="content_border">
-<p>This page describes only some of the hidden settings. The complete list, with the Terminal command for each setting, is in the document "&#47588;&#51649; &#53076;&#47704;&#53944;&#50752; &#49704;&#44200;&#51652; &#49444;&#51221; (&#50689;&#47928;)" (Comment Lines and Hidden Settings) in the Help menu.</p>
-<p> Ulrich Bauer added a patch to make TeXShop perform better
-			when used with a server, if AutoSave is on. Many users thank us for
-			this patch, but it caused problems for a few. To turn it off:
-			<dl>
-<dd> defaults write TeXShop WatchServer NO
-			</dd></dl>
-<p>
-				TeXShop adds lines which begin with the words \section, \subsection, \subsubsection, or \chapter to the Tag menu. To turn this off, run Terminal and type the following command. Change the word NO to YES to turn the behavior back on.
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop TagSections NO
-			</dd></dl>
-<p> ConTeXt users may want additional words to be recognized and added to the Tag menu. The
-following settings add the words \subsubsubsection, \subsubsubsubsection, \part, \title,
-\subject, \subsubject, \subsubsubject, \subsubsubsubject, and \subsubsubsubsubject. 
-</p>
-<dl>
-<dd>
-					defaults write TeXShop ConTeXtTags YES
-			</dd></dl>
-<p>
-				The colors of the source, preview and console windows, such as the syntax highlighting colors, the background and text colors, the insertion point color, the colors used for parenthesis matching and invisible characters, and the preview background color, as well as the transparency of these windows, are now set in the &#53580;&#47560; category of the Settings window.
-			</p>
-<p>
-				Documents open with syntax highlighting on. To open them without it, type the following command. The &#8220;&#44396;&#47928; &#54616;&#51060;&#46972;&#51060;&#53944;&#8221; (Syntax Highlighting) item in the Source menu then turns it on for a document. With this setting, the fields of the Advanced Find panel and the contents of the Macro Editor are not colored either.
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop SyntaxColoringEnabled NO
-			</dd></dl>
-<p>
-				Occasionally during typesetting, the .aux files, .log files, and other files created automatically by TeX become corrupted and must be removed. TeXShop has a "Trash AUX Files" menu item and associated button in the console window. When either item is selected, TeXShop moves to the trash all files in the folder containing the source file with the same name as the source name, and extensions .aux, .bcf, .blg, .brf, .css, .ent, .fdb_latexmk, .fff, .fls, .gaux, .glo, .glog, .gtex, .idv, .idx, .ilg, .ind, .lg, .loa, .lof, .log, .lot, .mlf, .mtc, .out, .pdfsync, .run.xml, .synctex, .synctex.gz, .synctex(busy), .toc, .ttt, .wrm, .xref, .4ct, and .4tc. Other extensions can be added to this list, one by one. For instance, to add .dvi files to this list:
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop OtherTrashExtensions -array-add "dvi"
-			</dd></dl>
-<p>
-				To remove all added extensions and return to the original list:
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop OtherTrashExtensions -array
-			</dd></dl>
-<p>
-				Sometimes a more extensive cleanup is desirable. If the option key is held down while choosing "Trash AUX Files," TeXShop uses the "% !TEX root = ..." and "Set Project Root" mechanisms to find the root file. It then moves all files in the folder of this file and any subfolders of this folder to the trash if they have appropriate extensions, regardless of the names of the files. This behavior can be made the default behavior for "Trash AUX Files" without using the option key; issue the command
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop AggressiveTrashAUX YES
-			</dd></dl>
-<p>
-				TeXShop can be configured to automatically refresh pdf views when the pdf file changes. To do this, once a second it examines the date and time when the pdf was last written to see if this information has changed. The time interval between these checks can be modified. To do this, run Terminal and type the following command. Change 1.00 to the number of seconds desired.
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop RefreshTime 1.00
-			</dd></dl>
-<p>
-				Automatic refresh for pdf views is useful if TeXShop is configured to use an external editor, or if a tex file is opened by "Open For Preview...". In these cases, a .tex file is opened, but TeXShop only shows the associated pdf file. TeXShop also allows pdf files to be opened directly; this is useful for a brief glance at illustrations before embedding them in a TeX document. If you want pdf files opened for an external editor to be refreshed automatically, but pdf files opened for a brief glance to be left alone, run Terminal and type the following command. The default value of this setting is YES.
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop PdfFileRefresh NO
-			</dd></dl>
-<p>
-				When TeXShop opens a .tex file for an external editor, it checks the dates of the tex and pdf files to make sure that the pdf output is up to date. If this output is not up to date or does not exist at all, TeXShop typesets the .tex file again. To turn off this behavior, run Terminal and type the following command.
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop ExternalEditorTypesetAtStart NO
-			</dd></dl>
-<p>
-				There is a new checkbox tool for the Preview window named "ShowSync." It is not part of the default toolkit for this window. When this item is checked, synchronization spots are show in the Preview document. The item is not shown when a preview window first appears, but this changed be changed via:
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop ShowSyncMarks YES
-			</dd></dl>
-<p>
-				When the preview window is updated after typesetting, it comes to the front. This behavior causes trouble for uses with an X11 editor running in Apple's X11 Window Manager. For these users, the behavior can be turned off via:
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop BringPdfFrontOnAutomaticUpdate NO
-			</dd></dl>
-<p>
-				TeXShop used to support a different set of source commands to determine the typesetting engine, file encoding, and root file; examples are %&amp;latex, %&amp;encoding= UTF-8 Unicode, %SourceDoc ../Main.tex. This syntax was a poor choice on my part and has been changed. If you have a lot of old documents, you can temporarily turn this choice back on using the command below. If you do so, the new commands will be recognized, but the old commands will also work. This setting should only be changed in an emergency.
-			</p>
-<dl>
-<dd>
-					defaults write TeXShop UseOldHeadingCommands YES
-			</dd></dl>
-<p> The console text reporting typesetting behavior and errors shows black text. The text can
-be made to switch to red after the first error with a hidden setting.
-</p>
-<dl>
-<dd> defaults write TeXShop RedConsoleAfterError YES
-			</dd></dl>
-<p> When the Preview window first appears, its drawer is hidden. A hidden setting changes this behavior so the drawer is visible when the Preview window first appears.
-</p>
-<dl>
-<dd>
-					defaults write TeXShop PreviewDrawerOpen YES
-			</dd></dl>
-<p> Moving to the next or previous mark of &#54200;&#51665; &#8250; &#47560;&#53356; with Option or Control and the command completion key is now turned on and off with "Option &#46608;&#45716; Control&#44284; &#54840;&#52636; &#53412;&#47196; &#45796;&#51020;&#183;&#51060;&#51204; &#47560;&#53356;&#47196; &#51060;&#46041;" in the &#53412;&#48372;&#46300; category of the Settings window.</p>
-<p> Version 2.38 of TeXShop marks matching parentheses with a yellow badge over the parenthesis which flashes briefly and then disappears. This change to increase visibility fulfills a long time request; it requires Snow Leopard or higher. To turn the badge off:
-<dl>
-<dd> defaults write TeXShop brieflyFlashYellowForMatch NO
-</dd></dl>
-</p></p></p><p><a href="basic_preferences.htm#settings-search">&#49444;&#51221; &#49324;&#50857; &#48143; &#44160;&#49353;</a></p><p>&#49704;&#44200;&#51652; &#49444;&#51221; WatchServer, ExtraCommandsToCheckParameters, ExtraCommandsNotToCheckParameters&#50752; macOS &#49444;&#51221; ApplePersistence&#45716; TeXShop&#51012; &#49884;&#51089;&#54624; &#46412; &#51069;&#49845;&#45768;&#45796;. &#48320;&#44221;&#54620; &#46244;&#50640;&#45716; TeXShop&#51012; &#45796;&#49884; &#49884;&#51089;&#54616;&#49901;&#49884;&#50724;.</p></div>
-<div id="header_background">
-</div>
-<div id="header_logo">
-<a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a>
-</div>
-<div id="header_chapter">
-			How do I configure TeXShop?
-		</div>
-<div id="header_title">
-			Hidden Settings
-		</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">TeXShop 설정 방법</span></header>
+<nav id="menu">
 <ul>
-<li><a href="configure_preliminaries.htm">Preliminaries</a>
-<li><a href="configure_prefchanges.htm">Recommended Changes to Settings</a>
-<li><a href="configure_correctinstall.htm">Obtaining New Library Items</a>
-<li><a href="configure_convertgraphics.htm">Converting Graphic Formats Automatically</a>
-<li><a href="configure_defaults.htm">TeX Command Line Settings </a>
-<li><a href="configure_latextemplate.htm">Default Latex Template</a>
-<li><a href="configure_hidden.htm">Hidden Settings</a>
-<li><a href="configure_plist.htm">.plist Files</a>
-<li><a href="configure_panel.htm">Modifying the Latex Panel</a>
-<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a>
-<li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-<li><a href="configure_macros.htm">Modifying the Macros Menu</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
+<li><a href="configure_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="configure_prefchanges.htm">권장하는 설정 변경</a></li>
+<li><a href="configure_correctinstall.htm">새 라이브러리 항목 받기</a></li>
+<li><a href="configure_hidden.htm" class="current">숨겨진 설정</a></li>
+<li><a href="configure_panel.htm">LaTeX 패널 수정</a></li>
+<li><a href="configure_autocompletion.htm">키 바인딩 수정</a></li>
+<li><a href="configure_menushortcuts.htm">메뉴 단축키 재지정</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>숨겨진 설정</h1>
+<p>설정 윈도우에는 대부분의 사용자에게 필요한 설정이 있습니다. 그보다 드물게 쓰이는 설정은 숨겨진 설정으로, 설정 윈도우에 컨트롤이 없으며 터미널에서 명령으로 변경합니다. 참고 문서 “매직 코멘트와 숨겨진 설정”(영문)에 모든 숨겨진 설정이 명령과 함께 주제별로 정리되어 있습니다. 도움말 › 매직 코멘트와 숨겨진 설정 (영문)이나 설정 › 일반 › 고급의 “매직 코멘트와 숨겨진 설정 설명서 열기…”로 엽니다.</p>
 
+<h2 id="change">숨겨진 설정 변경</h2>
+<ol>
+<li>TeXShop을 종료합니다.</li>
+<li>터미널(/Applications/Utilities에 있습니다)을 열고 명령을 입력한 후 Return 키를 누릅니다.</li>
+<li>TeXShop을 다시 시작합니다.</li>
+</ol>
+<p>각 명령의 형식은 <code>defaults write TeXShop <var>이름</var> <var>값</var></code>입니다. 기본값으로 되돌리려면 <code>defaults delete TeXShop <var>이름</var></code>을 사용합니다.</p>
+
+<h2 id="examples">예</h2>
+<dl>
+<dt><code>defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'</code></dt>
+<dd>파일 › 부수파일 삭제가 이 확장자의 파일도 제거합니다. 확장자는 마침표 없이 씁니다. <a href="advanced_removeaux.htm">부수 파일 삭제</a>를 참조하십시오.</dd>
+<dt><code>defaults write TeXShop ConTeXtTags YES</code></dt>
+<dd>태그 메뉴에 LaTeX의 절 명령 대신 \title, \subject 같은 ConTeXt의 절 명령이 나열됩니다.</dd>
+<dt><code>defaults write TeXShop RedConsoleAfterError YES</code></dt>
+<dd>TeX 오류에 응답하여 콘솔에 입력한 텍스트와, 그 실행에서 이후에 나오는 모든 출력이 빨간색으로 표시됩니다.</dd>
+<dt><code>defaults write TeXShop RefreshTime 2</code></dt>
+<dd>설정 › 미리보기의 “다른 앱의 PDF 변경을 항상 감시”가 켜져 있는 동안, TeXShop이 2초마다 PDF가 변경되었는지 확인합니다. 기본값은 1초, 최솟값은 0.5초입니다.</dd>
+</dl>
+
+<p>설정 윈도우에 있는 설정은 숨겨진 설정에서 다시 다루지 않습니다. 예를 들어 Option 또는 Control과 완성의 호출 키로 편집 › 마크의 다음 마크나 이전 마크로 이동하는 기능은 설정 › 키보드의 “Option 또는 Control과 호출 키로 다음·이전 마크로 이동”으로 켜고 끕니다. 이런 설정을 찾으려면 설정 검색을 사용하십시오. <a href="basic_preferences.htm#settings-search">설정 검색</a>을 참조하십시오.</p>
+</main>
 </body>
 </html>

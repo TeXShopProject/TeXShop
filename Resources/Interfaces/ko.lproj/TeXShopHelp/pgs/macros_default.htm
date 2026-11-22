@@ -1,49 +1,51 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>기본 매크로 이해하기</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="기본 매크로; Insert Begin/End; #SEL#; #INS#; #PASTE#; 마크; 커서 위치; 텍스트 매크로">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">매크로 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="macros_default.htm" class="current">기본 매크로 이해하기</a></li>
+<li><a href="macros_rearrange.htm">매크로 메뉴 재배열하기</a></li>
+<li><a href="macros_define.htm">새 매크로 정의하기</a></li>
+<li><a href="macros_applescript.htm">AppleScript 매크로</a></li>
+<li><a href="macros_includedscripts.htm">기본 AppleScript 매크로</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript 매크로 정의하기</a></li>
+<li><a href="macros_dialogs.htm">대화상자 만들기</a></li>
+<li><a href="macros_writingcompletescripts.htm">TeXShop 조판 명령으로 스크립트 작성하기</a></li>
+<li><a href="macros_writingcommandscripts.htm">셸 명령으로 스크립트 작성하기</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>기본 매크로 이해하기</h1>
+<p>기본 매크로를 이해하는 가장 좋은 방법은 매크로 편집기(매크로 › 매크로 편집기 열기...)에서 직접 살펴보는 것입니다. 목록에서 매크로를 선택하면 그 옆에 내용이 표시됩니다.</p>
+<p>예를 들어 theorem 환경이 필요하다고 합시다. theorem이라는 단어를 입력하고 선택한 다음 매크로 › Insert Begin/End를 선택합니다. 그러면 단어가 다음과 같이 바뀌고</p>
+<pre>\begin{theorem}
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Understanding Default Macros</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="default macros; placing the cursor">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+\end{theorem}</pre>
+<p>삽입 지점은 그 사이의 줄에 놓입니다.</p>
+<p>Insert Begin/End는 AppleScript 매크로입니다(<a href="macros_applescript.htm">AppleScript 매크로</a> 참고). 단어를 선택했을 때 같은 일을 하는 텍스트 매크로는 다음과 같습니다.</p>
+<pre>\begin{#SEL#}
+#INS#
+\end{#SEL#}</pre>
 
-<BODY>
-		<div id="content_border">
-		<P>The best way to understand default macros is to examine their definition with the Macro Editor. For example, consider the macro titled &quot;Begin/End.&quot; Suppose you wish to use an environment like the theorem environment. Type the word &quot;theorem&quot; and select it. Then choose the &quot;Begin/End&quot; macro. The word &quot;theorem&quot; will be replaced with the text</P>
-		<div id="source">
-			\begin{theorem}<br>
-			\end{theorem}
-		</div>
-		<p>with the cursor placed on the line between this pair.</p>
-		<p>Now examine the begin/end macro code:</p>
-		<div id="source">
-			\begin{#SEL#}<br>
-			#INS#<br>
-			\end{#SEL#}
-		</div>
-		<p>Text in the macro will be inserted into the source file. Each occurrence of the string #SEL# will be replaced by the text selected when the macro was invoked. If no text was selected, #SEL# will be replaced with an empty string. The cursor will be placed at the end of the inserted text unless the text contains the string #INS#, in which case the cursor will be placed at that location.</p>
-		<p>Using this knowledge, it is easy to understand and modify the default macros.</p>
-		
-			</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Macros Help</div>
-<div id="header_title">Understanding Default Macros</div>
-
-	<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Preliminaries</a></li>
-			<LI><a href="macros_default.htm">Understanding Default Macros</a></li>
-			<LI><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
-			<LI><a href="macros_define.htm">Defining New Macros</a></li>
-			<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
-			<LI><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
-			<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
-			<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
-			<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
-			<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
-		</UL>
-	</div	</BODY>
-
-</HTML>
+<h2 id="placeholders">텍스트 매크로의 자리표시자</h2>
+<p>텍스트 매크로의 텍스트는 다음 항목이 바뀐 다음 소스에 삽입됩니다.</p>
+<dl>
+<dt>#SEL#</dt><dd>매크로를 선택할 때 선택되어 있던 텍스트로 바뀝니다. 선택한 텍스트가 없으면 아무것도 넣지 않습니다.</dd>
+<dt>#INS#</dt><dd>삽입 지점이 놓일 곳을 나타냅니다. 이것이 없으면 삽입 지점은 삽입한 텍스트의 끝에 놓입니다.</dd>
+<dt>#PASTE#</dt><dd>클립보드의 텍스트로 바뀝니다. 클립보드에 텍스트가 없으면 아무것도 넣지 않습니다.</dd>
+<dt>•</dt><dd>마크입니다. 편집 › 마크로 이 위치로 이동할 수 있습니다.</dd>
+</dl>
+<p>매크로 편집기에서는 이 자리표시자가 둥근 토큰으로 표시됩니다. 토큰을 넣는 방법은 <a href="macros_define.htm">새 매크로 정의하기</a>에서 설명합니다. 이것만 알면 기본 매크로를 쉽게 이해하고 고칠 수 있습니다.</p>
+</main>
+</body>
+</html>

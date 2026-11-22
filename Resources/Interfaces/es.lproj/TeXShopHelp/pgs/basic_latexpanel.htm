@@ -1,54 +1,64 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel LaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="panel LaTeX; símbolos; letras griegas; entornos; tipografía; amssymb; completion.plist; botones personalizados">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edición</a></li>
+<li><a href="basic_find.htm">Buscar y reemplazar</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Autocompletado de comandos</a></li>
+<li><a href="basic_latexpanel.htm" class="current">Panel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
+<li><a href="basic_license.htm">Licencia</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Panel LaTeX</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Panel LaTeX</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="panel latex; amssymb; completion.plist">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<p>Ventana › Panel LaTeX... abre un panel de código LaTeX: símbolos matemáticos, letras griegas, funciones, caracteres acentuados e internacionales, entornos y comandos de tipografía. Haga clic en el lugar del código fuente donde debe ir el código y después haga clic en un botón del panel. Su código se inserta en el punto de inserción. El panel se queda delante de las ventanas de código mientras usted trabaja.</p>
+<p>Los botones están organizados en páginas. Elija una página con los botones de la parte superior de cada parte del panel: Matemáticas, Griego, Símbolos, Funciones e Internacional, y Entornos, Tipografía y Personalizado.</p>
+<p>Si hay texto seleccionado al hacer clic en un botón de tipografía o de entorno, el texto seleccionado queda dentro del código insertado, como en <code>\textbf{texto seleccionado}</code>.</p>
+<p>Algunos símbolos necesitan el paquete amssymb. Añada esta línea al preámbulo de un documento que los use:</p>
+<pre>\usepackage{amssymb}</pre>
 
-<BODY>
-	<div id="content_border">
-		<P>Bajo el men&uacute; Ventana, hay un &iacute;tem llamado &laquo;Panel LaTeX...&raquo;. Al elegirlo, se abrir&aacute; un panel que contiene una gran cantidad de s&iacute;mbolos matem&aacute;ticos, letras griegas, caracteres internacionales, y entornos de composici&oacute;n. Al hacer click en un s&iacute;mbolo, el correspondiente texto se insertar&aacute; en el archivo con el c&oacute;digo fuente LaTeX. Debemos este magn&iacute;fico panel a Geoffroy Lenglin; su correo electr&oacute;nico es <a href="mailto:geoffroy.lenglin@m4x.org">geoffroy.lenglin@m4x.org</a>.</P>
-		<p>Algunos s&iacute;mbolos del panel requieren la l&iacute;nea</p>
-		<dl>
-			<dd><tt>\usepackage{amssymb}</tt>
-		</dl>
-		<p>al principio en el c&oacute;digo fuente. </p>
-		<p>Es posible personalizar el comportamiento del panel. Cuando TeXShop se ejecuta por primera vez, crea una archivo ~/Library/TeXShop/LatexPanel/completion.plist en tu carpeta de usuario Library. &Eacute;ste es un archivo de texto ordinario que se puede abrir y editar con TeXShop. En &eacute;s se encuentran todas las cadenas de caracteres que se insertan en el c&oacute;digo TeX cuando se elige un &iacute;tem de la paleta. Si una de tales cadenas de caracteres contiene #SEL#, entonces lo que est&eacute; seleccionado reemplazar&aacute; a esta expresi&oacute;n en el texto que se inserta. Si contiene #INS#, entonces el cursor se colocar&aacute; en esa posici&oacute;n tras insertar el texto. Para personalizar el comportamiento del panel, hay que editar completion.plist.</p>
-		<p>Editar archivos plist requiere peque&ntilde;os trucos; v&eacute;ase, en la ayuda, el apartado dedicado a ello. Si usas caracteres Unicode, aseg&uacute;rate de editar y guardar el archivo con formato UTF-8.</p>
-		<p>Los usuarios pueden a&ntilde;adir hasta diecis&eacute;is &iacute;tem adicionales al Panel LaTeX, editando el archivo completion.plist. &Eacute;stos aparecen en el subpanel &laquo;Personal&raquo; del Panel LaTeX. Para conocer con m&aacute;s detalle c&oacute;mo a&ntilde;adir estos &iacute;tem, v&eacute;anse los comentarios sobre completion.plist.</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda b&aacute;sica</div><div id="header_title">Panel LaTeX</div>
-		<div id="menu_border">
-		<ul>
-			<LI><a href="basic_preliminaries.htm">Preliminares</a>
-			<LI><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">C&oacute;mo obtener e instalar TeXShop</a>
-			<li><a href="basic_typesetting.htm">Componer (&lsquo;typeset&rsquo;) documentos</a>
-			<li><a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a>
-			<li><a href="basic_spelling.htm">Correcci&oacute;n ortogr&aacute;fica</a>
-			<li><a href="basic_latexpanel.htm">Panel LaTeX</a>
-			<li><a href="basic_matrixpanel.htm">Panel matrices</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a>
-			<li><a href="basic_graphics.htm">Inclusi&oacute;n de gr&aacute;ficos</a>
-			<li><a href="basic_printing.htm">Imprimir</a>
-			<li><a href="basic_preferences.htm">Establecer ajustes</a>
-			<li><a href="basic_templates.htm">Personalizaci&oacute;n del men&uacute; Plantillas</a>
-			<li><a href="basic_edittricks.htm">Trucos de edici&oacute;n</a>
-			<li><a href="basic_autocompletion.htm">Autocompleci&oacute;n</a>
-			<li><a href="basic_commandcompletion.htm">Compleci&oacute;n de comandos</a>
-			<li><a href="basic_bugs.htm">Notificaci&oacute;n de errores (&lsquo;bugs&rsquo;)</a>
-			<li><a href="basic_websites.htm">Sitios web &uacute;tiles</a>
-			<li><a href="basic_license.htm">Licencia</a>
-			<li><a href="basic_thistranslation.htm">Sobre la traducci&oacute;n a espa&ntilde;ol</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
-
+<h2>Personalizar el panel</h2>
+<p>El código que inserta cada botón se guarda en <code>~/Library/TeXShop/LatexPanel/completion.plist</code>. Abra este archivo en TeXShop para modificarlo; los comentarios del principio explican cómo está organizado. Los nombres de los botones estándar no se pueden cambiar, pero el código que insertan sí. En este código:</p>
+<ul>
+<li><code>#SEL#</code> representa el texto seleccionado;</li>
+<li><code>#INS#</code> marca dónde queda el punto de inserción después de insertar el código;</li>
+<li><code>#PASTE#</code> representa el texto del portapapeles.</li>
+</ul>
+<p>La página Personalizado tiene sitio para un máximo de dieciséis botones propios. Cada uno se define en la lista <code>Customized</code> del archivo mediante dos cadenas, el nombre del botón y el código que inserta:</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>Guarde el archivo en UTF-8 y después salga de TeXShop y vuelva a abrirlo para ver los cambios en el panel. Si el archivo falta o está dañado, TeXShop lo sustituye por su propia copia. Consulte <a href="configure_panel.htm">Modificar el panel LaTeX</a> y <a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

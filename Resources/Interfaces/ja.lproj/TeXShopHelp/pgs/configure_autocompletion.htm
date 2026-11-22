@@ -1,51 +1,47 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>キーバインドを変更する</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="キーバインド; キーバインドの一覧; キーバインドの編集; 入力文字; 出力文字列; ペースト; Keyboardフォルダ; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">TeXShopの設定はどうすればよいか？</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">まえがき</a></li>
+<li><a href="configure_prefchanges.htm">おすすめの設定変更</a></li>
+<li><a href="configure_correctinstall.htm">ライブラリの新しい項目を入手する</a></li>
+<li><a href="configure_hidden.htm">隠し設定</a></li>
+<li><a href="configure_panel.htm">LaTeXパネルを変更する</a></li>
+<li><a href="configure_autocompletion.htm" class="current">キーバインドを変更する</a></li>
+<li><a href="configure_menushortcuts.htm">メニューのショートカットを変更する</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>キーバインドを変更する</h1>
+<p>キーバインドは、入力した文字を別のテキストに置き換えます。たとえば^を^{}に置き換え、カーソルを波括弧の間に置きます。使い方は「<a href="basic_autocompletion.htm">キーバインド</a>」で説明しています。このページでは、一覧の変更方法を説明します。</p>
 
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>キーバインドを変更する</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="キーバインド（自動補完）のオン・オフや内容の編集について">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<h2 id="on-off">キーバインドをオンにする</h2>
+<p>「設定」→「キーボード」の「キーバインドを使う（新しい書類の初期値）」で、書類を開いたときにキーバインドをオンにするかどうかを決めます。最初はオフです。「ソース」→「キーバインド」は、作業中の書類だけでオン・オフを切り替えます。ツールバーに追加できる「キーバインド」項目も同じ働きをします。</p>
 
-<BODY>
-<div id="content_border">
+<h2 id="edit">一覧を編集する</h2>
+<p>「設定」→「キーボード」の「キーバインドの一覧」には、「入力文字」とその「出力文字列」が並んでいます。セルをダブルクリックすると、その場で編集できます。一覧の下の＋をクリックするとキーバインドを追加し、−をクリックすると選択したキーバインドを削除します。行をドラッグすると順序を変えられます。入力文字は1文字です。変更はすぐに保存されて反映され、すでに開いている書類にも適用されます。「編集」→「取り消す」で元に戻せます。</p>
+<p>出力文字列には次の記号を入れられます。一覧では小さなラベルで表示されます。</p>
+<dl>
+<dt>#SEL#</dt><dd>キーを入力したときに選択していたテキスト</dd>
+<dt>#INS#</dt><dd>カーソルを置く位置</dd>
+<dt>#PASTE#</dt><dd>クリップボードのテキスト</dd>
+<dt>•</dt><dd>マーク（「編集」→「マーク」で移動できます）</dd>
+</dl>
+<p>これらは一覧の下の「挿入」メニューから入れるか、上のとおりに入力します。改行はOption＋Returnキー、タブはOption＋Tabキーで入力します。一覧の横の「?」ボタンで、すべての記号を確認できます。出力文字列をコピーすると、記号は上の書き方でコピーされます。</p>
+<p>「ペースト」列にチェックを入れると、キーバインドをペーストしたテキストにも適用します。その書類でキーバインドがオンのとき、ソースにペーストまたはドロップしたテキストに含まれる入力文字が、すべて出力文字列に置き換わります。出力文字列に#SEL#、#INS#、#PASTE#、マークを含むキーバインドにはチェックを入れられません。</p>
 
-<p>
-「設定」→「キーボード」には新しい書類の初期値としてキーバインドをオン／オフするチェックボックスがあります ； デフォルトではオフになっています。キーバインドをオンにすると、特定の文字を打ち込むことで一連の文字列をソースファイルに挿入することができます。たとえば、^ を打ち込むと、カーソルを間に挟んだ括弧──^{ } が挿入されます。
-</p>
-
-<p>
-キーバインドの内容は，TeXShopに内蔵されているキーバインドエディタで編集できます。
-</p>
-
-<p>
-キーバインドがオンのとき、「ペースト」にチェックを入れたキーバインドは、ペーストした文字列にも適用されます。ペーストした文字列の中の入力文字が、それぞれ出力文字列に置き換わります。出力文字列に #SEL#、#INS#、#PASTE#、マーク（•）を含むキーバインドはチェックできません。たとえば「設定」の「新しい書類のエンコーディング」が日本語以外のとき、入力文字 ¥ の出力文字列を半角の \ 1文字にしてチェックを入れると、ペーストした文字列の ¥ が \ になります。TeXShopを初めてインストールした場合は、¥ の行は最初からこのとおりになっています。
-</p>
-
-</div>		
-		<div id="header_background"></div>
-		<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-		<div id="header_chapter">TeXShopの設定はどうすればよいか？</div>
-		<div id="header_title">キーバインドを変更する</div>
-		<div id="menu_border">
-			<UL>
-				<li><a href="configure_preliminaries.htm">まえがき</a>
-				<li><a href="configure_correctinstall.htm">~/Library/TeXShopの新しい項目を入手する</a>
-				<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
-				<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
-				<li><a href="configure_defaults.htm">初期設定について</a>
-		
-				<li><a href="configure_latextemplate.htm">デフォルトのLaTeXテンプレート</a>
-				<li><a href="configure_hidden.htm">隠れた設定項目</a>
-				<li><a href="configure_plist.htm">.plistファイル</a>
-				<li><a href="configure_panel.htm">LaTeXパネルを一部変更する</a>
-				<li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
-		
-				<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-				<li><a href="configure_macros.htm">マクロメニューを変更する</a>
-			</UL>
-		</div>
-</BODY>
-
-</HTML>
+<h2 id="reset">デフォルトの一覧に戻す</h2>
+<p>一覧は~/Library/TeXShop/Keyboardフォルダに保存されています。TeXShopに付属する一覧に戻すには、TeXShopを終了し、Keyboardフォルダをデスクトップに移してから、TeXShopをもう一度起動します。TeXShopはデフォルトの内容でフォルダを作ります。</p>
+</main>
+</body>
+</html>

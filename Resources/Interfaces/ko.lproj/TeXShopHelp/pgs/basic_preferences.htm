@@ -1,88 +1,93 @@
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
-<title>Changing Settings</title>
-<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="settings; magnify; window position; encoding" name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>설정 변경</title>
+<meta name="description" content="설정; 환경설정; 설정 검색; 엔진 프로파일; 조판 명령; 경로 자동 감지; 인코딩; UTF-8; 테마; 불투명도; 괄호 짝 맞추기; 보이지 않는 문자; 키보드; 업데이트; Dock 아이콘; 숨겨진 설정">
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<div id="content_border">
-<p>&#48276;&#51452; &#51060;&#47492;&#51060;&#45208; &#49444;&#47749;&#51060; &#51068;&#52824;&#54616;&#47732; &#54644;&#45817; &#48276;&#51452;&#51032; &#47592; &#50948;&#47196; &#51060;&#46041;&#54616;&#45716; &#54637;&#47785; &#54616;&#45208;&#44032; &#54364;&#49884;&#46121;&#45768;&#45796;. &#44060;&#48324; &#49444;&#51221;&#51008; &#51088;&#52404; &#51060;&#47492;, &#49440;&#53469; &#54637;&#47785; &#46608;&#45716; &#49444;&#47749;&#51004;&#47196; &#44160;&#49353;&#46121;&#45768;&#45796;. &#44057;&#51008; &#54665;&#51032; &#49353;&#49345; &#54596;&#46300;&#45716; &#44208;&#44284; &#54616;&#45208;&#47196; &#54364;&#49884;&#46121;&#45768;&#45796;.</p>
-<h1> Changing settings in the Settings window</h1>
-<p>&#49444;&#51221;&#50640;&#45716; &#51068;&#48152;, &#47928;&#49436; &#48143; &#51200;&#51109;, &#54200;&#51665;&#44592;, &#53412;&#48372;&#46300;, &#47582;&#52644;&#48277; &#44160;&#49324;, &#53580;&#47560;, &#51312;&#54032;, &#53080;&#49556;, &#48120;&#47532;&#48372;&#44592;, &#50629;&#45936;&#51060;&#53944;&#51032; 10&#44060; &#48276;&#51452;&#44032; &#51080;&#49845;&#45768;&#45796;. &#47582;&#52644;&#48277; &#44160;&#49324;&#50640;&#49436; &#8220;LaTeX &#44396;&#47928;&#51012; &#44256;&#47140;&#54620; &#47582;&#52644;&#48277; &#44160;&#49324; &#49324;&#50857;(&#44428;&#51109;)&#8221; &#46608;&#45716; &#8220;&#44592;&#51316; &#48169;&#49885;&#8221;&#51012; &#49440;&#53469;&#54633;&#45768;&#45796;. &#49352; &#48169;&#49885;&#50640;&#45716; &#8220;LaTeX &#51228;&#50808; &#44508;&#52825; &#54200;&#51665;&#8230;&#8221;, &#44592;&#51316; &#48169;&#49885;&#50640;&#45716; &#46308;&#50668;&#50420; &#54616;&#50948; &#50741;&#49496; &#49464; &#44060;&#44032; &#51080;&#49845;&#45768;&#45796;. &#50756;&#49457; &#53412;&#44032; Tab&#51068; &#46412; Tab&#51012; &#44160;&#49353;&#54616;&#47732; &#50696;&#50557; &#50504;&#45236;&#50752; &#50756;&#49457; &#53412; &#49444;&#51221;&#51012; &#54364;&#49884;&#54633;&#45768;&#45796;. &#51068;&#48152;&#50640;&#49436; &#51452;&#49437; &#54665;&#44284; &#49704;&#44200;&#51652; &#49444;&#51221; &#49444;&#47749;&#51012; &#50676; &#49688; &#51080;&#49845;&#45768;&#45796;.</p>
-<h2>Windows and display</h2>
-<p>Several items can be changed in the Settings window: the default font for the input window, the default magnification for the output window, and the default position of these windows when they first appear. You can configure the console so it always appears when typesetting, or only appears when there is an error. You can configure the source window so an initial click in the window only activates the
-window, or this initial click also sets the text insertion point.</p>
-<h2>Typesetting commands</h2>
-<p>The Settings window can also be used to change the commands executed when the "TeX" and "LaTeX" buttons are pushed. This is useful because some users prefer a version of TeX called etex, and there are pdf versions of etex called pdfetex and pdfelatex. Obviously the substituted command must produce a pdf output file. If the new programs are in the TeX binary directory, it is enough to name them in the Settings window; the dialog will also accept fully qualified path names for files which live elsewhere.</p>
-<h2>Text encoding</h2>
-<p>TeXShop editing is done with Apple's Cocoa editing class, which uses Unicode for internal work. When TeXShop files are written to disk, they are usually converted to 8-bit ascii because TeX expects to receive such a file. There are several ways to do the conversion: Mac OS Roman, Iso Latin 1, Iso Latin 2, and others. A setting selects the method used. For many users, the choice will make no difference. Some TeX packages allow users to type accented European characters directly on the keyboard; these packages require the Iso Latin conversion. Thanks to Martin Heusse for providing the original code for this setting. The conversion method can also be selected directly from the Open and Save panels.</p>
-<p> When TeXShop typesets a source file, it displays the result in the preview window, activating this window and bringing it to the front. A setting changes this behavior, showing the result in the preview window but keeping the source window active for further editing. This is particularly useful if you have a large monitor and the source and preview windows do not overlap. To change this setting, choose the &#51312;&#54032; category in Settings and change the "After Typesetting" item to "Continue Editing."</p>
-<h2>Japanese/Korean settings</h2>
-<p>Users in Japan and Korea will use other conversion settings, also provided.</p>
-<p>&#51068;&#48152;&#51032; &#49444;&#51221; &#54532;&#47196;&#54028;&#51068;&#50640;&#49436; &#44592;&#48376; &#49444;&#51221; &#47926;&#51020;&#51012; &#51201;&#50857;&#54624; &#49688; &#51080;&#49845;&#45768;&#45796;.</p>
-<h2>Invisible character settings</h2>
-<p> The item "Show Invisible Characters" in the Source menu makes certain invisible characters visible: the space character, a special wider space used in Japan, the newline character, and the tab character. The choice of which characters to show and how to represent them is made in the &#8220;&#48372;&#51060;&#51648; &#50506;&#45716; &#47928;&#51088;&#8221; (Invisible) group of the &#8220;&#54200;&#51665;&#44592;&#8221; (Editor) category of the Settings window. Most users want invisible characters to be shown only on rare occasions when puzzling things happen, but if you want them to be shown when a document opens, turn on &#8220;&#49704;&#44608;&#47928;&#51088; &#48372;&#51060;&#44592;&#8221; (Show Invisible Characters) under &#8220;&#47928;&#49436;&#47484; &#50676; &#46412;&#8221; (When a Document Opens) in the same category.
-</p>
-<p> The color of invisible character representatives is orange, but this color can be changed by a hidden setting. See the "Hidden Settings" section of Advanced Help.
-</p>
-<h2>Brace matching settings</h2>
-<p>TeX makes extensive use of various kinds of braces: parentheses, curly brackets, etc.  A common mistake is to write source in which the braces don't match. TeXShop has brace matching
-code to help avoid this error. The code is configured in the "Parens Targets & Highlight Color" and "Parens Matching Settings" sections of the Settings window.
-</p>
-<p> When a brace is typed, this brace and its matching brace flash and temporarily turn color, and the background of the text between them also turns color. This makes it easy to make sure that the scope of the brace pair is correct. As soon as another character is typed, these temporary colors are removed.
-</p>
-<p> Because temporary colors and flashes can be distracting, the user is given fine control over this behavior. First, the types of braces it affects can be selected. Many users, for instance, prefer that it not apply to ordinary parentheses "(, )" because they occur so often. Second, the temporary color of the braces can be modified; by default it is magenta.
-</p>
-<p> The "Highlight Enclosed Characters" item determines whether the background of text between the braces temporarily changes color. The "Show Indicator in Moving" determines whether this code applies when moving the cursor through the source with the arrow keys. The "Blink Highlight" item determines whether the matching brace pair momentarily changes color and then returns to the usual color, or instead changes color until another character is typed.
-Finally, "Beep for Isolated Parens" and "Flash Back for Isolated Parens" cause the user to be notified when a brace is typed which has no matching brace.
-</p>
-<p> The color of the temporary background for text inside a brace pair (default is yellow) can be changed by a hidden setting. See the "Hidden Settings" section of Advanced Help.
-</p>
-<p> On Snow Leopard and above, matching braces are briefly marked with a yellow badge over the brace; 
-this fulfills a request for greater visibility of the matching characters. This badge can be turned off; see the "Hidden settings" section of Advanced Help
-for details.
-</p>
-<h1>Hidden settings</h1>
-<p>Although most of the TeXShop's settings are available in the Settings window, some more low-level settings are only settable using the command line.</p>
-<h2>Background, Text and Cursor Colors</h2>
-<p>&#53580;&#47560;&#50640;&#49436; &#49548;&#49828;, &#48120;&#47532;&#48372;&#44592; &#48143; &#53080;&#49556; &#52285;&#51032; &#48176;&#44221;&#49353;, &#44544;&#51088;&#49353;, &#52964;&#49436; &#49353;&#44284; &#48520;&#53804;&#47749;&#46020;, &#44536;&#47532;&#44256; &#49548;&#49828;&#51032; &#49440;&#53469; &#48512;&#48516; &#49353;&#51012; &#49444;&#51221;&#54633;&#45768;&#45796;. &#52964;&#49436;&#50752; &#49440;&#53469; &#48512;&#48516; &#49353; &#50500;&#47000;&#51032; &#8216;&#49884;&#49828;&#53596; &#49353;&#49345; &#49324;&#50857;&#8217;&#51012; &#53020;&#47732; &#49884;&#49828;&#53596; &#49444;&#51221;&#51032; &#8216;&#54868;&#47732; &#47784;&#46300;&#8217;&#50640;&#49436; &#49440;&#53469;&#54620; &#44053;&#51312; &#49353;&#49345;&#44284; &#54616;&#51060;&#46972;&#51060;&#53944; &#49353;&#49345;&#51060; &#45824;&#49888; &#49324;&#50857;&#46104;&#47728;, &#45124;&#47732; &#53580;&#47560;&#51032; &#49353;&#49345;&#51004;&#47196; &#46028;&#50500;&#44049;&#45768;&#45796;. &#48520;&#53804;&#47749;&#46020;&#45716; 0~100% &#49836;&#46972;&#51060;&#45908;&#50752; &#49707;&#51088; &#51077;&#47141; &#54596;&#46300;&#47196; &#51312;&#51208;&#54633;&#45768;&#45796;. &#51221;&#49688; &#48177;&#48516;&#50984;&#51012; &#51077;&#47141;&#54616;&#44256; Return&#51012; &#45572;&#47476;&#44144;&#45208; &#45796;&#47480; &#54596;&#46300;&#47196; &#51060;&#46041;&#54616;&#47732; &#51201;&#50857;&#46121;&#45768;&#45796;. &#54596;&#46300; &#50694;&#51032; &#54868;&#49332;&#54364; &#48260;&#53948;&#51004;&#47196; 1%&#50473; &#50732;&#47532;&#44144;&#45208; &#45236;&#47549;&#45768;&#45796;. &#48276;&#50948;&#47484; &#48279;&#50612;&#45212; &#51221;&#49688;&#45716; 0 &#46608;&#45716; 100&#51004;&#47196; &#51312;&#51221;&#46121;&#45768;&#45796;. &#49548;&#49688; &#46321; &#51096;&#47803;&#46108; &#51077;&#47141;&#51008; &#54200;&#51665;&#51012; &#47560;&#52832; &#46412; &#51060;&#51204; &#44050;&#51004;&#47196; &#46028;&#50500;&#44049;&#45768;&#45796;. &#51649;&#51217; &#51077;&#47141;&#54620; &#53581;&#49828;&#53944;&#50752; &#48537;&#50668;&#45347;&#51008; &#53581;&#49828;&#53944;&#50640; &#44057;&#51008; &#44508;&#52825;&#51060; &#51201;&#50857;&#46121;&#45768;&#45796;.</p>
-<h2>Adding to the list of file types</h2>
-<p>There is a hidden setting to add file extensions to the list of files that TeXShop recognizes as source files which can be typeset and syntax colored.  This is useful when you want to use syntax highlighting when editing TeX files with non-standard extensions. For example,</p>
-<dl>
-<dd>defaults write TeXShop OtherTeXExtensions -array-add "lbx"
-		</dd></dl>
-<p>tells TeXShop to syntax color biblatex 'lbx' files.<p>
-</p></p><h3 id="settings-search">&#49444;&#51221; &#44160;&#49353;</h3><p>&#49324;&#51060;&#46300;&#48148; &#50948;&#51032; &#44160;&#49353; &#54596;&#46300;&#50640;&#49436; &#49444;&#51221;, &#49440;&#53469; &#49324;&#54637;, &#47700;&#45684; &#47749;&#47161;&#51012; &#52286;&#49845;&#45768;&#45796;. &#44033; &#44208;&#44284;&#50640;&#45716; &#54637;&#47785; &#51060;&#47492;&#44284; &#48276;&#51452;&#44032; &#54364;&#49884;&#46121;&#45768;&#45796;. &#44277;&#48177;&#51004;&#47196; &#44396;&#48516;&#54620; &#45800;&#50612;&#45716; &#44057;&#51008; &#54637;&#47785;&#50640; &#54644;&#45817;&#54616;&#47728; &#48276;&#51452; &#51060;&#47492;&#51004;&#47196; &#48276;&#50948;&#47484; &#51329;&#55184; &#49688; &#51080;&#49845;&#45768;&#45796;. &#45824;&#49548;&#47928;&#51088;, &#46972;&#54004; &#47928;&#51088; &#50501;&#49468;&#53944;, &#51204;&#44033; &#47928;&#51088;, &#55176;&#46972;&#44032;&#45208;&#50752; &#44032;&#53440;&#52852;&#45208;&#47484; &#51221;&#44508;&#54868;&#54633;&#45768;&#45796;. &#44208;&#44284;&#47484; &#49440;&#53469;&#54616;&#47732; &#54644;&#45817; &#54665;&#51004;&#47196; &#51060;&#46041;&#54616;&#50668; &#44053;&#51312;&#54616;&#44256; &#48169;&#47928; &#44592;&#47197;&#50640; &#52628;&#44032;&#54633;&#45768;&#45796;. &#44160;&#49353;&#50612;&#47484; &#51648;&#50864;&#47732; &#54364;&#49884; &#51473;&#51064; &#48276;&#51452;&#47484; &#50976;&#51648;&#54633;&#45768;&#45796;. &#44160;&#49353; &#51473;&#50640;&#46020; &#46244;&#47196; &#48143; &#50526;&#51004;&#47196;&#45716; &#48169;&#47928; &#44592;&#47197;&#50640; &#46384;&#46972; &#51060;&#46041;&#54633;&#45768;&#45796;. &#47700;&#45684; &#47749;&#47161; &#44208;&#44284;&#45716; &#53412;&#48372;&#46300;&#47484; &#50676;&#44256; &#44592;&#45733; &#44160;&#49353;&#51012; &#54596;&#53552;&#47553;&#54633;&#45768;&#45796;. &#45800;&#52629;&#53412;&#47484; &#44592;&#47197;&#54616;&#45716; &#46041;&#50504;&#50640;&#45716; &#53412; &#44592;&#47197;&#51012; &#50864;&#49440;&#54633;&#45768;&#45796;.</p><p>&#51088;&#46041; &#51200;&#51109; &#48143; &#48260;&#51204;&#51008; TeXShop&#51012; &#45796;&#49884; &#49884;&#51089;&#54620; &#54980; &#51201;&#50857;&#46121;&#45768;&#45796;. &#54364;&#51456; &#44160;&#49353; &#54056;&#45328;&#44284; &#44160;&#49353; &#47561;&#45824; &#49324;&#51060;&#51032; &#51204;&#54872;&#51008; &#50676;&#47536; &#47928;&#49436;&#51032; &#49548;&#49828;, &#53080;&#49556;, &#47196;&#44536;&#50640; &#51593;&#49884; &#51201;&#50857;&#46121;&#45768;&#45796;. OgreKit&#51004;&#47196; &#51204;&#54872;&#54616;&#44144;&#45208; OgreKit&#50640;&#49436; &#45796;&#47480; &#48169;&#49885;&#51004;&#47196; &#51204;&#54872;&#54616;&#47732; &#45796;&#49884; &#49884;&#51089;&#54620; &#54980; &#51201;&#50857;&#46121;&#45768;&#45796;.</p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Changing Settings</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>
-<li><a href="basic_spelling.htm">Checking Spelling</a>
-<li><a href="basic_latexpanel.htm">Latex Panel</a>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-<li><a href="basic_macros.htm">Macros</a>
-<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-<li><a href="basic_graphics.htm">Including Graphics</a>
-<li><a href="basic_printing.htm">Printing</a>
-<li><a href="basic_preferences.htm">Changing Settings</a>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-<li><a href="basic_edittricks.htm">Editing Tricks</a>
-<li><a href="basic_autocompletion.htm">Key Bindings</a>
-<li><a href="basic_commandcompletion.htm">Command Completion </a>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-<li><a href="basic_websites.htm">Useful Web Sites</a>
-<li><a href="basic_license.htm">License</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm" class="current">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>설정 변경</h1>
+<p>TeXShop › 설정…(<kbd>⌘,</kbd>)을 선택하면 TeXShop의 동작을 변경할 수 있습니다. 설정의 사이드바에는 일반, 문서 및 저장, 편집기, 키보드, 맞춤법 검사, 테마, 조판, 콘솔, 미리보기, 업데이트의 10개 범주가 있습니다. 각 범주는 짧은 개요로 시작하며, 설정은 이름이 붙은 그룹으로 정리되어 있습니다. 설정이 열려 있는 동안 뒤로와 앞으로, 또는 <kbd>⌘[</kbd>와 <kbd>⌘]</kbd>를 사용하면 방문한 범주로 돌아갈 수 있습니다.</p>
+<p>설정은 문서가 열릴 때의 상태를 정하고, 메뉴 명령은 활성 문서가 열려 있는 동안 그 문서만 변경합니다. 예를 들어 소스 › 행번호 보이기는 활성 윈도우의 행 번호를 보이거나 가리고, 설정 › 편집기의 “행 번호 보이기”는 문서를 열 때 행 번호를 표시할지를 정합니다. 이런 설정은 편집기 범주와 미리보기 범주 맨 위의 “문서를 열 때” 그룹에 모여 있습니다.</p>
+<p>변경 내용은 바로 저장됩니다. 텍스트 필드의 값은 Return 키를 누르거나 필드를 벗어날 때 적용됩니다. “자동 저장 및 버전 사용”과, OgreKit 찾기 패널로 전환하거나 OgreKit 찾기 패널에서 다른 것으로 전환하는 변경은 TeXShop을 다시 시작한 후 적용됩니다.</p>
 
+<h2 id="settings-search">설정 검색</h2>
+<p>사이드바 위의 설정 검색 필드에 입력하면 설정, 선택 사항, 메뉴 명령을 찾을 수 있습니다. 각 결과에는 항목 이름과 범주가 표시됩니다. 공백으로 구분한 단어는 모두 같은 항목에 해당해야 하며, 범주 이름을 넣으면 검색 범위가 좁혀집니다. 대소문자, 라틴 문자의 악센트, 전각 문자, 히라가나와 가타카나의 차이는 무시됩니다. 결과를 선택하면 해당 설정으로 이동하여 강조 표시하며, 뒤로를 누르면 원래 있던 곳으로 돌아갑니다. 검색어를 지워도 화면의 범주는 그대로 유지됩니다. 메뉴 명령을 선택하면 키보드 범주가 열리고 그 명령이 목록에 표시되며, 거기서 단축키를 변경할 수 있습니다.</p>
 
+<h2>일반</h2>
+<p>시작 시 그룹의 “빈 문서 열기”는 파일 없이 TeXShop을 시작할 때 빈 문서를 열지 정합니다. “외부 에디터 사용”은 소스를 다른 에디터로 작성할 때 사용하며, 이 경우 TeXShop은 소스 파일의 미리보기만 표시합니다. <a href="advanced_externaleditor.htm">외부 에디터 사용하기</a>을 참조하십시오.</p>
+<p>윈도우 그룹에서는 문서의 소스와 미리보기를 별도의 윈도우로 열지 한 윈도우로 열지, 그리고 새 윈도우를 탭으로 열지를 선택합니다(<a href="basic_miscellaneous.htm">윈도우와 탭</a> 참조). 윈도우 위치 그룹은 소스, 미리보기, 콘솔, HTML 윈도우가 열릴 위치를 정하며, “현재 위치 저장”은 지금 열려 있는 윈도우의 위치와 크기를 사용합니다. 프로젝트 루트 파일 그룹의 설정을 켜면 프로젝트의 장 파일을 열 때 루트 파일이 열립니다. <a href="advanced_root.htm">프로젝트 루트 파일 설정</a>을 참조하십시오.</p>
+<p>실행 중인 Dock 아이콘은 TeXShop이 Dock에 표시하는 아이콘을 현재 아이콘과 이전 디자인 중에서 선택합니다. 고급 그룹에는 “매직 코멘트와 숨겨진 설정 설명서 열기…” 버튼이 있으며, 매직 코멘트와 이 윈도우에 표시되지 않는 설정을 정리한 문서를 엽니다. <a href="configure_hidden.htm">숨겨진 설정</a>을 참조하십시오.</p>
+
+<h2>문서 및 저장</h2>
+<p>“새 문서의 인코딩”은 유니코드(UTF-8)이며, 거의 모든 사용자에게 알맞은 선택입니다. 인코딩 행이 없는 파일을 열면 TeXShop이 인코딩을 판별합니다. 파일 첫머리에 <code>% !TEX encoding = …</code> 행을 넣으면(매크로 › Encoding으로 넣을 수 있습니다) 그 파일의 인코딩이 고정됩니다. “저장 대화상자에 인코딩 표시”를 켜면 저장 대화상자에 인코딩 메뉴가 추가됩니다. <a href="advanced_encoding.htm">인코딩</a>을 참조하십시오.</p>
+<p>“자동 저장 및 버전 사용”은 작업하는 동안 편집 내용을 저장하고 이전 버전을 보관하는 macOS 기능을 켭니다. “저장할 때 이전 파일을 ‘이름~’으로 남기기”는 저장할 때마다 저장하기 전의 파일을 백업으로 남깁니다. “UTF-8-MAC을 UTF-8로 자동 변환”은 저장할 때 か + ゛처럼 따로 저장된 문자를 하나의 문자로 합칩니다.</p>
+
+<h2>편집기</h2>
+<p>“서체”는 모든 소스 윈도우의 서체를 정합니다. 고정폭 서체를 사용하면 소스의 열이 가지런히 맞습니다. 에디터 스타일 그룹은 탭의 폭, 줄바꿈 없이 쓴 문단의 들여쓰기, 줄 간격을 정하며, 열려 있는 소스 윈도우에 바로 반영됩니다. 입력 그룹에는 소스 윈도우를 앞으로 가져오는 클릭으로 삽입 위치도 옮길지를 정하는 “선택시 커서 이동”과 “괄호 입력 시 선택한 텍스트를 감싸기”가 있습니다. 구문 하이라이트 그룹에는 명령 이름의 <code>@</code>, expl3 코드, 전각 문자, 색인 항목에 관한 스위치가 있으며, 색상은 테마에서 설정합니다. 검색 그룹에서는 검색 인터페이스를 선택합니다. <a href="basic_find.htm">찾기 및 대치</a>를 참조하십시오.</p>
+<p>“문서를 열 때” 그룹은 새 소스 윈도우에서 행 번호 표시, 현재 줄 강조, 워드랩, 숨김문자 표시, 블럭 커서 사용 여부를 정합니다. 활성 윈도우에서는 소스 메뉴로 변경합니다.</p>
+<h3>괄호 짝 맞추기</h3>
+<p>닫는 괄호를 입력하면 TeXShop이 짝이 되는 괄호를 보여 주므로, 수식의 괄호 쌍이 맞는지 확인할 수 있습니다. 괄호 짝 맞추기 그룹에서는 어떤 괄호 쌍을 확인할지와 짝을 어떻게 보여 줄지를 선택합니다. 잠깐 강조하거나(괄호 여닫기 체크), 깜박이거나(대응 괄호 깜박이기), 괄호 쌍 사이의 텍스트에 색을 칠하거나(괄호 여닫기 하일라이트), 삽입 위치가 괄호 옆으로 이동할 때도 보여 줍니다(이동 중에도 보이기). 홑괄호 경고음과 홑괄호 경고 색상은 짝이 없는 닫는 괄호를 알려 줍니다. 괄호를 이중 클릭하면 짝이 되는 괄호까지 모두 선택됩니다. 색상은 테마의 강조 그룹에 있는 괄호 안의 내용과 중괄호, 그리고 소스 그룹의 플래시입니다.</p>
+<h3>보이지 않는 문자</h3>
+<p>소스 › 숨김문자 보이기는 활성 윈도우에서 공백, 전각 공백, 줄바꿈, 탭을 표시합니다. 텍스트가 이상하게 동작할 때 도움이 됩니다. 편집기의 보이지 않는 문자 그룹에서는 어느 문자를 표시할지와 각 문자에 사용할 기호를 선택하며, “문서를 열 때”의 “숨김문자 보이기”를 켜면 모든 문서에서 표시됩니다. 색상은 테마의 강조 그룹에 있는 보이지 않는 문자입니다.</p>
+
+<h2>키보드</h2>
+<p>키보드 범주에는 입력한 문자를 <code>{}</code> 같은 텍스트로 바꾸는 키 바인딩(<a href="basic_autocompletion.htm">키 바인딩</a> 참조), 명령어 완성과 그 호출 키 및 완성 목록을 편집하는 “명령어 완성 파일 편집…”(<a href="basic_commandcompletion.htm">명령어 완성</a> 참조), 레이블과 인용 키 완성, 그리고 모든 메뉴 명령의 단축키가 있으며, 단축키는 여기서 변경할 수 있습니다(<a href="configure_menushortcuts.htm">메뉴 단축키 재지정</a> 참조).</p>
+
+<h2>맞춤법 검사</h2>
+<p>맞춤법 검사 그룹에서는 입력 중 맞춤법 검사, 맞춤법 자동 수정, 사전을 설정합니다. 방식 그룹에서는 “LaTeX 구문을 고려한 맞춤법 검사 사용(권장)”을 선택하십시오. 이 방식은 주석, 수식, 명령, 그리고 <code>\label</code>이나 <code>\cite</code> 같은 명령의 인수를 건너뛰며, “LaTeX 제외 규칙 편집…”으로 건너뛸 대상을 변경할 수 있습니다. “기존 방식”에는 자체 옵션이 세 개 있습니다. <a href="basic_spelling.htm">맞춤법 검사</a>를 참조하십시오.</p>
+
+<h2>테마</h2>
+<p>테마는 윈도우, 구문 하이라이트, 괄호 짝 맞추기, 보이지 않는 문자, 그 밖의 강조에 사용하는 색상의 묶음입니다. “밝은 테마”와 “어두운 테마”는 macOS의 각 화면 모드에서 사용할 테마를 선택합니다. 그 아래의 테마 목록에서는 테마를 추가, 복제, 이름 변경, 삭제, 복원, 내보내기, 가져오기 할 수 있으며, 테마를 선택하면 색상을 변경할 수 있습니다. 테마의 변경 내용은 즉시 저장됩니다.</p>
+<p>테마에서는 소스, 미리보기, 콘솔 윈도우의 배경색, 글자색, 커서 색상과 불투명도, 그리고 소스의 선택 부분 색상을 설정합니다. 커서와 선택 부분 색상 아래의 “시스템 색상 사용”을 켜면 시스템 설정 › 화면 모드에서 선택한 강조 색상과 하이라이트 색상이 대신 사용되며, 다시 끄면 테마 자체의 색상으로 돌아갑니다. 불투명도는 0%에서 100%까지의 슬라이더와 숫자 입력 필드로 조절합니다. 정수 백분율을 입력하고 Return 키를 누르거나 필드를 벗어나면 적용됩니다. 필드 옆의 화살표 버튼으로 1%씩 올리거나 내립니다. 범위를 벗어난 값은 가장 가까운 한계값으로 조정됩니다. 소수 등 잘못된 입력은 편집을 마칠 때 이전 값으로 돌아갑니다. 직접 입력한 텍스트와 붙여넣은 텍스트에 같은 규칙이 적용됩니다.</p>
+<p>소스의 색상에 대해서는 <a href="advanced_syntaxcolor.htm">구문 하이라이트</a>를 참조하십시오.</p>
+
+<h2>조판</h2>
+<p>조판을 설정하는 가장 빠른 방법은 엔진 프로파일입니다. 엔진 그룹 맨 위의 엔진 프로파일 메뉴에서 pdfLaTeX, LuaLaTeX, upLaTeX + dvipdfmx 같은 프로파일을 선택합니다. 프로파일이 설정하는 값이 시트에 나열됩니다. 현재 설정을 유지할 값은 끄고, LaTeX를 latexmk로 실행할지 선택한 다음 확인을 클릭합니다. 프로파일은 조판 명령과 조판 방식, kpsewhich 명령, BibTeX 엔진, 색인 프로그램, MetaPost, otf 변환을 설정하며, 일본어 프로파일은 새 문서의 인코딩, 사전, UTF-8-MAC 변환도 설정합니다. 그 밖의 설정은 그대로 유지됩니다. 설정이 어느 프로파일과도 일치하지 않으면 메뉴에 “사용자화”가 표시됩니다.</p>
+<p>엔진 그룹의 나머지 설정은 문서를 열 때 도구 막대의 조판 버튼 옆에서 선택되는 것(새 문서 조판), 거기서 엔진 파일을 선택했을 때 사용할 엔진 파일, 그리고 조판 방식(PDF 직접 생성 또는 DVI 경유)을 정합니다. 문서 첫머리의 <code>% !TEX program</code> 행이 이 설정보다 우선합니다. “조판 후 동작”은 조판이 끝났을 때 어느 윈도우를 앞으로 가져올지를 “보기 창을 전면으로”, “편집 창에서 계속 작업”, “보기 창을 표시한 후 원래 창으로 돌아가기” 중에서 선택합니다.</p>
+<p>PDF 직접 생성 그룹과 DVI 경유 그룹에는 각 방식이 실행하는 plain TeX 명령과 LaTeX 명령이 옵션과 함께 들어 있습니다. 명령에 <code>-shell-escape</code>를 추가했다면 “shell-escape 시 확인”을 켜십시오. 그런 문서를 조판하기 전에 확인을 요청합니다. <a href="advanced_shellescape.htm">Shell Escape 보호</a>를 참조하십시오. 관련 도구 그룹에는 BibTeX, 색인 작성, MetaPost의 명령이 있습니다. <a href="basic_typesetting.htm">문서 조판</a>과 <a href="basic_alternatetypeset.htm">대체 조판 방식</a>을 참조하십시오.</p>
+<p>경로 그룹에는 TeX 프로그램의 폴더(TeX 엔진, 보통 <code>/Library/TeX/texbin</code>)와 Ghostscript의 폴더가 있습니다. “경로 자동 감지…”는 일반적인 위치에서 TeX Live와 Ghostscript를 찾아, 찾은 설치본을 버전과 함께 최신 것부터 나열하고 선택한 것을 설정합니다. TeXShop을 처음 사용할 때도 이 작업을 합니다. 일본어 pLaTeX 그룹은 <a href="advanced_Japan.htm">일본어 조판</a>에서 설명합니다.</p>
+
+<h2>콘솔</h2>
+<p>콘솔 범주에서는 콘솔의 서체(원하면 매크로 편집기에도 적용)와 콘솔이 나타나는 시점, 즉 조판할 때 항상 나타날지 오류가 발생했을 때만 나타날지를 설정합니다.</p>
+
+<h2>미리보기</h2>
+<p>“문서를 열 때” 그룹은 새 미리보기 윈도우가 문서를 표시하는 방식을 정합니다. 페이지 형식, 배율, 마우스 모드, 링크 팝업, 두 페이지 표시의 방향입니다. 다른 그룹에서는 페이지 넘기기와 링크 팝업, 다른 응용 프로그램이 PDF를 변경했을 때의 새로 고침, 복사할 이미지의 형식, HTML 윈도우의 시작 페이지를 설정합니다. <a href="basic_preview.htm">미리보기 윈도우</a>를 참조하십시오.</p>
+
+<h2>업데이트</h2>
+<p>TeXShop은 매일, 매주 또는 매월 새 버전을 자동으로 확인할 수 있습니다. 베타 버전도 받으려면 “가능한 경우 사전 발매 버전으로 업데이트”를 켜십시오. “업데이트 확인...”을 클릭하면 지금 바로 확인합니다.</p>
+</main>
 </body>
 </html>

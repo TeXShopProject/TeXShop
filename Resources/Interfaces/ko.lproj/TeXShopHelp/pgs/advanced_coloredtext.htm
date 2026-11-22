@@ -1,92 +1,55 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>텍스트 색상</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="텍스트 색상; xcolor; color; textcolor; definecolor; dvipsnames; 미리보기 페이지 색상; 라이트 페이지">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm" class="current">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>텍스트 색상</h1>
+<p>xcolor 패키지를 사용하면 조판된 문서의 텍스트에 색을 입힐 수 있습니다. 프리앰블에서 이 패키지를 불러옵니다.</p>
+<pre>\usepackage{xcolor}</pre>
+<p>그러면 <code>\color{blue}</code>는 현재 그룹이나 환경이 끝날 때까지 텍스트를 파란색으로 바꾸고, <code>\textcolor{red}{This is very important!}</code>는 인수에만 색을 입힙니다. 원하는 색을 직접 정의하려면 예를 들어 다음과 같이 씁니다.</p>
+<pre>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</pre>
+<p><code>dvipsnames</code> 옵션을 사용하면 BrickRed, ForestGreen 같은 이름 있는 색을 쓸 수 있습니다.</p>
+<pre>\usepackage[dvipsnames]{xcolor}</pre>
+<p>도움말 › 패키지 도움말 보이기...로 여는 xcolor 문서에 모든 색과 옵션이 나와 있습니다.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-<TITLE>Colored Text</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="colored text; pdf background color">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
-<BODY>
-		<div id="content_border">
-		<P>
-	It has always been possible to color TeX output. To do so, add the line
-</P>
-	<dl>
-	<dd><tt>\usepackage{color}</tt>   
-	</dl>
-<P>
-	to the preamble, and insert a line like
-</P>
-	<dl>
-	<dd><tt>\color{blue}</tt>   
-	</dl>
-<P>
-	before typesetting begins. To color a limited section of text, use a command like
-</P>
-	<dl>
-	<dd><tt>{\color{red} This is very important!}</tt>   
-	</dl>
-<P>
-	To define custom colors, use a command like
-</P>
-<dl>
-	<dd><tt>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</tt>   
-	</dl>
-
-<P>
-	Users may be familiar with a list of defined colors with names like "BrickRed"; these
-named colors were defined automatically for the dvips driver. To use them generally, use the syntax
-</P>
-<dl>
-	<dd><tt>\usepackage[dvipsnames,usenames]{color}</tt>   
-	</dl>
-
-
-<P>
-	When output is colored, the output may be difficult to read on the preview screen.
-		The pages in the preview can be given another color in the “테마” (Themes) category of the Settings window:
-		the color under “라이트 페이지” (Light Pages) in the “미리보기” (Preview) row fills the pages while they are shown light.
-		Each theme has its own color, so the theme for Light Mode and the theme for Dark Mode can use different colors.
-		The color is not printed, and it does not appear when part of a page is copied.
-		Pages shown dark with the “화면 모드” (Appearance) item in the toolbar of the Preview window are not filled with this color.
-</P>
-<P>
-	Earlier versions of TeXShop set this color with the hidden settings Pdfbackground_R, Pdfbackground_G and Pdfbackground_B.
-</P></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Colored Text in TeX</div>
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>미리보기 윈도우의 페이지 색상</h2>
+<p>색을 입힌 텍스트는 흰 페이지에서 읽기 어려울 수 있습니다. 미리보기 윈도우의 페이지는 설정 › 테마에서 다른 색으로 바꿀 수 있습니다. 윈도우 그룹의 미리보기 줄에서 “라이트 페이지” 아래의 색이, 페이지를 밝게 표시할 때 페이지를 채웁니다. 테마마다 색이 따로 있으므로 밝은 테마와 어두운 테마에서 다른 색을 쓸 수 있습니다.</p>
+<p>이 색은 화면에서 볼 때만 쓰입니다. 프린트되지 않으며, 페이지의 일부를 복사할 때도 포함되지 않습니다. 미리보기 윈도우 도구 막대의 화면 모드 항목으로 페이지를 어둡게 표시할 때는 이 색으로 채우지 않습니다. 텍스트 자체의 색은 위에서 설명한 것처럼 문서에서 xcolor로 정합니다.</p>
+</main>
+</body>
+</html>

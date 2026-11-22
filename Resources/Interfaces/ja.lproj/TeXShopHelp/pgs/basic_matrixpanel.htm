@@ -1,67 +1,65 @@
-<HTML>
-
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>行列パネル</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="行列パネルの取扱説明">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>行列パネル</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="行列パネル; 行列; array; tabular; 表; 区切り記号; 単位行列; スプレッドシート; matrixpanel_1.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
 <body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
+<li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm" class="current">行列パネル</a></li>
+<li><a href="basic_macros.htm">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm">画像を入れる</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>行列パネル</h1>
+<p>「ウインドウ」→「行列パネル...」を選ぶと、行列や表を書くためのパネルが開きます。パネルの表に成分を入力し、仕上がりの形を選んで、ソースのカーソル位置に入れます。</p>
 
-<div id="content_border">
+<h2>行列や表を作る</h2>
+<ol>
+<li>「行：」と「列：」に大きさを入力します。どちらも999まで指定できます。</li>
+<li>「環境」で、数式の中の行列なら「matrix」（<code>array</code>環境）、文章の表なら「tabular」を選びます。「tabular」では、「table環境に埋め込む」をオンにすると、表がキャプションとラベル付きの<code>table</code>フロートに入ります。</li>
+<li>行列では、左右の区切り記号を選びます。ピリオドを選ぶとその側に区切り記号を付けません。最後のボタンを選ぶと、横の欄に入力した区切り記号を使います。</li>
+<li>行列の絵が描かれた2つのボタンで、成分の周りの枠と、成分の間の罫線を加えます。</li>
+<li>成分を入力します。「クリア」ですべて空にし、「単位行列」と「零行列」で単位行列やゼロを入れます。</li>
+<li>「挿入」をクリックするか、<kbd>⌘Return</kbd>を押します。</li>
+</ol>
 
-<!-- 
-<p>
-「ウィンドウ」メニューに「行列パネル」という項目があります。これを選択すると、行列を簡単に作成できるパネルが開きます。行列の各入力部分は小さなものですが、長いものでもどこか別の場所で編集してからペーストすることができます。この素晴らしいパネルはJonas Zimmermann（ <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a> ）の業績です。
-</p>
- -->
+<h2>表の操作</h2>
+<p>表はスプレッドシートのように使えます。セルをクリックすると選択され、ドラッグかShiftキーを押しながらのクリックで複数を選択できます。そのまま入力すると値が置き換わります。値を編集するには、ダブルクリックするか、F2キーかControl＋Uを押します。Returnキーで下へ、Tabキーで右へ、矢印キーで上下左右へ移動し、Deleteキーで選択したセルを空にします。「コピー」と「ペースト」で、スプレッドシートのアプリケーションとセルをやりとりできます。行の番号をドラッグすると行を移動できます。パネルが作業中のあいだは、「取り消す」と「やり直す」が表に働きます。</p>
+<p>行列を小さくしても、外れたセルは値を保ったまま灰色で表示され、また大きくすると戻ります。表をもっと見るには、パネルを大きくしてください。</p>
 
-<p>
-「ウインドウ」メニューに「行列パネル」という項目があります。これを選択すると、行列を簡単に作成できるパネルが開きます。行列の各入力部分は小さなものですが、どこか別の場所で編集した長いテキストをペーストすることができます。この素晴らしいパネルはJonas Zimmermann（ <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a> ）さんによって作られました。
-</p>
-
-<p>
-TeXShop 1.35では、行列パネルで表（テーブル）を作成することもできます。このパネルは ~/Library/TeXShop/MatrixPanelにある「matrixpanel_1.plist」というファイルを使って設定できます。このファイルの構成は1.35で見直されました ； 古い「matrixpanel.plist」ファイルはTeXShop 1.34からのまま残っていても差し支えありません。
-</p>
-
-<p>表は表計算アプリと同じように操作できます。セルをクリックして選び、ドラッグやShiftクリックで複数のセルを選びます。そのまま入力すると値が置き換わり、ダブルクリック、F2、Control-Uで値を編集できます。Returnで下へ、Tabで右へ、矢印キーで上下左右に移動し、Deleteで選んだセルを空にします。コピーとペーストで、表計算アプリとセルをやり取りできます。行番号をドラッグすると行を移動でき、Command-Returnで行列を挿入します。行列は999行・999列まで作れます。行列の外のセルは値を保ったまま灰色で表示されます。</p> 
-
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">基本的なヘルプ</div>
-<div id="header_title">行列パネル</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="basic_preliminaries.htm">まえがき</a>
-			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a>
-			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
-			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
-			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
-			<li><a href="basic_spelling.htm">スペルをチェックする</a>
-			<li><a href="basic_latexpanel.htm">Latexパネル</a>
-			<li><a href="basic_matrixpanel.htm">行列パネル</a>
-			<li><a href="basic_macros.htm">マクロ</a>
-			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
-			<li><a href="basic_graphics.htm">画像を入れる</a>
-			<li><a href="basic_printing.htm">印刷</a>
-			<li><a href="basic_preferences.htm">設定</a>
-			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
-			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
-			<li><a href="basic_edittricks.htm">編集上のコツ</a>
-			<li><a href="basic_autocompletion.htm">キーバインド</a>
-			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
-			<li><a href="basic_bugs.htm">バグレポートを送る</a>
-			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
-			<li><a href="basic_license.htm">使用許諾</a>
-		</ul>
-	</div>
+<h2>入れるコードを変更する</h2>
+<p>パネルが成分の周りに書くコードは<code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code>にあります。環境の始まりと終わり、区切り記号、成分の間と行の間の区切り、枠や罫線の線、それに各列の揃え方を決める文字<code>c</code>です。たとえば<code>c</code>を<code>r</code>に変えると、列が右揃えになります。ファイルの文字列の数と順番は変えないでください。変更したらTeXShopを再起動します。「<a href="advanced_plist.htm">Plistファイル</a>」を参照してください。</p>
+</main>
 </body>
-
-
-</HTML>
+</html>

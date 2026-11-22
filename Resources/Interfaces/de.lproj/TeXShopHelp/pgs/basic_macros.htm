@@ -1,47 +1,58 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Makros</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Makros; Menü Makros; Makro-Editor; Kurzbefehl für Makros; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
+<li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
+<li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
+<li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_macros.htm" class="current">Makros</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
+<li><a href="basic_printing.htm">Drucken</a></li>
+<li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
+<li><a href="basic_license.htm">Lizenz</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Makros</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Makros</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="TeXShop erlaubt es mit Hilfe von Makros h&auml;ufig benutzte Befehle in den LaTeX-Quelltext einzuf&uuml;gen. Verwenden Sie hierzu das Makro-Men&uuml; und den Makro-Editor.">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">	
-		<P>Es existiert eine andere Art um h&auml;ufig verwendete TeX-Befehle in Ihren Quelltext einzuf&uuml;gen. Die Befehle finden Sie im Makro-Men&uuml; oder &uuml;ber die Makro-Schaltfl&auml;che in der Zeichenleiste. Zus&auml;tzlich f&uuml;hren einige Makros AppleScripts aus. Ein Makroeditor ist vorhanden, was Ihnen die M&ouml;glichkeit bietet aktuelle Makros zu &uuml;berpr&uuml;fen, zu &auml;ndern und eigene Makros zu erstellen. F&uuml;r weitere Details schauen Sie das Dokument &bdquo;&Uuml;ber Makros&ldquo; im Hilfemen&uuml; an. Die TeXShop Makros und der Makroeditor wurden von Mitsuhiro Shishikura programmiert. Standardmakros wurden von Mitsuhiro Shishikura und Hirokazu Ogawa erstellt.</P>
-		<p>Die Makros werden in &bdquo;~/Library/TeXShop/Macros/Macros.plist&ldquo; gesichert . Es handelt sich dabei um eine einfache Textdatei, die kopiert und an andere gesandt werden kann. So k&ouml;nnen Sie Makros verbreiten, die Sie erstellt haben. Der Makroeditor hat eine Funktion um plist-Dateien zu lesen um Makros zu importieren.</p>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Grundlagen</div>
-<div id="header_title">Makros</div>
+<p>Das Menü „Makros“ und das Objekt „Makros“ der Symbolleiste enthalten Befehle, die LaTeX-Code in den Quelltext einfügen oder AppleScript-Skripte ausführen. Einige der Makros, die TeXShop mitbringt (ihre Namen sind englisch):</p>
+<ul>
+<li>Program, Encoding und Root schreiben die <code>% !TEX</code>-Zeilen, die die Satz-Engine, die Kodierung und die Hauptdatei eines Dokuments festlegen. Wählen Sie den Wert aus der angezeigten Liste; die Zeile wird korrekt an den Anfang des Quelltexts geschrieben.</li>
+<li>Insert Begin/End macht aus einem ausgewählten Wort wie <code>theorem</code> ein Paar <code>\begin{theorem}</code> … <code>\end{theorem}</code> mit der Einfügemarke dazwischen.</li>
+<li>Untermenüs wie Headings, Mathematics, Lists, Tables und Figures fügen häufig gebrauchten LaTeX-Code ein.</li>
+</ul>
 
-
-	<div id="menu_border">
-		<UL>
-			<LI><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-			<LI><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-			<LI><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
-			<LI><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-			<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-			<li><a href="basic_spelling.htm">Rechtschreibpr&uuml;fung</a></li>
-			<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-			<li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
-			<li><a href="basic_macros.htm">Makros</a></li>
-			<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-			<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
-			<li><a href="basic_printing.htm">Drucken</a></li>
-			<li><a href="basic_preferences.htm">Einstellungen &auml;ndern</a></li>
-			<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-			<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
-			<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-			<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
-			<li><a href="basic_bugs.htm">Fehlerbericht &uuml;bermitteln</a></li>
-			<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
-			<li><a href="basic_license.htm">Lizenz</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2>Der Makro-Editor</h2>
+<p>Wählen Sie Makros › Makro-Editor öffnen..., um zu sehen, wie jedes Makro definiert ist, es zu ändern oder eigene Makros hinzuzufügen. Die Liste links ist das Menü „Makros“: Ziehen Sie Einträge, um sie neu anzuordnen, und fügen Sie mit der Leiste unter der Liste Einträge, Untermenüs und Trennlinien hinzu. Der Text eines Makros wird in den Quelltext eingefügt. In diesem Text stehen abgerundete Platzhalter für den ausgewählten Text, den Text in der Zwischenablage und die Stelle der Einfügemarke; wählen Sie sie aus dem Menü „Einfügen“ unter dem Text.</p>
+<p>Um einem Makro einen Tastaturkurzbefehl zu geben, wählen Sie es in der Liste aus, klicken auf seinen Kurzbefehl (oder doppelklicken darauf) und drücken die Tasten. Ein Kurzbefehl verwendet die Befehls- oder Control-Taste oder ist eine Funktionstaste. Verwendet ihn bereits ein Menübefehl oder ein anderes Makro, weist der Makro-Editor darauf hin.</p>
+<p>Die Makros stehen in <code>~/Library/TeXShop/Macros/Macros_Latex.plist</code>. Um Makros weiterzugeben, wählen Sie sie im Makro-Editor aus und wählen Makros › Auswahl in Datei sichern...; um Makros aus einer solchen Datei hinzuzufügen, wählen Sie Makros › Makros aus Datei hinzufügen....</p>
+<p>Das Kapitel <a href="macros.htm">Hilfe zu Makros</a> erklärt Makros ausführlich, auch <a href="macros_applescript.htm">AppleScript-Makros</a>.</p>
+</main>
+</body>
+</html>

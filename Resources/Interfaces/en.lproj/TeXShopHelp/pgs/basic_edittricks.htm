@@ -1,138 +1,111 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editing Tricks</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="editing tricks; matching brackets; select lines; comment; indent; Tags menu; Close Current Environment; split source; drag and drop; status bar; statistics; Swap with Clipboard; Copy with Style; Character Type Conversion; backup file">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
+<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
+<li><a href="basic_preview.htm">The Preview Window</a></li>
+<li><a href="basic_edittricks.htm" class="current">Editing Tricks</a></li>
+<li><a href="basic_find.htm">Find and Replace</a></li>
+<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
+<li><a href="basic_spelling.htm">Checking Spelling</a></li>
+<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
+<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
+<li><a href="basic_graphics.htm">Including Graphics</a></li>
+<li><a href="basic_printing.htm">Printing</a></li>
+<li><a href="basic_preferences.htm">Changing Settings</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
+<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
+<li><a href="basic_websites.htm">Useful Web Sites</a></li>
+<li><a href="basic_license.htm">License</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Editing Tricks</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Editing Tricks</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="editing tricks; comment; indent; split window; drag and drop; backup file">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Selecting</h2>
 
-<BODY>
-		<div id="content_border">
+<p>Double-click a bracket, such as ( or }, to select everything between it and its matching bracket; this helps to find a brace that is missing. Double-click with the Option key held down to select the bracket alone. Click or drag over the line numbers to select whole lines. The Matching Brackets group of Settings › Editor sets how matching brackets are shown while you type.</p>
 
-<p> Double clicking on a bracket of the form (, {, [, ], }, or ) will select everything between that bracket and its matching bracket. Double clicking on a bracket with the option key down will select the bracket alone.</p>
-<p> The Advanced Find Panel, chosen in Settings &gt; Editor &gt; Find Panel, finds and replaces with regular expressions. Every user starts with it: at the first launch of TeXShop 6.00, users of earlier versions are switched to it once, and can choose another method there again. Users who came from the OgreKit Find Panel find the OgreKit replacement syntax (\1) chosen under More Options. With the panel, the Find submenu of the Edit menu also has Find All (shift-command-F), Select All Matches, Use Selection for Replace (shift-command-E), Replace, Replace and Find (option-command-G), Replace All, Highlight All (shift-command-H) and Remove Highlights (control-shift-command-H); they work while the panel is closed. Find All lists every match in the panel with its line number; clicking a row selects the match. Highlight All, Select All and Remove Highlights are in the menu of Find All. Replace All is undone with a single Undo. The options under the fields and behind the button with three dots are remembered from session to session. A click in the source window puts the panel behind that window; to keep the panel in front of the document windows, turn on &ldquo;Keep the Advanced Find panel on top&rdquo; in Settings &gt; Editor.</p>
-<p> The panel uses the regular expressions of ICU. A brace that is not part of a repetition must be written \{ or \}. In the replacement, $1, $2, ... are the groups and \$ is a dollar sign; the OgreKit syntax, with \1, \2, ... and a literal $, can be chosen among the options. A backslash in the replacement is written twice. The ? button next to Regular expression opens a reference of the syntax and the replacement, and of where ICU and OgreKit differ. The fields use a monospaced font at the size of the source font and the colors of the source&rsquo;s theme. With Regular expression off, they are colored as TeX is in the source; with it on, they show the parts of a pattern in the theme&rsquo;s colors, errors in red and what OgreKit reads otherwise in orange; the line under the options explains them.</p>
-<p><a name="multiplereplace"></a> Edit Multiple Replace in the Find submenu keeps sets of find and replace pairs, applied in order with a single Undo. The Multiple Replace&hellip; button next to Replace All in the Advanced Find Panel opens it too. The sets are files in ~/Library/TeXShop/MultipleReplace, in the JSON format of CotEditor's replacement definitions. The Multiple Replace submenu applies a set to the whole text at once. Two sample sets, written when the folder does not exist yet, convert between Unicode characters and the commands of ajmacros as Character Type Conversion does, adding % after a command at the end of a line; a sample that was changed or removed is not written again.</p>
-<p> To find and replace in all files of a document split into chapter files, see <a href="basic_texrootsearch.htm">Find in TeX Sources</a>.</p>
-<p> Replace All, Find All and Multiple Replace run in the background, and the document cannot be edited until they end. When one takes long, a sheet on the document window shows how many it has found or how many rules it has done; its cancel button, or the Escape key, stops it and leaves the text as it was.</p>
-<p> The panel also finds in the console, the log and the Experiment windows. Replacing is dimmed in the console, the log and the Experiment console, which show the output of TeX.</p>
-<p> The OgreKit Find Panel by Isao Sonobe remains available as a legacy choice in Settings; switching to or from it requires restarting TeXShop. The TeXShop manual describes the Advanced Find Panel in detail.</p>
+<h2>Comments and indentation</h2>
 
-		<P>Groups of lines can be commented out using a menu command, and later activated again. Groups of lines can be indented with a menu command, and later moved back. If a line starts with a series of tabs or spaces, new lines will start at the same position until the behavior is cancelled by backspacing. This behavior was added to TeXShop by Nicol&aacute;s Ojeda B&auml;r in Argentina, who can be reached at <a href="mailto:lojedaortiz@interlink.com.ar">lojedaortiz@interlink.com.ar</a>. Thanks!</P>
+<p>Source › Comment (<kbd>⌘{</kbd>) puts % at the start of the selected lines, and Source › Uncomment (<kbd>⌘}</kbd>) removes it. Source › Indent and Source › Unindent move the selected lines right or left, by a tab when “Use Tabs for Indent Menu” is on in Settings › Editor › Style, and otherwise by as many spaces as Tab Size. A new line starts with the same tabs and spaces as the line before it; press Delete to remove them.</p>
 
-<P>
-The source window can be split in two pieces using the split tool at the top of the window. When it is split, two views of the same source are
-shown. You can type in either piece and your changes will immediately appear in the other as well. Thus you can modify one section of
-source while reading a second part of the source.
-</P>
+<h2>Moving around the source</h2>
 
-<P>
-TeXShop can be instructed to keep a backup file every time a file is saved. When &ldquo;Enable Autosave and Versions&rdquo; is off, turn on &ldquo;Keep the previous file as &ldquo;name~&rdquo; when saving&rdquo; in Settings &gt; Documents and Saving. The backup has the name of the file followed by a tilde.
-</P>
+<p>The Tags menu in the toolbar lists the chapters, sections and other divisions of the document; choose one to go there. A line that starts with <code>%:</code> adds the rest of the line to the menu as a tag of your own. “Tags Menu in Menubar” in Settings › Editor › Display puts the same menu in the menu bar. The Labels item of the toolbar lists the labels of the document. Edit › Line Number... (<kbd>⌘L</kbd>) goes to a line by its number.</p>
 
-<P>
-A status bar under the source shows the lines, characters and words of the document, with the numbers in the selection in parentheses,
-and where the insertion point is: its location, line and column. Characters are counted as they are seen, so an accented letter or an
-emoji counts as one, and TeX commands are counted as they are written. An emoji also counts as a word. The size of the saved file is shown at the right.
-Source &gt; Show Status Bar shows or hides the status bar in every window.
-</P>
+<p>Window › Split Window (<kbd>⌃2</kbd>), or the Split Source item of the toolbar, divides the source window into two parts that show the same text, so that you can read one part of the document while you write another. Hold down Option to split it side by side. What you type in one part appears in the other too.</p>
 
-<P>
-Text Statistics&hellip; in the status bar, or Edit &gt; Statistics&hellip;, counts the text without the TeX commands. The TeX Live
-program detex removes them from the document, or from the selection, and adds the files read with \input and \include; TeXShop
-counts what is left in the same way as the status bar. The document need not be saved. The count is made when the popover opens
-and when its refresh button is clicked, and the time of the count is shown at the top.
-</P>
+<h2>Typing less</h2>
 
-<P>
-File icons can be dragged and dropped onto the source text. If the file is a tex file, an \input command will be
-added with a relative path to the file. If the file is a graphic file, an \includegraphics command will be
-added instead. The following graphic types are recognized: pdf, jpg, jpeg, tif, tiff, eps, ps.
-</P>
+<p>Source › Close Current Environment (<kbd>⌃⌘C</kbd>) adds the <code>\end</code> line of the environment that is still open, for example <code>\end{itemize}</code> after a list. Command completion finishes commands and environments you have begun to type; see <a href="basic_commandcompletion.htm">Command Completion</a>. Key bindings replace a typed character with text; see <a href="basic_autocompletion.htm">Key Bindings</a>. The LaTeX panel, the Matrix panel and the Macros menu insert longer pieces of text.</p>
 
-<P>
-Dropping a cls file produces \documentclass and a file reference, dropping a sty file produces
-\usepackage, dropping a bib file produces \bibliographystyle, and dropping other text files
-produces \input.
-</P>
+<h2>Dropping files on the source</h2>
 
-<p> Drag and drop resolves aliases. For example, if a graphic file is really an alias, the file can
-be drag-and-dropped to the source and this source will typeset fine. TeX itself cannot resolve aliases,
-although it can resolve symbolic links. So if the name of the graphic alias is typed directly into
-the source, it will cause an error during typesetting.</p>
+<p>Drag a file from the Finder onto the source to insert a command for it:</p>
 
-<P>
-The behavior of drag and drop is user customizable. Customization is done with the Macro menu. Insert a new submenu
-titled "Drag & Drop". Inside this submenu place items named with the extension whose behavior
-you wish to customize, and place the code that should be inserted in the body of this item.
-For instance, if the item is .pdf, the code might be \includegraphics[#INS#]{%r}. In these inclusions,
-the following abbreviations may be used:
+<table>
+<tr><th>File</th><th>Inserted command</th></tr>
+<tr><td>.pdf, .png, .jpg, .jpeg, .tif, .tiff, .eps, .ps</td><td><code>\includegraphics[]{<var>path</var>}</code></td></tr>
+<tr><td>.bib</td><td><code>\bibliography{<var>name</var>}</code></td></tr>
+<tr><td>.bst</td><td><code>\bibliographystyle{<var>name</var>}</code></td></tr>
+<tr><td>.sty</td><td><code>\usepackage{<var>name</var>}</code></td></tr>
+<tr><td>.cls</td><td><code>\documentclass{<var>name</var>}</code></td></tr>
+<tr><td>other files, such as .tex</td><td><code>\input{<var>path</var>}</code></td></tr>
+</table>
+
+<p>Here <var>path</var> is the path of the file from the folder of the source file, and <var>name</var> is the file name without its extension. A dropped alias is replaced by the file it stands for, which TeX could not find by itself. A file whose path contains a space is not inserted; TeXShop shows a warning instead.</p>
+
+<p>To insert something else for a kind of file, open the Macro Editor (Macros › Open Macro Editor...) and add a submenu named <code>Drag &amp; Drop</code>. In it, add an item named after the extension, such as <code>.pdf</code>, whose content is the text to insert, for example <code>\includegraphics[#INS#]{%r}</code>; an item named <code>.*</code> is used for every extension without an item of its own. The content can use these abbreviations:</p>
 
 <dl>
-<dd>	%F full path of an dropped file
-<dd>	%f dropped filename
-<dd>	%r relative path of the dropped file
-<dd>	%n filename without extension
-<dd>	%e extension.
+<dt><code>%F</code></dt><dd>the full path of the dropped file</dd>
+<dt><code>%f</code></dt><dd>the name of the file</dd>
+<dt><code>%r</code></dt><dd>the path of the file from the folder of the source file</dd>
+<dt><code>%n</code></dt><dd>the name of the file without its extension</dd>
+<dt><code>%e</code></dt><dd>the extension</dd>
 </dl>
-</P>
 
-<P>
-If an extension is not mentioned in the Macro Editor, then it is
-handled in the default manner mentioned earlier. Thus for
-most people, no macro "Drag & Drop" submenu is needed.
-</P>
+<h2>The status bar and text statistics</h2>
 
-<P>
-Swap with Clipboard in the Edit menu replaces the selected text with the text on the clipboard, and puts the text it replaced on the clipboard.
-To exchange two pieces of text, copy the first piece, select the second piece and choose Swap with Clipboard, then select the place where
-the first piece was and paste. When nothing is selected, the command is an ordinary paste.
-</P>
+<p>The status bar under the source shows the lines, characters and words of the document, with the numbers in the selection in parentheses, and the location, line and column of the insertion point. Characters are counted as they are seen, so an accented letter or an emoji counts as one, and TeX commands are counted as they are written; an emoji also counts as a word. The size of the saved file is shown at the right. Source › Show Status Bar shows or hides the status bar in every window.</p>
 
-<P>
-Copy with Style in the Edit menu copies the selected text in the font of the source and with the colors of the theme of Light Mode or of Dark Mode,
-with or without the background color of the source, to paste it into a word processor, a presentation or an email. The colors of syntax highlighting are kept,
-and fullwidth letters and symbols keep the background of their highlight; the highlights of the current line, of braces and of found text are not copied. Each of its four items can be given a shortcut in Settings &#8250; Keyboard.
-</P>
+<p>Text Statistics… in the status bar, or Edit › Statistics..., counts the text without the TeX commands. The TeX Live program detex removes them from the document, or from the selection, and adds the files read with <code>\input</code> and <code>\include</code>; TeXShop counts what is left in the same way as the status bar. The document need not be saved. The count is made when the popover opens and when its refresh button is clicked.</p>
 
-<P>
-The submenus Character Type Conversion and Unicode Normalization in the Edit menu, also found in the contextual menu of the source window,
-rewrite the selected text; if nothing is selected, TeXShop asks whether to rewrite the whole document. Character Type Conversion is mainly
-for Japanese documents. It converts between hiragana and katakana, between fullwidth and halfwidth digits and letters, between characters
-such as circled numbers and the commands of the ajmacros package, and between characters outside JIS X 0208 and the &#92;UTF and &#92;CID
-commands of the otf package. It also changes curly quotes to TeX quotes. Unicode Normalization converts the selection to NFC, NFD, NFKC or NFKD,
-or to Modified NFC or Modified NFD, which leave CJK compatibility ideographs unchanged. Both commands can be undone.
-</P></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Editing Tricks</div>
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_miscellaneous.htm">Miscellaneous </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
-	</BODY>
+<h2>The clipboard</h2>
 
-</HTML>
+<p>Edit › Swap with Clipboard replaces the selection with the text on the clipboard and puts the selection on the clipboard. To exchange two pieces of text, copy the first, select the second and choose Swap with Clipboard, then select the place of the first and paste. When nothing is selected, it pastes.</p>
+
+<p>Edit › Copy with Style copies the selection in the font of the source and with the colors of the Light Mode or Dark Mode theme, with or without the background color, to paste into a word processor, a presentation or an email. Each of its four items can be given a shortcut in Settings › Keyboard.</p>
+
+<h2>Converting characters</h2>
+
+<p>The submenus Character Type Conversion and Unicode Normalization of the Edit menu, also in the contextual menu of the source, rewrite the selection; if nothing is selected, TeXShop asks whether to rewrite the whole document. Character Type Conversion is mainly for Japanese documents. It converts between hiragana and katakana, between fullwidth and halfwidth digits and letters, between characters such as circled numbers and the commands of the ajmacros package, and between characters outside JIS X 0208 and the <code>\UTF</code> and <code>\CID</code> commands of the otf package. It also changes curly quotes into TeX quotes. Unicode Normalization converts the selection to NFC, NFD, NFKC or NFKD, or to Modified NFC or Modified NFD, which leave CJK compatibility ideographs unchanged. Both can be undone.</p>
+
+<h2>Backup files</h2>
+
+<p>When “Enable Autosave and Versions” is off in Settings › Documents and Saving, turn on “Keep the previous file as “name~” when saving” there to keep the previous version of a file each time it is saved. The backup has the name of the file followed by a tilde.</p>
+
+<p>Finding and replacing, with regular expressions and Multiple Replace, is described in <a href="basic_find.htm">Find and Replace</a>.</p>
+</main>
+</body>
+</html>

@@ -1,58 +1,59 @@
-<HTML>
-
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>マクロ</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="よく使うTeXコマンドをソースに挿入する仕組み">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>マクロ</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="マクロ; マクロメニュー; マクロエディタ; マクロのショートカット; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
 <body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
+<li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm">行列パネル</a></li>
+<li><a href="basic_macros.htm" class="current">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm">画像を入れる</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>マクロ</h1>
+<p>「マクロ」メニューと、ツールバーの「マクロ」項目には、LaTeXのコードをソースに入れたり、AppleScriptのスクリプトを実行したりするコマンドが入っています。TeXShopに付属のマクロには、たとえば次のものがあります。</p>
+<ul>
+<li>「Program」「Encoding」「Root」は、書類のタイプセットのエンジン、エンコーディング、ルートファイルを指定する<code>% !TEX</code>の行を書きます。表示される一覧から値を選ぶと、ソースの先頭に正しい形で行が入ります。</li>
+<li>「Insert Begin/End」は、<code>theorem</code>のように選択した語を<code>\begin{theorem}</code>…<code>\end{theorem}</code>の組にし、その間にカーソルを置きます。</li>
+<li>「Headings」「Mathematics」「Lists」「Tables」「Figures」などのサブメニューは、よく使うLaTeXのコードを入れます。</li>
+</ul>
 
-<div id="content_border">
-
-<p>
-よく使うTeXコマンドをソース・ドキュメントに挿入する仕組みが他にもあります。マクロメニューまたはツールバーのマクロ・ボタンから見つけてコマンドを選び取ってください。なお、AppleScriptコマンドを実行するマクロもあります。マクロエディタを備え付けてありますから、現行のマクロを調べたり、修正したり、独自のマクロを追加することが可能です。詳細については、ヘルプメニューにある「<A HREF = "macros.htm">マクロ・ヘルプ</A>」を参照してください。TeXShopのマクロ・コマンドとマクロエディタは宍倉光広さんによって作成されました。デフォルト・マクロは宍倉光広さんと小川弘和さんによって作成されたものです。
-</p>
-
-<p>
-マクロは ~/Library/TeXShop/Macros/Macros.plistというファイルに格納されています。これはごく普通のテキストファイルですから、コピーしたり他の人に送ったりできます ； したがって、ユーザの作成したマクロを配布することが可能です。マクロエディタにはplistファイルを読み込んでマクロを追加するためのコマンドがあります。
-</p>
-
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">基本的なヘルプ</div>
-<div id="header_title"> マクロ </div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="basic_preliminaries.htm">まえがき</a>
-			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a>
-			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
-			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
-			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
-			<li><a href="basic_spelling.htm">スペルをチェックする</a>
-			<li><a href="basic_latexpanel.htm">Latexパネル</a>
-			<li><a href="basic_matrixpanel.htm">行列パネル</a>
-			<li><a href="basic_macros.htm">マクロ</a>
-			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
-			<li><a href="basic_graphics.htm">画像を入れる</a>
-			<li><a href="basic_printing.htm">印刷</a>
-			<li><a href="basic_preferences.htm">設定</a>
-			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
-			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
-			<li><a href="basic_edittricks.htm">編集上のコツ</a>
-			<li><a href="basic_autocompletion.htm">キーバインド</a>
-			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
-			<li><a href="basic_bugs.htm">バグレポートを送る</a>
-			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
-			<li><a href="basic_license.htm">使用許諾</a>
-		</ul>
-	</div>
+<h2>マクロエディタ</h2>
+<p>「マクロ」→「マクロエディタを開く...」を選ぶと、各マクロの定義を見たり、変更したり、自分のマクロを加えたりできます。左の一覧が「マクロ」メニューです。項目をドラッグして並べ替え、一覧の下のバーで項目、サブメニュー、区切りを加えます。マクロのテキストはソースに入れられます。テキストの中では、選択中のテキスト、クリップボードのテキスト、カーソルを置く場所を丸いラベルで表します。これらはテキストの下の「挿入」メニューから選びます。</p>
+<p>マクロにキーボードショートカットを付けるには、一覧でマクロを選び、そのショートカットの欄をクリック（またはダブルクリック）してキーを押します。ショートカットにはCommandキーかControlキーを使うか、ファンクションキーを使います。メニューコマンドやほかのマクロがすでにそのキーを使っていれば、マクロエディタがそれを知らせます。</p>
+<p>マクロは<code>~/Library/TeXShop/Macros/Macros_Latex.plist</code>に保存されています。マクロをほかの人に渡すには、マクロエディタで選んで「マクロ」→「選択したマクロをファイルに保存...」を選びます。そうしたファイルからマクロを加えるには、「マクロ」→「ファイルからマクロを追加...」を選びます。</p>
+<p>マクロの詳しい説明は「<a href="macros.htm">マクロ・ヘルプ</a>」の章にあり、「<a href="macros_applescript.htm">AppleScriptマクロ</a>」も含まれています。</p>
+</main>
 </body>
-
-</HTML>
+</html>

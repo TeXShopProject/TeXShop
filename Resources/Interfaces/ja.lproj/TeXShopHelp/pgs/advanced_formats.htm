@@ -1,270 +1,71 @@
-<HTML>
-
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>新規フォーマットの作成と利用</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="フォーマット フォーマットファイルfmt">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
-<BODY>
-
-	<div id="content_border">
-
-<!-- 
-<h4> Using formats </h4>
- -->
-
-<h4>フォーマットの利用</h4>
-
-<!-- 
-		<P>When TeX typesets a document, it must process the document header, which may contain
-a large number of \input, \include, and \usepackage statements. Every time the document is typeset,
-this process is repeated even though large portions of the header did not change.</P>
- -->
-<p>
-TeXがタイプセットを行なう際には、文書のヘッダを処理しなければなりませんが、そこには \inputや \includdeあるいは \usepackageなどの命令が数多く含まれているかもしれません。文書をタイプセットするたびに、このプロセスはくり返されます──ヘッダの大部分に変化がなかったとしてもです。
-</p>
-
-<!-- 
-<p> TeX has a built-in mechanism to speed up this process. It can be instructed to process lines of source and output the result to a "format file." When TeX typesets after that, it can rapidly read the format and then typeset the document. LaTeX is constructed in this manner;
-the format file is created when TeX is installed on your machine and the command "latex file" tells TeX to read this format and then typeset "file". </p>
- -->
-
-<p>
-TeXにはこのプロセスを高速化するための機構が組み込まれています。それにより、ソースを処理した結果を「フォーマットファイル」に出力するよう指示することができます。そうしておいてからTeXでタイプセットを実行すると、素早くフォーマットを読み込んだ上で文書をタイプセットすることができます。LaTeXはこの方法で構築されています──TeXをコンピュータにインストールする際にフォーマットファイルが生成されますが、コマンド「latex file」がTeXに対してこのフォーマットを読み込むよう命じ、その上で「ファイル」をタイプセットするのです。
-</p>
-
-<!-- 
-<p> When machines were slower, users often created their own format files to speed up typesetting.
-This is done less often today, but dealing with format files may still be useful. For instance, some organizations create and distribute a format to be used by everyone working on a common project. In this section we'll explain how to use a format file provided by someone else, and how to create a format.</p>
- -->
-
-<p>
-マシン速度がまだ遅かった時分には、ユーザはよく独自のフォーマットファイルを作成してタイプセットのスピードを上げていました。これは今日ではあまり行なわれないのですが、フォーマットファイルの利用は今でもなお有用なことかもしれません。たとえば、ある組織で、共通のプロジェクトに参加する各員が利用できるよう、フォーマットを作成して配布する、というように。この章では、他から提供されたフォーマットを利用する方法、およびどのようにしてフォーマットを作成するのかについて説明しましょう。
-</p>
-
-<!-- 
-<p> A typical format file has extension "fmt". Suppose a department of the University of Oregon has provided a format "uo.fmt". To use this format, follow the steps below:</p>
- -->
-
-<p>
-典型的なフォーマットファイルの拡張子は「fmt」です。たとえばオレゴン大学の学部がフォーマット「uo.fmt」を配布したとしましょう。このフォーマットを使用するには、以下のような手順を踏みます──
-</p>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeXのフォーマットを作成して使う</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="フォーマット; fmtファイル; initex; -ini; -fmt; dump; エンジンファイル; プリアンブル">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<nav id="menu">
 <ul>
-
-<!-- 
-<li> Move uo.fmt to "~/Library/texmf/web2c/uo.fmt". You may need to create some of these directories.
- -->
-<li>「uo.fmt」を ~/Library/texmf/web2c/uo.fmtへと移します。このうちのいくつかのディレクトリは新たに作成する必要があるかもしません。
-
-<!-- 
-<li> Create a new "engine file" by going to ~/Library/TeXShop/Engines and duplicating the file
-XeLaTeX.engine. Engine files need to have the execute bit set, and this duplication step automatically does that.
- -->
-<li>新しい「エンジンファイル」を作成します──~/Library/TeXShop/Enginesへ行き「XeLaTeX.engine」というファイルを複製してください。エンジンファイルには実行ビットセットが必要ですが、この複製の過程で自動的に備わります。
-
-<!-- 
-<li> Rename this new file. The name need not
-match the name of the format. Since the name will appear in the TeXShop interface, it should make sense to a user. We'll choose "Oregon.engine".
- -->
-<li>複製したファイルの名称を変更します。この名称をフォーマット名と同じにする必要はありません。名称はTeXShopのインターフェイスに表示されるので、ユーザにとってわかりやすいものにします。ここでは「Oregon.engine」とします。
-
-<!-- 
-<li> Open Oregon.engine in TeXShop and edit it to read as follows
- -->
-<li>「Oregon.engine」をTeXShopで開き、下記のように編集します──
-
-	<tt>
-		<dl>
-			<dd>#!/bin/tcsh
-			<dd>
-			<dd>set path= ($path /Library/TeX/texbin /usr/local/bin)
-		<dd>pdflatex -fmt uo  "$1" 
-		</dl>
-	</tt>
-
-最初の２行は既存のものですから、書き換えが必要なのは３行目だけでしょう。
-
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
+<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm" class="current">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
+<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
+<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
+<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
+<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
 </ul>
+</nav>
+<main id="content">
+<h1>TeXのフォーマットを作成して使う</h1>
+<p>フォーマットファイル（拡張子<code>.fmt</code>）は、TeXが一組のマクロを読み込んだ状態を保存したものです。LaTeX自体も1つのフォーマットで、TeXは毎回LaTeXのソースを読む代わりに、フォーマットを一瞬で読み込みます。長いプリアンブルから自分のフォーマットを作ってタイプセットの開始を速くしたり、プロジェクトや組織が用意したフォーマットを使ったりできます。</p>
+<p>フォーマットは、それを作ったエンジンとTeX Liveの版でしか使えません。TeX Live 2026のpdfLaTeXで作ったフォーマットは、XeLaTeXでも別の年のTeX Liveでも使えません。新しいTeX Liveをインストールしたら、作り直してください。</p>
 
-<!-- 
-<p> This completes the installation. The next time you start TeXShop, the pulldown menu beside
-the typeset button on the Source Window Toolbar will list "Oregon" as an option. Choose this to typeset using the uo.fmt format. If you want this typesetting method to be the default, go to
-TeXShop Settings under the「タイプセット」カテゴリ, and in the Default Command box select "Command Listed Below" and fill in the edit box with the word Oregon.</p>
- -->
+<h2>フォーマットを作る</h2>
+<p>フォーマットに含める行をファイルに書き、最後に<code>\dump</code>を置きます。たとえば<code>uo.tex</code>は次のようにします。</p>
+<pre>\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\dump</pre>
+<p>ターミナルでこのファイルのフォルダに移動し、次のように入力します。</p>
+<pre>pdflatex -ini -jobname=uo "&amp;pdflatex" uo.tex</pre>
+<p>これでLaTeXのフォーマットが読み込まれ、<code>uo.tex</code>が読まれて、<code>uo.fmt</code>が書き出されます。このフォーマットでタイプセットする書類では、フォーマットに含めた行を省いて<code>\begin{document}</code>から始めます。</p>
 
-<p>
-これで導入作業は済みました。次回TeXShopを起動すると、ソースウインドウのツールバーにあるタイプセットボタン脇のプルダウンメニューに「Oregon」がタイプセット・オプションとして入っています。これを選択し「uo.fmt」フォーマットを使用してタイプセットします。もしもこのタイプセット方法をデフォルトにしたければ、TeXShopの設定を開き、「タイプセット」タブのところにある「デフォルトのコマンド」から「次のコマンドを利用」を選択し、テキストボックスに“Oregon”と書き入れておきます。
-</p>
+<h2>TeXShopでフォーマットを使う</h2>
+<ol>
+<li><code>uo.fmt</code>を<code>~/Library/texmf/web2c</code>フォルダに移します（フォルダがなければ作ります）。こうすると、TeXがどのフォルダからでも見つけます。</li>
+<li>Finderで<code>~/Library/TeXShop/Engines</code>を開き（「TeXShop」→「~/Library/TeXShopを開く」）、<code>XeLaTeX.engine</code>などのエンジンを複製して、たとえば<code>Oregon.engine</code>と名前を変えます。この名前はTeXShopに表示されるもので、フォーマットの名前と同じである必要はありません。</li>
+<li>複製したファイルをTeXShopで開き、最後の行を変えて次の内容にします。
+<pre>#!/bin/tcsh
 
-<!-- 
-<p> It is also possible to select the Oregon format for a particular document 
-without changing the typesetting option. To do that, add the
-following line to the top of the source file:</p>
- -->
-
-<p>
-ある特定の文書用に、タイプセット・オプションを変更することなく「Oregon」フォーマットを指定することもできます。そのためには、ソースファイルの冒頭に、次のような１行を追加します──
-</p>
-
-	<tt>
-		<dl>
-			<dd> %!TEX TS-program = Oregon
-		</dl>
-	</tt>
-
-<!-- 
-<p> Then uo.fmt will be used for that document regardless of the typesetting option chosen.</p>
- -->
-
-<p>
-これで、タイプセット・オプションの選択の如何に関わらず、この文書には「uo.fmt」が用いられます。
-</p>
-
-<!-- 
-<p> The above instructions assume you have a format for pdflatex. You can also make formats for plain tex; in that case change "pdflatex" to "pdftex" in the engine file.</p>
- -->
-
-<p>
-以上の解説は、ユーザが既にpdflatex用のフォーマットを所持しているものと想定しています。ユーザがplain TeX用のフォーマットを作成することもできます──この場合にはエンジンファイルを「pdflatex」ではなく「pdftex」としておきます。
-</p>
-
-<!-- 
-<p> It is also possible to use formats when you are typesetting with tex + ghostscript. TeXShop assumes that an
-engine file contains one or more command line instructions and ultimately produces a pdf file.
-So the engine file must contain the commands which convert the dvi file to a pdf file.
-Here is a typical engine file for uo.fmt in that case:</p>
- -->
-
-<p>
-「DVI経由」でタイプセットする場合でも、フォーマットを利用することはできます。TeXShopでは、エンジンファイルに１つないしはそれ以上のコマンドライン指定が含まれており、最終的にはpdfファイルを生成するものと想定しています。そのためエンジンファイルには、dviファイルをpdfファイルに変換するためのコマンドが含まれていなければなりません。こういった場合における「uo.fmt」用の典型的なエンジンファイルは以下のようなものです──
-</p>
-
-	<tt>
-		<dl>
-			<dd>#!/bin/tcsh
-			<dd>set path= ($path /Library/TeX/texbin /usr/local/bin /opt/homebrew/bin)
-			<dd>latex -fmt uolatex  "$1"
-			<dd>set filename = "$1"
-			<dd>dvips "${filename:r}.dvi"
-			<dd>ps2pdf "${filename:r}.ps" 
-		</dl>
-	</tt>
-
-<!-- 
-<h4> Making formats </h4>
- -->
-<h4>フォーマットの作成</h4>
-
-<!-- 
-<p> Format files contain the internal binary representation of typeset lines of source.
-This representation depends on the processor and particular TeX implementation. Thus it is
-rarely possible to use a format file from someone else unless that person has the same
-machine and TeX installation that you do.<p>
- -->
-
-<p>
-フォーマットファイルには、ソースのタイプセットについて、内部におけるバイナリの再現性（リプリゼンテーション）が含まれています。この再現性はプロセッサと個々のTeXの実装に依存します。ですから他から提供されたフォーマットファイルが利用可能なことは滅多にありません──先方でも同じマシンを持っていて、そっくり同じようにTeXをインストールしてあるのでない限りは。
-</p>
-
-<!-- 
-<p> However, it is common for organizations to distribute the source lines needed to construct
-a format. In that case you'll be told to make the format using "initTeX". For example,
-suppose this source text is "uo.tex". To make the format,
-open Apple's Terminal program and change to the directory containing the source for the
-format. Then type</p>
- -->
-
-<p>
-しかしながら、フォーマットを生成するために必要なソースを組織で配布することは、ごく普通に行なわれています。こうした場合には「initTeX」を使ってフォーマットを作成するように、と言われることでしょう。そこで、たとえばフォーマット用のソーステキストを「uo.tex」としてみましょう。フォーマットを作るには、AppleのTerminal.appを起動し、フォーマット用のソースがあるディレクトリへ移動します。そして次のようにタイプします──
-</p>
-
-	<tt>
-		<dl>
-			<dd>pdflatex -ini
-		</dl>
-	</tt>
-
-<!-- 
-<p>You will get a ** prompt. Type the following line at the prompt</p>
- -->
-
-<p>
-すると前に ** の付いたプロンプトになります。プロンプトのところで次のように打ち込みます──
-</p>
-
-	<tt>
-		<dl>
-			<dd>&pdflatex uo
-		</dl>
-	</tt>
-
-<!-- 
-<p>and press return. The format file will be created. At the end you may have to
-issue a "\dump" command if the format source doesn't contain it. This will produce
-the required "uo.fmt".</p>
- -->
-
-<p>
-そしてリターンキーを押します。これでフォーマットファイルが作成されます。もしフォーマットのソースに「\dump」が含まれていなかった場合には、最後に「\dump」コマンドを打ち込んでやらなければならないかもしれません。これで必要な「uo.fmt」が作られます。
-</p>
-
-<!-- 
-<p> You might like to try this with the follow "uo.tex" file:</p>
- -->
-
-<p>
-以下のような「uo.tex」で試してみるのもいいかもしれません──
-</p>
-
-	<tt>
-		<dl>
-			<dd>\documentclass[11pt]{article}
-			<dd>\usepackage{geometry}
-			<dd>\geometry{letterpaper}
-			<dd>\usepackage[parfill]{parskip}
-			<dd>\usepackage{graphicx}
-			<dd>\usepackage{amssymb}
-			<dd>\usepackage{epstopdf}
-			<dd>\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
-			<dd>\dump
-		</dl>
-	</tt>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title">新規フォーマットの作成と利用</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
-			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
-			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
-			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
-			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
-			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
-			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
-			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
-			<li><a href="advanced_plist.htm">Plistファイル</a>
-			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-		</ul>
-	</div>
-	</body>
-
-</HTML>
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
+</ol>
+<p>そのあとに開いた書類では、「タイプセット」ボタンの横のポップアップメニューにOregonが表示されます。そこで何を選んでいても特定の書類でこのフォーマットを使うには、ソースの先頭に次の行を加えます。</p>
+<pre>% !TEX program = Oregon</pre>
+<p>これを既定にするには、「設定」→「タイプセット」→「エンジン」の「新しい書類のタイプセット」で「エンジンファイル」を選び、「エンジンファイル」メニューでOregonを選びます。<a href="advanced_addengine.htm">タイプセットエンジンを追加する</a>を参照してください。</p>
+<p>plain TeXのフォーマットでは、エンジンで<code>pdflatex</code>の代わりに<code>pdftex</code>を使います。DVI経由で使うフォーマットでは、エンジンでDVIファイルをPDFに変換する必要もあります。TeXShopはソースと同じ名前のPDFファイルを表示するからです。たとえばzshのスクリプトなら<code>dvipdfmx "${1:r}.dvi"</code>のようにします。</p>
+</main>
+</body>
+</html>

@@ -1,52 +1,50 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obtaining New Library Items</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop; update; New folder; bin; Scripts; Engines Inactive; macros; damaged files; Backups; default folder contents">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">How do I configure TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminaries</a></li>
+<li><a href="configure_prefchanges.htm">Recommended Changes to Settings</a></li>
+<li><a href="configure_correctinstall.htm" class="current">Obtaining New Library Items</a></li>
+<li><a href="configure_hidden.htm">Hidden Settings</a></li>
+<li><a href="configure_panel.htm">Modifying the LaTeX Panel</a></li>
+<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a></li>
+<li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Obtaining New Library Items</h1>
+<p>TeXShop keeps the files you can change, such as templates, macros, engines, key bindings, the LaTeX Panel file and themes, in ~/Library/TeXShop, the TeXShop folder of the Library folder in your home folder. TeXShop › Open ~/Library/TeXShop opens it in the Finder. When TeXShop runs for the first time, it creates this folder with default contents.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Obtaining New Library Items</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="correct install; TeX folder; macro">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-<div id="content_border">
-		<P>The default behavior of TeXShop can be modified in two ways: by making changes to settings, and by editing files in ~/Library/TeXShop. Here ~/Library is the Library folder in your home directory.
-<p>
-New versions of TeXShop generally do not change these user modifications because users don't like changes made behind their backs. But sometimes, new features require a few modifications. These modifications are explained in the document "About This Release" in the TeXShop Help menu. This document is rewritten for each TeXShop release. TeXShop still works fine if changes explained in "About This Release" aren't made, but then some new features may not work as advertised.
+<h2 id="updates">What a new version changes</h2>
+<p>A new version of TeXShop leaves most of ~/Library/TeXShop alone, so your changes are kept. A few places hold TeXShop's own support files or optional items, and a new version brings them up to date:</p>
+<ul>
+<li>the folders bin, Documents, ExternalEditorScripts and Scripts;</li>
+<li>Engines/Inactive and HTML/Inactive, which hold engines and HTML files you can move into use;</li>
+<li>HTML/Help.html, the page shown by Help › HTML Commands;</li>
+<li>the folder New, which is replaced as a whole.</li>
+</ul>
+<p>In these places every file that comes with TeXShop is replaced by its new version, so changes you made to such a file are lost; new files are added, and files you added under other names stay as they are. To keep your own version of one of these files, save it under another name.</p>
+<p>The engines in use, in the Engines folder itself, are not changed. Only when the folder was last updated by a version of TeXShop older than 6.00 does TeXShop add html.engine to Engines, once, and only if no file of that name is there. In the Macros folder, macros that came with TeXShop and were never edited may be updated to their current text; edited macros and your own macros stay as they are. Everything else keeps your changes.</p>
+<p>TeXShop records its version in a hidden file <code>.Version</code> in ~/Library/TeXShop/New and updates the folder only when it is newer than the version recorded there. So ~/Library/TeXShop is not rewritten each time TeXShop starts, and an older version of TeXShop can be run without changing it.</p>
 
-<p> Although TeXShop does not usually upgrade items in ~/Library/TeXShop, there are exceptions. Each new release updates the folders bin, Documents, Engines/Inactive, ExternalEditorScripts, HTML/Inactive, and Scripts, and the file HTML/Help.html, the page shown by Help &gt; HTML Commands. In these places, every file that comes with TeXShop is replaced by its new version, so changes you made to such a file are lost; new default files are added, and files you added under other names are left unchanged. To keep your own version of one of these files, for instance of Help.html, save it under another name. Note that active Engine files are not changed because they live in Engines, not in the Inactive subfolder; only when a library last updated by a version older than 6.00 beta 10 is updated does TeXShop copy html.engine into Engines, once, and only if no file of that name is there. In the Macros folder, macros that came with an earlier TeXShop and were never edited may be updated to their current text; edited macros and your own macros stay as they are. Everything else in ~/Library/TeXShop keeps your edits.
+<h2 id="new">The New folder</h2>
+<p>The folder New contains items that you may want to add yourself, for instance new templates. Move such an item to the right folder, such as Templates, and edit it as you like. Help › About This Release says when there is something to pick up.</p>
 
-<p>The advantage of this design is that some engines put support files in the bin and scripts directories. Upgrades of TeXShop can automatically update these support files without user intervention. Similarly, new engines are sometimes added to the Engines/Inactive directory; users obtain them automatically without doing anything.
+<h2 id="repair">Missing and damaged files</h2>
+<p>When a file that TeXShop needs, such as the macros, the LaTeX Panel file, the key bindings, KeyEquivalents.plist or a theme, is missing or damaged, TeXShop replaces it with its own copy when it starts, without a message. The damaged file is kept in ~/Library/TeXShop/Backups, so you can recover your changes from it.</p>
 
-<p> Each new TeXShop upgrade rewrites the folder ~/Library/TeXShop/New. This folder contains new items which a user might like to add to their other configuration folders. For example, new templates will appear in ~/Library/TeXShop/New. Users who want these new templates should move them to ~/Library/TeXShop/Templates and edit them as appropriate. Files in ~/Library/TeXShop/New are always described in "About This Release", so it is not necessary to examine ~/Library/TeXShop/New unless directed to do so.
-
-<p> It is useful to understand one technical detail of this design. A hidden file in ~/Library/TeXShop/New lists the version number of TeXShop which wrote that folder. The location ~/Library/TeXShop is only updated if the version number of TeXShop is higher than the version number listed in that hidden file. Consequently, ~/Library/TeXShop is not updated every time TeXShop runs, and older versions of TeXShop can safely be run without modifying ~/Library/TeXShop. 
-
-<p>In rare cases, a user may wish to obtain the latest default files for a folder in ~/Library/TeXShop. If that folder is moved to the desktop, then the next time TeXShop runs it will recreate the folder from scratch. Then any modifications made can be merged in from the desktop copy. For instance, if the Templates folder from ~/Library/TeXShop is moved to the desktop, then the next TeXShop run will produce the latest default Templates folder. 
-This drastic action, luckily, is seldom required.
-
-<p> 
-</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">How do I configure TeXShop?</div><div id="header_title">Obtaining New Library Items</div>
-
-<div id="menu_border">
-		<ul>
-			<LI><a href="configure_preliminaries.htm">Preliminaries</a>
-			<LI><a href="configure_prefchanges.htm">Recommended Changes to Settings</a>
-			<LI><a href="configure_correctinstall.htm">Obtaining New Library Items</a>
-			<LI><a href="configure_convertgraphics.htm">Converting Graphic Formats Automatically</a>
-			<LI><a href="configure_defaults.htm">TeX Command Line Settings </a>
-			<LI><a href="configure_latextemplate.htm">Default Latex Template</a>
-			<li><a href="configure_hidden.htm">Hidden Settings</a>
-			<li><a href="configure_plist.htm">.plist Files</a>
-			<li><a href="configure_panel.htm">Modifying the Latex Panel</a>
-			<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a>
-			<li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-			
-			<li><a href="configure_macros.htm">Modifying the Macros Menu</a>
-		</ul>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2 id="defaults">Getting the default contents of a folder</h2>
+<p>To get the latest default contents of a folder, for instance Templates, quit TeXShop, move that folder out of ~/Library/TeXShop (to the desktop, say) and start TeXShop again. It creates the folder with its default contents. Then copy back from the moved folder whatever you want to keep.</p>
+</main>
+</body>
+</html>

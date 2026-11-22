@@ -1,42 +1,48 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tastenbelegungen anpassen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Tastenbelegungen; Liste der Tastenbelegungen; Tastenbelegungen bearbeiten; Eingabezeichen; Ausgabetext; Einsetzen; Ordner Keyboard; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Wie konfiguriere ich TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Einführung</a></li>
+<li><a href="configure_prefchanges.htm">Empfohlene Änderungen an den Einstellungen</a></li>
+<li><a href="configure_correctinstall.htm">Neue Objekte für die Library</a></li>
+<li><a href="configure_hidden.htm">Versteckte Einstellungen</a></li>
+<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a></li>
+<li><a href="configure_autocompletion.htm" class="current">Tastenbelegungen anpassen</a></li>
+<li><a href="configure_menushortcuts.htm">Tastaturkurzbefehle für Menüs ändern</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Tastenbelegungen anpassen</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Die automatische Vervollst&auml;ndigung anpassen</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Erweitern Sie die M&ouml;glichkeiten der automatischen Vervollst&auml;ndigung.">
-				<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<p>Tastenbelegungen ersetzen ein getipptes Zeichen durch einen Text, zum Beispiel ^ durch ^{} mit der Einfügemarke zwischen den Klammern; <a href="basic_autocompletion.htm">Tastenbelegungen</a> erklärt, wie Sie sie verwenden. Diese Seite erklärt, wie Sie die Liste ändern.</p>
 
-<BODY>
+<h2 id="on-off">Tastenbelegungen einschalten</h2>
+<p>„Tastenbelegungen verwenden (Vorgabe für neue Dokumente)“ unter Einstellungen › Tastatur legt fest, ob die Tastenbelegungen beim Öffnen eines Dokuments eingeschaltet sind; zunächst ist die Option ausgeschaltet. Quelltext › Autovervollständigung schaltet sie nur für das aktive Dokument ein oder aus, und das optionale Objekt „Autovervollständigung“ der Symbolleiste tut dasselbe.</p>
 
-<div id="content_border">
-		<P>Die TeXShop Einstellungen enthalten eine Auswahlbox um &bdquo;Autmomatisches Vervollst&auml;ndigen&ldquo; an- oder auszuschalten. Die Standardeinstellung hierf&uuml;r ist &bdquo;aus&ldquo;. Ist die automatische Vervollst&auml;ndigung eingeschaltet, so f&uuml;gt das Tippen eines bestimmten Buchstabens dazu, dass ein ganzer String in den Quelltext eingef&uuml;gt wird. So f&uuml;hrt das Tippen von &bdquo;^&ldquo; zu einer Ausgabe von &bdquo;^{ }&ldquo;, wobei der Cursor in zwischen den beiden Klammern platziert wird.</P>
-		<p>Die Definitionen der automatischen Vervollst&auml;ndigung k&ouml;nnen durch das Bearbeiten der Datei &bdquo;autocompletion.plist&ldquo; ge&auml;ndert oder neu hinzugef&uuml;gt werden. Die Kommentare am Anfang der Datei erkl&auml;ren wie Ver&auml;nderungen vorgenommen werden k&ouml;nnen. &Auml;ndern Sie einfach die Datei &bdquo;~/Library/TeXShop/Keyboard/completions.plist&ldquo; nachdem Sie sie mit TeXShop ge&ouml;ffnet haben. Stellen Sie sicher, dass Sie sie mit UTF-8 Kodierung sichern, wenn Sie Unicode Zeichen verwenden.</p>
-		<p>Ist die automatische Vervollst&auml;ndigung eingeschaltet und bei einer Tastenbelegung &bdquo;Einsetzen&ldquo; markiert, gilt sie auch f&uuml;r eingesetzten Text: Jedes ihrer Eingabezeichen im eingesetzten Text wird durch ihren Ausgabetext ersetzt. Tastenbelegungen, deren Ausgabetext #SEL#, #INS#, #PASTE# oder eine Marke (&bull;) enth&auml;lt, k&ouml;nnen nicht markiert werden.</p>
-</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Wie konfiguriere ich TeXShop?</div>
-<div id="header_title">Die automatische Vervollst&auml;ndigung anpassen</div>
+<h2 id="edit">Die Liste bearbeiten</h2>
+<p>Die „Liste der Tastenbelegungen“ unter Einstellungen › Tastatur zeigt jedes Eingabezeichen mit seinem Ausgabetext. Doppelklicken Sie auf eine Zelle, um sie direkt zu bearbeiten. Klicken Sie auf + unter der Liste, um eine Tastenbelegung hinzuzufügen, und auf −, um die ausgewählten zu löschen; ziehen Sie Zeilen, um ihre Reihenfolge zu ändern. Ein Eingabezeichen ist ein einzelnes Zeichen. Änderungen werden sofort gesichert und wirken sofort, auch in bereits geöffneten Dokumenten; Bearbeiten › Widerrufen nimmt sie zurück.</p>
+<p>Ein Ausgabetext kann diese Symbole enthalten, die die Liste als kleine Marken zeigt:</p>
+<dl>
+<dt>#SEL#</dt><dd>der Text, der beim Tippen der Taste ausgewählt war</dd>
+<dt>#INS#</dt><dd>wohin die Einfügemarke kommt</dd>
+<dt>#PASTE#</dt><dd>der Text in der Zwischenablage</dd>
+<dt>•</dt><dd>eine Marke, zu der Bearbeiten › Marken springen kann</dd>
+</dl>
+<p>Fügen Sie sie mit dem Menü „Einfügen“ unter der Liste hinzu oder tippen Sie sie wie oben geschrieben; Wahltaste-Zeilenschalter tippt einen Zeilenumbruch und Wahltaste-Tabulator einen Tabulator. Die Taste „?“ neben der Liste zeigt sie alle. Beim Kopieren eines Ausgabetexts werden die Symbole so kopiert, wie sie oben geschrieben sind.</p>
+<p>Ein Häkchen in der Spalte „Einsetzen“ wendet eine Tastenbelegung auch auf eingesetzten Text an: Solange die Tastenbelegungen für das Dokument eingeschaltet sind, wird jedes Vorkommen ihres Eingabezeichens in Text, der in den Quelltext eingesetzt oder dort abgelegt wird, durch ihren Ausgabetext ersetzt. Tastenbelegungen, deren Ausgabetext #SEL#, #INS#, #PASTE# oder eine Marke enthält, lassen sich nicht abhaken.</p>
 
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="configure_preliminaries.htm">Einleitung</a>
-			<li><a href="configure_correctinstall.htm">Neue Objekte in ~/Library/TeXShop erhalten</a>
-			<li><a href="configure_prefchanges.htm">Empfohlene &Auml;nderung von Einstellungen</a>
-			<LI><a href="configure_convertgraphics.htm">Grafikformate automatisch konvertieren</a>
-			<LI><a href="configure_defaults.htm">Standardeinstellungen</a>
-			<LI><a href="configure_latextemplate.htm">Die Standard-LaTeX-Vorlage</a>
-			<li><a href="configure_hidden.htm">Versteckte Einstellungen</a>
-			<li><a href="configure_plist.htm">.plist-Dateien</a>
-			<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a>
-			<li><a href="configure_autocompletion.htm">Die automatische Vervollst&auml;ndigung anpassen</a>
-			<li><a href="configure_menushortcuts.htm">Tastaturk&uuml;rzel neu festlegen</a>
-			<li><a href="configure_macros.htm">Das Makro-Men&uuml; ver&auml;ndern</a>
-		</ul>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2 id="reset">Zur Standardliste zurückkehren</h2>
+<p>Die Liste liegt im Ordner ~/Library/TeXShop/Keyboard. Um zu der Liste zurückzukehren, die mit TeXShop kommt, beenden Sie TeXShop, bewegen den Ordner Keyboard auf den Schreibtisch und starten TeXShop erneut; es legt den Ordner mit seinem Standardinhalt an.</p>
+</main>
+</body>
+</html>

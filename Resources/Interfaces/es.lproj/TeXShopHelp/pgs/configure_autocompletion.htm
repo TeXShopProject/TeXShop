@@ -1,38 +1,48 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modificar las combinaciones de teclas</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="combinaciones de teclas; autocompleción; Lista de combinaciones de teclas; editar las combinaciones de teclas; Carácter escrito; Texto de salida; Pegar; carpeta Keyboard; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">¿Cómo configuro TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm">Cambios recomendados en los ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obtener nuevos elementos de la biblioteca</a></li>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
+<li><a href="configure_panel.htm">Modificar el panel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm" class="current">Modificar las combinaciones de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir los atajos de teclado de los menús</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modificar las combinaciones de teclas</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Modificaci&oacute;n de la autocompleci&oacute;n</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="autocompleci&oacute;n; crear y modificar autocompleci&oacute;n">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<p>Las combinaciones de teclas sustituyen un carácter escrito por un texto, por ejemplo ^ por ^{} con el punto de inserción entre las llaves; <a href="basic_autocompletion.htm">Combinaciones de teclas</a> explica cómo usarlas. Esta página explica cómo modificar la lista.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>Autocompleci&oacute;n se activa y desactiva en la categor�a Teclado de los Ajustes de TeXShop; por defecto, aparece desactivado. Cuando est&aacute; activada, al teclear ciertos caracteres se insertan otros en el archivo con el c&oacute;digo fuente. Por ejemplo, al teclear ^ aparece ^{  }, y el cursor se coloca entre las llaves.</P>
-		<p>La autocompleci&oacute;n se puede cambiar y a&ntilde;adir m&aacute;s cosas; para hacerlo hay que editar el archivo &laquo;autocompletion.plist&raquo;. Los comentarios al comienzo del archivo explican c&oacute;mo realizar tales cambios. Para ello, edita el archivo ~/Library/TeXShop/Keyboard/autocompletion.plist con TeXShop. Aseg&uacute;rate de editar y guardar el archivo con formato UTF-8 si usas caracteres Unicode.</p>
-		<p>Con la autocompleci&oacute;n activada, si en una asignaci&oacute;n de teclas se marca &laquo;Pegar&raquo;, tambi&eacute;n se aplica al texto pegado: cada uno de sus caracteres escritos que aparece en el texto pegado se sustituye por su texto de salida. Las asignaciones cuyo texto de salida contiene #SEL#, #INS#, #PASTE# o una marca (&bull;) no se pueden marcar.</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">&iquest;C&oacute;mo configuro TeXShop?</div><div id="header_title">Modificaci&oacute;n de la autocompleci&oacute;n</div>
-		<div id="menu_border">
-		<UL>
-			<LI><a href="configure_preliminaries.htm">Preliminares</a>
-			<LI><a href="configure_correctinstall.htm">Obtener elementos nuevos de ~/Library/TeXShop</a>
-			<LI><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a>
-			<LI><a href="configure_convertgraphics.htm">Conversi&oacute;n autom&aacute;tica de formatos gr&aacute;ficos</a>
-			<LI><a href="configure_defaults.htm">Ajustes predeterminados</a>
-			<LI><a href="configure_latextemplate.htm">Plantilla LaTeX predeterminada</a>
-			<li><a href="configure_hidden.htm">Ajustes ocultos</a>
-			<li><a href="configure_plist.htm">Archivos .plist</a>
-			<li><a href="configure_panel.htm">Modificaci&oacute;n del panel LaTeX</a>
-			<li><a href="configure_autocompletion.htm">Modificaci&oacute;n de la autocompleci&oacute;n</a>
-			<li><a href="configure_menushortcuts.htm">Redefinici&oacute;n de atajos de teclado de men&uacute;s</a>
-			<li><a href="configure_macros.htm">Modificaci&oacute;n del men&uacute; Macros</a>
-		</UL>
-	</div>
-	</BODY>
+<h2 id="on-off">Activar las combinaciones de teclas</h2>
+<p>«Usar combinaciones de teclas (valor inicial para documentos nuevos)», en Ajustes › Teclado, decide si las combinaciones de teclas están activadas cuando se abre un documento; al principio está desactivado. Código › Autocompleción las activa o desactiva solo para el documento activo, y el elemento opcional Autocompleción de la barra de herramientas hace lo mismo.</p>
 
-</HTML>
+<h2 id="edit">Editar la lista</h2>
+<p>La «Lista de combinaciones de teclas», en Ajustes › Teclado, muestra cada carácter escrito con su texto de salida. Haga doble clic en una celda para editarla allí mismo. Haga clic en + bajo la lista para añadir una combinación de teclas y en − para eliminar las seleccionadas; arrastre las filas para cambiar su orden. Un carácter escrito es un único carácter. Los cambios se guardan de inmediato y se aplican en el acto, también en los documentos que ya están abiertos; Edición › Deshacer los revierte.</p>
+<p>Un texto de salida puede contener estos símbolos, que la lista muestra como pequeñas etiquetas:</p>
+<dl>
+<dt>#SEL#</dt><dd>el texto que estaba seleccionado al pulsar la tecla</dd>
+<dt>#INS#</dt><dd>el lugar al que va el punto de inserción</dd>
+<dt>#PASTE#</dt><dd>el texto del portapapeles</dd>
+<dt>•</dt><dd>una señal, a la que se puede ir con Edición › Señales</dd>
+</dl>
+<p>Añádalos con el menú Insertar, bajo la lista, o escríbalos tal como aparecen arriba; Opción-Retorno escribe un salto de línea y Opción-Tabulador, un tabulador. El botón ? junto a la lista los muestra todos. Al copiar un texto de salida, los símbolos se copian tal como aparecen arriba.</p>
+<p>Una marca en la columna Pegar aplica una combinación de teclas también al texto pegado: mientras las combinaciones de teclas están activadas para el documento, cada aparición de su carácter escrito en el texto que se pega o se suelta en el código fuente se sustituye por su texto de salida. No se pueden marcar las combinaciones de teclas cuyo texto de salida contiene #SEL#, #INS#, #PASTE# o una señal.</p>
+
+<h2 id="reset">Volver a la lista por omisión</h2>
+<p>La lista se guarda en la carpeta ~/Library/TeXShop/Keyboard. Para volver a la lista que incluye TeXShop, salga de TeXShop, mueva la carpeta Keyboard al escritorio y vuelva a abrir TeXShop; TeXShop crea la carpeta con su contenido por omisión.</p>
+</main>
+</body>
+</html>

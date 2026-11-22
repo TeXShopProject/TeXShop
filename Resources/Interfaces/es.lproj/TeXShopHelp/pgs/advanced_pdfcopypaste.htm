@@ -1,56 +1,63 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copiar y pegar, arrastrar y soltar</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="copiar y pegar; arrastrar y soltar; Seleccionar PDF; Formato de imagen al copiar; Copiar con formato; Usar correspondencia de color; Prominencia primer plano; Guardar selección en archivo; Keynote">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Más sobre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
+<li><a href="advanced_addengine.htm">Añadir motores de composición</a></li>
+<li><a href="advanced_formats.htm">Crear y usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX y LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificaciones</a></li>
+<li><a href="advanced_Japan.htm">Composición en japonés</a></li>
+<li><a href="advanced_root.htm">Establecer el archivo raíz de un proyecto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronización entre código y vista previa</a></li>
+<li><a href="advanced_removeaux.htm">Borrar archivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protección ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar un editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm" class="current">Copiar y pegar, arrastrar y soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a></li>
+<li><a href="advanced_coloredtext.htm">Texto en color</a></li>
+<li><a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizaciones</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Copiar y pegar, arrastrar y soltar</h1>
+<p>Una parte de una página de la ventana de vista previa se puede copiar como imagen en otro programa, como Keynote, Pages o Vista Previa.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Copiar-pegar y arrastrar-soltar</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="copiar y pegar; arrastrar y soltar; configurar; pdf; png; jpg; tif; tiff">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Seleccionar y copiar</h2>
+<ol>
+<li>Elija la herramienta «Seleccionar PDF» en la barra de herramientas de la ventana de vista previa.</li>
+<li>Arrastre un rectángulo sobre la parte que quiera. Puede contener texto, fórmulas e imágenes.</li>
+<li>Elija Edición › Copiar (<kbd>⌘C</kbd>) y pegue en el otro programa, o arrastre la selección a un documento de ese programa. Al arrastrarla al escritorio o a una ventana del Finder se crea un archivo.</li>
+</ol>
+<p>PDF › Guardar selección en archivo… guarda la selección con el nombre y en la carpeta que elija. Con la herramienta «Seleccionar PDF», Edición › Seleccionar todo (<kbd>⌘A</kbd>) selecciona todo lo que se muestra: la página en los formatos «Página simple» y «Página doble», y todo el documento en «Multipágina» y «Multipágina doble». En estos dos últimos solo funciona con documentos de 20 páginas como máximo, para que la copia no resulte enorme.</p>
+<p>Para copiar texto en lugar de una imagen, use la herramienta «Seleccionar texto».</p>
 
-<BODY>
-	<div id="content_border">
-<P>
-Podemos seleccionar una porci&oacute;n de la ventana con el pdf previsto, y copiar y pegar, el gr&aacute;fico que resulta, en otro programa. Tambi&eacute;n podemos arrastrar y soltar la selecci&oacute;n. Los ajustes permiten seleccionar el tipo de archivo gr&aacute;fico que se va a obtener al copiar (pdf, png, jpg, tiff, etc.), as&iacute; como los colores y trasparencias del primer plano y del fondo.
-</P>
-
-<P>
-Para los usuarios de Keynote, puede ser muy &uacute;til seleccionar un trozo de pdf y arrastrarlo y soltarlo sobre Keynote. Usando los ajustes predeterminados en la categor�a Vista previa, al soltar una selecci&oacute;n con un texto sobre una diapositiva ocurre lo siguiente: el fondo del texto ser&aacute; transparente, as&iacute; que el fondo de la diapositiva se ver&aacute; entre las letras. El texto se puede cambiar de tama&ntilde;o sin problemas, puesto que lo hemos copiado con formato pdf.
-</P>
-
-<P>
-Se puede usar el comando &laquo;Seleccionar todo&raquo; del men&uacute; Edici&oacute;n para seleccionar una p&aacute;gina entera del pdf ypoder copiarla. Sin embargo, con &laquo;Multip&aacute;gina&raquo;, y &laquo;Multip&aacute;gina doble&raquo;, el &laquo;Seleccionar todo&raquo; s&oacute;lo funciona si el documento tien 20 p&aacute;ginas o menos, pues que, en otro caso, el archivo pdf seleccionado podr&iacute;a ser enorme, y copiarlo podr&iacute;a enlentecer demasiado la m&aacute;quina.
-</P>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda avanzada</div><div id="header_title">Copiar-pegar y arrastrar-soltar</div>
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adici&oacute;n de archivos de estilo y de macros personales a TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a>
-			<LI><a href="advanced_removeaux.htm">Borrado de archivos AUX</a>
-			<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar desde la ventana del PDF</a>
-			<li><a href="advanced_root.htm">Establecer un documento ra&iacute;z</a>
-			<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a>
-			<li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizaciones</a>
-			<li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a>
-			<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a>
-			<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a>
-			<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a>
-			<li><a href="advanced_context.htm">ConTeXt y MetaPost</a>
-			<li><a href="advanced_plist.htm">Archivos .plist</a>
-			<li><a href="advanced_menushortcuts.htm">Redefinici&oacute;n de atajos de teclado de men&uacute;s</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>El formato de la copia</h2>
+<p>Ajustes › Vista previa › Copia de imágenes › Formato de imagen al copiar establece el tipo de imagen: PDF, TIFF, JPEG o PNG, algunos en varias calidades. PDF, el predeterminado, mantiene nítidos el texto y las líneas a cualquier tamaño, de modo que una selección pegada en una diapositiva de Keynote se puede ampliar libremente. El submenú PDF › Copiar con formato muestra y cambia el mismo ajuste.</p>
+<p>En las copias TIFF, JPEG y PNG se aplican dos opciones más del grupo «Copia de imágenes»:</p>
+<ul>
+<li>«Usar correspondencia de color» convierte el negro en un color de texto y el blanco en un color de fondo, para que la copia combine con los colores de una diapositiva. Ambos colores se ajustan en Ajustes › Temas › Correspondencia de color de imágenes copiadas, en «Texto» y «Fondo», por separado para cada tema. Las copias PDF conservan los colores de la página.</li>
+<li>«Prominencia primer plano» establece con qué intensidad se resalta el texto en la copia.</li>
+</ul>
+<p>El color que el tema da a las páginas claras en la ventana de vista previa no forma parte de la copia.</p>
+</main>
+</body>
+</html>

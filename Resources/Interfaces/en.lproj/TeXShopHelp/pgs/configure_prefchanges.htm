@@ -1,59 +1,49 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Recommended Changes to Settings</title>
-<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="changes to settings; placing source and preview windows; magnification; security; shell escape warning" name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<meta name="description" content="recommended settings; engine profile; latexmk; Direct PDF; Via DVI; typesetting commands; Find interface; Advanced Find Panel; autosave; window positions">
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-
-<div id="content_border"><p>Engine Profile in Typesetting sets the typesetting commands for one kind of TeX engine, the kpsewhich command, the BibTeX engine, the index program, MetaPost and conversion to otf package \UTF / \CID; the Japanese profiles also set UTF-8 as the encoding for new documents, the dictionary and UTF-8-MAC conversion. Other settings stay as they are. Choosing a profile lists the values it sets and marks those that change; turn off any you want to keep, then click OK. With latexmk runs BibTeX, the index and further passes as needed. The menu shows Custom as soon as any setting of the profile is changed. Escape cancels. Detect Paths in the same category sets the paths to TeX and Ghostscript. To keep an original theme, duplicate it before editing. Creating a theme asks for a name; replacing an existing theme requires confirmation. Theme changes reach open documents after saving succeeds. If saving fails, the last saved colors are restored.</p><p>Auto Save and Versions takes effect after restarting TeXShop. Switching between the standard Find Panel and Find Bar updates the source, console and log views of open documents immediately. Switching to or from OgreKit takes effect after restarting TeXShop.</p>
-
-
-
-<p>
-Users should consider changing a small number of default settings provided by TeXShop. Some of these changes depend on characteristics of individual displays and cannot be set until you use the program.
-</p>
-<p>
-By default, TeXShop opens source and preview windows in the spot they last appeared. This only makes sense when you deal with one document at a time. It is usually better to open source and preview windows in a predetermined optimal position. To make that happen, typeset a simple document. Then arrange the position and size of the source
-and preview windows. Side by side is best if your screen is large enough. Open TeXShop Settings. In the "General" category, select "All Windows Start At Fixed Position" and click "Set With Current Position." Make the same change in the "Preview" category.
-</p>
-<p> A later addition to TeXShop makes this easier. Instead of opening TeXShop Settings,
-activate the source window and then choose ``Save Source Position'' in the Source Menu. Then
-activate the preview window and select ``Save Preview Position'' in the Preview Menu. 
-</p>
-<p> If you have a portable connected to a large monitor, the above commands will configure
-for display on the large monitor. It is possible to also configure for trips when the portable
-is used by itself without the monitor. This configuration can be done with the large monitor
-attached, or without. Arrange the source and preview windows as desired on the portable screen.
-Activate the source window and select the menu item ``Save Source Position for Portable'' in the
-Source Menu, Then activate the preview window and select ``Save Preview Position for Portable''
-in the preview window.
-
-
-</p><p><a href="basic_preferences.htm#settings-search">Using Settings and Search Settings</a></p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a></div>
-<div id="header_chapter">How do I configure TeXShop?</div><div id="header_title">Recommended Changes to Settings</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">How do I configure TeXShop?</span></header>
+<nav id="menu">
 <ul>
-<li><a href="configure_preliminaries.htm">Preliminaries</a>
-<li><a href="configure_prefchanges.htm">Recommended Changes to Settings</a>
-<li><a href="configure_correctinstall.htm">Obtaining New Library Items</a>
-<li><a href="configure_convertgraphics.htm">Converting Graphic Formats Automatically</a>
-<li><a href="configure_defaults.htm">TeX Command Line Settings </a>
-<li><a href="configure_latextemplate.htm">Default Latex Template</a>
-<li><a href="configure_hidden.htm">Hidden Settings</a>
-<li><a href="configure_plist.htm">.plist Files</a>
-<li><a href="configure_panel.htm">Modifying the Latex Panel</a>
-<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a>
-<li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-<li><a href="configure_macros.htm">Modifying the Macros Menu</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
+<li><a href="configure_preliminaries.htm">Preliminaries</a></li>
+<li><a href="configure_prefchanges.htm" class="current">Recommended Changes to Settings</a></li>
+<li><a href="configure_correctinstall.htm">Obtaining New Library Items</a></li>
+<li><a href="configure_hidden.htm">Hidden Settings</a></li>
+<li><a href="configure_panel.htm">Modifying the LaTeX Panel</a></li>
+<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a></li>
+<li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Recommended Changes to Settings</h1>
+<p>TeXShop works with its default settings, but a few of them depend on your TeX installation, your screen and your habits. They are worth checking first. Choose TeXShop › Settings… to open the Settings window; <a href="basic_preferences.htm#settings-search">Using Settings and Search Settings</a> explains how to find a setting.</p>
 
+<h2 id="engine-profile">Choose an engine profile</h2>
+<p>Settings › Typesetting › Engine Profile sets up typesetting in one step. Choose the profile of the engine you use; the less common ones are under Other. A sheet lists the values the profile sets and marks those that change. Turn off any value you want to keep, then click OK; Cancel changes nothing.</p>
+<p>Choose “With latexmk” to have latexmk run BibTeX, the index program and further passes as needed; otherwise each typesetting runs the engine once. A profile sets the typesetting commands, the kpsewhich command, the BibTeX engine, the index program, MetaPost and “Convert to otf Package \UTF / \CID”. The Japanese profiles also set UTF-8 as the encoding for new documents, the spelling dictionary and conversion of UTF-8-MAC. Every other setting stays as it is. When you change one of these settings later, the menu shows Custom; choose the profile again to go back to its values.</p>
+<p>The paths to TeX and Ghostscript are set apart, with “Detect Paths…” in the Paths group of the same category. When TeXShop starts for the first time, it asks for the paths and then for an engine profile.</p>
 
+<h3 id="commands">Typesetting commands</h3>
+<p>The commands that a profile sets are in the Direct PDF and Via DVI groups of Settings › Typesetting, each with a plain TeX and a LaTeX command, and “Typesetting Method” chooses which group is used. Typeset › Direct PDF and Typeset › Via DVI switch the method for the active document only. The default commands already contain <code>-file-line-error</code>, which lets TeXShop take you to the line of an error, and <code>-synctex=1</code>, which makes synchronization between source and preview work, so most people never edit them. If a document needs <code>-shell-escape</code>, see <a href="advanced_shellescape.htm">Shell Escape Protection</a> first.</p>
 
+<h2 id="find">Choose the find interface</h2>
+<p>Settings › Editor › Find interface chooses the window or bar that Find opens. “Advanced Find Panel (recommended)” finds with regular expressions, lists all matches and replaces several pairs of strings at once; see <a href="basic_find.htm">Find and Replace</a>. The Apple Find Panel and the Apple Find Bar are the standard find of macOS, and “OgreKit Find Panel (Legacy)” remains available. A new choice takes effect at once, except a switch to or from the OgreKit Find Panel, which takes effect after restarting TeXShop. Turn on “Keep the Advanced Find panel on top” if the panel should stay in front of the document windows.</p>
+
+<h2 id="autosave">Keep autosave on</h2>
+<p>“Enable Autosave and Versions” in Settings › Documents and Saving is on by default, and keeping it on is recommended. macOS then saves your documents while you work, and File › Revert To › Browse All Versions brings back earlier versions. If you turn it off, the file changes only when you save it; “Keep the previous file as “name~” when saving” then keeps the previous version beside it. A change of this setting takes effect after restarting TeXShop.</p>
+
+<h2 id="window-positions">Fix the window positions</h2>
+<p>By default each window opens where it was when it was last closed. If you usually work on one document at a time, it is better to open the windows at a fixed place. Typeset a short document and arrange its source and Preview windows, side by side if the screen is wide enough. Then, in Settings › General › Window Positions, choose “All windows start at fixed position” for Source and for Preview and click “Set with current position” on each row. The Console and HTML rows work the same way.</p>
+<p>The menu commands Source › Save Source Position and Preview › Save Preview Position do the same from the windows themselves. If you use a portable Mac with a large display, arrange the windows for the built-in screen and choose Source › Save Source Position for Portable and Preview › Save Preview Position for Portable as well; TeXShop then uses those positions when the large display is not connected.</p>
+
+<h2 id="fonts-colors">Fonts and colors</h2>
+<p>The font of the source window is set in Settings › Editor › Document Font, and the font of the console in Settings › Console. Settings › Themes chooses and edits the color themes of the source, Preview and console windows; see <a href="advanced_syntaxcolor.htm">Syntax Highlighting</a>.</p>
+</main>
 </body>
 </html>

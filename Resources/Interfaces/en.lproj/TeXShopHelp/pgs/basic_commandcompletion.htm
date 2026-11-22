@@ -1,86 +1,69 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Command Completion</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="command completion; escape key; completion trigger; marks; Next Mark; labels and citation keys">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
+<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
+<li><a href="basic_preview.htm">The Preview Window</a></li>
+<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
+<li><a href="basic_find.htm">Find and Replace</a></li>
+<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
+<li><a href="basic_spelling.htm">Checking Spelling</a></li>
+<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">Command Completion</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
+<li><a href="basic_graphics.htm">Including Graphics</a></li>
+<li><a href="basic_printing.htm">Printing</a></li>
+<li><a href="basic_preferences.htm">Changing Settings</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
+<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
+<li><a href="basic_websites.htm">Useful Web Sites</a></li>
+<li><a href="basic_license.htm">License</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Command Completion</h1>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Command Completion</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="command completion; escape key; labels and citation keys">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<p>Type the first letters of a command or an environment and press Escape: TeXShop completes it from its Completion file. Press Escape again to go through the other completions that begin with the same letters, from the bottom of the file toward the top; Shift-Escape goes the other way. One of them is the text you typed. For example, <code>\begin{th</code> followed by Escape offers <code>\begin{theorem}</code> and other environments.</p>
 
-<BODY>
-		<div id="content_border">
-		<P>
-		The source editor supports command completion. Type the first few letters of a word or command and
-		hit the escape key. The rest of the command will be entered. Hitting escape again will
-		cycle through all possible completions, from the bottom of the Completion file toward the top;
-		shift-escape goes through them in the opposite order.</p>
-		
-		<p>
-		The key which triggers command completion can be changed from "escape" to "tab" with "Completion trigger" in the
-		Keyboard category of TeXShop Settings. The source panel of Edit &#8250; Experiment&#8230; uses the same key as the source window. </p>
+<p>A completion can do more than finish the word. The completion of <code>\begin{theorem}</code> also writes the <code>\end{theorem}</code> line, and puts marks (•) where you will type: the first mark is selected, so what you type replaces it. Pressing Escape several times often gives the same command with more arguments, as <code>\newc</code> does for <code>\newcommand</code>. A completion need not start with a backslash: at the start of a line or after a space, <code>sec</code> gives the same as <code>\sec</code>.</p>
 
-<P>
-		TeXShop stores these completions in a Completion file, which can be edited
-		within the program.  To add a word to the dictionary, select the word and choose "Add to Command Completion List" in the Source menu. 		To edit the file, open Settings, select Keyboard, and press "Edit Command Completion&#8230;". Notice that completions can be
-		more complicated than just a single word;  special commands are available to place the cursor in a convenient spot after completing the command. Examine the Completion file for details. </p>
-		
-<P>		Command completion can deal with complicated commands with multiple parameters.  For example, type "\newcom" and hit escape several times to reveal versions of this
-		command with two, three, or four arguments. Select the command with four arguments. Notice that the cursor is placed on a 
-		centered dot --- that is, a mark --- where the first argument will go. The mark is selected, so when you start typing,
-		you'll replace the mark with desired text. When that entry is complete, choose Next Mark in Edit &#8250; Marks. This command has a keyboard shortcut, so after practice it can be selected without going back to
-		the menu. The cursor will skip to the second mark and select it. Typing immediately replaces the second mark with
-		desired text there. Continue until all four arguments of the command are filled in.</p>
-		
-<p> Since moving from mark to mark is often required, TeXShop supports additional keyboard shortcuts beyond those listed in Edit &#8250; Marks. When the escape key is used to trigger command completion, option-escape will move to the next mark and control-escape will move to the previous mark. When the tab key triggers command completion, option-tab moves to the next mark and control-tab moves to the previous mark. If you use a third party utility with other uses for these shortcuts, turn off "Move to the next or previous mark with Option or Control and the trigger key" in the Keyboard category of TeXShop Settings.</p>
-		
-<P> 		The current extensive  Completion file  was written by Herbert Schulz, who added various "Mark" commands to TeXShop. Schulz wrote
-		an extended document describing this facility. That document is available in ~/Library/TeXShop/CommandCompletion. </p>
-<p> If the Escape key is pressed but there are no completions for the given source in the
-Completion file, then TeXShop reverts to an alternate completion method provided by the
-Apple Cocoa environment. A list of dictionary phrases appears in a popup window and the
-user can select one of them. The phrases at the top of this window are taken from surrounding
-text in the source and thus often the intended completion.
+<p>When the Completion file has nothing for the text, Escape shows the word completions of macOS instead.</p>
 
+<h2>Settings</h2>
 
+<p>In Settings › Keyboard, “Completion trigger” chooses Escape or Tab as the key that completes. The source panel of Edit › Experiment... uses the same key as the source window.</p>
 
-		
+<p>To add a word to the Completion file, select it and choose Source › Add to Command Completion List. To edit the file, click “Edit Command Completion…” in Settings › Keyboard. Studying the completions that are there is the best way to learn how to write new ones; the folder ~/Library/TeXShop/CommandCompletion also has a detailed document about them.</p>
 
-<h3><a name="labels"></a>Label and Citation Key Completion</h3>
-<p>Edit &#8250; Complete Label or Citation Key (F5) completes a label or a citation key from a list. Choose it right after \ref{, \pageref{, \eqref{ or \autoref{, or after the first letters of a label typed there, and the list shows the labels defined with \label in the file. After \cite{ and similar commands, the list shows citation keys from BibDesk when "Also offer BibDesk citation keys" under Label and Citation Key Completion in the Keyboard category of TeXShop Settings is on. Elsewhere, it shows the word completions of macOS. On many keyboards, hold down the fn key (the Globe key) while pressing F5.</p>
+<h2><a name="marks"></a>Marks</h2>
 
-<h3><a name="marks"></a>Marks</h3>
-<p>A mark (&#8226;) is a place to come back to; a mark with a note (&#8226;&#8249;note&#8250;) also says what belongs there. Command completions, macros and key bindings can contain marks, and you can insert them yourself with Edit &#8250; Marks &#8250; Insert Mark (&#8984;8) and Insert Mark with Note (&#8963;&#8984;8). Insert Mark with Note inserts &#8226;&#8249;&#8250; with the insertion point between the brackets, or turns the selected text into the note.</p>
-<p>Next Mark (&#8963;&#8984;F) and Previous Mark (&#8963;&#8984;G) select the next or previous mark together with its note, so typing replaces it. Hold Option to delete just the &#8226; and select the note instead (&#8963;&#8997;&#8984;F, &#8963;&#8997;&#8984;G).</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Command Completion</div>
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_miscellaneous.htm">Miscellaneous </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
-	</BODY>
+<p>A mark (•) is a place to come back to; a mark with a note (•‹note›) also says what belongs there. Command completions, macros and key bindings can contain marks, and you can insert them yourself with Edit › Marks › Insert Mark (<kbd>⌘8</kbd>) and Insert Mark with Note (<kbd>⌃⌘8</kbd>). Insert Mark with Note inserts •‹› with the insertion point between the brackets, or turns the selected text into the note.</p>
 
-</HTML>
+<p>Next Mark (<kbd>⌃⌘F</kbd>) and Previous Mark (<kbd>⌃⌘G</kbd>) select the next or previous mark together with its note, so that typing replaces it. Hold down Option to delete just the • and select the note instead (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+
+<p>The trigger key moves between marks too: with Escape as the trigger, Option-Escape goes to the next mark and Control-Escape to the previous one; with Tab, Option-Tab and Control-Tab. If another application needs these keys, turn off “Move to the next or previous mark with Option or Control and the trigger key” in Settings › Keyboard.</p>
+
+<h2><a name="labels"></a>Label and Citation Key Completion</h2>
+
+<p>Edit › Complete Label or Citation Key (<kbd>F5</kbd>) completes a label or a citation key from a list. Choose it right after <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> or <code>\autoref{</code>, or after the first letters of a label typed there, and the list shows the labels defined with <code>\label</code> in the file; choose one with the arrow keys and press Return. After <code>\cite{</code> and similar commands, the list shows citation keys from BibDesk when “Also offer BibDesk citation keys” in Settings › Keyboard is on. Elsewhere, it shows the word completions of macOS. On many keyboards, hold down the fn key (the Globe key) while pressing F5.</p>
+</main>
+</body>
+</html>

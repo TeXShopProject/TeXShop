@@ -1,60 +1,67 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Syntax Highlighting</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="syntax highlighting; syntax color; colors; theme; expl3; index entries; footnote; marker; brackets; fullwidth; SyntaxColoringEnabled">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
+<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
+<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
+<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
+<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
+<li><a href="advanced_experiments.htm">Experiments</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
+<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm" class="current">Syntax Highlighting</a></li>
+<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Syntax Highlighting</h1>
+<p>The source window shows TeX in colors: comments, commands, footnotes, the markers <code>$</code> and <code>&amp;</code>, and the brackets <code>( )</code>, <code>{ }</code> and <code>[ ]</code> each have their own color. Source › Syntax Highlighting turns highlighting on or off for the active document. Documents open with it on; to open them with it off, use the hidden setting</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Syntax Highlighting</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="syntax highlighting; syntax color; defaults; changing syntax colors">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>What is highlighted</h2>
+<ul>
+<li>Commands are a backslash followed by letters. Settings › Editor › Syntax Highlighting › “@ as Part of Command Names” also counts <code>@</code> as a letter, as in the internal commands of packages.</li>
+<li>The text of <code>\footnote</code>, <code>\footcite</code> and <code>\autocite</code> is shown in the Footnote color. The hidden setting <code>defaults write TeXShop SyntaxColorFootnote NO</code> colors only the command.</li>
+<li>Source › Highlight Index Entries shows the arguments of <code>\index</code> and <code>\esindex</code> in the Index color. Settings › Editor › Syntax Highlighting › “Highlight Index Entries by Default” turns it on when documents open.</li>
+<li>Source › Highlight expl3 Code also colors the functions, variables and other parts of expl3 code, the programming layer of LaTeX, for those who write packages. “Highlight expl3 Code by Default” in the same group turns it on when documents open.</li>
+<li>“Highlight Fullwidth Letters and Symbols” in the same group shows fullwidth letters, digits and symbols, easily mistaken for ASCII characters in Japanese text, in the Fullwidth colors.</li>
+</ul>
+<p>Highlight Index Entries and Highlight expl3 Code apply to the active document; each source window has its own choice. Files that are not TeX sources, such as log files, are not highlighted; see <a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a> for the list of extensions and how to add one.</p>
 
-<BODY>
-	<div id="content_border">
-<h2>Changing the colors of syntax highlighting</h2>
-		<P>When syntax highlighting is turned on in the source window, comments, commands, and the symbols $, {, and } are shown in their own colors. These colors belong to the theme. To change them, use the Syntax Highlighting group in the Themes category of the Settings window. Each theme has its own colors, so the Lite Mode Theme and the Dark Mode Theme can use different colors.</P>
-		<p>Earlier versions of TeXShop set these colors with hidden settings such as markerred, markergreen and markerblue. They are no longer used.</p>
-<h2>Adding to the list of file types</h2>
-<p>There is a hidden setting to add file extensions to the list of files that TeXShop recognizes as source files which can be typeset and syntax colored.  This is useful when you want to use syntax highlighting when editing TeX files with non-standard extensions. For example,</p>
-		<dl>
-			<dd>defaults write TeXShop OtherTeXExtensions -array-add "lbx"
-		</dl>
-<p>tells TeXShop to syntax color biblatex 'lbx' files.<p>
-
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Syntax Highlighting</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_Japan.htm">Settings for Japan</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>Changing the colors</h2>
+<p>The colors belong to the theme. Choose them in Settings › Themes:</p>
+<ul>
+<li>the group Syntax Highlighting has Comment, Command, Footnote, Marker and Index;</li>
+<li>the group Brackets has the colors of <code>( )</code>, <code>{ }</code> and <code>[ ]</code>;</li>
+<li>the group expl3 has function, __function, key, variable, __variable, argument and msg;</li>
+<li>the group Highlights has, among others, the Fullwidth colors;</li>
+<li>the group XML Syntax has the colors for HTML and XML files.</li>
+</ul>
+<p>Each theme has its own colors, so the Lite Mode Theme and the Dark Mode Theme can differ.</p>
+</main>
+</body>
+</html>

@@ -20,22 +20,22 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  for filename in ['Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex','Documentation/Releases/6.00-ja.md','website/release-notes-ja.html']:
   phrase='「設定を検索」で、設定の項目を探せるようになりました。' if '-ja.' in filename else 'Search Settings finds a setting.'
   cases.append(('release-search-'+filename,filename,phrase.encode(),b'REMOVED',guidance,'Release category and color-row guidance'))
- cases.append(('ko-category','Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm',''.join('&#'+str(ord(c))+';' for c in '범주').encode(),''.join('&#'+str(ord(c))+';' for c in '카테고리').encode(),guidance,'Korean category terminology'))
+ cases.append(('ko-category','Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm','범주'.encode(),'카테고리'.encode(),guidance,'Korean category terminology'))
 
  for lang in ['en','ja','de','es','ko']:
   for name in ['basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden']:
-   cases.append((f'outside-{lang}-{name}',f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/{name}.htm',b'</body>',b'<p>fixture paragraph</p></body>',guidance,'body text outside content_border'))
- cases += [('ja-button','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>初期状態に戻す</p></div>'.encode(),guidance,'Japanese obsolete shortcut button'),('ja-sheet','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>「適用」</p></div>'.encode(),guidance,'Japanese recording sheet buttons'),('manual-find','DocumentSources/Manual Source/Manual.tex',b'Select each and try it. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel',b'Select each and try it. After making a selection, TeXShop must be restarted. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel',guidance,'Find Panel restart guidance')]
+   cases.append((f'outside-{lang}-{name}',f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/{name}.htm',b'</body>',b'<p>fixture paragraph</p></body>',guidance,'body text outside the content area'))
+ cases += [('ja-button','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</main>','<p>初期状態に戻す</p></main>'.encode(),guidance,'Japanese obsolete shortcut button'),('ja-sheet','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</main>','<p>「適用」</p></main>'.encode(),guidance,'Japanese recording sheet buttons'),('manual-find','DocumentSources/Manual Source/Manual.tex',b'Select each and try it. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel',b'Select each and try it. After making a selection, TeXShop must be restarted. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel',guidance,'Find Panel restart guidance')]
  for suffix in ['.md','-ja.md']:
   file='Documentation/Releases/6.00'+suffix
   # The checker examines these current release sources directly.
   cases.append(('release-'+suffix,file,b'\n',b'\napproved compact layout\n',guidance,'approved compact layout'))
  for tag,body in [('ul',b'<ul><li>fixture item</li></ul>'),('div',b'<div>fixture division</div>'),('raw',b'fixture bare text'),('dl',b'<dl><dt>fixture term</dt><dd>fixture definition</dd></dl>')]:
-  cases.append(('outside-'+tag,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'</body>',body+b'</body>',guidance,'body text outside content_border'))
+  cases.append(('outside-'+tag,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'</body>',body+b'</body>',guidance,'body text outside the content area'))
  for term in ['Theme color groups are shown together in Appearance.','Settings » Appearance','Appearance category']:
-  cases.append(('obsolete-'+term,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'<div id="content_border">',('<div id="content_border"><p>'+term+'</p>').encode('ascii',errors='xmlcharrefreplace'),guidance,term))
- for chrome in ['menu_border','header_title']:
-  cases.append(('chrome-paragraph-'+chrome,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/configure_hidden.htm',('<div id="'+chrome+'">').encode(),('<div id="'+chrome+'"><p>fixture body</p>').encode(),guidance,'body text outside content_border'))
+  cases.append(('obsolete-'+term,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'<main id="content">',('<main id="content"><p>'+term+'</p>').encode('ascii',errors='xmlcharrefreplace'),guidance,term))
+ for chrome in ['<nav id="menu">','<header id="header">']:
+  cases.append(('chrome-paragraph-'+chrome,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/configure_hidden.htm',chrome.encode(),(chrome+'<p>fixture body</p>').encode(),guidance,'body text outside the content area'))
  for text in ['解除','すべて元に戻す…']:
   cases.append(('ja-label-'+text,'Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',text.encode(),b'REMOVED',guidance,'Japanese shortcut button missing'))
  for name,file,old,new,run,message in cases:

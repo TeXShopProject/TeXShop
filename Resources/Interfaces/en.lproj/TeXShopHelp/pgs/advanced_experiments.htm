@@ -1,86 +1,64 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experiments</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Experiment; try a formula; fragment; source panel; preview panel; Experiment console">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
+<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
+<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
+<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
+<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
+<li><a href="advanced_experiments.htm" class="current">Experiments</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
+<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
+<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Experiments</h1>
+<p>Edit › Experiment… lets you try a short but tricky piece of LaTeX, such as a formula, a table or a TikZ picture, before you put it into the document. It is available when a source window is active.</p>
+<p>The command opens a source panel. If text is selected in the source window, it is copied into the panel; otherwise the panel shows what you left in it last time. Type or edit the fragment, for instance <code>$$\sqrt{x^2 + y^2}$$</code>, and press the Typeset button at the bottom of the panel. A preview panel shows the result. The first time it shows the top of the first page; when you typeset again, it keeps the part of the page you are looking at. The fragment can be anything from a formula to several pages.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Experiments</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="experiment; input language; utf-8">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>How the fragment is typeset</h2>
+<p>TeXShop typesets a file made of the preamble of the document, everything up to <code>\begin{document}</code>, followed by the fragment and <code>\end{document}</code>. In a project with a root file, the preamble of the root file is used. Your document and its folder are not changed:</p>
+<ul>
+<li>The file is typeset in a temporary folder that holds copies of the files and folders next to the document, so pictures are found as when the document is typeset, also with paths beginning with <code>./</code>. Folders with more than 5000 items and items that cannot be copied this way, such as files on another disk or online-only files of a cloud service, are not copied; files next to the document are then still found, but not with paths beginning with <code>./</code>.</li>
+<li>A copy of the <code>.aux</code> file of the last typesetting of the document is read, so <code>\ref</code>, <code>\pageref</code> and <code>\cite</code> show the numbers of the document.</li>
+</ul>
+<p>The engine is the one the document uses: a <code>% !TEX program</code> line at the top of the source, or else the choice in the toolbar of the source window. With LaTeX, the typesetting method of the document is followed: Direct PDF, Via DVI or Personal Script. If BibTeX or MakeIndex is chosen, pdfLaTeX is used. ConTeXt, MetaPost and plain TeX cannot be used for an experiment. Engines of your own are tried, but they may fail if they do not expect LaTeX or do not produce a PDF file.</p>
 
-<BODY>
-	<div id="content_border">
-	
-<p>	The menu item "Experiment..." in the Edit menu,    available when the source window is active, allows users to experiment with short, but complicated, fragments of TeX before copying the source into the main document. 
+<h2>The panels</h2>
+<p>The source panel shows text as the source window does, with the same font, tabs, line spacing, wrapping, syntax colors, current line highlight, block cursor, invisible characters, line numbers and bracket matching, and follows changes to them made in menus or Settings. <kbd>⌘+</kbd> and <kbd>⌘-</kbd> enlarge or reduce the text; like a font chosen with the Font panel, they change the source window too. Key bindings, command completion and Edit › Complete Label or Citation Key work in the panel. Command completion uses the trigger key chosen in Settings › Keyboard › Completion trigger.</p>
+<p>The toolbar of the preview panel has the tools of the Preview window: Scroll, Select Text, Magnify and Select PDF. Magnify shows the page under the pointer at 150% while the mouse button is held, or 200%, 250% and 300% with Command, Option and Control; double-click for a larger glass. With Select PDF, draw a rectangle and copy it in the format chosen in Preview › Copy Format. The panel remembers its tool separately from the Preview window. Beside the tools are Zoom Out, Zoom In, Zoom to Content, which enlarges the typeset part of the page to fill the panel, and Zoom to Content Width, which makes the typeset part as wide as the panel. The panel also scrolls and zooms with the mouse and trackpad gestures.</p>
+<p>The output of typesetting appears in a console of its own, the Experiment console. It comes to the front when typesetting starts; click a panel to bring that panel forward again. <kbd>⌘0</kbd> (File › Show Console) in a panel brings the Experiment console forward, and pressing it again returns to the panel. If Settings › Console › Show console is set to show the console only when an error occurs, the Experiment console stays hidden until TeX reports an error or waits for input.</p>
+<p>The panels and the Experiment console float above the document windows. They can be moved and resized, and TeXShop remembers their sizes and places. Close a panel with its close button or <kbd>⌘W</kbd>. Escape also closes the preview panel, and the source panel when command completion uses the Tab key; when Escape is the completion trigger, it completes commands in the source panel instead.</p>
 
-<p>
-When the item is chosen, a panel appears. Type a TeX fragment into the panel, say $$\sqrt{x^2 + y^2}$$. Push the Typeset button at the bottom of the panel, and a second panel appears showing the result of typesetting the fragment. After the first typesetting, the second panel shows the top of the first page; when the fragment is typeset again, it keeps the part of the page being viewed. The fragment can contain anything: a displayed formula, ordinary text, several pages of mixed material.
-To typeset, TeXShop creates a new source file with the header of the current document up until "\begin{document}", the new fragment, and a final "\end{document}." This also works in a project with a root file. In that case the contents of the root file up until "\begin{document}" are used. The new file is typeset in a temporary folder that holds copy-on-write clones of the files and folders next to the document, so pictures are found as when the document is typeset, also with paths beginning with "./", while whatever the typesetting writes leaves the document's folder alone. Items that cannot be cloned, and folders with more than 5000 items, are not cloned; files next to the document are then still found, but not with paths beginning with "./". A copy of the document's .aux file from its last typesetting is read at the start of each run, so \ref, \pageref and \cite show the numbers of the document.
-
-<p>The toolbar of the second panel has four tools, as in the Preview window: Scroll, Select Text, Magnify and Select PDF. Magnify is the magnifying glass of the Preview window: while the mouse button is held, it shows the page under the pointer at 150% of its size on screen, or 200%, 250% and 300% with Command, Option and Control; double-click for a larger lens. Select PDF draws a rectangle; Copy then copies it in the format chosen in the Copy Format submenu of the Preview menu. The panel remembers its tool separately from the Preview window. Next to the tools are Zoom Out, Zoom In, Zoom to Content, which enlarges the typeset part of the page to fill the panel, and Zoom to Content Width, which makes the typeset part as wide as the panel and shows its top at the top of the panel.
-
-<p> Typesetting in the source panel shows its output in a console of its own, the Experiment console. Like the two panels, it floats over the document's windows. It comes in front of the panels when typesetting starts, and a panel comes in front of it again when you click the panel. Command-0 (Show Console) in a panel brings the Experiment console forward; pressing it again returns to the panel. TeXShop remembers the size and location of the Experiment console. If the Console category of TeXShop Settings is set to show the console only when an error occurs, the Experiment console stays hidden until TeX reports an error or waits for input.
-
-<p> Both panels have close buttons, and command-W closes them. The "escape" key also closes the preview panel, and it closes the source panel when command completion uses the "tab" key.
-
-<p> Although the two panels do not have resize buttons, they can both be resized. TeXShop will remember
-the new sizes and locations and use them the next time "Experiment..." is selected. The source panel shows text as the source window does, with the same font, tabs, line spacing, wrapping, syntax colors, current line highlight, block cursor, invisible characters, line numbers and brace matching. Changing any of these from a menu or in Settings changes the source panel at once. The keyboard shortcuts "command +" and "command -" work in the source panel to enlarge the text if desired; like a font chosen there with the Font panel, they change the source window too. Key bindings, command completion and Edit &#8250; Complete Label or Citation Key are available in the source panel. Command completion uses the same trigger key as the source window, chosen with "Completion trigger" in the Keyboard category of TeXShop Settings. When this key is "escape", the escape key completes commands in the source panel and does not close it; close the panel with command-W or its close button.
-
-<p> The "Experiment..." feature requires a latex-like engine. It will not work with ordinary plain tex. The
-source panel's Typeset button looks at the main source window's toolbar to determine a typesetting engine.,
-and also uses the "% $TEX engine = ..." mechanism if available at the top of the source window.
-If "plain TeX" or "Context" is selected, nothing happens. If "bibtex" or "make index" are chosen, pdflatex is used. 
-Obviousy "pdflatex, xelatex, and lualatex" can be used. The panel will try to use any user-defined engine selected, but  some such engines may fail if they don't expect latex-like code or don't output pdf.
-
-<p> The preview panel understands mouse scroll commands and trackpad gesture commands to scroll and resize. It understands "command-shift +" and "command-shift -" to resize contents. 
-
-<p> If you close a panel during work and later reopen it, the contents will be remembered. But the contents
-are lost when quitting TeXShop. It is assumed that the panels will be used for short fragments of work; when
-users are satisfied, they will transfer the source to the main document using copy and paste. Panel
-contents are not auto-saved and cannot be manually saved except via the copy mechanism.
-
-<p> Each document has its own source and preview panels, so if you have multiple documents open, you could also have multiple source and preview panels open, leading to a confusing mess. I expect users to exercise common sense and only experiment with one fragment at a time.  One way to avoid confusion would be to hide the panels when a document becomes inactive. I didn't want to do that because  a user  constructing
-a complicated example might want to temporarily open a second document and copy source from that
-document into the panel as a starting point.
-
-
-	
-	
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Experiment</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_Japan.htm">Settings for Japan</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>Keeping the result</h2>
+<p>When the fragment is right, copy it from the source panel and paste it into the document. The panels keep their contents when they are closed and reopened, but not when TeXShop quits, and they cannot be saved.</p>
+<p>Each document has its own panels. With several documents open, close the panels you no longer need, so that it stays clear which document an experiment belongs to.</p>
+</main>
+</body>
+</html>

@@ -1,130 +1,106 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Encodings</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="encoding; UTF-8; Unicode; % !TEX encoding; automatic detection; Open dialog; Save dialog; IsoLatin9; right-to-left; Arabic; Hebrew; Persian; input sources">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
+<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
+<li><a href="advanced_encoding.htm" class="current">Encodings</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
+<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
+<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
+<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
+<li><a href="advanced_experiments.htm">Experiments</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
+<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
+<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Encodings</h1>
+<p>TeXShop edits text in Unicode, so the source window accepts any character of any language. The <em>encoding</em> decides how this text is written to the file on disk and read back. UTF-8 can store every character, and LaTeX, XeLaTeX and LuaLaTeX read it by default. Older files and files from other systems may use another encoding, such as ISO Latin 9 or Shift JIS.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Encodings</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="bibtex; bibliography; citation">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>New documents</h2>
+<p>New documents are saved in the encoding chosen in Settings › Documents and Saving › Encoding › Encoding for new documents. The default is Unicode (UTF-8); keep it unless you exchange files with people who need another encoding.</p>
+<p>A document is saved in the encoding it was opened with, so an older file keeps its encoding. Characters that the encoding of a file cannot represent are lost when the file is saved.</p>
 
-<BODY>
-	<div id="content_border">
-	
-	
-<p> In the original version of TeX by Donald Knuth, source files contained only ascii characters. Recall that ascii encodes standard typewriter characters as bytes, i.e., integers between 0 and 255, so a source file was just a long sequence of bytes. The ascii encoding only uses integers between 0 and 127.</p>
+<h2>Opening files</h2>
+<p>When a file without an encoding line (see below) is opened, TeXShop detects its encoding. A byte order mark identifies UTF-8 and UTF-16 files. A file of ASCII characters only is read in the encoding for new documents. Otherwise TeXShop uses the encoding that the program which saved the file recorded with it, when macOS has kept this information, and then tries UTF-8, and then the encodings of your languages and the encoding for new documents. An encoding that the source declares, for instance with <code>\usepackage[latin9]{inputenc}</code>, is used as a hint.</p>
+<p>Detection is a guess and works best with files that contain a fair amount of text. If it chooses the wrong encoding, close the file without saving, open it again with File › Open…, press Options in the Open dialog, and choose the encoding in its menu; the encoding chosen there is used for the files opened at that time, and the document keeps it. Then add an encoding line to the file so that it always opens correctly. Detection can be turned off with the hidden setting</p>
+<pre>defaults write TeXShop EncodingAutoDetection NO</pre>
+<p>Files are then read in the encoding for new documents.</p>
 
-<p>The restriction to ascii characters caused problems for users in Europe, who regularly use accents, umlauts, upside down question marks, and other special characters. TeX allows these characters to be input as markup commands, but unfortunately markup commands divide words, so a word with an accented vowel looks like two words to TeX. This then broke automatic hyphenation for Europeans.</p>
+<h2>The encoding line</h2>
+<p>A line in one of the first twenty lines of a source file fixes its encoding for reading and for saving, overriding everything else:</p>
+<pre>% !TEX encoding = UTF-8 Unicode</pre>
+<p>The line must start at the left margin, with one space after <code>%</code> and one space on each side of the equals sign, and the name must be written exactly as in the table below. The Encoding macro in the Macros menu lists the encodings and inserts the line for you. The names that TeXworks uses, such as <code>UTF-8</code> or <code>ISO 8859-1</code>, are also understood.</p>
+<p>If the line names an encoding that TeXShop does not know, TeXShop reads the file as UTF-8 and says so. If the line names UTF-8 but the file is not valid UTF-8, TeXShop reports it and opens the file in ISO Latin 9, which reads any file; saving it without changing the line writes the same bytes back, so nothing is lost. To open a file without applying its encoding line, hold down Option while it opens.</p>
+<table>
+<tr><th>Name in the encoding line</th><th>Name in menus</th></tr>
+<tr><td><code>UTF-8 Unicode</code></td><td>Unicode (UTF-8)</td></tr>
+<tr><td><code>Standard Unicode</code></td><td>Unicode (UTF-16)</td></tr>
+<tr><td><code>MacOSRoman</code></td><td>Western (Mac OS Roman)</td></tr>
+<tr><td><code>IsoLatin</code></td><td>Western (ISO Latin 1)</td></tr>
+<tr><td><code>IsoLatin9</code></td><td>Western (ISO Latin 9)</td></tr>
+<tr><td><code>Windows Latin 1</code></td><td>Windows Latin 1</td></tr>
+<tr><td><code>IsoLatin2</code></td><td>Central European (ISO Latin 2)</td></tr>
+<tr><td><code>Mac Central European Roman</code></td><td>Mac Central European Roman</td></tr>
+<tr><td><code>WindowsCentralEurRoman</code></td><td>Central European Roman (Windows)</td></tr>
+<tr><td><code>IsoLatin5</code></td><td>Turkish (ISO Latin 5)</td></tr>
+<tr><td><code>IsoLatinGreek</code></td><td>Greek (ISO 8859-7)</td></tr>
+<tr><td><code>Mac Cyrillic</code></td><td>Cyrillic (Mac OS)</td></tr>
+<tr><td><code>DOS Cyrillic</code></td><td>Cyrillic (DOS)</td></tr>
+<tr><td><code>Windows Cyrillic</code></td><td>Cyrillic (Windows)</td></tr>
+<tr><td><code>DOS Russian</code></td><td>Russian (DOS)</td></tr>
+<tr><td><code>KOI8_R</code></td><td>Russian (KOI8-R)</td></tr>
+<tr><td><code>MacJapanese</code></td><td>Japanese (Mac OS, ShiftJIS ¥)</td></tr>
+<tr><td><code>DOSJapanese</code></td><td>Japanese (Windows, DOS, ShiftJIS \)</td></tr>
+<tr><td><code>SJIS_X0213</code></td><td>Japanese (Shift JIS X0213)</td></tr>
+<tr><td><code>EUC_JP</code></td><td>Japanese (EUC)</td></tr>
+<tr><td><code>JISJapanese</code></td><td>Japanese (ISO 2022-JP)</td></tr>
+<tr><td><code>MacKorean</code></td><td>Korean (Mac OS)</td></tr>
+<tr><td><code>DOSKorean</code></td><td>Korean (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Traditional</code></td><td>Traditional Chinese (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Traditional</code></td><td>Traditional Chinese (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Simplified</code></td><td>Simplified Chinese (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Simplified</code></td><td>Simplified Chinese (Windows, DOS)</td></tr>
+<tr><td><code>GB 2312</code></td><td>Simplified Chinese (GB 2312)</td></tr>
+<tr><td><code>GBK</code></td><td>Chinese (GBK)</td></tr>
+<tr><td><code>GB 18030</code></td><td>Chinese (GB 18030)</td></tr>
+</table>
 
-<p>Version 3 of TeX, which is the current version, fixed this problem by expanding font tables from 128 characters to 256 characters. This made it possible to design fonts containing accented characters and other special symbols, so markup commands are not needed to input these characters. It made it possible for TeX to process input files containing bytes with all 256 values,  rather than the original 128 ascii symbols.</p>
+<h2>Saving in another encoding</h2>
+<p>To choose the encoding when saving, turn on Settings › Documents and Saving › Encoding › Show Encoding in Save Dialog; the Save dialog then has an encoding menu. Edit › Transformations › Change Encoding chooses the encoding in which the open document is saved from then on. If the file has an encoding line, the line decides; edit the line instead. TeXShop keeps the byte order mark of a UTF-8 file and the byte order of a UTF-16 file.</p>
+<p>Converting a file to another encoding loses every character that the new encoding cannot represent, and reading a file in the wrong encoding and saving it replaces its characters for good. Keep a copy of the original. The command line program <code>iconv</code> converts files without changing the original. The document “File Encoding and TeXShop” in the Help menu discusses these questions in more detail.</p>
 
-<p>Simultaneously, computer manufacturers faced their own form of the same problem, and they responded in a similar manner by extending the ascii table to a full 256 characters. But unfortunately, 256 is too small to include all characters used in Europe: Cyrilic, Greek, etc. So manufacturers invented several different extensions of ascii, which were called "encodings".</p>
+<h2>Right-to-left languages</h2>
+<p>Arabic, Hebrew and Persian are typed from right to left in the source window. When Settings › Editor › Typing › “Right-to-left languages (Arabic, Hebrew, Persian)” is on and syntax highlighting is on, lines that begin with Arabic or Hebrew script are aligned to the right, and other lines, for instance lines that begin with a LaTeX command, to the left. With the hidden setting</p>
+<pre>defaults write TeXShop RightJustifyIfAny YES</pre>
+<p>every line that contains such characters anywhere is aligned to the right. The alignment is only for editing; TeX lays out the typeset text by its own commands. To typeset these languages, use XeLaTeX or LuaLaTeX; see <a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a>.</p>
 
-<p>None of these solutions sufficed to include the much larger set of characters used in China and other countries in the East. Eventually computer manufacturers adopted a new standard named Unicode which can simultaneously encode all symbols used everywhere in the World. Apple is one of the manufacturers who adoped Unicode. Internally, TeXShop and all Cocoa-based text editors use Unicode and accept any character as input. For instance, you can type text into TeXShop  written in Arabic or Hebrew, and the text will automatically appear from right to left. For more details, see the help section on XeTeX and XeLaTeX.</p>
-
-<p>Standard TeX and LaTeX do not accept Unicode input. Two majors projects are underway to extend TeX so it can directly deal with Unicode. One of these projects, XeTeX, is actively used by many users. See the next section of TeXShop Help for details. The second project, luaTeX, is available but still in beta. In addition to these projects, there are a few TeX support files which support Unicode input for some languages.</p>
-
-<p>A further complication is that there is no standard way to write Unicode to a file; instead several different standards have emerged. One of these, called UTF-8, is particularly prevalent. In this format, the standard 128 ascii characters are written as usual, so a straight ascii file is a legal UTF-8 file. But all other characters are 	encoded. In particular, a random sequence of bytes is usually not a legal UTF-8 file; only certain legal sequences of numbers translate back into Unicode.</p>
-
-<p>Whenever TeXShop reads or writes a file to disk, it must be given an encoding to use for the file. If the encoding supports full Unicode, then the source file will be completely unchanged if written and later read back. If another encoding is used, unicode characters not supported by the encoding will be modified when written to disk and later read back.</p>
-
-<p>The various 256-character encodings behave differently than the few Unicode encodings. Every sequence of bytes is legal in the 256 character encodings. So if a file is written with one such encoding, and then read back with another, there will be no computer error, but some characters will be replaced by nonsense characters. If this happens, it is important not to immediately save the file, because then the nonsense characters will replace the desired characters on disk.</p>
-
-<p> On the other hand, if a file is written to disk with a 256-character encoding, and later read back as a UTF-8 Unicode file, the computer is likely to report an error and give up because the file is not legal UTF-8. In that case, TeXShop will reread the file using ISOLatin 9 encoding. This will eliminate the computer error, but will likely replace characters by nonsense characters. ISOLatin 9 has full ascii support as well as
-support for all symbols commonly used throughout Western Europe.</p>
-
-<p>Two issues remain. First, how is TeX informed that a particular encoding is being used? And second, how does TeXShop administer encodings when loading and saving files?</p>
-
-<p>We'll give one example showing how TeX source can indicate the encoding. The particular method you use will depend on the encoding used in your part of the world. Users in Germany often include the following three lines in the preface of TeX documents. The first line asks TeX to use German conventions for dates, hyphenation, and the like. The second line tells TeX about fonts which understand the required encoding, and the third line tells TeX about the encoding of the input source file.</p>
-
-<dl>
-<dd> \usepackage[german]{babel}
-<dd>\usepackage[T1]{fontenc}
-<dd>\usepackage[latin9]{inputenc}
-</dl>
-
-<p> From now on, we explain how to configure TeXShop to handle encodings. Notice first that there is a setting under the 
-Documents and Saving category of the Settings window to set the default encoding.</p>
-
-<p>When loading files from disk, or saving files to disk, the appropriate dialogs contain an "Encoding" drop down menu at the bottom allowing you to select the appropriate encoding for that particular read or write operation. Usually you will ignore this menu and use the default encoding.</p>
-
-<p>Finally, it is possible to set the encoding of a particular file so it will be used regardless of the default encoding set in Settings.	
-For example, if one of the first twenty lines of the source has the form</p>
-<dl>
-<dd> % !TEX encoding = UTF-8 Unicode
-</dl>
-<p>then that source will be loaded and saved with UTF-8 Unicode encoding regardless of the default encoding
-setting in Settings. To bypass this behavior, hold down the option key while opening a file.</p>
-
-
- <p> There must be one space after % !TEX and one space before the equals sign; the spaces in the name of the
-encoding must match the spaces in the name listed below. The name of the encoding is the internal name
-used by Mac OS X. TeXShop has an "Encoding" Macro which knows appropriate values and allows you to set encoding by choosing from a list. Below is the list of allowed names:</p>
-<dl>
-<li> MacOSRoman
-<li> IsoLatin
-<li> IsoLatin2
-<li> IsoLatin5
-<li> IsoLatin9
-<li> IsoLatinGreek
-<li> Mac Central European Roman
-<li> MacJapanese
-<li> DOSJapanese
-<li> SJIS_X0213
-<li> EUC_JP
-<li> JISJapanese
-<li> MacKorean
-<li> UTF-8 Unicode
-<li> Standard Unicode
-<li> Mac Cyrillic
-<li> DOS Cyrillic
-<li> DOS Russian
-<li> WindowsCentralEurRoman
-<li> Windows Cyrillic
-<li> KOI8_R
-<li> Mac Chinese Traditional
-<li> Mac Chinese Simplified
-<li> DOS Chinese Traditional
-<li> DOS Chinese Simplified
-<li> GBK
-<li> GB 2312
-<li> GB 18030
-</dl>
-
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Encodings</div>
-	<div id="menu_border">
-		<ul>
-			<li><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<li><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<li><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_Japan.htm">Settings for Japan</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>Typing other scripts</h2>
+<p>To type in another script, add an input source for it in System Settings › Keyboard, under Text Input, and switch input sources with the input menu in the menu bar.</p>
+</main>
+</body>
+</html>

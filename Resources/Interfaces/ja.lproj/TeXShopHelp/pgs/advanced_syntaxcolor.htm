@@ -1,56 +1,66 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>シンタックスハイライト</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="シンタックスハイライト; 構文の色分け; 色; テーマ; expl3; 索引; 脚注; 記号類; 括弧; 全角英数記号; SyntaxColoringEnabled">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
+<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
+<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
+<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
+<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
+<li><a href="advanced_syntaxcolor.htm" class="current">シンタックスハイライト</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>シンタックスハイライト</h1>
+<p>ソースのウインドウでは、TeXが色分けして表示されます。コメント、コマンド、脚注、記号<code>$</code>と<code>&amp;</code>、括弧<code>( )</code>、<code>{ }</code>、<code>[ ]</code>にそれぞれの色があります。「ソース」→「シンタックスハイライト」で、作業中の書類のハイライトをオン・オフできます。書類はハイライトがオンの状態で開きます。オフで開くようにするには、次の隠し設定を使います。</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
 
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>シンタックスハイライト</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="シンタックスハイライトの配色の変更方法">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<h2>色分けされるもの</h2>
+<ul>
+<li>コマンドは、バックスラッシュに続く英字の並びです。「設定」→「エディタ」→「シンタックスハイライト」の「@ をコマンド名の一部と見なす」をオンにすると、パッケージの内部コマンドのように<code>@</code>も英字として扱います。</li>
+<li><code>\footnote</code>、<code>\footcite</code>、<code>\autocite</code>の中の文字列は「脚注」の色で表示されます。隠し設定<code>defaults write TeXShop SyntaxColorFootnote NO</code>を使うと、コマンドだけに色を付けます。</li>
+<li>「ソース」→「索引をハイライト」を選ぶと、<code>\index</code>と<code>\esindex</code>の引数が「索引」の色で表示されます。「設定」→「エディタ」→「シンタックスハイライト」の「索引を既定でハイライト」をオンにすると、書類を開いたときにオンになります。</li>
+<li>「ソース」→「expl3コードをハイライト」を選ぶと、LaTeXのプログラミング層であるexpl3のコードの関数、変数などにも色を付けます。パッケージを書く人のための機能です。同じグループの「expl3コードを既定でハイライト」をオンにすると、書類を開いたときにオンになります。</li>
+<li>同じグループの「全角英数記号を強調」をオンにすると、日本語の文章でASCII文字と見間違えやすい全角の英字、数字、記号を「全角英数記号」の色で表示します。</li>
+</ul>
+<p>「索引をハイライト」と「expl3コードをハイライト」は作業中の書類に働き、ソースのウインドウごとに別々に選べます。ログファイルなど、TeXのソースではないファイルには色を付けません。対象の拡張子と、拡張子を加える方法については、<a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>を参照してください。</p>
 
-<body>	
-
-<div id="content_border">
-
-<p>
-ソースウインドウでシンタックスハイライトが有効になっているときは、コメント、コマンド、「 $ 」 「 { 」 「 } 」といった記号が、それぞれの色で表示されます。これらの色はテーマの一部です。設定ウインドウの「テーマ」の「シンタックスハイライト」で変えられます。色はテーマごとに設定するので、ライトモード時のテーマとダークモード時のテーマで別の色にできます。
-</p>
-
-<p>
-以前のTeXShopでは、markerred・markergreen・markerblueなどの隠れた設定でこれらの色を設定していました。これらの設定は今は使われません。
-</p>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title">シンタックスハイライト</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
-			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
-			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
-			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
-			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
-			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
-			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
-			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
-			<li><a href="advanced_plist.htm">Plistファイル</a>
-			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-		</ul>
-	</div>
-	</body>
-
-</HTML>
+<h2>色を変える</h2>
+<p>色はテーマに属しています。「設定」→「テーマ」で選びます。</p>
+<ul>
+<li>「シンタックスハイライト」グループには、「コメント」「コマンド」「脚注」「記号類」「索引」があります。</li>
+<li>「括弧類」グループには、<code>( )</code>、<code>{ }</code>、<code>[ ]</code>の色があります。</li>
+<li>「expl3」グループには、function、__function、key、variable、__variable、argument、msgがあります。</li>
+<li>「強調表示」グループには、「全角英数記号」の色などがあります。</li>
+<li>「XML構文」グループには、HTMLとXMLのファイルの色があります。</li>
+</ul>
+<p>テーマごとに色が異なるので、「ライトモード時のテーマ」と「ダークモード時のテーマ」で別の色にできます。</p>
+</main>
+</body>
+</html>

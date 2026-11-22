@@ -1,187 +1,95 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE html>
+<html lang="de">
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
-  <title>Dokumente setzen</title>
-  <meta name="copyright"
- content="Copyright (c) 2003 Richard Koch, Martin Kerz und Sebastian Siedentopf unter der GNU FDL">
-  <meta name="description"
- content="Benutzen Sie den LaTeX-Knopf in der Werkzeugleiste um Ihren TeXShop-Quelltext zu setzen. Verlassen Sie sich dabei auf die vielf&auml;ltigen Hilfen und Einstellungsm&ouml;glichkeiten.">
-  <link href="../sty/screen.css" rel="stylesheet" media="all">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dokumente setzen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="setzen; erstes Dokument; Setzen; Konsole; Fehler; Gehe zu Fehler; Abbrechen; Aux-Dateien löschen; Engine-Profil; % !TEX program; Hauptdatei; SyncTeX; Ein gemeinsames Fenster">
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<div id="content_border">
-<p>Um TeXShop zu benutzen,
-m&uuml;ssen Sie einfach Ihren LaTeX-Text im Eingabefenster von
-TeXShop eingeben. Dr&uuml;cken Sie danach den
-&bdquo;LaTeX&ldquo;-Knopf im oberen Teil des Fensters. Ihr Text
-wird gespeichert und pdflatex ausgef&uuml;hrt. Ein zweites Fenster
-wird erscheinen, das Ihnen die Informationen von tex anzeigt. Falls ein
-Fehler auftritt, wird pdflatex anhalten. Dr&uuml;cken Sie die
-Eingabetaste um die Fehler einzeln zu &uuml;berspringen.
-Nat&uuml;rlich k&ouml;nnen Sie auch die Standard-TeX Befehle
-zum Verlassen oder &auml;hnlichem eingeben. Wenn das Dokument
-fertig gesetz ist, erscheint ein drittes Fenster, das Ihnen die
-erzeugte pdf-Datei anzeigt. Sie k&ouml;nnen zwischen den beiden
-Fenstern (Quelltext und Vorschau) wechseln, indem Sie Befehl-1
-dr&uuml;cken.</p>
-<p>Klicken Sie die Maus auf einen
-Bereich im Fenster der pdf-Datei und die Umgebung des Mauszeigers wird
-vergr&ouml;&szlig;ert. Wenn Sie doppelt klicken, wird der
-vergr&ouml;&szlig;erte Bereich wird noch weiter. Bei einem
-dreifachen Klick wird der Bereich ein weiteres Mal erweitert. Sie
-k&ouml;nnen die Standardverg&ouml;&szlig;erung allerdings
-auch &uuml;ber die Werkzeugleiste im Vorschau-Fenster einstellen.</p>
-<p>Um ein TeX-Dokument zu setzen,
-w&auml;hlen Sie den &bdquo;Programm&ldquo;-Auswahlknopf und
-w&auml;hlen Sie TeX anstelle von LaTeX aus. Wollen Sie TeX als
-Standard verwenden, w&auml;hlen Sie es bitte als Standardprogramm
-in den Einstellungen aus.&nbsp;</p>
-<p>Wenn Ihnen ein Fehler
-auff&auml;llt, k&ouml;nnen Sie Ihn direkt im Eingabefenster
-korrigieren. Dr&uuml;cken Sie jetzt den &bdquo;TeX&ldquo;
-oder &bdquo;LaTeX&ldquo;-Knopf erneut, m&uuml;ssen Sie den
-alten Satzvorgang nicht abbrechen. TeXShop beendet automatisch den
-alten Vorgang und startet einen neuen.</p>
-<p>TeXShop speichert die
-Textzeilen der ersten zwanzig Fehler. Um zu den einzelnen Fehlern zu
-springen, benutzen Sie den Men&uuml;eintrag &bdquo;Gehe zu
-Fehler&ldquo; im &bdquo;Bearbeiten&ldquo;-Men&uuml;
-oder dr&uuml;cken Sie das Tastaturk&uuml;rzel f&uuml;r
-diesen Befehl.</p>
-<p>Wenn Sie Fehler korrigieren und
-das Dokument erneut setzen, wird das Ausgabefenster zu der Position
-zurr&uuml;ckkehren, an der Sie vorher waren.</p>
-<p>Wenn eine Zeile Ihres
-Quelltextes mit &bdquo;%:&ldquo; beginnt, wird TeXShop die
-Zeilen als &bdquo;Markierung&ldquo; interpretieren und diese
-Markierung wird im
-&bdquo;Markierungen&ldquo;-Auswahlmen&uuml; erscheinen.
-Wird diese Markierung im Men&uuml; ausgew&auml;hlt, springt
-TeXShop automatische zur zugewiesenen Stelle im Quelltext. Zeilen die
-mit den Worten \section, \subsection, \subsubsection oder \chapter
-werden automatisch dem "Markierungen"-Auswahlmenu hinzugef&uuml;gt.
-Diese Einstellung kann jedoch ge&auml;ndert werden, indem Sie
-folgenden Befehl in Apples Terminal tippen:</p>
-<dl>
-  <dd><tt>defaults
-write TeXShop TagSections NO</tt> </dd>
-</dl>
-<p>TeXShop kann mit mehreren
-Dokumenten gleichzeitig umgehen. W&auml;hlen Sie
-&bdquo;Neu&ldquo; oder &bdquo;&Ouml;ffnen&ldquo;,
-wird Ihr Dokument erhalten bleiben und ein zus&auml;tzliches
-Fenster mit dem neuen Dokument erscheinen. &Ouml;ffnen Sie eine
-tex-Datei und in dem selben Ordner befindet sich eine pdf-Datei des
-selben Namens, wird im Ausgabefenster auch die pdf-Datei
-ge&ouml;ffnet.<br>
-</p>
-<p>Manche Benutzer
-m&ouml;chten ihr Dokument in mehrere Unterdokumente teilen, die von
-einem Hauptdokument mit dem \input Befehl gesteuert werden. TeXShop
-speichert immer das Dokument vor dem Setzen.</p>
-<p>TeXShop wird auch gestartet,
-wenn Sie doppel auf ein Dokument mit der Dateiendung
-&bdquo;.tex&ldquo; klicken. Es wird dann das Textdokument und
-falls vorhanden die dazugeh&ouml;rige pdf-Datei ge&ouml;ffnet.</p>
-<p>Sie k&ouml;nnen das
-pdf-Ausgabefenster jederzeit schlie&szlig;en. Es wird, wenn Sie ein
-Dokument nochmals setzen, wieder ge&ouml;ffnet. Schlie&szlig;en
-Sie das Eingabefenster, werden sich Eingabe- und Ausgabefenster
-schlie&szlig;en (Fenster anderer tex-Dokumente bleiben jedoch
-ge&ouml;ffnet). Sie sollten deshalb ein Eingabefenster eher ins
-Dock verkleinern oder ausblenden, als es zu schlie&szlig;en, falls
-Sie Platz auf dem Bildschirm ben&ouml;tigen.</p>
-<p>Pdftex und pdflatex sind
-UNIX-Programme, die auf Knuths TeX-Programm basieren. Die TeX-Syntax
-erlaubt keine Leerzeichen in Dateinamen. Daher sollten Sie hierauf
-verzichten. TeXShop selbst hat keine Probleme mit Leerzeichen in
-Dateinamen. </p>
-<p>Das Verhalten des
-Vorschau-Fensters kann &uuml;ber die Men&uuml;punkte
-&bdquo;Vergr&ouml;&szlig;erung&ldquo; und
-&bdquo;Anzeigeformat&ldquo; unter dem Man&uuml;punkt
-&bdquo;Vorschau&ldquo; eingestellt werden. So k&ouml;nnen
-Sie hier ein scrollen durch alle Seiten eines Dokuments erlauben. Auch
-kann das Vorschau-Fenster hier so eingestellt werden, dass es zwei
-Seiten gleichzeitig anzeigt. Schlie&szlig;lich kann man auch die
-Einstellung treffen, dass eine &Auml;nderung der
-Fenstergr&ouml;&szlig;e auch die Verg&ouml;&szlig;erung
-der Anzeige beeinflusst. Experimentieren Sie ein wenig, bis Sie alles
-nach Ihren W&uuml;nschen angepasst haben und w&auml;hlen Sie
-den Modus in den Einstellungen, den sie bevorzugen.</p>
-Verwenden Sie das Vergr&ouml;&szlig;erungswerkzeug in der
-Werkzeugleiste des Vorschaufensters, um Teile des Textes zu
-vergr&ouml;&szlig;ern. Durch Doppel- oder Dreifachklick werden
-noch umfangreichere Bereiche vergr&ouml;&szlig;ert. Der
-vergr&ouml;&szlig;erte Ausschnitt kann w&auml;hrend der
-Vergr&ouml;&szlig;erung mittel Druck auf Wahl-, Befehl-,
-Steuerung- und Hochstelltaste ver&auml;ndert werden.<br>
-<br>
-Sie k&ouml;nnen das PDF-Auswahlwerkzeug zum Ausw&auml;hlen von
-Teilbereichen des Vorschaufensters verwenden, und diese auf den
-Schreibtisch oder in andere Programme hin&uuml;berziehen.
-Standardm&auml;&szlig;ig enth&auml;lt der
-ausgew&auml;hlte Bereich nur den Vordergrundtext im PDF-Format.
-Dies ist z.B. n&uuml;tzlich, um den Text in Keynote einzusetzen:
-der Hintergrund der Folie bleibt durch den Text hindurch sichtbar,
-w&auml;hrend der Text auch beim nachtr&auml;glichen Skalieren
-scharf bleibt.
-<p>Verwenden Sie das
-Textauswahlwerkzeug um Text im Vorschaufenster zu markieren. Dieser
-Text kann dann mittels Kopieren&amp;Einsetzen in eine
-Textverarbeitung &uuml;bertragen werden. Falls die Vorschau
-Verweise (Links) enth&auml;lt, k&ouml;nnen diese durch Klick
-mit dem Textauswahlwerkzeug angew&auml;hlt werden. Mit den
-Vorw&auml;rts und Zur&uuml;ck Kn&ouml;pfen kann navigiert
-werden. In der Seitenschublade (Drawer) befindet sich ein Suchfeld zum
-Durchsuchen des PDF-Dokumentes.</p>
-<p>Es kann zwischen Quelltext- und
-Vorschaufenster durch Bet&auml;tigen der Befehlstaste (Apfeltaste)
-bei gleichzeitigen Klick auf ein Wort oder Textabschnitt gewechselt
-werden. Falls der angeklickte Text sich im Quelltextfenster befindet,
-springt das Vorschaufenster an die entsprechende Stelle und markiert
-die Stelle rot umrandet. Falls der angeklickte Text sich im
-Vorschaufenster befindet, &ouml;ffnet sich das Quelltextfenster
-(falls n&ouml;tig), spingt an die entsprechende Stelle und hebt den
-korrespondierenden Abschnitt gelb hervor.</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img
- src="../gfx/texshop-icon-small.png" border="0" height="40" width="40"></a></div>
-<div id="header_chapter">Grundlagen</div>
-<div id="header_title">Dokumente
-setzen</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<nav id="menu">
 <ul>
-  <li><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-  <li><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-  <li><a href="basic_installtexshop.htm">TeXShop beschaffen
-und installieren</a></li>
-  <li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-  <li><a href="basic_alternatetypeset.htm">Alternativer
-Schriftsatzmodus</a></li>
-  <li><a href="basic_spelling.htm">Rechtschreibpr&uuml;fung</a></li>
-  <li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-  <li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
-  <li><a href="basic_macros.htm">Makros</a></li>
-  <li><a href="basic_toolbar.htm">Werkzeugleiste und
-AppleScript</a></li>
-  <li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
-  <li><a href="basic_printing.htm">Drucken</a></li>
-  <li><a href="basic_preferences.htm">Einstellungen
-&auml;ndern</a></li>
-  <li><a href="basic_templates.htm">&Auml;ndern des
-Vorlagenmen&uuml;s</a></li>
-  <li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
-  <li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-  <li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung
-von Befehlen</a></li>
-  <li><a href="basic_bugs.htm">Fehlerbericht
-&uuml;bermitteln</a></li>
-  <li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
-  <li><a href="basic_license.htm">Lizenz</a></li>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
+<li><a href="basic_typesetting.htm" class="current">Dokumente setzen</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
+<li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
+<li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_macros.htm">Makros</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
+<li><a href="basic_printing.htm">Drucken</a></li>
+<li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
+<li><a href="basic_license.htm">Lizenz</a></li>
 </ul>
-</div>
+</nav>
+<main id="content">
+<h1>Dokumente setzen</h1>
+
+<h2>Ein erstes Dokument</h2>
+
+<p>Wählen Sie Ablage › Neu. Wählen Sie in der Symbolleiste des neuen Fensters im Menü „Vorlagen“ den Eintrag LatexTemplate; das Fenster füllt sich mit den Zeilen, die jedes LaTeX-Dokument braucht. Schreiben Sie Ihren Text zwischen <code>\begin{document}</code> und <code>\end{document}</code>. Eine Leerzeile beginnt einen neuen Absatz.</p>
+
+<p>Klicken Sie in der Symbolleiste auf „Setzen“ oder drücken Sie <kbd>⌘T</kbd> (Setzen › Setzen). Beim ersten Mal fragt TeXShop, wo das Dokument gesichert werden soll. TeX schreibt mehrere Dateien neben den Quelltext, geben Sie deshalb jedem Dokument einen eigenen Ordner. Danach ruft TeXShop TeX auf und öffnet ein Vorschaufenster mit dem gesetzten Dokument.</p>
+
+<p>Von nun an schreiben Sie, setzen und sehen sich das Ergebnis an. TeXShop sichert den Quelltext vor jedem Setzen, und die Vorschau bleibt auf der Seite, die Sie gerade lesen. <kbd>⌘T</kbd> funktioniert im Quelltext, in der Vorschau und in der Konsole, und <kbd>⌘1</kbd> (Fenster › Quelltext ⇔ Vorschau) wechselt zwischen dem Quelltext und seiner Vorschau. Einstellungen › Satz › Nach dem Setzen legt fest, welches Fenster nach vorn kommt, wenn TeX fertig ist.</p>
+
+<p>Beim Öffnen einer .tex-Datei wird auch die gleichnamige PDF-Datei geöffnet, falls es sie gibt. Schließen Sie das Vorschaufenster, bleibt der Quelltext offen, und die Vorschau erscheint beim nächsten Setzen wieder; das Schließen des Quelltextfensters schließt das Dokument.</p>
+
+<h2>Die Konsole</h2>
+
+<p>Während TeX läuft, erscheinen seine Meldungen in der Konsole. Einstellungen › Konsole › Konsole anzeigen legt fest, ob die Konsole bei jedem Setzen nach vorn kommt (Immer) oder nur, wenn TeX einen Fehler meldet (Nur bei Fehlern). Ablage › Konsole einblenden (<kbd>⌘0</kbd>) holt die Konsole des aktiven Dokuments nach vorn, und <kbd>⌘0</kbd> in der Konsole kehrt zum vorherigen Fenster zurück. Den Text der Konsole können Sie jederzeit auswählen und kopieren.</p>
+
+<p>Findet TeX einen Fehler, schreibt es eine Meldung ans Ende der Konsole und wartet auf eine Antwort. Geben Sie sie in das Feld unten in der Konsole ein und drücken Sie den Zeilenschalter; der Zeilenschalter allein geht zum nächsten Fehler weiter, und das Feld zeigt die übrigen Antworten, die TeX annimmt. Um TeX anzuhalten, klicken Sie in der Konsole auf „Abbrechen“ oder wählen Sie Ablage › Setzen abbrechen (<kbd>⌃⌥⌘A</kbd>).</p>
+
+<h2>Fehler finden</h2>
+
+<p>„Zum Fehler“ in der Konsole oder Bearbeiten › Gehe zu Fehler (<kbd>⌃⌘E</kbd>) blättert den Quelltext zur Zeile des ersten Fehlers und hebt sie hervor; wählen Sie den Befehl erneut für den nächsten Fehler. Liegt der Fehler in einer anderen Datei des Projekts, wird diese Datei geöffnet. Oft ist es am schnellsten, einige Fehler zu beheben und erneut zu setzen, da ein Fehler mehrere weitere verursachen kann. „Gehe zu Fehler“ stützt sich auf die Dateinamen und Zeilennummern, die TeX mit <code>-file-line-error</code> ausgibt; die Befehle und Engine-Dateien von TeXShop verwenden diese Option.</p>
+
+<p>LaTeX schreibt Informationen für den nächsten Durchlauf, etwa das Inhaltsverzeichnis und die Querverweise, in eine .aux-Datei und weitere Hilfsdateien; ein Dokument kann daher zwei oder drei Durchläufe brauchen, bis alle Verweise stimmen. Ein Fehler kann diese Dateien beschädigen, und das Dokument lässt sich dann auch nach Behebung des Fehlers nicht setzen. Wählen Sie Setzen › Aux-Dateien löschen &amp; Setzen (<kbd>⌥⌘T</kbd>), um die Hilfsdateien in den Papierkorb zu legen und erneut zu setzen, oder Ablage › Aux-Dateien löschen (<kbd>⌃⌘A</kbd>), das es auch als Taste in der Konsole gibt. Siehe <a href="advanced_removeaux.htm">Aux-Dateien entfernen</a>.</p>
+
+<h2 id="engine">Die Engine wählen</h2>
+
+<p>Einstellungen › Satz › Engine-Profil richtet den Satz für eine Engine in einem Schritt ein. Wählen Sie das Profil der Engine, die Sie verwenden; ein Dialog listet die Werte auf, die es setzt, und „OK“ übernimmt sie. Im Dialog können Sie „LaTeX ausführen:“ auf „Mit latexmk“ stellen; latexmk ruft dann BibTeX, den Index und weitere Durchläufe nach Bedarf auf. Sobald Sie einen dieser Werte ändern, zeigt das Menü „Eigene“. Das TeXShop Handbuch führt auf, was die Profile setzen.</p>
+
+<p>Für ein einzelnes Dokument wählen Sie die Engine im Einblendmenü „Programm“ neben „Setzen“ in der Symbolleiste. Es enthält LaTeX, plain TeX und die Engine-Dateien in ~/Library/TeXShop/Engines, etwa LuaLaTeX und XeLaTeX, und die Wahl gilt für dieses Fenster. Um sie zum Teil des Dokuments zu machen, schreiben Sie eine Zeile wie diese in die ersten 20 Zeilen des Quelltexts:</p>
+
+<pre>% !TEX program = LuaLaTeX</pre>
+
+<p><kbd>⌘T</kbd> setzt die Datei dann immer mit dieser Engine. Der Name ist der einer Engine-Datei oder einer von <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> und <code>tex</code> für das eingebaute LaTeX und plain TeX (siehe <a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a>). Makros › Program fügt die Zeile ein, wobei Sie die Engine aus einer Liste wählen. Einstellungen › Satz › Neue Dokumente setzen mit legt die Engine für Dokumente ohne eine solche Zeile fest. Zu Engine-Dateien siehe <a href="advanced_addengine.htm">Satz-Engines hinzufügen</a>.</p>
+
+<p>Das Menü „Setzen“ ruft außerdem BibTeX, MakeIndex und MetaPost für das Dokument auf; siehe <a href="advanced_bibtex.htm">BibTeX</a> und <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
+
+<h2>Dokumente aus mehreren Dateien</h2>
+
+<p>Ein Buch wird oft in eine Hauptdatei mit der Präambel und Kapiteldateien aufgeteilt, die sie mit <code>\include</code> oder <code>\input</code> einliest. Schreiben Sie eine Zeile wie <code>% !TEX root = ../Book.tex</code> an den Anfang jeder Kapiteldatei und nennen Sie darin die Hauptdatei mit ihrem Pfad von der Kapiteldatei aus. <kbd>⌘T</kbd> in einer Kapiteldatei setzt dann die Hauptdatei, und „Gehe zu Fehler“ und SyncTeX finden die richtige Kapiteldatei. Siehe <a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a>.</p>
+
+<h2>Zwischen Quelltext und Vorschau wechseln</h2>
+
+<p>Klicken Sie mit gedrückter Befehlstaste auf ein Wort im Quelltext, blättert die Vorschau zum gesetzten Text und markiert ihn. Klicken Sie mit gedrückter Befehlstaste in die Vorschau, kommt der Quelltext mit markiertem passendem Text nach vorn; in einem Dokument mit Kapiteldateien wird die Kapiteldatei bei Bedarf geöffnet. Die Zuordnung ist nicht immer genau, sehen Sie sich also auch die Umgebung der markierten Stelle an. Die Farben der Markierungen stellen Sie unter Einstellungen › Themen › SyncTeX ein.</p>
+
+<p>Dafür wird SyncTeX verwendet, das die Engines unterstützen, wenn sie mit <code>-synctex=1</code> aufgerufen werden, wie es die Befehle und Engine-Dateien von TeXShop tun; Einstellungen › Satz › Art der Synchronisierung sollte auf „SyncTeX (empfohlen)“ stehen. Die SyncTeX-Datei eines Dokuments hält fest, wo seine Dateien liegen; setzen Sie daher nach dem Verschieben eines Projektordners einmal neu, bevor Sie synchronisieren.</p>
+
+<h2>Die Fenster anordnen</h2>
+
+<p>Fenster › Ein gemeinsames Fenster stellt den Quelltext und seine Vorschau nebeneinander in ein einziges Fenster, und Fenster › Separate Fenster verwenden trennt sie wieder. Um jedes Dokument so zu öffnen, stellen Sie Einstellungen › Allgemein › Fenster › Quelltext und Vorschau auf „Ein gemeinsames Fenster“; „Quelltextposition im gemeinsamen Fenster“ setzt den Quelltext nach links oder rechts. Ziehen Sie die Trennlinie, um dem Quelltext mehr oder weniger Platz zu geben; TeXShop öffnet jedes gemeinsame Fenster mit derselben Aufteilung. Dokumente mit Kapiteldateien funktionieren nicht in einem einzigen Fenster; verwenden Sie für sie getrennte Fenster. Ablage › Neu öffnet nur ein Quelltextfenster: Setzen Sie das neue Dokument zuerst und wählen Sie dann „Ein gemeinsames Fenster“.</p>
+
+<p>Bei getrennten Fenstern ordnen Sie Quelltext- und Vorschaufenster nach Belieben an und wählen dann Quelltext › Position des Quelltext-Fensters sichern und Vorschau › Position des Vorschau-Fensters sichern; neue Fenster öffnen sich dort.</p>
+</main>
 </body>
 </html>

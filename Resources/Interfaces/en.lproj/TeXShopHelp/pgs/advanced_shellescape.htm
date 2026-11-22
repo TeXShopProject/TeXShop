@@ -1,82 +1,62 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shell Escape Protection</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="shell escape; -shell-escape; --shell-escape; Confirm Shell Escape; security; % !TEX parameter">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
+<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
+<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
+<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm" class="current">Shell Escape Protection</a></li>
+<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
+<li><a href="advanced_experiments.htm">Experiments</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
+<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
+<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Shell Escape Protection</h1>
+<p>During typesetting, TeX can run other programs. By default TeX Live allows only a short list of trusted programs, for example to convert EPS graphics to PDF. Packages that need to run other programs ask for the option <code>-shell-escape</code> (also written <code>--shell-escape</code>).</p>
+<p>With this option, a document can run any command, for example one that deletes all files in your home folder. Use it only for documents you trust, and not for files you receive from others.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Shell Escape Protection</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="shell escape; graphic conversion; security">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Adding the option</h2>
+<ul>
+<li>In the LaTeX or plain TeX command of Settings › Typesetting › Direct PDF, for every document typeset Direct PDF.</li>
+<li>In an engine file, for every document typeset with that engine; see <a href="advanced_addengine.htm">Adding Typesetting Engines</a>.</li>
+<li>For one document typeset with one of the latexmk engines, such as pdflatexmk, with the line <code>% !TEX parameter = -shell-escape</code> at the top of the source.</li>
+</ul>
 
-<BODY>
-	<div id="content_border">
-<P>
-In TeX Live since 2011, pdftex, pdflatex, and other TeX programs can call a small list of
-trusted programs during typesetting. For example, these programs are allowed to call Ghostscript
-to convert eps files to pdf files
-
-<p> It is possible to configure pdftex, pdflatex, and other programs so they can call arbitrary shell commands during
-typesetting. In that case, the flag "-shell-escape" must be added to the calling sequence, either
-in the Typesetting category of TeXShop Settings or in particular engine scripts. However,
-this flag is a serious security risk because it allows arbitrary shell programs to run, including for
-example a short program to erase all files in the home directory. If the flag is set, a malicious
-web site could offer a TeX source file which erases these files when it is typeset.
-
-<p> Although we recommend against setting the flag, it may be required by a few unusual
-typesetting packages.  
-TeXShop provides a protection mechanism for this situation. A setting in the Direct PDF group of the Typesetting category is labeled "Confirm Shell Escape." This item is off when TeXShop is delivered.
-		It checks only the plain TeX and LaTeX commands in this group, which are used when a file is typeset
-		with TeX or LaTeX by the Direct PDF method. Engine scripts (.engine files) are not checked, even if they
-		contain "-shell-escape."
-		If the item is on and the command used contains "-shell-escape," then the first time a file is typeset during
-		a TexShop session, a warning dialog will appear allowing you to turn shell-escape
-		off for that particular file. This dialog will not appear again during the session for that
-		particular file. Thus you can typeset your own files using "shell-escape" and typeset
-		files received in the mail without "shell-escape."
-</P>
-
-
-
-		<ul>
-			
-		</ul>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Shell Escape Protection</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_Japan.htm">Settings for Japan</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
-
-
+<h2>Confirm Shell Escape</h2>
+<p>Settings › Typesetting › Direct PDF › “Confirm Shell Escape”, off by default, guards the commands of the Direct PDF group. When it is on and the plain TeX or LaTeX command there contains <code>-shell-escape</code> or <code>--shell-escape</code>, TeXShop asks before it typesets a document for the first time after the document is opened:</p>
+<ul>
+<li>OK typesets with the option.</li>
+<li>Omit Shell Escape typesets without it.</li>
+<li>Cancel does not typeset.</li>
+</ul>
+<p>Once you choose OK or Omit Shell Escape, the answer holds for that document until it is closed, so you can typeset your own documents with the option and documents from others without it. Engine files are not checked, even if they contain <code>-shell-escape</code>.</p>
+</main>
+</body>
+</html>

@@ -1,71 +1,63 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>복사하여 붙여넣기와 드래그 앤 드롭</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="복사하여 붙여넣기; 드래그 앤 드롭; 범위 선택; 복사할 이미지 형식; 파일 형식; 칼러 매핑 사용; 전경색 농도; 선택부분을 파일로 저장; Keynote">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm" class="current">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>복사하여 붙여넣기와 드래그 앤 드롭</h1>
+<p>미리보기 윈도우에 표시된 페이지의 일부를 그림으로 복사하여 Keynote, Pages, 미리보기 앱 같은 다른 프로그램에 넣을 수 있습니다.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Copy-Paste and Drag-Drop</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="copy and paste; drag and drop; configure">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>선택하고 복사하기</h2>
+<ol>
+<li>미리보기 윈도우의 도구 막대에서 범위 선택 도구를 선택합니다.</li>
+<li>원하는 부분 위로 사각형을 드래그합니다. 텍스트, 수식, 그림이 들어 있어도 됩니다.</li>
+<li>편집 › 복사하기(<kbd>⌘C</kbd>)를 선택한 다음 다른 프로그램에 붙여 넣거나, 선택 영역을 그 프로그램의 문서로 드래그합니다. 데스크탑이나 Finder 윈도우로 드래그하면 파일이 만들어집니다.</li>
+</ol>
+<p>보기 › 선택부분을 파일로 저장...은 선택 영역을 원하는 이름으로 원하는 폴더에 저장합니다. 범위 선택 도구를 사용하는 중에 편집 › 전체 선택(<kbd>⌘A</kbd>)을 선택하면 표시된 내용 전체가 선택됩니다. 보기 형식이 단일 페이지와 두 페이지일 때는 현재 페이지가, 연속 스크롤과 연속 두 페이지일 때는 문서 전체가 선택됩니다. 연속 스크롤과 연속 두 페이지에서는 복사본이 지나치게 커지지 않도록 20페이지 이하인 문서에서만 작동합니다.</p>
+<p>그림이 아니라 텍스트를 복사하려면 텍스트 선택 도구를 사용합니다.</p>
 
-<BODY>
-	<div id="content_border">
-<P>
-It is possible to select a portion of the pdf preview display and copy and paste the
-		resulting graphic into another program. Drag and drop of the selection is also supported.
-		Settings allow users to select the file type of the copy (pdf, png, jpg, tiff, etc.)
-		and the foreground and background colors and transparency.
-</P>
-
-<P>
-Preview selection combined with drag and drop can be used with Keynote. 
-		Using the default copy settings, a text selection can be dropped on a Keynote slide; 
-		the background of the text will be transparent, so the slide background will show between the
-		letters. This text can be resized since the default copy format is pdf.
-</P>
-
-<P>
-The Edit menu's "Select All" command can be used to select the entire pdf page for copying. However,
-in Multi-Page and Double-Multi-Page modes Select All  only works if the document has 20 or fewer pages, since otherwise the selected pdf could be enormous and copying could bring the machine to a crawl.
-</P>
-
-		<ul>
-			
-		</ul>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Copy-Paste and Drag-Drop from the Preview Window</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>복사본의 형식</h2>
+<p>설정 › 미리보기 › 이미지 복사 › 복사할 이미지 형식에서 그림의 종류를 PDF, TIFF, JPEG, PNG 중에서 고르며, 일부는 품질도 고를 수 있습니다. 기본값인 PDF는 크기와 관계없이 텍스트와 선을 선명하게 유지하므로, Keynote 슬라이드에 붙여 넣은 선택 영역을 마음대로 확대할 수 있습니다. 하위 메뉴 보기 › 파일 형식에서도 같은 설정을 확인하고 바꿀 수 있습니다.</p>
+<p>TIFF, JPEG, PNG로 복사할 때는 이미지 복사 그룹의 다음 두 항목도 적용됩니다.</p>
+<ul>
+<li>“칼러 매핑 사용”은 검은색을 텍스트 색으로, 흰색을 배경색으로 바꾸어 복사본이 슬라이드의 색과 어울리게 합니다. 두 색은 설정 › 테마 › 이미지 복사 시 칼러 맵의 텍스트와 배경색에서 테마마다 따로 설정합니다. PDF로 복사하면 페이지의 색이 그대로 유지됩니다.</li>
+<li>“전경색 농도”는 복사본에서 텍스트를 얼마나 강조할지 정합니다.</li>
+</ul>
+<p>테마가 미리보기 윈도우의 라이트 페이지에 지정한 색은 복사본에 포함되지 않습니다.</p>
+</main>
+</body>
+</html>

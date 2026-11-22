@@ -1,63 +1,70 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeX Live 설치</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeX Live 설치; MacTeX; BasicTeX; /usr/local/texlive; /Library/TeX/texbin; TeX Live Utility; 경로 자동 감지; 다른 배포판">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm" class="current">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeX Live 설치</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Installing TeX Live</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="install texlive; tex foundation; ghostscript; graphic conversion">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<p>TeXShop을 사용하려면 TeX 배포판이 필요합니다. 표준 배포판은 TeX Live로, TeX 사용자 그룹들이 macOS, Windows, Linux 등을 위해 해마다 만듭니다. Mac에서는 TeX Users Group(TUG)이 만든 설치 패키지인 MacTeX로 설치합니다.</p>
 
-<BODY>
-		<div id="content_border">
-		<p> The standard TeX distribution is called TeX Live. A new version is produced each year by the TeX Users Group (TUG). This distribution works on macOS (both Apple silicon and Intel), on Linux, on Windows, and on many other architectures.<p>
-		<p> The MacTeX working group of the TeX Users Group (TUG) has produced an Apple
-install package containing this distribution and everything else needed to run TeX on macOS.
-The package installs in a couple of minutes with almost no user intervention. It
-contains the full TeX Live distribution, Ghostscript, and the applications
-TeXShop, TeX Live Utility, BibDesk, LaTeXiT, and hintview, which are installed in /Applications/TeX. For
-up to date links to the package, see
+<p><a href="https://tug.org/mactex/">https://tug.org/mactex/</a></p>
 
-		<dl>
-			<dd><a href="https://www.tug.org/mactex/">www.tug.org/mactex/ </a>
-		</dl></p>
+<p>이 페이지에서는 두 가지 패키지를 제공합니다. 내려받은 패키지를 이중 클릭하고 설치 프로그램의 안내를 따르십시오. 설치가 끝나면 바로 TeX를 사용할 수 있습니다.</p>
 
-		<p> The MacTeX package can be obtained from numerous CTAN sites. If the link on the previous site files, go to
+<dl>
+<dt>MacTeX</dt>
+<dd>약 7GB인 TeX Live 전체에 Ghostscript가 포함되며, TeXShop 등의 응용 프로그램이 /Applications/TeX에 설치됩니다. TeX나 LaTeX 책에 실린 예제는 대부분 아무것도 추가하지 않고 그대로 조판할 수 있습니다. 실제 작업에는 이 패키지를 선택하십시오.</dd>
+<dt>BasicTeX</dt>
+<dd>약 140MB인 TeX Live의 일부로, TeX를 시험해 보거나 많은 LaTeX 문서를 조판하기에 충분합니다. TeXShop은 설치되지 않습니다. <a href="basic_installtexshop.htm">TeXShop 설치</a>를 참조하십시오.</dd>
+</dl>
 
- 		<dl>
-			<dd><a href="https://www.ctan.org/">www.ctan.org/ </a>
-		</dl>
+<h2>TeX Live가 설치되는 위치</h2>
 
-and click on the link "our directories" and then on the link "systems" in the resulting web page, and then on the link "mac" on the next page, and finally on the link "mactex" on the final page.</p> 
+<p>MacTeX는 TeX Live를 <code>/usr/local/texlive/2026</code>에, BasicTeX는 <code>/usr/local/texlive/2026basic</code>에 설치합니다. 둘을 함께 설치할 수도 있습니다. 새 TeX Live는 해마다 4월 무렵에 나오며, 그 연도 이름의 폴더에 설치됩니다. 설치한 TeX Live를 제거하려면 해당 폴더를 휴지통으로 드래그합니다.</p>
 
-</p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Installing TeX Live</div>
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
-	</BODY>
+<p>설치 프로그램은 <code>/Library/TeX/texbin</code>도 만듭니다. 이 경로는 현재 사용 중인 TeX Live의 프로그램을 가리키며, 새 TeX Live를 설치하면 그쪽을 따라갑니다. TeXShop은 이 경로에서 TeX를 실행하므로(설정 › 조판 › 경로 › TeX 엔진), 해가 바뀌어도 아무것도 변경할 필요가 없습니다. 같은 그룹의 “경로 자동 감지…”는 Mac에 설치된 TeX와 Ghostscript를 찾아 그중 하나를 선택할 수 있게 합니다.</p>
 
-</HTML>
+<p>연례 배포 사이에도 TeX Live의 패키지는 업데이트됩니다. 업데이트를 설치하려면 MacTeX가 /Applications/TeX에 설치하는 TeX Live Utility를 사용합니다.</p>
+
+<h2>다른 TeX 배포판</h2>
+
+<p>TeXShop은 MacPorts나 Homebrew로 설치한 TeX, 또는 MiKTeX와도 함께 사용할 수 있습니다. 이들 프로그램은 다른 폴더에 있으므로 “경로 자동 감지…”를 사용하거나 설정 › 조판 › 경로 › TeX 엔진에 폴더를 입력하십시오. <a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a>를 참조하십시오.</p>
+</main>
+</body>
+</html>

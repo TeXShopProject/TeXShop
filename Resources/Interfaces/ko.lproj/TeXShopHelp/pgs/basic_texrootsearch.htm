@@ -1,23 +1,74 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeX 소스에서 찾기</title>
+<meta name="copyright" content="Copyright (c) 2026 under the GNU FDL">
+<meta name="description" content="같은 루트 파일을 가진 모든 파일에서 찾기 및 대치; 여러 파일로 나뉜 문서의 찾기 및 대치; TEX root; TeX 소스에서 찾기; 모두 대치; 백업">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm" class="current">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeX 소스에서 찾기</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Find in TeX Sources</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2026 under the GNU FDL">
-		<META NAME="description" CONTENT="find and replace in all files with the same root file; find and replace in all files of a split document; TEX root; Find in TeX Sources; Replace All; backups">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<p><a name="texroot_search"></a>루트 파일과 장 파일로 나뉜 문서는 모든 파일에서 한꺼번에 찾고 대치할 수 있습니다. 문서의 파일 하나를 앞에 두고 편집 › 찾기 › 같은 TEX root를 가진 TeX 소스에서 찾기…를 선택합니다. 루트 파일 자체가 앞에 있으면 이 항목은 이 파일을 TEX root로 하는 TeX 소스에서 찾기…가 됩니다. 고급 찾기 패널의 모두 찾기 메뉴에도 같은 항목이 있으며, 일괄 대치 윈도우의 모두 대치 메뉴에 있는 같은 TEX root를 가진 TeX 소스에 적용…은 거기서 선택한 세트로 이 윈도우를 엽니다. 이름이 없는 문서나 이름이 .tex로 끝나지 않는 파일에서는 이 항목들이 흐리게 표시됩니다.</p>
 
-<BODY>
-		<div id="content_border">
+<h2>찾는 파일</h2>
 
-<p><a name="texroot_search"></a>A document split into chapter files can be searched, and replaced in, in all its files at once. With one of its files in front, choose &ldquo;&#44057;&#51008; TEX root&#47484; &#44032;&#51652; TeX &#49548;&#49828;&#50640;&#49436; &#52286;&#44592;&hellip;&rdquo; (Find in TeX Sources with the Same TEX root&hellip;) in the &ldquo;&#52286;&#44592;&rdquo; (Find) submenu of the &ldquo;&#54200;&#51665;&rdquo; (Edit) menu; when the file in front is the root file itself, the item is &ldquo;&#51060; &#54028;&#51068;&#51012; TEX root&#47196; &#54616;&#45716; TeX &#49548;&#49828;&#50640;&#49436; &#52286;&#44592;&hellip;&rdquo; (Find in TeX Sources with This File as TEX root&hellip;). The same item is in the menu of &ldquo;&#47784;&#46160; &#52286;&#44592;&rdquo; (Find All) in the Advanced Find panel, and &ldquo;&#44057;&#51008; TEX root&#47484; &#44032;&#51652; TeX &#49548;&#49828;&#50640; &#51201;&#50857;&hellip;&rdquo; (Apply to TeX Sources with the Same TEX root&hellip;) in the menu of &ldquo;&#47784;&#46160; &#45824;&#52824;&rdquo; (Replace All) in the &ldquo;&#51068;&#44292; &#45824;&#52824;&rdquo; (Multiple Replace) window opens the window with the set chosen there. The items are dimmed for an untitled document and for a file whose name does not end in .tex.</p>
-<p>The window &ldquo;TeX &#49548;&#49828;&#50640;&#49436; &#52286;&#44592;&rdquo; (Find in TeX Sources) searches the root file and the .tex files in its folder and in the folders below it that name it with % !TEX root (or %!TEX root) in their first 20 lines; with the hidden setting UseOldHeadingCommands, also those that name it with %SourceDoc. The line under the modes says which root is searched, and the ? button at its end shows this rule. Files named in \input or \include are not followed, and the root file of a .texshop project is not used. Symbolic links to files are skipped, folders reached through symbolic links or aliases are not entered, and the folder TeXShop Backups is left out. The tree on the left lists the files; a file or a folder turned off there is not searched. The button &ldquo;&#51069;&#51648; &#47803;&#54620; &#54028;&#51068;&rdquo; (Files not read) at the bottom lists the files and folders that could not be read, with the reason.</p>
-<p>&ldquo;&#52286;&#44592;&rdquo; (Find) lists every match with its line number. &ldquo;&#45824;&#52824;&rdquo; (Replace) shows each line before and after the replacement, and every match has a check box: a match turned off is not replaced. &ldquo;&#51068;&#44292; &#45824;&#52824;&rdquo; (Multiple Replace) applies a set of the &ldquo;&#51068;&#44292; &#45824;&#52824;&rdquo; (Multiple Replace) window, and lists the groups of changed lines, which are turned on and off as a whole; &ldquo;&#54200;&#51665;&hellip;&rdquo; (Edit&hellip;) opens the set in that window. The find and replace fields and the options are those of the Advanced Find Panel. The list follows every change shortly after it, and the &#8635; button (command-R) collects the files again. Clicking a row shows the match in its document; double-clicking brings that window to the front. The stop button, the Escape key or command-period stop a long search.</p>
-<p>An open document is searched in the text on screen, with its unsaved changes. A file that is not open is read in the encoding TeXShop would open it with. A file that would not be written back exactly in that encoding, a file that has another name (a hard link), a file that cannot be written, and an open document that cannot be edited are only searched: they are marked &#8856;, and the mark gives the reason.</p>
-<p>&ldquo;&#47784;&#46160; &#45824;&#52824;&rdquo; (Replace All) asks before it replaces. The files are collected again and compared with the list before and after that question: if a file has changed or another file has appeared, nothing is replaced and the list is made again. With &ldquo;&#48177;&#50629; &#51200;&#51109;&rdquo; (Save backups) on, every file that is to be replaced in is first copied, as it was when the question was answered, into TeXShop Backups/&lt;date and time&gt; in the folder of the root file, under its path; an open document is copied in its text on screen. Then the files that are not open are written directly, in their own encoding, keeping their line endings, byte order mark, permissions and other attributes; this cannot be undone. The open documents are replaced on screen and are not saved: one &ldquo;&#49892;&#54665; &#52712;&#49548;&rdquo; (Undo) takes back the replacements of a document. Meanwhile the documents cannot be edited, saved, closed or typeset, and the stop button, Escape or command-period stop Replace All: the files already written and the open documents already done stay replaced, what was already put in the open document being replaced is taken back, and the rest is not replaced. Afterwards the files are searched again, the matches that were turned off stay off, and the line at the bottom says how many were replaced. When some files were not replaced, a sheet lists them with the reason, and &ldquo;Finder&#50640;&#49436; &#48372;&#44592;&rdquo; (Show in Finder) opens the folder of the backup.</p>
-<p>Right before a file is replaced, its content is compared with the version in the list, and the file is replaced at once. An application that writes the file in that brief moment without coordinating with other applications (through NSFileCoordinator) can still lose what it wrote; the backup keeps the version that was compared. Do not run &ldquo;&#47784;&#46160; &#45824;&#52824;&rdquo; (Replace All) while another program keeps writing the files.</p>
+<p>이 윈도우는 루트 파일, 그리고 루트 파일의 폴더와 그 하위 폴더에 있는 .tex 파일 중 처음 20행 안의 <code>% !TEX root</code> 행에서 그 루트 파일을 지정한 파일을 찾습니다. <a href="advanced_root.htm">프로젝트 루트 파일 설정</a>을 참조하십시오. 모드 아래의 행에는 어느 루트 파일을 찾는지 표시되며, 그 옆의 ? 버튼에서도 이 규칙을 볼 수 있습니다. <code>\input</code>이나 <code>\include</code>로 지정한 파일은 따라가지 않으며, .texshop 파일에 지정된 루트 파일은 사용하지 않습니다. 파일에 대한 심볼릭 링크, 심볼릭 링크나 별칭을 거쳐 도달하는 폴더, TeXShop Backups 폴더는 제외됩니다.</p>
 
-		</div>
-	</BODY>
-</HTML>
+<p>왼쪽 목록에 파일이 표시됩니다. 목록에서 파일이나 폴더를 끄면 제외됩니다. 읽지 못한 파일이나 폴더가 있으면 아래쪽의 읽지 못한 파일 버튼이 그 목록을 이유와 함께 보여 줍니다.</p>
+
+<h2>찾기와 대치</h2>
+
+<p>찾기 필드와 대치 필드, 옵션은 <a href="basic_find.htm">고급 찾기 패널</a>과 같습니다. 모드를 선택하십시오.</p>
+<ul>
+<li>찾기는 모든 일치 항목을 행 번호와 함께 나열합니다.</li>
+<li>대치는 각 행을 대치 전과 대치 후로 보여 줍니다. 일치 항목마다 체크상자가 있으며, 끈 항목은 대치하지 않습니다.</li>
+<li>일괄 대치는 일괄 대치 윈도우의 세트를 적용하고, 변경되는 행을 묶음별로 체크상자 하나와 함께 나열합니다. 편집…은 그 세트를 일괄 대치 윈도우에서 엽니다.</li>
+</ul>
+
+<p>행을 클릭하면 해당 문서에서 그 일치 항목이 표시되고, 이중 클릭하면 그 윈도우가 앞으로 옵니다. 목록은 변경 내용을 따라가며, ↻ 버튼(<kbd>⌘R</kbd>)은 파일을 다시 모읍니다. 시간이 오래 걸리는 검색은 정지 버튼, Escape 키, <kbd>⌘.</kbd>로 멈출 수 있습니다.</p>
+
+<p>열려 있는 문서는 저장하지 않은 변경 사항까지 포함하여 화면에 보이는 그대로 찾습니다. 열려 있지 않은 파일은 TeXShop이 열 때 사용할 인코딩으로 읽습니다. 쓸 수 없는 파일이나 인코딩 때문에 변경 없이 다시 저장할 수 없는 파일처럼, 찾을 수만 있고 대치할 수 없는 파일도 있습니다. 이런 파일에는 ⊘ 표시가 붙으며, 표시에서 이유를 볼 수 있습니다.</p>
+
+<h2>모두 대치</h2>
+
+<p>모두 대치는 대치하기 전에 확인을 요청합니다. 그 사이에 파일이 변경되었으면 아무것도 대치하지 않고 목록을 다시 만듭니다. 백업 저장을 켜면, 변경할 각 파일이 먼저 루트 파일 옆의 TeXShop Backups 폴더 안에 날짜와 시각 이름의 폴더로 복사됩니다.</p>
+
+<p>그다음 열려 있지 않은 파일은 각자의 인코딩, 줄바꿈, 권한을 유지한 채 디스크에 직접 쓰여집니다. 이 작업은 실행 취소할 수 없습니다. 열려 있는 문서는 화면에서 변경되고 저장되지 않으며, 문서에서 실행 취소를 한 번 하면 그 문서의 대치가 되돌아갑니다. 모두 대치를 멈추면 이미 처리한 파일은 대치된 채로, 나머지 파일은 변경되지 않은 채로 남습니다. 대치가 끝나면 파일을 다시 찾고, 아래쪽 행에 대치한 항목 수가 표시됩니다. 변경하지 못한 파일이 있으면 시트에 그 목록이 이유와 함께 표시되며, Finder에서 보기를 클릭하면 백업 폴더가 열립니다.</p>
+
+<p>다른 응용 프로그램이 이 파일들을 계속 쓰고 있는 동안에는 모두 대치를 실행하지 마십시오.</p>
+</main>
+</body>
+</html>

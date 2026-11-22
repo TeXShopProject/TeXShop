@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buscar y reemplazar</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="buscar y reemplazar; panel de búsqueda avanzada; interfaz de búsqueda; expresiones regulares; Buscar todo; Resaltar todo; Reemplazar todo; Reemplazo múltiple; barra de búsquedas de Apple; panel de búsquedas de OgreKit">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edición</a></li>
+<li><a href="basic_find.htm" class="current">Buscar y reemplazar</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Autocompletado de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
+<li><a href="basic_license.htm">Licencia</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Buscar y reemplazar</h1>
+
+<p>Los comandos de búsqueda están en el submenú Buscar del menú Edición: Buscar… (<kbd>⌘F</kbd>), Buscar y reemplazar… (<kbd>⌥⌘F</kbd>), Buscar siguiente (<kbd>⌘G</kbd>), Buscar anterior (<kbd>⇧⌘G</kbd>), Usar selección para buscar (<kbd>⌘E</kbd>) e Ir a la selección (<kbd>⌘J</kbd>). Para buscar texto en el documento compuesto, consulte <a href="basic_preview.htm#search">La ventana de vista previa</a>.</p>
+
+<h2>Elegir la interfaz de búsqueda</h2>
+
+<p>Ajustes › Editor › «Interfaz de búsqueda» elige qué abre Buscar:</p>
+<dl>
+<dt>Panel de búsqueda avanzada (recomendado)</dt>
+<dd>Un panel con expresiones regulares, una lista de todas las coincidencias y Reemplazo múltiple, descrito en esta página. Es el que tienen todos los usuarios al empezar.</dd>
+<dt>Barra de búsquedas de Apple</dt>
+<dd>La barra de búsqueda de macOS, en la parte superior del código fuente, como en Safari y Xcode.</dd>
+<dt>Panel de búsquedas de Apple</dt>
+<dd>El panel de búsqueda básico de macOS.</dd>
+<dt>Panel de búsquedas de OgreKit (heredado)</dt>
+<dd>El panel de búsqueda de OgreKit, de Isao Sonobe, con expresiones regulares propias. El cambio a este panel o desde él tiene efecto al reiniciar TeXShop.</dd>
+</dl>
+
+<h2>El panel de búsqueda avanzada</h2>
+
+<p>Buscar abre el panel con el campo de búsqueda seleccionado, y Buscar y reemplazar, con el campo de reemplazo seleccionado. En un campo, Retorno busca la siguiente coincidencia y Tabulador pasa al otro campo; Opción-Retorno y Opción-Tabulador insertan un salto de línea y un tabulador. El icono de la izquierda de cada campo enumera sus cadenas recientes, y el extremo derecho del campo de búsqueda muestra la posición de la coincidencia actual, como «3 de 12».</p>
+
+<p>Debajo de los campos están «Expresión regular», «Ignorar mayúsculas/minúsculas» y «En la selección». El botón de los tres puntos muestra más opciones: buscar en todo el documento, solo palabras enteras, ignorar los signos diacríticos o la diferencia entre caracteres de ancho completo y de medio ancho, opciones para las expresiones regulares, la sintaxis del reemplazo y «Tratar ¥ como \». Las opciones se conservan de una sesión a otra.</p>
+
+<p>Los botones de la parte inferior son Buscar todo, Reemplazar todo, Reemplazo múltiple…, Reemplazar y buscar, y las flechas para la coincidencia anterior y la siguiente.</p>
+<ul>
+<li>Buscar todo enumera cada coincidencia con su número de línea. Haga clic en una fila para seleccionar la coincidencia en el código fuente; haga doble clic para traer además al frente la ventana de código. Con «Actualización automática» activada, la lista sigue sus cambios. El menú de Buscar todo tiene también Resaltar todo, que marca todas las coincidencias en el texto, Seleccionar todo, que las selecciona todas, y Quitar resaltados.</li>
+<li>Reemplazar todo reemplaza todas las coincidencias, o todas las de la selección cuando «En la selección» está activado. Un solo Deshacer revierte todo el reemplazo.</li>
+<li>Reemplazar y buscar reemplaza la coincidencia seleccionada y busca la siguiente; su menú tiene también Reemplazar solo.</li>
+</ul>
+
+<p>Con el panel de búsqueda avanzada, el submenú Buscar tiene también los comandos del panel, que funcionan aunque el panel esté cerrado: Buscar todo (<kbd>⇧⌘F</kbd>), Seleccionar todas las coincidencias, Usar selección para reemplazar (<kbd>⇧⌘E</kbd>), Reemplazar, Reemplazar y buscar (<kbd>⌥⌘G</kbd>), Reemplazar todo, Resaltar todo (<kbd>⇧⌘H</kbd>) y Quitar resaltados (<kbd>⌃⇧⌘H</kbd>). Sus atajos se pueden cambiar en Ajustes › Teclado.</p>
+
+<p>Reemplazar todo, Buscar todo y Reemplazo múltiple trabajan en segundo plano, y el documento no se puede editar hasta que terminan. Cuando uno tarda, una hoja en la ventana del documento muestra su progreso; Cancelar en la hoja, o la tecla Escape, lo detiene y deja el texto como estaba.</p>
+
+<p>El panel también busca texto en la consola, en el log y en las ventanas de Experimento. No se puede reemplazar en la consola, el log y la consola del experimento, que muestran la salida de TeX.</p>
+
+<p>El panel es una más de las ventanas de documento, así que un clic en el código fuente lo coloca detrás de esa ventana, y Buscar lo vuelve a traer. Para mantenerlo delante de las ventanas de documento, active «Mantener el panel de búsqueda avanzada en primer plano» en Ajustes › Editor › Búsqueda.</p>
+
+<h2>Expresiones regulares</h2>
+
+<p>Con «Expresión regular» activado, la cadena de búsqueda es un patrón con la sintaxis de ICU, las expresiones regulares de macOS. La mayoría de los patrones se escriben como en otras aplicaciones. Una llave que no forma parte de una repetición debe escribirse <code>\{</code> o <code>\}</code>, así que busque <code>\\section\{</code> en lugar de <code>\\section{</code>.</p>
+
+<p>En el reemplazo, <code>$0</code> es la coincidencia completa, <code>$1</code>, <code>$2</code>, … son los grupos y <code>\$</code> es un signo de dólar, de modo que una fórmula <code>$x$</code> se escribe <code>\$x\$</code>. Una barra invertida se escribe dos veces: <code>\\section</code> da <code>\section</code>. La sintaxis de OgreKit, con <code>\1</code>, <code>\2</code>, … para los grupos y <code>$</code> como carácter normal, se puede elegir entre las opciones; los usuarios que venían del panel de búsquedas de OgreKit empiezan con ella.</p>
+
+<p>El pequeño botón ? junto a «Expresión regular» abre una referencia de la sintaxis de los patrones y los reemplazos, y de en qué se diferencia de OgreKit. Los campos muestran las partes de un patrón con los colores del tema, un error en rojo y lo que OgreKit leería de otra manera en naranja; la línea bajo las opciones los explica.</p>
+
+<p>Algunos ejemplos:</p>
+<ul>
+<li>Para cambiar <code>\section{Intro}</code> por <code>\section*{Intro}</code>, busque <code>\\section\{([^}]*)\}</code> y reemplace por <code>\\section*{$1}</code>.</li>
+<li>Para encontrar todos los caracteres que no son ASCII, busque <code>[^[:ascii:]]</code> y después haga clic en Buscar todo o elija Resaltar todo.</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>Reemplazo múltiple</h2>
+
+<p>Editar reemplazo múltiple…, en el submenú Buscar, o el botón Reemplazo múltiple… del panel, abre la ventana Reemplazo múltiple. Guarda conjuntos de pares de búsqueda y reemplazo, llamados reglas, y aplica las reglas de un conjunto en orden desde arriba. Los conjuntos se enumeran a la izquierda, y las reglas del conjunto seleccionado, a la derecha. Cada regla tiene sus propias cadenas de búsqueda y reemplazo, su propia elección de expresión regular (RE) y de ignorar mayúsculas y minúsculas (IC), y una descripción; la casilla de su izquierda la desactiva. Los botones + y − añaden y eliminan reglas, y las reglas se reordenan arrastrándolas. El botón de los tres puntos bajo las reglas contiene las opciones de todo el conjunto. Una regla que no se puede usar, por ejemplo con un patrón no válido, muestra un signo de advertencia y se omite.</p>
+
+<p>Reemplazar todo en la ventana aplica las reglas a todo el texto, o a la selección cuando «En la selección» está activado; un solo Deshacer lo revierte. Resaltar todo marca lo que encuentran las reglas. Todos los cambios en la ventana se guardan de inmediato. El submenú Reemplazo múltiple del submenú Buscar enumera los conjuntos y aplica el que usted elija a todo el texto del código fuente que está al frente.</p>
+
+<p>Cada conjunto es un archivo de ~/Library/TeXShop/MultipleReplace, en el formato JSON de las definiciones de reemplazo de CotEditor. Los botones + y − bajo la lista de conjuntos crean un conjunto nuevo y trasladan el conjunto seleccionado a la Papelera; el menú de los tres puntos situado junto a ellos duplica, importa y exporta conjuntos. Importar lee también definiciones de reemplazo de CotEditor y texto separado por tabuladores con una regla por línea. Dos conjuntos de ejemplo convierten entre caracteres Unicode y los comandos del paquete ajmacros, como hace Conversión de tipo de carácter; solo se escriben cuando la carpeta MultipleReplace todavía no existe.</p>
+
+<h2>Buscar en todos los archivos de un proyecto</h2>
+
+<p>Para buscar y reemplazar a la vez en el archivo raíz y en todos los archivos de capítulo de un documento, consulte <a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a>.</p>
+</main>
+</body>
+</html>
