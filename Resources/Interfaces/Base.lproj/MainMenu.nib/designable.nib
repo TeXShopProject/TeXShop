@@ -1488,7 +1488,6 @@
                                                 <action selector="displayShortCourse:" target="705" id="777"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="GrC-00-Sep"/>
                                         <menuItem title="All Symbol Tables" id="831" identifier="TSShortcut.displayTables:.0">
                                             <connections>
                                                 <action selector="displayTables:" target="705" id="832"/>

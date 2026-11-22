@@ -1495,7 +1495,6 @@
                                                 <action selector="displayShortCourse:" target="675" id="763"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="GrC-00-Sep"/>
                                         <menuItem title="Todas las tablas de símbolos" id="799" identifier="TSShortcut.displayTables:.0">
                                             <connections>
                                                 <action selector="displayTables:" target="675" id="800"/>

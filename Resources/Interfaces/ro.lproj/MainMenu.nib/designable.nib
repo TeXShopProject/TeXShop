@@ -1491,7 +1491,6 @@
                                                 <action selector="displayShortCourse:" target="690" id="758"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="GrC-00-Sep"/>
                                         <menuItem title="Toate tabelele de simboluri" id="796" identifier="TSShortcut.displayTables:.0">
                                             <connections>
                                                 <action selector="displayTables:" target="690" id="797"/>

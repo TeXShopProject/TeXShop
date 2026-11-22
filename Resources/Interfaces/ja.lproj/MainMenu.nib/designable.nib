@@ -1493,7 +1493,6 @@
                                                 <action selector="displayShortCourse:" target="690" id="758"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="GrC-00-Sep"/>
                                         <menuItem title="記号一覧（全体）" id="796" identifier="TSShortcut.displayTables:.0">
                                             <connections>
                                                 <action selector="displayTables:" target="690" id="797"/>

@@ -1492,7 +1492,6 @@
                                                 <action selector="displayShortCourse:" target="259" id="410"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="GrC-00-Sep"/>
                                         <menuItem title="기호 일람 전체" id="240" identifier="TSShortcut.displayTables:.0">
                                             <connections>
                                                 <action selector="displayTables:" target="259" id="417"/>

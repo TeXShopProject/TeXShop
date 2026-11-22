@@ -21,7 +21,7 @@ OLDER = ['displayTipsandTricks', 'displayRecentTeXFonts', 'displayNotesonApplesc
          'displayGettingStartedXeTeX', 'displayGettingStartedLatex']
 # George Grätzer's Short Course: the course, all symbol tables, then each table of the math and the text symbols in
 # the order of the book (Appendix B, Appendix C).
-SHORT = ['displayShortCourse', '-', 'displayTables', '-', 'displayHG', 'displayBinary', 'displayMoreBinary', 'displayNegatedBinary',
+SHORT = ['displayShortCourse', 'displayTables', '-', 'displayHG', 'displayBinary', 'displayMoreBinary', 'displayNegatedBinary',
          'displayBinaryOperations', 'displayArrows', 'displayMiscSymbols', 'displayDelimiters', 'displayOperators',
          'displayLargeOperators', 'displayMathAccents', 'displayMathSpacing', '-', 'displayEuropean', 'displayTextAccents',
          'displayTextSizes', 'displayTextSymbols', 'displayTextSpacing']

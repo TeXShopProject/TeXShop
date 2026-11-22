@@ -1494,7 +1494,6 @@
                                                 <action selector="displayShortCourse:" target="705" id="777"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="GrC-00-Sep"/>
                                         <menuItem title="全部符号表" id="831" identifier="TSShortcut.displayTables:.0">
                                             <connections>
                                                 <action selector="displayTables:" target="705" id="832"/>
