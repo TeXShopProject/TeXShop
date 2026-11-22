@@ -39,7 +39,9 @@ MUTATIONS = {
 def check_delegate(text):
     """TSAppDelegate decides with the display version and records it right after copying New."""
     start = text.index('currentVersion = [[[NSBundle bundleForClass:[self class]]')
-    decide = text[start:text.index('needsUpdating = TSLibraryNeedsUpdating(TSLibraryVersionInFolder(NewPath), currentVersion);', start)]
+    decide = text[start:text.index('needsUpdating = TSLibraryNeedsUpdating(libraryVersion, currentVersion);', start)]
+    if 'NSString *libraryVersion = TSLibraryVersionInFolder(NewPath);' not in decide:
+        return 'TSAppDelegate must read the version of the library before deciding'
     if 'objectForKey:@"CFBundleShortVersionString"]' not in decide:
         return 'TSAppDelegate must compare the display version (CFBundleShortVersionString)'
     copy = ('	if (needsUpdating) {\n		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/New"]\n'
