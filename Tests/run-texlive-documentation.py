@@ -27,6 +27,10 @@ MUTATIONS = {
     # The English document always wins, also where a translation exists.
     'english-always': ('    fileName = [[NSBundle mainBundle] pathForResource:@"TeXLiveDocumentation" ofType:@"pdf"];\n',
                        '    fileName = nil;\n'),
+    # The bundled ConTeXt macro goes back to its former name.
+    'macro-name': ('Resources/TeXShop/Macros/Macros_Context.plist', '<string>TeX Live home page</string>', '<string>teTeX/TeXLive home page</string>'),
+    # The Japanese menu title loses the space again.
+    'menu-title': ('Resources/Interfaces/ja.lproj/MainMenu.nib/designable.nib', 'title="TeX Liveドキュメント（英語）"', 'title="TeXLiveドキュメント（英語）"'),
 }
 
 PROBE = r'''
@@ -115,21 +119,23 @@ def run(source_text, work):
             check(opened == 'en.lproj', f'{name}: opens the English document (got {opened})')
 
 
-def spelling():
-    """TeX Live is written with a space in every text TeXShop shows: menu titles, other interface
-    strings and the bundled macros (names and the comments shown in the macro editor)."""
-    wrong = re.compile(r'TeXLive(?!Documentation)')
+def spelling(overrides):
+    """TeX Live is written with a space, and teTeX (long gone) is not named, in every text TeXShop
+    shows: menu titles, other interface strings and the bundled macros (names and the comments
+    shown in the macro editor). overrides maps a file to the text a mutation gave it."""
+    wrong = re.compile(r'TeXLive(?!Documentation)|teTeX')
     files = sorted(INTERFACES.glob('*.lproj/*.nib/designable.nib')) + sorted(INTERFACES.glob('*.lproj/*.xib'))
     files += sorted(INTERFACES.glob('*.lproj/*.strings')) + sorted((root / 'Resources/TeXShop/Macros').glob('*.plist'))
     check(len(files) > 50, f'{len(files)} interface and macro files')
     for file in files:
-        text = file.read_text(encoding='utf-8', errors='replace')
+        name = file.relative_to(root).as_posix()
+        text = overrides.get(name) or file.read_text(encoding='utf-8', errors='replace')
         for line in text.splitlines():
-            # Folder names such as /Applications/TeXLive are paths, not text.
             for m in wrong.finditer(line):
-                if line[max(0, m.start() - 1)] == '/' and m.start() > 0:
+                # Folders such as /Applications/TeXLive/ are paths, not text.
+                if line[m.start() - 1:m.start()] == '/' and line[m.end():m.end() + 1] == '/':
                     continue
-                check(False, f'{file.relative_to(root)}: "TeX Live" without the space: {line.strip()[:120]}')
+                check(False, f'{name}: "TeX Live" without the space, or teTeX: {line.strip()[:120]}')
 
 
 def main():
@@ -144,12 +150,18 @@ def main():
                 bad.append(name)
         sys.exit(1 if bad else 0)
     text = (root / SOURCE).read_text()
+    overrides = {}
     if args[:1] == ['--mutation']:
-        old, new = MUTATIONS[args[1]]
-        if old not in text:
+        mutation = MUTATIONS[args[1]]
+        path, old, new = mutation if len(mutation) == 3 else (SOURCE, *mutation)
+        original = text if path == SOURCE else (root / path).read_text(encoding='utf-8')
+        if old not in original:
             raise SystemExit(f'mutation {args[1]}: text not found')
-        text = text.replace(old, new, 1)
-    spelling()
+        if path == SOURCE:
+            text = original.replace(old, new, 1)
+        else:
+            overrides[path] = original.replace(old, new, 1)
+    spelling(overrides)
     with tempfile.TemporaryDirectory(prefix='texlive-doc-') as tmp:
         work = Path(tmp)
         (work / 'home').mkdir()

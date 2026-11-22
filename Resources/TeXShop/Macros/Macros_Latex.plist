@@ -2444,7 +2444,7 @@ try
 		open theFile
 	end tell
 on error
-	display dialog ("There don't seem to be any files in the teTeX tree with the filename: " &amp; filename_to_open) buttons {"OK"} default button "OK"
+	display dialog ("There don't seem to be any files in the TeX Live tree with the filename: " &amp; filename_to_open) buttons {"OK"} default button "OK"
 end try
 </string>
 					<key>key</key>

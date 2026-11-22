@@ -56,9 +56,9 @@ open location "https://texshop.app/"</string>
 					<string>--AppleScript
 -- If the content field starts with "--AppleScript" then it will be interpreted as an AppleScript and will be executed.  
 
-open location "http://www.rna.nl/tex.html"</string>
+open location "https://tug.org/texlive/"</string>
 					<key>name</key>
-					<string>teTeX/TeX Live home page</string>
+					<string>TeX Live home page</string>
 				</dict>
 			</array>
 		</dict>
