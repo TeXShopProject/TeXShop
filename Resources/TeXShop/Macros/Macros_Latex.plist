@@ -2430,8 +2430,8 @@ open location "https://tug.org/mactex/"</string>
 					<key>content</key>
 					<string>--Applescript direct
 
--- OPEN TeXLive FILE
--- Type the name of a file in the TeXLive tree, for example "geometry.sty". This macro will find it and open it.
+-- OPEN TeX Live FILE
+-- Type the name of a file in the TeX Live tree, for example "geometry.sty". This macro will find it and open it.
 
 set q1 to display dialog "Open TeX File" &amp; return &amp; return &amp; "Enter the name, including extension, of the TeX file you want to open." default answer "" buttons {"Cancel", "Open"} default button "Open"
 set filename_to_open to the text returned of q1
@@ -2444,7 +2444,7 @@ try
 		open theFile
 	end tell
 on error
-	display dialog ("There don't seem to be any files in the teTeX tree with the filename: " &amp; filename_to_open) buttons {"OK"} default button "OK"
+	display dialog ("There don't seem to be any files in the TeX Live tree with the filename: " &amp; filename_to_open) buttons {"OK"} default button "OK"
 end try
 </string>
 					<key>key</key>

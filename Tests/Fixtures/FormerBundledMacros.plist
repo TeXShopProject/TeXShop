@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Context</key>
+	<dict>
+		<key>content</key>
+		<string>--AppleScript
+-- If the content field starts with "--AppleScript" then it will be interpreted as an AppleScript and will be executed.  
+
+open location "http://www.rna.nl/tex.html"</string>
+		<key>name</key>
+		<string>teTeX/TeXLive home page</string>
+	</dict>
+	<key>Latex</key>
+	<dict>
+		<key>content</key>
+		<string>--Applescript direct
+
+-- OPEN TeXLive FILE
+-- Type the name of a file in the TeXLive tree, for example "geometry.sty". This macro will find it and open it.
+
+set q1 to display dialog "Open TeX File" &amp; return &amp; return &amp; "Enter the name, including extension, of the TeX file you want to open." default answer "" buttons {"Cancel", "Open"} default button "Open"
+set filename_to_open to the text returned of q1
+
+try
+	set file_path to do shell script "/Library/TeX/texbin/kpsewhich " &amp; filename_to_open
+	set theFile to alias (POSIX file file_path)
+	tell application "TeXShop"
+		activate
+		open theFile
+	end tell
+on error
+	display dialog ("There don't seem to be any files in the teTeX tree with the filename: " &amp; filename_to_open) buttons {"OK"} default button "OK"
+end try
+</string>
+		<key>key</key>
+		<string></string>
+		<key>name</key>
+		<string>View TeX Live file</string>
+	</dict>
+</dict>
+</plist>

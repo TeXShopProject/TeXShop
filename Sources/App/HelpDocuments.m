@@ -89,6 +89,9 @@
     NSString                *fileName;
     
     fileName = [[NSBundle mainBundle] pathForResource:@"TeXLiveDocumentation" ofType:@"pdf"];
+    // Only some languages have their own copy; the others open the English one.
+    if (fileName == nil)
+        fileName = [[NSBundle mainBundle] pathForResource:@"TeXLiveDocumentation" ofType:@"pdf" inDirectory:nil forLocalization:@"en"];
     [self displayFile: fileName];
 }
 

@@ -3,7 +3,10 @@
 
 The macro TeXShop home page of earlier versions opened Richard Koch's former web site. When
 TeXShop is updated, a copy in ~/Library/TeXShop/Macros whose content is still exactly an earlier
-bundled text opens https://texshop.app/; a macro that was edited, and every other macro, keep
+bundled text opens https://texshop.app/. The same holds for the macros reworded in 6.00, taken
+as earlier versions bundled them (Tests/Fixtures/FormerBundledMacros.plist): View TeX Live file
+writes TeX Live with the space, and the ConTeXt macro teTeX/TeXLive home page becomes TeX Live home
+page, which opens https://tug.org/texlive/; a copy the user renamed keeps its name and content. A macro that was edited, and every other macro, keep
 their content, names, keys and order. Nothing is written when no macro changes, a symbolic link
 stays a link, a binary file stays binary, and a file that cannot be read is left alone.
 TSAppDelegate does this only when the bundled files of a new version are copied.
@@ -20,8 +23,16 @@ FORMER = ['https://pages.uoregon.edu/koch/texshop/texshop.html',
           'http://www.uoregon.edu/~koch/texshop/texshop.html']
 MUTATIONS = {
     # Any macro mentioning a former address is changed, edited ones too.
-    'substring': ('    if ([content isKindOfClass:[NSString class]] && earlier[content]) {\n        node[@"content"] = earlier[content];',
-                  '    NSString *any = earlier.allValues.firstObject;\n    if ([content isKindOfClass:[NSString class]] && [content containsString:@"uoregon"]) {\n        node[@"content"] = any;'),
+    'substring': ('    NSDictionary *target = [content isKindOfClass:[NSString class]] ? earlier[content] : nil;',
+                  '    NSDictionary *target = [content isKindOfClass:[NSString class]] && [content containsString:@"uoregon"] ? earlier.allValues.firstObject : nil;'),
+    # The reworded macros are not recognized.
+    'reworded-ignored': ('    return @[\n        @{@"name": @"View TeX Live file",', '    return @[]; (void)@[\n        @{@"name": @"View TeX Live file",'),
+    # A copy the user renamed is updated too.
+    'renamed-copy-updated': ('target[@"formerName"] == nil || [node[@"name"] isEqual:target[@"formerName"]]', 'YES'),
+    # The renamed macro keeps its earlier name.
+    'name-kept': ('            node[@"name"] = target[@"name"];', '            ;'),
+    # The teTeX line of View TeX Live file is not part of the earlier text.
+    'tetex-line-missing': ('                        @[@"any files in the TeX Live tree with", @"any files in the teTeX tree with"]]},', '                        ]},'),
     # The oldest address is not recognized.
     'oldest-missing': ('             @"http://www.uoregon.edu/~koch/texshop/texshop.html"];', '             ];'),
     # A symbolic link is replaced by a file.
@@ -141,6 +152,45 @@ def run(mutation=None):
             user.write_bytes(b'not a property list')
             if update(user, bundled) != 0 or user.read_bytes() != b'not a property list':
                 return '%s: a broken file was changed' % kind
+
+        # The macros reworded in 6.00, as earlier versions bundled them.
+        former = plistlib.loads((root / 'Tests/Fixtures/FormerBundledMacros.plist').read_bytes())
+        for kind, name, earlier_name in (('Latex', 'View TeX Live file', 'View TeX Live file'),
+                                         ('Context', 'TeX Live home page', 'teTeX/TeXLive home page')):
+            bundled = root / 'Resources/TeXShop/Macros' / ('Macros_%s.plist' % kind)
+            current = plistlib.loads(bundled.read_bytes())
+            macro = find(current, name)
+            if macro is None:
+                return '%s: the bundled macro %s is missing' % (kind, name)
+            if 'TeXLive' in macro['content'] or 'teTeX' in macro['content'] + macro['name']:
+                return '%s: %s still says TeXLive or teTeX' % (kind, name)
+            if kind == 'Context' and 'open location "https://tug.org/texlive/"' not in macro['content']:
+                return 'Context: TeX Live home page does not open https://tug.org/texlive/'
+            if former[kind]['name'] != earlier_name or former[kind]['content'] == macro['content']:
+                return '%s: the fixture does not hold the earlier %s' % (kind, earlier_name)
+            # An unedited copy of the earlier macro, in its place among the other bundled macros.
+            earlier = copy.deepcopy(current)
+            find(earlier, name).update(copy.deepcopy(former[kind]))
+            user = tmp / ('%s-reworded.plist' % kind)
+            user.write_bytes(plistlib.dumps(earlier))
+            if update(user, bundled) != 1 or plistlib.loads(user.read_bytes()) != current:
+                return '%s: the unedited earlier %s is not updated to the current macro' % (kind, earlier_name)
+            # An edited copy stays as it is; so does a copy the user renamed, where the macro itself was renamed.
+            for label, change in (('edited', {'content': former[kind]['content'] + '\n-- mine'}),
+                                  ('renamed', {'name': 'My TeX page'})):
+                mine = copy.deepcopy(earlier)
+                find(mine, earlier_name).update(change)
+                user = tmp / ('%s-reworded-%s.plist' % (kind, label))
+                user.write_bytes(plistlib.dumps(mine))
+                before = user.read_bytes()
+                expected = 1 if (label == 'renamed' and kind == 'Latex') else 0
+                if update(user, bundled) != expected:
+                    return '%s: a %s copy of %s was handled wrongly' % (kind, label, earlier_name)
+                after = plistlib.loads(user.read_bytes())
+                if expected == 0 and user.read_bytes() != before:
+                    return '%s: a %s copy of %s was written' % (kind, label, earlier_name)
+                if expected == 1 and find(after, 'My TeX page')['content'] != macro['content']:
+                    return 'Latex: a renamed unedited View TeX Live file did not take the current text'
     return None
 
 
@@ -157,7 +207,7 @@ def main():
     problem = run()
     if problem:
         sys.exit('FAIL: ' + problem)
-    print('PASS: unedited bundled macros of earlier versions open texshop.app after an update (3 earlier addresses, '
+    print('PASS: unedited bundled macros of earlier versions open texshop.app or take the reworded TeX Live texts after an update (3 earlier addresses, '
           'LaTeX and ConTeXt); edited macros, other macros, links, binary and broken files are kept')
 
 
