@@ -405,7 +405,7 @@ The next crucial step is to learn \TeX. The easiest way to do that is to pick on
 
 Ask friends where to start. Because it is how I started, I'd recommend Leslie Lamport's book {\em \LaTeX, A Document Preparation System}. Be sure to get the second edition, which will say ``Updated for \LaTeX\ 2e''. It would be enough to read chapters 2 and 3, a total of 52 pages. 
 
-TeX Live contains a free book of about 150 pages on \LaTeX,  \emph {The Not So Short Introduction to \LaTeX 2e}, by Tobias Oetiker, Hubert Partl, Irene Hyna and Elisabeth Schlegl. See \url{file:/Library/TeX/Root/texmf-dist/doc/latex/lshort-english/lshort.pdf}.
+TeX Live contains a free book of about 150 pages on \LaTeX,  \emph {The Not So Short Introduction to \LaTeX 2e}, by Tobias Oetiker, Hubert Partl, Irene Hyna and Elisabeth Schlegl. See \url{https://ctan.org/pkg/lshort-english}.
 
 The link \url{https://learnlatex.org} leads to a series of online \LaTeX\  lessons, with interactive examples, which were partly funded by the TeX User Group in 2020.
 
@@ -1844,8 +1844,8 @@ frontmost document when the AppleScript actually runs.
 
 Starting with TeXShop 5.23, the string   \#FOLDERPATH\# is also available and will be replaced with the complete path to
 the folder containing the tex, pdf, log, and aux files of a document. So if
- \#FILEPATH\# gives \url{/Users/koch/Projects/Fourier/Fourier.tex}, then
- \#FOLDERPATH\# will give \url{/Users/koch/Projects/Fourier/}.
+ \#FILEPATH\# gives \nolinkurl{/Users/koch/Projects/Fourier/Fourier.tex}, then
+ \#FOLDERPATH\# will give \nolinkurl{/Users/koch/Projects/Fourier/}.
 
 In addition, any string \#NAMEPATH\# 
 is replaced with the complete path name of the source tex file minus its extension,
@@ -4485,7 +4485,7 @@ Three menu items provide information about TeX, LaTeX, and other items in the Te
 
 {\bf TeX Live Documentation}
 
-The TeX Live distribution comes with a massive amount of documentation. This menu item opens a page of links to various important items in that documentation.
+The TeX Live distribution comes with a massive amount of documentation. This menu item opens a page of links to the latest versions of important documents online: the documentation of any package at texdoc.org, the packages on CTAN, and the TeX Live guide. Where the page has not been translated into the language of TeXShop, it opens in English.
 
 {\bf Show Help for Package ...}
 
@@ -4763,7 +4763,7 @@ Now in the TeXShop Edit menu, show ``Show Spelling and Grammar.''  A panel will 
 
 \subsection{Introduction}
 
-\cmd{cocoAspell} is a \LaTeX-aware Spell Checker that operates through Apple's \cmd{Spell Checking} System. Version 2.5, for \cmd{macOS 10.11} (\cmd{El Capitan}) and later, is available at <\url{http://people.ict.usc.edu/~leuski/cocoaspell/}> or as part of \cmd{MacTeXtras} available at <\url{http://www.tug.org/mactex/mactextras.html}>.
+\cmd{cocoAspell} is a \LaTeX-aware Spell Checker that operates through Apple's \cmd{Spell Checking} System. Version 2.5, for \cmd{macOS 10.11} (\cmd{El Capitan}) and later, is available at <\url{https://github.com/leuski/cocoAspell}> or as part of \cmd{MacTeXtras} available at <\url{http://www.tug.org/mactex/mactextras.html}>.
 
 If you've never installed \cmd{cocoAspell} before \emph{and} you are using \cmd{OS X 10.13.x} (High Sierra) (or later?) the install may partially fail; the dictionaries are not completely built under that OS version (or later?). There is a fix, provided by Thaddeus Perala, but it involves using the Command Line (\acr{CL}) tool called \cmd{make}.
 

@@ -2,7 +2,6 @@
 % !TEX encoding = UTF-8 Unicode
 %
 \documentclass[letterpaper,11pt]{article}
-\usepackage[utf8]{inputenc}
 \usepackage[body={6.0in,9.0in}, vmarginratio=1:1]{geometry}
 \usepackage[small,compact]{titlesec}
 
@@ -56,7 +55,7 @@
 \setlength{\fboxsep}{0pt}
 \newcommand{\selmark}{\colorbox{green}{\rule[-0.5ex]{0ex}{2.1ex}\texttt{•}}}
 
-\title{A Beginner's Guide\\to\\File Encoding \& \TS\\\small v0.4.2--2018/06/11}
+\title{A Beginner's Guide\\to\\File Encoding \& \TS\\\small v0.4.2--2018/06/11\\Updated in 2026 for \TS\ 6.00}
 \author{H. Schulz \& R. Koch}
 \date{}
 
@@ -114,24 +113,24 @@ The various encodings were developed independently by  computer companies as
 their products were sold in more and more countries. 
 
 Unfortunately, text files do not have a header listing the encoding used to generate the
-file. Thus there is no way for \TS\ to automatically adjust the encoding as various files are input. 
-Some text editors have built-in heuristics to try to guess the correct encoding, but \TS\ does not use these heuristics because they work only 90\% of the time and an incorrect guess can lead to havoc.
+file. Thus there is no sure way for \TS\ to know the encoding as various files are input. 
+Many text editors have built-in heuristics to guess the correct encoding. Starting with version 6.00, \TS\ also guesses the encoding of a file which has no encoding directive (see Section~\ref{telltexshop}). Such a guess is usually right, but it can be wrong, so the encoding directive described below remains the reliable way to state the encoding of a file.
 
 \section{\acr{Unicode}}
 
 As the computer market expanded across the world, computer companies came to their senses and created a consortium to develop an all-encompassing standard, called \acr{Unicode}. The goal of \acr{Unicode} is to encode all symbols commonly used across the world, including Roman, Greek, Cyrillic, Arabic, Hebrew, Chinese, Japanese, Korean, and many others. Unicode even has support for Egyptian Hieroglyphics and recently added support for Mathematical Symbols.
 
-All modern computer systems, including the Macintosh, Windows, Linux and Unix, now support \acr{Unicode}. Internally, \TS\ and other Macintosh editors describe characters using \acr{Unicode} and can accept text that is a combination of Roman, Greek, Cyrillic, Arabic, Chinese, and other languages. \TS\ even understands that Arabic, Hebrew, and Persian are written from right to left. To input these extra languages, activate additional keyboards using the \cmd{System Preferences} \cmd{Keyboard} Pane. This Pane changed in recent versions of \acr{OS X}; in \acr{El Capitan}, select a keyboard on the left, or click `+' below the list to see a list of additional languages and add their keyboards.
+All modern computer systems, including the Macintosh, Windows, Linux and Unix, now support \acr{Unicode}. Internally, \TS\ and other Macintosh editors describe characters using \acr{Unicode} and can accept text that is a combination of Roman, Greek, Cyrillic, Arabic, Chinese, and other languages. \TS\ even understands that Arabic, Hebrew, and Persian are written from right to left. To input these extra languages, add input sources for them in the \cmd{Keyboard} section of \cmd{System Settings}, under \cmd{Text Input}.
 
 Because there are far more than 256 symbols, Unicode describes symbols using much larger integers, using more than one byte. Unicode defines the ``internal'' structure of these numbers, but gives several different ways to write the symbols on computers. The most popular Unicode encoding is \acr{UTF-8}, but \acr{UTF-16} and others are also available.
 
 The great advantage of \acr{UTF-8} is that ordinary \acr{ASCII} characters retain their single byte form in the encoded file. Consequently, ordinary \acr{ASCII} files remain valid as \acr{UTF-8} files. With most single byte encodings like \acr{IsoLatin1}, \acr{IsoLatin9}, etc., any sequence of bytes forms a legal file. If you open such a file with the wrong encoding, the file will appear as usual, but some of the symbols will be wrong. If someone in Germany using \acr{IsoLatin9} collaborates with someone in the U.S. using \acr{MacOSRoman}, and their paper is written in English, they may not notice the mismatch until they proofread the references and discover that accents and umlauts have gone missing.
 
-However, not all sequences of bytes form legal \acr{UTF-8} files, because non-\acr{ASCII} symbols are converted into bytes using a somewhat complicated code. In the previous example, if the German collaborator uses \acr{IsoLatin9} and includes non-\acr{ASCII} characters, such as those with umlauts, in the document and the American collaborator uses \acr{UTF-8} \TS\ will report an error when it tries to open the \acr{IsoLatin9} file in \acr{UTF-8}. \TS\ will then display an error message and  offer to open the file in a ``fallback'' single byte encoding, currently \acr{IsoLatin9} (not configurable).
+However, not all sequences of bytes form legal \acr{UTF-8} files, because non-\acr{ASCII} symbols are converted into bytes using a somewhat complicated code. In the previous example, if the German collaborator uses \acr{IsoLatin9} and includes non-\acr{ASCII} characters, such as those with umlauts, in the document and the American collaborator uses \acr{UTF-8}, the \acr{IsoLatin9} file cannot be read in \acr{UTF-8}. Starting with version 6.00, \TS\ notices this when the file has no encoding directive and reads it in the encoding it detects instead. If the file has an encoding directive naming \acr{UTF-8}, or if automatic detection is turned off, \TS\ displays an error message and opens the file in a ``fallback'' single byte encoding, currently \acr{IsoLatin9} (not configurable).
 
-On the other hand both of the authors of this document use \acr{UTF-8 Unicode} as our default encoding, turning that message to our advantage. \acr{UTF-8} encoding preserves everything typed in \TS, so there are no puzzling character losses. HTML and other code is usually saved in \acr{UTF-8}, so \TS\ can be used as a more general text editor. Moreover, if a \TeX\ file from an external source is not in \acr{UTF-8}, we get that warning. The trick is then to let \TS\ open the file in the ``fallback'' encoding, \acr{IsoLatin9}, and examine the file for an \cmd{inputenc} line which tells you what encoding was actually used. Then close the file \emph{without making any changes} and re-open it using the \cmd{Open} dialog and manually choose the correct encoding. Once the file is open with the correct encoding you may add the \TS\ encoding directive line for that encoding and save it for future use.
+Both of the authors of this document use \acr{UTF-8 Unicode} as our default encoding. \acr{UTF-8} encoding preserves everything typed in \TS, so there are no puzzling character losses. HTML and other code is usually saved in \acr{UTF-8}, so \TS\ can be used as a more general text editor. If a \TeX\ file from an external source is not in \acr{UTF-8}, \TS\ detects its encoding when it opens the file; an \cmd{inputenc} line in the file is used as a hint. Check the result. If some characters are wrong, close the file \emph{without making any changes} and re-open it using the \cmd{Open} dialog and manually choose the correct encoding. Once the file is open with the correct encoding you may add the \TS\ encoding directive line for that encoding and save it for future use.
 
-Using \acr{UTF-8 Unicode} has become so advantageous that \TS\ 4.00 and later use \acr{UTF-8 Unicode} as the default, out of the box\footnote{If you switch to the latest \TS\ version and have already reset the default encoding in \mnu{TeXShop}\To\mnu{Preferences} your selection will be maintained.}, encoding.
+Using \acr{UTF-8 Unicode} has become so advantageous that \TS\ 4.00 and later use \acr{UTF-8 Unicode} as the default, out of the box\footnote{If you switch to the latest \TS\ version and have already reset the default encoding in \TS\ Settings, your selection will be maintained.}, encoding.
 
 All of the encoding methods discussed here, including \cmd{Unicode}, ignore italics, underlining, font size, font color, etc. They just encode characters. It is up to users to specify additional attributes in some other way. For example, when Apple's \cmd{TextEdit} program is used in \emph{Plain Text} mode, a user can change the font or font size for an entire document, but not for individual sections of the document. If the document is saved to disk and then reloaded, the font changes are lost. On the other hand, a word processor like Microsoft Word or Apple's Pages, has much more control over fonts, font size and the like. These programs output text with a proprietary coding only readable by that program. But the file preserves the extra attribute information.  
 
@@ -173,13 +172,18 @@ much more capable of handling languages where \cmd{Unicode} becomes essential. B
 code for \cmd{Unicode} support. One big problem with these languages is that appropriate fonts must be chosen which support the languages. To simplify that problem,
 both \XeTeX\ and \LuaTeX\ allow users to use the ordinary system fonts supplied with their computer.
 
-\section{Telling \TS\ what encoding is used to Load and Save Source Files.}
+\section{Telling \TS\ what encoding is used to Load and Save Source Files.}\label{telltexshop}
 
-To set the default \TS\ encoding, open \TS\ Preferences. Select the Source tab.
-In the second column, find the Encoding section. This section contains a pull down menu;
-select the desired encoding from this menu. Select \acr{Western (ISO Latin 9)} to get the \acr{IsoLatin9} encoding, useful in English speaking countries and Western Europe. You must select
+To set the default \TS\ encoding, open \TS\ Settings and select the \cmd{Documents and Saving} category.
+In the \cmd{Encoding} group, select the desired encoding from the pop-up menu \cmd{Encoding for new documents}. Select \acr{Western (ISO Latin 9)} to get the \acr{IsoLatin9} encoding, useful in English speaking countries and Western Europe. You must select
 \acr{Unicode (UTF-8)}, the current default, or \acr{Unicode (UTF-16)} if you want to preserve everything typed into the \TS\ editor. If you pick any other encoding, there may be characters you can type in \TS\
-which will be lost if you Save and then re-Load. On the other hand, \acr{UTF-8} may not work well with certain \LaTeX\ packages, as explained later.
+which will be lost if you Save and then re-Load.
+
+Starting with version 6.00, this encoding is used for new documents and for files containing only \acr{ASCII} characters. When a file without an encoding directive is opened, \TS\ detects its encoding: it uses a byte order mark, the encoding recorded by the program which saved the file when macOS has kept it, \acr{UTF-8}, and the encodings used for your languages and for the default encoding, in that order, and takes an \cmd{inputenc} line in the source as a hint. Detection works best for files containing a reasonable amount of text. It can be turned off with a hidden setting:
+\begin{verbatim}
+     defaults write TeXShop EncodingAutoDetection NO
+\end{verbatim}
+Then files without an encoding directive are read in the default encoding, as in earlier versions. See the \TS\ manual for details.
 
 \TS\ has a mechanism to set the encoding of a particular file independent of the user's default choice, or of choices in the Load and Save panels. To set the encoding used to read or write a particular file to \acr{UTF-8}, add the following line to the first twenty lines of the top of the file:
 \begin{verbatim}
@@ -191,41 +195,41 @@ If such a line exists, the indicated encoding will be used, overriding all other
 of setting the encoding, \emph{unless} the option key is held down during the entire
 load or save operation. 
 
-Many users in Western Europe prefer to set \acr{IsoLatin9} as their default encoding so they
-can easily read files from collaborators, but include the line setting encoding to \acr{UTF-8}
-in file templates used to create files, so that their own files are encoded in \acr{UTF-8}.
+Before version 6.00, many users in Western Europe set \acr{IsoLatin9} as their default encoding so they
+could easily read files from collaborators. Now that \TS\ detects the encoding of such files, \acr{UTF-8} is the better default.
 
 It is also possible to set the encoding used to read a file by Opening the file explicitly from within \TS. The resulting open dialog has a pulldown menu at the bottom selecting
-the encoding to be used for that particular file.\footnote{Under \cmd{El Capitan} you must first press the \cmd{Options} button to get to the pulldown menu.} (Note that the ``\acr{\% !TEX encoding =}''
+the encoding to be used for that particular file.\footnote{You must first press the \cmd{Options} button to get to the pulldown menu.} (Note that the ``\acr{\% !TEX encoding =}''
 line overrides this command.)
 
-Explicitly Saving a file from within \TS\ produces a Save Dialog with a similar pulldown menu to set the encoding.
+When \cmd{Show Encoding in Save Dialog} is turned on in the \cmd{Documents and Saving} category of \TS\ Settings, explicitly Saving a file from within \TS\ produces a Save Dialog with a similar pulldown menu to set the encoding. If the file has an encoding directive, the menu shows that encoding and cannot be changed.
 
 NOTE: you can't easily change the encoding of a file. The best thing to do is copy the whole document into a new one and save that with the correct encoding. Using the \TS\ directive before saving the new file the first time is definitely recommended.
 
 \section{Telling \LaTeX\ about File Encodings}
 
-Your typesetting engine needs to `know' the encoding used to save each source file so the input source and the output glyphs are synchronized. For ordinary \LaTeX, this is usually
-done by including a command like the following one in the header of the source:
+Your typesetting engine needs to `know' the encoding used to save each source file so the input source and the output glyphs are synchronized. Since 2018, \LaTeX\ expects \acr{UTF-8} input by default, so a source file in \acr{UTF-8} needs no extra line; the line \verb|\usepackage[utf8]{inputenc}| found in older documents is no longer needed. \XeLaTeX\ and \LuaLaTeX\ always read \acr{UTF-8}. For a source file saved in another encoding, ordinary \LaTeX\ must be told the encoding by
+including a command like the following one in the header of the source:
 \begin{verbatim}
      \usepackage[latin9]{inputenc}	
 \end{verbatim}
 Typical values for other encodings are given in the short table at the end of this
 document.
 
-This line is not needed when the source encoding is ordinary \acr{ASCII}. 
+This line is not needed when the source encoding is ordinary \acr{ASCII}, which is also legal \acr{UTF-8}. 
 
-One of the legal values
-for encoding with inputenc is \cmd{utf8}. This line works in Western Europe, but not in situations
-requiring deep use of \cmd{Unicode}. When in doubt, it is useful to read the \cmd{inputenc} documentation. To do that, go to the \TS\ \mnu{Help} menu, select \cmd{Show Help for Package}, and
+When in doubt, it is useful to read the \cmd{inputenc} documentation. To do that, go to the \TS\ \mnu{Help} menu, select \cmd{Show Help for Package}, and
 fill in the requested Package with \cmd{inputenc}.
 
-Users in Western Europe usually use \emph{four} ``related'' commands in the header.
-Here are these four lines for users in Germany.
+Users in Western Europe usually use \emph{three} ``related'' commands in the header.
+Here are these three lines for users in Germany.
 \begin{verbatim}
      \usepackage[german]{babel}
      \usepackage{lmodern}
      \usepackage[T1]{fontenc}
+\end{verbatim}
+A source file saved in \acr{IsoLatin9} adds a fourth line:
+\begin{verbatim}
      \usepackage[latin9]{inputenc}
 \end{verbatim}
 
@@ -235,7 +239,7 @@ The second line tells \LaTeX\ to use the Latin Modern fonts. These fonts agree w
 
 The third line tells \LaTeX\ the connection between the characters in the file and actual glyphs (i.e., the physical representation of the characters in the final document).
 
-As explained above, the final line tells \LaTeX\ which encoding was used for the source file.
+As explained above, the fourth line tells \LaTeX\ which encoding was used for a source file which is not in \acr{UTF-8}.
 
 Users interested in more details should consult the documentation for \cmd{babel}, \cmd{lmodern},
 and \cmd{fontenc} using \TS's \cmd{Show Help for Package} item in the \cmd{Help} Menu. The documentation
@@ -256,7 +260,7 @@ The `Directive' column gives the designation used in \TS's encoding directive,
 \end{verbatim}
 where \texttt{xxxxx} is the designator you wish to use. If this line is in place before you first \cmd{Save} your source file \TS\ will automatically save the file with the designated encoding. \TS\ will also automatically \cmd{Open} the file with that encoding when \cmd{Double-Clicked}. We suggest you create a Template which contains the directive and use that to create new documents.
 
-The `inputenc' column gives the optional argument for the inputenc package. As with the Directive, I suggest you create a Template which has the proper inputenc line for the corresponding encoding in the directive.
+The `inputenc' column gives the optional argument for the inputenc package. As with the Directive, I suggest you create a Template which has the proper inputenc line for the corresponding encoding in the directive. No inputenc line is needed for \acr{UTF-8}, the default of \LaTeX.
 
 \begin{table}[H]
 \centering

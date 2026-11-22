@@ -70,7 +70,8 @@
 %\renewcommand*{\CaptionSeparator}{\space\textemdash\space}
 \frenchbsetup{ShowOptions,og=«,fg=»}
 \usepackage{xfrac}
-\usepackage[decimalsymbol=comma,unitsep=cdot,digitsep=thick,mode=text,sepfour=true,valuesep=thick]{siunitx}
+%\usepackage[decimalsymbol=comma,unitsep=cdot,digitsep=thick,mode=text,sepfour=true,valuesep=thick]{siunitx}
+\usepackage[output-decimal-marker={,},inter-unit-product=\ensuremath{{}\cdot{}},group-separator={\;},group-minimum-digits=4,number-unit-separator={\;},mode=text]{siunitx}
 \usepackage[np,autolanguage]{numprint}
 
 %Caption, float, microtype
@@ -103,6 +104,8 @@
 
 \begin{document}
 \maketitle
+\noindent\textit{Ce document a été écrit en 2015. Les noms des menus et des réglages de TeXShop ont changé depuis ; consultez le manuel de TeXShop pour les noms actuels.}
+
 
 %\section{Introduction}
 \section{Introduction}
