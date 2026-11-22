@@ -35,6 +35,7 @@ MUTATIONS = {
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
+parser.add_argument('--sdk', help='SDK to compile with, for example a path to an older macOS SDK')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewLayout.h').read_text()
@@ -166,9 +167,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     for (NSMenuItem *choice in choices) {
         check(choice.image && [inkOf(choice.image) isEqualToData:ink[choice.tag]],
             [NSString stringWithFormat:@"menu item %ld shows the icon of its display format", (long)choice.tag]);
+#if defined(MAC_OS_VERSION_27_0)
         if (@available(macOS 27.0, *))
             check(choice.preferredImageVisibility == NSMenuItemImageVisibilityVisible,
                 [NSString stringWithFormat:@"menu item %ld keeps its icon visible on macOS 27", (long)choice.tag]);
+#endif
     }
     printf("PASS: %lu checks of the display format icons\n", (unsigned long)checks);
     return 0;
@@ -178,7 +181,7 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-icons-') as tmp:
     tmp = Path(tmp)
     (tmp / 'TSPreviewLayout.h').write_text(header)
     (tmp / 'test.m').write_text(program)
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-I', str(tmp), *include_args(root), '-framework', 'Cocoa', '-framework', 'PDFKit',
+    subprocess.run(['xcrun', *(['--sdk', args.sdk] if args.sdk else []), 'clang', '-fobjc-arc', '-I', str(tmp), *include_args(root), '-framework', 'Cocoa', '-framework', 'PDFKit',
                     str(tmp / 'test.m'), '-o', str(tmp / 'test')], check=True)
     result = subprocess.run([str(tmp / 'test')], capture_output=True, text=True)
     output = (result.stdout + result.stderr).strip()
