@@ -214,8 +214,8 @@
 
 // The bar changes the height of what can be seen of the Preview. Each part keeps the text
 // at the top of what can be seen, a split into a top and a bottom part keeps the shares of
-// what can be seen, and an open drawer is placed again: right below the title bar, beside the
-// toolbar and the bar (#67).
+// what can be seen, and an open drawer is placed again: where the rounding of the window's
+// top corner ends, beside the toolbar and the bar (#67).
 - (void)keepPreviewPlaceInWindow:(NSWindow *)window while:(void (NS_NOESCAPE ^)(void))change
 {
     TSPreviewWindow *preview = self.pdfKitWindow;

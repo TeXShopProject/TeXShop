@@ -16,14 +16,16 @@ NS_ASSUME_NONNULL_BEGIN
 BOOL TSDocumentWindowsUseFullSizeContent(void);
 
 // Gets a document window ready after its toolbar is set. On macOS 26 and later its
-// content runs under the title bar and the toolbar, and a drawer at its side starts
-// right below the title bar, as on earlier systems. On every system the drawer's frame
+// content runs under the title bar and the toolbar, and a drawer at its side starts where
+// the rounding of the window's top corner ends, beside the title bar (#67). On earlier
+// systems the drawer starts right below the title bar. On every system the drawer's frame
 // takes the window's colors.
 void TSDocumentWindowPrepare(NSWindow * _Nullable window);
 
 // Places the open drawers of a document window again after the band under its toolbar
 // changed height, as when the annotation toolbar is shown or hidden: a drawer never starts
-// above that band where the band is lower than the title bar, as in full screen.
+// above that band where the band is lower than the rounding of the window's corner, as in
+// full screen.
 void TSDocumentWindowPlaceDrawers(NSWindow * _Nullable window);
 
 // The height of the band at the top of a view that lies under the title bar and the
