@@ -179,7 +179,7 @@ In the \cmd{Encoding} group, select the desired encoding from the pop-up menu \c
 \acr{Unicode (UTF-8)}, the current default, or \acr{Unicode (UTF-16)} if you want to preserve everything typed into the \TS\ editor. If you pick any other encoding, there may be characters you can type in \TS\
 which will be lost if you Save and then re-Load.
 
-Starting with version 6.00, this encoding is used for new documents and for files containing only \acr{ASCII} characters. When a file without an encoding directive is opened, \TS\ detects its encoding: it uses a byte order mark, the encoding recorded by the program which saved the file when macOS has kept it, \acr{UTF-8}, and the encodings used for your languages and for the default encoding, in that order, and takes an \cmd{inputenc} line in the source as a hint. Detection works best for files containing a reasonable amount of text. It can be turned off with a hidden setting:
+Starting with version 6.00, this encoding is used for new documents and for files containing only \acr{ASCII} characters (with \acr{UTF-16} selected, such files are read in \acr{UTF-8}, since \acr{UTF-16} does not write \acr{ASCII} characters as \acr{ASCII}). When a file without an encoding directive is opened, \TS\ detects its encoding: it uses a byte order mark, the encoding recorded by the program which saved the file when macOS has kept it, \acr{UTF-8}, and the encodings used for your languages and for the default encoding, in that order, and takes an \cmd{inputenc} line in the source as a hint. Detection works best for files containing a reasonable amount of text. It can be turned off with a hidden setting:
 \begin{verbatim}
      defaults write TeXShop EncodingAutoDetection NO
 \end{verbatim}
@@ -202,7 +202,7 @@ It is also possible to set the encoding used to read a file by Opening the file 
 the encoding to be used for that particular file.\footnote{You must first press the \cmd{Options} button to get to the pulldown menu.} (Note that the ``\acr{\% !TEX encoding =}''
 line overrides this command.)
 
-When \cmd{Show Encoding in Save Dialog} is turned on in the \cmd{Documents and Saving} category of \TS\ Settings, explicitly Saving a file from within \TS\ produces a Save Dialog with a similar pulldown menu to set the encoding. If the file has an encoding directive, the menu shows that encoding and cannot be changed.
+When \cmd{Show Encoding in Save Dialog} is turned on in the \cmd{Documents and Saving} category of \TS\ Settings, explicitly Saving a file from within \TS\ produces a Save Dialog with a similar pulldown menu to set the encoding. If the file has an encoding directive naming an encoding \TS\ knows, the menu shows that encoding and cannot be changed. It can still be changed when the directive names an unknown encoding, or when the file could not be read in the encoding it names and was opened in \acr{IsoLatin9}.
 
 NOTE: you can't easily change the encoding of a file. The best thing to do is copy the whole document into a new one and save that with the correct encoding. Using the \TS\ directive before saving the new file the first time is definitely recommended.
 
