@@ -795,6 +795,12 @@
                                     <action selector="toggleExplColor:" target="-1" id="mPT-5c-a8V"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="高亮索引条目" id="7A7-TP-doE" identifier="TSShortcut.toggleIndexColor:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleIndexColor:" target="-1" id="2u6-Qe-1NB"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="高亮当前行" tag="14" id="YGN-wa-VyC" identifier="TSShortcut.toggleSyntaxColorEntry:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

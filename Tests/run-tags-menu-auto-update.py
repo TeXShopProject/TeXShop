@@ -322,8 +322,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     // Text-only toolbars of the source window and of the single window, saved with Update.
     // AppKit opens the menu of the item's menu form; in the overflow menu, the same menu.
     fprintf(stderr, "SAVED-TOOLBAR-BEGIN\n");
-    NSDictionary *saved = @{kSourceToolbarIdentifier: @[kTagsTID, @"Update", kLabelsTID],
-                            @"Single Window Toolbar": @[skTagsTID, @"UpdateSplit", skLabelsTID]};
+    // ColorIndex and ColorIndexSplit (index highlighting, now in the Source menu) are gone the same way.
+    NSDictionary *saved = @{kSourceToolbarIdentifier: @[kTagsTID, @"Update", @"ColorIndex", kLabelsTID],
+                            @"Single Window Toolbar": @[skTagsTID, @"UpdateSplit", @"ColorIndexSplit", skLabelsTID]};
     for (NSString *ident in saved) {
         HarnessWindow *w = SourceWindow(a, NO);
         NSToolbar *tb = [[NSToolbar alloc] initWithIdentifier:ident]; tb.autosavesConfiguration = NO; tb.delegate = a;
@@ -331,7 +332,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         [tb setConfigurationFromDictionary:@{@"TB Item Identifiers": saved[ident], @"TB Display Mode": @(NSToolbarDisplayModeLabelOnly), @"TB Is Shown": @YES, @"TB Size Mode": @1}];
         [w.contentView.superview layoutSubtreeIfNeeded];
         NSArray *expected = [ident isEqual:kSourceToolbarIdentifier] ? @[kTagsTID, kLabelsTID] : @[skTagsTID, skLabelsTID];
-        Check([[tb.items valueForKey:@"itemIdentifier"] isEqual:expected], [NSString stringWithFormat:@"Saved Update is dropped, the other items stay: %@", Joined([tb.items valueForKey:@"itemIdentifier"])]);
+        Check([[tb.items valueForKey:@"itemIdentifier"] isEqual:expected], [NSString stringWithFormat:@"Saved Update and ColorIndex are dropped, the other items stay: %@", Joined([tb.items valueForKey:@"itemIdentifier"])]);
         Check(tb.displayMode == NSToolbarDisplayModeLabelOnly, @"Toolbar shows text only");
         for (NSToolbarItem *item in tb.items) {
             BOOL isTags = [item.itemIdentifier hasPrefix:@"Tags"];

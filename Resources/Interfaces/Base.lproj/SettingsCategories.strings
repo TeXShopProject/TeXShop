@@ -90,6 +90,8 @@
 "group.editor.3.title" = "Syntax Highlighting";
 "catalog.editor.3.0.title" = "@ as Part of Command Names";
 "catalog.editor.3.1.title" = "Highlight expl3 Code by Default";
+"catalog.editor.3.3.title" = "Highlight Index Entries by Default";
+"catalog.editor.3.3.former" = "Color Index";
 "catalog.editor.3.2.title" = "Highlight Fullwidth Letters and Symbols";
 "group.editor.4.title" = "Matching Brackets";
 "catalog.editor.4.0.title" = "Parens Matching";

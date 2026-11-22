@@ -90,6 +90,8 @@
 "group.editor.3.title" = "语法高亮";
 "catalog.editor.3.0.title" = "将 @ 视为命令名的一部分";
 "catalog.editor.3.1.title" = "默认高亮expl3代码";
+"catalog.editor.3.3.title" = "默认高亮索引条目";
+"catalog.editor.3.3.former" = "索引着色";
 "catalog.editor.3.2.title" = "高亮全角字母数字符号";
 "group.editor.4.title" = "括号匹配";
 "catalog.editor.4.0.title" = "配对括号";

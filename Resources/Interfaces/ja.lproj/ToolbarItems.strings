@@ -122,10 +122,6 @@ tiLabelSearchKIT				= "検索";
 tiPaletteLabelSearchKIT         = "検索";
 tiToolTipSearchKIT				= "検索";
 
-tiLabelColorIndex				= "索引の色づけ";
-tiPaletteLabelColorIndex		= "索引の色づけ";
-tiToolTipColorIndex				= "\\indexと \\esindexを別色で色づけします";
-
 tiLabelTypesetKIT				= "タイプセット";
 tiPaletteLabelTypesetKIT		= "タイプセット";
 tiToolTipTypesetKIT				= "タイプセットプログラムを起動します";
@@ -208,10 +204,6 @@ tiToolTipGotoPageSplit          = "ページへ移動";
 tiLabelMagnificationSplit		= "ズーム倍率";
 tiPaletteLabelMagnificationSplit   = "ズーム倍率";
 tiToolTipMagnificationSplit     = "プレビュー画面のズーム倍率を設定します";
-
-tiLabelColorIndexSplit			= "索引の色づけ";
-tiPaletteLabelColorIndexSplit     = "索引の色づけ";
-tiToolTipColorIndexSplit          = "\\indexと \\esindexを別色で色づけします";
 
 tiLabelAutoCompleteSplit		= "キーバインド";
 tiPaletteLabelAutoCompleteSplit   = "キーバインド";

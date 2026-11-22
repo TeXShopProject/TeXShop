@@ -118,10 +118,6 @@ tiLabelSyncMarks			= "Segni sync";
 tiPaletteLabelSyncMarks			= "Segni sync";
 tiToolTipSyncMarks			= "Mostra i segni di sincronizzazione";
 
-tiLabelColorIndex				= "Colora indice";
-tiPaletteLabelColorIndex		= "Colora indice";
-tiToolTipColorIndex				= "Colora i comandi dell’indice";
-
 tiLabelTypesetKIT				= "Compila";
 tiPaletteLabelTypesetKIT		= "Compila";
 tiToolTipTypesetKIT				= "Esegui il programma di compilazione";
@@ -208,10 +204,6 @@ tiToolTipGotoPageSplit          = "Vai alla pagina";
 tiLabelMagnificationSplit		= "Ingrandimento";
 tiPaletteLabelMagnificationSplit   = "Ingrandimento";
 tiToolTipMagnificationSplit     = "Imposta ingrandimento della pagina";
-
-tiLabelColorIndexSplit			= "Colora indice";
-tiPaletteLabelColorIndexSplit     = "Colora indice";
-tiToolTipColorIndexSplit          = "Colora i comandi dell’indice";
 
 tiLabelAutoCompleteSplit		= "Autocompletamento";
 tiPaletteLabelAutoCompleteSplit   = "Autocompletamento";

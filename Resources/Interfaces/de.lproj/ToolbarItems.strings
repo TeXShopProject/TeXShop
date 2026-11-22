@@ -118,10 +118,6 @@ tiLabelSyncMarks			= "SynchPunkte";
 tiPaletteLabelSyncMarks		= "Synchronisationspunkte";
 tiToolTipSyncMarks			= "Synchronisationspunkte anzeigen";
 
-tiLabelColorIndex				= "Farbindex";
-tiPaletteLabelColorIndex		= "Farbindex";
-tiToolTipColorIndex				= "Farbindex Befehle";
-
 tiLabelTypesetKIT				= "Setzen";
 tiPaletteLabelTypesetKIT		= "Setzen";
 tiToolTipTypesetKIT				= "Starte Schriftsatzprogramm";
@@ -207,10 +203,6 @@ tiToolTipGotoPageSplit          = "Gehe zu Seite";
 tiLabelMagnificationSplit		= "Vergrößerung";
 tiPaletteLabelMagnificationSplit   = "Vergrößerung";
 tiToolTipMagnificationSplit     = "Stelle Seitenvergrößerung ein";
-
-tiLabelColorIndexSplit			= "Farb-Index";
-tiPaletteLabelColorIndexSplit     = "Farb-Index";
-tiToolTipColorIndexSplit          = "Farb-Index Befehle";
 
 tiLabelAutoCompleteSplit		= "Autovervollständigung";
 tiPaletteLabelAutoCompleteSplit   = "Autovervollständigung";

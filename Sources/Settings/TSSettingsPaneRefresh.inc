@@ -68,6 +68,7 @@
     [_makeatletterButton setState:[defaults boolForKey:MakeatletterEnabledKey]];
     [_expl3SyntaxColorButton setState:[defaults boolForKey:expl3SyntaxColoringKey]];
     [_highlightFullwidthSymbolsButton setState:[defaults boolForKey:HighlightFullwidthSymbolsKey] ? NSControlStateValueOn : NSControlStateValueOff];
+    [_indexColorStartButton setState:[defaults boolForKey:IndexColorStartKey] ? NSControlStateValueOn : NSControlStateValueOff];
     [XMLchapter setState:[defaults boolForKey:XMLChapterTagKey]];
     [XMLsection setState:[defaults boolForKey:XMLSectionTagKey]];
     [XMLsubsection setState:[defaults boolForKey:XMLSubsectionTagKey]];

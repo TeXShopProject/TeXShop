@@ -90,6 +90,8 @@
 "group.editor.3.title" = "Evidențierea sintaxei";
 "catalog.editor.3.0.title" = "@ face parte din comenzi";
 "catalog.editor.3.1.title" = "Evidențiază codul expl3 implicit";
+"catalog.editor.3.3.title" = "Evidențiază intrările de index implicit";
+"catalog.editor.3.3.former" = "Index de culori";
 "catalog.editor.3.2.title" = "Evidențiază literele și simbolurile de lățime completă";
 "group.editor.4.title" = "Potrivirea parantezelor";
 "catalog.editor.4.0.title" = "Verificarea Parantezelor";

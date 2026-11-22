@@ -24,14 +24,18 @@ CORRECTED={
     'ko.lproj':([action('lockDocument:','NLs-gZ-1iV')],[action('gotoURL:','NLs-gZ-1iV')]),
     'pt-PT.lproj':([action('convertTiff:','yKe-Uz-9qP')],
                    [action('doTag:','yKe-Uz-9qP'),outlet('showFullPathButton','3921','Bcb-fn-oGM'),outlet('slabels','OUv-dr-rDM','bJm-TP-SIA')]),
-    # The split window's AutoComplete and Color Index buttons were added with their connections.
+    # The split window's AutoComplete button was added with its connections (and the Color Index button,
+    # which left the nib in 6.00; see INDEX_COLOR).
     'zh_CN.lproj':([action('lockDocument:','LJq-e2-BPE')],
                    [action('gotoURL:','LJq-e2-BPE'),outlet('autoCompleteSplitButton','oCL-rZ-3aW','2wM-qZ-cUD'),
-                    outlet('indexColorSplitBox','Ih7-yf-Js1','o3g-yr-DO1'),action('changeAutoComplete:','9Wv-gf-ygw'),action('showIndexColor:','ecQ-oX-sf2')]),
+                    action('changeAutoComplete:','9Wv-gf-ygw')]),
 }
 # The former Statistics panel left the document nib in 6.00 (Text Statistics is a popover of the
 # status bar): its outlets and its button's action are no longer there in any language.
 STATISTICS=('statisticsPanel','statisticsForm','statisticsWords','statisticsLines','statisticsCharacters')
+# The Color Index check boxes of the two toolbars left the document nib in 6.00 (index highlighting is
+# Source > Highlight Index Entries): their outlets and their action are gone in every language.
+INDEX_COLOR=('indexColorBox','indexColorSplitBox')
 # The Annotation Panel and the Text panel left the document nib in 6.00 (Issue #49: the annotation
 # toolbar and its text popover are made in code): their outlets and every connection inside them
 # are gone in every language. Nothing else may change.
@@ -57,6 +61,7 @@ for kind in ('TSDocument',):
                 attrs=dict(e.attrib)
                 if kind=='TSDocument' and (id(e) in panel_connections or attrs.get('property') in PANELS): continue
                 if kind=='TSDocument' and (attrs.get('property') in STATISTICS or attrs.get('selector')=='updateStatistics:' or e.tag=='accessibilityConnection'): continue
+                if kind=='TSDocument' and (attrs.get('property') in INDEX_COLOR or attrs.get('selector')=='showIndexColor:'): continue
                 if kind=='TSDocument' and attrs.get('property')=='htmlView': attrs['property']='htmlViewContainer'
                 result.append((e.tag,tuple(sorted(attrs.items()))))
             return sorted(result)
@@ -74,6 +79,8 @@ for kind in ('TSDocument',):
             assert expected==connections(current),path
             assert not [e for e in current.iter('outlet') if e.get('property') in STATISTICS],path
             assert not [e for e in current.iter('outlet') if e.get('property') in PANELS],path
+            assert not [e for e in current.iter('outlet') if e.get('property') in INDEX_COLOR],path
+            assert not [e for e in current.iter('action') if e.get('selector')=='showIndexColor:'],path
             assert not [w for w in current.iter('window') if w.get('identifier')=='TextPanel'],path
             assert not [e for e in current.iter('action') if e.get('selector')=='updateStatistics:'],path
             assert current.find('.//form') is None,path

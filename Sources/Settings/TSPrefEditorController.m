@@ -10,6 +10,7 @@
 - (IBAction)firstParagraphIndentPressed:(id)sender { [self.preferences firstParagraphIndentPressed:sender]; }
 - (IBAction)highlightChanged:(id)sender { [self.preferences highlightChanged:sender]; }
 - (IBAction)highlightFullwidthSymbolsChanged:(id)sender { [self.preferences highlightFullwidthSymbolsChanged:sender]; }
+- (IBAction)indexColorStartChanged:(id)sender { [self.preferences indexColorStartChanged:sender]; }
 - (IBAction)interlineSpacingPressed:(id)sender { [self.preferences interlineSpacingPressed:sender]; }
 - (IBAction)invisibleCharacterChanged:(id)sender { [self.preferences invisibleCharacterChanged:sender]; }
 - (IBAction)lineNumberButtonPressed:(id)sender { [self.preferences lineNumberButtonPressed:sender]; }

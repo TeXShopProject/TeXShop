@@ -648,15 +648,6 @@
  {
   "nib": "TSDocument",
   "change": "extra",
-  "fact": "action NSButtonCell (NSButtonCell in top) showIndexColor: -> Owner",
-  "languages": [
-   "es"
-  ],
-  "reason": "the action sits on the button cell instead of the button; same effect"
- },
- {
-  "nib": "TSDocument",
-  "change": "extra",
   "fact": "action NSMatrix (NSMatrix in top:NSMatrix) changeMouseMode: -> @pdfView",
   "languages": [
    "de",
@@ -902,15 +893,6 @@
   ],
   "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them",
   "count": 3
- },
- {
-  "nib": "TSDocument",
-  "change": "missing",
-  "fact": "action @indexColorSplitBox (NSButton in top:NSMatrix) showIndexColor: -> Owner",
-  "languages": [
-   "es"
-  ],
-  "reason": "the action sits on the button cell instead of the button; same effect"
  },
  {
   "nib": "TSDocument",

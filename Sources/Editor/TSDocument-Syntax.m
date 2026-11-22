@@ -269,7 +269,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
      Thus colorizeText can be called after close but before dealloc. By the time it is
      called, some of the pieces of the document, including the toolbar, have been deallocated.
      
-     This is why the code below does not itself look at the indexColorBox to get its state.
+     This is why the code below takes the index state from indexColorState, not from a window or toolbar control.
      
      */
     

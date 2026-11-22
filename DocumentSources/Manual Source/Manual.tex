@@ -602,6 +602,8 @@ Several source window features  can  also be changed using menu items in the Sou
 
 {\bf Syntax Highlighting} The item {\bf Syntax Highlighting} in the Source menu turns syntax highlighting on or off for the active source window. Documents open with syntax highlighting on; Settings has no switch for it. A hidden setting opens documents without syntax highlighting; see the document ``Comment Lines and Hidden Settings'' in the TeXShop Help menu.
 
+{\bf Highlight Index Entries} The item {\bf Highlight Index Entries} in the Source menu turns highlighting of the arguments of \verb|\index| and \verb|\esindex| on or off for the active source window. They are shown in the Index color of the theme. Documents open as {\bf Highlight Index Entries by Default} in the Editor category of Settings says.
+
 {\bf Check spelling while typing} (Spell Checking category; Edit menu, Spelling and Grammar submenu) When selected, misspelled words are underlined in light red.
 
 {\bf Show Invisible Characters} When selected, invisible characters like spaces, newlines, and tabs are shown.
@@ -640,6 +642,8 @@ in which the hero loses a programming girlfriend because she uses spaces rather 
 {\bf @ as Part of Command Names} When selected, syntax highlighting treats the character @ as part of command names, as \LaTeX\ macro authors do. It is on by default. Before TeXShop 6.00, this was the hidden setting MakeatletterEnabled.
 
 {\bf Highlight expl3 Code by Default} When selected, expl3 code is highlighted when a document is first opened. See \cref{expl3Chapter}. Before TeXShop 6.00, this was the hidden setting expl3SyntaxColoring.
+
+{\bf Highlight Index Entries by Default} When selected, the arguments of \verb|\index| and \verb|\esindex| are highlighted when a document is first opened, and in the Macro Editor and the fields of the Advanced Find panel. Before TeXShop 6.00, this was the hidden setting IndexColorStart.
 
 {\bf Highlight Fullwidth Letters and Symbols} When selected, fullwidth letters, digits and symbols and the minus sign are shown in the Fullwidth colors of the theme, set in the Themes category. When not selected, they are colored like other text. It is on by default.
 
@@ -6798,13 +6802,6 @@ During one update, the code to create the Tags and Labels menus was made more ef
     defaults write TeXShop UseNewTagsAndLabels NO
     defaults write TeXShop CreateLabelList NO
     defaults write TeXShop CreateTagList NO
-\end{verbatim}
-
-\subsubsection{<Settings for Coloring Indices>}
-
-TeXShop has a hidden setting to control the ``ColorIndex'' tool:
-\begin{verbatim}
-   defaults write TeXShop IndexColorStart YES
 \end{verbatim}
 
 \subsubsection{<Setting for Tabs>}

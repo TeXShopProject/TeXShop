@@ -90,6 +90,8 @@
 "group.editor.3.title" = "Syntaxmarkering";
 "catalog.editor.3.0.title" = "@ in opdrachtnamen";
 "catalog.editor.3.1.title" = "expl3-code standaard markeren";
+"catalog.editor.3.3.title" = "Indexitems standaard markeren";
+"catalog.editor.3.3.former" = "Kleurindex";
 "catalog.editor.3.2.title" = "Letters en symbolen in volle breedte markeren";
 "group.editor.4.title" = "Overeenkomende haakjes";
 "catalog.editor.4.0.title" = "Accentueer haakjes";
