@@ -10011,6 +10011,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 - (void) setTextSelectionYellow:(BOOL)value
 {
 	textSelectionYellow = value;
+	_reverseSyncTextView = value ? textView : nil;
 }
 
 

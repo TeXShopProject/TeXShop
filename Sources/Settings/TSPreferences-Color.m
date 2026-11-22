@@ -26,6 +26,7 @@
 #import "globals.h"
 #import "TSColorSupport.h"
 #import "TSThemeAlpha.h"
+#import "TSThemeSystemColor.h"
 #import "TSThemeFileStore.h"
 #import "TSLibraryRepair.h"
 
@@ -1008,7 +1009,8 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 {
     TSThemeFileStore *store = [[TSThemeFileStore alloc] initWithDirectory:[NSURL fileURLWithPath:[ColorPath stringByExpandingTildeInPath] isDirectory:YES]];
     // A theme is what TeXShop keeps as one when it checks its files at launch (TSLibraryThemeCheck: every color red,
-    // green, blue and alpha numbers), with at least one of TeXShop's colors, or nothing but a title. A file of other
+    // green, blue and alpha numbers), with at least one of TeXShop's colors, or nothing but a title (and the switches of
+    // the cursor and the selection, which a theme of a title only has once one of them is changed here). A file of other
     // settings put in a theme's place, or a theme with a color TeXShop cannot read, is not edited or written into.
     NSString *lite = TSLibraryBundledPath(@"Themes/LiteTheme.plist") ?: [store.directory URLByAppendingPathComponent:@"LiteTheme.plist"].path;
     NSData *referenceData = lite != nil ? [NSData dataWithContentsOfFile:(NSString *_Nonnull)lite] : nil;
@@ -1019,7 +1021,7 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
         if (data == nil || !TSLibraryThemeCheck()(data, referenceData)) return NO;
         BOOL entries = NO;
         for (NSString *key in colors) {
-            if ([key isEqual:@"Title"]) continue;
+            if ([key isEqual:@"Title"] || TSThemeIsSystemColorSwitch(key)) continue;
             entries = YES;
             // The check above has made every color red, green, blue and alpha numbers.
             if ([colors[key] isKindOfClass:NSArray.class] && (reference == nil || [reference[key] isKindOfClass:NSArray.class])) return YES;
@@ -1077,7 +1079,8 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 
 - (void)themeListShowError:(NSString *)message { [self showPreferenceNotice:message]; }
 
-// A file imported as a theme is one Settings would edit (themeStore's acceptsColors), with at least one color.
+// A file imported as a theme is one Settings would edit (themeStore's acceptsColors), with at least one color: the
+// title and the switches of the cursor and the selection alone are not one.
 - (BOOL)themeListAcceptsData:(NSData *)data
 {
     NSDictionary *theme = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
@@ -1085,6 +1088,7 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
     BOOL (^accepts)(NSDictionary<NSString *, id> *) = [self themeStore].acceptsColors;
     NSMutableDictionary *colors = [theme mutableCopy];
     [colors removeObjectForKey:@"Title"];
+    [colors removeObjectsForKeys:@[TSThemeInsertionPointUsesSystemColorKey, TSThemeSelectionUsesSystemColorKey]];
     return colors.count > 0 && (accepts == nil || accepts(theme));
 }
 

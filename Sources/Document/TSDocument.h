@@ -786,7 +786,15 @@ enum RootCommand
 - (id) mousemodeMatrix;
 - (void) setCharacterIndex:(NSUInteger)idx;
 - (BOOL) textSelectionYellow;
+// The reverse sync marks the selection of the view in use (textView) with its own color until the next click or key;
+// that view is kept, so that its theme color comes back to it even when the other part of a split is in use by then.
 - (void) setTextSelectionYellow:(BOOL)value;
+@property (weak, readonly) NSTextView *reverseSyncTextView;
+// The color of the selection in the source (the theme's, or the system's: TSColorSupport), set with the theme's colors.
+@property (strong) NSColor *sourceSelectionColor;
+- (void) applySourceSelectionColorToTextView: (NSTextView *)aTextView;
+// Gives the view the reverse sync marked its selection color again.
+- (void) endReverseSyncSelection;
 - (void) saveSourcePosition;
 - (void) savePreviewPosition;
 - (void) savePortableSourcePosition;

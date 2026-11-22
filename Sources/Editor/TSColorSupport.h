@@ -34,6 +34,11 @@
 // A theme color drawn opaque, as the document's source, console and preview draw it;
 // the opacity stored with the color is not used. Without the key, the built-in color.
 - (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode;
+// The cursor and the selection of the source: the system's color while the theme's switch is on (TSThemeSystemColor.h),
+// left dynamic so that each view draws it as its appearance and the system's settings have it; the theme's otherwise,
+// opaque, and without it the built-in one.
+- (NSColor *)insertionPointColorFromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode;
+- (NSColor *)selectionColorFromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode;
 
 // - (NSColor *)colorForKey: (NSString *)theKey  whiledark: (BOOL)mode;
 

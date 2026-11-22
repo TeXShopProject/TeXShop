@@ -50,7 +50,7 @@ static TSAdvancedFindFieldStyle *_Nullable (^TSProvider)(BOOL dark);
 
 - (instancetype)initWithScheme:(nullable TSSyntaxColorScheme *)scheme texOptions:(TSSyntaxTeXOptions *)texOptions font:(nullable NSFont *)font
                      textColor:(nullable NSColor *)textColor backgroundColor:(nullable NSColor *)backgroundColor
-           insertionPointColor:(nullable NSColor *)insertionPointColor
+           insertionPointColor:(nullable NSColor *)insertionPointColor selectionColor:(nullable NSColor *)selectionColor
 {
     if ((self = [super init])) {
         _scheme = scheme;
@@ -59,8 +59,17 @@ static TSAdvancedFindFieldStyle *_Nullable (^TSProvider)(BOOL dark);
         _textColor = textColor;
         _backgroundColor = backgroundColor;
         _insertionPointColor = insertionPointColor;
+        _selectionColor = selectionColor;
     }
     return self;
+}
+
+- (instancetype)initWithScheme:(nullable TSSyntaxColorScheme *)scheme texOptions:(TSSyntaxTeXOptions *)texOptions font:(nullable NSFont *)font
+                     textColor:(nullable NSColor *)textColor backgroundColor:(nullable NSColor *)backgroundColor
+           insertionPointColor:(nullable NSColor *)insertionPointColor
+{
+    return [self initWithScheme:scheme texOptions:texOptions font:font textColor:textColor backgroundColor:backgroundColor
+            insertionPointColor:insertionPointColor selectionColor:nil];
 }
 
 - (TSSyntaxColorScheme *)fieldScheme
