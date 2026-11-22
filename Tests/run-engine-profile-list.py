@@ -26,7 +26,7 @@ PREFERENCES = source_file(R, 'TSPreferences.m')
 # The table of the profiles, as run-engine-profiles.py writes it out independently of the source.
 _table_source = {}
 for node in ast.parse((R / 'Tests/run-engine-profiles.py').read_text()).body:
-    if isinstance(node, ast.Assign) and node.targets[0].id in ('PDF', 'SIMP', 'PT', 'DVIPDF', 'TABLE', 'JAPANESE'):
+    if isinstance(node, ast.Assign) and node.targets[0].id in ('PDF', 'LUA', 'SIMP', 'PT', 'DVIPDF', 'TABLE', 'JAPANESE'):
         exec(compile(ast.Module([node], []), 'run-engine-profiles.py', 'exec'), _table_source)
 TABLE, JAPANESE = _table_source['TABLE'], _table_source['JAPANESE']
 MENU = [1, 2, 3, 4, 5, 6, 7, 8]
