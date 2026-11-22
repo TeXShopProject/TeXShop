@@ -280,7 +280,7 @@
 "catalog.typesetting.4.0.title" = "plain TeX";
 "catalog.typesetting.4.1.title" = "LaTeX";
 "catalog.typesetting.4.2.title" = "shell-escape 시 확인";
-"catalog.typesetting.4.2.note" = "위의 plain TeX 또는 LaTeX 명령에 --shell-escape가 들어 있으면 조판 전에 확인합니다.";
+"catalog.typesetting.4.2.note" = "위의 plain TeX 또는 LaTeX 명령에 -shell-escape가 들어 있으면 조판 전에 확인합니다.";
 "group.typesetting.5.title" = "DVI 경유";
 "catalog.typesetting.5.0.title" = "plain TeX";
 "catalog.typesetting.5.1.title" = "LaTeX";

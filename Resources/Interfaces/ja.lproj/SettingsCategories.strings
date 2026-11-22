@@ -280,7 +280,7 @@
 "catalog.typesetting.4.0.title" = "plain TeX";
 "catalog.typesetting.4.1.title" = "LaTeX";
 "catalog.typesetting.4.2.title" = "shell-escapeのとき確認";
-"catalog.typesetting.4.2.note" = "上のplain TeX・LaTeXのコマンドに --shell-escapeが含まれているとき、タイプセットの前に確認します。";
+"catalog.typesetting.4.2.note" = "上のplain TeX・LaTeXのコマンドに -shell-escapeが含まれているとき、タイプセットの前に確認します。";
 "group.typesetting.5.title" = "DVI経由";
 "catalog.typesetting.5.0.title" = "plain TeX";
 "catalog.typesetting.5.1.title" = "LaTeX";

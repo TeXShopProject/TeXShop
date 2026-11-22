@@ -280,7 +280,7 @@
 "catalog.typesetting.4.0.title" = "plain TeX";
 "catalog.typesetting.4.1.title" = "LaTeX";
 "catalog.typesetting.4.2.title" = "Bevestigen bij shell-escape";
-"catalog.typesetting.4.2.note" = "Vraagt vóór het zetten om bevestiging als de opdracht voor plain TeX of LaTeX hierboven --shell-escape bevat.";
+"catalog.typesetting.4.2.note" = "Vraagt vóór het zetten om bevestiging als de opdracht voor plain TeX of LaTeX hierboven -shell-escape bevat.";
 "group.typesetting.5.title" = "Via DVI";
 "catalog.typesetting.5.0.title" = "plain TeX";
 "catalog.typesetting.5.1.title" = "LaTeX";

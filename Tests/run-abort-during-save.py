@@ -10,7 +10,7 @@ Save panel for a new document, a save that waits for another one). Checked: an A
 from starting; the save of an earlier Typeset, aborted or not, does not start the later one, and the later one starts
 once; the end of an earlier job (its termination handler clears doAbort) does not undo an Abort; an aborted
 Typeset › Alternate is not carried over to the next Typeset; a save that fails or is cancelled starts nothing and
-does not keep the next Typeset from starting; the answer to the confirmation of --shell-escape (the one wait between
+does not keep the next Typeset from starting; the answer to the confirmation of -shell-escape (the one wait between
 the save and the launch) goes on only with the Typeset asked for last, and not after an Abort. Nothing is shown on screen. --mutations removes each
 part and the test must then fail."""
 from pathlib import Path
@@ -26,7 +26,7 @@ do_alternate = method(jobs, '- (void)doAlternateTypeset: sender')
 abort_method = method(jobs, '- (void)abort:(id)sender')
 save = jobs[jobs.index('- (void) saveFinished: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo'):]
 save = save[save.index('    @try {\n') + len('    @try {\n'):save.index('\twhichEngineLocal = (useTempEngine ? tempEngine : whichEngine);')]
-# The confirmation of --shell-escape, the one wait between the save and the launch, and its answer.
+# The confirmation of -shell-escape, the one wait between the save and the launch, and its answer.
 shell = jobs[jobs.index('\tif ((! warningGiven) && ((whichEngineLocal == TexEngine) || (whichEngineLocal == LatexEngine))'):]
 shell = shell[:shell.index('\t[self completeSaveFinished];\n') + len('\t[self completeSaveFinished];\n')]
 sheet = method(jobs, '-(void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo')
@@ -39,6 +39,7 @@ PROGRAM = r'''
 #import <Cocoa/Cocoa.h>
 #import <objc/message.h>
 #import "TestAppKitIsolation.h"
+#import "TSTeXOptions.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr, "FAIL %d: %s\n", __LINE__, #__VA_ARGS__); exit(1); } } while (0)
 enum { TexEngine = 1, LatexEngine = 2, BibtexEngine = 3, IndexEngine = 4, MetapostEngine = 5, UserEngine = 6 };
 static NSMutableArray<NSString *> *events;
@@ -250,7 +251,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         [p doJob:LatexEngine withError:NO runContinuously:NO];
         Finish(p, 0);
         REQUIRE(Started() == 1 && [events containsObject:@"started Typeset"]);
-        // The confirmation of --shell-escape: the answer starts the Typeset, but not after an Abort, and not one that a
+        // The confirmation of -shell-escape: the answer starts the Typeset, but not after an Abort, and not one that a
         // later Typeset replaced.
         sheets = [NSMutableArray array];
         [SUD setBool:YES forKey:WarnForShellEscapeKey];
