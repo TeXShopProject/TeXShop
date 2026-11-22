@@ -82,6 +82,45 @@ static inline NSArray<NSDictionary *> *TSTeXCommandArguments(NSString *command)
     return arguments;
 }
 
+// The words of text[range] as a shell reads them (latexmk hands its commands to a shell, and so does env -S): blanks
+// split words; quotes, which may start or end inside a word, group blanks into it and are dropped; a backslash outside
+// single quotes takes the next character as it is. Each word has a value, the range it takes in text (quotes included)
+// and, for each character of the value, its place in text.
+static inline NSArray<NSDictionary *> *TSTeXShellWords(NSString *text, NSRange range)
+{
+    NSMutableArray<NSDictionary *> *words = [NSMutableArray array];
+    __block NSMutableString *value = nil;
+    __block NSMutableArray<NSNumber *> *offsets = nil;
+    __block NSUInteger start = 0, last = 0;
+    unichar quote = 0;
+    NSCharacterSet *blank = NSCharacterSet.whitespaceAndNewlineCharacterSet;
+    void (^finish)(void) = ^{
+        if (value != nil)
+            [words addObject:@{TSTeXArgumentValue: [value copy], TSTeXArgumentRange: [NSValue valueWithRange:NSMakeRange(start, last + 1 - start)],
+                               TSTeXArgumentOffsets: [offsets copy]}];
+    };
+    for (NSUInteger i = range.location; i < NSMaxRange(range); i++) {
+        unichar c = [text characterAtIndex:i];
+        if (quote == 0 && [blank characterIsMember:c]) {
+            finish();
+            value = nil;
+            continue;
+        }
+        if (value == nil) { value = [NSMutableString string]; offsets = [NSMutableArray array]; start = i; }
+        last = i;
+        if (quote == 0 && (c == '"' || c == '\'')) { quote = c; continue; }
+        if (quote != 0 && c == quote) { quote = 0; continue; }
+        if (c == '\\' && quote != '\'' && i + 1 < NSMaxRange(range)) {
+            unichar next = [text characterAtIndex:i + 1];
+            if (quote == 0 || next == '"' || next == '\\' || next == '$' || next == '`') { i++; last = i; c = next; }
+        }
+        [value appendFormat:@"%C", c];
+        [offsets addObject:@(i)];
+    }
+    finish();
+    return words;
+}
+
 // The program the command runs: its first word, past env with its options (and the values of
 // -u, -P, -L, -U, -C, -S) and NAME=value settings; the words of env -S are read as the command.
 static inline NSString *TSTeXCommandProgram(NSString *command)
@@ -100,8 +139,10 @@ static inline NSString *TSTeXCommandProgram(NSString *command)
             if ([word isEqualToString:@"-S"] || [word isEqualToString:@"--split-string"] || [word hasPrefix:@"--split-string="]) {
                 NSString *string = [word hasPrefix:@"--split-string="] ? [word substringFromIndex:15] : (words.count ? words.firstObject : @"");
                 if (![word hasPrefix:@"--split-string="] && words.count) [words removeObjectAtIndex:0];
-                NSArray *inner = [string componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
-                [words replaceObjectsInRange:NSMakeRange(0, 0) withObjectsFromArray:[inner filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"length > 0"]]];
+                NSMutableArray<NSString *> *inner = [NSMutableArray array];
+                for (NSDictionary *w in TSTeXShellWords(string, NSMakeRange(0, string.length)))
+                    [inner addObject:w[TSTeXArgumentValue]];
+                [words replaceObjectsInRange:NSMakeRange(0, 0) withObjectsFromArray:inner];
                 continue;
             }
             if ([withValue containsObject:word]) { if (words.count) [words removeObjectAtIndex:0]; continue; }
@@ -125,19 +166,18 @@ static inline NSString *TSTeXOptionDashes(NSString *command)
 }
 
 // The arguments to look at for TeX options: those of the command, and for latexmk also the words of
-// the commands it is told to run (-e "$name=q/…/", -pdflatex="…" and the like), split at blanks with
-// their quotes dropped. Each has a value, a range in the command and the offsets of its characters.
+// the TeX commands it is told to run (-e "$pdflatex=q/…/", -pdflatex="…" and the like), read as a shell reads them. Each has a value, a range in the command and the offsets of its characters.
 static inline NSArray<NSDictionary *> *TSTeXOptionArguments(NSString *command)
 {
     NSArray<NSDictionary *> *arguments = TSTeXCommandArguments(command);
     if (![TSTeXCommandProgram(command).lowercaseString hasPrefix:@"latexmk"])
         return arguments;
-    static NSRegularExpression *perl, *option, *word;
+    static NSRegularExpression *perl, *option;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        perl = [NSRegularExpression regularExpressionWithPattern:@"^\\s*\\$\\w+\\s*=\\s*q/(.*)/\\s*;?\\s*$" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
-        option = [NSRegularExpression regularExpressionWithPattern:@"^-{1,2}(?:pdf|lua|xe|dvi)?latex=(.*)$" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
-        word = [NSRegularExpression regularExpressionWithPattern:@"\"[^\"]*\"|'[^']*'|[^\\s]+" options:0 error:NULL];
+        // Only the settings that name a TeX command ($latex, $pdflatex, $lualatex, $xelatex, $dvilualatex, $hilatex), not $out_dir and other settings.
+        perl = [NSRegularExpression regularExpressionWithPattern:@"^\\s*\\$(?:pdf|lua|xe|dvilua|hi)?latex\\s*=\\s*q/(.*)/\\s*;?\\s*$" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
+        option = [NSRegularExpression regularExpressionWithPattern:@"^-{1,2}(?:pdf|lua|xe|dvilua|hi)?latex=(.*)$" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
     });
     NSMutableArray<NSDictionary *> *all = [arguments mutableCopy];
     for (NSUInteger i = 1; i < arguments.count; i++) {
@@ -150,15 +190,14 @@ static inline NSArray<NSDictionary *> *TSTeXOptionArguments(NSString *command)
         if (!match)
             continue;
         NSArray<NSNumber *> *offsets = arguments[i][TSTeXArgumentOffsets];
-        NSRange inner = [match rangeAtIndex:1];
-        for (NSTextCheckingResult *w in [word matchesInString:value options:0 range:inner]) {
-            NSString *text = [value substringWithRange:w.range];
-            unichar first = [text characterAtIndex:0];
-            BOOL quoted = text.length >= 2 && (first == '"' || first == '\'') && [text characterAtIndex:text.length - 1] == first;
-            NSRange valueRange = quoted ? NSMakeRange(w.range.location + 1, w.range.length - 2) : w.range;
-            NSUInteger from = offsets[w.range.location].unsignedIntegerValue, to = offsets[NSMaxRange(w.range) - 1].unsignedIntegerValue + 1;
-            [all addObject:@{TSTeXArgumentValue: [value substringWithRange:valueRange], TSTeXArgumentRange: [NSValue valueWithRange:NSMakeRange(from, to - from)],
-                             TSTeXArgumentOffsets: [offsets subarrayWithRange:valueRange]}];
+        for (NSDictionary *w in TSTeXShellWords(value, [match rangeAtIndex:1])) {
+            NSRange within = [w[TSTeXArgumentRange] rangeValue];
+            NSUInteger from = offsets[within.location].unsignedIntegerValue, to = offsets[NSMaxRange(within) - 1].unsignedIntegerValue + 1;
+            NSMutableArray<NSNumber *> *places = [NSMutableArray array];
+            for (NSNumber *n in w[TSTeXArgumentOffsets])
+                [places addObject:offsets[n.unsignedIntegerValue]];
+            [all addObject:@{TSTeXArgumentValue: w[TSTeXArgumentValue], TSTeXArgumentRange: [NSValue valueWithRange:NSMakeRange(from, to - from)],
+                             TSTeXArgumentOffsets: places}];
         }
     }
     return all;
