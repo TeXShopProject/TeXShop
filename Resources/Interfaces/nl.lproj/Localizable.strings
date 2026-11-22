@@ -104,7 +104,7 @@
 "New Document" = "Nieuw document";
 "Link Popups" = "Beweeg pop-ups";
 "Split Window with Link" = "Splits venster met link";
-"Syntax Color expl3 Code" = "Syntaxis Kleur expl3-code";
+"Highlight expl3 Code" = "expl3-code markeren";
 "PDF File Has No Annotations" = "PDF-bestand bevat geen annotaties";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */

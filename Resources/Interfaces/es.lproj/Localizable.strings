@@ -106,7 +106,7 @@
 "New Document" = "Nuevo documento";
 "Link Popups" = "Desplegar enlaces";
 "Split Window with Link" = "Dividir ventana con enlace";
-"Syntax Color expl3 Code" = "Sintaxis de código expl3";
+"Highlight expl3 Code" = "Resaltar el código expl3";
 "PDF File Has No Annotations" = "El archivo PDF no tiene anotaciones";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */

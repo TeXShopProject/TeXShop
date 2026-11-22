@@ -107,7 +107,7 @@
 "Link Popups" = "링크 팝업";
 "Split Window with Link" = "윈도우를 분할하여 링크 대상 표시";
 "Source" = "소스";
-"Syntax Color expl3 Code" = "expl3 구문 강조";
+"Highlight expl3 Code" = "expl3 코드 하이라이트";
 "PDF File Has No Annotations" = "PDF 주석 없음";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */

@@ -842,14 +842,28 @@ static NSMenuItem *TSAlternateTypesetItem(NSMenu *menu)
     return nil;
 }
 
-// What the info button of the Alternate Engine says: where the command is, its key as the menu
-// has it now, and what it does.
+// Two sentences of one paragraph: a space between them, none after a full-width full stop.
+static NSString *TSAlternateEngineInfoSentences(NSArray<NSString *> *sentences)
+{
+    NSMutableString *paragraph = [NSMutableString string];
+    for (NSString *sentence in sentences) {
+        if (sentence.length == 0) continue;
+        if (paragraph.length > 0 && ![paragraph hasSuffix:@"。"] && ![paragraph hasSuffix:@"．"]) [paragraph appendString:@" "];
+        [paragraph appendString:sentence];
+    }
+    return paragraph;
+}
+
+// What the info button of the Alternate Engine says, as a heading and paragraphs: what the engine is for and what the
+// command does; where the command is and its key as the menu has it now; what takes precedence.
 NSArray<NSString *> *TSAlternateEngineInfoLines(NSMenu *mainMenu)
 {
     NSMenuItem *item = TSAlternateTypesetItem(mainMenu);
     NSMutableArray<NSString *> *lines = [NSMutableArray arrayWithObject:item.title.length ? item.title : NSLocalizedString(@"Typeset with Alternate Engine", @"")];
+    NSString *purpose = [NSBundle.mainBundle localizedStringForKey:@"catalog.typesetting.0.3.note" value:@"" table:@"SettingsCategories"];
+    [lines addObject:TSAlternateEngineInfoSentences(@[purpose, NSLocalizedString(@"Typesets once with this engine instead of the one chosen in the toolbar.", @"")])];
     if (item != nil) {
-        NSString *menuTitle = item.menu.title;
+        NSString *menuTitle = item.menu.title, *where = nil;
         NSMenuItem *base = nil;
         if (item.isAlternate)
             for (NSInteger i = [item.menu indexOfItem:item] - 1; i >= 0 && base == nil; i--)
@@ -861,20 +875,21 @@ NSArray<NSString *> *TSAlternateEngineInfoLines(NSMenu *mainMenu)
             if (held & NSEventModifierFlagOption) [keys appendString:@"⌥"];
             if (held & NSEventModifierFlagShift) [keys appendString:@"⇧"];
             if (held & NSEventModifierFlagCommand) [keys appendString:@"⌘"];
-            [lines addObject:[NSString stringWithFormat:NSLocalizedString(@"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@.", @""), menuTitle, base.title, keys]];
+            where = [NSString stringWithFormat:NSLocalizedString(@"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@.", @""), menuTitle, base.title, keys];
         } else {
-            [lines addObject:[NSString stringWithFormat:NSLocalizedString(@"This item is in the %@ menu.", @""), menuTitle]];
+            where = [NSString stringWithFormat:NSLocalizedString(@"This item is in the %@ menu.", @""), menuTitle];
         }
-        [lines addObject:item.keyEquivalent.length
+        NSString *key = item.keyEquivalent.length
             ? [NSString stringWithFormat:NSLocalizedString(@"Key: %@", @"The shortcut of a menu item"), TSShortcutDisplayKey(item.keyEquivalent, item.keyEquivalentModifierMask)]
-            : NSLocalizedString(@"No key is assigned.", @"")];
+            : NSLocalizedString(@"No key is assigned.", @"");
+        [lines addObject:TSAlternateEngineInfoSentences(@[where, key])];
     }
-    [lines addObject:NSLocalizedString(@"Typesets once with this engine instead of the one chosen in the toolbar.", @"")];
     [lines addObject:NSLocalizedString(@"A % !TEX TS-program line at the top of the document takes precedence.", @"")];
     return lines;
 }
 
-// The first line is the heading; each following line is a paragraph.
+// The first line is the heading; each following line is a paragraph. The popover takes the size of the content with
+// its margins.
 - (NSViewController *)alternateEngineInfoController
 {
     NSArray<NSString *> *lines = TSAlternateEngineInfoLines(NSApp.mainMenu);
@@ -891,6 +906,7 @@ NSArray<NSString *> *TSAlternateEngineInfoLines(NSMenu *mainMenu)
     }
     NSViewController *controller = [NSViewController new];
     controller.view = stack;
+    controller.preferredContentSize = stack.fittingSize;
     return controller;
 }
 
@@ -1433,15 +1449,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
     [SUD setBool:[(NSButton*)sender state] forKey:TabIndentKey];
 }
 
-
-/*" This method is connected to the 'syntax coloring' checkbox.
-"*/
-- (IBAction)syntaxColorPressed:sender
-{
-
-    [SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:SyntaxColoringEnabledKey];
-    TSPostPreferenceNotifications([NSSet setWithArray:@[SyntaxColoringEnabledKey]], self);
-}
 
 
 

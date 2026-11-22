@@ -3,7 +3,7 @@
 <meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
 <title>Ajustes ocultos</title>
 <meta content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU" name="copyright"/>
-<meta content="ajustes ocultos; colores para sintaxis; color de fondo; x11; matrices; .aux; sincronización; marcas; transparencia" name="description"/>
+<meta content="ajustes ocultos; resaltado de sintaxis; color de fondo; x11; matrices; .aux; sincronización; marcas; transparencia" name="description"/>
 <link href="../sty/screen.css" media="all" rel="stylesheet"/>
 </head>
 <body>
@@ -19,7 +19,11 @@
 <dl>
 <dd>defaults write TeXShop ConTeXtTags YES
 		</dd></dl>
-<p>Los colores de las ventanas de código, del pdf previsto y de la consola (los colores para sintaxis, los colores de fondo y del texto, el del punto de inserción y el fondo de la ventana con el pdf), así como la transparencia de estas ventanas, se configuran ahora en la categoría «Temas» de los Ajustes.</p>
+<p>Los colores de las ventanas de código, del pdf previsto y de la consola (los colores del resaltado de sintaxis, los colores de fondo y del texto, el del punto de inserción y el fondo de la ventana con el pdf), así como la transparencia de estas ventanas, se configuran ahora en la categoría «Temas» de los Ajustes.</p>
+<p>Los documentos se abren con el resaltado de sintaxis activado. Para abrirlos sin él, escribe la orden siguiente. La opción «Resaltado de sintaxis» del menú «Código» lo activa entonces en un documento. Con este ajuste, los campos del panel de búsqueda avanzada y el contenido del editor de macros tampoco se colorean.</p>
+<dl>
+<dd>defaults write TeXShop SyntaxColoringEnabled NO
+		</dd></dl>
 <p>Ocasionalmente, al componer páginas, los archivos .aux, .log, y otros que TeX crea automáticamente, se corrompen y hay que borrarlos. TeXShop tiene un menú
 «Borrar archivos aux», y un botón en la Consola con la misma función. Al usar cualquiera de los dos, TeXShop pone en la papelera todos los ficheros con el mismo nombre (descartada la extensión), y situados en la misma carpeta, que el archivo con el código fuente, siempre que su extensión sea .aux, .bcf, .blg, .brf, .css, .ent, .fdb_latexmk, .fff, .fls, .gaux, .glo, .glog, .gtex, .idv, .idx, .ilg, .ind, .lg, .loa, .lof, .log, .lot, .mlf, .mtc, .out, .pdfsync, .run.xml, .synctex, .synctex.gz, .synctex(busy), .toc, .ttt, .wrm, .xref, .4ct o .4tc.
 Se pueden añadir más extensiones a esta lista, una por una. Por ejemplo, para añadir los archivos .dvi a la lista, haz

@@ -38,7 +38,6 @@
     [self updateDocumentFontTextField];
     [_tabIndentButton setState:[defaults boolForKey:TabIndentKey]];
     [_syntaxColorLineButton setState:[defaults boolForKey:SyntaxColorEntryLineKey]];
-    [_syntaxColorButton setState:[defaults boolForKey:SyntaxColoringEnabledKey]];
     [_selectActivateButton setState:[defaults boolForKey:AcceptFirstMouseKey]];
     [_parensMatchButton setState:[defaults boolForKey:ParensMatchingEnabledKey]];
     [_editorAddBracketsButton setState:[defaults boolForKey:EditorCanAddBracketsKey]];

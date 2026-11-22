@@ -8666,7 +8666,7 @@ if (! useFullSplitWindow) {
     
     sourceMenu = [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Source", @"Source")] submenu];
     if (sourceMenu) {
-        explMenu = [sourceMenu itemWithTitle:NSLocalizedString(@"Syntax Color expl3 Code", @"Syntax Color expl3 Code")];
+        explMenu = [sourceMenu itemWithTitle:NSLocalizedString(@"Highlight expl3 Code", @"The title of Source > Highlight expl3 Code")];
         if (explMenu)
             [explMenu setState: self.useExplColor];
     }

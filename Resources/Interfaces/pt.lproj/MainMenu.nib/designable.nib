@@ -785,13 +785,13 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Exibir destaque de sintaxe" tag="14" id="yRI-4m-uqv" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="Destaque de sintaxe" tag="14" id="yRI-4m-uqv" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="5xV-Ni-r0A"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Coloração de sintaxe do código expl3" id="EWq-BT-fuR" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="Destacar o código expl3" id="EWq-BT-fuR" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="84s-Zh-IP4"/>

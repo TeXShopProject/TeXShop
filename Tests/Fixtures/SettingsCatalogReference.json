@@ -317,43 +317,14 @@
    "summary": "ソースのウインドウの表示と入力を設定します。",
    "groups": [
     {
-     "title": "表示",
+     "title": "書類を開いたときの状態",
      "rows": [
-      {
-       "kind": "font",
-       "title": "フォント",
-       "value": "Helvetica 12",
-       "src": [
-        "16"
-       ]
-      },
-      {
-       "kind": "switch",
-       "title": "ソースのカラー表示",
-       "on": true,
-       "src": [
-        "621#1"
-       ],
-       "note": "新しい書類の初期値です。開いている書類では、「ソース」メニューで切り替えます。"
-      },
       {
        "kind": "switch",
        "title": "行番号",
        "on": true,
        "src": [
         "621#9"
-       ],
-       "note": "新しい書類の初期値です。開いている書類では、「ソース」メニューで切り替えます。"
-      },
-      {
-       "kind": "popup",
-       "title": "行番号の文字サイズ",
-       "choices": [
-        "小",
-        "大"
-       ],
-       "src": [
-        "ksw-cZ-1eN"
        ]
       },
       {
@@ -374,6 +345,45 @@
        "selected": 1,
        "src": [
         "X2i-f0-3Hu"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "不可視文字を表示",
+       "src": [
+        "1221"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "カーソルをブロック状表示",
+       "src": [
+        "rmh-fo-iC3"
+       ],
+       "id": "blockCursor"
+      }
+     ]
+    },
+    {
+     "title": "表示",
+     "rows": [
+      {
+       "kind": "font",
+       "title": "フォント",
+       "value": "Helvetica 12",
+       "src": [
+        "16"
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "行番号の文字サイズ",
+       "choices": [
+        "小",
+        "大"
+       ],
+       "src": [
+        "ksw-cZ-1eN"
        ]
       },
       {
@@ -409,23 +419,21 @@
       },
       {
        "kind": "integer",
-       "title": "段落1行目のインデント量",
+       "title": "行のインデント量",
        "value": "0",
        "unit": "pt",
        "src": [
         "6Ic-Ft-d2h"
-       ],
-       "note": "改行から次の改行までを1つの段落として、その最初の行を右に下げて表示します。"
+       ]
       },
       {
        "kind": "integer",
-       "title": "段落2行目以降のインデント量",
+       "title": "折り返した行のインデント量",
        "value": "0",
        "unit": "pt",
        "src": [
         "4dC-45-e52"
-       ],
-       "note": "「折り返し表示」で折り返した段落の、2行目以降を右に下げて表示します。"
+       ]
       },
       {
        "kind": "integer",
@@ -434,8 +442,7 @@
        "unit": "pt",
        "src": [
         "rgC-4Z-JXZ"
-       ],
-       "note": "行と行のあいだに空ける間隔です。折り返した行のあいだにも入ります。"
+       ]
       }
      ]
     },
@@ -467,7 +474,7 @@
      ]
     },
     {
-     "title": "構文の色分け",
+     "title": "シンタックスハイライト",
      "rows": [
       {
        "kind": "switch",
@@ -478,11 +485,10 @@
       },
       {
        "kind": "switch",
-       "title": "expl3を既定でハイライト",
+       "title": "expl3コードを既定でハイライト",
        "src": [
         "621#3"
-       ],
-       "note": "新しい書類の初期値です。開いている書類では、「ソース」メニューで切り替えます。"
+       ]
       },
       {
        "kind": "switch",
@@ -564,13 +570,6 @@
      "title": "不可視文字",
      "rows": [
       {
-       "kind": "switch",
-       "title": "ファイルを開いた直後から表示",
-       "src": [
-        "1221"
-       ]
-      },
-      {
        "kind": "switchpopup",
        "title": "半角スペース",
        "choices": [
@@ -627,14 +626,6 @@
     {
      "title": "カーソル",
      "rows": [
-      {
-       "kind": "switch",
-       "title": "カーソルをブロック状表示",
-       "src": [
-        "rmh-fo-iC3"
-       ],
-       "id": "blockCursor"
-      },
       {
        "kind": "color",
        "title": "ブロックカーソルの色",
@@ -1360,7 +1351,7 @@
    "summary": "PDFのプレビューの表示と操作を設定します。",
    "groups": [
     {
-     "title": "表示",
+     "title": "書類を開いたときの状態",
      "rows": [
       {
        "kind": "popup",
@@ -1413,50 +1404,12 @@
       },
       {
        "kind": "switch",
-       "title": "スクロールでページを送らない",
-       "note": "「単一ページ」「見開きページ」で、マウスのホイールやトラックパッドでのスクロールが、ページの上端・下端で止まります。",
-       "src": [
-        "preview-scroll-page-turn-button"
-       ]
-      },
-      {
-       "kind": "switch",
-       "title": "左右の矢印キーでいつもページを送る",
-       "note": "拡大してページが横にはみ出しているときも、← → キーで横にスクロールせずにページを送ります。",
-       "src": [
-        "preview-arrow-keys-page-button"
-       ]
-      },
-      {
-       "kind": "switch",
        "title": "リンク先をポップアップ",
-       "note": "これから開く書類の初期値です。開いている書類では、「プレビュー」メニューで切り替えます。",
        "on": true,
        "src": [
         "preview-link-popups-button"
        ]
       },
-      {
-       "kind": "switch",
-       "title": "リンク先のポップアップにページ番号を表示",
-       "on": true,
-       "indent": 1,
-       "src": [
-        "preview-link-popup-page-label-button"
-       ]
-      },
-      {
-       "kind": "switch",
-       "title": "フルスクリーンにするとき、倍率・ページレイアウト・分割状態を保つ",
-       "src": [
-        "preview-full-screen-keeps-display-button"
-       ]
-      }
-     ]
-    },
-    {
-     "title": "見開きの配置",
-     "rows": [
       {
        "kind": "popup",
        "title": "ページの方向",
@@ -1477,7 +1430,43 @@
       },
       {
        "kind": "description",
-       "title": "これから開く文書に適用します。マジックコメントと、PDF内の表示方向が優先されます。"
+       "title": "「ページの方向」と「先頭ページを表紙として単独表示」は、マジックコメントが優先されます。「ページの方向」は、PDF内の表示方向も優先されます。"
+      }
+     ]
+    },
+    {
+     "title": "表示と操作",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "スクロールでページを送らない",
+       "note": "「単一ページ」「見開きページ」で、マウスのホイールやトラックパッドでのスクロールが、ページの上端・下端で止まります。",
+       "src": [
+        "preview-scroll-page-turn-button"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "左右の矢印キーでいつもページを送る",
+       "note": "拡大してページが横にはみ出しているときも、← → キーで横にスクロールせずにページを送ります。",
+       "src": [
+        "preview-arrow-keys-page-button"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "リンク先のポップアップにページ番号を表示",
+       "on": true,
+       "src": [
+        "preview-link-popup-page-label-button"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "フルスクリーンにするとき、倍率・ページレイアウト・分割状態を保つ",
+       "src": [
+        "preview-full-screen-keeps-display-button"
+       ]
       }
      ]
     },
@@ -1638,7 +1627,6 @@
        "kind": "path",
        "title": "代替エンジン",
        "value": "pdflatexmk",
-       "note": "「代替エンジンでタイプセット」で使うエンジンです。デフォルト: pdflatexmk",
        "src": [
         "5ec-XS-ht9"
        ]

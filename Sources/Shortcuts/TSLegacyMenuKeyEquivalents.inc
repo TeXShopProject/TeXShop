@@ -101,7 +101,8 @@ static NSString *TSLegacyComparableTitle(NSString *title)
 static NSString *const TSLegacyCompletionItem = @"TSShortcut.registerForCommandCompletion:.0";
 // Titles that no longer exist but still name an item: the Typeset menu's
 // typesetting methods before 5.60 named them by what they do (Direct PDF,
-// Via DVI), and the former Command Completion submenu, in every language.
+// Via DVI), the former Command Completion submenu, and the two syntax
+// highlighting items of the Source menu before 6.00, in every language.
 static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
 {
     static NSDictionary<NSString *, NSString *> *identifiers;
@@ -111,6 +112,9 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
         for (NSString *former in @[@"Pdftex", @"pdfTeX"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.100";
         for (NSString *former in @[@"TeX and DVI", @"TeX und DVI", @"TeX y DVI", @"TeX et DVI", @"TeX e DVI", @"TeX en DVI", @"TeX + DVI", @"Tex și  DVI", @"TeX 和 DVI"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.101";
         for (NSString *former in @[@"Command Completion", @"Vervollständigung", @"Compleción de comandos ", @"Compleción de comandos", @"Commande de complètement", @"Completamento comandi", @"コマンド補完", @"명령 완성", @"Aanvullen", @"Completion", @"Completar", @"Completare", @"命令补全"]) map[TSLegacyComparableTitle(former)] = TSLegacyCompletionItem;
+        // Show Syntax Color and Syntax Color expl3 Code before 6.00, in every language.
+        for (NSString *former in @[@"Afficher la coloration syntaxique", @"Colorazione sintassi", @"Exibir destaque de sintaxe", @"Mostrar resaltado de sintaxis", @"Show Syntax Color", @"Syntaxhervorhebung anzeigen", @"Toggle Syntax Color", @"显示语法高亮", @"구문색상 끄기/켜기"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.toggleSyntaxColor:.14";
+        for (NSString *former in @[@"Coloration syntaxique du code expl3", @"Colorazione sintassi codice expl3", @"Coloração de sintaxe do código expl3", @"Código exp da cor da sintaxe", @"Sintaxis de código expl3", @"Sintaxă Cod expl culoare", @"Syntax Color expl3 Code", @"Syntaxis Kleur expl3-code", @"expl3 구문 강조", @"expl3-Syntax farblich hervorheben"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.toggleExplColor:.0";
         identifiers = map;
     });
     return identifiers[TSLegacyComparableTitle(title)];

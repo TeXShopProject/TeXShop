@@ -107,7 +107,7 @@
 "New Document" = "新規書類";
 "Link Popups" = "リンク先をポップアップ";
 "Split Window with Link" = "ウインドウを分割してリンク先を表示";
-"Syntax Color expl3 Code" = "expl3コードをハイライト";
+"Highlight expl3 Code" = "expl3コードをハイライト";
 "PDF File Has No Annotations" = "PDFファイルに注釈が含まれません";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */

@@ -23,7 +23,7 @@ window, or this initial click also sets the text insertion point.</p>
 <p>Users in Japan and Korea will use other conversion settings, also provided.</p>
 <p>To set up typesetting for Japanese, choose LuaLaTeX (Japanese), upLaTeX + dvipdfmx or pLaTeX + dvipdfmx in Engine Profile in Typesetting and confirm with Apply.</p>
 <h2>Invisible character settings</h2>
-<p> The item "Show Invisible Characters" in the Source menu makes certain invisible characters visible: the space character, a special wider space used in Japan, the newline character, and the tab character. The choice of which characters to show and how to represent them is made in the "Show Invisible Characters" section of the Settings window. Most users want invisible characters to be shown only on rare occasions when puzzling things happen, but if you want them to be shown by default, select the "On by Default" item in this section of the Settings window.
+<p> The item "Show Invisible Characters" in the Source menu makes certain invisible characters visible: the space character, a special wider space used in Japan, the newline character, and the tab character. The choice of which characters to show and how to represent them is made in the Invisible group of the Editor category of the Settings window. Most users want invisible characters to be shown only on rare occasions when puzzling things happen, but if you want them to be shown when a document opens, turn on "Show Invisible Characters" under When a Document Opens in the Editor category.
 </p>
 <p> The color of invisible character representatives is orange, but this color can be changed by a hidden setting. See the "Hidden Settings" section of Advanced Help.
 </p>
@@ -49,7 +49,7 @@ for details.
 <h2>Background, Text and Cursor Colors</h2>
 <p>Choose Themes to set the background, text and cursor colors and the opacity of the source, preview and console windows. Opacity uses a slider and a numeric field from 0% to 100%. Enter a whole percentage and press Return or leave the field to apply it. The arrow buttons beside the field raise or lower it by one percent. Values outside this range are adjusted to the nearest limit. Invalid text, including decimal values, restores the previous value when you finish editing; typed and pasted input follow the same rule.</p>
 <h2>Adding to the list of file types</h2>
-<p>There is a hidden setting to add file extensions to the list of files that TeXShop recognizes as source files which can be typeset and syntax colored.  This is useful when you want to use syntax coloring when editing TeX files with non-standard extensions. For example,</p>
+<p>There is a hidden setting to add file extensions to the list of files that TeXShop recognizes as source files which can be typeset and syntax colored.  This is useful when you want to use syntax highlighting when editing TeX files with non-standard extensions. For example,</p>
 <dl>
 <dd>defaults write TeXShop OtherTeXExtensions -array-add "lbx"
 		</dd></dl>

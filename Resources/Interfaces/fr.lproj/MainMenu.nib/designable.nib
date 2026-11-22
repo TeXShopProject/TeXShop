@@ -783,13 +783,13 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Afficher la coloration syntaxique" tag="14" id="zgM-JW-IYX" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="Surlignage syntaxique" tag="14" id="zgM-JW-IYX" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="PaI-Ew-gZR"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Coloration syntaxique du code expl3" id="vom-am-WyE" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="Surligner le code expl3" id="vom-am-WyE" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="4zI-zl-A8P"/>
