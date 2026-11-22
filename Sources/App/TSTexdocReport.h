@@ -44,10 +44,14 @@ static inline NSString *TSTexdocRun(NSString *tool, NSArray<NSString *> *argumen
 }
 
 // The TeX installation of the folder of the TeX engines (its SELFAUTOPARENT, such as
-// /Applications/TeXLive/2026), and the folders that texdoc searches: the roots of its TEXDOCS path
-// as kpsewhich of that installation writes them, without the "!!" and "//" marks of kpathsea, the
-// existing ones (all of them when none exists). Both are nil when kpsewhich does not tell.
-static inline void TSTexdocSearch(NSString *binPath, NSDictionary *environment, NSString **installation, NSArray<NSString *> **folders)
+// /Applications/TeXLive/2026), and the folders that texdoc is set to search: the roots of its
+// TEXDOCS path as kpsewhich of that installation writes them, without the trailing "//", each with
+// whether it exists and whether kpathsea looks in it only through its ls-R index (marked "!!").
+// Both are nil when kpsewhich does not tell.
+static NSString * const TSTexdocFolderPath = @"path";
+static NSString * const TSTexdocFolderIndexOnly = @"indexOnly";
+static NSString * const TSTexdocFolderExists = @"exists";
+static inline void TSTexdocSearch(NSString *binPath, NSDictionary *environment, NSString **installation, NSArray<NSDictionary *> **folders)
 {
     NSString *kpsewhich = [binPath stringByAppendingPathComponent:@"kpsewhich"];
     NSString *root = TSTexdocRun(kpsewhich, @[@"-var-value", @"SELFAUTOPARENT"], environment);
@@ -57,25 +61,43 @@ static inline void TSTexdocSearch(NSString *binPath, NSDictionary *environment, 
         *folders = nil;
         return;
     }
-    NSMutableArray<NSString *> *all = [NSMutableArray array], *existing = [NSMutableArray array];
+    NSMutableArray<NSDictionary *> *list = [NSMutableArray array];
+    NSMutableSet<NSString *> *seen = [NSMutableSet set];
     for (NSString *entry in [roots componentsSeparatedByString:@":"]) {
-        NSString *folder = [entry hasPrefix:@"!!"] ? [entry substringFromIndex:2] : entry;
+        BOOL indexOnly = [entry hasPrefix:@"!!"];
+        NSString *folder = indexOnly ? [entry substringFromIndex:2] : entry;
         while (folder.length > 1 && [folder hasSuffix:@"/"])
             folder = [folder substringToIndex:folder.length - 1];
-        if (folder.length == 0 || [all containsObject:folder])
+        if (folder.length == 0 || [seen containsObject:folder])
             continue;
-        [all addObject:folder];
+        [seen addObject:folder];
         BOOL directory = NO;
-        if ([[NSFileManager defaultManager] fileExistsAtPath:folder isDirectory:&directory] && directory)
-            [existing addObject:folder];
+        BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:folder isDirectory:&directory] && directory;
+        [list addObject:@{TSTexdocFolderPath: folder, TSTexdocFolderIndexOnly: @(indexOnly), TSTexdocFolderExists: @(exists)}];
     }
-    *folders = existing.count ? existing : all;
+    *folders = list;
+}
+
+// The folders of TSTexdocSearch as lines: the existing ones, or all when none exists; a folder
+// searched only through its ls-R index says so.
+static inline NSArray<NSString *> *TSTexdocFolderLines(NSArray<NSDictionary *> *folders, BOOL existing)
+{
+    NSMutableArray<NSString *> *lines = [NSMutableArray array];
+    for (NSDictionary *folder in folders) {
+        if (existing && ![folder[TSTexdocFolderExists] boolValue])
+            continue;
+        NSString *line = folder[TSTexdocFolderPath];
+        if ([folder[TSTexdocFolderIndexOnly] boolValue])
+            line = [NSString stringWithFormat:NSLocalizedString(@"%@ (only the files listed in its ls-R index)", @"Help > Show Help for Package: a folder texdoc searches only through its ls-R index"), line];
+        [lines addObject:line];
+    }
+    return lines;
 }
 
 // The message and the details of the alert for a texdoc that ended with status, or nil when it
 // showed the documentation. output is what texdoc wrote (its own hints, such as texdoc.org).
 static inline NSArray<NSString *> *TSTexdocFailureTexts(int status, BOOL exited, NSString *package, NSString *texdoc,
-                                                       NSString *output, NSString *installation, NSArray<NSString *> *folders)
+                                                       NSString *output, NSString *installation, NSArray<NSDictionary *> *folders)
 {
     if (exited && status == 0)
         return nil;
@@ -84,9 +106,13 @@ static inline NSArray<NSString *> *TSTexdocFailureTexts(int status, BOOL exited,
     NSString *message;
     if (exited && status == TSTexdocNothingFound) {
         message = [NSString stringWithFormat:NSLocalizedString(@"No documentation was found for “%@”.", @"Help > Show Help for Package: texdoc found nothing"), package];
-        if (installation.length && folders.count) {
-            NSString *searched = [NSString stringWithFormat:NSLocalizedString(@"texdoc of the TeX installation in %@ looked in:", @"Help > Show Help for Package: followed by the folders texdoc searched"), installation];
-            [details addObject:[[@[searched] arrayByAddingObjectsFromArray:folders] componentsJoinedByString:@"\n"]];
+        NSArray<NSString *> *existing = TSTexdocFolderLines(folders, YES);
+        if (installation.length && existing.count) {
+            NSString *set = [NSString stringWithFormat:NSLocalizedString(@"texdoc of the TeX installation in %@ is set to search these folders:", @"Help > Show Help for Package: followed by the folders texdoc is set to search"), installation];
+            [details addObject:[[@[set] arrayByAddingObjectsFromArray:existing] componentsJoinedByString:@"\n"]];
+        } else if (installation.length && folders.count) {
+            NSString *none = [NSString stringWithFormat:NSLocalizedString(@"None of the folders that texdoc of the TeX installation in %@ is set to search exists:", @"Help > Show Help for Package: followed by the folders texdoc is set to search, none of which exists"), installation];
+            [details addObject:[[@[none] arrayByAddingObjectsFromArray:TSTexdocFolderLines(folders, NO)] componentsJoinedByString:@"\n"]];
         } else
             [details addObject:[NSString stringWithFormat:NSLocalizedString(@"The folders that %@ searched could not be determined.", @"Help > Show Help for Package: kpsewhich did not tell where texdoc looked; %@ is the path of texdoc"), texdoc]];
         [details addObject:[NSString stringWithFormat:NSLocalizedString(@"Another TeX installation on this Mac may have it. The installation that TeXShop uses is set in %@.", @"Help > Show Help for Package: %@ is the path of the setting"), TSTexdocEnginePathSetting()]];

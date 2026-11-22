@@ -301,7 +301,7 @@
 		int status = finished.terminationStatus;
 		BOOL exited = finished.terminationReason == NSTaskTerminationReasonExit;
 		NSString *installation = nil;
-		NSArray<NSString *> *folders = nil;
+		NSArray<NSDictionary *> *folders = nil;
 		if (exited && status == TSTexdocNothingFound)
 			TSTexdocSearch(binPath, environment, &installation, &folders);
 		NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];

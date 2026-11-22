@@ -463,9 +463,6 @@
 /* The Settings window, as the first step of a path to a setting */
 "Settings" = "設定";
 
-/* Help > Show Help for Package: followed by the folders texdoc searched */
-"texdoc of the TeX installation in %@ looked in:" = "「%@」のTeXのtexdocが探したフォルダ：";
-
 /* Help > Show Help for Package: %@ is the path of the setting */
 "Another TeX installation on this Mac may have it. The installation that TeXShop uses is set in %@." = "このMacのほかのTeXにはあるかもしれません。TeXShopが使うTeXは「%@」で選べます。";
 
@@ -489,3 +486,12 @@
 
 /* Help > Show Help for Package: the path of texdoc and the path of the setting */
 "%@ is not executable. The folder is set in %@." = "「%1$@」は実行可能ではありません。フォルダは「%2$@」で設定します。";
+
+/* Help > Show Help for Package: followed by the folders texdoc is set to search */
+"texdoc of the TeX installation in %@ is set to search these folders:" = "「%@」のTeXのtexdocは、次のフォルダを探すように設定されています：";
+
+/* Help > Show Help for Package: followed by the folders texdoc is set to search, none of which exists */
+"None of the folders that texdoc of the TeX installation in %@ is set to search exists:" = "「%@」のTeXのtexdocが探すように設定されているフォルダは、どれもありません：";
+
+/* Help > Show Help for Package: a folder texdoc searches only through its ls-R index */
+"%@ (only the files listed in its ls-R index)" = "「%@」（ls-Rの索引にあるファイルだけ）";

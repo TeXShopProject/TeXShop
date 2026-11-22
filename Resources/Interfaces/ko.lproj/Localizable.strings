@@ -455,9 +455,6 @@
 /* The Settings window, as the first step of a path to a setting */
 "Settings" = "설정";
 
-/* Help > Show Help for Package: followed by the folders texdoc searched */
-"texdoc of the TeX installation in %@ looked in:" = "%@에 있는 TeX의 texdoc이 찾아본 폴더:";
-
 /* Help > Show Help for Package: %@ is the path of the setting */
 "Another TeX installation on this Mac may have it. The installation that TeXShop uses is set in %@." = "이 Mac의 다른 TeX에는 있을 수 있습니다. TeXShop이 사용하는 TeX는 %@에서 정합니다.";
 
@@ -481,3 +478,12 @@
 
 /* Help > Show Help for Package: the path of texdoc and the path of the setting */
 "%@ is not executable. The folder is set in %@." = "%1$@은(는) 실행할 수 없는 파일입니다. 폴더는 %2$@에서 정합니다.";
+
+/* Help > Show Help for Package: followed by the folders texdoc is set to search */
+"texdoc of the TeX installation in %@ is set to search these folders:" = "%@에 있는 TeX의 texdoc은 다음 폴더를 찾도록 설정되어 있습니다:";
+
+/* Help > Show Help for Package: followed by the folders texdoc is set to search, none of which exists */
+"None of the folders that texdoc of the TeX installation in %@ is set to search exists:" = "%@에 있는 TeX의 texdoc이 찾도록 설정된 폴더가 하나도 없습니다:";
+
+/* Help > Show Help for Package: a folder texdoc searches only through its ls-R index */
+"%@ (only the files listed in its ls-R index)" = "%@ (ls-R 색인에 있는 파일만)";
