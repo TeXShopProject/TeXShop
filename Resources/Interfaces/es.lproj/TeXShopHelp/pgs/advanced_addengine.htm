@@ -37,14 +37,14 @@
 
 <p>La carpeta ~/Library/TeXShop/Engines contiene una subcarpeta llamada &laquo;Inactive&raquo; con muchos otros guiones de motores, que muestran con ejemplos c&oacute;mo se escriben. Cuando se llama a un motor, la variable &laquo;$1&raquo; contiene el nombre del archivo fuente activo en ese momento, sin su carpeta, y el motor se ejecuta en la carpeta que contiene ese archivo. Por ejemplo, para /Users/me/paper/main.tex, &laquo;$1&raquo; es main.tex y el motor se ejecuta en /Users/me/paper. Por eso, un gui&oacute;n que cambie a otra carpeta debe guardar antes la ruta completa, por ejemplo como &laquo;$PWD/$1&raquo;. La extensi&oacute;n de este archivo no tiene por qu&eacute; ser &laquo;.tex&raquo;. El gui&oacute;n puede tener muchos pasos intermedios, crear diversos archivos auxiliares y procesarlos con otros programas de l&iacute;nea de comandos. TeXShop supone que al final se crea un archivo PDF con el mismo nombre que el archivo fuente y la extensi&oacute;n &laquo;.pdf&raquo;. En ese caso, TeXShop abre autom&aacute;ticamente el PDF cuando termina el motor y se desplaza al mismo lugar que en el PDF anterior a la composici&oacute;n. Si no se crea ning&uacute;n PDF, TeXShop omite este paso; entonces es el gui&oacute;n del motor el que debe abrir el resultado en un programa adecuado, si se desea.</p>
 
-<p>Los guiones de motores se pueden escribir en cualquier lenguaje conveniente. La mayor&iacute;a usa csh o tcsh, pero tambi&eacute;n funcionan guiones escritos en perl y otros lenguajes.</p>
+<p>Los guiones de motores se pueden escribir en cualquier lenguaje conveniente. La mayor&iacute;a usa tcsh o zsh, pero tambi&eacute;n funcionan guiones escritos en perl y otros lenguajes.</p>
 
 <p>Algunos motores siguen esta estrategia: componen un archivo de entrada, crean as&iacute; un archivo auxiliar con el mismo nombre y otra extensi&oacute;n, y procesan ese archivo auxiliar con otro programa. El motor sage de la carpeta &laquo;Inactive&raquo; es un ejemplo: el archivo auxiliar tiene la extensi&oacute;n &laquo;.sage&raquo; y debe procesarlo el sistema de c&aacute;lculo simb&oacute;lico Sage. En estos casos es &uacute;til el siguiente fragmento del motor sage:</p>
 <dl>
-<dd> set sagename = "${filename:r}.sage"
+<dd> sagename=${filename/%tex/sagetex.sage}
 </dl>
 
-<p>Aqu&iacute; {filename:r} quita la extensi&oacute;n del nombre del archivo, y &laquo;.sage&raquo; a&ntilde;ade la extensi&oacute;n sage.</p>
+<p>Aqu&iacute; ${filename/%tex/sagetex.sage} sustituye el &laquo;tex&raquo; final del nombre del archivo por &laquo;sagetex.sage&raquo;, el nombre del archivo que escribe sagetex.</p>
 
 </div>
 <div id="header_background"></div>

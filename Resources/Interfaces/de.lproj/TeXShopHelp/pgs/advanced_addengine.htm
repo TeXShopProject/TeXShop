@@ -37,14 +37,14 @@
 
 <p>Der Ordner ~/Library/TeXShop/Engines enth&auml;lt einen Unterordner &bdquo;Inactive&ldquo; mit vielen weiteren Engine-Skripten. Sie zeigen an Beispielen, wie Engine-Dateien geschrieben werden. Beim Aufruf einer Engine enth&auml;lt die Variable &bdquo;$1&ldquo; den Namen der Quelldatei, die beim Aufruf aktiv war, ohne ihren Ordner, und die Engine startet in dem Ordner, der diese Datei enth&auml;lt. F&uuml;r /Users/me/paper/main.tex ist &bdquo;$1&ldquo; zum Beispiel main.tex, und die Engine l&auml;uft in /Users/me/paper. Wechselt ein Skript in einen anderen Ordner, muss es sich deshalb vorher den vollst&auml;ndigen Pfad merken, etwa als &bdquo;$PWD/$1&ldquo;. Diese Datei muss nicht die Endung &bdquo;.tex&ldquo; haben. Das Skript kann viele Zwischenschritte enthalten, verschiedene Hilfsdateien erzeugen und sie mit anderen Kommandozeilenprogrammen verarbeiten. TeXShop geht davon aus, dass am Ende eine PDF-Datei mit dem Namen der Quelldatei und der Endung &bdquo;.pdf&ldquo; entsteht. Dann &ouml;ffnet TeXShop nach dem Lauf der Engine automatisch die PDF-Datei und rollt an dieselbe Stelle wie in der PDF-Datei vor dem Setzen. Entsteht keine PDF-Datei, l&auml;sst TeXShop diesen Schritt aus. In diesem Fall muss das Skript das Ergebnis bei Bedarf selbst in einem passenden Programm &ouml;ffnen.</p>
 
-<p>Engine-Skripte k&ouml;nnen in jeder geeigneten Sprache geschrieben werden. Die meisten Engines verwenden csh oder tcsh, aber auch Skripte in perl und anderen Sprachen funktionieren.</p>
+<p>Engine-Skripte k&ouml;nnen in jeder geeigneten Sprache geschrieben werden. Die meisten Engines verwenden tcsh oder zsh, aber auch Skripte in perl und anderen Sprachen funktionieren.</p>
 
 <p>Manche Engines gehen so vor: Sie setzen eine Eingabedatei, erzeugen dabei eine Hilfsdatei mit gleichem Namen und anderer Endung und verarbeiten diese Hilfsdatei mit einem anderen Programm. Die Engine &bdquo;sage&ldquo; im Ordner &bdquo;Inactive&ldquo; ist ein Beispiel; ihre Hilfsdatei hat die Endung &bdquo;.sage&ldquo; und wird vom Computeralgebrasystem Sage verarbeitet. In solchen F&auml;llen ist die folgende Zeile aus der Engine &bdquo;sage&ldquo; n&uuml;tzlich:</p>
 <dl>
-<dd> set sagename = "${filename:r}.sage"
+<dd> sagename=${filename/%tex/sagetex.sage}
 </dl>
 
-<p>Dabei entfernt {filename:r} die Endung vom Dateinamen, und &bdquo;.sage&ldquo; f&uuml;gt die Endung &bdquo;.sage&ldquo; an.</p>
+<p>Dabei ersetzt ${filename/%tex/sagetex.sage} das &bdquo;tex&ldquo; am Ende des Dateinamens durch &bdquo;sagetex.sage&ldquo;, den Namen der Datei, die sagetex schreibt.</p>
 
 </div>
 <div id="header_background"></div>
