@@ -10,19 +10,16 @@
 
 <BODY>
 	<div id="content_border">
-Los comandos pdftex y pdflates, tal como aparecen por defecto, son ahora &laquo;pdftex -shell-escape&raquo; y &laquo;pdflatex -shell-escape&raquo;. La parte &laquo;shell-escape&raquo; de este texto indica a pdftex que puede llamar a otros programas cuando est&aacute; componiendo p&aacute;ginas. Esto es &uacute;til porque, as&iacute;, cuando pdftex encuentra una ilustraci&oacute;n en un formato que no entiende, puede llamar autom&aacute;ticamente a un programa de conversiones gr&aacute;ficas, para que convierta el gr&aacute;fico a otro formato. Por ejemplo, la plantilla LaTeX que aparece por defecto hace que los archivos eps se conviertan en pdf, y los archivos tif en png.
+<P>
+En TeX Live, desde 2011, pdftex, pdflatex y otros programas de TeX pueden llamar durante la composici&oacute;n a una breve lista de programas de confianza. Por ejemplo, pueden llamar a Ghostscript para convertir archivos eps en archivos pdf.
 </P>
 
 <P>
-Esto crea una dificultad que puede preocupar a algunos usuarios. El &laquo;pdflatex -shell-escape&raquo; pemite a pdf ejecutar CUALQUIER programa. As&iacute;, un estudiante disgustado te puede enviar por email un fichero tex, y, al compilarlo, puedes descubrir que ha borrado algunos archivos de tu derectorio.
+Es posible configurar pdftex, pdflatex y otros programas para que llamen a cualquier comando de la shell durante la composici&oacute;n. En ese caso hay que a&ntilde;adir la opci&oacute;n &laquo;-shell-escape&raquo; a la orden de llamada, ya sea en la categor&iacute;a &laquo;Composici&oacute;n&raquo; de los Ajustes de TeXShop o en determinados scripts de motor. Sin embargo, esta opci&oacute;n es un grave riesgo de seguridad, porque permite ejecutar cualquier programa de la shell, por ejemplo uno breve que borre todos los archivos de tu carpeta de inicio. Si la opci&oacute;n est&aacute; activada, un sitio web malintencionado podr&iacute;a ofrecer un archivo fuente de TeX que borre esos archivos al componerlo.
 </P>
 
 <P>
-Creo que el peligro es muy peque&ntilde;o. Un fichero tex que haga da&ntilde;o ha tenido que ser creado deliberadamente, y que alguien env&iacute;e un &laquo;virus&raquo; por medio de c&oacute;digo tex parece algo esot&eacute;rico. No obstante, hay dos maneras con las que te puedes proteger. La primera y m&aacute;s f&aacute;cil es quitar los &laquo;-shell-escape&raquo; que aparecen en los comandos pdftex y pdflatex (categor&iacute;a &laquo;Composición&raquo; de los Ajustes), y convertir todos los archivos gr&aacute;ficos a mano.</P>
-
-<P>
-TeXShop proporciona otra prtecci&oacute;n diferente. En la categor&iacute;a &laquo;Composición&raquo; de los Ajustes, hay un &iacute;tem llamado &laquo;Avisos shell-escape&raquo;. Salvo que lo modifiques, est&aacute; sin marcar. Si estamos usando &laquo;-shell-escape&raquo; y tenemos los avisos marcados, la primera vez que TeXShop compila una archivo tex en una sesi&oacute;n, aparece un di&aacute;logo que te permite desactivar la comunicaci&oacute;n entre pdftex y otros programas durante toda la compilaci&oacute;n del archivo.
-As&iacute;, puedes seguir compilado tus propios archivos permitiendo &laquo;-shell-escape&raquo;, pero no permitirlo en los que hayas recibido por email.
+Aunque recomendamos no activar la opci&oacute;n, puede que algunos paquetes poco habituales la necesiten. Para este caso, TeXShop ofrece un mecanismo de protecci&oacute;n: en el grupo &laquo;PDF directo&raquo; de la categor&iacute;a &laquo;Composici&oacute;n&raquo; de los Ajustes hay un ajuste llamado &laquo;Confirmar shell-escape&raquo;, que viene desactivado. Si est&aacute; activado y shell-escape est&aacute; en uso, la primera vez que se compone un archivo en una sesi&oacute;n de TeXShop aparece un di&aacute;logo de aviso que permite desactivar shell-escape para ese archivo. El di&aacute;logo no vuelve a aparecer para ese archivo durante la sesi&oacute;n. As&iacute;, puedes componer tus propios archivos con shell-escape y los que recibas por correo electr&oacute;nico sin &eacute;l.
 </P>
 </div>
 <div id="header_background"></div>
