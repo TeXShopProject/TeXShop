@@ -214,7 +214,9 @@ static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flag
         BOOL splitSideBySide = preview ? document.pdfKitWindow.pdfKitSplitView.isVertical : document.isSplitSideBySide;
         BOOL sideBySide = TSSplitToggleShowsSideBySide(held, split, splitSideBySide);
         // In a split window a click unsplits, so the tool tip and the spoken name say so.
-        NSString *tip = TSSplitToggleToolTip(preview, split);
+        PDFDisplayMode mode = preview ? document.pdfKitWindow.myPDFKitView.displayMode : kPDFDisplaySinglePage;
+        BOOL continuousPages = mode == kPDFDisplaySinglePageContinuous || mode == kPDFDisplayTwoUpContinuous;
+        NSString *tip = TSSplitToggleToolTip(preview, split, continuousPages);
         if (![item.toolTip isEqualToString: tip])
             item.toolTip = tip;
         if (sideBySide == [objc_getAssociatedObject(item, &TSSplitToggleSideBySideKey) boolValue]) {
@@ -626,6 +628,8 @@ else
                 if (choice.action) choice.enabled = [self validatePreviewLayoutItem:choice];
         }
     }
+    // The tool tip of the Split Preview button depends on the display format.
+    TSSplitToggleItemsFollowSplit();
 }
 
 // Zoom to Content and Zoom to Content Width (TSContentZoom.h), for the active part of the preview.

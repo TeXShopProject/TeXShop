@@ -100,6 +100,7 @@ tiToolTipSplit				= "Geteilten Quelltext umschalten. Option-Taste-Klicken teilt 
 tiLabelSplitKIT				= "Geteilte Vorschau";
 tiPaletteLabelSplitKIT		= "Geteilte Vorschau";
 tiToolTipSplitKIT			= "Geteilte Vorschau umschalten. Option-Taste-Klicken teilt vertikal.";
+"tiToolTipSplitKITContinuous" = "Geteilte Vorschau umschalten. Option-Taste-Klicken teilt vertikal, Umschalttaste-Klicken setzt die Seiten unten fort.";
 
 tiLabelMacros				= "Makros";
 tiPaletteLabelMacros			= "Makros";
