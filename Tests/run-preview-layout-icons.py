@@ -25,6 +25,9 @@ MUTATIONS = {
     # The arrow points up (#65 audit).
     'arrow-up': ('@"M11,14.6V19.2M9.3,17.5L11,19.2L12.7,17.5"', '@"M11,14.6V19.2M9.3,16.3L11,14.6L12.7,16.3"'),
     # A carriage return is not a separator (#65 audit).
+    # The menu items show their images also on macOS 27, where AppKit usually hides them.
+    'menu-images-hidden-on-27': ('if (@available(macOS 27.0, *)) choice.preferredImageVisibility = NSMenuItemImageVisibilityVisible;', ''),
+    'menu-without-images': ('            choice.image = TSPreviewLayoutImage(tag);\n', ''),
     'cr-not-separator': ('@" ,\\n\\r\\t\\f"', '@" ,\\n\\t"'),
     # Command letters read together: a close followed at once by a move is lost (#65 audit).
     'commands-read-together': ('        unichar next = [data characterAtIndex:scanner.scanLocation];\n        if ([commands characterIsMember:next]) {\n            command = next;\n            scanner.scanLocation += 1;',
@@ -156,6 +159,17 @@ int main(int argc, char **argv) { @autoreleasepool {
     const unsigned char *ar = arrow.bytes; NSUInteger missing = 0;
     for (NSUInteger i = 0; i < arrow.length; i++) if (ar[i] && !i4[i]) missing++;
     check(count(arrow) > 30 && missing == 0, [NSString stringWithFormat:@"Double MultiPage has the arrow pointing down (%lu of %lu missing)", (unsigned long)missing, (unsigned long)count(arrow)]);
+    // The Page Layout menu shows the icon of each display format, also on macOS 27 and later.
+    NSMenuToolbarItem *item = TSPreviewLayoutItem(nil, TSPreviewLayoutToolbarID);
+    NSArray<NSMenuItem *> *choices = item.menu.itemArray;
+    check(choices.count == 4, @"the Page Layout menu has the four display formats");
+    for (NSMenuItem *choice in choices) {
+        check(choice.image && [inkOf(choice.image) isEqualToData:ink[choice.tag]],
+            [NSString stringWithFormat:@"menu item %ld shows the icon of its display format", (long)choice.tag]);
+        if (@available(macOS 27.0, *))
+            check(choice.preferredImageVisibility == NSMenuItemImageVisibilityVisible,
+                [NSString stringWithFormat:@"menu item %ld keeps its icon visible on macOS 27", (long)choice.tag]);
+    }
     printf("PASS: %lu checks of the display format icons\n", (unsigned long)checks);
     return 0;
 }}
