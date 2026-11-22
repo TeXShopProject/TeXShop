@@ -12,6 +12,7 @@ from pathlib import Path
 import os
 import re
 import stat
+import html.parser
 import subprocess
 import sys
 import tempfile
@@ -60,18 +61,40 @@ def blocks(text):
     return (version.group(0) if version else None), (block.group(0) if block else None)
 
 
+class Tags(html.parser.HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.tags = []
+
+    def handle_starttag(self, tag, attrs):
+        self.tags.append((tag, attrs))
+
+
 def check_help_page():
-    """Help.html of HTML Commands no longer points to the removed Help > TeXShop Demos movies or
-    embeds a video, and is not signed as Richard Koch's page."""
-    page = (root / 'Resources/TeXShop/HTML/Help.html').read_text(encoding='utf-8')
-    for word in ('TeXShop Demos', '<video', '<iframe', 'Getting Started.mp4', 'University of Oregon'):
-        if word in page:
-            return 'Help.html still contains ' + word
-    if '% !TEX TS-program = html' not in page:
-        return 'Help.html must still be typeset with html.engine'
-    for link in re.findall(r'(?i)href="([^":]+)"', page):
-        if not (root / 'Resources/TeXShop/HTML' / link).exists():
-            return 'Help.html links to a missing file: ' + link
+    """Help.html of HTML Commands, and the copy in HTML/Inactive/InitialVersion that TeXShop also
+    gives users, no longer point to the removed Help > TeXShop Demos movies or embed a video, are not
+    signed as Richard Koch's page, link only to files beside them, and show img with real
+    attributes (alt text, no misspelled ones a browser drops)."""
+    for folder in ('Resources/TeXShop/HTML', 'Resources/TeXShop/HTML/Inactive/InitialVersion'):
+        name = folder + '/Help.html'
+        page = (root / name).read_text(encoding='utf-8')
+        for word in ('TeXShop Demos', '<video', '<iframe', 'Getting Started.mp4', 'University of Oregon'):
+            if word in page:
+                return name + ' still contains ' + word
+        if '% !TEX TS-program = html' not in page:
+            return name + ' must still be typeset with html.engine'
+        for link in re.findall(r'(?i)(?:href|src)="([^":]+)"', page):
+            if not (root / folder / link).exists():
+                return name + ' links to a missing file: ' + link
+        parser = Tags()
+        parser.feed(page)
+        images = [dict(attrs) for tag, attrs in parser.tags if tag == 'img']
+        if not images:
+            return name + ' must show how to insert an image'
+        for image in images:
+            known = {'src', 'alt', 'width', 'height'}
+            if not image.get('alt') or set(image) - known:
+                return name + ': img needs alt text and only real attributes: ' + repr(image)
     return None
 
 
