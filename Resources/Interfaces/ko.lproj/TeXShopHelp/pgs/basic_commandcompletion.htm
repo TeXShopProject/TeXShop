@@ -3,83 +3,67 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Command Completion</title>
+<title>명령어 완성</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="command completion; escape key; labels and citation keys">
+<meta name="description" content="명령어 완성; Escape 키; 호출 키; 마크; 다음 마크로 이동; 레이블과 인용 키">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
-<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
-<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
-<li><a href="basic_spelling.htm">Checking Spelling</a></li>
-<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
-<li><a href="basic_commandcompletion.htm" class="current">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
-<li><a href="basic_macros.htm">Macros</a></li>
-<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
-<li><a href="basic_graphics.htm">Including Graphics</a></li>
-<li><a href="basic_printing.htm">Printing</a></li>
-<li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
-<li><a href="basic_websites.htm">Useful Web Sites</a></li>
-<li><a href="basic_license.htm">License</a></li>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Command Completion</h1>
+<h1>명령어 완성</h1>
 
-		<P>
-		The source editor supports command completion. Type the first few letters of a word or command and
-		hit the escape key. The rest of the command will be entered. Hitting escape again will
-		cycle through all possible completions, from the bottom of the Completion file toward the top;
-		shift-escape goes through them in the opposite order.</p>
-		
-		<p>
-		The key which triggers command completion can be changed from "escape" to "tab" with "&#54840;&#52636; &#53412;" in the
-		&#53412;&#48372;&#46300; category of TeXShop Settings. The source panel of &#54200;&#51665; &#8250; &#49892;&#54744;... uses the same key as the source window. </p>
+<p>명령이나 환경의 처음 몇 글자를 입력하고 Escape 키를 누르면, TeXShop이 Completion 파일에 따라 나머지를 완성합니다. Escape 키를 다시 누르면 같은 글자로 시작하는 다른 후보가 파일의 아래쪽에서 위쪽 순서로 차례로 나타나며, Shift-Escape는 반대 방향으로 이동합니다. 후보 중에는 입력한 텍스트 그대로인 것도 있습니다. 예를 들어 <code>\begin{th</code>를 입력하고 Escape 키를 누르면 <code>\begin{theorem}</code> 등의 환경이 제시됩니다.</p>
 
-<P>
-		TeXShop stores these completions in a Completion file, which can be edited
-		within the program.  To add a word to the dictionary, select the word and choose "&#47749;&#47161;&#50612; &#50756;&#49457; &#47785;&#47197;&#50640; &#52628;&#44032;" in the &#49548;&#49828; menu. 		To edit the file, open Settings, select &#53412;&#48372;&#46300;, and press "&#47749;&#47161;&#50612; &#50756;&#49457; &#54028;&#51068; &#54200;&#51665;&#8230;". Notice that completions can be
-		more complicated than just a single word;  special commands are available to place the cursor in a convenient spot after completing the command. Examine the Completion file for details. </p>
-		
-<P>		Command completion can deal with complicated commands with multiple parameters.  For example, type "\newcom" and hit escape several times to reveal versions of this
-		command with two, three, or four arguments. Select the command with four arguments. Notice that the cursor is placed on a 
-		centered dot --- that is, a mark --- where the first argument will go. The mark is selected, so when you start typing,
-		you'll replace the mark with desired text. When that entry is complete, choose &#45796;&#51020; &#47560;&#53356;&#47196; &#51060;&#46041; in &#54200;&#51665; &#8250; &#47560;&#53356;. This command has a keyboard shortcut, so after practice it can be selected without going back to
-		the menu. The cursor will skip to the second mark and select it. Typing immediately replaces the second mark with
-		desired text there. Continue until all four arguments of the command are filled in.</p>
-		
-<p> Since moving from mark to mark is often required, TeXShop supports additional keyboard shortcuts beyond those listed in &#54200;&#51665; &#8250; &#47560;&#53356;. When the escape key is used to trigger command completion, option-escape will move to the next mark and control-escape will move to the previous mark. When the tab key triggers command completion, option-tab moves to the next mark and control-tab moves to the previous mark. If you use a third party utility with other uses for these shortcuts, turn off "Option &#46608;&#45716; Control&#44284; &#54840;&#52636; &#53412;&#47196; &#45796;&#51020;&#183;&#51060;&#51204; &#47560;&#53356;&#47196; &#51060;&#46041;" in the &#53412;&#48372;&#46300; category of TeXShop Settings.</p>
-		
-<P> 		The current extensive  Completion file  was written by Herbert Schulz, who added various "Mark" commands to TeXShop. Schulz wrote
-		an extended document describing this facility. That document is available in ~/Library/TeXShop/CommandCompletion. </p>
-<p> If the Escape key is pressed but there are no completions for the given source in the
-Completion file, then TeXShop reverts to an alternate completion method provided by the
-Apple Cocoa environment. A list of dictionary phrases appears in a popup window and the
-user can select one of them. The phrases at the top of this window are taken from surrounding
-text in the source and thus often the intended completion.
+<p>완성은 단어를 끝맺는 데 그치지 않습니다. <code>\begin{theorem}</code>의 완성은 <code>\end{theorem}</code> 행까지 쓰고, 입력할 곳에 마크(•)를 넣습니다. 첫 번째 마크가 선택되어 있으므로 입력하면 마크가 바뀝니다. Escape 키를 여러 번 누르면 인수가 더 많은 같은 명령이 나오는 경우가 많습니다. <code>\newc</code>로 <code>\newcommand</code>를 완성할 때가 그렇습니다. 완성할 텍스트가 백슬래시로 시작하지 않아도 됩니다. 행의 처음이나 공백 다음에서 <code>sec</code>는 <code>\sec</code>와 같은 결과를 냅니다.</p>
 
+<p>Completion 파일에 해당하는 항목이 없으면 Escape 키는 대신 macOS의 단어 완성을 표시합니다.</p>
 
+<h2>설정</h2>
 
-		
+<p>설정 › 키보드의 “호출 키”에서 완성에 사용할 키로 Escape와 Tab 중 하나를 선택합니다. 편집 › 실험...의 소스 패널도 소스 윈도우와 같은 키를 사용합니다.</p>
 
-<h3><a name="labels"></a>&#47112;&#51060;&#48660;&#44284; &#51064;&#50857; &#53412; &#50756;&#49457;</h3>
-<p>&#54200;&#51665; &#8250; &#47112;&#51060;&#48660; &#46608;&#45716; &#51064;&#50857; &#53412; &#50756;&#49457; (F5) completes a label or a citation key from a list. Choose it right after \ref{, \pageref{, \eqref{ or \autoref{, or after the first letters of a label typed there, and the list shows the labels defined with \label in the file. After \cite{ and similar commands, the list shows citation keys from BibDesk when "BibDesk&#51032; &#51064;&#50857; &#53412;&#46020; &#54980;&#48372;&#47196; &#48372;&#50668; &#51452;&#44592;" under &#47112;&#51060;&#48660;&#44284; &#51064;&#50857; &#53412; &#50756;&#49457; in the &#53412;&#48372;&#46300; category of TeXShop Settings is on. Elsewhere, it shows the word completions of macOS. On many keyboards, hold down the fn key (the Globe key) while pressing F5.</p>
+<p>Completion 파일에 단어를 추가하려면 단어를 선택하고 소스 › 명령어 완성 목록에 추가를 선택합니다. 파일을 편집하려면 설정 › 키보드에서 “명령어 완성 파일 편집…”을 클릭합니다. 새 완성을 쓰는 방법은 이미 있는 완성을 살펴보는 것이 가장 좋은 공부입니다. ~/Library/TeXShop/CommandCompletion 폴더에도 자세한 설명 문서가 있습니다.</p>
 
-<h3><a name="marks"></a>Marks</h3>
-<p>A mark (&#8226;) is a place to come back to; a mark with a note (&#8226;&#8249;note&#8250;) also says what belongs there. Command completions, macros and key bindings can contain marks, and you can insert them yourself with &#54200;&#51665; &#8250; &#47560;&#53356; &#8250; &#47560;&#53356; &#49341;&#51077; (&#8984;8) and &#47700;&#47784; &#51080;&#45716; &#47560;&#53356; &#49341;&#51077; (&#8963;&#8984;8). &#47700;&#47784; &#51080;&#45716; &#47560;&#53356; &#49341;&#51077; inserts &#8226;&#8249;&#8250; with the insertion point between the brackets, or turns the selected text into the note.</p>
-<p>&#45796;&#51020; &#47560;&#53356;&#47196; &#51060;&#46041; (&#8963;&#8984;F) and &#51060;&#51204; &#47560;&#53356;&#47196; &#51060;&#46041; (&#8963;&#8984;G) select the next or previous mark together with its note, so typing replaces it. Hold Option to delete just the &#8226; and select the note instead (&#8963;&#8997;&#8984;F, &#8963;&#8997;&#8984;G).</p>
+<h2><a name="marks"></a>마크</h2>
+
+<p>마크(•)는 나중에 돌아올 위치를 나타냅니다. 메모 있는 마크(•‹메모›)는 그곳에 무엇을 넣을지도 알려 줍니다. 명령어 완성, 매크로, 키 바인딩에는 마크가 들어 있을 수 있으며, 편집 › 마크 › 마크 삽입(<kbd>⌘8</kbd>)과 메모 있는 마크 삽입(<kbd>⌃⌘8</kbd>)으로 직접 넣을 수도 있습니다. 메모 있는 마크 삽입은 •‹›를 넣고 삽입 위치를 괄호 사이에 두거나, 선택한 텍스트를 메모로 바꿉니다.</p>
+
+<p>다음 마크로 이동(<kbd>⌃⌘F</kbd>)과 이전 마크로 이동(<kbd>⌃⌘G</kbd>)은 다음 또는 이전 마크를 메모와 함께 선택하므로, 입력하면 마크가 바뀝니다. Option 키를 누르고 있으면 •만 삭제하고 메모를 선택합니다(<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+
+<p>호출 키로도 마크 사이를 이동할 수 있습니다. 호출 키가 Escape이면 Option-Escape로 다음 마크로, Control-Escape로 이전 마크로 이동하며, Tab이면 Option-Tab과 Control-Tab을 사용합니다. 다른 응용 프로그램에서 이 키가 필요하면 설정 › 키보드에서 “Option 또는 Control과 호출 키로 다음·이전 마크로 이동”을 끄십시오.</p>
+
+<h2><a name="labels"></a>레이블과 인용 키 완성</h2>
+
+<p>편집 › 레이블 또는 인용 키 완성(<kbd>F5</kbd>)은 레이블이나 인용 키를 목록에서 골라 완성합니다. <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code>, <code>\autoref{</code> 바로 다음이나, 그 뒤에 레이블의 처음 몇 글자를 입력한 다음에 선택하면 파일에서 <code>\label</code>로 정의한 레이블이 목록에 표시됩니다. 화살표 키로 하나를 선택하고 Return 키를 누르십시오. <code>\cite{</code> 등의 명령 다음에서는 설정 › 키보드의 “BibDesk의 인용 키도 후보로 보여 주기”가 켜져 있으면 BibDesk의 인용 키가 목록에 표시됩니다. 그 밖의 위치에서는 macOS의 단어 완성이 표시됩니다. 많은 키보드에서는 fn 키(지구본 키)를 누른 채 F5를 눌러야 합니다.</p>
 </main>
 </body>
 </html>

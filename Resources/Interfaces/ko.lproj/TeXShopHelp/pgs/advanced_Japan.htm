@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>일본어 조판</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="일본; 일본어; pLaTeX; upLaTeX; LuaLaTeX; dvipdfmx; otf 패키지; \UTF; \CID; UTF-8-MAC; 유니코드 정규화; 엔화 기호; 백슬래시">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm" class="current">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>일본어 조판</h1>
+<p>TeX Live에는 일본어 TeX 엔진인 pTeX와 upTeX, 그리고 이를 바탕으로 한 pLaTeX와 upLaTeX가 들어 있으며, LuaTeX-ja 패키지를 사용하는 LuaLaTeX도 들어 있습니다. TeXShop의 일본어 도움말에서 일본어 조판을 더 자세히 설명합니다.</p>
+
+<h2>일본어용 엔진 프로파일</h2>
+<p>일본어 문서를 위해 TeXShop을 설정하는 가장 빠른 방법은 엔진 프로파일을 사용하는 것입니다. 설정 › 조판 › 엔진 프로파일에서 세 가지 일본어 프로파일 중 하나를 선택합니다.</p>
+<table>
+<tr><th>프로파일</th><th>조판</th><th>BibTeX, 색인, MetaPost</th></tr>
+<tr><td>upLaTeX + dvipdfmx</td><td>uplatex 후 dvipdfmx</td><td>upbibtex, upmendex, upmpost</td></tr>
+<tr><td>pLaTeX + dvipdfmx</td><td>platex 후 dvipdfmx</td><td>pbibtex, mendex, pmpost</td></tr>
+<tr><td>LuaLaTeX(일본어)</td><td>lualatex</td><td>upbibtex, upmendex, mpost</td></tr>
+</table>
+<p>일본어 프로파일은 새 문서의 인코딩을 UTF-8로 하고, 맞춤법 사전을 언어 자동 감지로 설정하며, “UTF-8-MAC을 UTF-8로 자동 변환”을 켭니다. pLaTeX + dvipdfmx는 “otf 패키지의 \UTF / \CID로 자동 변환”도 켜며, 나머지 프로파일은 모두 이 설정을 끕니다. 적용하기 전에 프로파일이 설정하는 값이 시트에 표시됩니다.</p>
+
+<h2>pLaTeX에서 JIS X 0208에 없는 문자</h2>
+<p>pTeX는 UTF-8 소스를 읽지만 내부적으로는 JIS X 0208의 문자만 다루므로, 森鷗外의 鷗처럼 그 밖의 문자는 사라집니다. otf 패키지는 <code>\UTF{9DD7}</code> 같은 명령으로 이런 문자를 출력합니다. 설정 › 조판의 “일본어 pLaTeX” 그룹에 있는 “otf 패키지의 \UTF / \CID로 자동 변환”을 사용하면 이런 문자를 그대로 입력할 수 있습니다.</p>
+<ul>
+<li>문서를 저장할 때 JIS X 0208에 없는 문자는 모두 <code>\UTF{XXXX}</code>로, 편집기에서 선택한 글리프 변형은 <code>\CID{번호}</code>로 기록됩니다. 이런 명령이 줄 끝에 오면 출력에 공백이 생기지 않도록 뒤에 <code>%</code>를 붙입니다.</li>
+<li>문서를 열 때는 이 설정이 켜져 있든 꺼져 있든 이런 명령을 다시 문자로 되돌리므로, 소스 윈도우에는 항상 문자 자체가 표시됩니다.</li>
+</ul>
+<p>문서에는 <code>\usepackage{otf}</code>가 필요합니다. 예를 들어 소스 윈도우에는 다음과 같이 표시되지만</p>
+<pre>\documentclass{jsarticle}
+\usepackage{otf}
+\begin{document}
+森鷗外 was a famous novelist in Japan.
+\end{document}</pre>
+<p>파일에는 <code>森\UTF{9DD7}外</code>가 들어 있습니다. upLaTeX와 LuaLaTeX는 유니코드를 직접 다루므로 변환이 필요 없습니다.</p>
+<p>텍스트의 일부를 직접 변환하려면 그 부분을 선택하고 편집 › 문자 종류 변환 › 유니코드 문자 → \UTF / \CID 또는 \UTF / \CID → 유니코드 문자를 사용합니다. 같은 하위 메뉴에서 히라가나와 가타카나, 전각과 반각 숫자 및 영문자, 원 숫자 같은 문자와 ajmacros 패키지의 명령을 서로 변환하고, 둥근 따옴표를 TeX 따옴표로 바꿀 수 있습니다. 아무것도 선택하지 않으면 TeXShop은 문서 전체를 변환할지 묻습니다. 모든 변환은 실행 취소할 수 있습니다.</p>
+
+<h2>조합형 문자와 분해형 문자</h2>
+<p>일본어 문자 중에는 유니코드 형태가 두 가지인 것이 있습니다. が는 하나의 문자(U+304C)일 수도 있고, か(U+304B) 뒤에 결합용 탁음 부호(U+3099)가 붙은 것일 수도 있습니다. 둘은 똑같아 보이지만 TeX는 서로 다른 것으로 취급하므로, 한 형태로 정의한 명령을 다른 형태로 사용하면 찾지 못합니다.</p>
+<pre>\def\が{GA}
+\が   % 이 が가 분해형이면 Undefined control sequence</pre>
+<p>분해형 텍스트는 HFS+ 디스크가 분해형으로 저장하는 파일 이름에서 오는 경우가 많으며, 이 형태를 UTF-8-MAC이라고 합니다. 설정 › 문서 및 저장 › 문서 저장 › “UTF-8-MAC을 UTF-8로 자동 변환”이 켜져 있으면, TeXShop은 문서를 저장할 때 이런 문자를 하나의 문자로 합칩니다. 다만 CJK 호환 한자처럼 표준 합성(NFC)을 적용하면 다른 문자로 바뀌는 문자는 그대로 둡니다. 이 형태를 Modified NFC라고 합니다.</p>
+<p>하위 메뉴 편집 › 유니코드 정규화는 선택 부분이나 문서 전체를 NFC, Modified NFC, NFD, Modified NFD, NFKC, NFKD로 변환한 다음, 결과를 문자 정보 패널에 보여 줍니다. 정규화한 텍스트는 대개 겉보기에 달라지지 않기 때문입니다.</p>
+
+<h2>엔화 기호와 백슬래시</h2>
+<p>일본어 키보드에서는 백슬래시 자리에 있는 키를 누르면 엔화 기호 ¥가 입력되지만, TeX 명령은 백슬래시 \로 시작합니다.</p>
+<ul>
+<li>일본어 프로파일이 설정하는 인코딩인 UTF-8에서는 ¥와 \가 서로 다른 문자이며 둘 다 그대로 유지됩니다. 그 문서에서 소스 › 키 바인딩을 켜십시오. TeXShop에 들어 있는 키 바인딩 목록은 입력한 ¥를 \로 바꾸며, 붙여넣기 열이 체크되어 있으므로 소스에 붙여 넣은 텍스트의 ¥도 바꿉니다. <a href="basic_autocompletion.htm">키 바인딩</a>을 참고하십시오.</li>
+<li>새 문서의 인코딩이 일본어 인코딩 중 하나이면, TeXShop은 입력하거나 붙여 넣을 때 ¥와 \를 변환합니다. 일본어(Mac OS, ShiftJIS ¥)와 일본어(Shift JIS X0213)에서는 소스 윈도우에 TeX 명령 문자가 ¥로 표시되고, 그 밖의 일본어 인코딩에서는 \로 표시됩니다.</li>
+<li>일본어 인코딩으로 파일을 저장할 때 백슬래시와 물결표는 항상 TeX가 기대하는 바이트 0x5C와 0x7E로 기록됩니다.</li>
+</ul>
+
+<h2>그 밖의 일본어 관련 설정</h2>
+<ul>
+<li>설정 › 편집기 › 보이지 않는 문자 › 전각 스페이스 (일본어)를 켜면, 숨김 문자를 표시할 때 전각 공백도 표시됩니다.</li>
+<li>설정 › 편집기 › 구문 하이라이트 › 전각 영숫자·기호 강조는 ASCII 문자와 혼동하기 쉬운 전각 영문자, 숫자, 기호를 테마의 전각 영숫자·기호 색상으로 표시합니다.</li>
+<li>설정 › 미리보기 › 페이지 방향으로 세로쓰기 문서에 필요한 대로 페이지를 오른쪽에서 왼쪽으로 배열할 수 있습니다. <code>% !TEX PageDirectionR2L</code> 줄과 <code>% !TEX PageDirectionL2R</code> 줄은 한 문서의 방향을 정합니다.</li>
+</ul>
+<p>\UTF / \CID 변환과 유니코드 정규화는 Yusuke Terada의 TUG 2013 발표 자료 <a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>에서 자세히 설명합니다.</p>
+</main>
+</body>
+</html>

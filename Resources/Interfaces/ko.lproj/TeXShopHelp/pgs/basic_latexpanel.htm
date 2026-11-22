@@ -3,54 +3,60 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Latex Panel</title>
+<title>LaTeX 패널</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="latex panel; amssymb; completion.plist; custom">
+<meta name="description" content="LaTeX 패널; 기호; 그리스 문자; 환경; 서체; amssymb; completion.plist; 사용자화 버튼">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
-<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
-<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
-<li><a href="basic_spelling.htm">Checking Spelling</a></li>
-<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
-<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm" class="current">Latex Panel</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
-<li><a href="basic_macros.htm">Macros</a></li>
-<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
-<li><a href="basic_graphics.htm">Including Graphics</a></li>
-<li><a href="basic_printing.htm">Printing</a></li>
-<li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
-<li><a href="basic_websites.htm">Useful Web Sites</a></li>
-<li><a href="basic_license.htm">License</a></li>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm" class="current">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Latex Panel</h1>
+<h1>LaTeX 패널</h1>
+<p>윈도우 › LaTeX 패널...을 선택하면 수학 기호, 그리스 문자, 함수, 악센트가 붙은 문자와 각국 문자, 환경, 서체 명령 등 LaTeX 코드를 모은 패널이 열립니다. 소스에서 코드를 넣을 위치를 클릭한 다음 패널의 버튼을 클릭하면, 그 코드가 삽입 위치에 삽입됩니다. 작업하는 동안 패널은 소스 윈도우 앞에 머뭅니다.</p>
+<p>버튼은 여러 페이지에 나뉘어 있습니다. 패널의 각 부분 위쪽에 있는 버튼으로 페이지를 선택합니다. 수학기호, 그리스 문자, 기호, 함수, 국제문자, 그리고 TeX 환경, 서체, 사용자화입니다.</p>
+<p>서체 버튼이나 환경 버튼을 클릭할 때 텍스트가 선택되어 있으면, <code>\textbf{선택한 텍스트}</code>처럼 선택한 텍스트가 삽입되는 코드 안에 들어갑니다.</p>
+<p>일부 기호에는 amssymb 패키지가 필요합니다. 이런 기호를 사용하는 문서의 프리앰블에 다음 행을 추가하십시오.</p>
+<pre>\usepackage{amssymb}</pre>
 
-		<P>Under the Windows menu, there is an item named &quot;Latex Panel...&quot; Choosing this item will open a panel containing a large number of mathematical symbols, Greek letters, international characters, and typesetting environments. Clicking on a symbol will insert the corresponding text into your LaTeX source file. This wonderful panel is the work of Geoffroy Lenglin, who can be reached at <a href="mailto:geoffroy.lenglin@m4x.org">geoffroy.lenglin@m4x.org</a>.</P>
-		<p>Some symbols in the panel require the line</p>
-		<dl>
-			<dd><tt>\usepackage{amssymb}</tt>
-		</dl>
-		<p>at the top of the source file. </p>
-		<p>It is possible to customize the behavior of the panel. When TeXShop first runs, it creates a file ~/Library/TeXShop/LatexPanel/completion.plist inside your personal Library folder. This file is an ordinary text file which can be opened and edited by TeXShop. The file contains all strings inserted into the source code when a Palette item is chosen. If such a string contains #SEL#, then the current selection will replace this expression in the inserted string. If a string contains #INS#, then the cursor will be set to this position when the string is inserted. To customize panel behavior, edit completion.plist.</p>
-		<p>Editing plist files is slightly tricky; see the item about them at the end of this help file. Be sure to edit and save in UTF-8 format if you use Unicode characters.</p>
-		<p>Users can add up to sixteen additional items to the Latex Panel by editing completion.plist. These are displayed on the &quot;Custom&quot; subpanel of the Latex Panel. See comments in completion.plist for details about adding such items.</p>
-		<ul>
-			
-		</ul>
-	
+<h2>패널 사용자화</h2>
+<p>각 버튼이 삽입하는 코드는 <code>~/Library/TeXShop/LatexPanel/completion.plist</code>에 있습니다. 변경하려면 이 파일을 TeXShop에서 여십시오. 파일 첫머리의 주석에 구성이 설명되어 있습니다. 표준 버튼의 이름은 바꿀 수 없지만, 버튼이 삽입하는 코드는 바꿀 수 있습니다. 이 코드에서</p>
+<ul>
+<li><code>#SEL#</code>은 선택한 텍스트를 나타냅니다.</li>
+<li><code>#INS#</code>은 코드를 삽입한 후 삽입 위치가 놓일 곳을 나타냅니다.</li>
+<li><code>#PASTE#</code>는 클립보드의 텍스트를 나타냅니다.</li>
+</ul>
+<p>사용자화 페이지에는 사용자 버튼을 16개까지 만들 수 있습니다. 각 버튼은 파일의 <code>Customized</code> 목록에 버튼 이름과 삽입할 코드, 두 문자열로 정의합니다.</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>파일을 UTF-8로 저장한 다음 TeXShop을 종료했다가 다시 시작하면 변경 내용이 패널에 반영됩니다. 파일이 없거나 손상되어 있으면 TeXShop이 자체 사본으로 바꿉니다. <a href="configure_panel.htm">LaTeX 패널 수정</a>과 <a href="advanced_plist.htm">~/Library/TeXShop의 파일</a>을 참조하십시오.</p>
 </main>
 </body>
 </html>

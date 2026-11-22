@@ -3,47 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Macros</title>
+<title>매크로</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="macro; macros.plist">
+<meta name="description" content="매크로; 매크로 메뉴; 매크로 편집기; 매크로 단축키; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
-<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
-<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
-<li><a href="basic_spelling.htm">Checking Spelling</a></li>
-<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
-<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
-<li><a href="basic_macros.htm" class="current">Macros</a></li>
-<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
-<li><a href="basic_graphics.htm">Including Graphics</a></li>
-<li><a href="basic_printing.htm">Printing</a></li>
-<li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
-<li><a href="basic_websites.htm">Useful Web Sites</a></li>
-<li><a href="basic_license.htm">License</a></li>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm" class="current">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Macros</h1>
+<h1>매크로</h1>
+<p>매크로 메뉴와 도구 막대의 매크로 항목에는 소스에 LaTeX 코드를 삽입하거나 AppleScript 스크립트를 실행하는 명령이 들어 있습니다. TeXShop에 들어 있는 매크로의 예는 다음과 같습니다.</p>
+<ul>
+<li>Program, Encoding, Root는 문서의 조판 엔진, 인코딩, 루트 파일을 정하는 <code>% !TEX</code> 행을 씁니다. 표시되는 목록에서 값을 선택하면 소스 맨 위에 올바른 형식으로 행이 쓰입니다.</li>
+<li>Insert Begin/End는 <code>theorem</code> 같은 단어를 선택한 상태에서 실행하면 <code>\begin{theorem}</code> … <code>\end{theorem}</code> 쌍으로 바꾸고, 삽입 위치를 그 사이에 둡니다.</li>
+<li>Headings, Mathematics, Lists, Tables, Figures 같은 하위 메뉴는 자주 쓰는 LaTeX 코드를 삽입합니다.</li>
+</ul>
 
-		<P>There is an alternate mechanism to insert commonly used TeX commands in your source document. Find the command in the Macro menu or the Macro button on the toolbar and choose it. In addition, some macros run AppleScript commands. A Macro Editor is provided which allows you to examine current macros, modify them, and add your own macros. For details, see the &quot;About Macros&quot; document in the Help menu. The TeXShop Macro commands and the Macro Editor were created by Mitsuhiro Shishikura. Default macros were created by Mitsuhiro Shishikura and Hirokazu Ogawa.</P>
-		<p>Macros are stored in the file ~/Library/TeXShop/Macros/Macros.plist. This is an ordinary text file which can be copied and sent to others; thus you can distribute macros you have created. The Macro Editor has a command to read a plist file and add macros in it to existing macros.</p>
-		<ul>
-			
-		</ul>
-	
+<h2>매크로 편집기</h2>
+<p>매크로 › 매크로 편집기 열기...를 선택하면 각 매크로의 정의를 보거나 변경하고, 직접 만든 매크로를 추가할 수 있습니다. 왼쪽 목록이 매크로 메뉴입니다. 항목을 드래그하여 순서를 바꾸고, 목록 아래의 막대로 항목, 하위 메뉴, 구분선을 추가합니다. 매크로의 텍스트는 소스에 삽입됩니다. 이 텍스트에서 모서리가 둥근 토큰은 선택한 텍스트, 클립보드의 텍스트, 삽입 위치를 나타내며, 텍스트 아래의 삽입 메뉴에서 선택하여 넣습니다.</p>
+<p>매크로에 키보드 단축키를 지정하려면 목록에서 매크로를 선택하고 단축키 부분을 클릭(또는 이중 클릭)한 다음 키를 누릅니다. 단축키에는 Command 키나 Control 키를 사용하거나 기능 키를 사용합니다. 메뉴 명령이나 다른 매크로가 이미 사용하는 단축키이면 매크로 편집기가 알려 줍니다.</p>
+<p>매크로는 <code>~/Library/TeXShop/Macros/Macros_Latex.plist</code>에 보관됩니다. 매크로를 다른 사람에게 주려면 매크로 편집기에서 선택한 후 매크로 › 선택부분을 파일로 저장...을 선택하고, 그런 파일에서 매크로를 추가하려면 매크로 › 파일에서 매크로 추가...를 선택합니다.</p>
+<p>매크로에 대한 자세한 내용은 <a href="macros_applescript.htm">AppleScript 매크로</a>를 포함하여 <a href="macros.htm">매크로 도움말</a> 장에서 설명합니다.</p>
 </main>
 </body>
 </html>

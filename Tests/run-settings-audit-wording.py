@@ -20,7 +20,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  for filename in ['Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex','Documentation/Releases/6.00-ja.md','website/release-notes-ja.html']:
   phrase='「設定を検索」で、設定の項目を探せるようになりました。' if '-ja.' in filename else 'Search Settings finds a setting.'
   cases.append(('release-search-'+filename,filename,phrase.encode(),b'REMOVED',guidance,'Release category and color-row guidance'))
- cases.append(('ko-category','Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm',''.join('&#'+str(ord(c))+';' for c in '범주').encode(),''.join('&#'+str(ord(c))+';' for c in '카테고리').encode(),guidance,'Korean category terminology'))
+ cases.append(('ko-category','Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm','범주'.encode(),'카테고리'.encode(),guidance,'Korean category terminology'))
 
  for lang in ['en','ja','de','es','ko']:
   for name in ['basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden']:

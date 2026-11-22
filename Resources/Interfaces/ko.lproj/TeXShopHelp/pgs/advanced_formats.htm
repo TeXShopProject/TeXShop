@@ -3,135 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Making and Using TeX Formats</title>
+<title>TeX 포맷 만들고 사용하기</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="index; makeindex; makeidx">
+<meta name="description" content="포맷; fmt 파일; initex; -ini; -fmt; dump; 엔진 파일; 프리앰블">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
-<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
-<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
-<li><a href="advanced_formats.htm" class="current">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
-<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm" class="current">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
-<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
-<li><a href="advanced_experiments.htm">Experiments</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
-<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
-<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
-<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
-<li><a href="advanced_localization.htm">Localizations</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Making and Using TeX Formats</h1>
+<h1>TeX 포맷 만들고 사용하기</h1>
+<p>포맷 파일(확장자 <code>.fmt</code>)은 TeX가 매크로 묶음을 읽은 상태를 그대로 저장해 둔 것입니다. LaTeX 자체도 하나의 포맷으로, TeX는 매번 LaTeX 소스를 읽는 대신 이 포맷을 순식간에 불러옵니다. 긴 프리앰블로 자신만의 포맷을 만들어 조판이 더 빨리 시작되게 하거나, 프로젝트나 기관에서 제공하는 포맷을 사용할 수 있습니다.</p>
+<p>포맷은 그것을 만든 엔진과 TeX Live 버전에서만 작동합니다. TeX Live 2026의 pdfLaTeX로 만든 포맷은 XeLaTeX나 다른 연도의 TeX Live에서 사용할 수 없습니다. 새 TeX Live를 설치한 뒤에는 포맷을 다시 만드십시오.</p>
 
-<h4> Using formats </h4>
-		<P>When TeX typesets a document, it must process the document header, which may contain
-a large number of \input, \include, and \usepackage statements. Every time the document is typeset,
-this process is repeated even though large portions of the header did not change.</P>
+<h2>포맷 만들기</h2>
+<p>포맷에 넣을 줄을 파일에 쓰고, 마지막 줄에 <code>\dump</code>를 둡니다. 예를 들어 <code>uo.tex</code>는 다음과 같습니다.</p>
+<pre>\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\dump</pre>
+<p>터미널에서 이 파일이 있는 폴더로 이동한 다음 다음과 같이 입력합니다.</p>
+<pre>pdflatex -ini -jobname=uo "&amp;pdflatex" uo.tex</pre>
+<p>이 명령은 LaTeX 포맷을 불러온 뒤 <code>uo.tex</code>를 읽어 <code>uo.fmt</code>를 만듭니다. 이 포맷으로 조판하는 문서에서는 포맷에 들어 있는 줄을 빼고 <code>\begin{document}</code>로 시작합니다.</p>
 
-<p> TeX has a built-in mechanism to speed up this process. It can be instructed to process lines of source and output the result to a "format file." When TeX typesets after that, it can rapidly read the format and then typeset the document. LaTeX is constructed in this manner;
-the format file is created when TeX is installed on your machine and the command "latex file" tells TeX to read this format and then typeset "file". </p>
+<h2>TeXShop에서 포맷 사용하기</h2>
+<ol>
+<li>TeX가 어느 폴더에서든 찾을 수 있도록 <code>uo.fmt</code>를 <code>~/Library/texmf/web2c</code> 폴더로 옮깁니다. 폴더가 없으면 만듭니다.</li>
+<li>Finder에서 <code>~/Library/TeXShop/Engines</code>를 열고(TeXShop › ~/라이브러리/TeXshop 폴더열기), <code>XeLaTeX.engine</code> 같은 엔진을 복제한 다음 사본의 이름을 예를 들어 <code>Oregon.engine</code>으로 바꿉니다. 이 이름은 TeXShop에 표시되는 이름이며, 포맷의 이름과 같을 필요는 없습니다.</li>
+<li>사본을 TeXShop에서 열고, 엔진이 다음과 같이 되도록 마지막 줄을 고칩니다.
+<pre>#!/bin/tcsh
 
-<p> When machines were slower, users often created their own format files to speed up typesetting.
-This is done less often today, but dealing with format files may still be useful. For instance, some organizations create and distribute a format to be used by everyone working on a common project. In this section we'll explain how to use a format file provided by someone else, and how to create a format.</p>
-
-<p> A typical format file has extension "fmt". Suppose a department of the University of Oregon has provided a format "uo.fmt". To use this format, follow the steps below:</p>
-<ul>
-<li> Move uo.fmt to "~/Library/texmf/web2c/uo.fmt". You may need to create some of these directories.
-<li> Create a new "engine file" by going to ~/Library/TeXShop/Engines and duplicating the file
-XeLaTeX.engine. Engine files need to have the execute bit set, and this duplication step automatically does that.
-<li> Rename this new file. The name need not
-match the name of the format. Since the name will appear in the TeXShop interface, it should make sense to a user. We'll choose "Oregon.engine".
-<li> Open Oregon.engine in TeXShop and edit it to read as follows
-<dl>
-<dd>#!/bin/tcsh
-<dd>
-<dd>set path= ($path /Library/TeX/texbin /usr/local/bin)
-<dd>pdflatex -fmt uo  "$1" 
-</dl>
-	The first two lines will already be present, so it may only be necessary to change the third line.
-</ul>
-<p> This completes the installation. The next time you start TeXShop, the pulldown menu beside
-the typeset button on the Source Window Toolbar will list "Oregon" as an option. Choose this to typeset using the uo.fmt format. If you want this typesetting method to be the default, go to
-TeXShop Settings under the &#51312;&#54032; category, choose "Engine File" in the "Typeset New Documents With" menu, and choose Oregon in the "Engine File" menu.</p>
-<p> It is also possible to select the Oregon format for a particular document 
-without changing the typesetting option. To do that, add the
-following line to the top of the source file:</p>
-<dl>
-<dd> %!TEX TS-program = Oregon
-</dl>
-<p> Then uo.fmt will be used for that document regardless of the typesetting option chosen.</p>
-<p> The above instructions assume you have a format for pdflatex. You can also make formats for plain tex; in that case change "pdflatex" to "pdftex" in the engine file.</p>
-<p> It is also possible to use formats when you are typesetting with tex + ghostscript. TeXShop assumes that an
-engine file contains one or more command line instructions and ultimately produces a pdf file.
-So the engine file must contain the commands which convert the dvi file to a pdf file.
-Here is a typical engine file for uo.fmt in that case:</p>
-<dl>
-<dd>#!/bin/tcsh
-<dd>set path= ($path /Library/TeX/texbin /usr/local/bin /opt/homebrew/bin)
-<dd>latex -fmt uolatex  "$1"
-<dd>set filename = "$1"
-<dd>dvips "${filename:r}.dvi"
-<dd>ps2pdf "${filename:r}.ps" 
-</dl>  
-<h4> Making formats </h4>
-<p> Format files contain the internal binary representation of typeset lines of source.
-This representation depends on the processor and particular TeX implementation. Thus it is
-rarely possible to use a format file from someone else unless that person has the same
-machine and TeX installation that you do.<p>
-
-<p> However, it is common for organizations to distribute the source lines needed to construct
-a format. In that case you'll be told to make the format using "initTeX". For example,
-suppose this source text is "uo.tex". To make the format,
-open Apple's Terminal program and change to the directory containing the source for the
-format. Then type</p>
-<dl>
-<dd>pdflatex -ini
-</dl>
-<p>You will get a ** prompt. Type the following line at the prompt</p>
-<dl>
-<dd>&pdflatex uo
-</dl>
-<p>and press return. The format file will be created. At the end you may have to
-issue a "\dump" command if the format source doesn't contain it. This will produce
-the required "uo.fmt".</p>
-<p> You might like to try this with the follow "uo.tex" file:</p>
-<dl>
-<dd>\documentclass[11pt]{article}
-<dd>\usepackage{geometry}   
-<dd>\geometry{letterpaper}                 
-<dd>\usepackage[parfill]{parskip} 
-<dd>\usepackage{graphicx}
-<dd>\usepackage{amssymb}
-<dd>\usepackage{epstopdf}
-<dd>\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
-
-<dd>\dump
-</dl>
-
-
-
-
-
-
-
-
-	
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
+</ol>
+<p>그 뒤에 여는 문서에서는 조판 버튼 옆의 팝업 메뉴에 Oregon이 나타납니다. 그 메뉴에서 무엇을 선택했든 한 문서에 이 포맷을 사용하려면 소스 첫머리에 다음 줄을 추가합니다.</p>
+<pre>% !TEX program = Oregon</pre>
+<p>이 포맷을 기본으로 사용하려면 설정 › 조판 › 엔진 › 새 문서 조판에서 “엔진 파일”을 선택하고, 엔진 파일 메뉴에서 Oregon을 선택합니다. <a href="advanced_addengine.htm">조판 엔진 추가하기</a>를 참고하십시오.</p>
+<p>plain TeX 포맷이라면 엔진에서 <code>pdflatex</code> 대신 <code>pdftex</code>를 사용합니다. DVI 경유로 사용할 포맷이라면 엔진에서 DVI 파일을 PDF로 변환하는 일도 해야 합니다. 예를 들어 zsh 스크립트에서는 <code>dvipdfmx "${1:r}.dvi"</code>를 추가합니다. TeXShop은 소스와 이름이 같은 PDF 파일을 보여 주기 때문입니다.</p>
 </main>
 </body>
 </html>

@@ -3,112 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pdfsync</title>
+<title>소스와 미리보기 동기화</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="pdfsync, synchronize, synchronization">
+<meta name="description" content="SyncTeX; 동기화; Sync; Command-클릭; Sync 방식; PDF 검색; synctex.gz; projectfile; useConTeXtSyncParser">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
-<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
-<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
-<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
-<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm" class="current">Pdfsync</a></li>
-<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm" class="current">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
-<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
-<li><a href="advanced_experiments.htm">Experiments</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
-<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
-<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
-<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
-<li><a href="advanced_localization.htm">Localizations</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Pdfsync</h1>
+<h1>소스와 미리보기 동기화</h1>
+<p>소스 윈도우에서 단어를 Command-클릭하면 미리보기 윈도우가 해당 위치로 스크롤하고 그곳을 표시합니다. 미리보기 윈도우에서 어떤 곳을 Command-클릭하면, 필요한 경우 소스 파일이 열리고 해당하는 줄이 표시됩니다. 두 표시의 색상은 설정 › 테마 › SyncTeX의 미리보기와 소스에서 설정합니다.</p>
 
-		<P>Synchronization is an important feature of Textures, a commercial implementation of TeX for
-the Macintosh by Blue Sky TeX Systems. Using this feature,  an author can click in the preview window and immediately be taken to the corresponding spot in the source window, or click in the source window and be taken to the preview window. The implementation of synchronization in Textures is widely admired for its ability to precisely locate the corresponding spot in the source code.</P> 
+<h2>SyncTeX</h2>
+<p>TeXShop은 SyncTeX로 동기화합니다. <code>-synctex=1</code> 옵션을 주어 TeX를 실행하면 PDF 옆에 <code>Galois.synctex.gz</code> 같은 파일이 생깁니다. 이 파일에는 소스의 각 부분이 페이지의 어디에 놓였는지가 기록됩니다. TeXShop이 설정하는 조판 명령, 엔진 프로파일, TeXShop에 들어 있는 엔진은 이미 이 옵션을 사용합니다. 직접 만든 엔진에서는 TeX를 호출하는 부분에 <code>-synctex=1</code>을 추가하십시오. 하이픈은 하나든 둘이든 모든 엔진이 받아들입니다.</p>
+<p>synctex 파일에는 소스 파일의 전체 경로가 들어 있습니다. 프로젝트 폴더를 옮기거나 복사하거나 다른 사람에게 보낸 뒤에는, 문서를 다시 조판할 때까지 동기화가 작동하지 않습니다.</p>
+<p>SyncTeX가 완전히 정확하지는 않으므로, 찾는 곳이 표시된 곳보다 조금 앞이나 뒤에 있을 수 있습니다.</p>
 
-<P>Since this implementation, a number of TeX systems have provided a roughly similar feature using a mechanism which causes TeX to write extra synchronization information during typesetting. None of these approximations is as accurate as Textures.</P>
+<h2>여러 파일로 된 프로젝트</h2>
+<p>장 파일이 <code>% !TEX root</code>로 루트 파일을 지정한 프로젝트(<a href="advanced_root.htm">프로젝트 루트 파일 설정</a> 참고)에서는, 장 파일에서 Command-클릭하면 문서 전체의 미리보기에서 해당 위치로 이동하고, 미리보기에서 Command-클릭하면 클릭한 곳이 들어 있는 장 파일이 열립니다. 설정 › 조판 › 소스와 미리보기 동기화 › “동기화로 여는 파일을 루트 파일 윈도우의 탭으로 열기”가 켜져 있으면, 이렇게 여는 파일은 별도의 윈도우가 아니라 루트 파일 윈도우의 탭으로 열립니다.</p>
 
-<p>TeXShop provides synchronization using new SyncTeX technology introduced by Jérôme Laurens; when this technology is not available, TeXShop falls back on older Search synchronization introduced in TeXShop 2.0. To use synchronization in TeXShop, click on a word or phrase in the source window while holding down the Apple control key; the preview window will scroll to the appropriate spot and the corresponding typeset phrase will be circled in red. Similarly, click on a word or phrase in the preview window. The appropriate source file will open (if necessary) and scroll to the corresponding source phrase, which will be highlighted in yellow.</p>
-
-<p>If you are a new TeXShop user, the SyncTeX method is active by default. Users who installed an older version of TeXShop and upgraded to this version need to change three settings to make SyncTeX work. In TeXShop Settings under the &#51312;&#54032; category, change the Sync Method to SyncTeX. In TeXShop Settings under the &#51312;&#54032; category, change the TeX and LaTeX items in the &quot;PDF &#51649;&#51217; &#49373;&#49457;&quot; (Direct PDF) group to</p>
+<h2>Sync 방식</h2>
+<p>설정 › 조판 › 소스와 미리보기 동기화 › Sync 방식에서는 두 가지 중 하나를 선택합니다.</p>
 <dl>
-	<dd> pdftex -synctex=1
-	<dd> pdflatex -synctex=1
+<dt>SyncTeX(권장)</dt><dd>위에서 설명한 대로 synctex 파일을 사용합니다. 기본값입니다.</dd>
+<dt>PDF 검색</dt><dd>소스에서 클릭한 곳 주변의 텍스트를 PDF에서 찾고, 미리보기에서 클릭한 곳 주변의 텍스트를 소스에서 찾습니다. synctex 파일이 필요 없지만, 수식이나 명령이 많은 텍스트처럼 조판된 텍스트가 소스와 다른 곳에서는 찾지 못합니다. 미리보기의 어떤 곳이 어느 파일에 있는지 찾을 때는 루트 파일의 <code>\include</code> 명령과 <code>\input</code> 명령에 지정된 파일을 검색합니다. 다른 방법으로 파일을 포함하는 프로젝트에서는 루트 파일에 다음과 같은 줄로 그 파일들을 나열합니다.
+<pre>% !TEX projectfile = chapter2.tex
+% !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
+이름은 전체 경로나 루트 파일을 기준으로 한 상대 경로로 쓰며, 이 줄은 루트 파일의 어디에 있어도 됩니다.</dd>
 </dl>
 
-<p>SyncTeX was introduced by Jérôme Laurens in 2008. It causes TeX to output an additional file with extension ".synctex" containing information needed to correlate the output pdf and input source files. The additional file is written directly by the TeX engine. Typesetting is not modified in any way by SyncTeX; in particular, line and page breaks are not changed, as happened with the older pdfsync technology. SyncTeX should allow very accurate synchronization as developers master its features.</p>
-
-<p>A second synchronization method named Search is also provided in TeXShop. This method works with all TeX engines; no special changes to the source file are needed to use it.  The Search method uses features of OS X introduced by Apple in System 10.4. These features allow developers toeasily search pdf files for text strings;  the search method finds strings in the source file and corresponding strings in the output pdf file. This method does not require an additional style file, so theoretically it works for all typesetting methods. But it fails when the pdf strings is different than the input strings and thus fails for mathematical expressions.</p>
-
-<p>By default, TeXShop first tries SyncTeX. But if SyncTeX fails or the ".synctex" file does not exist, TeXShop falls back on the Search synchronization method.</p>  
-
-<p>TeXShop can provide synchronization in three ways: SyncTeX, Search, and PdfSync. The method used is controlled by the "Sync Method" setting. The SyncTeX option select synchronization with SyncTeX, but falls back on the Search method if SyncTeX fails. The Search and PdfSync options call the Search and PdfSync methods respectively, while the "Both" option calls Search but falls back on PdfSync if Search fails. This complexity is due to the history of these features on OS X. Pdfsync is older technology replaced with SyncTeX, and will not be discussed here.</p>
-
-<p>To use SyncTeX, the typesetting engine needs to be called with a special flag instructing it to output the ".synctex" file. This is done by adding the following option when calling the engine:</p>
-<dl>
-	<dd> -synctex=1
-</dl>
-
-<p> For example, to use SyncTeX with pdftex and pdflatex, we modified the two command entries in the Typesetting category of Settings to</p>
-<dl>
-	<dd> pdftex -synctex=1
-	<dd> pdflatex -synctex=1
-</dl>
-
-<p> Incidentally, if TeXShop is used with an older engine which does not support this flag, typesetting will still occur. The engine will report in console that it does not recognize the "synctex" flag and proceed.</p>
-
-<p> Similar changes must be made in the call to simpdftex, and in engines files, including any engine files you have created. None of these changes have yet been made, so you will need to make the changes yourself if you use one of these engines and want to use SyncTeX. In modern TeX distributions, most typesetting is done by pdfetex or xetex, both of which support this flag. The original TeX program by Knuth does not support the flag.</p>
-
-<p>SyncTeX is very new, and supported for it was first added to TeXShop in August of 2008. As the developers understand more clearly the information provided by  Jérôme Laurens' synctex utility, the accuracy of TeXShop synchronization with SyncTeX will improve.</p> 
-
-<p> From now on, we discuss the older Search method; most of these comments do not apply to SyncTeX.</p>
-
-
-
-<p> When using Search synchronization, it helps to know the underlying mechanism. Suppose you click on a spot in the source file. TeXShop obtains the string 20 characters wide centered about the click, and searches for the corresponding string in the pdf file. If it finds this string exactly once, it circles the pdf string in red and declares success. But often, source strings contain formatting commands and do not match output strings; this is certainly true when typesetting mathematics. So if the search fails, TeXShop backs up 5 characters, obtains a new string 20 characters wide, and tries again. It repeats this operation 20 times if necessary, and if none of the tries succeeds it repeats the operation 20 more times looking forward past the original string rather than backward. If none of these search operations succeeds, TeXShop gives up.</p>
-
-<P>Obviously, then, it is best to click on sentences rather than formulas. Paragraphs
-with heavy markup may not synchronize well. Experiments show, however, that searches usually
-succeed and clicking can be done without really thinking about selecting an appropriate spot.     
-
-<P> Synchronizing from the preview window to the source window works the same way, but there is an additional complication. Projects may contain several source files, inserted using the \include or
-\input methods. TeXShop handles this complication by assuming that all \include and \input statements occur in the root file, using one of the commands \include{this file}, \input{this file}, or
-\import{this file}. In the initial implementation, it makes a list of the first sixty such files
-and searches all of them, declaring success if a string occurs exactly once in exactly one of the files. If the string is found in a file which is not yet open, TeXShop opens the file. Then it scrolls to the appropriate spot and highlights the resulting phrase in yellow. (In future implementations, the
-number sixty may be raised; write if you need more files searched.)</P>
-
-<P>ConTeXt uses a different method of inputting files, so a search for \include and \input statements will not find related ConTeXt files. There is a manual method to indicate
-files to be searched for synchronization; this method works with any typesetting method and
-is required in ConTeXt. At the top of the root file, list files to be searched via
-<dl>
-	<dd>% !TEX projectfile =
-</dl>
-Here are examples:
-<dl>
-	<dd>% !TEX projectfile = /Users/koch/MyDoc/chapter1.tex
-	<dd>% !TEX projectfile = chapter2.tex
-	<dd>% !TEX projectfile = ../chapter3.tex
-</dl>
-
- 
-
-	
+<h2>ConTeXt</h2>
+<p>ConTeXt에서는 문서의 설정 부분에 <code>\setupsynctex[state=start,method=min]</code>을 추가하고, 루트 파일 첫머리에 <code>% !TEX useConTeXtSyncParser</code> 줄을 넣습니다. 그러면 TeXShop은 ConTeXt 자체의 동기화 코드를 사용합니다. <a href="advanced_context.htm">ConTeXt와 MetaPost</a>를 참고하십시오.</p>
+<p>다른 에디터에서 열어 둔 소스와 동기화하는 방법은 <a href="advanced_externaleditor.htm">외부 에디터 사용하기</a>를 참고하십시오.</p>
 </main>
 </body>
 </html>

@@ -3,45 +3,69 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alternate Typesetting Mode</title>
+<title>대체 조판 방식</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="tex; latex; dvi; ghostscript; eps">
+<meta name="description" content="DVI 경유; PDF 직접 생성; dvips; Ghostscript; PostScript; pstricks; 조판 방식; % !TEX program; 사용자 스크립트">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
-<li><a href="basic_alternatetypeset.htm" class="current">Alternate Typesetting Mode</a></li>
-<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
-<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
-<li><a href="basic_spelling.htm">Checking Spelling</a></li>
-<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
-<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
-<li><a href="basic_macros.htm">Macros</a></li>
-<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
-<li><a href="basic_graphics.htm">Including Graphics</a></li>
-<li><a href="basic_printing.htm">Printing</a></li>
-<li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
-<li><a href="basic_websites.htm">Useful Web Sites</a></li>
-<li><a href="basic_license.htm">License</a></li>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm" class="current">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Alternate Typesetting Mode</h1>
+<h1>대체 조판 방식</h1>
 
-		<P>There is another way to typeset with TeXShop; in this alternate mode, eps illustrations can be input directly without conversion. To use the alternate method, choose &quot;DVI &#44221;&#50976;&quot; (Via DVI) in the Typeset menu. Then TeXShop will typeset by calling tex or latex to produce a &quot;.dvi&quot; file, calling dvips to convert it to a postscript file, and calling ps2pdf to convert the postscript file to pdf. The method chosen in the typeset menu will only affect the active document; other documents will continue to be typeset with pdftex or pdflatex. The primary method used when a document is first opened can be selected in the Settings window.</P>
-		<p>The &quot;DVI &#44221;&#50976;&quot; method should be used for old projects with many eps illustrations, and for TeX files with postscript special commands, and for TeX files that include bitmapped fonts which do not display correctly when typeset with pdflatex. Experimentation will show which is the preferable typesetting engine.</p>
-		<p>There is a way to permanently set the typesetting method of a document regardless of settings. If one of the first twenty lines of the source file is % !TEX TS-program = tex  then tex + dvi will be used. If one of the first twenty lines is % !TEX TS-program = latex, then latex + dvi will be used. If one
-of the lines is % !TEX TS-program = pdftex, or % !TEX TS-program = pdflatex, then pdftex or pdflatex will be used.  If one of the lines is % !TEX TS-program = personaltex or % !TEX TS-program = personallatex, then the personal script will be used as set in the Settings window.</p>
+<p>TeXShop은 보통 PDF 직접 생성 방식으로 조판합니다. pdfLaTeX나 pdfTeX가 PDF 파일을 직접 만드는 방식입니다. 대체 방식인 DVI 경유는 LaTeX나 TeX로 DVI 파일을 만들고, dvips로 이를 PostScript로 변환한 후, Ghostscript로 PostScript를 PDF로 변환합니다. 이 단계는 TeX Live의 스크립트 simpdftex가 수행합니다.</p>
+
+<p>DVI 경유 방식은 pstricks 패키지처럼 출력에 PostScript 코드를 넣는 문서에 필요합니다. EPS 그림 때문에 이 방식을 쓸 필요는 없습니다. PDF 직접 생성으로 조판할 때 TeX Live가 EPS 그림을 PDF로 변환합니다.</p>
+
+<h2>방식 선택</h2>
+
+<p>조판 › DVI 경유와 조판 › PDF 직접 생성은 활성 문서의 방식을 전환합니다. 열려 있는 다른 문서는 각자의 방식을 유지합니다. 문서가 처음에 사용하는 방식은 설정 › 조판 › 조판 방식에서 정합니다. 세 번째 선택 항목인 사용자 스크립트를 선택하면 사용자 스크립트 그룹의 명령이 대신 실행됩니다. DVI 경유의 명령은 plain TeX용과 LaTeX용 하나씩 설정 › 조판의 DVI 경유 그룹에 있습니다. 엔진 프로파일 메뉴의 기타에 있는 LaTeX + dvips + Ghostscript 프로파일을 선택하면 DVI 경유 조판에 맞게 설정됩니다.</p>
+
+<h2>문서에서 방식 선택</h2>
+
+<p>소스의 처음 20행 안에 다음 행 중 하나를 넣으면, 설정과 관계없이 그 문서의 프로그램과 방식이 정해집니다.</p>
+
+<table>
+<tr><th>행</th><th>조판 방식</th></tr>
+<tr><td><code>% !TEX program = pdflatex</code></td><td>LaTeX, PDF 직접 생성</td></tr>
+<tr><td><code>% !TEX program = latex</code></td><td>LaTeX, DVI 경유</td></tr>
+<tr><td><code>% !TEX program = pdftex</code></td><td>plain TeX, PDF 직접 생성</td></tr>
+<tr><td><code>% !TEX program = tex</code></td><td>plain TeX, DVI 경유</td></tr>
+<tr><td><code>% !TEX program = personallatex</code></td><td>LaTeX, 사용자 스크립트</td></tr>
+<tr><td><code>% !TEX program = personaltex</code></td><td>plain TeX, 사용자 스크립트</td></tr>
+</table>
+
+<h2>DVI 경유의 옵션</h2>
+
+<p>Ghostscript는 기본적으로 PostScript의 투명도를 무시합니다. 투명도를 유지하려면 DVI 경유 그룹의 명령 끝에 <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code>를 추가하십시오. 중간 PostScript 파일을 남기려면 <code>--keep-psfile</code>을 추가합니다. Ghostscript는 설정 › 조판 › 경로 › Ghostscript에 지정된 폴더에서 실행됩니다.</p>
 </main>
 </body>
 </html>

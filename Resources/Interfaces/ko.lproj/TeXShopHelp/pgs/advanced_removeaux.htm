@@ -3,68 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Removing AUX Files</title>
+<title>부수 파일 삭제</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="aux; remove; log">
+<meta name="description" content="부수파일 삭제; 부수 파일 삭제 후 조판; aux; log; 보조 파일; OtherTrashExtensions; AggressiveTrashAUX">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
-<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
-<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
-<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
-<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-<li><a href="advanced_removeaux.htm" class="current">Removing AUX Files</a></li>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm" class="current">부수 파일 삭제</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
-<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
-<li><a href="advanced_experiments.htm">Experiments</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
-<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
-<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
-<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
-<li><a href="advanced_localization.htm">Localizations</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Removing AUX Files</h1>
+<h1>부수 파일 삭제</h1>
+<p>LaTeX는 <code>Galois.tex</code>를 조판할 때 <code>Galois.aux</code>, <code>Galois.toc</code>, <code>Galois.log</code> 같은 부수 파일을 기록합니다. 다음 조판에서는 상호 참조, 목차 등을 위해 이 파일을 읽습니다. 오류 등으로 조판이 도중에 멈추면 이 파일이 손상된 채 남을 수 있으며, 그러면 다음 조판에서 소스에 없는 오류가 보고됩니다. 이런 오류는 흔히 <code>\begin{document}</code> 바로 앞에서 나타납니다. 부수 파일을 휴지통으로 옮기고 다시 조판하면 해결됩니다.</p>
 
-		<p>When documents are typeset, auxiliary files are created with extensions .aux, .log, .bbl, etc.
-Occasionally these files can become corrupt and lead to unexplained typesetting errors. TeXShop has a menu
-command "Trash AUX Files" which will remove all such files so typesetting can proceed. There is a similarly named button on the Console window. If either of these
-items is activated, TeXShop will move to the trash all files in the current source directory with
-the same name as the source file and extension aux, blg, brf, ccs, ent, fff, glo, idx, idv, ilg, ind, ioa, lg, log,  lot, mte, mlf, out, pdfsync, toc,  ttt, wrm, bcf, run.xml, synctex, synctex.gz, xref, 4ct, 4tc, fls, or fdb_latexmk.</p>
-<p> Additional extensions can be added to this list. To add "dvi" to the list, activate the Terminal and
-type </p>
-<dl>
-<dd> defaults write TeXShop OtherTrashExtensions -array-add "dvi"
-</dl>
-<p> To remove all additions and return to the original default list, tppe </p>
-<dl>
-<dd> defaults write TeXShop OtherTrashExtensions -array
-</dl>
-<p> Sometimes more extensive cleanup is needed. For example, if a book is controlled by main.tex, and chapters are in subfolders accessed with commands like \include{chapter1/chapter1}, then typesetting the book
-will create main.aux, main.pdfsync, and main.log in the main folder, and chapter1.aux in the chapter1 folder.</p>
-<p> The required extensive cleanup can be done by holding down the option key while choosing "Trash AUX Files." In this case:</p>
-<dl>
-<li>"%!TEX root" and Root File information will be used to find the root document and its folder
-<li> All files with appropriate extensions in this folder or any subfolder will be moved to the trash, regardless of the name of the file
-</dl>
-<p> There is a way to make this behavior the default behavior for "Trash AUX Files" even if the option
-key is not down:
-<dl>
-<dd> defaults write TeXShop AggressiveTrashAUX YES
-</dl>
+<h2>파일을 휴지통으로 옮기기</h2>
+<ul>
+<li>파일 › 부수파일 삭제(<kbd>⌃⌘A</kbd>)를 선택하거나 콘솔의 부수파일 삭제 버튼을 누르면 문서의 부수 파일이 휴지통으로 옮겨집니다.</li>
+<li>조판 › 부수 파일 삭제 후 조판(<kbd>⌥⌘T</kbd>)은 이 작업을 한 다음 조판합니다. 조판 메뉴에서는 Option 키를 누르고 있는 동안 조판하기 대신 이 항목이 나타납니다.</li>
+</ul>
+<p>휴지통으로 옮겨지는 파일은 소스와 같은 폴더에 있고, 소스와 이름이 같으며, 확장자가 다음 중 하나인 파일입니다.</p>
+<pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
+gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
+lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
+ttt  wrm  xref</pre>
+<p>조판이 중단되어 SyncTeX가 이름 끝에 <code>(busy)</code>가 붙은 채 남긴 파일도 휴지통으로 옮겨집니다. BibTeX의 <code>.bbl</code> 파일은 남겨 둡니다.</p>
+<p>장 파일이 <code>% !TEX root</code>로 루트 파일을 지정한 프로젝트에서는, 장 파일에서 명령을 실행해도 루트 파일의 부수 파일이 휴지통으로 옮겨집니다.</p>
+
+<h2>다른 동작</h2>
+<ul>
+<li>부수파일 삭제를 선택하거나 버튼을 누를 때 Shift 키를 누르고 있으면 문서의 PDF 파일도 휴지통으로 옮겨집니다. 평소에는 조판이 실패해도 미리보기 윈도우에 보여 줄 것이 있도록 이전 PDF를 남겨 둡니다.</li>
+<li>부수파일 삭제를 선택하거나 버튼을 누를 때 Option 키를 누르고 있으면 프로젝트 전체를 정리합니다. 루트 파일의 폴더와 그 아래의 모든 폴더에서, 이름과 관계없이 위 확장자 중 하나를 가진 파일이 모두 휴지통으로 옮겨집니다. 하위 폴더에 있는 장에 대해 <code>\include</code>가 기록하는 <code>.aux</code> 파일도 이렇게 정리됩니다.</li>
+</ul>
+<p>두 가지 숨겨진 설정으로 동작을 바꿀 수 있습니다. 목록에 확장자(예: <code>dvi</code>)를 추가하려면 터미널에서 다음과 같이 입력합니다.</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
+<p>표준 목록으로 되돌리려면 다음과 같이 입력합니다.</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array</pre>
+<p>Option 키를 누를 때의 동작을 부수파일 삭제의 기본 동작으로 하려면 다음과 같이 입력합니다.</p>
+<pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
 </main>
 </body>
 </html>

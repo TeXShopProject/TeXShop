@@ -3,52 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Plist Files</title>
+<title>~/Library/TeXShop의 파일</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="plist file; xml; latex panel; auto complete; keyboard shortcut; macro menu">
+<meta name="description" content="~/Library/TeXShop; plist 파일; 설정 파일; completion.plist; autocompletion.plist; KeyEquivalents.plist; Macros_Latex.plist; matrixpanel; 테마; CommandCompletion.txt; 백업">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
-<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
-<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
-<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
-<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
-<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
-<li><a href="advanced_experiments.htm">Experiments</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
-<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
-<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
-<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm" class="current">Plist Files</a></li>
-<li><a href="advanced_localization.htm">Localizations</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm" class="current">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Plist Files</h1>
+<h1>~/Library/TeXShop의 파일</h1>
+<p>TeXShop은 사용자가 원하는 대로 바꿀 수 있는 파일을 <code>~/Library/TeXShop</code> 폴더에 보관합니다. 이 폴더는 TeXShop을 처음 실행할 때 만들어집니다. TeXShop › ~/라이브러리/TeXshop 폴더열기를 선택하면 Finder에서 이 폴더가 열립니다. 직접 바꾼 내용을 다른 Mac으로 옮기려면 이 폴더를 그 Mac에 복사합니다.</p>
 
-		<P>Mac OS X makes extensive use of xml files; xml is a structured language closely related to html.</P>
-		<p>TeXShop uses five xml files for configuration: completion.plist, autocompletion.plist, KeyEquivalents.plist, Macros_Latex.plist, and Macros_Context.plist. These files reside inside your personal library in a folder called ~/Library/TeXShop created when TeXShop first runs. If you have modified the default TeXShop configuration and want to move TeXShop to another machine preserving your modifications, copy ~/Library/TeXShop to the new machine.</p>
-		<p>The files are used to configure the Latex Panel, Key Bindings, the Keyboard Menu Shortcuts, and the Macro menu. Details are given elsewhere in this document. </p>
-		<p>Files of type plist are ordinary text files, so they can be opened and edited with TeXShop, TextEdit, or other text editors. Editing the file is straightforward, but somewhat tedious. </p>
-		<p>If a plist file contains unicode characters, it needs to be edited and saved in UTF-8 format. Before opening such a file in TeXShop, change the TeXShop encoding setting to UTF-8. Then edit and save the file. Then change the encoding setting back to the original value. The default value is MacOSRoman if you did not reset it earlier.</p>
-		<p>If you installed the Developer distribution of Mac OS X and you double click a .plist file, it will open in a program named Property List Editor. This program is useful for editing plist files, but it is buggy and does not display all file information. In particular, comments are missing. It is better to use TeXShop.</p>
-		<ul>
-			
-		</ul>
-	
+<h2>폴더에 들어 있는 것</h2>
+<p>이 파일들은 대부분 TeXShop 안에서 편집하므로 파일을 직접 열 필요는 없습니다.</p>
+<table>
+<tr><th>파일 또는 폴더</th><th>내용</th><th>바꾸는 곳</th></tr>
+<tr><td><code>Keyboard/autocompletion.plist</code>, <code>autocompletionPaste.plist</code>, <code>autocompletionDisplayOrder.plist</code></td><td>키 바인딩</td><td>설정 › 키보드 › 키 바인딩 목록</td></tr>
+<tr><td><code>CommandCompletion/CommandCompletion.txt</code></td><td>명령어 완성 목록</td><td>설정 › 키보드 › 명령어 완성 파일 편집…</td></tr>
+<tr><td><code>Menus/KeyEquivalents.plist</code></td><td>메뉴 단축키의 기본값</td><td>설정 › 키보드의 메뉴 단축키 목록</td></tr>
+<tr><td><code>Macros/Macros_Latex.plist</code></td><td>매크로 메뉴</td><td>매크로 › 매크로 편집기 열기...</td></tr>
+<tr><td><code>Themes/</code></td><td>색상 테마</td><td>설정 › 테마</td></tr>
+<tr><td><code>SpellCheck/SpellingExclusions.txt</code></td><td>LaTeX 구문을 고려한 맞춤법 검사에서 제외하는 부분</td><td>설정 › 맞춤법 검사 › LaTeX 제외 규칙 편집…</td></tr>
+<tr><td><code>Engines/</code></td><td>조판 엔진</td><td>설정 › 조판 › 엔진 목록 편집…</td></tr>
+<tr><td><code>LatexPanel/completion.plist</code></td><td>LaTeX 패널의 텍스트</td><td>직접 편집. <a href="configure_panel.htm">LaTeX 패널 수정</a> 참고</td></tr>
+<tr><td><code>MatrixPanel/matrixpanel_1.plist</code></td><td>행렬 패널의 텍스트</td><td>직접 편집</td></tr>
+<tr><td><code>Templates/</code>, <code>Stationery/</code></td><td>템플릿 메뉴, 파일 › 템플릿에서 새 파일...</td><td>Finder에서. <a href="basic_templates.htm">템플릿과 스테이셔너리</a> 참고</td></tr>
+</table>
+<p><code>KeyEquivalents.plist</code>의 메뉴 단축키는 설정 › 키보드의 단축키 목록에서 기본값이 됩니다. 설정에서 바꾼 단축키가 우선합니다. <a href="configure_menushortcuts.htm">메뉴 단축키 재지정</a>를 참고하십시오.</p>
+
+<h2>파일을 직접 편집하기</h2>
+<p>확장자가 <code>.plist</code>인 파일은 XML 텍스트입니다. TeXShop, 다른 텍스트 에디터, Xcode에서 열고 편집할 수 있습니다. 그중 몇몇 파일은 맨 앞의 주석에 형식이 설명되어 있습니다. 파일은 원래 인코딩인 UTF-8로 유지하십시오. 테마의 색상은 파일이 아니라 설정 › 테마에서 편집하십시오.</p>
+<p>편집한 파일이 작동하지 않으면 그 파일을 폴더 밖으로 옮기거나 파일이 들어 있는 폴더를 데스크탑으로 옮긴 다음 TeXShop을 다시 시작합니다. 그러면 TeXShop이 원래 내용으로 파일을 다시 만듭니다.</p>
+
+<h2>없어지거나 손상된 파일</h2>
+<p>매크로, 키 바인딩, LaTeX 패널과 행렬 패널의 텍스트, 메뉴 단축키, 명령어 완성 목록, 맞춤법 검사 제외 규칙, 표준 테마처럼 TeXShop에 필요한 파일이 없거나, TeXShop을 시작할 때 손상된 것으로 확인되면, TeXShop은 오류 메시지 없이 자체 사본을 그 자리에 넣습니다. 손상된 파일은 <code>~/Library/TeXShop/Backups</code> 폴더 안에 날짜와 시각을 이름으로 한 폴더로 옮겨지므로, 그 파일에서 바꾼 내용을 되살릴 수 있습니다.</p>
+<p>Templates 폴더와 Stationery 폴더의 파일, 엔진, 직접 만든 테마처럼 일부러 지울 수도 있는 파일은 복원되지 않습니다.</p>
 </main>
 </body>
 </html>

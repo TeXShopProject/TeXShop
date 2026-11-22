@@ -3,50 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Installing TeXShop</title>
+<title>TeXShop 설치</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="install texshop; web site; texshop.app">
+<meta name="description" content="TeXShop 설치; texshop.app; 처음 실행; 업데이트 확인; 설정 업데이트; 사전 발매 버전; ~/Library/TeXShop; 이 버전에 대하여">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
-<li><a href="basic_installtexshop.htm" class="current">Installing TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
-<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
-<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
-<li><a href="basic_spelling.htm">Checking Spelling</a></li>
-<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
-<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
-<li><a href="basic_macros.htm">Macros</a></li>
-<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
-<li><a href="basic_graphics.htm">Including Graphics</a></li>
-<li><a href="basic_printing.htm">Printing</a></li>
-<li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
-<li><a href="basic_websites.htm">Useful Web Sites</a></li>
-<li><a href="basic_license.htm">License</a></li>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm" class="current">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Installing TeXShop</h1>
+<h1>TeXShop 설치</h1>
 
-<p> TeXShop is automatically installed by the MacTeX packages described in the previous section. It is also possible to obtain it from the TeXShop web site:</p>
-			<p><a href="https://texshop.app/">https://texshop.app/</a></p>
+<p>TeXShop을 사용하려면 macOS 14.6 이상이 필요합니다. MacTeX는 TeXShop을 /Applications/TeX에 설치합니다. TeXShop 웹 사이트에서 내려받을 수도 있습니다.</p>
 
-<p> New versions of TeXShop sometimes have revised Macros, Engines, and Templates. These new versions do not automatically appear when updating from an older version of TeXShop. To get them, read "About This Release" under the Help menu. 
+<p><a href="https://texshop.app/">https://texshop.app/</a></p>
 
-<p> A brute force way to get new defaults is to go to ~/Library/TeXShop; here ~/Library is the Library folder in your home directory. Move the entire Macros (or Engines or Templates) folder to the desktop. The next time TeXShop runs, it will recreate the missing folder. Then merge in any personal changes you may have made from the old folder on the desktop.</p>
+<p>내려받은 TeXShop을 /Applications 또는 /Applications/TeX로 옮기십시오. MacTeX에는 이전 버전이 들어 있을 수 있으므로, MacTeX를 설치한 후에는 TeXShop › 업데이트 확인...을 한 번 선택하십시오.</p>
 
-<p>Much easier ways to update are described in Help's "How do I configure TeXShop?" section.
-		
+<h2>처음 실행할 때</h2>
+
+<p>TeXShop을 처음 실행하면 TeX와 Ghostscript를 찾아, 찾은 설치본을 최신 것부터 나열합니다. 하나를 선택하고 확인을 클릭하십시오. 이어서 엔진 프로파일을 묻습니다. 엔진 프로파일은 사용하는 엔진에 맞게 조판 설정을 한꺼번에 맞춥니다. 둘 다 나중에 설정 › 조판에서 변경할 수 있습니다. <a href="basic_typesetting.htm#engine">엔진 선택</a>을 참조하십시오.</p>
+
+<h2>업데이트</h2>
+
+<p>TeXShop › 업데이트 확인...은 새 버전이 있는지 확인합니다. 새 버전이 있으면 변경 내용을 보여 주고 설치할지 묻습니다. 설치가 끝나면 TeXShop이 다시 시작되어 하던 작업으로 돌아갑니다. 설정 › 업데이트의 “업데이트를 자동으로 확인”과 “확인 간격”은 TeXShop이 스스로 확인할지와 그 빈도를 정합니다. 베타 버전도 받으려면 “가능한 경우 사전 발매 버전으로 업데이트”를 켜십시오. 베타 버전의 TeXShop은 처음 실행할 때 이 설정을 켭니다.</p>
+
+<p>업데이트한 후에는 도움말 › 이 버전에 대하여 (영문)을 훑어보십시오. 직접 해야 할 일이 있으면 알려 줍니다. 대개는 할 일이 없습니다.</p>
+
+<h2>~/Library/TeXShop 폴더</h2>
+
+<p>TeXShop은 템플릿, 매크로, 엔진, 키 바인딩, 명령어 완성 목록, 테마처럼 사용자가 변경할 수 있는 파일을 홈 폴더의 라이브러리 폴더 안에 있는 TeXShop 폴더에 보관합니다. TeXShop › ~/라이브러리/TeXshop 폴더열기를 선택하면 Finder에서 이 폴더가 열립니다. TeXShop은 처음 실행할 때 이 폴더를 만듭니다. 폴더 안의 파일이 없거나 손상되어 있으면 TeXShop은 오류 메시지 없이 자체 사본으로 바꾸고, 손상된 파일은 ~/Library/TeXShop 안의 폴더에 보관합니다.</p>
+
+<p>업데이트는 매크로나 사용 중인 엔진처럼 사용자가 편집했을 수 있는 파일을 변경하지 않으며, 선택 항목이 든 몇몇 폴더만 새것으로 바꿉니다. 새 버전에 새로운 매크로, 엔진 등이 포함되어 있으면 이 버전에 대하여에서 알려 주며, 이를 추가하는 방법은 <a href="configure_correctinstall.htm">새 라이브러리 항목 받기</a>에서 설명합니다.</p>
 </main>
 </body>
 </html>

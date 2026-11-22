@@ -3,50 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Preliminaries</title>
+<title>시작하기 전에</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="shishikura; macros; macro editor">
+<meta name="description" content="매크로; 매크로 편집기; Macros_Latex.plist; Macros 폴더; 선택부분을 파일로 저장; 파일에서 매크로 추가; Shishikura">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Macros Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">매크로 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="macros_preliminaries.htm" class="current">Preliminaries</a></li>
-<li><a href="macros_default.htm">Understanding Default Macros</a></li>
-<li><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
-<li><a href="macros_define.htm">Defining New Macros</a></li>
-<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
-<li><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
-<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
-<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
-<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
-<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
+<li><a href="macros_preliminaries.htm" class="current">시작하기 전에</a></li>
+<li><a href="macros_default.htm">기본 매크로 이해하기</a></li>
+<li><a href="macros_rearrange.htm">매크로 메뉴 재배열하기</a></li>
+<li><a href="macros_define.htm">새 매크로 정의하기</a></li>
+<li><a href="macros_applescript.htm">AppleScript 매크로</a></li>
+<li><a href="macros_includedscripts.htm">기본 AppleScript 매크로</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript 매크로 정의하기</a></li>
+<li><a href="macros_dialogs.htm">대화상자 만들기</a></li>
+<li><a href="macros_writingcompletescripts.htm">TeXShop 조판 명령으로 스크립트 작성하기</a></li>
+<li><a href="macros_writingcommandscripts.htm">셸 명령으로 스크립트 작성하기</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Preliminaries</h1>
+<h1>시작하기 전에</h1>
+<p>TeXShop의 매크로와 매크로 편집기는 Mitsuhiro Shishikura가 만들었으며, 기본 LaTeX 매크로는 Mitsuhiro Shishikura와 Hirokazu Ogawa가 만들었습니다.</p>
+<p>매크로는 매크로 메뉴와, 소스 윈도우 도구 막대의 매크로 팝업 메뉴에 나열됩니다. 매크로에는 두 종류가 있습니다. 텍스트 매크로는 LaTeX 패널의 버튼처럼 소스에 텍스트를 넣습니다. AppleScript 매크로는 AppleScript를 실행합니다. <a href="macros_applescript.htm">AppleScript 매크로</a>를 참고하십시오.</p>
 
-		<P>TeXShop macros and the Macro Editor are by Mitsuhiro Shishikura. Default Latex macros were created by Mitsuhiro Shishikura and Hirokazu Ogawa. Default Context macros were created by Hans Hagen.</P>
-	<P>The available Macros depend on the typesetting engine chosen. If this engine is LaTeX, then a series of macros suitable for LaTeX will be displayed. If the engine is ConTeXT, then macros for ConTeXt will be displayed. When TeXShop is first installed, it has macros for only these two engines; the LaTeX macros will be displayed for all engines except ConTeXt.</P>
-		<p>Macros come in two kinds. Some insert strings into the TeX source file; these macros are similar to buttons in the Latex panel. Other macros run Applescript scripts.</p>
-		<p>Macros are stored in 
-	<dl>
-	<dd> ~/Library/TeXShop/Macros/Macros_Latex.plist
-	</dl> 
-and 
-	<dl>
-	<dd>~/Library/TeXShop/Macros/Macros_Context.plist.
-	</dl>
+<h2 id="files">매크로를 보관하는 곳</h2>
+<p>매크로는 다음 파일에 저장되며,</p>
+<pre>~/Library/TeXShop/Macros/Macros_Latex.plist</pre>
+<p>매크로 메뉴는 어느 조판 엔진에서나 이 매크로를 보여 줍니다. 내장 엔진인 plain TeX, BibTeX, MakeIndex, MetaPost용으로는 매크로를 따로 둘 수 있습니다. 문서에 이 엔진 중 하나가 선택되어 있으면 매크로 편집기는 매크로를 Macros_Tex.plist 같은 별도의 파일에 저장하고, Macros_Latex.plist는 바꾸지 않습니다.</p>
+<p>매크로 파일은 일반 텍스트 파일이지만, 매크로 편집기로 바꾸는 것이 가장 좋습니다. 매크로 › 매크로 편집기 열기...를 선택하십시오. 매크로를 추가하고 삭제하고 이름을 붙이는 방법과 단축키를 지정하는 방법은 <a href="macros_define.htm">새 매크로 정의하기</a>에서 설명합니다.</p>
 
- If these files are missing when TeXShop runs, default macro files are created there. These files are ordinary text files, so it can be opened and inspected with TeXShop. This is usually not necessary because the files are best manipulated with the Macro editor.</p>
-	<p>The Macro editor modifies macros stored in Macros_Latex.plist and Macros_Context.plist when one of these typesetting engines is chosen. But if another typesetting engine like TeX is chosen, then the Macro editor will replace the default Latex macro set with a set defined by the user for TeX, storing the results in Macros_Tex.plist and leaving Macros_Latex.plist unchanged.</p>
-		<p>When you define useful Macros and wish to give them to others, simply open the Macro Editor and choose &quot;Save selection to file...&quot; in the Macro menu. This will create a file in any location you wish. To distribute your macros, send this file.</p>
-		<p>To add macros created by others to your list of macros, open the Macro Editor and choose &quot;Add macros from file...&quot;. Then use the Macro Editor to arrange the macros as you desire.</p>
-		<ul>
-			
-		</ul>
-	
+<h2 id="missing">Macros 폴더가 없을 때</h2>
+<p>TeXShop을 시작할 때 Macros 폴더가 없으면 TeXShop은 기본 매크로로 폴더를 다시 만듭니다. Macros_Latex.plist가 손상되어 있으면 TeXShop은 시작할 때 아무 메시지 없이 자체 사본으로 바꾸고, 손상된 파일은 ~/Library/TeXShop/Backups에 보관합니다. 기본 매크로로 처음부터 다시 시작하려면 TeXShop을 종료하고 Macros 폴더를 데스크탑으로 옮긴 다음 TeXShop을 다시 시작합니다. 옮긴 폴더에는 이전 매크로가 그대로 남아 있습니다.</p>
+
+<h2 id="sharing">매크로 공유하기</h2>
+<p>매크로 편집기가 열려 있는 동안에는 매크로 메뉴에 명령 두 개가 더 나타납니다. “선택부분을 파일로 저장...”은 선택한 매크로를 별도의 파일로 저장하며, 이 파일을 다른 사람에게 줄 수 있습니다. “파일에서 매크로 추가...”는 그런 파일에 들어 있는 매크로를 목록에 추가합니다. 추가한 뒤에는 매크로 편집기에서 원하는 대로 정리합니다.</p>
 </main>
 </body>
 </html>

@@ -128,8 +128,8 @@ for language in LANGUAGES:
         pages[path.stem] = text
         page_count += 1
     if language in ('en', 'ko'):
-        route = 'Settings > Typesetting > Related Tools > BibTeX Engine' if language == 'en' else 'Settings > 조판 > 관련 도구 > BibTeX 엔진'
-        # The help writes menu and Settings paths with › (the Korean page still with >).
+        route = 'Settings > Typesetting > Related Tools > BibTeX Engine' if language == 'en' else '설정 > 조판 > 관련 도구 > BibTeX 엔진'
+        # The help writes menu and Settings paths with ›, with the names the interface shows (설정 in Korean).
         assert route in pages['advanced_bibtex'] or route.replace(' > ', ' › ') in pages['advanced_bibtex'], (language, 'BibTeX Engine route')
     overview=pages['basic_preferences']
     assert 'id="settings-search"' in overview,(language,'central search instructions')

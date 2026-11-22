@@ -3,47 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Preliminaries</title>
+<title>시작하기 전에</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="about texshop; han the thanh">
+<meta name="description" content="TeXShop 소개; TeX Live; MacTeX; pdfLaTeX; PDF; macOS 14.6; 도움말 안내">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm" class="current">Preliminaries</a></li>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
-<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
-<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
-<li><a href="basic_spelling.htm">Checking Spelling</a></li>
-<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
-<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
-<li><a href="basic_macros.htm">Macros</a></li>
-<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
-<li><a href="basic_graphics.htm">Including Graphics</a></li>
-<li><a href="basic_printing.htm">Printing</a></li>
-<li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
-<li><a href="basic_websites.htm">Useful Web Sites</a></li>
-<li><a href="basic_license.htm">License</a></li>
+<li><a href="basic_preliminaries.htm" class="current">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Preliminaries</h1>
+<h1>시작하기 전에</h1>
 
-		<p>TeXShop is a Mac OS X program which can typeset TeX and LaTeX files and preview the output on the screen. The program usually typesets using pdftex or pdflatex instead of tex or latex. These programs output pdf files rather than dvi files. Since pdf is the native graphics format of Mac OS X, it is easy to display the output on the screen. Pdftex and pdflatex were written by  Han The Thanh, Petr Sojka, and Jiri Zlatuska.<br>
-			<br>
-			The pdf files created by TeXShop are standard pdf files which can be given to other people and displayed on a variety of computer systems. For example, they can be displayed by Adobe Acrobat. <br>
-			<br>
-			TeXShop does not include TeX. Instead it can be used with any standard TeX distribution. See the next section for download sites for the standard TeX distributions on Mac OS X.</p>
-	
+<p>TeXShop은 TeX와 LaTeX로 문서를 작성하는 macOS 응용 프로그램입니다. 편집 윈도우에서 소스를 작성하고, 클릭 한 번이나 <kbd>⌘T</kbd>로 조판하면, 옆의 미리보기 윈도우에서 결과를 볼 수 있습니다. 어느 한쪽 윈도우에서 Command-클릭하면 다른 쪽 윈도우의 대응하는 위치가 표시됩니다.</p>
+
+<p>TeXShop에는 TeX가 포함되어 있지 않습니다. TeXShop은 TeX 배포판의 프로그램을 실행하며, 보통은 MacTeX 설치 프로그램으로 Mac에 설치하는 TeX Live를 사용합니다. <a href="basic_installtetex.htm">TeX Live 설치</a>를 참조하십시오. TeXShop을 사용하려면 macOS 14.6 이상이 필요합니다.</p>
+
+<p>설치 직후의 TeXShop은 LaTeX 문서를 pdfLaTeX로 조판합니다. pdfLaTeX는 PDF 파일을 직접 만들고, 미리보기 윈도우는 그 파일을 표시합니다. 이 파일은 다른 사람에게 보내 어느 컴퓨터에서나 읽을 수 있는 일반 PDF 파일입니다. LuaLaTeX 등 다른 엔진으로 조판하려면 설정에서 엔진 프로파일을 선택하거나 문서 첫머리에 엔진 이름을 적습니다. <a href="basic_typesetting.htm#engine">문서 조판</a>을 참조하십시오.</p>
+
+<h2>이 도움말의 구성</h2>
+<dl>
+<dt><a href="basic.htm">기본 도움말</a></dt>
+<dd>TeX Live와 TeXShop 설치, 조판, 미리보기 윈도우, 편집, 찾기 및 대치, 맞춤법 검사, 키 바인딩과 명령어 완성, 각종 패널, 매크로, 프린트, 설정.</dd>
+<dt><a href="advanced.htm">고급 도움말</a></dt>
+<dd>조판 엔진, 루트 파일이 있는 프로젝트, BibTeX와 MakeIndex, 인코딩, 외부 에디터, 구문 하이라이트 등.</dd>
+<dt><a href="macros.htm">매크로 도움말</a></dt>
+<dd>매크로 메뉴, 매크로 편집기, AppleScript로 작성한 매크로.</dd>
+<dt><a href="configure.htm">TeXShop 설정 방법</a></dt>
+<dd>권장 설정, ~/Library/TeXShop의 새 항목, 숨겨진 설정, 키 바인딩과 키보드 단축키.</dd>
+</dl>
+
+<p>도움말 메뉴에서 그 밖의 문서를 열 수 있습니다(모두 영문). TeXShop 설명서는 모든 기능을 자세히 설명합니다. TeXShop 입문은 처음 사용하는 사람을 위한 짧은 소개입니다. 이 버전에 대하여는 업데이트 후에 따로 할 일이 있으면 알려 주고, 변경사항은 버전마다 바뀐 내용을 정리합니다. 매직 코멘트와 숨겨진 설정은 <code>% !TEX program =</code> 같은 매직 코멘트와 설정 윈도우에 표시되지 않는 설정을 정리한 문서입니다.</p>
+
+<p>TeXShop 웹 사이트는 <a href="https://texshop.app/">texshop.app</a>입니다.</p>
 </main>
 </body>
 </html>

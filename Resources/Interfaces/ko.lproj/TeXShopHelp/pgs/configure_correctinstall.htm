@@ -3,43 +3,48 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Obtaining New Library Items</title>
+<title>새 라이브러리 항목 받기</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="correct install; TeX folder; macro">
+<meta name="description" content="~/Library/TeXShop; 업데이트; New 폴더; bin; Scripts; Engines Inactive; 매크로; 손상된 파일; Backups; 폴더의 기본 내용">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">How do I configure TeXShop?</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">TeXShop 설정 방법</span></header>
 <nav id="menu">
 <ul>
-<li><a href="configure_preliminaries.htm">Preliminaries</a></li>
-<li><a href="configure_prefchanges.htm">Recommended Changes to Settings</a></li>
-<li><a href="configure_correctinstall.htm" class="current">Obtaining New Library Items</a></li>
-<li><a href="configure_hidden.htm">Hidden Settings</a></li>
-<li><a href="configure_panel.htm">Modifying the Latex Panel</a></li>
-<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a></li>
-<li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a></li>
+<li><a href="configure_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="configure_prefchanges.htm">권장하는 설정 변경</a></li>
+<li><a href="configure_correctinstall.htm" class="current">새 라이브러리 항목 받기</a></li>
+<li><a href="configure_hidden.htm">숨겨진 설정</a></li>
+<li><a href="configure_panel.htm">LaTeX 패널 수정</a></li>
+<li><a href="configure_autocompletion.htm">키 바인딩 수정</a></li>
+<li><a href="configure_menushortcuts.htm">메뉴 단축키 재지정</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Obtaining New Library Items</h1>
+<h1>새 라이브러리 항목 받기</h1>
+<p>TeXShop은 템플릿, 매크로, 엔진, 키 바인딩, LaTeX 패널 파일, 테마처럼 사용자가 변경할 수 있는 파일을 홈 폴더의 라이브러리 폴더 안에 있는 TeXShop 폴더, 즉 ~/Library/TeXShop에 보관합니다. TeXShop › ~/라이브러리/TeXshop 폴더열기를 선택하면 Finder에서 이 폴더가 열립니다. TeXShop을 처음 실행하면 기본 내용으로 이 폴더가 만들어집니다.</p>
 
-		<P>The default behavior of TeXShop can be modified in two ways: by making changes to settings, and by editing files in ~/Library/TeXShop. Here ~/Library is the Library folder in your home directory.
-<p>
-New versions of TeXShop generally do not change these user modifications because users don't like changes made behind their backs. But sometimes, new features require a few modifications. These modifications are explained in the document "About This Release" in the TeXShop Help menu. This document is rewritten for each TeXShop release. TeXShop still works fine if changes explained in "About This Release" aren't made, but then some new features may not work as advertised.
+<h2 id="updates">새 버전이 변경하는 것</h2>
+<p>TeXShop의 새 버전은 ~/Library/TeXShop의 대부분을 그대로 두므로 사용자가 변경한 내용이 유지됩니다. 다만 TeXShop 자체의 지원 파일이나 선택 항목을 담은 몇몇 위치는 새 버전이 최신 상태로 바꿉니다.</p>
+<ul>
+<li>bin, Documents, ExternalEditorScripts, Scripts 폴더</li>
+<li>사용하도록 옮길 수 있는 엔진과 HTML 파일이 든 Engines/Inactive와 HTML/Inactive</li>
+<li>도움말 › HTML 명령 (영문)이 표시하는 페이지인 HTML/Help.html</li>
+<li>통째로 바뀌는 New 폴더</li>
+</ul>
+<p>이 위치에서는 TeXShop에 들어 있는 모든 파일이 새 버전으로 바뀌므로, 그런 파일에 가한 변경은 사라집니다. 새 파일은 추가되며, 사용자가 다른 이름으로 추가한 파일은 그대로 남습니다. 이런 파일을 자신의 버전으로 유지하려면 다른 이름으로 저장하십시오.</p>
+<p>Engines 폴더 자체에 있는 사용 중인 엔진은 변경되지 않습니다. 이 폴더를 마지막으로 업데이트한 TeXShop이 6.00보다 오래된 버전일 때만, TeXShop은 같은 이름의 파일이 없는 경우에 한해 html.engine을 Engines에 한 번 추가합니다. Macros 폴더에서는 TeXShop에 들어 있던 매크로 중 한 번도 편집하지 않은 매크로가 현재 텍스트로 업데이트될 수 있으며, 편집한 매크로와 사용자가 만든 매크로는 그대로 남습니다. 그 밖의 모든 것은 사용자가 변경한 대로 유지됩니다.</p>
+<p>TeXShop은 ~/Library/TeXShop/New 안의 숨김 파일 <code>.Version</code>에 버전을 기록하고, 자신이 거기 기록된 버전보다 새로울 때만 폴더를 업데이트합니다. 따라서 TeXShop을 시작할 때마다 ~/Library/TeXShop이 다시 쓰이지는 않으며, 이전 버전의 TeXShop을 실행해도 폴더가 바뀌지 않습니다.</p>
 
-<p> Although TeXShop does not usually upgrade items in ~/Library/TeXShop, there are exceptions. Each new release updates the folders bin, Documents, Engines/Inactive, ExternalEditorScripts, HTML/Inactive, and Scripts, and the file HTML/Help.html, the page shown by &#46020;&#50880;&#47568; &gt; HTML &#47749;&#47161; (&#50689;&#47928;). In these places, every file that comes with TeXShop is replaced by its new version, so changes you made to such a file are lost; new default files are added, and files you added under other names are left unchanged. To keep your own version of one of these files, for instance of Help.html, save it under another name. Note that active Engine files are not changed because they live in Engines, not in the Inactive subfolder; only when a library last updated by a version older than 6.00 beta 10 is updated does TeXShop copy html.engine into Engines, once, and only if no file of that name is there. In the Macros folder, macros that came with an earlier TeXShop and were never edited may be updated to their current text; edited macros and your own macros stay as they are. Everything else in ~/Library/TeXShop keeps your edits.
+<h2 id="new">New 폴더</h2>
+<p>New 폴더에는 새 템플릿처럼 사용자가 직접 추가할 만한 항목이 들어 있습니다. 그런 항목을 Templates 같은 알맞은 폴더로 옮기고 원하는 대로 편집하십시오. 가져올 것이 있으면 도움말 › 이 버전에 대하여 (영문)에서 알려 줍니다.</p>
 
-<p>The advantage of this design is that some engines put support files in the bin and scripts directories. Upgrades of TeXShop can automatically update these support files without user intervention. Similarly, new engines are sometimes added to the Engines/Inactive directory; users obtain them automatically without doing anything.
+<h2 id="repair">없거나 손상된 파일</h2>
+<p>매크로, LaTeX 패널 파일, 키 바인딩, KeyEquivalents.plist, 테마처럼 TeXShop에 필요한 파일이 없거나 손상되어 있으면, TeXShop은 시작할 때 메시지 없이 자체 사본으로 바꿉니다. 손상된 파일은 ~/Library/TeXShop/Backups에 보관되므로, 거기서 변경 내용을 되살릴 수 있습니다.</p>
 
-<p> Each new TeXShop upgrade rewrites the folder ~/Library/TeXShop/New. This folder contains new items which a user might like to add to their other configuration folders. For example, new templates will appear in ~/Library/TeXShop/New. Users who want these new templates should move them to ~/Library/TeXShop/Templates and edit them as appropriate. Files in ~/Library/TeXShop/New are always described in "About This Release", so it is not necessary to examine ~/Library/TeXShop/New unless directed to do so.
-
-<p> It is useful to understand one technical detail of this design. A hidden file in ~/Library/TeXShop/New lists the version number of TeXShop which wrote that folder. The location ~/Library/TeXShop is only updated if the version number of TeXShop is higher than the version number listed in that hidden file. Consequently, ~/Library/TeXShop is not updated every time TeXShop runs, and older versions of TeXShop can safely be run without modifying ~/Library/TeXShop. 
-
-<p>In rare cases, a user may wish to obtain the latest default files for a folder in ~/Library/TeXShop. If that folder is moved to the desktop, then the next time TeXShop runs it will recreate the folder from scratch. Then any modifications made can be merged in from the desktop copy. For instance, if the Templates folder from ~/Library/TeXShop is moved to the desktop, then the next TeXShop run will produce the latest default Templates folder. 
-This drastic action, luckily, is seldom required.
-
-<p> 
+<h2 id="defaults">폴더의 기본 내용 받기</h2>
+<p>Templates 같은 폴더의 최신 기본 내용을 받으려면 TeXShop을 종료하고, 그 폴더를 ~/Library/TeXShop 밖으로(예를 들어 데스크탑으로) 옮긴 다음 TeXShop을 다시 시작하십시오. 기본 내용으로 폴더가 만들어집니다. 그런 다음 남기고 싶은 것을 옮겨 둔 폴더에서 다시 복사하십시오.</p>
 </main>
 </body>
 </html>

@@ -3,145 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Default AppleScript Macros</title>
+<title>기본 AppleScript 매크로</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="applescript">
+<meta name="description" content="AppleScript 매크로; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; 줄 끝 문자; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Macros Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">매크로 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="macros_preliminaries.htm">Preliminaries</a></li>
-<li><a href="macros_default.htm">Understanding Default Macros</a></li>
-<li><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
-<li><a href="macros_define.htm">Defining New Macros</a></li>
-<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
-<li><a href="macros_includedscripts.htm" class="current">Default AppleScript Macros</a></li>
-<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
-<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
-<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
-<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
+<li><a href="macros_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="macros_default.htm">기본 매크로 이해하기</a></li>
+<li><a href="macros_rearrange.htm">매크로 메뉴 재배열하기</a></li>
+<li><a href="macros_define.htm">새 매크로 정의하기</a></li>
+<li><a href="macros_applescript.htm">AppleScript 매크로</a></li>
+<li><a href="macros_includedscripts.htm" class="current">기본 AppleScript 매크로</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript 매크로 정의하기</a></li>
+<li><a href="macros_dialogs.htm">대화상자 만들기</a></li>
+<li><a href="macros_writingcompletescripts.htm">TeXShop 조판 명령으로 스크립트 작성하기</a></li>
+<li><a href="macros_writingcommandscripts.htm">셸 명령으로 스크립트 작성하기</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Default AppleScript Macros</h1>
+<h1>기본 AppleScript 매크로</h1>
+<p>TeXShop에는 Will Robertson, Claus Gerhardt 등이 만든 AppleScript 매크로 모음이 들어 있습니다. 그중 일부는 여러 조판 명령을 차례로 실행합니다. 이 매크로를 복사하여 고치면 자신의 작업에 맞는 스크립트를 만들 수 있습니다. 이 페이지에서는 그중 몇 가지를 매크로 메뉴에 표시되는 이름으로 소개합니다.</p>
 
-<P>TeXShop comes with an extended collection of
-Applescripts by Will Robertson, Claus Gerhardt and others. Some of these scripts automate workflow when a series of typesetting commands must be issued in sequence. By copying and modifying the scripts, users can construct scripts appropriate for their own workflow.  
-</P>
+<h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
+<p>이 매크로들은 Will Robertson이 만들었습니다. Column macros 하위 메뉴의 New tabular와 New array는 입력한 행과 열의 수만큼 tabular 환경이나 array 환경을 넣으며, Add column과 Delete column은 선택한 행에 열을 추가하거나 삭제합니다. Insert reference는 현재 파일에서 <code>\label{…}</code> 명령을 찾아 목록에서 레이블을 고르게 하고, 고른 레이블을 <code>\ref{…}</code>로 감싸서 넣습니다. 이 명령은 스크립트에서 바꿀 수 있습니다. 텍스트를 선택해 두었으면 그 텍스트가 들어 있는 레이블만 목록에 표시됩니다. Open quickly…는 현재 소스 파일이 있는 폴더의 .tex, .sty, .pdf 파일을 나열하고, 선택한 파일을 엽니다.</p>
 
-<P>In this section, we will describe some of these scripts. 
-</P>
+<h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
+<p>Alan Munn이 만든 이 매크로는 스프레드시트의 셀을 LaTeX 소스에 표로 붙여 넣습니다. Excel 같은 스프레드시트 응용 프로그램에서 셀 범위를 선택하여 복사합니다. 그런 다음 매크로 › Paste Spreadsheet Cells를 선택하고 표 스타일을 고릅니다.</p>
+<dl>
+<dt>cells</dt><dd>복사한 텍스트를 LaTeX 표의 셀로만 변환합니다.</dd>
+<dt>booktabs</dt><dd>첫 줄을 머리글로 삼고, tabular 환경 안에 <code>\toprule</code>, <code>\midrule</code>, <code>\bottomrule</code>을 넣습니다.</dd>
+<dt>simple</dt><dd>셀을 간단한 tabular 환경으로 감쌉니다.</dd>
+<dt>longtable</dt><dd>첫 줄을 머리글로 삼아 longtable의 머리글 줄을 추가하고, 셀을 longtable 환경에 넣습니다.</dd>
+</dl>
+<p>이 매크로는 클립보드의 내용을 LaTeX 텍스트로 바꿉니다. 같은 셀을 다른 스타일로 붙여 넣으려면 먼저 스프레드시트에서 셀을 다시 복사하십시오.</p>
 
-<P>
-<h5>Column Macros, Insert Reference, Open Quickly: </h5>
-</P>
+<h2 id="line-endings">Applescript › Convert to MAC, Convert to Unix, Convert to Windows</h2>
+<p>텍스트 파일은 줄 끝을 나타내는 방식이 서로 다릅니다. macOS와 Unix는 라인 피드를, Windows는 캐리지 리턴 뒤에 라인 피드를, 아주 오래된 Macintosh 파일은 캐리지 리턴만 사용합니다. TeXShop은 세 가지를 모두 읽습니다. 다른 사람의 에디터가 읽지 못한다면 이 매크로를 사용하십시오. 소스 파일이 MyFile.tex이면 Convert to Unix는 저장된 파일의 사본을 라인 피드로 바꾸어 MyFile_Unix.tex로 기록합니다. Convert to Windows는 MyFile_Windows.tex를, Convert to MAC은 MyFile_Mac.tex를 기록합니다. 이 매크로는 ~/Library/TeXShop/bin에 있는, Craig Stuart Sapp이 만든 flip 프로그램을 사용합니다.</p>
 
-<p> These macros are by Will Robertson. The first provides a very convenient way to construct
-an arbitrary matrix or table. The second searches through the current file for \label{...} commands
-and then pops up a list from which you may insert a reference label, wrapped in an (optional) customizable
-LaTeX command. The final macro allows you to rapidly open any file in the directory of the current
-source file.
+<h2 id="bibliography">Applescript › Bibliography</h2>
+<p>참고 문헌 목록이 있는 문서는 여러 번 조판해야 합니다. LaTeX가 .aux 파일을 기록하면 BibTeX가 그 파일을 사용하여 .bbl 파일과 .blg 파일을 기록하고, LaTeX를 다시 실행하여 참고 문헌 목록을 추가한 뒤, 한 번 더 실행하여 목록에 대한 참조를 갱신합니다. Bibliography 매크로는 LaTeX, BibTeX, LaTeX, LaTeX를 차례로 실행합니다. 작동 방식은 <a href="macros_writingcompletescripts.htm">TeXShop 조판 명령으로 스크립트 작성하기</a>에서 설명합니다.</p>
 
-<P>
-<h5>Paste Spreadsheet Cells</h5>
-<P>
-This macro (by Alan Munn) provides cut-and-paste functionality from spreadsheet applications into your LaTeX source, using various popular table styles.
-Select a range of cells in Excel or other spreadsheet application, and copy them to the clipboard.
-Within TeXShop, choose Paste Spreadsheet Cells in the Macros menu.  You will be asked to choose a table style. The styles available are the following:
-<P>
-<DL>
-<DT>cells
-<DD>converts the clipboard text simply to latex table cells
-<DT>simple
-<DD>creates a simple tabular environment around the cells
-<DT>booktabs
-<DD>assumes the first line is a header, and places \toprule, \midrule and \bottomrules in the appropriate places within a tabular environment
-<DT>longtable
-<DD>assumes the first line is a header, creates the appropriate longtable header information and places the cells in a longtable environment
-</DL>
-<P>
-Note that the script modifies the contents of the clipboard, so that it contains the LaTeX formatted text, and not your originally copied cells.  This means that if you need to change cell formats, you must re-copy the cells from your spreadsheet before choosing a different cell format to paste.
-<P>
-
-<P>
-<h5>Convert to Mac, Convert to Unix, Convert to Windows: </h5>
-</P>
-
-
-<P>
-In the early days, teletype terminals were used for communication. The ascii character set still has remnants from those days; for instance 0x07 rings the teletype bell. The
-character 0x0a was a line feed which turned the carriage to the next line and the character 0x0d was a carriage return which pulled the carriage back to the start of the line. To get a line feed, one used the sequence 0x0d 0x0a.</P>
-
-<P>
-After the age of teletypes ended, computer manufacturers selected different subsets of these characters  to indicate a line feed. In the Unix world, 0x0a was used, in the Windows world 0x0d 0x0a was used, and in the old Macintosh Classic world 0x0d was used. Apple's guidelines for Mac OS X state that programs should be able to automatically open files using any of these conventions. Most programs including TextEdit, TeXShop, etc., follow these guidelines. In TeXShop, new files are created using Unix conventions, but if you load a file created with Mac OS Classic and then add extra lines, old portions of the document will be saved with the Classic convention and new sections will have the Unix convention.   
-</P>
-
-<P>
-These line feeds cause no trouble until you send a file to a friend using a different operating system.
-Many editors now understand multiple line feed conventions, so often you'll have no problems. But if you
-do, use the scripts above. Suppose the source file for a document is named
-MyFile.tex. Then "Convert to Mac" will create a new file named MyFile_Mac.tex with the same source
-code and Macintosh line feed conventions. "Convert to Unix" and "Convert to Windows" work the same way.
-All of these scripts call a binary program by Craig Stuart Sapp named "flip" in ~/Library/TeXShop/bin. See
-http://ccrma-www.stanford.edu/~craig/utility/flip/ for details.
-</P>
-
-<P>
-<h5>Other Scripts->Bibliography:</h5>
-</P>
-
-<P>
-Processing a file with a bibliography requires multiple typesetting operations. First Latex is run to create an .aux file. Then Bibtex is run and uses this file to create .bbl and .blg files. Latex is run again to add the bibliography to the document. Latex is run a final time to update the references to the bibliography in the text.   
-</P>
-
-<P>
-The "Bibliography" command does all of these things one by one. First it saves the file. Then
-it runs latex->bibtex->latex->latex. Finally it updates the preview display.
-</P>
-
-<P>
-<h5>htlatexc, htlatexr:</h5>
-</P>
-
-<P>
-Tex4ht is a TeX program which converts a latex document into a web page. The source can be a standard
-Latex file and can include eps illustrations. The end result is an html page and a large number of
-gif files. The script command "htlatexc" saves the source documents, runs htlatex, and opens the resulting html file in Safari. Thus it behaves like a new TeXShop typesetting command, except that it was
-constructed by a user without waiting for new TeXShop code!  
-</P>
-
-<P>
-When using these scripts, it is not necessary to use the package tex4ht since this package will automatically be loaded. The script htlatexc calls htlatex without additional options. The script htlatexr calls it with the option "-r", which tells the program to recreate any .gifs which already exist.
-</P>
-
-<P>
-<h5>pdfselectc:</h5>
-</P>
-
-<P>
-This script runs the shell script pdfselect to create pdf files containing only certain selected
-pages of a document. When it is run, a dialog appears asking for the number of pdf files to be
-created. Suppose we answer 3. Next a dialog appears asking for the range for the first document.
-Suppose we answer 5:8. A dialog appears asking for the range of the second document. Suppose we
-answer 10. A dialog asks for the range of the third document. Suppose we answer 20:30. We will
-then obtain three documents, one containing pages 5 - 8 of the original, one containing page 10,
-and one containing pages 20 - 30.
-</P>
-
-<P>
-<h5>mpostc, mpostcpl, latex-makeindex-mpost:</h5>
-</P>
-
-<P>
-The script mpostc runs mpost and then pdflatex; the script mpostcpl runs pdflatex, and then mpost, and then pdflatex again.
-See the TeXShop help file General: Context and Metapost for an example of the use of these three
-commands in sequence.</P>
-
-<P> 
-The script latex-makeindex-mpost saves the source and runs pdflatex, makeindex, mpost, and pdflatex again, opening relevant log files in the process. 
-</P>
+<h2 id="gerhardt">Claus Gerhardt Macros</h2>
+<p>이 하위 메뉴의 매크로는 ~/Library/TeXShop/bin에 있는 같은 이름의 셸 스크립트를 호출하며, 저장된 파일에 대해 작동합니다. pdflatexc를 예로 든 설명은 <a href="macros_writingcommandscripts.htm">셸 명령으로 스크립트 작성하기</a>에 있습니다.</p>
+<h3>htlatexc, htlatexr</h3>
+<p>TeX4ht는 LaTeX 문서를 HTML 페이지와 그림 파일로 이루어진 웹 페이지로 변환합니다. htlatexc는 문서에 htlatex를 실행하고, 만들어진 HTML 파일을 Safari에서 엽니다. 문서에서 tex4ht 패키지를 불러올 필요는 없으며, htlatex가 불러옵니다. htlatexr은 <code>-r</code> 옵션을 주어 htlatex를 실행합니다. 이 옵션을 사용하면 그림이 이미 있어도 다시 만듭니다.</p>
+<h3>pdfselectc</h3>
+<p>pdfselectc는 문서 PDF에서 선택한 페이지만 담은 PDF 파일을 만듭니다. 먼저 파일을 몇 개 만들지 묻고, 이어서 각 파일에 넣을 페이지를 묻습니다. 예를 들어 5~8페이지는 <code>5:8</code>로, 여러 범위는 <code>3:4,6,8:12</code>처럼 입력합니다. 문서 이름이 MyFile이면 파일은 MyFile-1.pdf, MyFile-2.pdf와 같은 이름으로 저장됩니다.</p>
+<h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
+<p>mpostc는 MetaPost를 실행한 다음 pdfLaTeX를 실행합니다. mpostcpl은 pdfLaTeX와 MetaPost를 실행한 뒤 다시 pdfLaTeX를 실행합니다. latex-makeindex-mpost는 pdfLaTeX, MakeIndex, MetaPost를 실행한 뒤 다시 pdfLaTeX를 실행하며, 도중에 로그 파일을 엽니다. MetaPost에 대해서는 <a href="advanced_context.htm">ConTeXt와 MetaPost</a>를 참고하십시오.</p>
 </main>
 </body>
 </html>

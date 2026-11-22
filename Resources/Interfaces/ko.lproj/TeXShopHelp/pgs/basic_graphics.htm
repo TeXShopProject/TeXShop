@@ -3,76 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Including Graphics</title>
+<title>그림 넣기</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="including graphics; epstopdf; eps; pdf; jpg; tif; tiff; automatic conversion">
+<meta name="description" content="그림 넣기; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; TIFF 파일 변환">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
-<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
-<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
-<li><a href="basic_spelling.htm">Checking Spelling</a></li>
-<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
-<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
-<li><a href="basic_macros.htm">Macros</a></li>
-<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
-<li><a href="basic_graphics.htm" class="current">Including Graphics</a></li>
-<li><a href="basic_printing.htm">Printing</a></li>
-<li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
-<li><a href="basic_websites.htm">Useful Web Sites</a></li>
-<li><a href="basic_license.htm">License</a></li>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm" class="current">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Including Graphics</h1>
+<h1>그림 넣기</h1>
+<p>PDF로 직접 조판할 때 LaTeX는 PDF, PNG, JPEG 형식의 그림을 넣을 수 있습니다. PDF는 선 그림과 글자가 어떤 크기에서도 선명하므로 도표와 그래프에 적합하고, PNG와 JPEG는 스크린샷과 사진에 적합합니다.</p>
+<p>프리앰블에서 graphicx 패키지를 읽어 들이고</p>
+<pre>\usepackage{graphicx}</pre>
+<p>그림이 나타날 위치에 다음과 같이 씁니다.</p>
+<pre>\includegraphics[width=0.8\textwidth]{diagram}</pre>
+<p>확장자는 생략할 수 있습니다. 그러면 LaTeX가 <code>diagram.pdf</code>, <code>diagram.png</code>, <code>diagram.jpg</code> 등 알고 있는 형식의 파일을 찾습니다. 그림의 크기를 바꾸려면 width를 바꾸십시오. 그림 파일은 문서의 폴더에 두거나, <code>figures/diagram</code>처럼 문서 폴더에서 본 경로로 지정합니다.</p>
 
-		<P>The programs pdftex and pdflatex can use graphic files produced in pdf, jpg, png, or mps format. 
-		The native graphics format of Mac OS X is pdf (portable document format) and such files print well at any size. It is likely that most future Mac graphics programs will output pdf.</P>
-		
-		<p>To use graphics, include the line below in the preamble section of your source file:</p>
-		<dl>
-			<dd><tt>\usepackage{graphicx}</tt>
-		</dl>
-		<p>When you wish to insert a graphic file, say &quot;f1.pdf &quot;, use the command</p>
-		<dl>
-			<dd><tt>\includegraphics[width=2in]{f1}</tt>
-		</dl>
-		<p>By changing the indicated width in this command, the graphic can be resized during typesetting. Experiment to find the desired size.</p>
-		
-		<p>If you used TeX in the past, your illustrations may be in eps format. These files must be converted to pdf format before being typeset with pdftex and pdflatex. In TeX Live starting with 2011, this is done automatically, provided the source file includes the graphicx package.
-		
-		<p> It is possible to convert isolated eps files to pdf format by opening the file in TeXShop. This step automatically converts the eps
-		to pdf, writing the pdf file to disk and leaving the eps file in place. Then it opens the pdf file.
-		
-		
-				<p>The authors of pdflatex and the authors of the graphics package graphicx have made it easy to include graphic files in a LaTeX document typeset with pdflatex, even if the document will later be typeset by standard latex and converted to a dvi file for distribution to other people. This might happen if you share source files with a colleague who uses ordinary LaTeX and requires eps illustrations rather than pdf illustrations. When you want to include an illustration, say &quot;f1.pdf &quot;, use the command below, omitting the ".pdf" or ".eps" extension:</p>
-		<dl>
-			<dd><tt>\includegraphics[width=2in]{f1}</tt>
-		</dl>
-		<p>This command will cause tex to input the graphic file &quot;f1.pdf&quot; when the text is typeset with pdflatex, but input the file &quot;f1.eps&quot; when the text is typeset with latex. </p>
-		
-		
-		<p>You can also use tif and tiff illustrations. For these cases, TeXShop has a menu command "Convert tiff" which converts the files to png files which pdftex and pdflatex understand. The menu command will be active when the source window is active. When the menu is selected, an open dialog will appear listing all files
-		in the folder containing the source. Only tif and tiff files will be active; all others will be grayed out. Select one file or multiple files and push "Convert." All
-		selected files will be converted to png files, leaving the tiff files undisturbed. 
-		
+<h2>EPS 파일</h2>
+<p>문서가 graphicx를 읽어 들이면 TeX Live는 조판하는 동안 epstopdf로 EPS 그림을 자동으로 PDF로 변환합니다. 변환된 파일 <code>diagram-eps-converted-to.pdf</code>는 EPS 파일 옆에 저장되며, 이후에는 이 파일이 사용됩니다.</p>
+<p>TeXShop에서 EPS 파일을 열 때도 변환됩니다. TeXShop은 같은 이름의 PDF 파일을 옆에 저장하고 표시합니다.</p>
 
-<p> If you have a few old files with eps illustrations, or if you use the pstricks postscript package in TeX, you can typeset with "DVI &#44221;&#50976;" (Via DVI) instead of pdflatex. See the TeXShop Help section "Alternate Typesetting Mode" for details. In this mode, conversion of eps files to pdf format is not necessary. However, it is not a good idea to use this mode for new projects involving a large number of eps files, because the eps illustrations must be implicitly converted to pdf form every time the file is typeset, slowing typesetting down enormously when the eps illustrations are complicated. That is because convertion from postscript to pdf takes place at the very end of typesetting in "DVI &#44221;&#50976;" mode, after the illustrations have been embedded in the complete final document.</p>	
-	
+<h2>TIFF 파일</h2>
+<p>LaTeX는 TIFF 파일을 넣을 수 없습니다. 소스 윈도우가 활성화된 상태에서 파일 › TIFF 파일 변환을 선택하면, 문서의 폴더가 대화상자에 표시되며 TIFF 파일만 선택할 수 있습니다. 하나 이상을 선택하고 변환을 클릭하십시오. 각 파일이 같은 폴더에 같은 이름의 PNG 파일로 변환되며, TIFF 파일은 그대로 남습니다.</p>
 
-		
+<h2>DVI 경유 조판</h2>
+<p>pstricks 패키지처럼 PostScript 코드를 사용하는 문서는 DVI 경유 방식으로 조판하며, 이 방식은 기본적으로 dvips를 실행합니다. 이때 그림은 EPS 형식으로 넣으며, PDF, PNG, JPEG 파일은 사용할 수 없습니다. <a href="basic_alternatetypeset.htm">대체 조판 방식</a>을 참조하십시오.</p>
 </main>
 </body>
 </html>

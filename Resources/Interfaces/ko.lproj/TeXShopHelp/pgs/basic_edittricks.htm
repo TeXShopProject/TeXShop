@@ -3,115 +3,109 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Editing Tricks</title>
+<title>편집 요령</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="editing tricks; comment; indent; split window; drag and drop; backup file">
+<meta name="description" content="편집 요령; 괄호 짝 맞추기; 행 선택; 주석; 들여쓰기; 태그 메뉴; 현재 환경 닫기; 소스 분할; 드래그 앤 드롭; 상태 막대; 통계; 클립보드와 교환; 스타일과 함께 복사하기; 문자 종류 변환; 백업 파일">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
-<li><a href="basic_edittricks.htm" class="current">Editing Tricks</a></li>
-<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
-<li><a href="basic_spelling.htm">Checking Spelling</a></li>
-<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
-<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
-<li><a href="basic_macros.htm">Macros</a></li>
-<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
-<li><a href="basic_graphics.htm">Including Graphics</a></li>
-<li><a href="basic_printing.htm">Printing</a></li>
-<li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
-<li><a href="basic_websites.htm">Useful Web Sites</a></li>
-<li><a href="basic_license.htm">License</a></li>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm" class="current">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Editing Tricks</h1>
+<h1>편집 요령</h1>
 
+<h2>선택</h2>
 
-<p> Double clicking on a bracket of the form (, {, [, ], }, or ) will select everything between that bracket and its matching bracket. Double clicking on a bracket with the option key down will select the bracket alone.</p>
-<p>The Advanced Find Panel (&ldquo;&#44256;&#44553; &#52286;&#44592; &#54056;&#45328;&rdquo;), chosen in &#49444;&#51221; &gt; &#54200;&#51665;&#44592; &gt; &#44160;&#49353; &#51064;&#53552;&#54168;&#51060;&#49828; (Settings &gt; Editor &gt; Find interface), finds and replaces with regular expressions. Every user starts with it: at the first launch of TeXShop 6.00, users of earlier versions are switched to it once, and can choose another method there again. Users who came from the OgreKit Find Panel (&ldquo;OgreKit &#52286;&#44592; &#54056;&#45328;(&#47112;&#44144;&#49884;)&rdquo;) find the OgreKit replacement syntax (\1) chosen under &ldquo;&#52628;&#44032; &#50741;&#49496;&rdquo; (More Options). &ldquo;&#47784;&#46160; &#52286;&#44592;&rdquo; (Find All) lists every match in the panel with its line number; clicking a row selects the match. &ldquo;&#47784;&#46160; &#54616;&#51060;&#46972;&#51060;&#53944;&rdquo; (Highlight All), &ldquo;&#51204;&#52404; &#49440;&#53469;&rdquo; (Select All) and &ldquo;&#54616;&#51060;&#46972;&#51060;&#53944; &#51228;&#44144;&rdquo; (Remove Highlights) are in the menu of &ldquo;&#47784;&#46160; &#52286;&#44592;&rdquo;. &ldquo;&#47784;&#46160; &#45824;&#52824;&rdquo; (Replace All) is undone with a single &ldquo;&#49892;&#54665; &#52712;&#49548;&rdquo; (Undo). The options under the fields and behind the button with three dots are remembered from session to session. A click in the source window puts the panel behind that window; to keep the panel in front of the document windows, turn on &ldquo;&#44256;&#44553; &#52286;&#44592; &#54056;&#45328;&#51012; &#54637;&#49345; &#47592; &#50526;&#50640; &#54364;&#49884;&rdquo; (Keep the Advanced Find panel on top) in &#49444;&#51221; &gt; &#54200;&#51665;&#44592;.</p>
-<p>The panel uses the regular expressions of ICU. A brace that is not part of a repetition must be written \{ or \}. In the replacement, $1, $2, ... are the groups and \$ is a dollar sign; the OgreKit syntax, with \1, \2, ... and a literal $, can be chosen among the options. A backslash in the replacement is written twice. The ? button next to &ldquo;&#51221;&#44508; &#54364;&#54788;&#49885;&rdquo; (Regular expression) opens a reference of the syntax and the replacement, and of where ICU and OgreKit differ. The fields use a monospaced font at the size of the source font and the colors of the source&rsquo;s &ldquo;&#53580;&#47560;&rdquo; (theme). With &ldquo;&#51221;&#44508; &#54364;&#54788;&#49885;&rdquo; off, they are colored as TeX is in the source; with it on, they show the parts of a pattern in the theme&rsquo;s colors, errors in red and what OgreKit reads otherwise in orange; the line under the options explains them.</p>
-<p><a name="multiplereplace"></a>&ldquo;&#51068;&#44292; &#45824;&#52824; &#54200;&#51665;&hellip;&rdquo; (Edit Multiple Replace) in the &ldquo;&#52286;&#44592;&rdquo; (Find) submenu keeps sets of find and replace pairs, applied in order with a single &ldquo;&#49892;&#54665; &#52712;&#49548;&rdquo;. The &ldquo;&#51068;&#44292; &#45824;&#52824;&hellip;&rdquo; (Multiple Replace&hellip;) button next to &ldquo;&#47784;&#46160; &#45824;&#52824;&rdquo; (Replace All) in the Advanced Find panel opens it too. The sets are files in ~/Library/TeXShop/MultipleReplace, in the JSON format of CotEditor's replacement definitions. The &ldquo;&#51068;&#44292; &#45824;&#52824;&rdquo; (Multiple Replace) submenu applies a set to the whole text at once.</p>
-<p> To find and replace in all files of a document split into chapter files, see <a href="basic_texrootsearch.htm">Find in TeX Sources</a>.</p>
-<p>&ldquo;&#47784;&#46160; &#45824;&#52824;&rdquo;, &ldquo;&#47784;&#46160; &#52286;&#44592;&rdquo; and &ldquo;&#51068;&#44292; &#45824;&#52824;&rdquo; run in the background, and the document cannot be edited until they end. When one takes long, a sheet on the document window shows how many it has found or how many rules it has done; its &ldquo;&#52712;&#49548;&rdquo; (Cancel) button, or the Escape key, stops it and leaves the text as it was.</p>
-<p>The panel also finds in the console, the log and the Experiment windows. Replacing is dimmed in the console, the log and the Experiment console, which show the output of TeX.</p>
-<p>The OgreKit Find Panel by Isao Sonobe remains available in Settings as a legacy choice, &ldquo;OgreKit &#52286;&#44592; &#54056;&#45328;(&#47112;&#44144;&#49884;)&rdquo; (OgreKit Find Panel (Legacy)); switching to or from it requires restarting TeXShop. The TeXShop manual describes the Advanced Find Panel in detail.</p>
+<p>( 나 } 같은 괄호를 이중 클릭하면 그 괄호와 짝이 되는 괄호 사이가 모두 선택됩니다. 빠진 중괄호를 찾을 때 유용합니다. Option 키를 누른 채 이중 클릭하면 괄호만 선택됩니다. 행 번호를 클릭하거나 드래그하면 행 전체가 선택됩니다. 입력하는 동안 짝이 되는 괄호를 어떻게 표시할지는 설정 › 편집기의 괄호 짝 맞추기 그룹에서 정합니다.</p>
 
-		<P>Groups of lines can be commented out using a menu command, and later activated again. Groups of lines can be indented with a menu command, and later moved back. If a line starts with a series of tabs or spaces, new lines will start at the same position until the behavior is cancelled by backspacing. This behavior was added to TeXShop by Nicol&aacute;s Ojeda B&auml;r in Argentina, who can be reached at <a href="mailto:lojedaortiz@interlink.com.ar">lojedaortiz@interlink.com.ar</a>. Thanks!</P>
+<h2>주석과 들여쓰기</h2>
 
-<P>
-The source window can be split in two pieces using the split tool at the top of the window. When it is split, two views of the same source are
-shown. You can type in either piece and your changes will immediately appear in the other as well. Thus you can modify one section of
-source while reading a second part of the source.
-</P>
+<p>소스 › 주석달기(<kbd>⌘{</kbd>)는 선택한 행의 처음에 %를 넣고, 소스 › 주석풀기(<kbd>⌘}</kbd>)는 이를 제거합니다. 소스 › 우로 인덴트와 소스 › 좌로 언인덴트는 선택한 행을 오른쪽이나 왼쪽으로 옮깁니다. 설정 › 편집기 › 에디터 스타일의 “탭 문자 사용”이 켜져 있으면 탭 하나만큼, 꺼져 있으면 “탭 들여쓰기”에 지정한 수만큼의 공백으로 옮깁니다. 새 행은 앞 행과 같은 탭과 공백으로 시작합니다. 이를 지우려면 Delete 키를 누르십시오.</p>
 
-<P>
-TeXShop can be instructed to keep a backup file every time a file is saved. When &ldquo;&#51088;&#46041; &#51200;&#51109; &#48143; &#48260;&#51204; &#49324;&#50857;&rdquo; (Enable Autosave and Versions) is off, turn on &ldquo;&#51200;&#51109;&#54624; &#46412; &#51060;&#51204; &#54028;&#51068;&#51012; &#8216;&#51060;&#47492;~&#8217;&#51004;&#47196; &#45224;&#44592;&#44592;&rdquo; (Keep the previous file as &ldquo;name~&rdquo; when saving) in &#49444;&#51221; &gt; &#47928;&#49436; &#48143; &#51200;&#51109; (Settings &gt; Documents and Saving). The backup has the name of the file followed by a tilde.
-</P>
+<h2>소스 안에서 이동</h2>
 
-<P>
-A status bar under the source shows the lines, characters and words of the document, with the numbers in the selection in parentheses,
-and where the insertion point is: its location, line and column. Characters are counted as they are seen, so an accented letter or an
-emoji counts as one, and TeX commands are counted as they are written. The size of the saved file is shown at the right.
-Source &gt; Show Status Bar shows or hides the status bar in every window.
-</P>
+<p>도구 막대의 태그 메뉴에는 문서의 장, 절 등의 구분이 나열되며, 항목을 선택하면 그 위치로 이동합니다. <code>%:</code>로 시작하는 행을 쓰면 행의 나머지 부분이 사용자 태그로 메뉴에 추가됩니다. 설정 › 편집기 › 표시의 “메뉴바에 태그 리스트 보이기”를 켜면 같은 메뉴가 메뉴 막대에도 표시됩니다. 도구 막대의 레이블 항목에는 문서의 레이블이 나열됩니다. 편집 › 행으로 가기...(<kbd>⌘L</kbd>)는 번호로 행을 찾아갑니다.</p>
 
-<P>
-Text Statistics&hellip; in the status bar, or Edit &gt; Statistics&hellip;, counts the text without the TeX commands. The TeX Live
-program detex removes them from the document, or from the selection, and adds the files read with \input and \include; TeXShop
-counts what is left in the same way as the status bar. The document need not be saved. The count is made when the popover opens
-and when its refresh button is clicked, and the time of the count is shown at the top.
-</P>
+<p>윈도우 › 윈도우 분할(<kbd>⌃2</kbd>)이나 도구 막대의 소스 분할 항목을 사용하면 소스 윈도우가 같은 텍스트를 표시하는 두 부분으로 나뉘므로, 문서의 한 부분을 읽으면서 다른 부분을 쓸 수 있습니다. Option 키를 누르고 있으면 좌우로 나뉩니다. 한쪽에서 입력한 내용은 다른 쪽에도 나타납니다.</p>
 
-<P>
-File icons can be dragged and dropped onto the source text. If the file is a tex file, an \input command will be
-added with a relative path to the file. If the file is a graphic file, an \includegraphics command will be
-added instead. The following graphic types are recognized: pdf, jpg, jpeg, tif, tiff, eps, ps.
-</P>
+<h2>입력 줄이기</h2>
 
-<P>
-Dropping a cls file produces \documentclass and a file reference, dropping a sty file produces
-\usepackage, dropping a bib file produces \bibliographystyle, and dropping other text files
-produces \input.
-</P>
+<p>소스 › 현재 환경 닫기(<kbd>⌃⌘C</kbd>)는 아직 열려 있는 환경의 <code>\end</code> 행을 추가합니다. 예를 들어 목록 다음에 <code>\end{itemize}</code>를 넣습니다. 명령어 완성은 입력하기 시작한 명령이나 환경을 완성합니다. <a href="basic_commandcompletion.htm">명령어 완성</a>을 참조하십시오. 키 바인딩은 입력한 문자를 다른 텍스트로 바꿉니다. <a href="basic_autocompletion.htm">키 바인딩</a>을 참조하십시오. LaTeX 패널, 행렬 패널, 매크로 메뉴로는 더 긴 텍스트를 삽입할 수 있습니다.</p>
 
-<p> Drag and drop resolves aliases. For example, if a graphic file is really an alias, the file can
-be drag-and-dropped to the source and this source will typeset fine. TeX itself cannot resolve aliases,
-although it can resolve symbolic links. So if the name of the graphic alias is typed directly into
-the source, it will cause an error during typesetting.</p>
+<h2>소스에 파일 드롭하기</h2>
 
-<P>
-The behavior of drag and drop is user customizable. Customization is done with the Macro menu. Insert a new submenu
-titled "Drag & Drop". Inside this submenu place items named with the extension whose behavior
-you wish to customize, and place the code that should be inserted in the body of this item.
-For instance, if the item is .pdf, the code might be \includegraphics[#INS#]{%r}. In these inclusions,
-the following abbreviations may be used:
+<p>Finder에서 파일을 소스로 드래그하면 그 파일을 위한 명령이 삽입됩니다.</p>
+
+<table>
+<tr><th>파일</th><th>삽입되는 명령</th></tr>
+<tr><td>.pdf, .png, .jpg, .jpeg, .tif, .tiff, .eps, .ps</td><td><code>\includegraphics[]{<var>경로</var>}</code></td></tr>
+<tr><td>.bib</td><td><code>\bibliography{<var>이름</var>}</code></td></tr>
+<tr><td>.bst</td><td><code>\bibliographystyle{<var>이름</var>}</code></td></tr>
+<tr><td>.sty</td><td><code>\usepackage{<var>이름</var>}</code></td></tr>
+<tr><td>.cls</td><td><code>\documentclass{<var>이름</var>}</code></td></tr>
+<tr><td>.tex 등 그 밖의 파일</td><td><code>\input{<var>경로</var>}</code></td></tr>
+</table>
+
+<p>여기서 <var>경로</var>는 소스 파일이 있는 폴더에서 본 파일의 경로이고, <var>이름</var>은 확장자를 뺀 파일 이름입니다. 별칭을 드롭하면 별칭이 가리키는 원본 파일로 바뀝니다. TeX는 별칭을 스스로 따라가지 못하기 때문입니다. 경로에 공백이 있는 파일은 삽입되지 않고 경고가 표시됩니다.</p>
+
+<p>파일 종류에 따라 다른 내용을 삽입하려면 매크로 편집기(매크로 › 매크로 편집기 열기...)를 열고 이름이 <code>Drag &amp; Drop</code>인 하위 메뉴를 추가합니다. 그 안에 <code>.pdf</code>처럼 확장자를 이름으로 하는 항목을 추가하고, 내용에 삽입할 텍스트를 적습니다. 예를 들면 <code>\includegraphics[#INS#]{%r}</code>입니다. 이름이 <code>.*</code>인 항목은 자체 항목이 없는 모든 확장자에 사용됩니다. 내용에는 다음 약어를 쓸 수 있습니다.</p>
 
 <dl>
-<dd>	%F full path of an dropped file
-<dd>	%f dropped filename
-<dd>	%r relative path of the dropped file
-<dd>	%n filename without extension
-<dd>	%e extension.
+<dt><code>%F</code></dt><dd>드롭한 파일의 전체 경로</dd>
+<dt><code>%f</code></dt><dd>파일 이름</dd>
+<dt><code>%r</code></dt><dd>소스 파일이 있는 폴더에서 본 파일의 경로</dd>
+<dt><code>%n</code></dt><dd>확장자를 뺀 파일 이름</dd>
+<dt><code>%e</code></dt><dd>확장자</dd>
 </dl>
-</P>
 
-<P>
-If an extension is not mentioned in the Macro Editor, then it is
-handled in the default manner mentioned earlier. Thus for
-most people, no macro "Drag & Drop" submenu is needed.
-</P>
+<h2>상태 막대와 본문 통계</h2>
+
+<p>소스 아래의 상태 막대에는 문서의 행 수, 문자 수, 단어 수가 표시되고, 괄호 안에 선택 영역의 수가 표시됩니다. 삽입 위치의 위치, 행, 열도 표시됩니다. 문자는 눈에 보이는 대로 세므로 악센트가 붙은 글자나 이모티콘은 한 글자로 세며, TeX 명령은 쓰인 그대로 셉니다. 이모티콘은 한 단어로도 셉니다. 오른쪽에는 저장된 파일의 크기가 표시됩니다. 소스 › 상태 막대 보기는 모든 윈도우의 상태 막대를 보이거나 가립니다.</p>
+
+<p>상태 막대의 본문 통계…나 편집 › 통계...는 TeX 명령을 뺀 본문을 셉니다. TeX Live의 프로그램 detex가 문서나 선택 영역에서 TeX 명령을 제거하고 <code>\input</code>과 <code>\include</code>로 읽어 들이는 파일을 덧붙이면, TeXShop이 남은 텍스트를 상태 막대와 같은 방법으로 셉니다. 문서를 저장하지 않아도 됩니다. 팝오버가 열릴 때와 새로 고침 버튼을 클릭할 때 셉니다.</p>
+
+<h2>클립보드</h2>
+
+<p>편집 › 클립보드와 교환은 선택 영역을 클립보드의 텍스트로 바꾸고, 선택했던 텍스트를 클립보드에 넣습니다. 두 텍스트를 맞바꾸려면 첫 번째 텍스트를 복사하고, 두 번째 텍스트를 선택하여 클립보드와 교환을 선택한 다음, 첫 번째 텍스트가 있던 곳을 선택하고 붙여넣습니다. 아무것도 선택하지 않았으면 붙여넣기와 같습니다.</p>
+
+<p>편집 › 스타일과 함께 복사하기는 선택 영역을 소스의 서체와 밝은 테마 또는 어두운 테마의 색상으로, 배경색을 포함하거나 포함하지 않고 복사합니다. 워드 프로세서, 프레젠테이션, 이메일에 붙여넣을 때 사용합니다. 네 항목 모두 설정 › 키보드에서 단축키를 지정할 수 있습니다.</p>
+
+<h2>문자 변환</h2>
+
+<p>편집 메뉴의 하위 메뉴인 문자 종류 변환과 유니코드 정규화는 소스의 문맥 메뉴에도 있으며, 선택 영역을 바꿔 씁니다. 아무것도 선택하지 않았으면 문서 전체를 바꿔 쓸지 묻습니다. 문자 종류 변환은 주로 일본어 문서를 위한 기능입니다. 히라가나와 가타카나, 전각과 반각의 숫자 및 영문자, 원 숫자 같은 문자와 ajmacros 패키지의 명령, JIS X 0208에 없는 문자와 otf 패키지의 <code>\UTF</code> 및 <code>\CID</code> 명령 사이를 변환합니다. 둥근 따옴표를 TeX 따옴표로 바꾸는 기능도 있습니다. 유니코드 정규화는 선택 영역을 NFC, NFD, NFKC, NFKD, 또는 CJK 호환 한자를 바꾸지 않는 Modified NFC나 Modified NFD로 변환합니다. 두 기능 모두 실행 취소할 수 있습니다.</p>
+
+<h2>백업 파일</h2>
+
+<p>설정 › 문서 및 저장에서 “자동 저장 및 버전 사용”이 꺼져 있을 때 같은 곳의 “저장할 때 이전 파일을 ‘이름~’으로 남기기”를 켜면, 파일을 저장할 때마다 이전 버전이 남습니다. 백업 파일의 이름은 원래 파일 이름 뒤에 물결표가 붙은 것입니다.</p>
+
+<p>정규 표현식과 일괄 대치를 포함한 찾기와 대치는 <a href="basic_find.htm">찾기 및 대치</a>에서 설명합니다.</p>
 </main>
 </body>
 </html>
