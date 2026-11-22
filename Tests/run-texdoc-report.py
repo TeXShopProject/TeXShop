@@ -29,6 +29,8 @@ MUTATIONS = {
     'index-unmarked': (HEADER, '    BOOL mixed = indexOnly > 0 && indexOnly < listed.count;', '    BOOL mixed = NO;'),
     # texdoc's whole output is shown again.
     'whole-output': (HEADER, '        output = TSTexdocOutputHead(output);', '        ;'),
+    # The first mention of a folder decides whether it is read only through ls-R.
+    'first-mention': (HEADER, '        indexOnly[folder] = @((indexOnly[folder] == nil || indexOnly[folder].boolValue) && marked);', '        if (indexOnly[folder] == nil) indexOnly[folder] = @(marked);'),
     # Folders that do not exist are listed as searched.
     'missing-listed': (HEADER, '        if (!existing || [folder[TSTexdocFolderExists] boolValue])', '        if (YES)'),
     # Without kpsewhich the installation is guessed again.
@@ -91,7 +93,7 @@ int main(int argc, const char **argv)
 KPSEWHICH = '''#!/bin/sh
 case "$1" in
   -var-value) [ "$2" = SELFAUTOPARENT ] && echo "/Applications/TeXLive/2026" && exit 0 ;;
-  --expand-braces=*) echo "$DOCS/home/texmf/doc//:$DOCS/missing/doc//:!!$DOCS/dist/doc//:!!$DOCS/guides//:!!$DOCS/dist/doc//"; exit 0 ;;
+  --expand-braces=*) echo "$DOCS/home/texmf/doc//:$DOCS/missing/doc//:!!$DOCS/dist/doc//:!!$DOCS/guides//:!!$DOCS/dist/doc//:!!$DOCS/twice//:$DOCS/twice//:$DOCS/again//:!!$DOCS/again//"; exit 0 ;;
 esac
 exit 1
 '''
@@ -125,7 +127,7 @@ def run(texts):
         bin_dir = tmp / 'TeXLive/bin/universal-darwin'
         bin_dir.mkdir(parents=True)
         docs = str(tmp / 'docs')
-        for folder in ('home/texmf/doc', 'dist/doc', 'guides'):
+        for folder in ('home/texmf/doc', 'dist/doc', 'guides', 'twice', 'again'):
             (tmp / 'docs' / folder).mkdir(parents=True)
         (bin_dir / 'kpsewhich').write_text(KPSEWHICH)
         os.chmod(bin_dir / 'kpsewhich', 0o755)
@@ -145,8 +147,9 @@ def run(texts):
     head = out.split('== ')[0]
     check('installation=/Applications/TeXLive/2026' in head, 'the installation is the SELFAUTOPARENT of kpsewhich: ' + head)
     folders = [line[7:] for line in head.splitlines() if line.startswith('folder=')]
-    check(folders == [f'{docs}/home/texmf/doc index=0 exists=1', f'{docs}/missing/doc index=0 exists=0', f'{docs}/dist/doc index=1 exists=1', f'{docs}/guides index=1 exists=1'],
-          f'the roots of TEXDOCS, without !! and //, once each, also not named doc, with their marks: {folders}')
+    check(folders == [f'{docs}/home/texmf/doc index=0 exists=1', f'{docs}/missing/doc index=0 exists=0', f'{docs}/dist/doc index=1 exists=1', f'{docs}/guides index=1 exists=1',
+                       f'{docs}/twice index=0 exists=1', f'{docs}/again index=0 exists=1'],
+          f'the roots of TEXDOCS, without !! and //, once each, also not named doc, with their marks; a folder also named without !! (in either order) is searched normally: {folders}')
     message, details = sections.get('absent', ('', ''))
     check('None of the folders that texdoc of the TeX installation in /Applications/TeXLive/2026 is set to search exists:\n/no/doc\n/no/dist/doc *\n* In this folder, only the files listed in its ls-R index are searched.' in details,
           f'when no folder exists, the alert says so and lists them: {details!r}')
@@ -159,7 +162,7 @@ def run(texts):
     check(sections.get('found', ('',))[0] == '(none)', 'nothing is said when texdoc showed the documentation')
     message, details = sections.get('nothing', ('', ''))
     check(message == 'No documentation was found for “nosuchpkg”.', f'status 3: {message!r}')
-    check(f'texdoc of the TeX installation in /Applications/TeXLive/2026 is set to search these folders:\n{docs}/home/texmf/doc\n{docs}/dist/doc *\n{docs}/guides *\n* In this folder, only the files listed in its ls-R index are searched.\n\n' in details,
+    check(f'texdoc of the TeX installation in /Applications/TeXLive/2026 is set to search these folders:\n{docs}/home/texmf/doc\n{docs}/dist/doc *\n{docs}/guides *\n{docs}/twice\n{docs}/again\n* In this folder, only the files listed in its ls-R index are searched.\n\n' in details,
           f'status 3 names the installation and the folders: {details!r}')
     check('Another TeX installation on this Mac may have it.' in details and '› typesetting › group.typesetting.3.title › catalog.typesetting.3.0.title' in details,
           f'status 3 says where the TeX installation is chosen: {details!r}')

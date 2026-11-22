@@ -61,19 +61,25 @@ static inline void TSTexdocSearch(NSString *binPath, NSDictionary *environment, 
         *folders = nil;
         return;
     }
-    NSMutableArray<NSDictionary *> *list = [NSMutableArray array];
-    NSMutableSet<NSString *> *seen = [NSMutableSet set];
+    // A folder named more than once is read through its ls-R index only when every mention is marked.
+    NSMutableArray<NSString *> *order = [NSMutableArray array];
+    NSMutableDictionary<NSString *, NSNumber *> *indexOnly = [NSMutableDictionary dictionary];
     for (NSString *entry in [roots componentsSeparatedByString:@":"]) {
-        BOOL indexOnly = [entry hasPrefix:@"!!"];
-        NSString *folder = indexOnly ? [entry substringFromIndex:2] : entry;
+        BOOL marked = [entry hasPrefix:@"!!"];
+        NSString *folder = marked ? [entry substringFromIndex:2] : entry;
         while (folder.length > 1 && [folder hasSuffix:@"/"])
             folder = [folder substringToIndex:folder.length - 1];
-        if (folder.length == 0 || [seen containsObject:folder])
+        if (folder.length == 0)
             continue;
-        [seen addObject:folder];
+        if (indexOnly[folder] == nil)
+            [order addObject:folder];
+        indexOnly[folder] = @((indexOnly[folder] == nil || indexOnly[folder].boolValue) && marked);
+    }
+    NSMutableArray<NSDictionary *> *list = [NSMutableArray array];
+    for (NSString *folder in order) {
         BOOL directory = NO;
         BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:folder isDirectory:&directory] && directory;
-        [list addObject:@{TSTexdocFolderPath: folder, TSTexdocFolderIndexOnly: @(indexOnly), TSTexdocFolderExists: @(exists)}];
+        [list addObject:@{TSTexdocFolderPath: folder, TSTexdocFolderIndexOnly: indexOnly[folder], TSTexdocFolderExists: @(exists)}];
     }
     *folders = list;
 }
