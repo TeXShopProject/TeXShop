@@ -446,3 +446,6 @@
 "Auto Rotate" = "自动旋转";
 "Scale:" = "缩放：";
 "Scale to Fit" = "缩放以适合";
+
+/* Help > Show Help for Package: texdoc found nothing */
+"No documentation was found for “%@”." = "未找到“%@”的文档。";

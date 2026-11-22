@@ -52,7 +52,6 @@
 - (IBAction)displayTextSizes:sender;
 - (IBAction)displayTextSymbols:sender;
 - (IBAction)displayTextSpacing:sender;
-- (IBAction)supplementsToDesktop:sender;
 - (IBAction)displayTables:sender;
 - (IBAction)displayThisRelease:sender;
 - (IBAction)displayChanges:sender;

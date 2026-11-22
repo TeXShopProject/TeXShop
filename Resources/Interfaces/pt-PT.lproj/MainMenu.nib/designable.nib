@@ -1402,15 +1402,15 @@
                     </menu>
                 </menuItem>
                 <menuItem title="Ajuda" id="136">
-                    <menu key="submenu" title="Ajuda" id="137">
+                    <menu key="submenu" title="Ajuda" systemMenu="help" id="137">
                         <items>
-                            <menuItem title="Sobre esta versão" id="828" identifier="TSShortcut.displayThisRelease:.0">
+                            <menuItem title="Sobre esta versão (em inglês)" id="828" identifier="TSShortcut.displayThisRelease:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayThisRelease:" target="671" id="830"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Alterações" id="bIG-vh-9da" identifier="TSShortcut.displayChanges:.0">
+                            <menuItem title="Alterações (em inglês)" id="bIG-vh-9da" identifier="TSShortcut.displayChanges:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChanges:" target="671" id="vAx-uC-tpx"/>
@@ -1432,19 +1432,19 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="829"/>
-                            <menuItem title="Primeiros passos com o TeXShop" id="663" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
+                            <menuItem title="Primeiros passos com o TeXShop (em inglês)" id="663" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
                                     <action selector="displayGettingStartedTeXShop:" target="671" id="675"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Manual do TeXShop" id="DBh-t3-dmD" identifier="TSShortcut.displayManual:.0">
+                            <menuItem title="Manual do TeXShop (em inglês)" id="DBh-t3-dmD" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayManual:" target="671" id="AWf-RM-VPG"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="MKm-nC-IqD"/>
-                            <menuItem title="Comandos HTML" id="gYY-P6-VAI" identifier="TSShortcut.displayHTMLHelp:.0">
+                            <menuItem title="Comandos HTML (em inglês)" id="gYY-P6-VAI" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayHTMLHelp:" target="671" id="9e3-mg-sDc"/>
@@ -1455,72 +1455,75 @@
                                     <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Codificação de ficheiros e o TeXShop" id="w4h-eU-Ntv" identifier="TSShortcut.displayFileEncoding:.0">
+                            <menuItem title="Codificação de ficheiros e o TeXShop (em inglês)" id="w4h-eU-Ntv" identifier="TSShortcut.displayFileEncoding:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayFileEncoding:" target="671" id="IcA-FR-Hoq"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Dicas e truques do TeXShop" id="893" identifier="TSShortcut.displayTipsandTricks:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTipsandTricks:" target="671" id="894"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Confusões entre funcionalidades do TeXShop" id="flI-nA-zhJ" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTeXShopConfusion:" target="671" id="Tds-cJ-p5w"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Linhas de comentário e definições ocultas" id="no4-PK-1TO" identifier="TSShortcut.displayCommentLines:.0">
+                            <menuItem title="Linhas de comentário e definições ocultas (em inglês)" id="no4-PK-1TO" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="671" id="NUG-jA-DdW"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Tipos de letra TeX recentes" id="fYL-Fo-jRf" identifier="TSShortcut.displayRecentTeXFonts:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayRecentTeXFonts:" target="671" id="JmU-Rp-QVY"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Notas sobre o AppleScript no TeXShop" id="iIs-qE-f8C" identifier="TSShortcut.displayNotesonApplescript:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayNotesonApplescript:" target="671" id="mYE-rM-StL"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="685">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Primeiros passos com composição geral" id="684" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedXeTeX:" target="671" id="737"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="683">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Primeiros passos com composição matemática" id="682" identifier="TSShortcut.displayGettingStartedLatex:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedLatex:" target="671" id="738"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Curso breve de George Grätzer" id="681" identifier="TSShortcut.displayShortCourse:.0">
-                                <connections>
-                                    <action selector="displayShortCourse:" target="671" id="739"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Suplementos do curso breve --&gt; Secretária" id="680" identifier="TSShortcut.supplementsToDesktop:.0">
-                                <connections>
-                                    <action selector="supplementsToDesktop:" target="671" id="740"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Tabelas de símbolos do curso breve" id="777" identifier="TSShortcut.displayTables:.0">
-                                <connections>
-                                    <action selector="displayTables:" target="671" id="778"/>
-                                </connections>
+                            <menuItem title="Documentos antigos" id="HlO-Dc-Mnu">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Documentos antigos" id="HlO-Dc-Sub">
+                                    <items>
+                                        <menuItem title="Dicas e truques do TeXShop (em inglês)" id="893" identifier="TSShortcut.displayTipsandTricks:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTipsandTricks:" target="671" id="894"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Confusões entre funcionalidades do TeXShop (em inglês)" id="flI-nA-zhJ" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTeXShopConfusion:" target="671" id="Tds-cJ-p5w"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tipos de letra TeX recentes (em inglês)" id="fYL-Fo-jRf" identifier="TSShortcut.displayRecentTeXFonts:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayRecentTeXFonts:" target="671" id="JmU-Rp-QVY"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Notas sobre o AppleScript no TeXShop (em inglês)" id="iIs-qE-f8C" identifier="TSShortcut.displayNotesonApplescript:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayNotesonApplescript:" target="671" id="mYE-rM-StL"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="683">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="Primeiros passos com composição geral (em inglês)" id="684" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
+                                            <connections>
+                                                <action selector="displayGettingStartedXeTeX:" target="671" id="737"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Primeiros passos com composição matemática (em inglês)" id="682" identifier="TSShortcut.displayGettingStartedLatex:.0">
+                                            <connections>
+                                                <action selector="displayGettingStartedLatex:" target="671" id="738"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="HlO-Dc-Sp2"/>
+                                        <menuItem title="Curso breve de George Grätzer (em inglês)" id="681" identifier="TSShortcut.displayShortCourse:.0">
+                                            <connections>
+                                                <action selector="displayShortCourse:" target="671" id="739"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tabelas de símbolos do curso breve (em inglês)" id="777" identifier="TSShortcut.displayTables:.0">
+                                            <connections>
+                                                <action selector="displayTables:" target="671" id="778"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>

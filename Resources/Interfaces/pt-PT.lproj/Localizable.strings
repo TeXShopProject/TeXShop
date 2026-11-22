@@ -449,3 +449,6 @@
 "Auto Rotate" = "Rodar automaticamente";
 "Scale:" = "Escala:";
 "Scale to Fit" = "Ajustar escala";
+
+/* Help > Show Help for Package: texdoc found nothing */
+"No documentation was found for “%@”." = "Não foi encontrada documentação para “%@”.";

@@ -457,3 +457,6 @@
 "Auto Rotate" = "自動回転";
 "Scale:" = "サイズ調整:";
 "Scale to Fit" = "用紙サイズに合わせる";
+
+/* Help > Show Help for Package: texdoc found nothing */
+"No documentation was found for “%@”." = "「%@」のドキュメントが見つかりませんでした。";

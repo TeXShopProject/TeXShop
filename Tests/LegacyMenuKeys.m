@@ -68,6 +68,49 @@ int main(int argc,char **argv){@autoreleasepool{
   Apply(main,@{@"ヘルプ":@{@"TeXLiveドキュメント（英語）":@[@"t",@NO,@YES]}});
   Check([doc.keyEquivalent isEqual:@"t"],@"the former Japanese title reaches TeX Live Documentation");
  }
+ // Help: 6.00 moved the older documents into the Older Documents submenu, removed Short Course Supplements --> Desktop,
+ // marks the English-only documents in every language and corrected some titles; Spell Checking Help is added at launch.
+ // Positions and titles saved before still reach the same items.
+ {
+  NSMenu *main=[NSMenu new];NSMenuItem *helpTop=Item(main,@"Help");helpTop.submenu=[NSMenu new];NSMenu *help=helpTop.submenu;
+  NSMutableDictionary<NSString *,NSMenuItem *> *by=[NSMutableDictionary dictionary];
+  NSMenuItem *(^add)(NSMenu *,NSString *,NSString *)=^NSMenuItem *(NSMenu *menu,NSString *title,NSString *action){
+   NSMenuItem *item=Item(menu,title);item.identifier=[NSString stringWithFormat:@"TSShortcut.%@:.0",action];by[action]=item;return item;};
+  add(help,@"Acerca de esta versión (en inglés)",@"displayThisRelease");add(help,@"Cambios (en inglés)",@"displayChanges");[help addItem:NSMenuItem.separatorItem];
+  add(help,@"Documentación de TeX Live",@"displayTeXLiveDocumentation");add(help,@"Mostrar ayuda del paquete...",@"displayHelpForPackage");[help addItem:NSMenuItem.separatorItem];
+  add(help,@"Primeros pasos con TeXShop (en inglés)",@"displayGettingStartedTeXShop");NSMenuItem *spell=Item(help,@"Ayuda de la revisión ortográfica");
+  add(help,@"Manual de TeXShop (en inglés)",@"displayManual");[help addItem:NSMenuItem.separatorItem];
+  add(help,@"Comandos HTML (en inglés)",@"displayHTMLHelp");add(help,@"Panel de ayuda de TeXShop...",@"showHelp");
+  add(help,@"Codificaciones de archivos y TeXShop (en inglés)",@"displayFileEncoding");add(help,@"Líneas mágicas y ajustes ocultos (en inglés)",@"displayCommentLines");
+  [help addItem:NSMenuItem.separatorItem];NSMenuItem *olderTop=Item(help,@"Documentos anteriores");olderTop.submenu=[NSMenu new];NSMenu *older=olderTop.submenu;
+  add(older,@"Consejos y trucos en TeXShop (en inglés)",@"displayTipsandTricks");add(older,@"Confusiones entre utilidades de TeXShop (en inglés)",@"displayTeXShopConfusion");
+  add(older,@"Tipografías recientes para TeX (en inglés)",@"displayRecentTeXFonts");add(older,@"Notas sobre AppleScript en TeXShop (en inglés)",@"displayNotesonApplescript");
+  [older addItem:NSMenuItem.separatorItem];add(older,@"Primeros pasos con tipografía general (en inglés)",@"displayGettingStartedXeTeX");
+  add(older,@"Primeros pasos con tipografía matemática (en inglés)",@"displayGettingStartedLatex");[older addItem:NSMenuItem.separatorItem];
+  add(older,@"Curso corto de George Grätzer (en inglés)",@"displayShortCourse");add(older,@"Tablas de símbolos del curso (en inglés)",@"displayTables");
+  NSMenuItem *style=Item(main,@"Open Style File...");style.identifier=@"TSShortcut.displayStyleFile:.0";
+  void (^reset)(void)=^{for(NSMenuItem *item in by.allValues)item.keyEquivalent=@"";spell.keyEquivalent=@"";style.keyEquivalent=@"";};
+  // Former positions: 6 was Open Style File, 8 First Steps, 9 the Manual, 14 Tips and Tricks, 16 Comment Lines, 24 the removed Supplements, 25 Symbol Tables.
+  NSDictionary *positions=@{@"8":@"displayGettingStartedTeXShop",@"9":@"displayManual",@"14":@"displayTipsandTricks",@"16":@"displayCommentLines",
+                            @"18":@"displayNotesonApplescript",@"20":@"displayGettingStartedXeTeX",@"22":@"displayGettingStartedLatex",@"25":@"displayTables"};
+  for(NSString *helpKey in @[@"1",@"Help"]){
+   for(NSString *position in positions){
+    reset();Apply(main,@{helpKey:@{position:@[@"j",@NO,@YES]}});
+    Check([by[positions[position]].keyEquivalent isEqual:@"j"] && [spell.keyEquivalent isEqual:@""],
+          [NSString stringWithFormat:@"former Help position %@ reaches %@, not Spell Checking Help",position,positions[position]]);
+   }
+   reset();Apply(main,@{helpKey:@{@"6":@[@"s",@NO,@YES],@"24":@[@"x",@NO,@YES]}});
+   BOOL quiet=[style.keyEquivalent isEqual:@"s"];
+   for(NSMenuItem *item in by.allValues)if(item.keyEquivalent.length)quiet=NO;
+   Check(quiet,@"former position 6 reaches Open Style File; the place of the removed Supplements reaches no item");
+  }
+  // Titles saved before 6.00: without the mark, with the stray line end, and corrected ones.
+  reset();Apply(main,@{@"Help":@{@"Cambios":@[@"c",@NO,@YES],@"Líneas mágicas y ajustes ocultos\n":@[@"l",@NO,@YES],@"Consejos y trucos en TeXShop":@[@"t",@NO,@YES],
+                                 @"Introductie symbooltabellen":@[@"y",@NO,@YES],@"Exibir ajuda para o pacote":@[@"p",@NO,@YES],@"TeXShopヘルプパネル":@[@"h",@NO,@YES]}});
+  Check([by[@"displayChanges"].keyEquivalent isEqual:@"c"] && [by[@"displayCommentLines"].keyEquivalent isEqual:@"l"] && [by[@"displayTipsandTricks"].keyEquivalent isEqual:@"t"] &&
+        [by[@"displayTables"].keyEquivalent isEqual:@"y"] && [by[@"displayHelpForPackage"].keyEquivalent isEqual:@"p"] && [by[@"showHelp"].keyEquivalent isEqual:@"h"],
+        @"titles saved before 6.00 reach the Help items, also inside Older Documents");
+ }
  // Edit › Find: only the English menu had Find and Replace… before 6.00. Positions saved for another language's menu
  // skip it, which that menu now has after Find…; the English positions count it, as before. Titles reach it in both.
  for(NSNumber *english in @[@YES,@NO]){

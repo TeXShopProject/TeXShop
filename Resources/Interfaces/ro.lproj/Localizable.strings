@@ -449,3 +449,6 @@
 "Auto Rotate" = "Rotire automată";
 "Scale:" = "Redimensionare:";
 "Scale to Fit" = "Potrivire";
+
+/* Help > Show Help for Package: texdoc found nothing */
+"No documentation was found for “%@”." = "Nu s-a găsit documentație pentru „%@”.";

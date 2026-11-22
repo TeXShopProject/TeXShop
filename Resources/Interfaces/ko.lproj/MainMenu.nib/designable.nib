@@ -1403,7 +1403,7 @@
                     </menu>
                 </menuItem>
                 <menuItem title="도움말" id="222">
-                    <menu key="submenu" title="도움말" id="223">
+                    <menu key="submenu" title="도움말" systemMenu="help" id="223">
                         <items>
                             <menuItem title="이 버전에 대하여 (영문)" id="224" identifier="TSShortcut.displayThisRelease:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1445,13 +1445,13 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="lh7-mr-fNf"/>
-                            <menuItem title="HTML 명령" id="mff-0m-E9A" identifier="TSShortcut.displayHTMLHelp:.0">
+                            <menuItem title="HTML 명령 (영문)" id="mff-0m-E9A" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayHTMLHelp:" target="259" id="FGX-xp-s25"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop 도움말 패널" keyEquivalent="?" id="229" identifier="TSShortcut.showHelp:.0">
+                            <menuItem title="TeXShop 도움말 패널..." keyEquivalent="?" id="229" identifier="TSShortcut.showHelp:.0">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="332"/>
                                 </connections>
@@ -1462,66 +1462,69 @@
                                     <action selector="displayFileEncoding:" target="259" id="k8G-xr-OSl"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop 힌트와 팁 (영문)" id="230" identifier="TSShortcut.displayTipsandTricks:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTipsandTricks:" target="259" id="451"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="단축키, 매크로, 자동완성에 대하여 (영문)" id="473" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTeXShopConfusion:" target="259" id="474"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="매직 코멘트와 숨겨진 설정 (영문)" id="wn1-vb-7dK" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="259" id="Clk-hS-f4o"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="최신 TeX 서체에 대하여 (영문)" id="231" identifier="TSShortcut.displayRecentTeXFonts:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayRecentTeXFonts:" target="259" id="469"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="TeXShop과 Applescript (영문)" id="232" identifier="TSShortcut.displayNotesonApplescript:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayNotesonApplescript:" target="259" id="471"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="233">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="일반적 조판 입문 (영문)" id="234" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedXeTeX:" target="259" id="412"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="235">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="수식 입력 방법 (영문)" id="236" identifier="TSShortcut.displayGettingStartedLatex:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedLatex:" target="259" id="411"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="George Grätzer 짧은 입문서 (영문)" id="237" identifier="TSShortcut.displayShortCourse:.0">
-                                <connections>
-                                    <action selector="displayShortCourse:" target="259" id="410"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="입문서 부록을 데스크탑으로 복사" id="238" identifier="TSShortcut.supplementsToDesktop:.0">
-                                <connections>
-                                    <action selector="supplementsToDesktop:" target="259" id="409"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="기호 일람 (영문)" id="240" identifier="TSShortcut.displayTables:.0">
-                                <connections>
-                                    <action selector="displayTables:" target="259" id="417"/>
-                                </connections>
+                            <menuItem title="이전 문서" id="HlO-Dc-Mnu">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="이전 문서" id="HlO-Dc-Sub">
+                                    <items>
+                                        <menuItem title="TeXShop 힌트와 팁 (영문)" id="230" identifier="TSShortcut.displayTipsandTricks:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTipsandTricks:" target="259" id="451"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="단축키, 매크로, 자동완성에 대하여 (영문)" id="473" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTeXShopConfusion:" target="259" id="474"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="최신 TeX 서체에 대하여 (영문)" id="231" identifier="TSShortcut.displayRecentTeXFonts:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayRecentTeXFonts:" target="259" id="469"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="TeXShop과 Applescript (영문)" id="232" identifier="TSShortcut.displayNotesonApplescript:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayNotesonApplescript:" target="259" id="471"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="235">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="일반적 조판 입문 (영문)" id="234" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
+                                            <connections>
+                                                <action selector="displayGettingStartedXeTeX:" target="259" id="412"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="수식 입력 방법 (영문)" id="236" identifier="TSShortcut.displayGettingStartedLatex:.0">
+                                            <connections>
+                                                <action selector="displayGettingStartedLatex:" target="259" id="411"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="HlO-Dc-Sp2"/>
+                                        <menuItem title="George Grätzer 짧은 입문서 (영문)" id="237" identifier="TSShortcut.displayShortCourse:.0">
+                                            <connections>
+                                                <action selector="displayShortCourse:" target="259" id="410"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="기호 일람 (영문)" id="240" identifier="TSShortcut.displayTables:.0">
+                                            <connections>
+                                                <action selector="displayTables:" target="259" id="417"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>

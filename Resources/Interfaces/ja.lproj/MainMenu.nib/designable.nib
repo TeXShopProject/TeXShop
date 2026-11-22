@@ -1404,7 +1404,7 @@
                     </menu>
                 </menuItem>
                 <menuItem title="ヘルプ" id="136">
-                    <menu key="submenu" title="ヘルプ" id="137">
+                    <menu key="submenu" title="ヘルプ" systemMenu="help" id="137">
                         <items>
                             <menuItem title="このリリースについて（英語）" id="848" identifier="TSShortcut.displayThisRelease:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1446,13 +1446,13 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="DiS-jx-0ug"/>
-                            <menuItem title="HTMLコマンド" id="PzI-ik-u8r" identifier="TSShortcut.displayHTMLHelp:.0">
+                            <menuItem title="HTMLコマンド（英語）" id="PzI-ik-u8r" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayHTMLHelp:" target="690" id="SF9-kB-uN1"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShopヘルプパネル" keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
+                            <menuItem title="TeXShopヘルプパネル..." keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
@@ -1463,66 +1463,69 @@
                                     <action selector="displayFileEncoding:" target="690" id="OaD-xa-cXF"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShopのヒントと技巧（英語）" id="920" identifier="TSShortcut.displayTipsandTricks:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTipsandTricks:" target="690" id="921"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="TeXShopの様々な補完機能の解説（英語）" id="f2W-Pd-rBL" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTeXShopConfusion:" target="690" id="GlT-Bd-pji"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="マジックコメントと隠し設定（英語）" id="tRI-xD-Rf1" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="690" id="j9N-BE-7YM"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="近年のTeXフォントについて（英語）" id="Jg2-Kq-3vh" identifier="TSShortcut.displayRecentTeXFonts:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayRecentTeXFonts:" target="690" id="f48-XO-tUM"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="TeXShopのApplescriptの解説（英語）" id="gbB-GG-p4L" identifier="TSShortcut.displayNotesonApplescript:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayNotesonApplescript:" target="690" id="0Dx-ic-g4e"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="704">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="一般的なタイプセット法の入門記事（英語）" id="703" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedXeTeX:" target="690" id="756"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="702">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="数式のタイプセット法の入門記事（英語）" id="701" identifier="TSShortcut.displayGettingStartedLatex:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedLatex:" target="690" id="757"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="George Grätzerによるショートコース（英語）" id="700" identifier="TSShortcut.displayShortCourse:.0">
-                                <connections>
-                                    <action selector="displayShortCourse:" target="690" id="758"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="ショートコースの付録をデスクトップにコピー" id="699" identifier="TSShortcut.supplementsToDesktop:.0">
-                                <connections>
-                                    <action selector="supplementsToDesktop:" target="690" id="759"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="記号一覧（英語）" id="796" identifier="TSShortcut.displayTables:.0">
-                                <connections>
-                                    <action selector="displayTables:" target="690" id="797"/>
-                                </connections>
+                            <menuItem title="以前の資料" id="HlO-Dc-Mnu">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="以前の資料" id="HlO-Dc-Sub">
+                                    <items>
+                                        <menuItem title="TeXShopのヒントと技巧（英語）" id="920" identifier="TSShortcut.displayTipsandTricks:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTipsandTricks:" target="690" id="921"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="TeXShopの様々な補完機能の解説（英語）" id="f2W-Pd-rBL" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTeXShopConfusion:" target="690" id="GlT-Bd-pji"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="近年のTeXフォントについて（英語）" id="Jg2-Kq-3vh" identifier="TSShortcut.displayRecentTeXFonts:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayRecentTeXFonts:" target="690" id="f48-XO-tUM"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="TeXShopのApplescriptの解説（英語）" id="gbB-GG-p4L" identifier="TSShortcut.displayNotesonApplescript:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayNotesonApplescript:" target="690" id="0Dx-ic-g4e"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="702">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="一般的なタイプセット法の入門記事（英語）" id="703" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
+                                            <connections>
+                                                <action selector="displayGettingStartedXeTeX:" target="690" id="756"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="数式のタイプセット法の入門記事（英語）" id="701" identifier="TSShortcut.displayGettingStartedLatex:.0">
+                                            <connections>
+                                                <action selector="displayGettingStartedLatex:" target="690" id="757"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="HlO-Dc-Sp2"/>
+                                        <menuItem title="George Grätzerによるショートコース（英語）" id="700" identifier="TSShortcut.displayShortCourse:.0">
+                                            <connections>
+                                                <action selector="displayShortCourse:" target="690" id="758"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="記号一覧（英語）" id="796" identifier="TSShortcut.displayTables:.0">
+                                            <connections>
+                                                <action selector="displayTables:" target="690" id="797"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>

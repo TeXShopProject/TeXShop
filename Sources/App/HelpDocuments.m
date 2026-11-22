@@ -267,9 +267,9 @@
 	// get copy of environment and add the preferences paths
 	env = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
 	path = [env objectForKey:@"PATH"] ?: @"/usr/bin:/bin:/usr/sbin:/sbin";
-	path = [path stringByAppendingString:@":"];
-	// [path appendString:[SUD stringForKey:TetexBinPath]];
-	path = [path stringByAppendingString:binPath];
+	// texdoc is a texlua script (#!/usr/bin/env texlua): the texlua of the same TeX installation must come first,
+	// or another one on the PATH looks for texdoc's library in its own tree and fails.
+	path = [[binPath stringByAppendingString:@":"] stringByAppendingString:path];
  	[env setObject: path forKey: @"PATH"];
 	
 	
@@ -279,6 +279,27 @@
 	[args addObject: packageString];
 	[displayPackageHelpTask setArguments:args];
 	[displayPackageHelpTask setEnvironment:env];
+	// texdoc ends with a nonzero status when it finds no documentation (a misspelt name, a TeX Live installed
+	// without documentation) or cannot run; say so instead of doing nothing. A task replaced by a later request,
+	// or stopped here, says nothing.
+	NSPipe *errors = [NSPipe pipe];
+	[displayPackageHelpTask setStandardError:errors];
+	NSTask *task = displayPackageHelpTask;
+	task.terminationHandler = ^(NSTask *finished) {
+		NSData *data = [[errors fileHandleForReading] readDataToEndOfFile];
+		int status = finished.terminationStatus;
+		BOOL exited = finished.terminationReason == NSTaskTerminationReasonExit;
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (self->displayPackageHelpTask != task || !exited || status == 0)
+				return;
+			NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+			NSAlert *alert = [[NSAlert alloc] init];
+			alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"No documentation was found for “%@”.", @"Help > Show Help for Package: texdoc found nothing"), packageString];
+			// texdoc's own words: where else to look (texdoc.org, CTAN), or why it could not run.
+			alert.informativeText = [output stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] ?: @"";
+			[alert runModal];
+		});
+	};
 	// No texdoc there, or one that cannot be started (no TeX installed, another folder set): -launch would raise.
 	if (![displayPackageHelpTask launchAndReturnError:NULL]) {
 		displayPackageHelpTask = nil;
@@ -545,17 +566,6 @@
  	
 	fileName = [[NSBundle mainBundle] pathForResource:@"Tables" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
-}
-
-- (IBAction)supplementsToDesktop:sender
-{
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		
-		if (! [fileManager fileExistsAtPath: [[DesktopPath stringByAppendingString:@"Course Supplements"] stringByStandardizingPath]] ) {
-		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Course Supplements"]
-			  toPath:[[DesktopPath stringByAppendingString:@"Course Supplements"] stringByStandardizingPath]];
-		}
-
 }
 
 - (void) okForPanel: sender
