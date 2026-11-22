@@ -4,49 +4,71 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>In TeX-Quellen suchen</title>
-<meta name="copyright" content="Copyright (c) 2026 unter der GNU FDL">
-<meta name="description" content="Suchen und Ersetzen in allen Dateien eines geteilten Dokuments; TEX root; In TeX-Quellen suchen; Alles ersetzen; Sicherungskopien">
+<meta name="copyright" content="Copyright (c) 2026 under the GNU FDL">
+<meta name="description" content="in allen Dateien mit derselben Hauptdatei suchen und ersetzen; in allen Dateien eines aufgeteilten Dokuments suchen und ersetzen; TEX root; In TeX-Quellen suchen; Alles ersetzen; Sicherungskopien">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-<li><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-<li><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
 <li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
 <li><a href="basic_texrootsearch.htm" class="current">In TeX-Quellen suchen</a></li>
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
-<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
 <li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
-<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
 <li><a href="basic_printing.htm">Drucken</a></li>
 <li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
-<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-<li><a href="basic_bugs.htm">Fehlerberichte &uuml;bermitteln</a></li>
-<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
 <li><a href="basic_license.htm">Lizenz</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>In TeX-Quellen suchen</h1>
 
+<p><a name="texroot_search"></a>In einem Dokument, das in eine Hauptdatei und Kapiteldateien aufgeteilt ist, können Sie in allen Dateien zugleich suchen und ersetzen. Wählen Sie, während eine seiner Dateien vorn ist, Bearbeiten › Suchen › In TeX-Quellen mit derselben TEX root suchen …; ist die Hauptdatei selbst vorn, heißt der Eintrag „In TeX-Quellen mit dieser Datei als TEX root suchen …“. Derselbe Eintrag steht im Menü von „Alle suchen“ in der Erweiterten Suchmaske, und „Auf TeX-Quellen mit derselben TEX root anwenden …“ im Menü von „Alles ersetzen“ im Fenster „Mehrfach ersetzen“ öffnet das Fenster mit dem dort gewählten Regelsatz. Bei einem Dokument ohne Titel und bei einer Datei, deren Name nicht auf .tex endet, sind die Einträge abgeblendet.</p>
 
-<p><a name="texroot_search"></a>Ein Dokument, das in Kapiteldateien geteilt ist, kann in allen seinen Dateien auf einmal durchsucht werden, und in allen kann ersetzt werden. Ist eine seiner Dateien vorne, w&#228;hlen Sie im Untermen&#252; &bdquo;Suchen&ldquo; des Men&#252;s &bdquo;Bearbeiten&ldquo; &bdquo;In TeX-Quellen mit derselben TEX root suchen &hellip;&ldquo;; ist die vordere Datei die Root-Datei selbst, hei&#223;t der Befehl &bdquo;In TeX-Quellen mit dieser Datei als TEX root suchen &hellip;&ldquo;. Derselbe Befehl steht im Men&#252; von &bdquo;Alle suchen&ldquo; in der erweiterten Suchmaske, und &bdquo;Auf TeX-Quellen mit derselben TEX root anwenden &hellip;&ldquo; im Men&#252; von &bdquo;Alles ersetzen&ldquo; im Fenster &bdquo;Mehrfach ersetzen&ldquo; &#246;ffnet das Fenster mit dem dort gew&#228;hlten Regelsatz. F&#252;r ein Dokument ohne Namen und f&#252;r eine Datei, deren Name nicht auf .tex endet, sind die Befehle abgeblendet.</p>
-<p>Das Fenster &bdquo;In TeX-Quellen suchen&ldquo; durchsucht die Root-Datei und die .tex-Dateien in ihrem Ordner und den Ordnern darunter, die sie in ihren ersten 20 Zeilen mit % !TEX root (oder %!TEX root) angeben; mit der versteckten Einstellung UseOldHeadingCommands auch die, die sie mit %SourceDoc angeben. Die Zeile unter den Modi nennt die durchsuchte Root, und die Taste ? am Ende dieser Zeile zeigt diese Regel. Mit \input oder \include eingebundenen Dateien wird nicht gefolgt, und die Root-Datei eines .texshop-Projekts wird nicht verwendet. Symbolische Links auf Dateien werden &#252;bersprungen, Ordner hinter symbolischen Links oder Aliassen werden nicht betreten, und der Ordner TeXShop Backups wird ausgelassen. Die Baumansicht links zeigt die Dateien; eine dort ausgeschaltete Datei oder ein ausgeschalteter Ordner wird nicht durchsucht. Die Taste &bdquo;Nicht gelesene Dateien&ldquo; unten zeigt die Dateien und Ordner, die nicht gelesen werden konnten, mit dem Grund.</p>
-<p>&bdquo;Suchen&ldquo; listet jeden Treffer mit seiner Zeilennummer. &bdquo;Ersetzen&ldquo; zeigt jede Zeile vor und nach dem Ersetzen, und jeder Treffer hat ein Markierungsfeld: ein ausgeschalteter Treffer wird nicht ersetzt. &bdquo;Mehrfach ersetzen&ldquo; wendet einen Regelsatz des Fensters &bdquo;Mehrfach ersetzen&ldquo; an und listet die Gruppen ge&#228;nderter Zeilen, die als Ganzes ein- und ausgeschaltet werden; &bdquo;Bearbeiten &hellip;&ldquo; &#246;ffnet den Regelsatz in jenem Fenster. Such- und Ersetzungsfeld und die Optionen sind die der erweiterten Suchmaske. Die Liste folgt jeder &#196;nderung kurz danach, und die Taste &#8635; (Befehl-R) sammelt die Dateien neu. Ein Klick auf eine Zeile zeigt den Treffer in seinem Dokument; ein Doppelklick holt dieses Fenster nach vorne. Die Stopptaste, die Escape-Taste oder Befehl-Punkt beenden eine lange Suche.</p>
-<p>Ein ge&#246;ffnetes Dokument wird im Text auf dem Bildschirm durchsucht, mit seinen nicht gesicherten &#196;nderungen. Eine nicht ge&#246;ffnete Datei wird in der Codierung gelesen, mit der TeXShop sie &#246;ffnen w&#252;rde. Eine Datei, die sich in dieser Codierung nicht unver&#228;ndert zur&#252;ckschreiben lie&#223;e, eine Datei mit einem weiteren Namen (einem harten Link), eine Datei ohne Schreibrecht und ein ge&#246;ffnetes Dokument, das nicht bearbeitet werden kann, werden nur durchsucht: Sie tragen das Zeichen &#8856;, das den Grund nennt.</p>
-<p>&bdquo;Alles ersetzen&ldquo; fragt vor dem Ersetzen. Vor und nach dieser Frage werden die Dateien neu gesammelt und mit der Liste verglichen: Hat sich eine Datei ge&#228;ndert oder ist eine Datei hinzugekommen, wird nichts ersetzt und die Liste neu erstellt. Ist &bdquo;Sicherungskopien sichern&ldquo; eingeschaltet, wird zuerst jede Datei, in der ersetzt wird, so, wie sie bei der Antwort auf die Frage war, nach TeXShop Backups/&lt;Datum und Uhrzeit&gt; im Ordner der Root-Datei kopiert, unter ihrem Pfad; ein ge&#246;ffnetes Dokument mit seinem Text auf dem Bildschirm. Dann werden die nicht ge&#246;ffneten Dateien direkt geschrieben, in ihrer Codierung, mit ihren Zeilenenden, ihrer Byte-Reihenfolge-Markierung, ihren Zugriffsrechten und anderen Attributen; das kann nicht widerrufen werden. Die ge&#246;ffneten Dokumente werden auf dem Bildschirm ersetzt und nicht gesichert: Ein einziges &bdquo;Widerrufen&ldquo; nimmt die Ersetzungen eines Dokuments zur&#252;ck. W&#228;hrenddessen k&#246;nnen die Dokumente weder bearbeitet, gesichert, geschlossen noch gesetzt werden, und die Stopptaste, Escape oder Befehl-Punkt beenden &bdquo;Alles ersetzen&ldquo;: Bereits geschriebene Dateien und schon fertig ersetzte Dokumente bleiben ersetzt, was schon in das gerade bearbeitete Dokument eingesetzt wurde, wird zur&#252;ckgenommen, und der Rest wird nicht ersetzt. Danach werden die Dateien erneut durchsucht, ausgeschaltete Treffer bleiben ausgeschaltet, und die Zeile unten nennt die Zahl der Ersetzungen. Wurden einige Dateien nicht ersetzt, nennt ein Hinweis sie mit dem Grund, und &bdquo;Im Finder zeigen&ldquo; &#246;ffnet den Ordner der Sicherungskopie.</p>
-<p>Unmittelbar bevor eine Datei ersetzt wird, wird ihr Inhalt mit der Fassung in der Liste verglichen, und die Datei wird sofort ersetzt. Ein Programm, das die Datei genau in diesem kurzen Moment schreibt, ohne sich mit anderen Programmen abzustimmen (&#252;ber NSFileCoordinator), kann das Geschriebene trotzdem verlieren; die Sicherungskopie enth&#228;lt die verglichene Fassung. Verwenden Sie &bdquo;Alles ersetzen&ldquo; nicht, w&#228;hrend ein anderes Programm die Dateien laufend schreibt.</p>
+<h2>Welche Dateien durchsucht werden</h2>
 
-		
+<p>Das Fenster durchsucht die Hauptdatei und die .tex-Dateien in ihrem Ordner und den Ordnern darunter, die sie in einer Zeile <code>% !TEX root</code> unter ihren ersten 20 Zeilen nennen; siehe <a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a>. Die Zeile unter den Modi gibt an, welche Hauptdatei durchsucht wird, und ihre Taste „?“ wiederholt diese Regel. Dateien, die in <code>\input</code> oder <code>\include</code> genannt sind, werden nicht verfolgt, und eine in einer .texshop-Datei genannte Hauptdatei wird nicht verwendet. Symbolische Links auf Dateien, Ordner, die über symbolische Links oder Aliasse erreicht werden, und der Ordner TeXShop Backups bleiben außen vor.</p>
+
+<p>Die Liste links zeigt die Dateien; schalten Sie dort eine Datei oder einen Ordner aus, um sie auszulassen. Konnten einige Dateien oder Ordner nicht gelesen werden, listet die Taste „Nicht gelesene Dateien“ unten sie mit dem Grund auf.</p>
+
+<h2>Suchen und ersetzen</h2>
+
+<p>Such- und Ersetzungsfeld und die Optionen sind die der <a href="basic_find.htm">Erweiterten Suchmaske</a>. Wählen Sie einen Modus:</p>
+<ul>
+<li>„Suchen“ listet jeden Treffer mit seiner Zeilennummer auf.</li>
+<li>„Ersetzen“ zeigt jede Zeile vor und nach der Ersetzung. Jeder Treffer hat ein Markierungsfeld; ein ausgeschalteter Treffer wird nicht ersetzt.</li>
+<li>„Mehrfach ersetzen“ wendet einen Regelsatz des Fensters „Mehrfach ersetzen“ an und listet die Gruppen geänderter Zeilen mit je einem Markierungsfeld auf. „Bearbeiten …“ öffnet den Regelsatz in jenem Fenster.</li>
+</ul>
+
+<p>Klicken Sie auf eine Zeile, um den Treffer in seinem Dokument zu zeigen; doppelklicken Sie, um dieses Fenster nach vorn zu holen. Die Liste folgt Ihren Änderungen, und die Taste ↻ (<kbd>⌘R</kbd>) sammelt die Dateien neu. Die Stopptaste, die Escape-Taste oder <kbd>⌘.</kbd> hält eine lange Suche an.</p>
+
+<p>Ein geöffnetes Dokument wird so durchsucht, wie es auf dem Bildschirm steht, mit seinen ungesicherten Änderungen; eine nicht geöffnete Datei wird in der Kodierung gelesen, in der TeXShop sie öffnen würde. Manche Dateien lassen sich nur durchsuchen, aber nicht ersetzen, etwa eine Datei, die nicht geschrieben werden kann oder die ihre Kodierung nicht unverändert zurücksichern kann. Sie sind mit ⊘ markiert, und die Markierung nennt den Grund.</p>
+
+<h2>Alles ersetzen</h2>
+
+<p>„Alles ersetzen“ fragt nach, bevor es ersetzt. Hat sich eine Datei inzwischen geändert, wird nichts ersetzt und die Liste neu erstellt. Ist „Sicherungskopien sichern“ eingeschaltet, wird jede zu ändernde Datei zuerst in den Ordner TeXShop Backups neben der Hauptdatei kopiert, in einen nach Datum und Uhrzeit benannten Ordner.</p>
+
+<p>Nicht geöffnete Dateien werden dann direkt geschrieben, in ihrer eigenen Kodierung und mit ihren Zeilenenden und Zugriffsrechten; das lässt sich nicht widerrufen. Geöffnete Dokumente werden auf dem Bildschirm geändert und nicht gesichert, und ein einziges Widerrufen in einem Dokument nimmt seine Ersetzungen zurück. Wird „Alles ersetzen“ angehalten, bleiben die bereits bearbeiteten Dateien ersetzt und die übrigen unverändert. Danach werden die Dateien erneut durchsucht, und die Zeile unten gibt an, wie viele Treffer ersetzt wurden. Konnten einige Dateien nicht geändert werden, listet ein Dialog sie mit dem Grund auf, und „Im Finder zeigen“ öffnet den Ordner der Sicherungskopie.</p>
+
+<p>Verwenden Sie „Alles ersetzen“ nicht, während ein anderes Programm diese Dateien laufend schreibt.</p>
 </main>
 </body>
 </html>

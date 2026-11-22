@@ -3,34 +3,48 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Empfohlene Änderung von Einstellungen</title>
+<title>Empfohlene Änderungen an den Einstellungen</title>
+<meta name="description" content="empfohlene Einstellungen; Engine-Profil; latexmk; PDF direkt; Über DVI; Satzbefehle; Suchoberfläche; Erweiterte Suchmaske; automatisches Sichern; Fensterpositionen">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Wie konfiguriere ich TeXShop?</span></header>
 <nav id="menu">
 <ul>
-<li><a href="configure_preliminaries.htm">Einleitung</a></li>
-<li><a href="configure_prefchanges.htm" class="current">Empfohlene Änderung von Einstellungen</a></li>
-<li><a href="configure_correctinstall.htm">Neue Objekte in ~/Library/TeXShop erhalten</a></li>
+<li><a href="configure_preliminaries.htm">Einführung</a></li>
+<li><a href="configure_prefchanges.htm" class="current">Empfohlene Änderungen an den Einstellungen</a></li>
+<li><a href="configure_correctinstall.htm">Neue Objekte für die Library</a></li>
 <li><a href="configure_hidden.htm">Versteckte Einstellungen</a></li>
 <li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a></li>
-<li><a href="configure_autocompletion.htm">Die automatische Vervollst&auml;ndigung anpassen</a></li>
-<li><a href="configure_menushortcuts.htm">Tastaturkürzel neu festlegen</a></li>
+<li><a href="configure_autocompletion.htm">Tastenbelegungen anpassen</a></li>
+<li><a href="configure_menushortcuts.htm">Tastaturkurzbefehle für Menüs ändern</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Empfohlene Änderung von Einstellungen</h1>
-<p>&#8222;Engine-Profil&#8220; unter &#8222;Satz&#8220; legt die Satzbefehle für eine Art von TeX-Engine, den kpsewhich-Befehl, das BibTeX-Programm, das Indexprogramm, MetaPost und die Umwandlung in \UTF / \CID des otf-Pakets fest; die japanischen Profile legen auch UTF-8 als Kodierung für neue Dokumente, das Wörterbuch und die Umwandlung von UTF-8-MAC fest. Andere Einstellungen bleiben unverändert. Beim Wählen eines Profils werden die Werte aufgelistet, die es setzt, und die geänderten markiert; schalten Sie ab, was Sie behalten möchten, und klicken Sie auf OK. &#8222;Mit latexmk&#8220; führt BibTeX, den Index und weitere Durchläufe nach Bedarf aus. Escape bricht ab. &#8222;Pfade erkennen&#8220; in derselben Kategorie legt die Pfade zu TeX und Ghostscript fest. Duplizieren Sie ein Thema vor der Bearbeitung, wenn Sie das Original behalten möchten. Ein neues Thema erhält einen Namen; das Ersetzen eines vorhandenen Themas muss bestätigt werden. Nach erfolgreichem Speichern werden die Farben in offenen Dokumenten aktualisiert. Schlägt das Speichern fehl, werden die zuletzt gespeicherten Farben wiederhergestellt.</p><p>&#8222;Automatisches Sichern und Versionen&#8220; wird nach dem Neustart von TeXShop wirksam. Der Wechsel zwischen dem Standard-Suchfenster und der Suchleiste aktualisiert Quelltext-, Konsolen- und Protokollansichten offener Dokumente sofort. Ein Wechsel zu oder von OgreKit wird nach einem Neustart wirksam.</p>
+<h1>Empfohlene Änderungen an den Einstellungen</h1>
 
+<p>TeXShop funktioniert mit seinen Standardeinstellungen, doch einige davon hängen von Ihrer TeX-Installation, Ihrem Bildschirm und Ihren Gewohnheiten ab. Es lohnt sich, sie zuerst zu prüfen. Wählen Sie TeXShop › Einstellungen..., um das Fenster „Einstellungen“ zu öffnen; <a href="basic_preferences.htm#settings-search">Einstellungen suchen</a> erklärt, wie Sie eine Einstellung finden.</p>
 
+<h2 id="engine-profile">Ein Engine-Profil wählen</h2>
+<p>Einstellungen › Satz › Engine-Profil richtet den Satz in einem Schritt ein. Wählen Sie das Profil der Engine, die Sie verwenden; die selteneren stehen unter „Andere“. Ein Dialog listet die Werte auf, die das Profil setzt, und markiert die, die sich ändern. Schalten Sie jeden Wert aus, den Sie behalten möchten, und klicken Sie dann auf „OK“; „Abbrechen“ ändert nichts.</p>
+<p>Wählen Sie „Mit latexmk“, damit latexmk BibTeX, das Indexprogramm und weitere Durchläufe nach Bedarf aufruft; andernfalls ruft jedes Setzen die Engine einmal auf. Ein Profil setzt die Satzbefehle, den kpsewhich-Befehl, das BibTeX-Programm, das Indexprogramm, MetaPost und „In \UTF / \CID des otf-Pakets umwandeln“. Die japanischen Profile setzen außerdem UTF-8 als Kodierung für neue Dokumente, das Wörterbuch für die Rechtschreibprüfung und die Umwandlung von UTF-8-MAC. Alle anderen Einstellungen bleiben, wie sie sind. Ändern Sie später eine dieser Einstellungen, zeigt das Menü „Eigene“; wählen Sie das Profil erneut, um zu seinen Werten zurückzukehren.</p>
+<p>Die Pfade zu TeX und Ghostscript werden getrennt festgelegt, mit „Pfade erkennen…“ in der Gruppe „Pfade“ derselben Kategorie. Beim ersten Start fragt TeXShop nach den Pfaden und dann nach einem Engine-Profil.</p>
 
-<p>Benutzer sollten einige Änderungen der Standard-Einstellungen von TeXShop in Betracht ziehen. Die meisten dieser Änderungen basieren auf Besonderheiten einiger Bildschirme und können daher erst später festgelegt werden. </p>
-<p>Normalerweise öffnet TeXShop das Vorschau-Fenster an der Stelle, an der es zuletzt geöffnet war. Das macht dann Sinn, wenn Sie meist mit höchstens einem Dokument arbeiten. Es kann besser sein das Quelltext- und Vorschau-Fenster in einer optimalen Position zu öffnen. Um diese Einstellung zu treffen, setzen Sie ein beliebiges Dokument. Platzieren Sie nun die Fenster an die gewünschte Position auf dem Bildschirm. Wenn Sie genügend Platz auf dem Bildschirm haben, wird es das Beste sein, beide Fenster neben einander anzuordnen. Öffnen Sie nun den Kategorie &#8222;Allgemein&#8220; in den Einstellungen. Markieren Sie &#8222;Fenster immer an fester Position&#8220; und klicken Sie dann auf &#8222;Aktuelle Position merken&#8220;. Treffen Sie die selben Einstellungen unter dem Kategorie &#8222;Vorschau&#8220;.</p>
-<p>Schließlich können Sie sich über Sicherheitsfragen Gedanken machen. Normalerweise ist TeXShop so eingestellt, dass es pdftex und pdflatex erlaubt andere Programme während des Setzens aufzurufen. Wenn pdftex zum Beispiel eine Grafik in einem Format findet, das es nicht erkennt, ruft es ein Konvertierungsprogramm auf, das diese Grafik in ein für pdftex erkennbares Format umwandelt. So werden eps-Dateien in pdf und gif-Dateien in das png-Format konvertiert.</p>
-<p>Diese Einstellung macht es jedoch möglich jedes beliebige Programm aufzurufen. Dies kann dazu führen, dass eine bösartige TeX-Quelldatei, die Sie per E-Mail erhalten, ihr System beschädigen könnte. Daher könne Sie unter dem Kategorie &#8222;Schriftsatz&#8220; die Einstellung &#8222;Shell Escape Warnung&#8220; ein- oder ausschalten. Hierdurch werden Sie, wenn Sie eine Datei zu ersten Mal setzen, gefragt, ob pdftex ein anderes Programm aufrufen darf. Hierdurch können sie die automatische Konvertierung für ihre eigenen Programme benutzen, für fremde Programme jedoch jeweils die sichere Lösung wählen und einen Aufruf anderer Programme unterbinden.</p>
+<h3 id="commands">Satzbefehle</h3>
+<p>Die Befehle, die ein Profil setzt, stehen in den Gruppen „PDF direkt“ und „Über DVI“ unter Einstellungen › Satz, jeweils mit einem Befehl für plain TeX und einem für LaTeX, und „Satzmethode“ legt fest, welche Gruppe verwendet wird. Setzen › PDF direkt und Setzen › Über DVI stellen die Methode nur für das aktive Dokument um. Die Standardbefehle enthalten bereits <code>-file-line-error</code>, womit TeXShop Sie zur Zeile eines Fehlers bringen kann, und <code>-synctex=1</code>, das die Synchronisierung zwischen Quelltext und Vorschau ermöglicht; die meisten Benutzer bearbeiten sie daher nie. Braucht ein Dokument <code>-shell-escape</code>, lesen Sie zuerst <a href="advanced_shellescape.htm">Schutz vor Shell Escape</a>.</p>
 
-<p><a href="basic_preferences.htm#settings-search">Einstellungen verwenden und durchsuchen</a></p>
+<h2 id="find">Die Suchoberfläche wählen</h2>
+<p>Einstellungen › Editor › Suchoberfläche legt das Fenster oder die Leiste fest, die „Suchen“ öffnet. „Erweiterte Suchmaske (empfohlen)“ sucht mit regulären Ausdrücken, listet alle Treffer auf und ersetzt mehrere Paare von Zeichenketten auf einmal; siehe <a href="basic_find.htm">Suchen und Ersetzen</a>. Die Apple Suchmaske und die Apple Suchleiste sind die Standardsuche von macOS, und „OgreKit Suchmaske (veraltet)“ steht weiterhin zur Verfügung. Eine neue Wahl wirkt sofort, außer einem Wechsel zur oder von der OgreKit Suchmaske, der nach einem Neustart von TeXShop wirksam wird. Schalten Sie „Erweiterte Suchmaske immer im Vordergrund halten“ ein, wenn die Suchmaske vor den Dokumentfenstern bleiben soll.</p>
+
+<h2 id="autosave">Automatisches Sichern eingeschaltet lassen</h2>
+<p>„Automatisch sichern und Versionen aktivieren“ unter Einstellungen › Dokumente und Sichern ist standardmäßig eingeschaltet, und es wird empfohlen, es so zu lassen. macOS sichert dann Ihre Dokumente, während Sie arbeiten, und Ablage › Zurücksetzen auf › Alle Versionen durchsuchen … holt frühere Versionen zurück. Schalten Sie es aus, ändert sich die Datei nur, wenn Sie sie sichern; „Beim Sichern die vorherige Datei als „Name~“ behalten“ bewahrt dann die vorherige Version daneben auf. Eine Änderung dieser Einstellung wird nach einem Neustart von TeXShop wirksam.</p>
+
+<h2 id="window-positions">Die Fensterpositionen festlegen</h2>
+<p>Standardmäßig öffnet sich jedes Fenster dort, wo es beim letzten Schließen war. Arbeiten Sie meist an einem Dokument zur Zeit, ist es besser, die Fenster an einer festen Stelle zu öffnen. Setzen Sie ein kurzes Dokument und ordnen Sie sein Quelltext- und sein Vorschaufenster an, nebeneinander, wenn der Bildschirm breit genug ist. Wählen Sie dann unter Einstellungen › Allgemein › Fensterpositionen für „Quelltext“ und „Vorschau“ die Option „Fenster immer an fester Position“ und klicken Sie in jeder Zeile auf „Aktuelle Position merken“. Die Zeilen „Konsole“ und „HTML“ funktionieren ebenso.</p>
+<p>Die Menübefehle Quelltext › Position des Quelltext-Fensters sichern und Vorschau › Position des Vorschau-Fensters sichern tun dasselbe von den Fenstern aus. Verwenden Sie einen tragbaren Mac mit einem großen Bildschirm, ordnen Sie die Fenster außerdem für den eingebauten Bildschirm an und wählen Sie Quelltext › Position des Quelltext-Fensters für Mobilgerät speichern und Vorschau › Position des Vorschau-Fensters für Mobilgerät speichern; TeXShop verwendet diese Positionen dann, wenn der große Bildschirm nicht angeschlossen ist.</p>
+
+<h2 id="fonts-colors">Schriften und Farben</h2>
+<p>Die Schrift des Quelltextfensters legen Sie unter Einstellungen › Editor › Dokument-Schriftart fest, die Schrift der Konsole unter Einstellungen › Konsole. Einstellungen › Themen wählt und bearbeitet die Farbthemen der Quelltext-, Vorschau- und Konsolenfenster; siehe <a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a>.</p>
 </main>
 </body>
 </html>

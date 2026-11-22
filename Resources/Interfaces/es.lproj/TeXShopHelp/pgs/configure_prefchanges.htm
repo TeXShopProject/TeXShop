@@ -3,44 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Recomendaciones de cambios en los ajustes</title>
+<title>Cambios recomendados en los ajustes</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="ajustes recomendados; perfil del motor; latexmk; PDF directo; Vía DVI; comandos de composición; interfaz de búsqueda; panel de búsqueda avanzada; guardado automático; posiciones de las ventanas">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">&iquest;C&oacute;mo configuro TeXShop?</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">¿Cómo configuro TeXShop?</span></header>
 <nav id="menu">
 <ul>
 <li><a href="configure_preliminaries.htm">Preliminares</a></li>
-<li><a href="configure_prefchanges.htm" class="current">Recomendaciones de cambios en los ajustes</a></li>
-<li><a href="configure_correctinstall.htm">Obtener elementos nuevos de ~/Library/TeXShop</a></li>
+<li><a href="configure_prefchanges.htm" class="current">Cambios recomendados en los ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obtener nuevos elementos de la biblioteca</a></li>
 <li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
-<li><a href="configure_panel.htm">Modificaci&oacute;n del panel LaTeX</a></li>
-<li><a href="configure_autocompletion.htm">Modificaci&oacute;n de la autocompleci&oacute;n</a></li>
-<li><a href="configure_menushortcuts.htm">Redefinición de atajos de teclado de menús</a></li>
+<li><a href="configure_panel.htm">Modificar el panel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar las combinaciones de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir los atajos de teclado de los menús</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Recomendaciones de cambios en los ajustes</h1>
-<p>En Composición, elige un perfil del motor para ajustar de una vez los comandos de composición. La lista muestra los valores que se ajustarán y marca los que cambian; desmarca los que quieras conservar y haz clic en Aceptar; Escape cancela. Para conservar un tema original, duplícalo antes de editarlo. Al crear un tema se pide un nombre; reemplazar un tema existente requiere confirmación. Los colores se actualizan en los documentos abiertos cuando se guardan correctamente. Si falla el guardado, se restauran los últimos colores guardados.</p><p>El guardado automático y las versiones se activan al reiniciar TeXShop. El cambio entre el panel de búsqueda estándar y la barra de búsqueda se aplica inmediatamente al código, la consola y el registro de los documentos abiertos. Los cambios hacia o desde OgreKit se activan al reiniciar TeXShop.</p>
+<h1>Cambios recomendados en los ajustes</h1>
 
+<p>TeXShop funciona con sus ajustes por omisión, pero algunos dependen de su instalación de TeX, de su pantalla y de sus costumbres. Conviene revisarlos primero. Elija TeXShop › Ajustes… para abrir la ventana de Ajustes; <a href="basic_preferences.htm#settings-search">Buscar ajustes</a> explica cómo encontrar un ajuste.</p>
 
+<h2 id="engine-profile">Elegir un perfil del motor</h2>
+<p>Ajustes › Composición › Perfil del motor prepara la composición en un solo paso. Elija el perfil del motor que utiliza; los menos habituales están en Otros. Una hoja enumera los valores que establece el perfil y marca los que cambian. Desactive los valores que quiera conservar y haga clic en Aceptar; Cancelar no cambia nada.</p>
+<p>Elija «Con latexmk» para que latexmk ejecute BibTeX, el programa de índices y las pasadas adicionales que hagan falta; si no, cada composición ejecuta el motor una sola vez. Un perfil establece los comandos de composición, el comando kpsewhich, el motor BibTeX, el programa de índices, MetaPost y «Convertir a \UTF / \CID del paquete otf». Los perfiles japoneses establecen además UTF-8 como codificación de los documentos nuevos, el diccionario ortográfico y la conversión de UTF-8-MAC. Todos los demás ajustes se quedan como están. Si más adelante cambia uno de estos ajustes, el menú muestra Personalizado; elija de nuevo el perfil para volver a sus valores.</p>
+<p>Las rutas de TeX y de Ghostscript se establecen aparte, con «Detectar rutas…» en el grupo Rutas de la misma categoría. La primera vez que se abre TeXShop, pide las rutas y después un perfil del motor.</p>
 
-<p>
-Los usuarios pueden querer cambiar algunos de los ajustes previamente establecidos por TeXShop. Algunos de estos cambios dependerán de determinadas características individuales, y no se pueden establecer hasta no haber usado el programa.
-</p>
-<p>
-Por defecto, TeXShop abre la ventana de código y la del pdf previsto en la posición en que las mostró por última vez. Esto sólo tiene sentido cuando estamos manejando un solo documento cada vez. Usualmente, es mejor abrir ambas ventanas en un lugrar óptimo predeterminado. Para ver qué es lo que ocurre, compila un documento. Entonces, pon el tamaño y posición de la ventana donde quieras. Si la pantalla es grande, lo mejor es ponerlas una junto a otra. En la categoría «General», selecciona «Comenzar con posición fija» y haz click en «Establecer con posición actual». Haz el mismo cambio en la categoría «Vista previa».
-</p>
-<p>
-</p>
-<p>
-Finalmente, puedes querer enfrentarte con un posible problema de seguridad. Por defecto, TeXShop está configurado para permitir que pdftex y pdflatex llamen a otros programas cuando están componiendo. Cuando pdftex encuentra una ilustración en un formato que no entiende, automáticamente llama a un programa de conversiones gráficas, para que convierta el gráfico en un formato útil. Por ejemplo, los archivos eps se convierten en pdf, y los archivos tif en png.
-</p>
-<p>
-Sin embargo, la configuración permite a pdftex llamar a CUALQUIER programa. Es concebible que otro usuario te envíe un archivo tex que, al compilarlo, le haga a tu sistema cosas no muy agradables. Si estás precupado por que te pueda ocurrir esto, vete a la categoría «Composición» de los Ajustes y selecciona la opción «Avisos shell-escape». Cuando este botón está marcado, la primera vez que TeXShop compila una archivo tex en una sesión, aparece un diálogo que te permite desactivar la comunicación entre pdftex y otros programas durante toda la compilación del archivo. Así, puedes continuar consiguiendo la conversión automática en tus propios archivos, pero actuar de manera segura cuando los hayas recibido de otros.
-</p>
+<h3 id="commands">Comandos de composición</h3>
+<p>Los comandos que establece un perfil están en los grupos PDF directo y Vía DVI de Ajustes › Composición, cada uno con un comando de plain TeX y otro de LaTeX, y «Método de composición» elige qué grupo se usa. Componer › PDF directo y Componer › Vía DVI cambian el método solo para el documento activo. Los comandos por omisión ya contienen <code>-file-line-error</code>, que permite a TeXShop llevarle a la línea de un error, y <code>-synctex=1</code>, que hace que funcione la sincronización entre el código fuente y la vista previa, así que la mayoría de las personas nunca los editan. Si un documento necesita <code>-shell-escape</code>, consulte primero <a href="advanced_shellescape.htm">Protección ante shell-escape</a>.</p>
 
-<p><a href="basic_preferences.htm#settings-search">Uso y búsqueda de ajustes</a></p>
+<h2 id="find">Elegir la interfaz de búsqueda</h2>
+<p>Ajustes › Editor › «Interfaz de búsqueda» elige la ventana o la barra que abre Buscar. «Panel de búsqueda avanzada (recomendado)» busca con expresiones regulares, enumera todas las coincidencias y reemplaza varios pares de cadenas a la vez; consulte <a href="basic_find.htm">Buscar y reemplazar</a>. El panel de búsquedas de Apple y la barra de búsquedas de Apple son la búsqueda estándar de macOS, y «Panel de búsquedas de OgreKit (heredado)» sigue disponible. Una elección nueva tiene efecto de inmediato, salvo el cambio al panel de búsquedas de OgreKit o desde él, que tiene efecto después de reiniciar TeXShop. Active «Mantener el panel de búsqueda avanzada en primer plano» si el panel debe quedarse delante de las ventanas de documento.</p>
+
+<h2 id="autosave">Mantener activado el guardado automático</h2>
+<p>«Activar guardado automático y versiones», en Ajustes › Documentos y guardado, está activado por omisión, y se recomienda mantenerlo así. macOS guarda entonces sus documentos mientras trabaja, y Archivo › Volver a › Explorar todas las versiones recupera versiones anteriores. Si lo desactiva, el archivo solo cambia cuando usted lo guarda; «Conservar el archivo anterior como “nombre~”» conserva entonces la versión anterior a su lado. Un cambio de este ajuste tiene efecto después de reiniciar TeXShop.</p>
+
+<h2 id="window-positions">Fijar las posiciones de las ventanas</h2>
+<p>Por omisión, cada ventana se abre donde estaba la última vez que se cerró. Si suele trabajar en un solo documento cada vez, es mejor abrir las ventanas en un lugar fijo. Componga un documento breve y coloque sus ventanas de código y de vista previa, una junto a otra si la pantalla es lo bastante ancha. Después, en Ajustes › General › Posiciones de las ventanas, elija «Comenzar con posición fija» para Código y para PDF y haga clic en «Establecer con posición actual» en cada fila. Las filas Consola y HTML funcionan del mismo modo.</p>
+<p>Los comandos de menú Código › Guardar posición ventana de código y PDF › Guardar posición ventana del PDF hacen lo mismo desde las propias ventanas. Si usa un Mac portátil con una pantalla grande, coloque las ventanas para la pantalla integrada y elija también Código › Guardar posición para portátil y PDF › Guardar posición para portátil; TeXShop usa entonces esas posiciones cuando la pantalla grande no está conectada.</p>
+
+<h2 id="fonts-colors">Tipos de letra y colores</h2>
+<p>El tipo de letra de la ventana de código se establece en Ajustes › Editor › Tipografía para el documento, y el de la consola, en Ajustes › Consola. Ajustes › Temas elige y edita los temas de color de las ventanas de código, de vista previa y de la consola; consulte <a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a>.</p>
 </main>
 </body>
 </html>

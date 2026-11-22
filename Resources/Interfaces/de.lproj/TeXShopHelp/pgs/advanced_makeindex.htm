@@ -5,50 +5,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MakeIndex</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Erstellen Sie Indizes f&uuml;r Ihr Dokument mit Hilfe des makeindex-Pakets.">
+<meta name="description" content="Index; makeindex; makeidx; mendex; upmendex; Indexprogramm; idx-Datei">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</a></li>
-<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-<li><a href="advanced_addengine.htm">Zus&auml;tzliche Schriftsatz-Programme</a></li>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-<li><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm" class="current">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
 <li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
-<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-<li><a href="advanced_plist.htm">Plist Datein</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Lokalisierungen</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>MakeIndex</h1>
-	
-		<P>MakeIndex ist eine Funktion um ein Index in einem LaTeX Dokument zu erstellen. Um solch einen Index zu erstellen, sollten Sie</P>
-		<ol>
-			<li type="a">den Befehl &quot;\usepackage{makeidx}&quot; Am Anfang Ihres Quelltextes einf&uuml;gen
-			<li type="a">den Befehl &quot;\makeindex&quot; in die Dokumentenpr&auml;ambel einf&uuml;gen
-			<li type="a">den Befehl &quot;\printindex&quot; an der Stelle einf&uuml;gen, an der der Index erscheinen soll, meist vor &quot;\end{document}&quot;
-			<li type="a">Indexverweise in Ihren Quelltext wie folgt einf&uuml;gen:
-		</ol>
-		<dl>
-			<dd>&quot;Es gibt viele Tiere auf der Welt\index{Tier}. Beispielsweise B&auml;ren\index{Tier!Baer}
-			<dd>und Tiger\index{Tier!Tiger} und verschiedene Insekten\index{Insekten|siehe{Tier}}.&quot;
-		</dl>
-		<p>Um einen Index zu erstellen, setzen Sie Ihr Dokument wie gewohnt. Starten Sie dann MakeIndex und setzen anschlie&szlig;end Ihr Dokument erneut.</p>
-		<p>Viele zus&auml;tzliche Informationen finden Sie in &bdquo;The LaTeX Companion&ldquo; von Goossens, Mittelbach und Samarin.</p>
-	
+<p>MakeIndex sortiert die Indexeinträge eines LaTeX-Dokuments und schreibt den Index. So fügen Sie einem Dokument einen Index hinzu:</p>
+<ol>
+<li>Schreiben Sie <code>\usepackage{makeidx}</code> und <code>\makeindex</code> in die Präambel.</li>
+<li>Schreiben Sie <code>\printindex</code> an die Stelle, an der der Index erscheinen soll, oft kurz vor <code>\end{document}</code>.</li>
+<li>Kennzeichnen Sie die Einträge im Text:
+<pre>There are many animals in the world\index{animal}.
+Examples include bears\index{animal!bear}
+and tigers\index{animal!tiger}.</pre></li>
+</ol>
+<p>Um den Index zu erstellen, setzen Sie das Dokument, wählen dann Setzen › Index erstellen (<kbd>⇧⌘I</kbd>) oder „Index erstellen“ im Einblendmenü neben der Taste „Setzen“ und klicken auf „Setzen“, und setzen dann erneut. Beim Setzen mit latexmk wird MakeIndex von selbst ausgeführt.</p>
+<p>„Index erstellen“ führt das Programm unter Einstellungen › Satz › Zugehörige Programme › Indexprogramm aus, gefolgt vom Namen der idx-Datei. Vorgabe ist <code>makeindex</code>. Tragen Sie ein anderes Programm ein, etwa <code>mendex</code> oder <code>upmendex</code> für japanische Dokumente, mit den nötigen Optionen, zum Beispiel <code>upmendex -s mystyle.ist</code>. Die Engine-Profile setzen dieses Feld: <code>makeindex</code> für die westlichen Profile, <code>mendex</code> für pLaTeX + dvipdfmx und <code>upmendex</code> für upLaTeX + dvipdfmx und LuaLaTeX (Japanisch).</p>
+<p>Quelltext › Indexeinträge hervorheben zeigt die Argumente von <code>\index</code> in der Farbe „Index“ des Themas an; siehe <a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a>.</p>
 </main>
 </body>
 </html>

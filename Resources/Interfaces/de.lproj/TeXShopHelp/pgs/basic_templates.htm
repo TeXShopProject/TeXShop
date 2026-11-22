@@ -3,51 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>&Auml;ndern des Vorlagenmen&uuml;s</title>
-<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="F&uuml;gen Sie weitere Vorlagen zum Vorlagenmen&uuml; in der Werkzeugleiste hinzu.">
+<title>Vorlagen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Vorlagen; Menü Vorlagen; ~/Library/TeXShop/Templates; More; Neue Datei aus Vorlagen; Stationery; Ordner Stationery">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-<li><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-<li><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
 <li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
 <li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
-<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
 <li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
-<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
 <li><a href="basic_printing.htm">Drucken</a></li>
 <li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
-<li><a href="basic_templates.htm" class="current">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-<li><a href="basic_bugs.htm">Fehlerberichte &uuml;bermitteln</a></li>
-<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
+<li><a href="basic_templates.htm" class="current">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
 <li><a href="basic_license.htm">Lizenz</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>&Auml;ndern des Vorlagenmen&uuml;s</h1>
-	
-		<P>Wird TeXShop zum ersten Mal ausgef&uuml;hrt, legt das Programm folgenden Ordner an:</P>
-		<dl>
-			<dd>~/Library/TeXShop/Templates
-		</dl>
-		<p>Die Dateien Graphics.tex, TexTemplate.tex und LatexTemplate.tex werden in diesen Ordner kopiert. Die Namen dieser Dateien werden unter dem Vorlagenauswahlmen&uuml; im oberen Fensterbereich angezeigt. W&auml;hlen Sie eines dieser Vorlagen aus, wird der Inhalt der Vorlage an der Stelle an dem sich der Cursor befindet eingef&uuml;gt. Die Vorlagen Graphics.tex und LatexTemplate.tex wurden von Will Robertson aktualisiert. Seine Vorlagen sind im Unterordner &bdquo;More&ldquo; verf&uuml;gbar.</p>
-		<p>Die drei Vorlagen sind Standard-tex-Dateien, die in TeXShop ge&ouml;ffnet und bearbeitet werden k&ouml;nnen. Zus&auml;tzliche Vorlagen k&ouml;nnen zum Vorlagenordner hinzugef&uuml;gt werden. Sie werden dann ebenfalls im Vorlagenauswahlmen&uuml; im oberen Teil des Eingabefensters angezeigt, inklusive der Endung &bdquo;.tex&ldquo;. Die Standardvorlagen k&ouml;nnen nach Belieben gel&ouml;scht werden.</p>
-		<p>Um eine hierarchische Struktur im Vorlagen-Men&uuml; einzuf&uuml;gen, legen Sie f&uuml;r einige Vorlagen Unterordner in &bdquo;~/Library/TeXShop/Templates&ldquo; an.</p>
-		<p>Um die Standardvorlagen wieder herzustellen, l&ouml;schen Sie den Ordner &bdquo;Templates&ldquo;. Beim n&auml;chsten Start von TeXShop wird er in seinem urspr&uuml;nglichen Zustand wieder hergestellt.</p>
-		<p>Die obengenannten Befehle \usepackage{amssymb} und \usepackage{graphicx} sind in der Standardvorlage integriert. Jedoch wird diese Vorlage bei einem Update von TeXShop nicht mit aktualisiert. Dies m&uuml;ssen Sie manuell &auml;ndern.</p>
-	
+<h1>Vorlagen</h1>
+
+<h2>Das Menü „Vorlagen“</h2>
+<p>Das Menü „Vorlagen“ in der Symbolleiste des Quelltextfensters fügt an der Einfügemarke eine Vorlage ein, eingerückt wie die aktuelle Zeile. TeXShop bringt diese Vorlagen mit:</p>
+<ul>
+<li>LatexTemplate, XeLaTeX Template, LatexSpanishTemplate und BeamerTemplate: der Anfang eines LaTeX-Artikels, eines XeLaTeX-Dokuments, eines spanischen LaTeX-Artikels und einer Beamer-Präsentation;</li>
+<li>TexTemplate: das <code>\end</code>, das ein plain-TeX-Dokument abschließt;</li>
+<li>GraphicsTemplate: der Code zum Einbinden einer Grafik;</li>
+<li>TeX4ht-Header und TeX4ht-Interactive: Code für Dokumente, die mit TeX4ht in HTML umgewandelt werden;</li>
+<li>More: ein Untermenü mit Präambeln, Dokumentklassen wie article, letter und memoir, Gleitobjekten für Abbildungen und Tabellen sowie mathematischen Anordnungen wie <code>align</code> und Matrizen.</li>
+</ul>
+<p>Die Vorlagen sind gewöhnliche Dateien in <code>~/Library/TeXShop/Templates</code>; mit TeXShop › Den Ordner „~/Library/TeXShop“ im Finder öffnen gelangen Sie dorthin. Um eine eigene Vorlage anzulegen, zum Beispiel die Präambel, die Sie für jeden Artikel verwenden, sichern Sie eine Datei mit der Endung <code>.tex</code> in diesem Ordner oder duplizieren eine Vorlage und ändern sie. Unterordner werden zu Untermenüs. Vorlagen, die Sie hinzufügen, umbenennen oder entfernen, erscheinen im Menü der danach geöffneten Fenster.</p>
+<p>Updates von TeXShop ändern diesen Ordner nicht, Ihre Vorlagen bleiben also erhalten. Um die ursprünglichen Vorlagen zurückzubekommen, bewegen Sie den Ordner Templates aus <code>~/Library/TeXShop</code> heraus, zum Beispiel auf den Schreibtisch, und starten TeXShop neu: Es legt den Ordner mit seinen eigenen Vorlagen neu an.</p>
+
+<h2>Neue Dokumente aus Vorlagen</h2>
+<p>Ablage › Neue Datei aus Vorlagen beginnt ein neues Dokument mit einem vollständigen Muster: Wählen Sie eines in der Liste, die zu jedem eine Beschreibung zeigt, und klicken Sie auf „OK“. Das neue Dokument hat keinen Titel; sichern Sie es, wo Sie möchten. TeXShop bringt Muster für einen AMS-Artikel, eine Beamer-Präsentation, einen Brief, ein PreTeXt-Dokument, ein Projekt mit Hauptdatei und Kapitel sowie ein XeLaTeX-Dokument mit.</p>
+<p>Diese Muster stehen in <code>~/Library/TeXShop/Stationery</code>. Um eigene hinzuzufügen, legen Sie die Datei dort ab, zum Beispiel <code>Report.tex</code>, zusammen mit einer Datei <code>Report.comment</code>, die einen beschreibenden Satz enthält.</p>
 </main>
 </body>
 </html>

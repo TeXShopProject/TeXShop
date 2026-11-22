@@ -3,87 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AUX-Dateien entfernen</title>
-<meta name="copyright" content="Copyright (c) 2003 Richard Koch, Martin Kerz und Sebastian Siedentopf unter der GNU FDL">
-<meta name="description" content="aux; entfernen; log">
+<title>Aux-Dateien entfernen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="Aux-Dateien löschen; Aux-Dateien löschen &amp; Setzen; aux; log; Hilfsdateien; OtherTrashExtensions; AggressiveTrashAUX">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</a></li>
-<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-<li><a href="advanced_addengine.htm">Zus&auml;tzliche Schriftsatz-Programme</a></li>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-<li><a href="advanced_removeaux.htm" class="current">AUX-Dateien entfernen</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm" class="current">Aux-Dateien entfernen</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
 <li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
-<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-<li><a href="advanced_plist.htm">Plist Datein</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Lokalisierungen</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>AUX-Dateien entfernen</h1>
+<h1>Aux-Dateien entfernen</h1>
+<p>Wenn LaTeX <code>Galois.tex</code> setzt, schreibt es Hilfsdateien wie <code>Galois.aux</code>, <code>Galois.toc</code> und <code>Galois.log</code>, die der nächste Lauf für Querverweise, das Inhaltsverzeichnis und Ähnliches liest. Wird das Setzen mittendrin abgebrochen, etwa nach einem Fehler, können diese Dateien beschädigt zurückbleiben, und der nächste Lauf meldet Fehler, die nicht im Quelltext stehen, oft kurz vor <code>\begin{document}</code>. Die Hilfsdateien in den Papierkorb zu bewegen und erneut zu setzen, behebt das.</p>
 
-<p>Werden Dokumente gesetzt, dann werden verschiedene Hilfsdateien
-erstellt, die z.B. die Suffixe &bdquo;.aux&ldquo;, &bdquo;.log&ldquo;,
-&bdquo;.bbl&ldquo; etc. haben. Es kann vorkommen, dass diese Dateien
-besch&auml;digt werden und so zu Fehlern im Satzvorgang f&uuml;hren
-k&ouml;nnen. Mit dem Men&uuml;befehl &bdquo;AUX-Dateien
-l&ouml;schen&ldquo; ist es nun in TeXShop m&ouml;glich, diese Dateien
-automatisch zu l&ouml;schen. In der Konsole ist ein Knopf mit der
-gleichen Funktion vorhanden. Wird diese Funktion aufgef&uuml;hrt, so
-schiebt TeXShop alle Dateien, die den selben Namen wie die
-Quelltextdatei haben und als Suffix aux,&nbsp;blg, brf, css, ent, fff,
-glo, idx, idv, ilg, ind, ioa, lg, log, lot, mte, mlf, out, pdfsync,
-toc, ttt, wrm, xref, 4ct oder 4tc aufweisen, in den Papierkorb.</p>
-<p>Zus&auml;tzliche Suffixe k&ouml;nnen dieser Liste hinzugef&uuml;gt
-werden. Um z.B. &bdquo;dvi&ldquo; hinzuzuf&uuml;gen, geben Sie
-folgenden Befehl im Terminal ein:</p>
-<dl>
-  <dd> defaults write TeXShop OtherTrashExtensions -array-add "dvi"
-  </dd>
-</dl>
-<p>Um wieder zur urspr&uuml;nglichen LIste zur&uuml;ckzukehren, geben
-Sie folgenden Befehl ein:</p>
-<dl>
-  <dd> defaults write TeXShop OtherTrashExtensions -array
-  </dd>
-</dl>
-<p>Manchmal ist es notwendig, umfangreicher aufzur&auml;umen. Ist zum
-Beispiel ein Buchprojekt durch das Hauptdokument
-&bdquo;haupt.tex&ldquo; gesteuert und die einzelnen Kapitel in
-Unterordnern abgelegt, die mit dem Befehl \include{kapitel1/kapitel1}
-eingebunden werden, so werden die Dateien "haupt.aux", "haupt.pdfsync"
-und "haupt.log" im Hauptordner sowie die zus&auml;tzlichen Hilfsdateien
-"kapitel1.aux" im Ordner "kapitel1"&nbsp;entsprechend der Kapitelnamen
-in den Unterverzeichnissen erstellt.</p>
-<p>Um auch diese Hilfdateien in den Unterverzeichnissen zu
-l&ouml;schen, m&uuml;ssen Sie die Wahltaste gedr&uuml;ckt halten,
-w&auml;hrend Sie den Befehl &bdquo;AUX-Dateien l&ouml;schen&ldquo;
-ausf&uuml;hren. Dies f&uuml;hrt dazu, dass</p>
-<dl>
-  <li>"%!TEX root" und Hauptdateiinformationen genutzt werden um das
-Hauptdokument und dessen Ordner zu lokalisieren und </li>
-  <li>alle Hilfsdateien mit den entsprechenden Suffixe, unabh&auml;ngig
-von ihrem Dateinamen gel&ouml;scht werden.</li>
-</dl>
-<p>Um dieses Verhalten von "AUX Dateien l&ouml;schen" als Standard
-einzustellen, m&uuml;ssen Sie folgenden Befehl im Terminal eingeben:</p>
-<dl>
-  <dd> defaults write TeXShop AggressiveTrashAUX YES
-  </dd>
-</dl>
+<h2>Die Dateien in den Papierkorb bewegen</h2>
+<ul>
+<li>Ablage › Aux-Dateien löschen (<kbd>⌃⌘A</kbd>) oder die Taste „Aux-Dateien löschen“ in der Konsole bewegt die Hilfsdateien des Dokuments in den Papierkorb.</li>
+<li>Setzen › Aux-Dateien löschen &amp; Setzen (<kbd>⌥⌘T</kbd>) tut dies und setzt danach. Im Menü „Setzen“ erscheint der Eintrag anstelle von „Setzen“, solange Sie die Wahltaste gedrückt halten.</li>
+</ul>
+<p>In den Papierkorb kommen die Dateien im Ordner der Quelltextdatei, die deren Namen und eine der folgenden Endungen haben:</p>
+<pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
+gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
+lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
+ttt  wrm  xref</pre>
+<p>Dateien, die SyncTeX bei unterbrochenem Setzen mit <code>(busy)</code> am Ende ihres Namens zurücklässt, kommen ebenfalls in den Papierkorb. Die <code>.bbl</code>-Datei von BibTeX bleibt erhalten.</p>
+<p>In einem Projekt, dessen Kapiteldateien mit <code>% !TEX root</code> eine Hauptdatei nennen, werden die Dateien der Hauptdatei entfernt, auch wenn der Befehl in einer Kapiteldatei gegeben wird.</p>
+
+<h2>Varianten</h2>
+<ul>
+<li>Halten Sie beim Wählen von „Aux-Dateien löschen“ oder beim Klicken auf die Taste die Umschalttaste gedrückt, um auch die PDF-Datei des Dokuments in den Papierkorb zu bewegen. Gewöhnlich bleibt das alte PDF erhalten, damit das Vorschaufenster etwas anzeigen kann, wenn das Setzen scheitert.</li>
+<li>Halten Sie beim Wählen von „Aux-Dateien löschen“ oder beim Klicken auf die Taste die Wahltaste gedrückt, um ein ganzes Projekt aufzuräumen: Jede Datei mit einer der obigen Endungen im Ordner der Hauptdatei und in allen Ordnern darunter kommt in den Papierkorb, gleich wie sie heißt. Damit werden auch die <code>.aux</code>-Dateien entfernt, die <code>\include</code> für Kapitel in Unterordnern schreibt.</li>
+</ul>
+<p>Zwei versteckte Einstellungen ändern das Verhalten. Um der Liste Endungen hinzuzufügen, etwa <code>dvi</code>, geben Sie im Terminal ein:</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
+<p>und um zur Standardliste zurückzukehren:</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array</pre>
+<p>Um das Verhalten mit der Wahltaste zum Standardverhalten von „Aux-Dateien löschen“ zu machen:</p>
+<pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
 </main>
 </body>
 </html>

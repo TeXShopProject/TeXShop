@@ -5,89 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>作業ファイルを削除する</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="拡張子にauxやlogが付いたファイルの除去">
+<meta name="description" content="作業ファイルを削除; 作業ファイルを削除 &amp; タイプセット; aux; log; 補助ファイル; OtherTrashExtensions; AggressiveTrashAUX">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a></li>
-<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a></li>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
 <li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
-<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a></li>
-<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
 <li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
 <li><a href="advanced_removeaux.htm" class="current">作業ファイルを削除する</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a></li>
-<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a></li>
-<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストおよびドラッグ＆ドロップ</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
 <li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
 <li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
-<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a></li>
-<li><a href="advanced_plist.htm">Plistファイル</a></li>
-<li><a href="advanced_localization.htm">各国語版へのローカライズ</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>作業ファイルを削除する</h1>
+<p>LaTeXは<code>Galois.tex</code>をタイプセットするとき、<code>Galois.aux</code>、<code>Galois.toc</code>、<code>Galois.log</code>などの作業ファイルを書き出し、次の回に相互参照や目次などのためにそれを読みます。エラーのあとなど、タイプセットが途中で止まると、これらのファイルが壊れたまま残ることがあり、次の回にソースにはないエラーが、多くは<code>\begin{document}</code>の直前で報告されます。作業ファイルをゴミ箱に入れてタイプセットし直せば直ります。</p>
 
-
-
-<p>
-ドキュメントをタイプセットすると、「.aux」 「.log」 「.bbl」などの拡張子が付いた補助的なファイルが生成されます。こうしたファイルはときどき、おかしくなったり、予期せぬタイプセット・エラーを招いたりすることがあります。TeXShopには「作業ファイルを削除」というメニューコマンドがあり、こうしたファイルをすべて取り除けるので、ひきつづきタイプセットを行なうことができます。同様な名前のボタンがコンソールウインドウにもあります。このいずれかを実行すると、現在のソースがあるディレクトリ内にあり、ソースファイルと名前が同じで、拡張子がaux・blg・brf・ccs・ent・fff・glo・idx・idv・ilg・ind・ioa・lg・log・lot・mtc・mlf・out・pdfsync・toc・ttt・wrm・xref・4ct・4tcとなっているファイルがすべてゴミ箱へと移動されます。
-</p>
-
-<p>
-このリストに拡張子を追加することもできます。「dvi」を加えるには、ターミナルを実行し、以下のようにタイプします──
-</P>
-	<dl>
-		<dd><tt>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</tt>
-	</dl>
-
-<p>
-追加した分を取り除いて元々のデフォルトのリストに戻すには、次のようにタイプします──
-</p>
-	<dl>
-		<dd><tt>defaults write TeXShop OtherTrashExtensions -array</tt>
-	</dl>
-
-<p>
-時として、さらに徹底したクリーンナップが必要になることがあります。たとえば、main.texで「本」を管理しており、各章がサブフォルダ内にあって \include{chapter1/chapter1} のようなコマンドでアクセスしている場合、「本」をタイプセットすると、メインのフォルダ内にはmain.aux・main.pdfsync・main.logが生成され、chapter1フォルダにはchapter1.auxが生成されます。
-</p>
-
-<p>
-これに応じた徹底的なクリーンナップは、オプションキーを押しながら「作業ファイルを削除」を選択することで実行できます。これを行なうと：
+<h2>ファイルをゴミ箱に入れる</h2>
 <ul>
-<!--		<li>SourceDocとルートファイルの情報が、ルート文書とそのフォルダを探し当てるのに使われます-->
-		<li><tt>%!TEX root</tt> とルートファイルの情報が、ルート文書とそのフォルダを探し当てるのに使われます
-		<li>このフォルダまたはいずれかのサブフォルダ内にあり、該当する拡張子の付いたファイルはすべて、ファイル名の如何によらずゴミ箱に移されます
+<li>「ファイル」→「作業ファイルを削除」（<kbd>⌃⌘A</kbd>）、またはコンソールの「作業ファイルを削除」ボタンで、書類の作業ファイルをゴミ箱に入れます。</li>
+<li>「タイプセット」→「作業ファイルを削除 &amp; タイプセット」（<kbd>⌥⌘T</kbd>）は、これを行ってからタイプセットします。「タイプセット」メニューでは、Optionキーを押している間、「タイプセット」の代わりにこの項目が現れます。</li>
 </ul>
+<p>ゴミ箱に入るのは、ソースのフォルダにあって、ソースと同じ名前を持ち、次のいずれかの拡張子が付いたファイルです。</p>
+<pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
+gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
+lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
+ttt  wrm  xref</pre>
+<p>タイプセットが中断されたときにSyncTeXが残す、名前の末尾に<code>(busy)</code>の付いたファイルもゴミ箱に入ります。BibTeXの<code>.bbl</code>ファイルは残します。</p>
+<p>章のファイルが<code>% !TEX root</code>でルートファイルを指定しているプロジェクトでは、章のファイルで実行しても、ルートファイルの作業ファイルがゴミ箱に入ります。</p>
 
-<p>
-「作業ファイルを削除」の動作を、オプションキーを押すことなく上記のようにする方法もあります：
-</p>
-<dl>
-	<dd><tt>defaults write TeXShop AggressiveTrashAUX YES</tt>
-</dl>
-
-
-
-
-
-
-
-
-		
-	</body>
-
-</HTML>
+<h2>操作のバリエーション</h2>
+<ul>
+<li>Shiftキーを押しながら「作業ファイルを削除」を選ぶかボタンをクリックすると、書類のPDFファイルもゴミ箱に入ります。ふだんは古いPDFを残します。タイプセットに失敗したときにも、プレビューのウインドウに表示するものがあるようにするためです。</li>
+<li>Optionキーを押しながら「作業ファイルを削除」を選ぶかボタンをクリックすると、プロジェクト全体を片付けます。ルートファイルのフォルダとその下のすべてのフォルダにある、上の拡張子のいずれかを持つファイルが、名前にかかわらずすべてゴミ箱に入ります。サブフォルダにある章のために<code>\include</code>が書き出す<code>.aux</code>ファイルも削除されます。</li>
+</ul>
+<p>2つの隠し設定で動作を変えられます。一覧に拡張子（たとえば<code>dvi</code>）を加えるには、ターミナルで次のように入力します。</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
+<p>標準の一覧に戻すには次のようにします。</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array</pre>
+<p>Optionキーを押したときの動作を「作業ファイルを削除」の標準の動作にするには、次のようにします。</p>
+<pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
 </main>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>キーバインド</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="キーバインド──省入力">
+<meta name="description" content="キーバインド; キーバインドの一覧; 入力文字; 出力文字列; ペースト; 円記号; バックスラッシュ; autocompletion.plist">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -13,69 +13,52 @@
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">まえがき</a></li>
-<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a></li>
-<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a></li>
-<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a></li>
-<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
 <li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
-<li><a href="basic_edittricks.htm">編集上のコツ</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
 <li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
-<li><a href="basic_spelling.htm">スペルをチェックする</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
 <li><a href="basic_autocompletion.htm" class="current">キーバインド</a></li>
-<li><a href="basic_commandcompletion.htm">コマンドの補完</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
 <li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
 <li><a href="basic_matrixpanel.htm">行列パネル</a></li>
 <li><a href="basic_macros.htm">マクロ</a></li>
 <li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
 <li><a href="basic_graphics.htm">画像を入れる</a></li>
-<li><a href="basic_printing.htm">印刷</a></li>
-<li><a href="basic_preferences.htm">設定</a></li>
-<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a></li>
-<li><a href="basic_templates.htm">テンプレートメニューを変更する</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
 <li><a href="basic_bugs.htm">バグレポートを送る</a></li>
-<li><a href="basic_websites.htm">役に立つウェブ・サイト</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
 <li><a href="basic_license.htm">使用許諾</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>キーバインド</h1>
+<p>キーバインドを使うと、文字を入力したときに別のテキストが入ります。TeXShopに付属の一覧では、<code>^</code>と入力すると<code>^{}</code>になって波括弧の間にカーソルが置かれ、<code>"</code>と入力するとカーソルの前後にTeXの引用符<code>``''</code>が入り、<code>ä</code>と入力すると<code>\"a</code>になります。選択したテキストを中に入れるキーバインドもあります。語を選んで<code>^</code>と入力すると<code>^{語}</code>になります。付属の一覧には45個のキーバインドがあります。</p>
 
+<p>キーバインドは初めはオフです。開くすべての書類でオンにするには、「設定」→「キーボード」の「キーバインドを使う（新しい書類の初期値）」をオンにします。「ソース」→「キーバインド」は、手前の書類でキーバインドのオンとオフを切り替えます。キーバインドのある文字をそのまま入力したいときなどに使います。ツールバーに追加できる「キーバインド」の項目も同じ働きをします。</p>
 
-<!-- 
-<p>
-Greg LandweberはTeXShopのエディタにキーバインド（自動補完）を付け加えました。ダブルクオートをタイプすると、カーソルを間に挟んだ１対のダブルクオートが入力されます。^ という記号をタイプすると、括弧の間にカーソルを挟んだ状態で ^{ } が入ります。などなど。こうした39個の補完が今のところ利用可能です。
-</p>
- -->
+<h2>キーバインドの一覧</h2>
 
-<p>
-Greg LandweberさんはTeXShopのエディタにキーバインド（自動補完）機能を付け加えました。ダブルクオートをタイプすると、カーソルを間に挟んだ１対のダブルクオートが入力されます。^ という記号をタイプすると、括弧の間にカーソルを挟んだ状態で ^{ } が入ります。などなど。こうした39個の補完が今のところ利用可能です。
-</p>
+<p>「設定」→「キーボード」の「キーバインド」グループに、キーバインドが「入力文字」とその「出力文字列」の組で一覧になっています。セルをダブルクリックすると編集できます。一覧の下の＋をクリックするとキーバインドを追加し、−をクリックすると選択したものを削除します。行をドラッグすると順番を変えられます。入力文字は1文字です。変更はすぐに保存され、開いている書類にも反映されます。「編集」→「取り消す」で元に戻せます。</p>
 
-<p>
-キーバインドは設定項目でオン・オフを切り替えられます。デフォルトの設定はオフになっています。キーバインドを試すにはオンにします。
-</p>
+<p>出力文字列の中の特別な項目は、小さなラベルで表示されます。選択中の文字列、カーソルを置く位置、クリップボードの文字列、「編集」→「マーク」で使うマーク（•）、改行、タブです。これらは一覧の下の「挿入」から入れるか、<code>#SEL#</code>、<code>#INS#</code>、<code>#PASTE#</code>、<code>•</code>と入力します。改行はOption＋Return、タブはOption＋Tabで入力します。「?」ボタンを押すと、すべての項目が表示されます。</p>
 
-	<p>キーバインドは，「ソース」メニューの「キーバインド」から，ファイル単位でもON/OFF切り替えができます。キーバインド機能は，キーボードからのキー入力をカスタマイズするので，もしキー入力をそのままファイルに入力したいのであれば，キーバインド機能をOFFにしてください。
-	</p>
-<p>キーバインドの設定は編集できます。「設定」→「キーボード」の「キーバインド」に，「入力文字」と「出力文字列」の一覧があります。セルをダブルクリックすると，その場で編集できます。一覧の下の「＋」で追加し，「&#8722;」で選択した行を削除します。行はドラッグで並べ替えられます。入力文字は1文字です。変更はすぐに保存されて有効になり，「編集」→「取り消す」で元に戻せます。
-</p>
-<p>出力文字列の中の #SEL#（選択中の文字列），#INS#（出力後のカーソル位置），#PASTE#（クリップボードの文字列），&#8226;（マーク），改行とタブは，小さな部品として表示されます。一覧の下の「挿入」から入れるほか，文字で打つこともできます。改行は Option＋Return，タブは Option＋Tab で入ります。「？」ボタンでそれらの一覧を表示できます。一覧は ~/Library/TeXShop/Keyboard/autocompletion.plist に，これまでと同じ形式で保存されます。
-</p>
+<p>「ペースト」の列にチェックを入れると、ソースにペーストやドロップしたテキストにもそのキーバインドが働き、入力文字が出てくるたびに出力文字列に置き換わります。入力したときと同じく、その書類でキーバインドがオンのときだけ働きます。出力文字列に選択中の文字列、カーソル位置、クリップボードの文字列、マークを含むキーバインドにはチェックを入れられません。</p>
 
+<h2>円記号</h2>
 
-<!-- 
-<p>
-キーバインドはユーザが設定可能です。設定するには、~/Library/TeXShop/Keyboard/autocompletion.plistというファイルをTeXShopで開きます。冒頭のコメントを読み、適切に編集してLandweberの選定したものを定義しなおしたり独自のものを付け加えたりして、保存します。Unicode文字を使用するのであれば、かならずUTF-8形式で編集し保存するようにしてください。
-</p>
- -->
+<p>日本語キーボードでは、バックスラッシュのキーで円記号（¥）が入力されることがあります。TeXShopに付属の一覧では、¥はバックスラッシュ1文字になり、「ペースト」にもチェックが入っています。そのため、新しい書類のエンコーディングがUTF-8なら、キーバインドをオンにするだけで、ソースに入力・ペーストした¥が\になります。以前のバージョンのTeXShopから引き継いだ一覧では、¥の出力文字列をバックスラッシュ1文字にし、「ペースト」にチェックを入れてください。「<a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a>」も参照してください。</p>
 
-<!--
-<p>
-キーバインドはユーザが設定可能です。設定するには、~/Library/TeXShop/Keyboard/autocompletion.plistというファイルをTeXShopで開きます。冒頭のコメントを読み、適切に編集してLandweberさんの選定したものを定義しなおしたり独自のものを付け加えたりして、保存します。Unicode文字を使用するのであれば、かならずUTF-8形式で編集し保存するようにしてください。
-
-</p>
-
--->
+<p>一覧は~/Library/TeXShop/Keyboard/autocompletion.plistに保存されています。「<a href="configure_autocompletion.htm">キーバインドを変更する</a>」を参照してください。</p>
 </main>
 </body>
 </html>

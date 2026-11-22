@@ -5,41 +5,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Abrir otros archivos con TeXShop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="log; aux; jpg; tif; tiff; eps; pdf; dvi; ps; ins; dts; sty; cls; mf; def; fd; ltx; clo; mp">
+<meta name="description" content="tipos de archivo; extensiones; sty; cls; bib; log; aux; dtx; ins; Rnw; mp; md; dvi; ps; eps; pdf; OtherTeXExtensions; Formato">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">A&ntilde;adir archivos personales a TeX Live</a></li>
-<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a></li>
+<li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Más sobre TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
-<li><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a></li>
-<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a></li>
+<li><a href="advanced_addengine.htm">Añadir motores de composición</a></li>
+<li><a href="advanced_formats.htm">Crear y usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX y LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
-<li><a href="advanced_root.htm">Establecer un documento ra&iacute;z</a></li>
-<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a></li>
-<li><a href="advanced_removeaux.htm">Borrado de archivos AUX</a></li>
+<li><a href="advanced_encoding.htm">Codificaciones</a></li>
+<li><a href="advanced_Japan.htm">Composición en japonés</a></li>
+<li><a href="advanced_root.htm">Establecer el archivo raíz de un proyecto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronización entre código y vista previa</a></li>
+<li><a href="advanced_removeaux.htm">Borrar archivos AUX</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a></li>
-<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar</a></li>
+<li><a href="advanced_shellescape.htm">Protección ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar un editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar y pegar, arrastrar y soltar</a></li>
 <li><a href="advanced_otherfiles.htm" class="current">Abrir otros archivos con TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a></li>
-<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a></li>
-<li><a href="advanced_plist.htm">Archivos .plist</a></li>
+<li><a href="advanced_coloredtext.htm">Texto en color</a></li>
+<li><a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizaciones</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Abrir otros archivos con TeXShop</h1>
+<p>TeXShop abre cualquier archivo de texto, así que puede leer los archivos log, los archivos aux y otros archivos de TeX que haya junto a sus documentos. También abre archivos PDF e imágenes.</p>
 
-		<P>TeXShop puede abrir la mayor&iacute;a de los archivos para editarlos. Esta posiblidad permite al usuario leer los archivos con extensiones &laquo;.log&raquo;, &laquo;.aux&raquo;, etc., relacionados con TeX y LaTeX. Los archivos con extensiones &laquo;.jpg&raquo;, &laquo;.tif&raquo;, &laquo;.eps&raquo;, o &laquo;.pdf&raquo; los abre como archivos gr&aacute;ficos.</P>
-		<p>TeXShop tambi&eacute;n puede abrir archivos &laquo;.dvi&raquo; y &laquo;.ps&raquo;. En estos casos, convierte el archivo a pdf y lo muestra.</p>
-		<p>TeXShop puede abrir archivos &laquo;.ins&raquo;, &laquo;.dts&raquo;, &laquo;.sty&raquo;, &laquo;.cls&raquo;, &laquo;.mf&raquo;, &laquo;.def&raquo;, &laquo;.fd&raquo;, &laquo;.ltx&raquo;, &laquo;.clo&raquo;, y &laquo;.mp&raquo; para procesarlos. Realmente, puede abrir cualquier archivo de texto.</p>
-		<p>No es una buena idea usar TeXShop como un editor de texto de prop&oacute;sito general. TeXShop puede leer archivos escritos en Unicode y otros formatos, pero siempre los guarda con el formato elegido en los Ajustes. Como consecuencia, si usamos TeXShop para editar archivos que no est&eacute;n relacionados con TeX, podemos perder informaci&oacute;n.</p>
+<h2>Archivos que se tratan como fuentes TeX</h2>
+<p>Los archivos con las extensiones siguientes, y los archivos sin extensión, son fuentes TeX para TeXShop: se muestran con resaltado de sintaxis y se pueden componer.</p>
+<pre>asy  bbx  bib  cbx  clo  cls  ctx  def  dtx  fd  fdd  gabc  gtex
+htx  html  ins  lbx  lhs  ltx  lua  lytex  ly  md  mf  mp  ptx
+Rnw  sk  skt  Stex  sty  tex  typ  xml</pre>
+<p>Los demás archivos de texto, como los archivos <code>.log</code>, <code>.aux</code>, <code>.bst</code>, <code>.engine</code> o <code>.txt</code>, se abren como texto simple, sin resaltado de sintaxis.</p>
+<p>Para que TeXShop trate como fuentes TeX los archivos con otra extensión, añada la extensión con un ajuste oculto en Terminal; por ejemplo, para archivos de ConTeXt con la extensión <code>mkiv</code>:</p>
+<pre>defaults write TeXShop OtherTeXExtensions -array-add "mkiv"</pre>
+
+<h2>Archivos PDF e imágenes</h2>
+<p>Los archivos PDF y las imágenes con las extensiones <code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.tif</code>, <code>.tiff</code> y <code>.eps</code> se abren en una ventana propia. Los archivos DVI y PostScript (<code>.dvi</code>, <code>.ps</code>) se convierten a PDF y se muestran.</p>
+
+<h2>Guardar con otra extensión</h2>
+<p>Un archivo conserva su extensión cuando TeXShop lo guarda. Un documento nuevo se guarda como archivo <code>.tex</code>, salvo que elija otro tipo en el menú «Formato» del diálogo Guardar, como sty, bib o mp.</p>
+<p>TeXShop guarda un archivo en la codificación con la que se abrió. Está pensado para archivos de TeX y relacionados; un archivo en un formato poco habitual puede cambiar si se guarda después de editarlo en TeXShop. Consulte <a href="advanced_encoding.htm">Codificaciones</a>.</p>
 </main>
 </body>
 </html>

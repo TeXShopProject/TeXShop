@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Das Vorschaufenster</title>
+<meta name="description" content="Vorschaufenster; PDF-Darstellung; Seitenlayout; Doppelseiten-Anordnung; Vergrößerung; An Fenster anpassen; Lupe; PDF-Auswahl; Bilder kopieren; PDF durchsuchen; Schubfach; Link-Popups; angeheftetes Popup; geteiltes Fenster; Ansichten vertauschen; Vollbild; Werkzeugleiste für Anmerkungen">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
+<li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm" class="current">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
+<li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
+<li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_macros.htm">Makros</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
+<li><a href="basic_printing.htm">Drucken</a></li>
+<li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
+<li><a href="basic_license.htm">Lizenz</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Das Vorschaufenster</h1>
+
+<p>Das Vorschaufenster zeigt die gesetzte PDF-Datei. Es wird nach jedem Setzen aktualisiert und bleibt auf der Seite, die Sie gerade lesen. Seine Einstellungen finden Sie unter Einstellungen › Vorschau: Die Einstellungen unter „Beim Öffnen eines Dokuments“ gelten, wenn ein Dokument geöffnet wird, und das Menü „Vorschau“ ändert sie für das vorderste Fenster.</p>
+
+<h2>Im Dokument blättern</h2>
+
+<p>Vorschau › PDF-Darstellung legt fest, wie die Seiten angeordnet werden: „Einzelseiten“ und „Doppelseiten“ zeigen eine Seite oder ein Seitenpaar, „Einzelseiten, kontinuierlich“ und „Doppelseiten, kontinuierlich“ zeigen alle Seiten in einer langen Spalte. „PDF-Darstellung“ unter „Beim Öffnen eines Dokuments“ legt die Darstellung fest, mit der ein Fenster beginnt. „Vorherige Seite“ und „Nächste Seite“ im Menü „Vorschau“ und in der Symbolleiste blättern um, das Feld „Gehe zu Seite“ in der Symbolleiste springt zu einer Seite mit ihrer Nummer, und die beiden Winkelpfeile von „Zurück/Vorwärts“ in der Symbolleiste kehren wie in einem Webbrowser zu den zuvor besuchten Stellen zurück.</p>
+
+<p>Bei „Einzelseiten“ und „Doppelseiten“ blättert das Scrollen über den oberen oder unteren Rand einer Seite hinaus um; schalten Sie „Beim Scrollen nicht umblättern“ unter Einstellungen › Vorschau › Darstellung und Navigation ein, um stattdessen am Seitenrand anzuhalten. Die Pfeiltasten nach oben und unten scrollen innerhalb der Seite. Die Pfeiltasten nach links und rechts scrollen seitwärts, wenn eine vergrößerte Seite breiter als das Fenster ist, und blättern sonst um; mit „Mit den Pfeiltasten links und rechts immer umblättern“ blättern sie immer um.</p>
+
+<p>Mit Fenster › Symbolleiste anpassen... lassen sich zwei Menüs zur Symbolleiste hinzufügen. „Seitenlayout“ wählt die PDF-Darstellung. „Doppelseiten-Anordnung“ legt nur für dieses Dokument fest, ob ein Seitenpaar von links nach rechts oder von rechts nach links gelesen wird und ob die erste Seite einzeln als Deckblatt erscheint; der Eintrag „Dokumenteinstellungen wiederherstellen“ kehrt zu den Einstellungen zurück. Die Einstellungen sind „Seitenrichtung“ und „Erste Seite einzeln als Deckblatt anzeigen“ unter „Beim Öffnen eines Dokuments“; die magischen Zeilen <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> und <code>% !TEX standardDisplay</code> legen sie für ein einzelnes Dokument fest.</p>
+
+<h2>Vergrößerung</h2>
+
+<p>Vorschau › Vergrößerung bietet diese Möglichkeiten:</p>
+<dl>
+<dt>An Fenster anpassen</dt>
+<dd>Die Seite füllt die Breite des Fensters, und eine Änderung der Fenstergröße ändert die Vergrößerung.</dd>
+<dt>An Inhaltsbreite anpassen</dt>
+<dd>Wie „An Fenster anpassen“, aber ohne die weißen Ränder: Der gesetzte Teil der Seiten füllt die Breite des Fensters.</dd>
+<dt>Feste Vergrößerung</dt>
+<dd>Die Vergrößerung bleibt so, wie sie im Feld „Vergrößerung“ der Symbolleiste oder mit „Vergrößern“ (<kbd>⇧⌘=</kbd>) und „Verkleinern“ (<kbd>⇧⌘-</kbd>) eingestellt wurde.</dd>
+<dt>Originalgröße</dt>
+<dd>Die Seiten in der Größe des Papiers.</dd>
+</dl>
+
+<p>„Auf Inhalt zoomen“ und „Auf Inhaltsbreite zoomen“ am Ende desselben Untermenüs stellen die Vergrößerung einmalig so ein, dass der gesetzte Teil der Seite in das Fenster passt oder seine Breite füllt. Ändern Sie die Vergrößerung mit der Symbolleiste, mit diesen Befehlen oder durch Aufziehen und Zusammenziehen mit zwei Fingern auf dem Trackpad, wechselt das Fenster zu „Feste Vergrößerung“; wählen Sie „An Fenster anpassen“, um zurückzukehren. Ein Klick auf das Wort neben dem Feld „Vergrößerung“ öffnet das Menü „Vergrößerung“. „Nach Größenänderung des Fensters“ und „Vergrößerung“ unter „Beim Öffnen eines Dokuments“ legen die Vergrößerung fest, mit der ein Fenster beginnt.</p>
+
+<h2>Die Mauswerkzeuge</h2>
+
+<p>Das Objekt „Maus-Modus“ der Symbolleiste legt fest, was der Zeiger auf der Seite bewirkt. „Verschieben“ bewegt die Seite. „Textauswahl“ wählt Text zum Kopieren aus. „Lupe“ und „Lupe (groß)“ zeigen eine Lupe, solange die Maustaste gedrückt ist: Doppelklicken und halten Sie für eine größere Lupe, dreifachklicken und halten Sie, um das ganze Fenster zu vergrößern; drücken Sie die Befehls-, Wahl- oder Control-Taste für eine stärkere, die Umschalttaste für eine schwächere Vergrößerung. „PDF-Auswahl“ wählt einen Bereich der Seite aus, der als Bild kopiert wird. „Standard Maus-Modus“ unter „Beim Öffnen eines Dokuments“ legt das Werkzeug fest, mit dem ein Fenster beginnt.</p>
+
+<p>Ziehen Sie mit „PDF-Auswahl“ über einen Bereich der Seite und kopieren Sie ihn dann mit <kbd>⌘C</kbd> oder ziehen Sie ihn in ein anderes Programm oder auf den Schreibtisch; Vorschau › Auswahl als Datei sichern... sichert ihn in einer Datei. Vorschau › Kopierformat legt fest, ob die Kopie PDF oder ein Bild wie PNG, TIFF oder JPEG ist; „Bild-Kopierformat“ unter Einstellungen › Vorschau › Bilder kopieren legt die Vorgabe fest. Siehe <a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a>.</p>
+
+<h2 id="search">Suchen und das Schubfach</h2>
+
+<p>Geben Sie ein Wort in das Suchfeld („Suchen“) der Symbolleiste ein und drücken Sie den Zeilenschalter, um sein erstes Vorkommen auszuwählen; <kbd>⌘G</kbd> geht zum nächsten. Ist das Vorschaufenster vorn, springt <kbd>⌘F</kbd> in dieses Feld.</p>
+
+<p>Vorschau › Such- und Kapitelschubfach oder das Objekt „Schubfach“ der Symbolleiste blendet das Schubfach ein. Sein oberer Teil ist die Gliederung des Dokuments, die das Paket hyperref aus den Kapiteln und Abschnitten erzeugt; klicken Sie auf einen Eintrag, um dorthin zu gehen, oder wählen Sie einen mit den Pfeiltasten und drücken Sie den Zeilenschalter. Sein unterer Teil ist ein zweites Suchfeld, das jedes Vorkommen mit seiner Seite auflistet; klicken Sie auf eines, um dorthin zu gehen.</p>
+
+<h2>Links und Link-Popups</h2>
+
+<p>Links, die das Paket hyperref erzeugt, funktionieren in der Vorschau: Klicken Sie auf einen Verweis, um zum Satz oder zum Literaturverzeichniseintrag zu gelangen; der linke Winkelpfeil von „Zurück/Vorwärts“ kehrt zurück. Eine Webadresse wird in Ihrem Webbrowser geöffnet.</p>
+
+<p>Halten Sie den Zeiger über einen Link, um die verlinkte Stelle in einem Popup zu sehen, mit der Seitenzahl in der rechten unteren Ecke. Das Popup verschwindet nach einigen Sekunden. Tasten, die beim Erscheinen des Popups gedrückt sind, verändern es:</p>
+<dl>
+<dt>Umschalttaste</dt>
+<dd>zeigt das Popup über dem Link statt darunter.</dd>
+<dt>Befehlstaste</dt>
+<dd>zeigt ein größeres Popup.</dd>
+<dt>Wahltaste</dt>
+<dd>heftet das Popup an, sodass es stehen bleibt. Auch das Drücken der Wahltaste, während ein Popup zu sehen ist, heftet es an.</dd>
+<dt>Control-Taste</dt>
+<dd>kehrt „Link-Popups“ für diesen Link um: Ist „Link-Popups“ eingeschaltet, erscheint kein Popup, sodass keines bei einem Control-Klick im Weg ist; ist es ausgeschaltet, erscheint das Popup trotzdem.</dd>
+</dl>
+
+<p>Ein angeheftetes Popup lässt sich verschieben, in der Größe ändern und scrollen, und sein Text lässt sich auswählen und kopieren. Es bleibt an seiner Stelle auf seiner Seite, während Sie klicken, scrollen, zoomen, Links folgen oder in anderen Fenstern arbeiten, bis Sie im Vorschaufenster die Escape-Taste drücken. Solange ein Popup angeheftet ist, erscheinen weiterhin andere Popups, und die Wahltaste heftet stattdessen eines von ihnen an.</p>
+
+<p>Vorschau › Link-Popups schaltet die Popups für das Fenster ein oder aus, und „Link-Popups“ unter „Beim Öffnen eines Dokuments“ legt fest, ob sie beim Öffnen eines Dokuments eingeschaltet sind. „Seitenzahl in Link-Popups anzeigen“ unter Einstellungen › Vorschau › Darstellung und Navigation zeigt die Seitenzahl im Popup; schalten Sie es aus, um sie wegzulassen. Solange das Werkzeug „PDF-Auswahl“ gewählt ist, erscheinen keine Popups.</p>
+
+<h2>Das Fenster teilen</h2>
+
+<p>Fenster › Geteiltes Fenster (<kbd>⌃2</kbd>) oder das Objekt „Geteilte Vorschau“ der Symbolleiste teilt das Vorschaufenster in zwei Teile, die verschiedene Stellen des Dokuments zeigen können; wählen Sie den Befehl erneut, um die Teilung aufzuheben. Halten Sie die Wahltaste gedrückt, um das Fenster nebeneinander zu teilen (Fenster › Vertikal geteiltes Fenster, <kbd>⌃⌥2</kbd>). Jeder Teil hat seine eigene PDF-Darstellung und Vergrößerung. Der zuletzt angeklickte Teil ist der aktive Teil und mit einer dünnen Linie in der Akzentfarbe markiert: Die Symbolleiste, das Schubfach, SyncTeX und das Menü „Vorschau“ wirken auf ihn, und er bleibt erhalten, wenn Sie die Teilung aufheben.</p>
+
+<p>Klicken Sie mit gedrückter Control-Taste oder mit der rechten Maustaste auf einen internen Link und wählen Sie „Geteiltes Fenster mit Link“, um die verlinkte Stelle im anderen Teil zu zeigen, während der Link sichtbar bleibt; das Fenster wird bei Bedarf zuerst geteilt.</p>
+
+<p>Fenster › Ansichten vertauschen (<kbd>⌥2</kbd>) vertauscht die beiden Teile eines geteilten Fensters. In einem ungeteilten Fenster wechselt der Befehl zwischen zwei Ansichten des Dokuments, jede mit eigener Stelle, PDF-Darstellung und Vergrößerung, sodass Sie zwischen zwei Stellen hin- und herwechseln können.</p>
+
+<h2>Vollbild</h2>
+
+<p>Fenster › Vollbildmodus (<kbd>⌃⌘F</kbd>) zeigt die Vorschau auf dem ganzen Bildschirm. Das Fenster ist dann ungeteilt und verwendet die zuletzt im Vollbild verwendete Vergrößerung und PDF-Darstellung; beim Verlassen des Vollbilds kehren die vorherigen zurück. Um Teilung, Vergrößerung und PDF-Darstellung beizubehalten, schalten Sie „Vergrößerung, PDF-Darstellung und Teilung beim Wechsel ins Vollbild beibehalten“ unter Einstellungen › Vorschau › Darstellung und Navigation ein. Im Vollbild schließt die erste Escape-Taste ein angeheftetes Popup, die zweite beendet das Vollbild.</p>
+
+<h2>Anmerkungen</h2>
+
+<p>Vorschau › Werkzeugleiste für Anmerkungen einblenden zeigt die Anmerkungswerkzeuge unter der Symbolleiste des Fensters. Klicken Sie links in der Werkzeugleiste für Anmerkungen auf „Bearbeiten“ und verwenden Sie dann ihre Tasten, um ausgewählten Text durchzustreichen, hervorzuheben oder zu unterstreichen oder um Formen, Pfeile, Text und Notizen hinzuzufügen. Anmerkungen sind nicht Teil des Quelltexts, und das nächste Setzen ersetzt die PDF-Datei; sichern Sie sie daher mit „Anmerkungen speichern …“ in der Werkzeugleiste für Anmerkungen. Dabei wird eine Kopie der PDF-Datei gesichert, für Fourier.tex zum Beispiel Fourier-Annotated.pdf. Haben Sie im Modus „Bearbeiten“ gearbeitet, bietet TeXShop an, die Anmerkungen zu sichern, bevor es erneut setzt oder das Fenster schließt. Das TeXShop Handbuch beschreibt Anmerkungen ausführlich.</p>
+
+<h2>Weiteres</h2>
+
+<p>Klicken Sie mit gedrückter Befehlstaste in die Vorschau, um zur passenden Stelle im Quelltext zu gelangen; siehe <a href="basic_typesetting.htm">Dokumente setzen</a>. „Drehen im Uhrzeigersinn“ und „Drehen gegen den Uhrzeigersinn“ im Menü „Vorschau“ drehen die Seiten. Schreibt ein anderes Programm wie latexmk die PDF-Datei neu, lädt die Vorschau sie an derselben Stelle neu; schalten Sie „PDF-Änderungen durch andere Apps ständig überwachen“ unter Einstellungen › Vorschau › Aktualisierung ein, damit sie auch neu geladen wird, während TeXShop im Hintergrund ist. Vorschau › Position des Vorschau-Fensters sichern lässt neue Vorschaufenster an der Stelle und in der Größe des vordersten Fensters öffnen.</p>
+</main>
+</body>
+</html>

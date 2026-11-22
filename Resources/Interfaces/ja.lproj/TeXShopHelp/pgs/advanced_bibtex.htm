@@ -5,140 +5,67 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BibTeX</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="参考文献目録の作成について">
+<meta name="description" content="BibTeX; 参考文献; 文献リスト; 引用; bibファイル; biber; biblatex; upbibtex; pbibtex; % !BIB program; BibTeXエンジン">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a></li>
-<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a></li>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
 <li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
-<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a></li>
-<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
 <li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
 <li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
 <li><a href="advanced_bibtex.htm" class="current">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a></li>
-<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a></li>
-<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストおよびドラッグ＆ドロップ</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
 <li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
 <li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
-<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a></li>
-<li><a href="advanced_plist.htm">Plistファイル</a></li>
-<li><a href="advanced_localization.htm">各国語版へのローカライズ</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>BibTeX</h1>
+<p>BibTeXは、文献のデータベース（拡張子<code>.bib</code>のファイル）からLaTeXの書類の参考文献リストを作ります。書類では項目をキーで引用し、BibTeXは引用された項目だけを並べます。</p>
+<p>データベース<code>mybibliography.bib</code>には、次のような項目を書きます。</p>
+<pre>@book{Knuth:TeXbook,
+  author    = {Donald E. Knuth},
+  title     = {The {\TeX}book},
+  publisher = {Addison-Wesley},
+  year      = {1986}
+}</pre>
+<p>書類では項目を引用し、スタイルとデータベースを指定します。</p>
+<pre>As explained in~\cite{Knuth:TeXbook}, …
 
+\bibliographystyle{plain}
+\bibliography{mybibliography}</pre>
 
-<p>
-BibTeXはLaTeX文書内に参考文献目録を作成するためのツールです。このツールは、しばしば引用する文献を集成したデータベースがあることを前提としています。シンプルなコマンドを使ってLaTeXソース内で文献の一部を参照することができます──BibTeXは、論文内で参照した項目だけを含んだ参考文献目録を作成します。
-</p>
+<h2>BibTeXを実行する</h2>
+<ol>
+<li>書類をタイプセットします。引用は[?]と表示され、参考文献リストはまだありません。</li>
+<li>「タイプセット」→「BibTeX」（<kbd>⇧⌘B</kbd>）を選ぶか、「タイプセット」ボタンの横のポップアップメニューで「BibTeX」を選んで「タイプセット」を押します。</li>
+<li>さらに2回タイプセットします。1回目で参考文献リストが加わり、2回目で引用の番号が埋まります。</li>
+</ol>
+<p>pdflatexmkのエンジンや、「latexmkを使う」に設定したプロファイルなど、latexmkでタイプセットするときは、BibTeXと追加のタイプセットが自動的に実行されます。</p>
+<p>TeXShopで新しいデータベースを作るには、保存ダイアログのファイルの種類のメニューでbibを選び、ファイルに拡張子<code>.bib</code>が付くようにします。データベースは個人用のTeXツリーに置くこともでき、そうすればどの書類からも見つかります。<a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a>を参照してください。</p>
 
-<BLOCKQUOTE>
-<p>
-<small>
-訳注：pTeXディストリビューションには日本語に対応したjBibTeXが含まれています。TeXShopの設定ウインドウでは、BibTeXの代わりにjBibTeXを使うよう、設定することができます。
-</small>
-</p>
-</BLOCKQUOTE>
-
-<!-- 
-<p>
-ここにGoossens・Mittelbach・Samarinの共著『The LaTeX Companion』から取った短い例があります。より詳しいことについてはこの本でお調べください。データベースは「mybibliography.bib」という名前のファイルで、以下に示すテキストを含むものとします。このテキスト内の、登録項目 「Felici:1991」 「Knuth:WEB」 「Liang:1983」は、LaTeXソース内で論文を参照するのに使われる鍵値（参照名）です。
-</p>
- -->
-
-<p>
-ここにGoossensさん・Mittelbachさん・Samarinさんの共著『The LaTeX Companion』から取った短い例があります。より詳しいことについてはこの本でお調べください。データベースは「mybibliography.bib」という名前のファイルで、以下に示すテキストを含むものとします。このテキスト内の、登録項目「Felici:1991」 「Knuth:WEB」 「Liang:1983」は、LaTeXソース内で論文を参照するのに使われる鍵値（参照名）です。
-</p>
-
-<BLOCKQUOTE>
-<p>
-<small>
-補足：『The LaTeXコンパニオン』アスキー書籍編集部監訳（1998年）
-</small>
-</p>
-</BLOCKQUOTE>
-
-<tt>
-		<dl>
-			<dd>@article{Felici:1991,
-			<dd>author	={James Felici},
-			<dd>title	={{PostScript versus TrueType}},
-			<dd>journal	={Macworld},
-			<dd>volume	=8, pages={195--201},
-			<dd>month	=sep, year = 1991		}
-			<p>
-			<dd>@techreport{Knuth:WEB,
-			<dd>title	={{The \textsf{WEB} System of
-			<dd>Structured Documentation}},
-			<dd>month	=sep, year = 1983,
-			<dd>author	={Donald E. Knuth},
-			<dd>address	={Stanford, CA 94305},
-			<dd>number	={STAN-CS-83-980},
-			<dd>institution={Department of Computer
-			<dd>Science, Stanford University}  }
-			<p>
-			<dd>@phdthesis{Liang:1983,
-			<dd>author	={Franklin Mark Liang},
-			<dd>month	=jun, year = 1983,
-			<dd>school	={Stanford University},
-			<dd>address	={Stanford, CA 94305},
-			<dd>title	={{Word Hy-phen-a-tion by
-			<dd>Com-pu-ter}},
-			<dd>note	={Also available as Stanford
-			<dd>University, Department of
-			<dd>Computer Science Report
-			<dd>No. STAN-CS-83-977}   }
-		</dl>
-</tt>
-
-<p>
-LaTeXのソースファイルは「myfile.tex」という名前で、以下のテキストを含むものとします：
-</p>
-
-<tt>
-		<dl>
-			<dd>\begin{document}
-			<dd>Consider the  argument of Felici~\cite{Felici:1991} in light of these comments.
-			<dd>\nocite{Liang:1983} We provide further remarks later.
-			<dd>
-			<dd>\bibliographystyle{plain}
-			<dd>\bibliography{mybibliography}
-			<dd>\end{document}
-		</dl>
-</tt>
-
-<p>
-このソースをタイプセットすると、Feliciの論文への参照が文章内に示され、参考文献目録が文章の最後に作成されます──そこにはFeliciとLiangの論文はありますが、Knuthの論文は見あたりません。
-</p>
-
-<p>
-TeXShopでは次に示す方法でこの例を利用できます。最初に「myfile.tex」という文書をいつも通りに編集してタイプセットします。参照は「 [?] 」として出力結果に示され、参考文献目録は欠落します。そのままプログラム・ボタンにある「BibTeX」を選択して実行します。次に「LaTeX」を選んで再度タイプセットします。参照はなおも「 [?] 」と表示されますが、参考文献目録は出力に付け加わります。最終的にタイプセットすると、参照も正しい値になっています。
-</p>
-
-<p>
-「mybibliography.bib」というファイルは、TeXShopで開いたり編集したりできます。もし最初からTeXShopを使って「mybibliography.bib」を作成するのであれば、保存画面の「フォーマット：」と表示のあるプルダウンメニューで、texファイルではなくbibファイルとして保存します。
-</p>
-
-
-
-
-
-
-		
-	</body>
-
-</HTML>
+<h2>プログラムを選ぶ</h2>
+<p>「タイプセット」→「BibTeX」は、「設定」→「タイプセット」→「周辺ツール」の「BibTeXエンジン」にあるコマンドを実行します。初期値は<code>bibtex</code>です。ここには、必要なオプションを付けて別のプログラムを入力できます。たとえばbiblatexパッケージを使う書類では<code>biber</code>にします。エンジンのプロファイルはこの欄を設定します。pLaTeX + dvipdfmxでは<code>pbibtex</code>、upLaTeX + dvipdfmxとLuaLaTeX（日本語）では<code>upbibtex</code>、ほかのプロファイルでは<code>bibtex</code>になります。</p>
+<p>書類ごとにプログラムを選ぶには、最初の20行のどこかに次のような行を書きます。</p>
+<pre>% !BIB program = biber</pre>
+<p>この行は設定よりも優先されます。<code>% !BIB TS-program =</code>という形も同じように読み取られます。</p>
 </main>
 </body>
 </html>

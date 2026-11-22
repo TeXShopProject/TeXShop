@@ -3,63 +3,60 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>コピー＆ペーストおよびドラッグ＆ドロップ</title>
+<title>コピー＆ペーストとドラッグ＆ドロップ</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="プレビュー表示の一部分を種々の画像として切り抜く方法">
+<meta name="description" content="コピー＆ペースト; ドラッグ＆ドロップ; 範囲指定; 画像のコピー; コピーフォーマット; カラーマップを使う; 文字色の強め具合; 選択部分をファイルに保存; Keynote">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a></li>
-<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a></li>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
 <li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
-<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a></li>
-<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
 <li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
 <li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a></li>
-<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a></li>
-<li><a href="advanced_pdfcopypaste.htm" class="current">コピー＆ペーストおよびドラッグ＆ドロップ</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm" class="current">コピー＆ペーストとドラッグ＆ドロップ</a></li>
 <li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
 <li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
-<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a></li>
-<li><a href="advanced_plist.htm">Plistファイル</a></li>
-<li><a href="advanced_localization.htm">各国語版へのローカライズ</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>コピー＆ペーストおよびドラッグ＆ドロップ</h1>
+<h1>コピー＆ペーストとドラッグ＆ドロップ</h1>
+<p>プレビューのウインドウでページの一部を選び、Keynote、Pages、プレビューなどのほかのプログラムに画像としてコピーできます。</p>
 
+<h2>選んでコピーする</h2>
+<ol>
+<li>プレビューのウインドウのツールバーで「範囲指定」ツールを選びます。</li>
+<li>必要な部分を囲むように四角形をドラッグします。文字、数式、図を含めてかまいません。</li>
+<li>「編集」→「コピー」（<kbd>⌘C</kbd>）を選んでほかのプログラムにペーストするか、選んだ範囲をそのプログラムの書類にドラッグします。デスクトップやFinderのウインドウにドラッグすると、ファイルになります。</li>
+</ol>
+<p>「プレビュー」→「選択部分をファイルに保存...」で、選んだ範囲を名前と保存先を指定して保存できます。「範囲指定」ツールで「編集」→「すべてを選択」（<kbd>⌘A</kbd>）を選ぶと、表示しているものすべてが選ばれます。ページレイアウトが「単一ページ」と「見開きページ」ではそのページ、「複数ページ」と「複数見開きページ」では書類全体です。後の2つでは、コピーが巨大にならないよう、20ページ以下の書類でだけ働きます。</p>
+<p>画像ではなく文字をコピーするには、「文字選択」ツールを使います。</p>
 
-<p>
-pdfのプレビュー表示の一部分を選択してコピーし、他のプログラムに画像としてペーストすることができます。選択部分のドラッグ＆ドロップもサポートしています。設定項目では、コピーファイルのフォーマット（  pdf・png・jpg・tiff等々）や、文字色、背景色と透明度を選べます。
-</p>
-
-<p>
-プレビューの選択部分はドラッグ＆ドロップでKeynoteと組み合わせて利用することができます。デフォルトのコピー設定を使い、テキストの選択部分をKeynoteのスライドにドロップできます ； テキストの背景は透明になるので、文字の間にはスライドの背景が見えます。このテキストはデフォルトのコピーフォーマットがpdfなのでリサイズできます。
-</p>
-
-<p>
-コピーを取るのに、編集メニューの「すべてを選択」コマンドを使うとpdfページ全体を選択できます。ですが「複数ページ」や「複数見開きページ」モードでは、「すべてを選択」は文書が20ページ以下の場合にのみ機能します──そうしておかないと、選択したpdfが巨大になりかねず、コピー作業がマシンの速度を低下させてしまうので。
-</p>
-
-
-
-
-
-
-		
-	</body>
-
-</HTML>
+<h2>コピーの形式</h2>
+<p>画像の種類は、「設定」→「プレビュー」→「画像のコピー」の「フォーマット」で設定します。PDF、TIFF、JPEG、PNGから選べ、いくつかは画質も選べます。初期値のPDFは、どの大きさでも文字や線がくっきりしたままなので、Keynoteのスライドにペーストした範囲を自由に拡大できます。「プレビュー」→「コピーフォーマット」のサブメニューでも、同じ設定を確認・変更できます。</p>
+<p>TIFF、JPEG、PNGでコピーするときは、「画像のコピー」グループのさらに2つの項目が働きます。</p>
+<ul>
+<li>「カラーマップを使う」は、黒を文字の色に、白を背景の色に置き換えて、コピーをスライドの配色に合わせます。2つの色は、「設定」→「テーマ」→「画像コピー時のカラーマップ」の「文字」と「背景」で、テーマごとに設定します。PDFのコピーはページの色のままです。</li>
+<li>「文字色の強め具合」は、コピーの中で文字をどれだけ強調するかを設定します。</li>
+</ul>
+<p>テーマがプレビューのウインドウでライト表示のページに付ける色は、コピーには含まれません。</p>
 </main>
 </body>
 </html>

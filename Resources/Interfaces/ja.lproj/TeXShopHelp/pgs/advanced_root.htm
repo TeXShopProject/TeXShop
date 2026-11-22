@@ -5,110 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>プロジェクトのルートファイルを設定する</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="大きな入力ファイルを分割して管理する方法">
+<meta name="description" content="ルートファイル; % !TEX root; プロジェクト; 章ファイル; include; input; ソース／プレビューを切換; プロジェクトのルートファイル">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a></li>
-<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a></li>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
 <li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
-<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a></li>
-<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
 <li><a href="advanced_root.htm" class="current">プロジェクトのルートファイルを設定する</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
 <li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a></li>
-<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a></li>
-<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストおよびドラッグ＆ドロップ</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
 <li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
 <li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
-<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a></li>
-<li><a href="advanced_plist.htm">Plistファイル</a></li>
-<li><a href="advanced_localization.htm">各国語版へのローカライズ</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>プロジェクトのルートファイルを設定する</h1>
+<p>大きな書類は、プリアンブルを持つルートファイルと、そこから読み込む章ごとのファイルに分けることがよくあります。たとえば、ルートファイル<code>Main.tex</code>は次のようになります。</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p><code>two.tex</code>を編集しているとき、TeXShopがタイプセットすべきなのは、プリアンブルのない章ではなく<code>Main.tex</code>です。それを伝えるには、各章のファイルの最初の20行のどこかに次の行を書きます。</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>ルートファイル自身には、この行は要りません。ルートファイルの名前は、次のいずれかの形で書けます。</p>
+<ul>
+<li>章のファイルと同じフォルダにあれば、名前だけで<code>Main.tex</code></li>
+<li>章のファイルのフォルダからの相対パスで<code>../Main.tex</code>や<code>../../Main.tex</code></li>
+<li>完全なパスで<code>/Users/me/Book/Main.tex</code>。プロジェクトを移動したら書き換える必要があります</li>
+</ul>
+<p>「マクロ」メニューの「Root」マクロでもこの行を入力できます。ルートファイルを尋ね、相対パスか絶対パスの行を選べるようにして、すでにあるルートの行を置き換えます。</p>
 
+<h2>ルートの行の働き</h2>
+<ul>
+<li>章のファイルでタイプセットすると、ルートファイルがタイプセットされ、ルートファイルのプレビューのウインドウに書類全体が表示されます。<code>% !TEX program</code>の行など、タイプセットのためのマジックコメントはルートファイルに書きます。</li>
+<li>「エラー箇所へ移動」は、エラーを含むファイルが開いていなければ開き、その行に移動します。</li>
+<li>プレビューのウインドウからの同期では、クリックした箇所を含む章のファイルが開きます。<a href="advanced_pdfsync.htm">ソースとプレビューの同期</a>を参照してください。</li>
+<li>「作業ファイルを削除」は、ルートファイルの作業ファイルを削除します。<a href="advanced_removeaux.htm">作業ファイルを削除する</a>を参照してください。</li>
+<li>章のファイルで「ウインドウ」→「ソース／プレビューを切換」（<kbd>⌘1</kbd>）を選ぶと、ルートファイルのプレビューのウインドウが手前に来ます。プレビューのウインドウでもう一度選ぶと、元のソースのウインドウに戻ります。ソースのウインドウから来たのでなければ、ルートファイルに戻ります。</li>
+</ul>
 
-<p>
-大きな入力ファイルを小さくいくつかに分割して、ルートファイルで管理するのは、よく行なわれることです。たとえば、書籍のプロジェクトのルートファイルは次のような形になっているかもしれません──
-</p>
+<h2>章のファイルを開く</h2>
+<p>ルートの行のある章のファイルを開くと、TeXShopはルートファイルとそのプレビューのウインドウも開きます。これは「設定」→「一般」→「プロジェクトのルートファイル」の2つの項目で設定します。「ファイルを開いたときにルートファイルも開く」でこの動作をオン・オフし、「開いたルートファイルを最小化する」をオンにすると、ルートファイルのソースのウインドウをDockにしまいます。章を編集している間、ルートファイルを編集することはあまりないからです。</p>
 
-<tt>
-		<dl>
-			<dd>\documentclass[11pt]{book}
-			<dd>\includeonly{Chapter2/two}
-			<dd>\textwidth = 6.5 in
-			<dd>\textheight = 9 in
-			<dd>\begin{document}
-			<dd>\include{Chapter1/one}
-			<dd>\include{Chapter2/two}
-			<dd>\include{Chapter3/three}
-			<dd>\end{document}
-		</dl>
-</tt>
+<h2>プロジェクト全体で検索・置換する</h2>
+<p>プロジェクトのすべてのファイルを一度に検索するには、そのどれかのファイルで「編集」→「検索」→「同じTEX rootを持つTeXソースを検索…」を選びます。ルートファイルと、ルートの行でそのルートファイルを指定しているファイルが検索されます。<a href="basic_texrootsearch.htm">TeXソースの検索と置換</a>と<a href="basic_find.htm">検索と置換</a>を参照してください。</p>
 
-<p>
-このルートファイルにはプロジェクト全体に対するフォーマット・コマンドはありますが、その内容についてはone.tex・two.tex・three.texという３つのファイルに収められています。上記の第２行目は、第２章だけをタイプセットするようTeXに指示しています──第２章の執筆中にタイプセットにかかる時間を短縮するためです。本が完成した暁には、この行はコメントアウトして、本全体を最終的にタイプセットすることができます。
-</p>
-
-<p>
-第２章を書いているときに、ファイルtwo.texをTeXShopで開くというのはごく自然なことでしょう。けれどもこの入力ファイルに変更を施した後、two.texをタイプセットすべきではありません ； 代わりにルートファイルをタイプセットします。そうするようTeXShopに指示できる方法が２つあります。
-<!--１つ目は、各章ごとのファイルの第１行目に次のように書くことで、ルートファイルを指定します──-->
-１つ目は、各章ごとのファイルの冒頭20行以内の１行に次のように書くことで、ルートファイルを指定します──
-</p>
-<tt>
-	<dl>
-<!--		<dd>%SourceDoc ../Main.tex-->
-		<dd>%!TEX root = ../Main.tex
-	</dl>
-</tt>
-<p>
-２つ目は「プロジェクトルートの設定...」というメニューコマンドを使う方法です。このメニューコマンドが提示するパネルにはテキストボックスがありますから、そこにルートファイルの名前を入れます。
-</p>
-
-<p>
-ルートファイルが入力ファイルと同じフォルダ内にあるときは、ファイル名だけで十分です──拡張子「.tex」を含めた名前です。たとえば、ルートファイルの名前がMainなら、ソースの第１行目またはダイアログウインドウにはMain.texと書き入れます。
-</p>
-
-<p>
-もしルートファイルが異なるディレクトリにあるなら、入力ファイルの位置に対する相対パス名を付けることもできます。上記の例では、個々の章はルートファイルのあるフォルダ内のサブフォルダの中に入っています。このような場合、ソースの第１行目またはダイアログウインドウに ../Main.texと入力すれば、章ごとの入力ファイルに対する相対パスでルートファイルの場所を示すことができます。
-</p>
-
-<p>
-最後に、ルートの名前は、絶対パス名でも指定できます──/Users/me/Main.texのように。
-</p>
-
-<p>
-TeXソース全体が単一のファイルになっている場合には、プロジェクトルートを設定する必要はありません。
-</p>
-
-<p>
-「プロジェクトルートの設定...」コマンドを使ってルートファイルを指定すると、TeXShopは、入力ファイルと名前が同じで拡張子が「.texshop」となっているファイルに情報を書き込むことで、ルートファイル名を記憶します。たとえば、第２章の入力ファイルがtwo.texの場合、TeXShopは、two.texと同じディレクトリにあるtwo.texshopにルートファイル名を書き込みます。後でtwo.texshopを捨ててしまうと、TeXShopはMain.texではなくtwo.texをタイプセットするようになってしまいます。ソースファイルの第１行目でルートファイルを特定すれば、余分な「.texshop」ファイルは不要になります。
-</p>
-
-<p>
-ルートファイルが有効なら、所定のソースウインドウが前面に出ている状態でcommand＋1を押すと、対応するプレビューウインドウがアクティブになります。もう一度command＋1を押せば、ソースウインドウがアクティブになります。プレビューウインドウは複数のソースウインドウに対応しているかもしれないので、command＋1でアクティブになるのは、直前にプレビューウインドウをアクティブにしたソースウインドウです──それまでに一度もcommand＋1が押されていなかった場合は、ルートソースをアクティブにします。
-</p>
-
-
-
-
-
-
-		
-	</body>
-
-</HTML>
+<h2>.texshopファイルで指定したルートファイル</h2>
+<p>章のファイルの隣にある拡張子<code>.texshop</code>のファイル（<code>two.tex</code>に対する<code>two.texshop</code>など）でもルートファイルを指定でき、TeXShopは今もこれを読みます。ただし、このファイルを作るメニューコマンドはありません。ソースとともに移動できる<code>% !TEX root</code>の行を使ってください。</p>
 </main>
 </body>
 </html>

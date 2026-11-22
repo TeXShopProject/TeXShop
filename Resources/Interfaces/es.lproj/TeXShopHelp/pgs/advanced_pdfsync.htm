@@ -3,104 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sincronizaci&oacute;n c&oacute;digo-pdf</title>
+<title>Sincronización entre código y vista previa</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="synctex, pdfsync, sincronizar, sincronizaci&oacute;n">
+<meta name="description" content="SyncTeX; sync; sincronizar; sincronización; Comando + clic; Tipo de sincronía; Buscar en PDF; synctex.gz; projectfile; useConTeXtSyncParser">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">A&ntilde;adir archivos personales a TeX Live</a></li>
-<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a></li>
+<li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Más sobre TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
-<li><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a></li>
-<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a></li>
+<li><a href="advanced_addengine.htm">Añadir motores de composición</a></li>
+<li><a href="advanced_formats.htm">Crear y usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX y LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
-<li><a href="advanced_root.htm">Establecer un documento ra&iacute;z</a></li>
-<li><a href="advanced_pdfsync.htm" class="current">Sincronizaci&oacute;n c&oacute;digo-pdf</a></li>
-<li><a href="advanced_removeaux.htm">Borrado de archivos AUX</a></li>
+<li><a href="advanced_encoding.htm">Codificaciones</a></li>
+<li><a href="advanced_Japan.htm">Composición en japonés</a></li>
+<li><a href="advanced_root.htm">Establecer el archivo raíz de un proyecto</a></li>
+<li><a href="advanced_pdfsync.htm" class="current">Sincronización entre código y vista previa</a></li>
+<li><a href="advanced_removeaux.htm">Borrar archivos AUX</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a></li>
-<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar</a></li>
+<li><a href="advanced_shellescape.htm">Protección ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar un editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar y pegar, arrastrar y soltar</a></li>
 <li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a></li>
-<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a></li>
-<li><a href="advanced_plist.htm">Archivos .plist</a></li>
+<li><a href="advanced_coloredtext.htm">Texto en color</a></li>
+<li><a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizaciones</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Sincronizaci&oacute;n c&oacute;digo-pdf</h1>
+<h1>Sincronización entre código y vista previa</h1>
+<p>Haga clic con la tecla Comando pulsada en una palabra de la ventana de código, y la ventana de vista previa se desplaza al lugar correspondiente y lo marca. Haga clic con la tecla Comando pulsada en un lugar de la ventana de vista previa, y el archivo fuente se abre, si hace falta, en la línea correspondiente, que queda marcada. Los colores de las dos marcas se ajustan en Ajustes › Temas › SyncTeX, en «Vista previa» y «Fuente».</p>
 
-		<P>La sincronizaci&oacute;n es una importante utilidad incorporada en Textures, una implementaci&oacute;n comercial de TeX para Macintosh Classic desarrollada por Blue Sky TeX Systems. Al usar la sincronizaci&oacute;n, un autor puede hacer clic en la ventana del dvi previsto e, inmediatamente, el cursor aparece en el correspondiente lugar de la ventana de c&oacute;digo. Blue Sky ha prometido una versi&oacute;n nativa para MacOS X de Textures, pero todav&iacute;a no la ha lanzado. La implementaci&oacute;n de la sincronizaci&oacute;n en Textures es admirada por su habilidad para localizar el correspondiente punto en el c&oacute;digo.</P>
+<h2>SyncTeX</h2>
+<p>TeXShop sincroniza con SyncTeX. Cuando TeX se ejecuta con la opción <code>-synctex=1</code>, escribe junto al PDF un archivo como <code>Galois.synctex.gz</code>, que registra dónde ha ido a parar en la página cada fragmento del archivo fuente. Las órdenes de composición que configura TeXShop, los perfiles del motor y los motores que incluye TeXShop ya usan esta opción. En un motor propio, añada <code>-synctex=1</code> a la llamada a TeX (con uno o dos guiones; todos los motores aceptan ambas formas).</p>
+<p>El archivo synctex contiene las rutas completas de los archivos fuente. Después de mover, copiar o enviar a otra persona la carpeta de un proyecto, la sincronización no hace nada hasta que se vuelve a componer el documento.</p>
+<p>SyncTeX no es del todo exacto: el lugar que busca puede estar un poco antes o después de la marca.</p>
 
-<P>Desde esa implementaci&oacute;n, varios sistemas TeX han incorporado, aproximadamente, la misma utilidad. Para ello han usado estilos adicionales que tambi&eacute;n hac&iacute;an que TeX escribiera informaci&oacute;n extra en el archivo dvi. Ninguna de estas aproximaciones (incluyendo los m&eacute;todos incorporados en TeXShop, y que describimos m&aacute;s adelante) es tan precisa como el m&eacute;todo de Textures.</P>
+<h2>Proyectos con varios archivos</h2>
+<p>En un proyecto cuyos archivos de capítulo indican el archivo raíz con <code>% !TEX root</code> (consulte <a href="advanced_root.htm">Establecer el archivo raíz de un proyecto</a>), Comando + clic en un archivo de capítulo lleva a su lugar en la vista previa del documento completo, y Comando + clic en la vista previa abre el archivo de capítulo que contiene el punto en el que se ha hecho clic. Con Ajustes › Composición › Sincronización de fuente y vista previa › «Abrir los archivos alcanzados por Sync como pestañas en la ventana del archivo raíz» activado, un archivo abierto de esta manera se añade como pestaña a la ventana del archivo raíz en lugar de abrirse en su propia ventana.</p>
 
-<P>Desde la versi&oacute;n 2.18, TeXShop proporciona sincronizaci&oacute;n entre el c&oacute;digo usando una nueva tecnolog&iacute;a denominada SyncTeX introducida por J&eacute;r&ocirc;me Laurens; cuando esta tecnolog&iacute;a no est&aacute; disponible, TeXShop  utiliza un antiguo m&eacute;todo de sincoronizaci&oacute;n basado en b&uacute;squedas, y que fue introducido en TeXShop 2.0. Para usar la sincronizaci&oacute;n, haz click sobre una frase de la ventana con c&oacute;digo mientras pulsas la tecla comando de Apple; el pdf se desplaza, en su correspondiente ventana, hasta el lugar oportuno, y la frase aparece destacada, rodeada por un c&iacute;rculo rojo. De manera similar, si haces comando-click en la ventana con el pdf, la ventana con el c&oacute;digo se abre (si es necesario), el texto se desplaza hasta el lugar apropiado, y la frase aparece resaltada en amarillo.</P>
-
-<p>Si instalas TeXShop por primera, el m&eacute;todo basado en SyncTeX est&aacute; activo por defecto. Sin embargo, los usuarios que hayan instalado previamente una versi&oacute;n antigua de TeXShop, y luego la hayan actualizado, necesitar&aacute;n cambiar tres &iacute;tems en los ajustes para lograr que SyncTeX funcione.
-En la categor&iacute;a &laquo;Composición&raquo; de los ajustes, pon que el m&eacute;todo de sincronizaci&oacute;n sea SyncTeX.
-Y, en la categor&iacute;a &laquo;Composición&raquo;, cambia los dos &iacute;tems del grupo &laquo;PDF directo&raquo; por</p>
+<h2>Tipo de sincronía</h2>
+<p>Ajustes › Composición › Sincronización de fuente y vista previa › Tipo de sincronía tiene dos opciones:</p>
 <dl>
-	<dd> pdftex -synctex=1
-	<dd> pdflatex -synctex=1
+<dt>SyncTeX (recomendado)</dt><dd>Usa el archivo synctex, como se ha descrito. Es la opción predeterminada.</dd>
+<dt>Buscar en PDF</dt><dd>Busca en el PDF el texto que rodea el clic, y en el archivo fuente el texto que rodea un clic en la vista previa. No necesita archivo synctex, pero falla donde el texto compuesto difiere del archivo fuente, como en las fórmulas y en el texto con muchas órdenes. Para encontrar el archivo de un punto de la vista previa, busca en los archivos indicados en las órdenes <code>\include</code> e <code>\input</code> del archivo raíz. En los proyectos que incluyen archivos de otra manera, indíquelos en el archivo raíz con líneas como
+<pre>% !TEX projectfile = chapter2.tex
+% !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
+Un nombre es una ruta completa o una ruta relativa al archivo raíz; estas líneas pueden estar en cualquier lugar del archivo raíz.</dd>
 </dl>
 
-
-<p>SyncTeX fue introducido por J&eacute;r&ocirc;me Laurens en 2008. Hace que TeX cree un archivo adicional con extensi&oacute;n &laquo;.synctex&raquo;, y que contiene la informaci&oacute;n que se necesita para sincronizar la salida en pdf con el c&oacute;digo tex. Es el propio motor de TeX el que se encarga de generar este archivo. La composicion de p&aacute;gina no se ve afectada en absoluto cuando se usa SyncTeX; en particular, no cambian los cores de l&iacute;nea y de p&aacute;gina, como ocurr&iacute;a con la antigua tecnolog&iacute;a basada en pdfsync. SyncTeX proporcionar&aacute; una sincronizaci&oacute;n a&uacute;n m&aacute;s precisas cuando los desarrolladores dominen todas sus posibilidades.</p>
-
-
-<p>TeXShop incorpora tambi&eacute;n un segundo m&eacute;todo de sincronizaci&oacute;n basado en b&uacute;squedas. Funciona con todos los motores de composici&oacute;n, y el c&oacute;digo tex no necesita ning&uacute;n cambio para poder usarlo. El m&eacute;todo basado en b&uacute;squedas utiliza una habilidad introducida en Mac OS X 10.4, y que permite a los desarrolladores programar f&aacute;cilmente la b&uacute;squeda de cadenas de texto en archivos pdf. As&iacute;, el m&eacute;todo de b&uacute;squeda lo que hace es encontrar cadenas de texto iguales en el c&oacute;digo tex y el archivo pdf. Este m&eacute;todo no requiere ning&uacute;n archivo de estilo, as&iacute; que te&oacute;ricamente funciona cualquiera que sea el modo de composici&oacute;n de p&aacute;ginas que se use. Pero falla cuando la cadenas de texto en el pdf es distinta de la del c&oacute;digo tex; en particular, no funciona en expresiones matem&aacute;ticas.</p>
-
-<p>Por defecto, TeXShop primero intenta SyncTeX. Pero si SyncTeX falla o el archivo &laquo;.synctex&raquo; no existe, TeXShop utiliza el m&eacute;todo de sincronizaci&oacute;n basado en b&uacute;squedas.</p>
-
-
-<p>En realidad, TeXShop proporciona sincronizaci&oacute;n de tres maneras: SyncTeX, b&uacute;squedas, and PdfSync.
-El tipo de sincron&iacute;a que se quiere usar se establece en la categor&iacute;a &laquo;Composición&raquo; en los ajustes.
-Las opciones &laquo;PdfSync&raquo; y &laquo;B&uacute;squedas&raquo; se corresponden, respectivamente, con los m&eacute;todos basado en b&uacute;squedas y en pdfsync, mientras que la opci&oacute;n &laquo;Ambos&raquo; utiliza el m&eacute;todo de b&uacute;squedas y, si &eacute;ste falla, pdfsync.
-Esta complejidad se debe a razones hist&oacute;ricas. Pdfsync era una antigua tecnolog&iacute;a que ha sido reemplazada por SyncTeX, y que ya no explicaremos aqu&iacute;.</p>
-
-<p>Para usar SyncTeX, necesitamos llamar al motor de composici&oacute;n con un &lsquo;flag&rsquo; especial que le indique que debe generar el archivo &laquo;.synctex&raquo;. Esto se logra a&ntilde;adiendo la siguiente opci&oacute;n cuando se llama al motor:</p>
-<dl>
-	<dd> -synctex=1
-</dl>
-
-<p>Por ejemplo, para usar SyncTeX con pdftex y pdflatex, la categor&iacute;a &laquo;Composición&raquo; de la ventana de Ajustes debe establecer las llamadas a TeX y LaTeX mediante</p>
-<dl>
-	<dd> pdftex -synctex=1
-	<dd> pdflatex -synctex=1
-</dl>
-
-<p>Conviene aqu&iacute; destacar que, si la parte &laquo;-synctex=1&raquo; est&aacute; presente pero TeXShop usa un antiguo motor que no soporta ese flag, la composici&oacute;n de p&aacute;ginas se lleva a cabo sin problemas, aunque el motor informar&aacute; en la consola de que que ha reconocido el flag &laquo;synctex&raquo;.</p>
-
-
-<p>Hay que hacer cambios similares en las llamadas a simpdftex, y a cualquier otro motor que hayas creado. Todo eso tendr&aacute;s que hacerlo por ti mismo si quieres emplear SyncTeX con esos motores. En distribuciones de TeX modernas, lo m&aacute;s com&uacute;n es componer p&aacute;ginas con pdftex o con xetex, y ambos soportan el flag &laquo;synctex&raquo;. No lo hace, sin embargo, el programa TeX original de Donald Knuth.</p>
-
-<p>SyncTeX es muy nuevo, y TeXShop comenz&oacute; a soportarlo en agosto de 2008. Cuando los desarrolladores comprendan m&aacute;s claramente toda la que proporciona la utilidad synctex de J&eacute;r&ocirc;me Laurens, la precisi&oacute;n de TeXShop al sincronizar mejorar&aacute;.</p>
-
-<p>A partir de ahora, vamos a explicar el antiguo m&eacute;todo de sincronizaci&oacute;n basado en b&uacute;squedas; la mayor parte de estos comentarios no se aplican a SyncTeX.</p>
-
-
-<P>Para sacar provecho de la sincronizaci&oacute;n basada en b&uacute;squedas, es &uacute;til conocer el mecanismo interno. Sup&oacute;n que haces click en un punto del c&oacute;digo fuente. TeXShop obtiene una cadena de 20 caracteres centrada en el click, y lo busca en el correspondiente archivo pdf. Si la encuentra exactamente una vez, nos la muestra, rodeada de un c&iacute;rculo rojo. Pero, a menudo, las cadenas de c&oacute;digo contienen comandos, que no aparecen como texto en el pdf; en particular, esto siempre ocurre al componer f&oacute;rmulas matem&aacute;ticas. As&iacute; que, si la b&uacute;squeda falla, TeXShop retrocede 5 caracteres, obtiene una nueva cadena de 20 caracteres, y lo intenta de nuevo. Si es necesario, repite esta operaci&oacute;n hasta 20 veces. Si en ninguno de estos intentos tiene &eacute;xito, lo intenta de nuevo 20 veces m&aacute;s, esta vez con cadenas por delante de la cadena original, en lugar de por detr&aacute;s. Si ninguna de estas operaciones de b&uacute;squeda tiene &eacute;xito, TeXShop renuncia.</P>
-
-<P>Como consecuencia, es obvio que es mejor hacer click en frases que en f&oacute;rmulas. Los p&aacute;rrafos que contienen muchos comandos de composici&oacute;n tampoco se sincronizan bien. Sin embargo, la experiencia muestra que estas b&uacute;squedas generalmente tienen &eacute;xito, y que no hace falta preocuparse demasiado de elegir un punto adecuado sobre el que hacer click.</P>
-
-<P>La sincronizaci&oacute;n desde la ventana con el pdf a la ventana con el c&oacute;digo funciona de la misma manera, pero tiene una complicaci&oacute;n adicional. Los proyectos pueden contener muchos archivos de c&oacute;digo, insertados por medio de comandos \include o \input. TeXshop maneja esta complicaci&oacute;n asumiendo que todos los \include e \input aparecen en el archivo ra&iacute;z, por medio de comandos \include{este archivo}, \input{este archivo} o \import{este archivo}. En la  implementaci&oacute;n inicial (en la versi&oacute;n 2.0) TeXShop hac&iacute;a una lista de los primeros 60 archivos y buscaba en todos ellos; consideraba que la b&uacute;squeda hab&iacute;a tenido &eacute;xito si la cadena de texto aparec&iacute;a exactamente en uno de estos archivos. Si la cadena est&aacute; en un archivo sin abrir, TeXShop lo abre. Entonces, el texto se desplaza hasta el lugar apropiado, y la frase aparece resaltada en amarillo. (Ese n&uacute;mero de 60 archivos puede cambiar en el futuro; escribe si necesitas que la b&uacute;squeda alcance a una mayor cantidad de archivos.)</P>
-
-<P>ConTeXt usa un m&eacute;todo diferente de incluir archivos, as&iacute; que una b&uacute;squeda en los archivos que aparecen en los \include y los \input no usar&aacute; los archivos incluidos con el m&eacute;todo de ConTeXt. Existe un m&eacute;todo manual de indicar los archivos que tienen que ser rastreados en la sincronizaci&oacute;n; este m&eacute;todo funciona con cualquier m&eacute;todo de composici&oacute;n, y es el requerido (forzosamente) por ConTeXt. En la parte de arriba del archivo ra&iacute;z, lista los archivos en cuyo interior hay que buscar v&iacute;a
-<dl>
-	<dd>%!TEX projectfile =
-</dl>
-He aqu&iacute; unos ejemplos:
-<dl>
-	<dd>%!TEX projectfile = /Users/koch/MyDoc/chapter1.tex
-	<dd>%!TEX projectfile = chapter2.tex
-	<dd>%!TEX projectfile = ../chapter3.tex
-</dl></P>
+<h2>ConTeXt</h2>
+<p>Para ConTeXt, añada <code>\setupsynctex[state=start,method=min]</code> a la configuración del documento y la línea <code>% !TEX useConTeXtSyncParser</code> al principio del archivo raíz; TeXShop usa entonces el código de sincronización propio de ConTeXt. Consulte <a href="advanced_context.htm">ConTeXt y MetaPost</a>.</p>
+<p>Para sincronizar con un archivo fuente abierto en otro editor, consulte <a href="advanced_externaleditor.htm">Usar un editor externo</a>.</p>
 </main>
 </body>
 </html>

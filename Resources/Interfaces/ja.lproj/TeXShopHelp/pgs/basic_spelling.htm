@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>スペルをチェックする</title>
+<title>スペルチェック</title>
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -11,71 +11,73 @@
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">まえがき</a></li>
-<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a></li>
-<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a></li>
-<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a></li>
-<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
 <li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
-<li><a href="basic_edittricks.htm">編集上のコツ</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
 <li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
-<li><a href="basic_spelling.htm" class="current">スペルをチェックする</a></li>
+<li><a href="basic_spelling.htm" class="current">スペルチェック</a></li>
 <li><a href="basic_autocompletion.htm">キーバインド</a></li>
-<li><a href="basic_commandcompletion.htm">コマンドの補完</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
 <li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
 <li><a href="basic_matrixpanel.htm">行列パネル</a></li>
 <li><a href="basic_macros.htm">マクロ</a></li>
 <li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
 <li><a href="basic_graphics.htm">画像を入れる</a></li>
-<li><a href="basic_printing.htm">印刷</a></li>
-<li><a href="basic_preferences.htm">設定</a></li>
-<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a></li>
-<li><a href="basic_templates.htm">テンプレートメニューを変更する</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
 <li><a href="basic_bugs.htm">バグレポートを送る</a></li>
-<li><a href="basic_websites.htm">役に立つウェブ・サイト</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
 <li><a href="basic_license.htm">使用許諾</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>スペルをチェックする</h1>
+<h1>スペルチェック</h1>
 
+<p>TeXShopは、macOSのスペルチェッカと辞書を使ってスペルをチェックします。最初から、LaTeXの構文を考慮するスペルチェックが有効になっています。本文をチェックし、TeXのコマンド、数式、コメント、<code>\label</code>、<code>\ref</code>、<code>\cite</code>、<code>\usepackage</code>などのコマンドの引数を飛ばします。よく使われるパッケージのキー、色、単位などの、文章ではない引数も飛ばします。書類の中で<code>\newcommand</code>や<code>\def</code>などで定義したコマンドも読み取るので、定義によって<code>\ref</code>や数式に渡される引数も飛ばされます。<code>\foreignlanguage</code>などでほかの言語に指定したテキストはその言語でチェックされますが、入力中には下線が引かれません。</p>
 
-<p>CocoaプログラムにはAppleの提供するスペルチェック機能が最初から備わっています。TeXShopは入力中のスペルチェックに対応しており、メニューコマンドで入・切を切り替えられます。最初の状態は設定で選べます。</p>
+<h2>書類をチェックする</h2>
 
-<p>Appleのスペルチェッカーは、そのままではLaTeXのコマンドを理解せず、多くのコマンドにスペルミスの印を付けてしまいます。TeXShopの「設定」の「スペルチェック」で「LaTeXの構文を考慮する（推奨）」を選ぶと、TeXShopはコマンド、数式、コメント、参照の引数などを除いて、本文だけを検査します。</p>
+<p>「編集」→「スペルと文法」→「入力中にスペルチェック」がオンのときは、入力するそばから綴りの誤りに下線が引かれます。書類を1語ずつ確認していくには、「編集」→「スペルと文法」→「スペルと文法を表示」（<kbd>⌘:</kbd>）を選びます。パネルに、カーソル位置より後ろの最初の誤りが表示されます。パネルの「次を検索」をクリックするか、「書類を今すぐチェック」（<kbd>⌘;</kbd>）を選ぶと、次の誤りに移ります。そのときOptionキーを押していると、マークアップを飛ばさないmacOSの検索になります。</p>
 
-<p>デフォルトの辞書は「設定」の「スペルチェック」にある「辞書」で選びます。ふだん英語で書くなら英語の辞書を、フランス語で書くならフランス語の辞書を選びます。「言語を自動判別」を選ぶと、テキストに応じて適切な辞書が自動的に選ばれます。</p>
+<p>ある語をすべて置き換えるには、パネルの「すべて変更する置換語」欄に置換語を入力するか候補を選び、「すべて変更」をクリックします。1回の取り消しで変更が元に戻ります。「スペルと文法」サブメニューの「学習した単語を削除…」は、書類の中の語のうち現在の言語で学習した語を一覧にし、選んだ語を辞書から削除します。同じサブメニューの「スペルを自動的に修正」は、入力中に語を修正します。最初はオフになっています。TeXではコマンドまで修正されてしまうので、オフのままが適しています。</p>
 
-<p>設定の「辞書」で選ぶのは、TeXShopで新しくファイルを開いたときに使うデフォルトの辞書です。すでに開いているファイルの辞書は変わりません。</p>
+<h2>「設定」→「スペルチェック」</h2>
 
-<p>「辞書」のメニューには、各言語がその言語自身の名前（たとえば「Deutsch」や「Français」）で表示されるので、辞書は言語の名前で選びます。スペルチェッカーがその言語に使うコード（「de」や「fr_CA」など）は、メニュー項目のツールチップに表示されます。</p>
-
-<p>辞書を設定したあとでTeXShopで複数のソースファイルを開くと、どのファイルにもデフォルトの辞書が割り当てられます。辞書は「編集」メニューの「スペルと文法」で変更できるので、必要ならファイルごとに別の辞書を使えます。たとえば英語、フランス語、ドイツ語、日本語で顧客への手紙を書いているなら、4つのソースファイルにそれぞれの辞書を割り当てられます。ソースファイルを切り替えると、そのたびに「スペルと文法」パネルが対応する辞書に切り替わります。</p>
-
-<p>ファイルを閉じるとこの対応は失われるので、複数の言語で書く場合は、ファイルを開くたびに適切な辞書を選び直す必要があります。</p>
-
-<p>ただし、次のようなマジックコメントを書いておくと、ファイルを開いたときに使う辞書を固定できます。</p>
+<p>「スペルチェック」グループの「入力中にスペルチェック」は、書類を開いたときに綴りの誤りに下線を引くかどうかを決めます。「辞書」については後で説明します。「方式」グループでは、TeXのソースをどうチェックするかを選びます。</p>
 <dl>
-<dd>% !TEX spellcheck = de-DE
-</dd></dl>
-<p>この例では、このファイルを開いたときには必ずドイツ語の辞書を使うことになります。ファイルを開いたあとで「スペルと文法」を使って辞書を変えることもできますが、次にファイルを閉じて開き直すと、またドイツ語の辞書が使われます。</p>
+<dt>「LaTeXの構文を考慮する（推奨）」</dt>
+<dd>上で説明した方式です。その行の末尾にある「LaTeXの除外規則を編集…」で、何を飛ばすかを決める規則を開きます。</dd>
+<dt>「従来の方式」</dt>
+<dd>その下の3つのオプションで除いたもの以外を、macOSがすべてチェックします。オプションは、「LaTeXコマンドを対象外にする」、<code>\usepackage</code>など特別な語を引数に取る一部のコマンドの引数を飛ばす「特定のコマンド引数を対象外にする」、「コメントを対象外にする」です。これらのオプションはシンタックスハイライトがオンのときだけ働き、「書類を今すぐチェック」には適用されません。</dd>
+</dl>
+<p>Sweaveファイルなど、TeXのソースでないファイルは、いつも従来の方式でチェックされます。</p>
 
-<p>この行は書類を開いたときに読み取られるので、ソースファイルに初めて書き加えたときは、ファイルを保存して開き直すまで有効になりません。ルートファイルのあるプロジェクトでは、取り込まれる各ソースファイルにこの行が必要です。</p>
+<h2>除外規則</h2>
 
-<p>このコマンドでは、Appleの辞書を、言語についてはISO 639-1またはISO 639-2の規格で、地域についてはISO 3166-1の規格で指定します。地域の指定は、同じ言語でも使われる地域による違いを区別するためのものです。たとえばフランス語はISO 639-1では「fr」、ISO 639-2では「fre」で、フランスのフランス語の地域指定は「FR」、カナダのフランス語の地域指定は「CA」です。したがってカナダでフランス語の辞書を選ぶには「spellcheck = fr」でもかまいませんが、「spellcheck = fr-CA」とするほうがより適切です。これらはISO規格なので、ほかのプラットフォームでも同様のコマンドが使えます（TeXShop自体はMacでしか動きませんが）。言語の規格は次のサイトにあります。</p>
-<dl>
-<dd><a href="https://www.loc.gov/standards/iso639-2/php/English_list.php">https://www.loc.gov/standards/iso639-2/php/English_list.php</a>
-</dd></dl>
-<p>地域の規格は次のサイトにあります。</p>
-<dl>
-<dd><a href="https://www.iso.org/iso-3166-country-codes.html">https://www.iso.org/iso-3166-country-codes.html</a>
-</dd></dl>
+<p>LaTeXの構文を考慮するスペルチェックの規則は、~/Library/TeXShop/SpellCheck/SpellingExclusions.txtにあります。設定の「LaTeXの除外規則を編集…」か、「編集」→「スペルと文法」→「スペルチェックの除外設定を編集…」で開きます。ファイルはTeXShopで開き、その冒頭に書き方の説明があります。たとえば次の行は、コマンド<code>\mycommand</code>の第1引数と、<code>proof</code>環境の中身を飛ばします。</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>変更は、次にスペルをチェックするときに反映されます。ファイルを削除すると、TeXShopは次の起動時に初期状態のファイルを作り直します。スペルチェックについて詳しくは、「ヘルプ」→「スペルチェックのヘルプ」を参照してください。</p>
 
-<p>以前のTeXShopは辞書について特別な処理をせず、ユーザは「スペルと文法」を使うだけでした。その後、上記の方式が部分的に実装され、TeXShop 3.81で完全に実装されました。TeXShopが「スペルと文法」の標準の動作にそのまま従っていた以前の方式を好む方は、次の隠し設定で元の動作に戻せます。</p>
-<dl>
-<dd>defaults write TeXShop OriginalSpelling YES
-</dd></dl>
+<h2>辞書</h2>
 
-<p><a href="basic_preferences.htm#settings-search">設定の使い方と設定の検索</a></p>
+<p>「設定」→「スペルチェック」の「辞書」で、それ以降に開く書類の辞書を選びます。すでに開いている書類は、それまでの辞書のままです。メニューには各言語がその言語の名前（DeutschやFrançaisなど）で表示され、deやfr_CAなどの言語コードがヘルプタグに出ます。「言語を自動判別」を選ぶと、macOSがテキストから言語を判別します。</p>
+
+<p>1つの書類だけ別の辞書を使うには、その書類を手前にして、「スペルと文法」パネルの下端のポップアップメニューで辞書を選びます。開いている書類はそれぞれの辞書を保ち、書類を切り替えるとパネルの辞書も切り替わります。この選択は、書類を閉じると失われます。</p>
+
+<p>書類を開くたびにその辞書を使うには、書類の先頭20行の中に次のような行を書きます。</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>値は「辞書」メニューのヘルプタグにあるような言語コードで、フランス語なら<code>fr</code>、カナダのフランス語なら<code>fr-CA</code>です。この行は書類を開くときに読まれるので、行を加えたら、書類を保存して閉じ、開き直してください。章のファイルに分けた書類では、各ファイルにこの行を書きます。</p>
+
+<p>設定ウインドウで設定を探す方法は、「<a href="basic_preferences.htm#settings-search">設定を検索</a>」を参照してください。</p>
 </main>
 </body>
 </html>

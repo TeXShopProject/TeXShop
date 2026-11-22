@@ -5,52 +5,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dialoge erstellen</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Erstellen Sie einfache Dialoge mit Hilfe von AppleScript und nutzen Sie diese in TeXShop.">
+<meta name="description" content="AppleScript; Dialoge; display dialog; activate; ScriptRunner">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Hilfe zu Makros</span></header>
 <nav id="menu">
 <ul>
-<li><a href="macros_preliminaries.htm">Einleitung</a></li>
+<li><a href="macros_preliminaries.htm">Vorbemerkungen</a></li>
 <li><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
-<li><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
-<li><a href="macros_define.htm">Neue Makros erstellen</a></li>
-<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
-<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
-<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
+<li><a href="macros_rearrange.htm">Das Menü „Makros“ neu ordnen</a></li>
+<li><a href="macros_define.htm">Neue Makros definieren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-Makros</a></li>
+<li><a href="macros_includedscripts.htm">Mitgelieferte AppleScript-Makros</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-Makros definieren</a></li>
 <li><a href="macros_dialogs.htm" class="current">Dialoge erstellen</a></li>
-<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
-<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
+<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a></li>
+<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Dialoge erstellen</h1>
+<p>Ein AppleScript kann Dialoge anzeigen und auf Ihre Eingaben reagieren. Erstellen Sie zum Beispiel ein Makro mit folgendem Inhalt und probieren Sie es aus:</p>
+<pre>-- AppleScript
+-- Use a dialog to enter user defined information into an AppleScript.
+-- There are two feedbacks possible 'text' and "choice of buttons".
+-- The returned information can be used to define corresponding
+-- variables.
+-- The number of buttons may not exceed three.
+-- In the three examples below it is shown how to use text return,
+-- button return, and both.
 
-		<P>Mit Hilfe von AppleScript k&ouml;nnen Sie Dialoge erstellen und Benutzereingaben verarbeiten. Probieren Sie zum Beispiel folgendes AppleScript aus:</P>
-		<dl>
-			<dd>
-			<dd><tt>-- AppleScript</tt>
-			<dd><tt>-- Einen Dialog benutzen um Informationen an ein ApleScript zu uebertragen.</tt>
-			<dd><tt>-- Zwei Feedback-Arten sind M&ouml;glich: Text und &bdquo;Knopfauswahl&ldquo;.</tt>
-			<dd><tt>-- Die Information kann an die entsprechenden Variablen uebergeben werden.</tt>
-			<dd><tt>-- Die Anzahld er Knoepfe darf drei nicht ueberschreiten.</tt>
-			<dd><tt>-- Die drei Beispiel unten sind Beispiele f&uuml;r text return, button return und beides.</tt>
-			<dd>
-				<p></p>
-			<dd><tt>activate</tt>
-			<dd><tt>display dialog &quot;Test-Dialog: Etwas unten eingeben&quot; default answer &quot;Hallo Welt!&quot; buttons {&quot;A&quot;, &quot;B&quot;, &quot;C&quot;} default button &quot;B&quot;</tt>
-			<dd><tt>set theText to (the text returned of the result)</tt>
-			<dd>
-				<p></p>
-			<dd><tt>display dialog &quot;Test-Dialog: Etwas unten eingeben&quot; default answer &quot;Hallo Welt!&quot; buttons {&quot;A&quot;, &quot;B&quot;, &quot;C&quot;} default button &quot;B&quot;</tt>
-			<dd><tt>set theButton to (the button returned of the result)</tt>
-			<dd>
-				<p></p>
-			<dd><tt>display dialog &quot;Test-Dialog: Etwas unten eingeben&quot; default answer &quot;Hallo Welt!&quot; buttons {&quot;A&quot;, &quot;B&quot;, &quot;C&quot;} default button &quot;B&quot;</tt>
-			<dd><tt>set {theText, theButton} to {the text returned of the result, the button returned of the result}</tt>
-		</dl>
-		<p>Ein Befehl in diesem Beispiel ist &bdquo;acitvate&ldquo;. Er bedarf einiger Anmerkungen. Wird ein AppleScript aus TeXShop aufgerufen, f&uuml;hrt es ein seperates Programm aus um das Skript zu starten. Dieses Programm, Scriptrunner, wird mit TeXShop zusammen ausgeliefert. Der Befehl &bdquo;activate&ldquo; brngt Scriptrunner nach vorne, sodass Dialoge &uuml;ber anderen Fenstern erscheinen.</p>
+activate
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set theText to (the text returned of the result)
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set theButton to (the button returned of the result)
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set {theText, theButton} to ¬
+  {the text returned of the result, the button returned of the result}</pre>
+<p>Der Befehl <code>activate</code> bedarf einer Erklärung. Ein Makro, das mit <code>-- AppleScript</code> beginnt, wird von ScriptRunner ausgeführt, einem eigenen Programm innerhalb von TeXShop; seine Dialoge zeigt daher ScriptRunner an und nicht TeXShop. <code>activate</code> holt ScriptRunner nach vorn, damit die Dialoge vor anderen Fenstern erscheinen.</p>
 </main>
 </body>
 </html>

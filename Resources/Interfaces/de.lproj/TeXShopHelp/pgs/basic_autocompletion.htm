@@ -3,45 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Autovervollst&auml;ndigen</title>
-<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Vereinfachen Sie die Bearbeitung mit Autovervollst&auml;ndigung.">
+<title>Tastenbelegungen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Tastenbelegungen; Autovervollständigung; Liste der Tastenbelegungen; Eingabezeichen; Ausgabetext; Einsetzen; Yen-Zeichen; Backslash; autocompletion.plist">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-<li><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-<li><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
 <li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
 <li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
-<li><a href="basic_autocompletion.htm" class="current">Autovervollst&auml;ndigen</a></li>
-<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
+<li><a href="basic_autocompletion.htm" class="current">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
 <li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
-<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
 <li><a href="basic_printing.htm">Drucken</a></li>
 <li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
-<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-<li><a href="basic_bugs.htm">Fehlerberichte &uuml;bermitteln</a></li>
-<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
 <li><a href="basic_license.htm">Lizenz</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Autovervollst&auml;ndigen</h1>
-	
-		<P>Greg Landweber hat die Funktion &bdquo;Autovervollst&auml;ndigen&ldquo; zu TeXShop hinzugef&uuml;gt. Wenn Sie Anf&uuml;hrungszeichen tippen, wird automatisch ein zweites Paar erstellt und der Cursor dazwischen positioniert. Tippen Sie ein ^ ergibt das ^{ } mit dem Cursor zwischen den geschweiften Klammern. 29 solcher Autovervollst&auml;ndigungen sind m&ouml;glich.</P>
-		<p>Autovervollst&auml;ndigen kann in den &bdquo;Einstellungen...&ldquo; abgeschaltet werden. Die Standardeinstellung ist &bdquo;Aus&ldquo;. Um Autovervollst&auml;ndigen auszuprobieren m&uuml;ssen Sie die Funktion zuerst aktivieren.</p>
-		<p>Autovervollst&auml;ndigen ist konfigurierbar. Um dies zu tun &ouml;ffnen Sie die Datei ~/Library/TeXShop/Keyboard/completion.plist mit TeXShop. Lesen Sie die Anmerkung am Anfang des Dokumentes, passen Sie Landwebers Auswahl an oder f&uuml;gen Sie Ihre eigene hinzu. Speichern Sie die Datei (im UTF-8 Format falls Sie Unicode benutzen) ab.</p>
-	
+<h1>Tastenbelegungen</h1>
+
+<p>Tastenbelegungen lassen ein getipptes Zeichen einen anderen Text einfügen. Mit der Liste, die TeXShop mitbringt, ergibt <code>^</code> den Text <code>^{}</code> mit der Einfügemarke zwischen den Klammern, <code>"</code> ergibt die TeX-Anführungszeichen <code>``''</code> um die Einfügemarke, und <code>ä</code> ergibt <code>\"a</code>. Eine Tastenbelegung kann auch den ausgewählten Text einschließen: Wählen Sie ein Wort aus und tippen Sie <code>^</code>, um <code>^{Wort}</code> zu erhalten. Die Liste enthält 45 Tastenbelegungen.</p>
+
+<p>Tastenbelegungen sind zunächst ausgeschaltet. Schalten Sie „Tastenbelegungen verwenden (Vorgabe für neue Dokumente)“ unter Einstellungen › Tastatur ein, damit sie in jedem Dokument, das Sie öffnen, eingeschaltet sind. Quelltext › Autovervollständigung schaltet sie für das vorderste Dokument ein oder aus, etwa um ein Zeichen mit Tastenbelegung als solches zu tippen. Das Objekt „Autovervollständigung“, das Sie zur Symbolleiste hinzufügen können, tut dasselbe.</p>
+
+<h2>Die Liste der Tastenbelegungen</h2>
+
+<p>Die Gruppe „Automat. Vervollständigung“ unter Einstellungen › Tastatur listet die Tastenbelegungen auf, jeweils mit „Eingabezeichen“ und „Ausgabetext“. Doppelklicken Sie auf eine Zelle, um sie zu bearbeiten; klicken Sie auf + unter der Liste, um eine Tastenbelegung hinzuzufügen, und auf −, um die ausgewählten zu löschen, und ziehen Sie Zeilen, um ihre Reihenfolge zu ändern. Ein Eingabezeichen ist ein einzelnes Zeichen. Änderungen werden sofort gesichert und wirken auch in geöffneten Dokumenten; Bearbeiten › Widerrufen nimmt sie zurück.</p>
+
+<p>In einem Ausgabetext erscheinen besondere Elemente als kleine Marken: der ausgewählte Text, die Stelle der Einfügemarke, der Text in der Zwischenablage, eine Marke (•) für Bearbeiten › Marken, ein Zeilenumbruch und ein Tabulator. Fügen Sie sie mit „Einfügen“ unter der Liste hinzu oder tippen Sie sie: <code>#SEL#</code>, <code>#INS#</code>, <code>#PASTE#</code> und <code>•</code>, Wahltaste-Zeilenschalter für einen Zeilenumbruch und Wahltaste-Tabulator für einen Tabulator. Die Taste „?“ listet sie alle auf.</p>
+
+<p>Ein Häkchen in der Spalte „Einsetzen“ wendet die Tastenbelegung auch auf Text an, den Sie in den Quelltext einsetzen oder dort ablegen: Jedes Vorkommen des Eingabezeichens wird durch den Ausgabetext ersetzt. Wie beim Tippen geschieht das nur, solange die Tastenbelegungen für das Dokument eingeschaltet sind. Eine Tastenbelegung, deren Ausgabetext die Auswahl, die Einfügemarke, die Zwischenablage oder eine Marke enthält, lässt sich nicht abhaken.</p>
+
+<h2>Das Yen-Zeichen</h2>
+
+<p>Auf einer japanischen Tastatur kann die Taste für den Backslash ein Yen-Zeichen (¥) erzeugen. In der Liste, die TeXShop mitbringt, ergibt ¥ einen einzelnen Backslash, und sein Feld „Einsetzen“ ist abgehakt. Ist die Kodierung für neue Dokumente UTF-8, genügt es also, die Tastenbelegungen einzuschalten, damit ein in den Quelltext getipptes oder eingesetztes ¥ zu \ wird. Stammt Ihre Liste aus einer älteren Version von TeXShop, setzen Sie den Ausgabetext von ¥ selbst auf einen einzelnen Backslash und haken sein Feld „Einsetzen“ ab.</p>
+
+<p>Die Liste ist in ~/Library/TeXShop/Keyboard/autocompletion.plist gespeichert; siehe <a href="configure_autocompletion.htm">Tastenbelegungen anpassen</a>.</p>
 </main>
 </body>
 </html>

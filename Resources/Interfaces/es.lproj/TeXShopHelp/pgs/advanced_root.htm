@@ -3,64 +3,77 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Establecer un documento ra&iacute;z</title>
+<title>Establecer el archivo raíz de un proyecto</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="documento ra&iacute;z; archivo ra&iacute;z; root file; varios archivos peque&ntilde;os; proyecto">
+<meta name="description" content="archivo raíz; documento raíz; % !TEX root; proyecto; archivos de capítulo; include; input; Código ⇔ PDF; Archivo raíz del proyecto">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">A&ntilde;adir archivos personales a TeX Live</a></li>
-<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a></li>
+<li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Más sobre TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
-<li><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a></li>
-<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a></li>
+<li><a href="advanced_addengine.htm">Añadir motores de composición</a></li>
+<li><a href="advanced_formats.htm">Crear y usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX y LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
-<li><a href="advanced_root.htm" class="current">Establecer un documento ra&iacute;z</a></li>
-<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a></li>
-<li><a href="advanced_removeaux.htm">Borrado de archivos AUX</a></li>
+<li><a href="advanced_encoding.htm">Codificaciones</a></li>
+<li><a href="advanced_Japan.htm">Composición en japonés</a></li>
+<li><a href="advanced_root.htm" class="current">Establecer el archivo raíz de un proyecto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronización entre código y vista previa</a></li>
+<li><a href="advanced_removeaux.htm">Borrar archivos AUX</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a></li>
-<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar</a></li>
+<li><a href="advanced_shellescape.htm">Protección ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar un editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar y pegar, arrastrar y soltar</a></li>
 <li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a></li>
-<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a></li>
-<li><a href="advanced_plist.htm">Archivos .plist</a></li>
+<li><a href="advanced_coloredtext.htm">Texto en color</a></li>
+<li><a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizaciones</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Establecer un documento ra&iacute;z</h1>
+<h1>Establecer el archivo raíz de un proyecto</h1>
+<p>Los documentos grandes suelen dividirse en varios archivos: un archivo raíz con el preámbulo que incluye un archivo por capítulo. Por ejemplo, un archivo raíz <code>Main.tex</code> podría ser así:</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p>Cuando edita <code>two.tex</code>, TeXShop debe componer <code>Main.tex</code>, no el capítulo, que no tiene preámbulo. Para indicárselo, escriba esta línea en una de las veinte primeras líneas de cada archivo de capítulo:</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>El archivo raíz no necesita esa línea. El nombre del archivo raíz se puede indicar</p>
+<ul>
+<li>solo por su nombre, <code>Main.tex</code>, cuando está en la misma carpeta que el archivo de capítulo;</li>
+<li>de forma relativa a la carpeta del archivo de capítulo, <code>../Main.tex</code> o <code>../../Main.tex</code>;</li>
+<li>por su ruta completa, <code>/Users/me/Book/Main.tex</code>, que hay que cambiar si se mueve el proyecto.</li>
+</ul>
+<p>La macro Root del menú Macros inserta la línea: pide el archivo raíz y ofrece una línea relativa o absoluta, que sustituye a una línea raíz anterior.</p>
 
-		<P>En lugar de tener un archivo TeX muy grande, es usual descomponerlo en varios archivos m&aacute;s peque&ntilde;os controlados por un documento ra&iacute;z (&lsquo;root&rsquo;). Por ejemplo, el archivo ra&iacute;z de un proyecto de un libro puede tener la forma
-</P>
-		<dl>
-			<dd><tt>\documentclass[11pt]{book}</tt>
-			<dd><tt>\includeonly{Chapter2/two.tex}</tt>
-			<dd><tt>\textwidth = 6.5 in</tt>
-			<dd><tt>\textheight = 9 in</tt>
-			<dd><tt>\begin{document}</tt>
-			<dd><tt>\include{Chapter1/one.tex}</tt>
-			<dd><tt>\include{Chapter2/two.tex}</tt>
-			<dd><tt>\include{Chapter3/three.tex}</tt>
-			<dd><tt>\end{document}</tt>
-		</dl>
-		<p>Este documento ra&iacute;z contiene comandos que afectar&aacute;n al proyecto entero (por ejemplo, para controlar la apariencia del libro), pero el texto del libro en s&iacute; mismo est&aacute; contenido en los archivos one.tex, two.tex y three.tex. La segunda l&iacute;nea del c&oacute;digo anterior le indica a TeX que componga s&oacute;lo el cap&iacute;tulo dos, lo cual permite acelerar las pruebas de composici&oacute;n mientras estamos escribiendo el cap&iacute;tulo dos. Cuando el libro est&eacute; completo, basta con que &laquo;comentemos esta l&iacute;nea&raquo; (a&ntilde;adiendo % delante) y as&iacute; podremos componer el libro entero.</p>
-		<p>Mientras estamos escribiendo el cap&iacute;tulo dos, lo m&aacute;s natural es que tengamos abierto el archivo two.tex con TeXShop. Pero, despu&eacute;s de que hayamos hecho cambios en este archivo, TeXShop no debe componer two.tex; en su lugar, debe componer el archivo ra&iacute;z. Hay dos maneras de indicarle a TeXShop que haga esto. La primera es se&ntilde;alar el archivo ra&iacute;z en la primera l&iacute;nea de cada uno de los ficheros con los cap&iacute;tulos; esto se logra escribiendo
-	<dl>
-	<dd><tt>%!TEX root = ../Main.tex</tt>
-	</dl>
-La segunda es usar el men&uacute; &laquo;Documento ra&iacute;z...&raquo;; as&iacute;, aparece un panel con una caja de texto en la que podemos escribir el nombre del documento ra&iacute;z.</p>
-		<p>Si el documento ra&iacute;z est&aacute; en la misma carpeta que el achivo que estamos editando, es suficiente con que demos su nombre, incluyendo la extensi&oacute;n &laquo;.tex&raquo;. Por ejemplo, si el archivo ra&iacute;z se llama Main, ponemos Main.tex en la caja de texto.</p>
-		<p>Si el archivo ra&iacute;z est&aacute; en un directorio diferente, debemos dar su nombre relativo a la localizaci&oacute;n del archivo que estamos editando. En el ejemplo anterior, los diversos cap&iacute;tulos est&aacute;n contenidos en subcarpetas dentro de la carpeta que contiene al documento ra&iacute;z. En tal caso, introducimos ../Main.tex en la caja de texto, indicando de esta manera la locaolizaci&oacute;n del archivo ra&iacute;z relativo al archivo con cada cap&iacute;tulo.</p>
-		<p>Finalmente, podemos proporcionar el nombre del archivo ra&iacute;z por medio de su nombre absoluto, como en /Users/me/Main.tex.</p>
-		<p>Si todo el c&oacute;digo TeX est&aacute; en un solo archivo, no es necesario establecer el documento ra&iacute;z.</p>
-		<p>Si usamos el men&uacute; &laquo;Documento ra&iacute;z...&raquo;, TeXShop recuerda el nombre del documento ra&iacute;z escribiendo esta informaci&oacute;n en un archivo con el mismo nombre que el archivo que estamos editando y la extensi&oacute;n &laquo;.texshop&raquo;. Por ejemplo, si el archivo para el cap&iacute;tulo dos es two.tex, TeXShop guarda el nombre del archivo ra&iacute;z en two.texshop, en el mismo directorio que two.tex. Si borramos two.texshop, a partir de entonces TeXShop compondr&aacute; two.tex en lugar de Main.tex.</p>
-		<p>En general, comando-1 sirve para alternar entre la ventana de c&oacute;digo y la ventana con el pdf previsto. Si hay alg&uacute;n documento ra&iacute;z activo, y tenemos al frente cualquiera de los ficheros con c&oacute;digo, al pulsar comando-1 vamos a la ventana con el pdf. Ahora, al pulsar comando-1 de nuevo, volvemos a la misma ventana de c&oacute;digo de la que hab&iacute;amos partido. Pero, si estamos en la ventana del pdf y no hemos usado comando-1 antes, vamos a la ventana con el c&oacute;digo ra&iacute;z.</p>
+<h2>Qué hace la línea raíz</h2>
+<ul>
+<li>Componer en un archivo de capítulo compone el archivo raíz, y la ventana de vista previa del archivo raíz muestra el documento completo. Una línea <code>% !TEX program</code> u otras líneas mágicas para la composición deben ir en el archivo raíz.</li>
+<li>«Ir al error» abre el archivo que contiene un error, si no está abierto, y va a la línea.</li>
+<li>La sincronización desde la ventana de vista previa abre el archivo de capítulo que contiene el punto en el que se ha hecho clic; consulte <a href="advanced_pdfsync.htm">Sincronización entre código y vista previa</a>.</li>
+<li>«Borrar archivos aux» elimina los archivos auxiliares del archivo raíz; consulte <a href="advanced_removeaux.htm">Borrar archivos AUX</a>.</li>
+<li>Ventana › Código ⇔ PDF (<kbd>⌘1</kbd>) en un archivo de capítulo trae al frente la ventana de vista previa del archivo raíz. Al usarlo de nuevo en la ventana de vista previa, se vuelve a la ventana de código de la que se venía, o al archivo raíz si no se venía de una ventana de código.</li>
+</ul>
+
+<h2>Abrir un archivo de capítulo</h2>
+<p>Cuando se abre un archivo de capítulo con línea raíz, TeXShop abre también el archivo raíz y su ventana de vista previa. Dos opciones de Ajustes › General › Archivo raíz del proyecto controlan esto: «Abrir el archivo raíz al abrir un documento» lo activa o desactiva, y «Miniaturizar la ventana raíz abierta» envía al Dock la ventana de código del archivo raíz, ya que rara vez se edita mientras se trabaja en un capítulo.</p>
+
+<h2>Buscar y reemplazar en todo el proyecto</h2>
+<p>Para buscar a la vez en todos los archivos de un proyecto, elija Edición › Buscar › Buscar en fuentes TeX con la misma TEX root… en uno de sus archivos. Busca en el archivo raíz y en los archivos que lo indican en una línea raíz. Consulte <a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a> y <a href="basic_find.htm">Buscar y reemplazar</a>.</p>
+
+<h2>Archivos raíz indicados en archivos .texshop</h2>
+<p>Un archivo con la extensión <code>.texshop</code> junto a un archivo de capítulo, como <code>two.texshop</code> para <code>two.tex</code>, también puede indicar el archivo raíz, y TeXShop sigue leyéndolo. Ninguna orden de menú crea estos archivos; use una línea <code>% !TEX root</code>, que viaja con el archivo fuente.</p>
 </main>
 </body>
 </html>

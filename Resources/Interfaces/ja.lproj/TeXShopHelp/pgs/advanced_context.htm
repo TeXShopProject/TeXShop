@@ -5,362 +5,67 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ConTeXtとMetaPost</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="ConTeXtとMetaPostへの言及とMetaPostの作例">
+<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; nv-metafun; mfpic; luamplib">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a></li>
-<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a></li>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
 <li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
-<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a></li>
-<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
 <li><a href="advanced_context.htm" class="current">ConTeXtとMetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
 <li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
 <li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a></li>
-<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a></li>
-<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストおよびドラッグ＆ドロップ</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
 <li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
 <li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
-<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a></li>
-<li><a href="advanced_plist.htm">Plistファイル</a></li>
-<li><a href="advanced_localization.htm">各国語版へのローカライズ</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>ConTeXtとMetaPost</h1>
+<h2>ConTeXt</h2>
+<p>ConTeXtは、Hans Hagenによるマクロパッケージです。LaTeXに代わるもので、独自のコマンドを持ち、組版のデザインを特に重視しています。TeX LiveにはConTeXtが含まれています。また、ConTeXt Gardenは、頻繁に更新され、ホームフォルダにインストールする版を配布しています。</p>
+<p>ConTeXt用のエンジンは、ガイド<code>Setting-Up-ConTeXt.pdf</code>とサンプルの書類とともに、<code>~/Library/TeXShop/Engines/Inactive/ConTeXt</code>にあります。</p>
+<table>
+<tr><th>エンジン</th><th>タイプセットに使うもの</th></tr>
+<tr><td><code>ConTeXt.engine</code></td><td>TeX LiveのConTeXtで、LuaTeXで動くもの</td></tr>
+<tr><td><code>ConTeXt-TL.engine</code></td><td>TeX LiveのConTeXtで、luametatexで動くもの</td></tr>
+<tr><td><code>ConTeXt-CG.engine</code></td><td>ホームフォルダにあるConTeXt Gardenの版</td></tr>
+</table>
+<p>必要なエンジンを<code>~/Library/TeXShop/Engines</code>に移し、書類のルートファイルの先頭にマジックコメントを書きます。たとえば次のようにします。</p>
+<pre>% !TEX program = ConTeXt-TL
+% !TEX useConTeXtSyncParser</pre>
+<p>ConTeXt-CGを使うときは、ConTeXt Gardenのインストールのプログラムがあるフォルダを「設定」→「タイプセット」→「パス」の「第二のTeXエンジン」欄に入力し、<code>% !TEX useAlternatePath</code>の行を加えます。この行があると、TeXShopはTeX Liveの代わりにそのフォルダをエンジンに渡します。</p>
+<p>ソースとプレビューを同期するには、書類の設定に<code>\setupsynctex[state=start,method=min]</code>を加えます。<code>% !TEX useConTeXtSyncParser</code>の行があると、TeXShopはConTeXt独自の同期のコードを使います。ConTeXt Gardenの版のインストールと各エンジンについては、「ヘルプ」→「TeXShopマニュアル（英語）」のConTeXtの章に詳しく書かれています。</p>
+<p>ConTeXtの<code>\title</code>や<code>\subject</code>などの見出しのコマンドを「タグ」メニューに表示するには、隠し設定ConTeXtTagsをオンにします。<a href="configure_hidden.htm">隠し設定</a>を参照してください。</p>
 
-
-<!-- 
-<p>
-ConTeXtはHans Hagenの作成した汎用的なTeXマクロパッケージです ； 人によってはこれは、LaTeXに取って代わるものでしょう。詳しくは <a href="http://www.pragma-ade.com/">http://www.pragma-ade.com/</a> を参照してください。
-</p>
- -->
-
-<p>
-ConTeXtはHans Hagenさんの作成した汎用的なTeXマクロパッケージです ； 人によってはこれは、LaTeXに取って代わるものでしょう。詳しくは <a href="http://www.pragma-ade.com/">http://www.pragma-ade.com/</a> を参照してください。
-</p>
-
-<!-- 
-<p>
-MetaPostはMetaFontに類似したシステムで、John Hobbyにより作成されましたが、ポストスクリプトとpdfのファイルを出力できます。このパッケージは精巧なポストスクリプトのイラストを描くのに使えます。詳しいことについては <A HREF="http://cm.bell-labs.com/who/hobby/MetaPost.html">http://cm.bell-labs.com/who/hobby/MetaPost.html</A> を参照してください。MetaPostを使ったおもしろい作例はあちこちのサイトで見つけられます ； たとえば <A HREF="http://www.cs.ucc.ie/~dongen/mpost/mpost.html">http://www.cs.ucc.ie/~dongen/mpost/mpost.html</A> をご覧ください。TeXShopはMetaPostをサポートしています。
-</p>
- -->
-
-<p>
-MetaPostはMetaFontに類似したシステムで、John Hobbyさんにより作成されましたが、ポストスクリプトとpdfのファイルを出力できます。このパッケージは精巧なポストスクリプトのイラストを描くのに使えます。詳しいことについては <A HREF="http://cm.bell-labs.com/who/hobby/MetaPost.html">http://cm.bell-labs.com/who/hobby/MetaPost.html</A> を参照してください。MetaPostを使ったおもしろい作例はあちこちのサイトで見つけられます ； たとえば <A HREF="http://www.cs.ucc.ie/~dongen/mpost/mpost.html">http://www.cs.ucc.ie/~dongen/mpost/mpost.html</A> をご覧ください。TeXShopはMetaPostをサポートしています。
-</p>
-
-<p>
-ここにMetaPostファイルのサンプルがあります：
-</p>
-
-<tt>
-		<dl>
-			<dd>prologues:=2;
-			<dd>color yellow; yellow = green + red;
-			<dd><p>
-			<dd>def star (expr size, n, pos, color)=
-			<dd>for a=0 step 360/n until 360:
-			<dd>draw (origin -- (size/2,0))
-			<dd>rotatedaround (origin, a)
-			<dd>shifted pos withcolor color;
-			<dd>endfor ;
-			<dd>enddef;
-			<dd><p>
-			<dd>beginfig(1);
-			<dd>pickup pencircle scaled 2mm; star (2cm,5,origin,red);
-			<dd>endfig;
-			<dd><p>
-			<dd>beginfig(2);
-			<dd>pickup pencircle scaled 2mm; star (2cm,7,origin,yellow);
-			<dd>endfig;
-			<dd><p>
-			<dd>beginfig(3);
-			<dd>pickup pencircle scaled 2mm; star (2cm,11,origin,green);
-			<dd>endfig;
-			<dd><p>
-			<dd>beginfig(4);
-			<dd>pickup pencircle scaled 2mm; star (2cm,13,origin,blue);
-			<dd>endfig;
-			<dd><p>
-			<dd>end
-		</dl>
-</tt>
-
-<p>
-このファイルの名前を「metademo.mp」とします。これをMetaPostで処理すると、metademo.1・metademo.2・metademo.3・metademo.4という４つの異なるポストスクリプト・ファイルが生成されます。ファイル名は「beginfig()」という番号パラメータで決定されています。この番号がbeginfig(0) あるいはbeginfig(10) というように負ではない整数（自然数）なら、結果として生じるファイルの名前はmetademo.0あるいはmetademo.10となります。もしこの番号がbeginfig(-10) のように負の数だった場合には、生成されるファイルの名前はmetademo.psとなり、それ以前にソースから作られていたすべてのmetademo.psファイルを上書きします。
-</p>
-
-<p>
-このデフォルトの設定で、番号のひとつがゼロになっていると仮定します。TeXShopはスクリプトpstopdfを呼び出します──MetaPostが実行されたことで全番号分のポストスクリプト・ファイルが作られています。スクリプトは各ポストスクリプト・ファイルを、それぞれにpdfファイルに変換します。最後に、ゼロ番目のpdfファイルの名前を、ソースの名前に拡張子「pdf」を付けたもの（この例ではmetademo.pdf）に変え、この図をプレビュー画面に表示します。
-</p>
-
-<p>
-MetaPostファイルを編集しているときに、編集中の図の番号を正の数からゼロに変えてみてください。TeXShopはこの図をデバッグ中のものとして表示します。この図が満足のゆくものになったら、番号を正の数に戻し、他の図の番号を正の数からゼロに変えます。
-</p>
-
-<p>
-いったんMetaPostファイルが作られれば、他のイラストと同様に表示できます。イラストがpdf形式に変換されていればpdflatexで扱えますし、TeX＋Ghostscriptならポストスクリプトのイラストを変換なしで扱えます。たとえば、上記のMetaPostファイルから作られた４つのイラストは、次のようなファイルをTeX＋Ghostscriptでタイプセットすることで表示できます：
-</p>
-
-<tt>
-		<dl>
-			<dd>\documentclass[11pt] {article}
-			<dd>\usepackage{graphicx}
-			<dd>
-			<dd>\begin{document}
-			<dd>
-			<dd>Here are some illustrations.
-			<dd>\vspace{.2in}
-			<dd>
-			<dd>\includegraphics[width=1cm]{metademo.1}
-			<dd>\hfill
-			<dd>\includegraphics[width=1cm]{metademo.2}
-			<dd>\hfill
-			<dd>\includegraphics[width=1cm]{metademo.3}
-			<dd>\hfill
-			<dd>\includegraphics[width=1cm]{metademo.4}
-			<dd>\hfill
-			<dd>
-			<dd>\end{document}
-		</dl>
-</tt>
-
-<p>
-mfpicパッケージを使うことで、MetaPostのソースコードをLaTeX文書に直接埋め込むこともできます。この方法を用いる際には、設定ウインドウで、MetaPostの設定を「mptopdf」ではなく「mpost」にしておきます──このようにMetaPostエンジンが選択されているとMetaPostが直接実行されます。MetaPostのソースコードを含む文書は、最初にpdflatexないしはlatexでタイプセットし、文書にあるすべてのイラストをひとまとめにしたmpソースファイルを作成します。そしてこのファイルをMetaPostでコンパイルします。最後に、文書を再度pdflatexまたはlatexでタイプセットしてイラストを表示します。
-</p>
-
-<p>
-下にあるのはClaus Gerhardtによる作例です。この例を「MetaPostTest」として保存します。ソース内の「\opengraphsfile{MetaPostTest}」と書かれた行に注目してください。mfpicパッケージはこのグラフィック・ファイルがどのような名前であってもかまわないとはいえ、TeXShopで次のような手順を踏むにあたっては、文書と同じ名前でなければなりません。いったん文書をタイプセットしたら、MetaPostに切り替えて再度タイプセットを行ない、もう一度LaTeXに戻して最終的にタイプセットします。この過程において、１番目と３番目のステップでは、pdflatexまたはlatex＋ghostscriptのいずれを用いてもかまいません。
-</p>
-
-<tt>
-		<dl>
-			<dd>% This example is a shortened version of an example provided by
-			<dd>% Claus Gerhardt.
-			<p>
-			<dd>\documentclass[11pt]{article}
-			<dd>\usepackage[metapost]{mfpic}
-			<dd>\usepackage{amsmath}
-			<dd>\opengraphsfile{MetaPostTest}
-			<p>
-			<dd>\title{Brief Article}
-			<dd>\author{The Author}
-			<dd>\begin{document}
-			<dd>\maketitle
-			<p>
-			<dd>\begin{mfpic}[20]{-0.5}{11}{-0.5}{11}
-			<dd>{\drawcolor{red}\function{0,10,0.05}{10-x}}
-			<dd>{\drawcolor{blue}\function{0.99,10,0.05}{10/x}}
-			<dd>{\drawcolor{green}\dashed\lines{(0.0,4),(10,4)}}
-			<dd>\tlabelcolor{black}
-			<dd>\drawcolor{black}\ymarks[4pt]{4}
-			<dd>\headcolor{black}
-			<dd>\drawcolor{2*black}\axes
-			<dd>\tlabel{(4,6.5)}{$P_{\negthickspace c}$}
-			<dd>\tlabel{(6,6.5)}{$P_{c}$}
-			<dd>\tlabel(5,3.5){$A$}
-			<dd>\tlabel{(-.6,3.9)}{$4$}
-			<dd>\end{mfpic}
-			<p>
-			<dd>\begin{center}
-			<dd>\begin{mfpic}[15]{-2.2}{5}{-2.2}{2.2}
-			<dd>\store{a}{\circle{(0,0),2}}
-			<dd>\store{b}{\circle{(2 *sqrt 2,0),2}}
-			<dd>\store{c}{\arc[p]{(0,0),-45,45,2}}
-			<dd>\gfill[0.7white]\lclosed\mfobj{a}
-			<dd>\gfill[white]\lclosed\mfobj{b}
-			<dd>\draw\mfobj{a}\draw\mfobj{b}
-			<dd>\tlabel(-1,-0.3){ $A$ }
-			<dd>\tlabel(3,-0.3){ $B$ }
-			<dd>\end{mfpic}
-			<dd>\end{center}
-			<p>
-			<dd>\closegraphsfile
-			<dd>\end{document}
-		</dl>
-</tt>
-
-<!-- 
-<p>
-下の例もまたClaus Gerhardtの提供によるもので、MetaPostの威力を示しています。
-</p>
- -->
-
-<p>
-下の例もまたClaus Gerhardtさんの提供によるもので、MetaPostの威力を示しています。
-</p>
-
-<tt>
-		<dl>
-			<dd>% This example was provided by Claus Gerhardt
-			<dd>% Most of the figures and the text are taken from G.'s book
-			<dd>% "Analysis I" published by International Press, Boston,
-			<dd>% which will appear at the beginning of 2004.
-			<p>
-			<dd>\documentclass[11pt]{amsart}
-			<dd>\usepackage[metapost]{mfpic}
-			<dd>\usepackage{amsmath}
-			<dd>\usepackage{amsthm}
-			<dd>\RequirePackage{amssymb}
-			<dd>\RequirePackage[mathscr]{eucal}
-			<dd>\opengraphsfile{MetaPostTest}
-			<p>
-			<dd>\DeclareMathOperator*{\Au}{\forall}
-			<dd>\DeclareMathOperator*{\Eu}{\exists}
-			<dd>\newcommand{\msc}{\protect\mathscr}
-			<dd>\newcommand\su{\subset}
-			<dd>\newcommand{\pri}[1]{#1^\prime}
-			<dd>\newcommand{\tit}[1]{\textit{\ignorespaces #1\ignorespaces}}
-			<dd>\newcommand{\Cc}{{\protect\mathbb C}}
-			<dd>\newcommand\ra{\rightarrow}
-			<dd>\newcommand{\abs}[1]{\lvert#1\rvert}
-			<dd>\newcommand{\fv}[2]{#1\hspace{0pt}_{|_{#2}}}
-			<dd>\newcommand{\set}[2]{\{\,#1\colon #2\,\}}
-			<dd>\newcommand\inn[1]{{\overset{\msp[9]\circ}{#1}}}
-			<dd>\newcommand{\msp}[1][1]{\mspace{#1mu}}
-			<dd>\newcommand{\Si}{\varSigma}
-			<p>
-			<dd>\theoremstyle{remark}
-			<dd>\newtheorem*{definition}{\bf Definition}
-			<dd>\theoremstyle{theorem}
-			<dd>\newtheorem*{theorem}{Theorem}
-			<p>
-			<dd>\title{An Example of Using MetaPost with mfpic}
-			<dd>%\author{The Author}
-			<p>
-			<dd>\begin{document}
-			<dd>\maketitle
-			<dd>\thispagestyle{empty}
-			<p>
-			<dd>\bigskip
-			<dd>\begin{mfpic}[20]{-0.5}{11}{-0.5}{11}
-			<dd>{\drawcolor{red}\function{0,10,0.05}{10-x}}
-			<dd>{\drawcolor{blue}\function{0.99,10,0.05}{10/x}}
-			<dd>{\drawcolor{green}\dashed\lines{(0.0,4),(10,4)}}
-			<dd>\tlabelcolor{black}
-			<dd>\drawcolor{black}\ymarks[4pt]{4}
-			<dd>\headcolor{black}
-			<dd>\drawcolor{2*black}\axes
-			<dd>\tlabel{(4,6.5)}{$P_{\negthickspace c}$}
-			<dd>\tlabel(5,3.5){$A$}
-			<dd>\tlabel{(-.6,3.9)}{$4$}
-			<dd>\end{mfpic}
-			<p>
-			<dd>\bigskip
-			<dd>\begin{definition}
-			<dd>Let $E,\pri E$ be metric spaces  and $f:E\rightarrow \pri E$ a map. $f$ is called \tit{continuous} at $x_0\in E$ if
-			<dd>\begin{equation}\notag
-			<dd>\Au_{\pri U\in \msc U(f(x_0))}\; \Eu_{U\in \msc U(x_0)}\quad f(U)\su \pri U.
-			<dd>\end{equation}
-			<dd>$f$ is called continuous in $E$ if $f$ is continuous at every point of $E$.
-			<dd>\end{definition}
-			<p>
-			<dd>\bigskip
-			<dd>\begin{center}
-			<dd>\begin{mfpic}[15]{-4.2}{16}{-4.2}{4.2}
-			<dd>\store{R}{\rect{(-4,-4),(4,4)}}
-			<dd>\store{U}{\cyclic[.75]{(-2,-2),(0,-1.5),(2,-2.4),(1.8,2),(0.5,1.8),(-2.3,1.7)}}
-			<dd>\store{FU}{\shiftpath{(12,0)}\cyclic[.75]{(-1.5,-1.5),(0,-1.2),(2,-1.7),(1.8,2),(0,1.6),(-2,1)}}
-			<dd>\store{UU}{\shiftpath{(12,0)}\cyclic[.75]{(-2.8,-3),(0,-2),(3,-2.4),(2.8,2.8),(0.5,2.4),(-2.9,1.7)}}
-			<dd>\gfill[0.6white]\mfobj{U}
-			<dd>\gfill[0.8white]\mfobj{UU}
-			<dd>\gfill[0.6white]\mfobj{FU}
-			<dd>\draw\mfobj{U}
-			<dd>\draw\mfobj{UU}
-			<dd>\draw\mfobj{R}
-			<dd>\draw\mfobj{FU}
-			<dd>\arrow\curve[1]{(3,2),(6,3),(9,2)}
-			<dd>\point{(0,0),(12,0)}
-			<dd>\shiftpath{(12,0)}\mfobj{R}
-			<dd>\tlabel[tc](0,3.5){$E$}
-			<dd>\tlabel[tc](12,3.5){$E'$}
-			<dd>\tlabel[tl](-2,0){$U$}
-			<dd>\tlabel[tl](10.1,1){$f(U)$}
-			<dd>\tlabel[tl](9,-1){$U'$}
-			<dd>\tlabel[tl](0.1,0){ $x_0$ }
-			<dd>\tlabel[tl](12.1,0){ $f(x_0)$ }
-			<dd>\tlabel[tc](6.1,3.8){$f$}
-			<dd>\end{mfpic}
-			<dd>\end{center}
-			<p>
-			<dd>\noindent
-			<dd>\parbox[c]{7.51cm}
-			<dd>{The picture on the right shows the intersection of two
-			<dd>sets $A$ and $B$. Notice that this intersection consists of
-			<dd>all points which belong to both sets.}
-			<dd>\hfill
-			<dd>\begin{minipage}{40mm}
-			<dd>\begin{mfpic}[15]{-2.2}{5}{-2.2}{2.2}
-			<dd>\store{a}{\circle{(0,0),2}}
-			<dd>\store{b}{\circle{(2 *sqrt 2,0),2}}
-			<dd>\store{c}{\arc[p]{(0,0),-45,45,2}}
-			<dd>\store{de}{ \arc[p]{(2 *sqrt 2,0),135,225,2}}
-			<dd>\store{dd}{\lclosed\connect\mfobj{de}\mfobj{c}\endconnect}
-			<dd>\gfill[0.7white]\mfobj{dd}
-			<dd>\draw\mfobj{a}\draw\mfobj{b}
-			<dd>\tlabel(-1,-0.3){ $A$ }
-			<dd>\tlabel(3,-0.3){ $B$ }
-			<dd>\end{mfpic}
-			<dd>\end{minipage}
-			<p>
-			<dd>\bigskip
-			<dd>\begin{definition}[Complex logarithm\index{complex logarithm}]
-			<dd>The \tit{complex logarithm},  $\log: \Cc^* \ra S_l$, is defined by
-			<dd>\begin{equation}\notag
-			<dd>\log z=\log\abs z+i\arg_lz.
-			<dd>\end{equation}
-			<dd>It is the inverse of $\fv\exp{S_l}$, the so-called \tit{ main branch}
-			<dd>of the exponential function.
-			<dd>\end{definition}
-			<p>
-			<dd>The region of discontinuity 
-			<dd>is now the axis
-			<dd>$\set{z\in\Cc^*}{\arg z=\pi}$. Thus, the exponential function 
-			<dd>is not only bijective in the
-			<dd>open strip
-			<dd>$\inn S_l$,
-			<dd>but also a differentiable homeomorphism onto
-			<dd>$\Si=\set{z\in\Cc^*}{\arg z\neq \pi}$ with
-			<dd>$\pri\exp z=\exp z\neq 0$, and therefore, in view of the previous theorem, we may conclude 
-			<p>
-			<dd>\begin{theorem}
-			<dd>The complex logarithm is  infinitely often  differentiable in $\Si$
-			<dd>and
-			<dd>$\pri\log z=\frac{1}{z}$.
-			<dd>\end{theorem}
-			<p>
-			<dd>\begin{mfpic}[15]{0}{20}{-2.5}{3}
-			<dd>\gfill[0.6white]\rect{(12,-2),(20,2)}
-			<dd>\gfill[0.6white]\circle{(4,0),2}
-			<dd>\arrow[l 5pt]\lines{(4,0),(8,0)}
-			<dd>\arrow[l 5pt]\lines{(4,-2.5),(4,3)}
-			<dd>\arrow[l 5pt]\lines{(12,0),(20,0)}
-			<dd>\gfill[white]\circle{(4,0),0.05}
-			<dd>\arrow\curve[1]{(7,2.5),(10,3.5),(13,2.5)}
-			<dd>\penwd{1pt}
-			<dd>\draw[white]\lines{(0,0),(4,0)}
-			<dd>\penwd{0.5pt}
-			<dd>\arrow[l 5pt]\lines{(16,-2.5),(16,3)}
-			<dd>\tlabel[cr](17.2,2.3){$\pi$}
-			<dd>\tlabel[cr](17.2,-2.3){$-\pi$}
-			<dd>\tlabel[cc](10,4){ log}
-			<dd>\tlabel[cc](2,2.5){ $\Si$}
-			<dd>\end{mfpic}%
-			<p>
-			<dd>\closegraphsfile
-			<dd>\end{document}
-		</dl>
-</tt>
+<h2>MetaPost</h2>
+<p>MetaPostは、John Hobbyによるプログラムで、KnuthのMETAFONTから派生したプログラミング言語での記述から図を描きます。マニュアルはTeX Liveに含まれています。「ヘルプ」→「パッケージのヘルプを表示...」を選び、<code>metapost</code>と入力してください。</p>
+<p>「タイプセット」→「MetaPost」（<kbd>⇧⌘M</kbd>）、または「タイプセット」ボタンの横のポップアップメニューの「MetaPost」は、作業中の書類（拡張子<code>.mp</code>のファイル）にMetaPostを実行します。実行するのは「設定」→「タイプセット」→「周辺ツール」の「MetaPost」にあるコマンドで、初期値は<code>mpost</code>です。エンジンのプロファイルはこの欄を設定します。pLaTeX + dvipdfmxでは<code>pmpost</code>、upLaTeX + dvipdfmxでは<code>upmpost</code>になり、ラベルの日本語をタイプセットできます。ほかのプロファイルでは<code>mpost</code>です。pmpostやupmpostで日本語のラベルをタイプセットした図は、LuaLaTeXでは取り込めません。LuaLaTeXでは、そうした図はluamplibパッケージを使って書類の中で描いてください。</p>
+<p>新しいファイルをMetaPostのファイルとして保存するには、保存ダイアログのファイルの種類のメニューでmpを選びます。</p>
+<p>Nicola Vitacolonnaによるエンジンnv-metapostとnv-metafunを使うと、MetaPostとMetaFunでの作業が楽になり、ファイルの中の図をプレビューのウインドウに表示できます。これらは<code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>にあります。同じフォルダの<code>README.pdf</code>にインストールと使い方が説明されていて、<code>examples</code>フォルダにはサンプルファイルがあります。たとえば、次のように始まるファイルは、nv-metafunのエンジンをEnginesフォルダに置けばnv-metafunでタイプセットされます。</p>
+<pre>% !TEX program = nv-metafun
+beginfig(1);
+  pickup pencircle scaled 2mm;
+  draw fullcircle scaled 2cm withcolor red;
+endfig;
+end</pre>
+<p>MetaPostの図は、LaTeXの書類の中に書くこともできます。LuaLaTeXではluamplibパッケージを使います。mfpicなどのパッケージでは、図が<code>.mp</code>ファイルに書き出され、2回のタイプセットの間にMetaPostがそれを処理します。</p>
 </main>
 </body>
 </html>

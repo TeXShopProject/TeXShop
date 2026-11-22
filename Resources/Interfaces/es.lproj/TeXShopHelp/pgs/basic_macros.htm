@@ -5,42 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Macros</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="macro; macros.plist">
+<meta name="description" content="macros; menú Macros; editor de macros; atajo de una macro; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda b&aacute;sica</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">Preliminares</a></li>
-<li><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">C&oacute;mo obtener e instalar TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Componer (&lsquo;typeset&rsquo;) documentos</a></li>
-<li><a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a></li>
-<li><a href="basic_edittricks.htm">Trucos de edici&oacute;n</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edición</a></li>
+<li><a href="basic_find.htm">Buscar y reemplazar</a></li>
 <li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
-<li><a href="basic_spelling.htm">Corrección ortográfica</a></li>
-<li><a href="basic_autocompletion.htm">Autocompleci&oacute;n</a></li>
-<li><a href="basic_commandcompletion.htm">Compleci&oacute;n de comandos</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Autocompletado de comandos</a></li>
 <li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
 <li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
 <li><a href="basic_macros.htm" class="current">Macros</a></li>
 <li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
-<li><a href="basic_graphics.htm">Inclusi&oacute;n de gr&aacute;ficos</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
 <li><a href="basic_printing.htm">Imprimir</a></li>
-<li><a href="basic_preferences.htm">Establecer ajustes</a></li>
-<li><a href="basic_templates.htm">Personalizaci&oacute;n del men&uacute; Plantillas</a></li>
-<li><a href="basic_bugs.htm">Notificaci&oacute;n de errores (&lsquo;bugs&rsquo;)</a></li>
-<li><a href="basic_websites.htm">Sitios web &uacute;tiles</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
 <li><a href="basic_license.htm">Licencia</a></li>
-<li><a href="basic_thistranslation.htm">Sobre la traducci&oacute;n a espa&ntilde;ol</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Macros</h1>
 
-		<P>Hay un mecanismo alternativo para insertar, en el documento con el c&oacute;digo fuente, comandos de TeX muy usados. Para ello, busca el comando en el men&uacute; Macros, o en el bot&oacute;n Macros de la barra de herramientas, y el&iacute;gelo. TeXShop proporciona un editor de macros que te permite examinar las macros actualmente definidas, modificarlas, y a&ntilde;adir las tuyas propias. Para conocer detalles, lee la Ayuda para Macros. El men&uacute; Macros y el editor de macros han sido creados por Mitsuhiro Shishikura. Las macros predefinidas han sido creadas por Mitsuhiro Shishikura y Hirokazu Ogawa.</P>
-		<p>Las macros se almacenan en el archivo ~/Library/TeXShop/Macros/Macros.plist. &Eacute;ste es un archivo de texto ordinario, que puede copiarse y enviarse a otros; as&iacute;, puedes distribuir las macros que hayas creado. El editor de macros dispone de un comando para leer un archivo plist y a&ntilde;adir, en &eacute;l, otras macros a las ya existentes. </p>
+<p>El menú Macros, y el elemento Macros de la barra de herramientas, contienen comandos que insertan código LaTeX en el código fuente o ejecutan scripts de AppleScript. Algunas de las macros que incluye TeXShop:</p>
+<ul>
+<li>Program, Encoding y Root escriben las líneas <code>% !TEX</code> que eligen el motor de composición, la codificación y el archivo raíz de un documento. Elija el valor de la lista que muestran; la línea se escribe correctamente al principio del código fuente.</li>
+<li>Insert Begin/End convierte una palabra seleccionada, como <code>theorem</code>, en un par <code>\begin{theorem}</code> … <code>\end{theorem}</code>, con el punto de inserción entre ambos.</li>
+<li>Submenús como Headings, Mathematics, Lists, Tables y Figures insertan código LaTeX habitual.</li>
+</ul>
+
+<h2>El editor de macros</h2>
+<p>Elija Macros › Abrir editor de macros... para ver cómo está definida cada macro, modificarla o añadir macros propias. La lista de la izquierda es el menú Macros: arrastre los elementos para reorganizarlos y use la barra que hay bajo la lista para añadir elementos, submenús y separadores. El texto de una macro se inserta en el código fuente. En este texto, unas fichas redondeadas representan el texto seleccionado, el texto del portapapeles y el lugar del punto de inserción; elíjalas en el menú Insertar, bajo el texto.</p>
+<p>Para asignar un atajo de teclado a una macro, selecciónela en la lista, haga clic en su atajo (o haga doble clic en él) y pulse las teclas. Un atajo usa la tecla Comando o Control, o es una tecla de función. Si un comando de menú u otra macro ya lo usa, el editor de macros lo indica.</p>
+<p>Las macros se guardan en <code>~/Library/TeXShop/Macros/Macros_Latex.plist</code>. Para dar macros a otras personas, selecciónelas en el editor de macros y elija Macros › Guardar selección en archivo...; para añadir macros desde un archivo así, elija Macros › Añadir macros desde archivo....</p>
+<p>El capítulo <a href="macros.htm">Ayuda para macros</a> explica las macros en detalle, incluidas las <a href="macros_applescript.htm">macros AppleScript</a>.</p>
 </main>
 </body>
 </html>

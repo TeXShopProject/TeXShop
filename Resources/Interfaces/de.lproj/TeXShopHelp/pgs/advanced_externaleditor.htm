@@ -5,58 +5,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Einen externen Editor verwenden</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Sie k&ouml;nnen auch einen externen Editor mit TeXShop benutzen.">
+<meta name="description" content="externer Editor; Zur Voransicht öffnen; Externen Editor benutzen; PDF-Änderungen durch andere Apps ständig überwachen; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</a></li>
-<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-<li><a href="advanced_addengine.htm">Zus&auml;tzliche Schriftsatz-Programme</a></li>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-<li><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
 <li><a href="advanced_externaleditor.htm" class="current">Einen externen Editor verwenden</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
-<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-<li><a href="advanced_plist.htm">Plist Datein</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Lokalisierungen</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Einen externen Editor verwenden</h1>
-	
-		<p>TeXShop kann auf verschiedene Weise f&uuml;r die Arbeit mit einem externen Editor konfiguriert werden. Einige der unten beschriebenen Funktionen sind hierzu n&uuml;tzlich und unabh&auml;ngig davon wie Ihr Editor funktioniert. In Zukunft werden eventuell Kofigurationshilfen Ihrem Editor beiliegen.</p>
-		<p>Wenn Sie den Men&uuml;punkt &bdquo;Zur Vorschau &ouml;ffnen...&ldquo; w&auml;hlen, werden Sie aufgefordert eine tex-Quelldatei zu bestimmen. Hierbei wird jedoch nur die zugeh&ouml;rige pdf-Datei angezeigt. Ist die gew&auml;hlte Quelldatei nicht gesetzt oder die pdf-Datei nicht auf dem aktuellesten Stand, so setzt TeXShop diese zuerst. Sie k&ouml;nnen die Quelldatei somit in jedem beliebeigen Editor bearbeiten. Wenn die Datei gesetzt werden soll, wechseln sie einfach zum Vorschau-Fenster und klicken Sie auf &bdquo;Setzen&ldquo;. In diesem Modus &auml;ndert TeXShop selbst die Quelldatei nicht, sondern leitet die Datei einfach den jeweiligenlatex oder tex Prozessen zu.</p>
-		<p>Das Vorschau-Fenster kann so angepasst werden, dass es einen Knopf zum Setzen enth&auml;lt. Sollten Sie diesen Knopf nicht sehen, so passen Sie Ihre Werkzeugleiste mit &bdquo;Werzeugleiste anpassen...&ldquo; aus dem Fenster-Men&uuml; an.</p>
-		<p>Benutzer, die die meiste Zeit mit externen Editoren arbeiten, k&ouml;nnen hierf&uuml;r die Einstellung  &bdquo;Externen Editor benutzen&ldquo; in den allgemeinen Einstellungen f&uuml;r TeXShop benutzen. Ist diese Option gew&auml;hlt, so verhalten sich die Men&uuml;punkte &bdquo;&Ouml;ffnen&ldquo; und &bdquo;Zuletzt benutzt...&ldquo; in der oben beschriebenen Weise. Dar&uuml;ber hinaus &auml;ndert sich der Punkt &bdquo;Zur Voransicht &ouml;ffnen...&ldquo; in &bdquo;Zum bearbeiten &ouml;ffnen...&ldquo;. Hierdurch kann man ausnahmsweise ein Dokument doch mit dem internen Editor bearbeiten. Die Funktion durch &bdquo;&Ouml;ffnen&ldquo; und &bdquo;Zuletzt benutzt...&ldquo; auch Dateien in den Formaten jpg, tiff, ps, pdf, dvi, log und anderer Dateien zu &ouml;ffnen wird hierdurch nicht beeintr&auml;chtigt.</p>
-		<p>Einige Editoren erlauben es die Unix Kommandos direkt aufzurufen. Um diese Editoren besser mit TeXShop nutzen zu k&ouml;nnen wurde eine neue Einstellung &bdquo;PDF-&Auml;nderungen durch andere Apps st&auml;ndig &uuml;berwachen&ldquo; in den TeXShop-Einstellungen hinzugef&uuml;gt. Ist eine tex-Datei &bdquo;zur Voransicht&ldquo; ge&ouml;ffnet, so wird die Vorschau automatisch aktualisiert, wenn die Datei gesetzt wird. Dadurch k&ouml;nnen Sie mit einem externen Editor Ihre Dateien setzen und das Ergebnis automatisch in TeXShop betrachten. Diese Einstellung bezieht sich auch auf in TeXShop ge&ouml;ffnete pdf-Dateien. Dar&uuml;ber hinaus werden auch tex-Dateien mit einbezogen, die mit &bdquo;&Ouml;ffnen&ldquo; ge&ouml;ffnet wurden, wenn die Einstellung einen externen Editor zu benutzen aktiviert ist.</p>
-		<p>Folgende AppleScript Befehle wurden in TeXShop implementiert. Externe Editoren k&ouml;nnen diese direkt aufrufen:</p>
-		<dl>
-			<dd>typesetinteractive
-			<dd>texinteractive
-			<dd>latexinteractive
-			<dd>contextinteractive
-			<dd>bibtexinteractive
-			<dd>makeindexinteractive
-			<dd>metapostinteractive
-			<dd>taskdone
-			<dd>refreshpdf
-			<dd>open_for_externaleditor
-		</dl>
-		Die ersten sieben Befehle aktivieren die TeXShop Satzkommandos. AppleScript wartet nicht bis die Prozesse zuende gef&uuml;hrt sind. Der &bdquo;taskdone&ldquo;-Befehl kann &uuml;berpr&uuml;fen, ob der Satzprozess beendet ist. Er gibt &bdquo;NO&ldquo; zur&uuml;ck, falls dieser noch l&auml;uft und &bdquo;YES&ldquo; falls dieser abgeschlossen ist. Jeder dieser Befehle aktualisiert das Vorschau-Fenster nach dem Setzen. Ruft Ihr Editor hierdurch TeXShop zum Setzen auf, kann die Option &bdquo;PDF-&Auml;nderungen durch andere Apps st&auml;ndig &uuml;berwachen&ldquo; ausgeschlatet werden.
-		<p>Modifiziert der externe Editor die pdf-Ausgabe direkt, kann das Vorschau-Fenster durch &bdquo;refreshpdf&ldquo; aktualisiert werden. Dies ist nat&uuml;rlich nur dann n&ouml;tig, wenn &bdquo;PDF-&Auml;nderungen durch andere Apps st&auml;ndig &uuml;berwachen&ldquo; ausgeschaltet ist. Schlie&szlig;lich &ouml;ffnet &bdquo;open_for_externaleditor&ldquo; eine tex-Datei &uuml;ber den Befehl &bdquo;Zur Voransicht &ouml;ffnen&ldquo;.</p>
-		<p>Der Tcl-Code um diese Funktionen aus AlphaX auszuf&uuml;hren werden im AlphaTcl-Ordner der TeXShop-Distribution mitgelifert. Lesen Sie die ersten Zeilen dieser Datei um zu erfahren, wie man AlphaX f&uuml;r TeXShop konfiguriert.</p>
-	
+<p>Sie können in einem anderen Editor schreiben und TeXShop zum Setzen und zum Anzeigen des PDF verwenden.</p>
+
+<h2>Nur die Vorschau öffnen</h2>
+<p>Ablage › Zur Voransicht öffnen… fragt nach einer Quelltextdatei und öffnet nur ihr Vorschaufenster. Wurde die Datei noch nicht gesetzt oder ist das PDF älter als der Quelltext, setzt TeXShop sie zuerst. Bearbeiten Sie den Quelltext in Ihrem Editor; zum Setzen sichern Sie ihn dort und klicken im Vorschaufenster auf „Setzen“ oder drücken <kbd>⌘T</kbd>. In diesem Modus öffnet oder ändert TeXShop die Quelltextdatei nie. Hat die Symbolleiste des Vorschaufensters keine Taste „Setzen“, fügen Sie sie mit Fenster › Symbolleiste anpassen… hinzu.</p>
+<p>Wenn Sie immer so arbeiten, schalten Sie Einstellungen › Allgemein › Beim Start › „Externen Editor benutzen“ ein. Ablage › Öffnen… und „Benutzte Dokumente“ öffnen Quelltextdateien dann nur zur Voransicht, und aus Ablage › Zur Voransicht öffnen… wird „Zum Bearbeiten öffnen…“, das eine Quelltextdatei im Editor von TeXShop öffnet, wenn Sie ihn brauchen. Andere Dateien, etwa PDF-, Bild- und Log-Dateien, öffnen sich wie bisher.</p>
+
+<h2>Die Vorschau aktuell halten</h2>
+<p>Wenn ein anderes Programm das PDF neu schreibt, etwa Ihr Editor oder latexmk im Terminal, lädt TeXShop es neu, sobald Sie zu TeXShop oder zum Vorschaufenster zurückkehren, und behält dabei Seite und Vergrößerung bei. Ist Einstellungen › Vorschau › Aktualisierung › „PDF-Änderungen durch andere Apps ständig überwachen“ eingeschaltet, lädt TeXShop das PDF neu, sobald es sich ändert, auch wenn TeXShop im Hintergrund ist, etwa wenn die Vorschau neben Ihrem Editor steht. Eine Vorschau mit ungesicherten Anmerkungen wird nicht neu geladen, damit die Anmerkungen nicht verloren gehen.</p>
+<p>TeXShop überwacht auch die Quelltextdateien, die in seinem eigenen Editor geöffnet sind. Ändert ein anderer Editor eine solche Datei, lädt TeXShop sie neu, sofern die Kopie in TeXShop keine ungesicherten Änderungen hat.</p>
+
+<h2>Mit dem Editor synchronisieren</h2>
+<p>Ein Befehlstaste-Klick im Vorschaufenster kann Sie zur Zeile in Ihrem Editor bringen, und „Gehe zu Fehler“ in der Konsole kann die Zeile eines Fehlers dort öffnen. Dafür braucht es „Externen Editor benutzen“, eine versteckte Einstellung und ein Befehlszeilenprogramm des Editors:</p>
+<ul>
+<li>Für TextMate, dessen Befehl <code>mate</code> in <code>/usr/local/bin</code> liegt: <code>defaults write TeXShop TextMateSync YES</code>.</li>
+<li>Für jeden anderen Editor: <code>defaults write TeXShop OtherEditorSync YES</code> und ein ausführbares Skript <code>/usr/local/bin/othereditor</code>, das die Zeilennummer als <code>$1</code> und den vollständigen Pfad der Datei als <code>$2</code> erhält. Für BBEdit lautet es:
+<pre>#!/bin/sh
+/usr/local/bin/bbedit "$2:$1"</pre></li>
+</ul>
+<p>Für die andere Richtung, von einer Zeile im Editor zum Vorschaufenster, ruft der Editor TeXShop über AppleScript mit den Befehlen <code>sync_preview_line</code>, <code>sync_preview_index</code> und <code>sync_preview_name</code> auf. Das Kapitel „Using an External Editor“ in Hilfe › TeXShop Handbuch (Englisch) enthält ein vollständiges Skript.</p>
+<p>Der Ordner <code>~/Library/TeXShop/ExternalEditorScripts</code> enthält fertige Unterstützung mit Dokumentation: AppleScripts, die ein Dokument aus BBEdit in TeXShop setzen und anzeigen, und ein Plug-in für Vim.</p>
+
+<h2>AppleScript-Befehle für Editoren</h2>
+<p>Ein Editor kann diese AppleScript-Befehle eines TeXShop-Dokuments aufrufen:</p>
+<dl>
+<dt><code>typesetinteractive</code>, <code>texinteractive</code>, <code>latexinteractive</code>, <code>bibtexinteractive</code>, <code>makeindexinteractive</code>, <code>metapostinteractive</code></dt>
+<dd>Setzen bzw. plain TeX, LaTeX, BibTeX, MakeIndex oder MetaPost ausführen. Der Aufruf kehrt sofort zurück, ohne auf das Ende des Setzens zu warten; die Vorschau wird aktualisiert, wenn es endet.</dd>
+<dt><code>taskdone</code></dt><dd>Gibt NO zurück, solange gesetzt wird, und YES, wenn das Setzen beendet ist.</dd>
+<dt><code>refreshpdf</code></dt><dd>Lädt das PDF neu und holt das Vorschaufenster nach vorn.</dd>
+<dt><code>refreshpdfbackground</code></dt><dd>Lädt das PDF neu, ohne TeXShop nach vorn zu holen, wenn das Vorschaufenster bereits geöffnet ist.</dd>
+<dt><code>refreshtext</code></dt><dd>Liest die Quelltextdatei erneut vom Volume.</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Öffnet eine Quelltextdatei wie Ablage › Zur Voransicht öffnen….</dd>
+</dl>
+<p>Wenn der Editor über TeXShop setzt, wird „PDF-Änderungen durch andere Apps ständig überwachen“ nicht gebraucht. Siehe auch <a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a>.</p>
 </main>
 </body>
 </html>

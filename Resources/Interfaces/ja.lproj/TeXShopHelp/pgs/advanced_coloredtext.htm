@@ -3,113 +3,52 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TeXにおける文字の色指定</title>
+<title>色付きの文字</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="テキスト全体ないしは一部分のカラー化と背景色の変更について">
+<meta name="description" content="色付きの文字; xcolor; 色; textcolor; definecolor; dvipsnames; プレビューのページの色; ライト表示のページ">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a></li>
-<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a></li>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
 <li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
-<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a></li>
-<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
 <li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
 <li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a></li>
-<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a></li>
-<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストおよびドラッグ＆ドロップ</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
 <li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
 <li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
-<li><a href="advanced_coloredtext.htm" class="current">TeXにおける文字の色指定</a></li>
-<li><a href="advanced_plist.htm">Plistファイル</a></li>
-<li><a href="advanced_localization.htm">各国語版へのローカライズ</a></li>
+<li><a href="advanced_coloredtext.htm" class="current">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>TeXにおける文字の色指定</h1>
+<h1>色付きの文字</h1>
+<p>タイプセットする書類の文字に色を付けるには、xcolorパッケージを使います。プリアンブルで読み込みます。</p>
+<pre>\usepackage{xcolor}</pre>
+<p>すると、<code>\color{blue}</code>で、そのグループや環境の終わりまで青になり、<code>\textcolor{red}{This is very important!}</code>で、引数だけに色が付きます。自分で色を定義するには、たとえば次のようにします。</p>
+<pre>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</pre>
+<p>オプション<code>dvipsnames</code>を付けると、BrickRedやForestGreenなどの名前の付いた色が加わります。</p>
+<pre>\usepackage[dvipsnames]{xcolor}</pre>
+<p>すべての色とオプションは、「ヘルプ」→「パッケージのヘルプを表示...」で開けるxcolorのドキュメントに載っています。</p>
 
-
-<p>
-TeXの出力をカラー化することができます。そうするには、プリアンブルに次の１行を加えます──
-</p>
-
-<tt>
-	<dl>
-		<dd>\usepackage{color}
-	</dl>
-</tt>
-
-<p>
-そして、タイプセットを始める前に次のような１行を挿入します──
-</p>
-
-<tt>
-	<dl>
-		<dd>\color{blue}
-	</dl>
-</tt>
-
-<p>
-テキストの特定の部分に色を付けたいときは、コマンドを次のように使います──
-</p>
-
-<tt>
-	<dl>
-		<dd>{\color{red} This is very important!}
-		<dd>{\color{red} これはとても重要だ！}
-	</dl>
-</tt>
-
-<p>
-カスタム・カラーを定義するには、次のようなコマンドを使います──
-</p>
-
-<tt>
-	<dl>
-		<dd>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}
-	</dl>
-</tt>
-
-<p>
-あるいはユーザは、
-"BrickRed" のように名前で定義された色見本になじんでいるかもしれません；
-名前付きの色はdvipsドライバ用に事前に定義されているものです。
-こうした色を使うには一般に次のような構文を用います──
-</p>
-
-<tt>
-	<dl>
-		<dd>\usepackage[dvipsnames,usenames]{color}
-	</dl>
-</tt>
-
-<p>
-出力をカラーにした場合、プレビューウインドウで判読しにくくなるかもしれません。プレビューのページの色は、設定ウインドウの「テーマ」で変えられます。「プレビュー」の行の「ライト表示のページ」の色で、ライト表示のページが塗られます。色はテーマごとに設定するので、ライトモード時のテーマとダークモード時のテーマで別の色にできます。この色は印刷されず、ページの一部をコピーしたときにも付きません。プレビューウインドウのツールバーの「外観」でページをダーク表示にしているときは、この色では塗られません。
-</p>
-
-<p>
-以前のTeXShopでは、隠れた設定 Pdfbackground_R、Pdfbackground_G、Pdfbackground_B でこの色を設定していました。
-</p>
-
-
-
-
-
-
-		
-	</body>
-
-</HTML>
+<h2>プレビューのウインドウのページの色</h2>
+<p>色付きの文字は、白いページの上では読みにくいことがあります。プレビューのウインドウのページには、「設定」→「テーマ」で別の色を付けられます。「ウインドウ」グループで、「プレビュー」の行の「ライト表示のページ」の下にある色が、ページをライトで表示しているときのページの色になります。テーマごとに色があるので、「ライトモード時のテーマ」と「ダークモード時のテーマ」で別の色を使えます。</p>
+<p>この色は表示のためだけのもので、印刷されず、ページの一部をコピーしたときにも含まれません。プレビューのウインドウのツールバーの「外観」でダーク表示にしたページには、この色は付きません。文字そのものの色は、上のようにxcolorを使って書類で指定します。</p>
 </main>
 </body>
 </html>

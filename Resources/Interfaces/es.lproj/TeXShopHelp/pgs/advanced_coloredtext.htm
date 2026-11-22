@@ -3,76 +3,53 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Texto coloreado en TeX</title>
+<title>Texto en color</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="texto coloreado; color de fondo a la ventana del pdf">
+<meta name="description" content="texto en color; xcolor; color; textcolor; definecolor; dvipsnames; color de las páginas de la vista previa; Páginas claras">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">A&ntilde;adir archivos personales a TeX Live</a></li>
-<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a></li>
+<li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Más sobre TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
-<li><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a></li>
-<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a></li>
+<li><a href="advanced_addengine.htm">Añadir motores de composición</a></li>
+<li><a href="advanced_formats.htm">Crear y usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX y LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
-<li><a href="advanced_root.htm">Establecer un documento ra&iacute;z</a></li>
-<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a></li>
-<li><a href="advanced_removeaux.htm">Borrado de archivos AUX</a></li>
+<li><a href="advanced_encoding.htm">Codificaciones</a></li>
+<li><a href="advanced_Japan.htm">Composición en japonés</a></li>
+<li><a href="advanced_root.htm">Establecer el archivo raíz de un proyecto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronización entre código y vista previa</a></li>
+<li><a href="advanced_removeaux.htm">Borrar archivos AUX</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a></li>
-<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar</a></li>
+<li><a href="advanced_shellescape.htm">Protección ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar un editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar y pegar, arrastrar y soltar</a></li>
 <li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a></li>
-<li><a href="advanced_coloredtext.htm" class="current">Texto coloreado en TeX</a></li>
-<li><a href="advanced_plist.htm">Archivos .plist</a></li>
+<li><a href="advanced_coloredtext.htm" class="current">Texto en color</a></li>
+<li><a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizaciones</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Texto coloreado en TeX</h1>
+<h1>Texto en color</h1>
+<p>El paquete xcolor colorea el texto del documento compuesto. Cárguelo en el preámbulo:</p>
+<pre>\usepackage{xcolor}</pre>
+<p>Después, <code>\color{blue}</code> cambia a azul hasta el final del grupo o entorno actual, y <code>\textcolor{red}{This is very important!}</code> colorea solo su argumento. Para definir colores propios, use por ejemplo</p>
+<pre>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</pre>
+<p>La opción <code>dvipsnames</code> añade una lista de colores con nombre, como BrickRed y ForestGreen:</p>
+<pre>\usepackage[dvipsnames]{xcolor}</pre>
+<p>La documentación de xcolor, que se abre con Ayuda › Mostrar ayuda del paquete…, muestra todos los colores y opciones.</p>
 
-		<P>Siempre ha sido posible colorear la salida que proporciona LaTeX. Para hacerlo, a&ntilde;ade la l&iacute;nea
-</P>
-	<dl>
-	<dd><tt>\usepackage{color}</tt>   
-	</dl>
-<P>
-	en el pre&aacute;mbulo, e inserta una l&iacute;nea como
-</P>
-	<dl>
-	<dd><tt>\color{blue}</tt>   
-	</dl>
-<P>
-	antes de que LaTeX comience a componer p&aacute;ginas. Para colorear una secci&oacute;n limitada de texto, usa un comando como
-</P>
-	<dl>
-	<dd><tt>{\color{red} !`Esto es muy importante!}</tt>   
-	</dl>
-<P>
-	Para definir colores a medida, usa un comando como
-</P>
-<dl>
-	<dd><tt>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</tt>   
-	</dl>
-
-<P>
-	Los usuarios pueden estar familiarizados con una lista de colores identificados por sus nombres en ingl&eacute;s, como &laquo;BrickRed&raquo;; estos nombres los define autom&aacute;ticamente el driver dvips. Para poder emplearlos con cualquier motor de composici&oacute;n, usa la sintaxis
-</P>
-<dl>
-	<dd><tt>\usepackage[dvipsnames,usenames]{color}</tt>   
-	</dl>
-
-<P>
-    Cuando coloreamos la salida, puede ser dif&iacute;cil leerla en la ventana con el pdf previsto. El color de las p&aacute;ginas de la vista previa se puede cambiar en la categor&iacute;a Temas de la ventana de Ajustes: el color bajo &laquo;P&aacute;ginas claras&raquo; en la fila PDF rellena las p&aacute;ginas mientras se muestran claras. Cada tema tiene su propio color, de modo que el tema del modo claro y el del modo oscuro pueden usar colores distintos. Este color no se imprime ni aparece al copiar parte de una p&aacute;gina. Las p&aacute;ginas que se muestran oscuras con el elemento Aspecto de la barra de herramientas de la ventana del PDF no se rellenan con este color.
-</P>
-<P>
-    Las versiones anteriores de TeXShop usaban los ajustes ocultos Pdfbackground_R, Pdfbackground_G y Pdfbackground_B para este color.
-</P>
+<h2>El color de las páginas en la ventana de vista previa</h2>
+<p>El texto en color puede ser difícil de leer sobre una página blanca. Las páginas de la ventana de vista previa pueden tener otro color en Ajustes › Temas: en el grupo «Ventanas», el color bajo «Páginas claras» en la fila «PDF» rellena las páginas mientras se muestran claras. Cada tema tiene su propio color, de modo que el tema de «Modo claro» y el de «Modo oscuro» pueden usar colores distintos.</p>
+<p>El color solo sirve para ver las páginas: no se imprime y no aparece al copiar una parte de una página. Las páginas que se muestran oscuras con el elemento «Aspecto» de la barra de herramientas de la ventana de vista previa no se rellenan con este color. El color del propio texto lo establece el documento, con xcolor como se ha indicado.</p>
 </main>
 </body>
 </html>

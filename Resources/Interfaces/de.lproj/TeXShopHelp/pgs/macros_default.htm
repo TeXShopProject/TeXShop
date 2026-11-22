@@ -5,43 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Die Standardmakros verstehen</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Sehen Sie sich die Standardmakros mit dem Makro-Editor an um mehr &uuml;ber Sie zu erfahren.">
+<meta name="description" content="Standardmakros; Insert Begin/End; #SEL#; #INS#; #PASTE#; Marken; Einfügemarke platzieren; Textmakros">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Hilfe zu Makros</span></header>
 <nav id="menu">
 <ul>
-<li><a href="macros_preliminaries.htm">Einleitung</a></li>
+<li><a href="macros_preliminaries.htm">Vorbemerkungen</a></li>
 <li><a href="macros_default.htm" class="current">Die Standardmakros verstehen</a></li>
-<li><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
-<li><a href="macros_define.htm">Neue Makros erstellen</a></li>
-<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
-<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
-<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
+<li><a href="macros_rearrange.htm">Das Menü „Makros“ neu ordnen</a></li>
+<li><a href="macros_define.htm">Neue Makros definieren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-Makros</a></li>
+<li><a href="macros_includedscripts.htm">Mitgelieferte AppleScript-Makros</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-Makros definieren</a></li>
 <li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
-<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
-<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
+<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a></li>
+<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Die Standardmakros verstehen</h1>
+<p>Am besten verstehen Sie die Standardmakros, indem Sie sie im Makro-Editor (Makros › Makro-Editor öffnen…) ansehen: Wählen Sie ein Makro in der Liste aus, und sein Inhalt erscheint daneben.</p>
+<p>Angenommen, Sie möchten eine theorem-Umgebung. Geben Sie das Wort theorem ein, wählen Sie es aus und wählen Sie Makros › Insert Begin/End. Das Wort wird ersetzt durch</p>
+<pre>\begin{theorem}
 
-		<P>Am einfachsten versteht man die Standardmakros, wenn man sich Ihre Definition mit Hilfe des Makro Editors ansieht. Nehmen Sie zum Beispiel das Makro &bdquo;Begin/End&ldquo;. Nehmen wir an, dass Sie eine Umgebung wie die Theorem-Umgebung benutzen wollen. Tippen Sie das Wort &bdquo;theorem&ldquo; und markieren Sie es. W&auml;hlen Sie nun das &bdquo;Begin/End&ldquo;-Makro, so wird der markierte Text durch folgenden Text ersetzt:</P>
-		<dl>
-			<dd><tt>\begin{theorem}</tt>
-			<dd>
-			<dd><tt>\end{theorem}</tt>
-		</dl>
-		<p>Der Cursor ist zwischen den beiden Zeilen platziert.</p>
-		<p>Sehen Sie sich nun den Code des &bdquo;Begin/End&ldquo; Makros genauer an:</p>
-		<dl>
-			<dd><tt>\begin{#SEL#}</tt>
-			<dd><tt>#INS#</tt>
-			<dd><tt>\end{#SEL#}</tt>
-		</dl>
-		<p>Der Text des Makros wird in den TeX-Quelltext eingef&uuml;gt. Jedes #SEL# wird durch den Text ersetzt, der markiert war, als das Makro aufgerufen wurde. War kein Text markiert, so wird f&uuml;r #SEL# ein leerer String eingesetzt. Der Cursor wird am Ende des eingef&uuml;gten Textes platziert, es sei denn der Text beinhaltet den String #INS#. Dann wird der Cursor an dieser Stelle platziert.</p>
-		<p>Mit diesem Wissen ist es ein Leichtes die Standardmakros zu verstehen und zu ver&auml;ndern.</p>
+\end{theorem}</pre>
+<p>und die Einfügemarke steht in der Zeile dazwischen.</p>
+<p>Insert Begin/End ist ein AppleScript-Makro (siehe <a href="macros_applescript.htm">AppleScript-Makros</a>). Ein Textmakro, das dasselbe tut, wenn ein Wort ausgewählt ist, lautet:</p>
+<pre>\begin{#SEL#}
+#INS#
+\end{#SEL#}</pre>
+
+<h2 id="placeholders">Platzhalter in Textmakros</h2>
+<p>Der Text eines Textmakros wird mit diesen Ersetzungen in den Quelltext eingefügt:</p>
+<dl>
+<dt>#SEL#</dt><dd>wird durch den Text ersetzt, der beim Wählen des Makros ausgewählt war, oder durch nichts, wenn kein Text ausgewählt war.</dd>
+<dt>#INS#</dt><dd>bezeichnet, wohin die Einfügemarke kommt. Ohne diesen Platzhalter steht die Einfügemarke am Ende des eingefügten Textes.</dd>
+<dt>#PASTE#</dt><dd>wird durch den Text in der Zwischenablage ersetzt, oder durch nichts, wenn die Zwischenablage keinen Text enthält.</dd>
+<dt>•</dt><dd>ist eine Marke, zu der Bearbeiten › Marken springen kann.</dd>
+</dl>
+<p>Im Makro-Editor werden diese Platzhalter als abgerundete Felder angezeigt; <a href="macros_define.htm">Neue Makros definieren</a> erklärt, wie Sie sie einfügen. Mit diesem Wissen sind die Standardmakros leicht zu verstehen und zu ändern.</p>
 </main>
 </body>
 </html>

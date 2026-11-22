@@ -3,34 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tastaturkürzel neu festlegen</title>
+<title>Tastaturkurzbefehle für Menüs ändern</title>
+<meta name="description" content="Menükurzbefehle; Tastaturkurzbefehle; Einstellungen Tastatur; Nach Funktion suchen; Nach Taste suchen; Standard wiederherstellen; Kurzbefehle für Makros; KeyEquivalents.plist; App-Tastaturkurzbefehle">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Wie konfiguriere ich TeXShop?</span></header>
 <nav id="menu">
 <ul>
-<li><a href="configure_preliminaries.htm">Einleitung</a></li>
-<li><a href="configure_prefchanges.htm">Empfohlene Änderung von Einstellungen</a></li>
-<li><a href="configure_correctinstall.htm">Neue Objekte in ~/Library/TeXShop erhalten</a></li>
+<li><a href="configure_preliminaries.htm">Einführung</a></li>
+<li><a href="configure_prefchanges.htm">Empfohlene Änderungen an den Einstellungen</a></li>
+<li><a href="configure_correctinstall.htm">Neue Objekte für die Library</a></li>
 <li><a href="configure_hidden.htm">Versteckte Einstellungen</a></li>
 <li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a></li>
-<li><a href="configure_autocompletion.htm">Die automatische Vervollst&auml;ndigung anpassen</a></li>
-<li><a href="configure_menushortcuts.htm" class="current">Tastaturkürzel neu festlegen</a></li>
+<li><a href="configure_autocompletion.htm">Tastenbelegungen anpassen</a></li>
+<li><a href="configure_menushortcuts.htm" class="current">Tastaturkurzbefehle für Menüs ändern</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Tastaturkürzel neu festlegen</h1>
+<h1>Tastaturkurzbefehle für Menüs ändern</h1>
 
-<p>Öffnen Sie Einstellungen und wählen Sie Tastatur. Nach Funktion suchen findet Befehlsnamen und Menüpfade. Nach Taste suchen erfasst einen Tastendruck und zeigt passende Menübefehle und Makros mit ihrer Belegungspriorität. Escape, ein erneuter Klick auf den Suchmodus, ein Kategorie- oder Fensterwechsel und das Schließen der Einstellungen beenden die Aufzeichnung. Wählen Sie Im Makroeditor anzeigen, um ein Makro zu bearbeiten.</p>
-<p>Wählen Sie in den Einstellungen die Kategorie &#8222;Tastatur&#8220;, um Menükurzbefehle zu bearbeiten. Wählen Sie einen Befehl und klicken Sie auf seinen Kurzbefehl (oder doppelklicken Sie den Befehl oder drücken Sie den Zeilenschalter) und drücken Sie dann den neuen Kurzbefehl. Mit Escape bleibt der bisherige Kurzbefehl erhalten. Ein Kurzbefehl muss die Befehls- oder Control-Taste verwenden oder eine Funktionstaste F1&#8211;F20 sein. Wird er schon von einem anderen Befehl verwendet, meldet TeXShop das unter der Liste und ändert nichts; drücken Sie dann einen anderen Kurzbefehl. Zum Entfernen klicken Sie im Feld auf &#8222;Kurzbefehl entfernen&#8220; (&#8854;) oder drücken die Rückschritttaste. Die Zeile unter der Liste zeigt den Standardkurzbefehl des ausgewählten Befehls; mit &#8222;Standard wiederherstellen&#8220; und &#8222;Alle zurücksetzen&#8230;&#8220; werden Kurzbefehle wiederhergestellt. Änderungen wirken sofort und bleiben nach einem Neustart erhalten.</p>
-<p>Wenn ein anderer Menübefehl das Standardtastenkürzel verwendet, kann es nicht wiederhergestellt werden. Ändern Sie zuerst das Tastenkürzel des anderen Befehls.</p>
-<p>Wenn unter &#8222;Dokumente und Sichern&#8220; die Option &#8222;Automatisch sichern und Versionen aktivieren&#8220; eingeschaltet ist, fügt macOS dem Ablage-Menü die Befehle &#8222;Duplizieren&#8220; und &#8222;Alle schließen&#8220; hinzu. Ihre Tastenkürzel lassen sich wie die anderer Befehle ändern. &#8222;Sichern unter...&#8220; behält dann das Tastenkürzel, das macOS vergibt, und erscheint in der Liste abgeblendet; ist das automatische Sichern ausgeschaltet, lässt es sich ebenfalls ändern.</p>
-<p>Bei derselben Taste und denselben Modifikatortasten haben Menübefehle mit ihren aktuellen, gegebenenfalls angepassten Kurzbefehlen Vorrang vor Makros. Durch Anpassung frei gewordene Tasten können Makros verwenden. Wird einem Menübefehl eine von einem Makro verwendete Taste zugewiesen oder wiederhergestellt, wird vorher nachgefragt. Das Makro bleibt über das Menü ausführbar; nur sein Kurzbefehl wird inaktiv. Der Makro-Editor markiert inaktive Kurzbefehle und nennt den konkurrierenden Befehl und seine Tasten. Beim Speichern wird nur bei neu vergebenen oder geänderten kollidierenden Tasten nachgefragt, auch bei importierten Makros. Man kann weiter bearbeiten, unverändert mit inaktiven Tasten speichern oder die kollidierenden Tasten entfernen und speichern. Bei Makros mit derselben Taste hat das erste Vorrang. &#8222;Kurzbefehl nicht verfügbar&#8220; betrifft nur Konflikte zwischen Menübefehlen. Im Vorschaufenster folgen Befehl-F und Befehl-G weiterhin Suchen und Weitersuchen, einschließlich geänderter oder entfernter Kurzbefehle.</p>
-<p>Die in KeyEquivalents.plist (siehe unten) festgelegten Kurzbefehle bleiben die Standardwerte. Kurzbefehle für Makros werden im Makro-Editor festgelegt, Tastenbelegungen für die Texteingabe in ihrem eigenen Editor.</p>
-<p>Tastaturkürzel für TeXShop können neu festgelegt werden. Wie man dies macht wird in den Kommentaren am Anfang der Datei &#8222;KeyEquivalents.plist&#8220; erklärt. Öffnen Sie einfach die Datei &#8222;~/Library/TeXShop/Menus/KeyEquivalents.plist&#8220; mit TeXShop. Stellen Sie sicher die Datei in der Kodierung UTF-8 zu sichern wenn Sie Unicode Zeichen benutzen.</p>
-<p>Beim Klicken auf eine Ergebniszeile bleibt die Tastenaufzeichnung aktiv. Inaktive Ergebnisse nennen die vorrangige Belegung und deren Taste; Gruppen in Makropfaden werden durch Trennzeichen getrennt.</p>
-<p><a href="basic_preferences.htm#settings-search">Einstellungen verwenden und durchsuchen</a></p>
+<p>Jedem Menübefehl von TeXShop können Sie unter Einstellungen › Tastatur einen Kurzbefehl Ihrer Wahl geben oder seinen Kurzbefehl entfernen. Kurzbefehle von Makros werden im Makro-Editor festgelegt.</p>
+
+<h2 id="settings">Einen Menükurzbefehl ändern</h2>
+<p>Wählen Sie TeXShop › Einstellungen... und dann „Tastatur“. Die Gruppe „Menükurzbefehle“ listet die Menübefehle mit ihren Kurzbefehlen auf. Wählen Sie einen Befehl aus und klicken Sie auf seinen Kurzbefehl (oder doppelklicken Sie auf den Befehl oder drücken Sie den Zeilenschalter), und drücken Sie dann den neuen Kurzbefehl. Escape oder der Zeilenschalter behält den alten, und die Tabulatortaste geht weiter. Ein Kurzbefehl muss die Befehls- oder Control-Taste verwenden oder eine der Funktionstasten F1–F20 sein. Verwendet bereits ein anderer Befehl den Kurzbefehl, sagt TeXShop das unter der Liste und ändert nichts; drücken Sie einen anderen Kurzbefehl. Um einen Kurzbefehl zu entfernen, klicken Sie im Feld auf „Kurzbefehl entfernen“ (⊖) oder drücken die Rückschritttaste.</p>
+<p>Änderungen wirken sofort und bleiben nach einem Neustart von TeXShop erhalten. Die Zeile unter der Liste zeigt den Standardkurzbefehl des ausgewählten Befehls. „Standard wiederherstellen“ gibt dem ausgewählten Befehl seinen Standardkurzbefehl zurück, und „Alle zurücksetzen…“ tut das für alle Befehle. Verwendet inzwischen ein anderer Befehl den Standardkurzbefehl, stellt „Standard wiederherstellen“ ihn nicht wieder her; ändern Sie zuerst den anderen Befehl.</p>
+<p>Ist „Automatisch sichern und Versionen aktivieren“ unter Einstellungen › Dokumente und Sichern eingeschaltet, fügt macOS dem Menü „Ablage“ die Befehle „Duplizieren“ und „Alle schließen“ hinzu; ihre Kurzbefehle lassen sich wie die anderer Befehle ändern. „Sichern unter...“ behält dann den Kurzbefehl, den macOS ihm gibt, und ist in der Liste abgeblendet; bei ausgeschaltetem automatischem Sichern lässt sich auch er ändern.</p>
+
+<h2 id="search">Einen Befehl oder eine Taste finden</h2>
+<p>„Nach Funktion suchen“ findet einen Befehl über seinen Namen oder seinen Menüpfad. „Nach Taste suchen“ findet, was eine Taste bewirkt: Drücken Sie einen Kurzbefehl, und die Liste zeigt die Menübefehle und Makros, die ihn verwenden, welcher davon gilt und warum die anderen inaktiv sind. Ein Klick auf ein Ergebnis lässt die Aufnahme weiterlaufen; Escape allein, ein erneuter Klick auf den Suchmodus, die Wahl einer anderen Kategorie, ein Fensterwechsel oder das Schließen der Einstellungen beendet sie. Wählen Sie bei einem Makro „Im Makroeditor anzeigen“, um es zu bearbeiten. Ein Menübefehl, den Sie mit „Einstellungen suchen“ finden, öffnet „Tastatur“ mit dem Befehl in „Nach Funktion suchen“; siehe <a href="basic_preferences.htm#settings-search">Einstellungen suchen</a>.</p>
+
+<h2 id="macros">Kurzbefehle für Makros</h2>
+<p>Kurzbefehle von Makros werden in der Liste des Makro-Editors festgelegt, wie unter <a href="macros_define.htm">Neue Makros definieren</a> beschrieben. Bei gleicher Taste und gleichen Sondertasten hat ein Menübefehl Vorrang vor einem Makro, und unter Makros erhält das erste mit dieser Taste den Vorrang. Geben Sie einem Menübefehl einen Kurzbefehl, den ein Makro verwendet, werden Sie um Bestätigung gebeten; das Makro bleibt im Menü „Makros“, aber sein Kurzbefehl wird inaktiv. Der Makro-Editor kennzeichnet inaktive Kurzbefehle und zeigt, welcher Befehl die Taste verwendet. Sichern Sie Makros, deren neue Kurzbefehle von Menübefehlen verwendet werden, lässt der Makro-Editor Sie zur Bearbeitung zurückkehren, mit diesen inaktiven Kurzbefehlen sichern oder sie entfernen und sichern.</p>
+<p>Im Vorschaufenster folgen Befehl-F und Befehl-G den Befehlen „Suchen...“ und „Weitersuchen (vorwärts)“, auch mit Kurzbefehlen, die Sie ihnen geben. Tastenbelegungen, die beim Tippen eines einzelnen Zeichens Text einfügen, werden in der „Liste der Tastenbelegungen“ unter Einstellungen › Tastatur festgelegt; siehe <a href="configure_autocompletion.htm">Tastenbelegungen anpassen</a>.</p>
+
+<h2 id="legacy">Ältere Methoden</h2>
+<p>Zwei andere Wege, Kurzbefehle festzulegen, funktionieren weiterhin. Einstellungen › Tastatur ist einfacher und wird empfohlen.</p>
+<h3 id="keyequivalents">KeyEquivalents.plist</h3>
+<p>TeXShop liest die Datei ~/Library/TeXShop/Menus/KeyEquivalents.plist beim Start. Die dort festgelegten Kurzbefehle werden zu den Standardkurzbefehlen unter Einstellungen › Tastatur, sodass „Standard wiederherstellen“ zu ihnen zurückkehrt. Die Kommentare am Anfang der Datei erklären ihr Format; bearbeiten Sie sie mit TeXShop, sichern Sie sie in UTF-8 und starten Sie TeXShop neu.</p>
+<h3 id="app-shortcuts">App-Tastaturkurzbefehle von macOS</h3>
+<p>In den Systemeinstellungen von macOS kann Tastatur › Tastaturkurzbefehle … › App-Tastaturkurzbefehle einem Menübefehl von TeXShop über seinen genauen Titel in der Sprache Ihrer Menüs einen Kurzbefehl geben. Ein solcher Kurzbefehl funktioniert nicht mehr, wenn TeXShop den Menübefehl umbenennt; legen Sie Kurzbefehle daher besser unter Einstellungen › Tastatur fest.</p>
 </main>
 </body>
 </html>

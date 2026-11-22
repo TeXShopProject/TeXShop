@@ -3,30 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Modificaci&oacute;n del panel LaTeX</title>
+<title>Modificar el panel LaTeX</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="configurar panel latex; personalizar solapa; completions.plist">
+<meta name="description" content="panel LaTeX; página Personalizado; completion.plist; carpeta LatexPanel; botones">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">&iquest;C&oacute;mo configuro TeXShop?</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">¿Cómo configuro TeXShop?</span></header>
 <nav id="menu">
 <ul>
 <li><a href="configure_preliminaries.htm">Preliminares</a></li>
-<li><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a></li>
-<li><a href="configure_correctinstall.htm">Obtener elementos nuevos de ~/Library/TeXShop</a></li>
+<li><a href="configure_prefchanges.htm">Cambios recomendados en los ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obtener nuevos elementos de la biblioteca</a></li>
 <li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
-<li><a href="configure_panel.htm" class="current">Modificaci&oacute;n del panel LaTeX</a></li>
-<li><a href="configure_autocompletion.htm">Modificaci&oacute;n de la autocompleci&oacute;n</a></li>
-<li><a href="configure_menushortcuts.htm">Redefinición de atajos de teclado de menús</a></li>
+<li><a href="configure_panel.htm" class="current">Modificar el panel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar las combinaciones de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir los atajos de teclado de los menús</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Modificaci&oacute;n del panel LaTeX</h1>
+<h1>Modificar el panel LaTeX</h1>
 
-		<P>El panel LaTeX contiene una solapa llamada &laquo;Personal&raquo;; el usuario puede a&ntilde;adir en ella hasta diecis&eacute;is botones. El resto de los botones del panel LaTeX no se pueden modificar, pero s&iacute; que se puede cambiar el texto que se inserta al pulsar el cada bot&oacute;n.</P>
-		<p>Los comentarios al comienzo del archivo &laquo;completions.plist&raquo; explican c&oacute;mo realizar estos cambios. Para ello, edita el archivo ~/Library/TeXShop/LatexPanel/completions.plist con TeXShop. Aseg&uacute;rate de editar y guardar el archivo con formato UTF-8 si usas caracteres Unicode.
-			</p>
+<p>El panel LaTeX (Ventana › Panel LaTeX...) tiene una página Personalizado con hasta dieciséis botones propios. Los nombres de los demás botones no se pueden cambiar, pero el texto que insertan sí.</p>
+<p>Ambas cosas se establecen en el archivo ~/Library/TeXShop/LatexPanel/completion.plist. Ábralo en TeXShop y lea los comentarios de su principio, que explican cómo está organizado el archivo. Cada página tiene una lista de los textos que insertan sus botones, en el orden de los botones. En estos textos, #SEL# representa el texto seleccionado y #INS#, el lugar al que va el punto de inserción.</p>
+<p>Los botones de la página Personalizado están en la lista llamada Customized. Cada botón es un par de cadenas: su nombre y, después, el texto que inserta. Por ejemplo,</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>crea un botón llamado Section que inserta <code>\section{}</code> alrededor del texto seleccionado, con el punto de inserción dentro de las llaves.</p>
+<p>Guarde el archivo en UTF-8. TeXShop lo lee la primera vez que se abre el panel LaTeX, así que vuelva a abrir TeXShop para ver sus cambios. Conserve todas las entradas de las listas de las demás páginas: si el archivo no se puede usar, TeXShop usa su propia copia y, en el siguiente arranque, sustituye el archivo y guarda el suyo en ~/Library/TeXShop/Backups.</p>
 </main>
 </body>
 </html>

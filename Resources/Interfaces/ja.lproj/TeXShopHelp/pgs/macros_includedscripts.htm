@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>デフォルトのAppleScriptマクロ</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="1.33から付属するマクロについての説明">
+<meta name="description" content="AppleScriptマクロ; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; 改行コード; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +14,7 @@
 <ul>
 <li><a href="macros_preliminaries.htm">まえがき</a></li>
 <li><a href="macros_default.htm">デフォルトのマクロを理解する</a></li>
-<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a></li>
+<li><a href="macros_rearrange.htm">マクロメニューを並べ替える</a></li>
 <li><a href="macros_define.htm">新しいマクロを定義する</a></li>
 <li><a href="macros_applescript.htm">AppleScriptマクロ</a></li>
 <li><a href="macros_includedscripts.htm" class="current">デフォルトのAppleScriptマクロ</a></li>
@@ -26,101 +26,35 @@
 </nav>
 <main id="content">
 <h1>デフォルトのAppleScriptマクロ</h1>
+<p>TeXShopには、Will Robertson、Claus GerhardtほかによるAppleScriptマクロが付属しています。その中には、一連のタイプセットのコマンドを順に実行するものもあります。これらをコピーして変更すれば、自分の作業のためのスクリプトを作れます。このページでは、そのいくつかを「マクロ」メニューでの名前で説明します。</p>
 
+<h2 id="robertson">Column macros、Insert reference、Open quickly…</h2>
+<p>これらはWill Robertsonによるマクロです。「Column macros」サブメニューの「New tabular」と「New array」は、入力した行数と列数でtabular環境やarray環境を挿入し、「Add column」と「Delete column」は選んだ行を変更します。「Insert reference」は、現在のファイルから<code>\label{…}</code>コマンドを探し、一覧からラベルを選ばせます。選んだラベルは<code>\ref{…}</code>で囲んで挿入されます（このコマンドはスクリプトで変更できます）。文字列を選択していれば、それを含むラベルだけが一覧に出ます。「Open quickly…」は、現在のソースファイルのフォルダにある.tex、.sty、.pdfのファイルを一覧にし、選んだものを開きます。</p>
 
-<!-- 
-<p>
-TeXShopにはWill RobertsonやClaus Gerhardtその他の人たちによるAppleScriptの広汎なコレクションが付属しています。これらのスクリプトのいくつかは、一連のタイプセット・コマンドが順を追って実行されるとき、ワークフローを自動化します。スクリプトを複製したり修正したりすることでユーザは、それぞれのワークフローに適したスクリプトを組み立てることができます。
-</p>
- -->
+<h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
+<p>Alan Munnによるこのマクロは、スプレッドシートのセルをLaTeXのソースに表としてペーストします。Excelなどのスプレッドシートアプリケーションでセルの範囲を選んでコピーし、「マクロ」→「Paste Spreadsheet Cells」を選んで、表のスタイルを選びます。</p>
+<dl>
+<dt>cells</dt><dd>コピーした文字列を、LaTeXの表のセルだけに変換します。</dd>
+<dt>booktabs</dt><dd>1行目を見出しとし、tabular環境の中に<code>\toprule</code>、<code>\midrule</code>、<code>\bottomrule</code>を置きます。</dd>
+<dt>simple</dt><dd>セルを簡単なtabular環境で囲みます。</dd>
+<dt>longtable</dt><dd>1行目を見出しとし、longtableの見出しの行を加えて、セルをlongtable環境に入れます。</dd>
+</dl>
+<p>このマクロは、クリップボードの内容をLaTeXの文字列に置き換えます。同じセルを別のスタイルでペーストするときは、先にスプレッドシートでもう一度コピーしてください。</p>
 
-<p>
-TeXShopにはWill RobertsonさんやClaus Gerhardtさん、その他の人たちによるAppleScriptの広汎なコレクションが付属しています。これらのスクリプトのいくつかは、一連のタイプセットコマンドが順を追って実行されるとき、ワークフローを自動化します。スクリプトを複製したり修正したりすることでユーザは、それぞれのワークフローに適したスクリプトを組み立てることができます。
-</p>
+<h2 id="line-endings">Applescript › Convert to MAC、Convert to Unix、Convert to Windows</h2>
+<p>テキストファイルの行の終わり方には、いくつかの種類があります。macOSとUnixはラインフィード、Windowsはキャリッジリターンとラインフィード、ごく古いMacintoshのファイルはキャリッジリターンだけです。TeXShopはこの3つのどれでも読めます。ほかの人のエディタが読めないときは、これらのマクロを使います。ソースファイルがMyFile.texなら、「Convert to Unix」は保存されたファイルをコピーしてラインフィードにしたMyFile_Unix.texを書き出します。同じように「Convert to Windows」はMyFile_Windows.texを、「Convert to MAC」はMyFile_Mac.texを書き出します。これらのマクロは、~/Library/TeXShop/binにあるCraig Stuart Sappのプログラムflipを使います。</p>
 
-<p>
-このセクションでは、こうしたスクリプトのいくつかについて述べます。
-</p>
+<h2 id="bibliography">Applescript › Bibliography</h2>
+<p>参考文献リストのある書類には、何回かの実行が必要です。LaTeXが.auxファイルを書き出し、BibTeXがそれを使って.bblファイルと.blgファイルを書き出し、LaTeXをもう一度実行して参考文献リストを加え、さらにもう一度実行してリストへの参照を更新します。「Bibliography」マクロは、LaTeX、BibTeX、LaTeX、LaTeXを順に実行します。その仕組みは<a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>で説明しています。</p>
 
-<hr>
-<p>
-<b>Column Macros</b>・<b>Insert Reference</b> ・ <b>Open Quickly</b>
-</p>
-
-<!-- 
-<p>
-これらのマクロはWill Robertsonによるものです。最初のものは、任意の行列やテーブルをこしらえるのにとても便利です。次のものは、現在のファイル全体から \label{...} コマンドを探し出してリスト表示するので、その中から参照ラベルを挿入したり、それを（任意の）カスタマイズ可能なLaTeXコマンドで囲んだりできます。最後のマクロは、作業中のソースファイルがあるディレクトリ内のファイルが手早く開けます。
-</p>
- -->
-
-<p>
-これらのマクロはWill Robertsonさんによるものです。最初のものは、任意の行列やテーブルをこしらえるのにとても便利です。次のものは、現在のファイル全体から \label{...} コマンドを探し出してリスト表示するので、その中から参照ラベルを挿入したり、それを（任意の）カスタマイズ可能なLaTeXコマンドで囲んだりできます。最後のマクロは、作業中のソースファイルがあるディレクトリ内のファイルが手早く開けます。
-</p>
-
-<hr>
-<p>
-<b>Convert to Mac</b> ・ <b>Convert to Unix</b> ・ <b>Convert to Windows</b>
-</p>
-
-<p>
-初期の頃は、テレタイプ端末が通信に使われていました。ascii文字セットはいまだにその頃の名残りをとどめています ； たとえば0x07はテレタイプのベルを鳴らします。0x0aというキャラクタはキャリッジを次行へ送るラインフィード（LF＝改行）でしたし、0x0dというキャラクタはキャリッジを行の先頭まで引き戻すキャリッジ・リターン（CR＝行頭復帰）でした。行を改めるには、ひとつづきの0x0d 0x0aを使いました。
-</p>
-
-<p>
-テレタイプの時代が終わると、コンピュータの製造者たちは、改行を示すのに、これらのキャラクタの異なる一部を選び取りました。UNIXでは0x0a（LF）が使われ、Windowsでは0x0d 0x0a（CR＋LF）が、そして昔のMacintosh Classicでは0x0d（CR）が使われました。Mac OS X用のAppleのガイドラインには、こうした仕様のいずれが用いられているファイルでも自動的に開けるようにすべきだ、と述べられています。TextEditやTeXShopなどを含むほとんどのプログラムは、このガイドラインにしたがっています。TeXShopでは、新規書類はUnixの改行コードで作成されますが、Mac OS Classicで作成したファイルを取り込んで新しい行を付け加えた場合、文書の古い部分はClassicの改行コードで保存され、新たな箇所はUnixの改行コードで保存されます。
-</p>
-
-<p>
-こうした改行コードは、異なるオペレーティング・システムを使っている人にファイルを送らないかぎりは、トラブルの種になったりはしません。多くのエディタが今では複数の改行コード仕様を理解しますから、そう頻繁に問題にはならないでしょう。けれども困ったことになった場合には、上記のスクリプトを使ってください。かりにソースファイルの名前をMyFile.texとしておきましょう。「Convert to Mac」は、MyFile_Mac.texという名前の、ソースコードは同じでMacintoshの改行コードになっている新しいファイルを生成します。「Convert to Unix」と「Convert to Windows」も同様に機能します。これらのスクリプトはすべて ~/Library/TeXShop/binにある「flip」という、Craig Stuart Sappの作ったバイナリ・プログラムを呼び出します。詳細については <A HREF="http://ccrma-www.stanford.edu/~craig/utility/flip/">http://ccrma-www.stanford.edu/~craig/utility/flip/</A> を参照してください。
-</p>
-
-<hr>
-<p>
-<B>Other Scripts->Bibliography</B>
-</p>
-
-<p>
-参考文献目録のあるファイルを処理するには、数度のタイプセット操作が必要になります。最初にLaTeXを実行して .auxファイルを作る。それからBibtexを実行し、.auxファイルを使って .bblファイルと .blgファイルを作る。LaTeXをふたたび実行して文書に参考文献目録を付け加える。最後にLaTeXを実行して本文中の目録の参照を更新する。
-</p>
-
-<p>
-「Bibliography」コマンドは、以上のことをひとつずつ行ないます。まず最初にファイルを保存します。そしてlatex -> bibtex -> latex -> latexの順に実行します。最後にプレビュー画面を更新します。
-</p>
-
-<hr>
-<p>
-<b>htlatexc</b> ・ <b>htlatexr</b>
-</p>
-
-<p>
-Tex4htは、LaTeX文書をウェブページに変換するTeXプログラムです。ソースは標準的なLaTeXファイルでよく、eps形式のイラストを含んでいてもかまいません。最終的な結果はhtmlページとなり、多数のgifファイルが含まれています。スクリプトコマンド「htlatexc」は、ソース文書を保存し、htlatexを実行し、結果のhtmlファイルをSafariで開きます。つまりこれは、TeXShopの新しいタイプセットコマンドのように動作します──TeXShopの新しいコードを待たずにユーザによって構築される、ということを除けば！
-</p>
-
-<p>
-これらのスクリプトを使う際には、Tex4htパッケージを使用する必要はありません──このパッケージは自動的に読み込まれます。スクリプトhtlatexcは、追加オプションなしでhtlatexを呼び出します。スクリプトhtlatexrは、をオプション「-r」を付けて呼び出します──これはすでにあるすべての .gifファイルを再生成するようプログラムに命じます。
-</p>
-
-<hr>
-<p>
-<B>pdfselectc</B>
-</p>
-
-<p>
-このスクリプトは、シェルスクリプトpdfselectを実行し、文書の中から選択したページのみを含むpdfファイルを作成します。これを実行すると、作成するpdfファイルの数を尋ねるダイアログが表示されます。ためしに3としてみましょう。つづいて最初の文書のページ範囲を尋ねるダイアログが表示されます。これを5:8とします。次に第２の文書のページ範囲を尋ねるダイアログが表示されます。これを10とします。最後に第３の文書のページ範囲を尋ねるダイアログが表示されます。これを20:30とします。これで３つの文書が得られることになります──ひとつには元の文書の５～８ページが、もうひとつには10ページ目が、そして最後のひとつには20～30ページが含まれています。
-</p>
-
-<hr>
-<p>
-<b>mpostc</b> ・ <b>mpostcpl</b> ・ <b>latex-makeindex-mpost</b>
-</p>
-
-<p>
-スクリプトmpostcはmpostを実行した後でpdflatexを実行します ； スクリプトmpostcplはpdflatexを実行した後でmpostを実行し、ふたたびpdflatexを実行します。この３つのコマンドを順々に用いる例については、TeXShopヘルプの「上級向けのヘルプ」にある「<A HREF = "advanced_context.htm">ConTeXtとMetaPost</A>」を参照してください。
-</p>
-
-<p>
-スクリプトlatex-makeindex-mpostは、ソースを保存し、pdflatex・makeindex・mpostそしてもう一度pdflatexを実行し、その過程で当該のログファイルを開きます。
-</p>
+<h2 id="gerhardt">Claus Gerhardt Macros</h2>
+<p>このサブメニューのマクロは、~/Library/TeXShop/binにある同じ名前のシェルスクリプトを呼び出します。保存したファイルに対して働きます。例としてpdflatexcを<a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>で説明しています。</p>
+<h3>htlatexc、htlatexr</h3>
+<p>TeX4htは、LaTeXの書類をWebページ（HTMLのページと画像ファイル）に変換します。htlatexcは書類にhtlatexを実行し、できたHTMLファイルをSafariで開きます。書類でtex4htパッケージを読み込む必要はありません。htlatexが読み込みます。htlatexrは、htlatexをオプション<code>-r</code>付きで実行します。このオプションを付けると、画像がすでにあっても作り直します。</p>
+<h3>pdfselectc</h3>
+<p>pdfselectcは、書類のPDFから選んだページを含むPDFファイルを作ります。まず作るファイルの数を尋ね、次にそれぞれのファイルのページを尋ねます。5ページから8ページなら<code>5:8</code>、<code>3:4,6,8:12</code>のようにも指定できます。書類の名前がMyFileなら、ファイルはMyFile-1.pdf、MyFile-2.pdf、…という名前で保存されます。</p>
+<h3>mpostc、mpostcpl、latex-makeindex-mpost</h3>
+<p>mpostcはMetaPostを実行してからpdfLaTeXを実行します。mpostcplはpdfLaTeX、MetaPost、pdfLaTeXを順に実行します。latex-makeindex-mpostはpdfLaTeX、MakeIndex、MetaPost、pdfLaTeXを順に実行し、途中でログファイルを開きます。MetaPostについては<a href="advanced_context.htm">ConTeXtとMetaPost</a>を参照してください。</p>
 </main>
 </body>
 </html>

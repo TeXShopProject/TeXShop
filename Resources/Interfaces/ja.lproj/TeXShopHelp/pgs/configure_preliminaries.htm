@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>まえがき</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="「TeXShopの設定はどうすればよいか？」についての概要">
+<meta name="description" content="TeXShopの設定; 設定ウインドウ; 設定を検索; ~/Library/TeXShop; 壊れたファイル; Backups; 隠し設定; マジックコメント">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -14,32 +14,29 @@
 <ul>
 <li><a href="configure_preliminaries.htm" class="current">まえがき</a></li>
 <li><a href="configure_prefchanges.htm">おすすめの設定変更</a></li>
-<li><a href="configure_correctinstall.htm">~/Library/TeXShopの新しい項目を入手する</a></li>
-<li><a href="configure_hidden.htm">隠れた設定項目</a></li>
-<li><a href="configure_panel.htm">LaTeXパネルを一部変更する</a></li>
+<li><a href="configure_correctinstall.htm">ライブラリの新しい項目を入手する</a></li>
+<li><a href="configure_hidden.htm">隠し設定</a></li>
+<li><a href="configure_panel.htm">LaTeXパネルを変更する</a></li>
 <li><a href="configure_autocompletion.htm">キーバインドを変更する</a></li>
-<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a></li>
+<li><a href="configure_menushortcuts.htm">メニューのショートカットを変更する</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>まえがき</h1>
+<p>この章では、TeXShopを自分の使い方に合わせる方法を説明します。最初に確かめておきたい設定、~/Library/TeXShopのファイルをTeXShopが最新に保つしくみ、隠し設定、そしてLaTeXパネル・キーバインド・メニューのショートカットの変更方法です。</p>
 
+<h2 id="settings">設定ウインドウ</h2>
+<p>「TeXShop」→「設定…」を選ぶと、設定ウインドウが開きます。サイドバーには「一般」「書類と保存」「エディタ」「キーボード」「スペルチェック」「テーマ」「タイプセット」「コンソール」「プレビュー」「アップデート」の10のカテゴリがあります。どのカテゴリにあるかわからない設定は、サイドバーの上の「設定を検索」欄に語句を入力して結果を選ぶと、その設定が表示され、強調されます。「<a href="basic_preferences.htm#settings-search">設定を検索</a>」を参照してください。</p>
+<p>多くの設定には、対応するメニューコマンドがあります。たとえば「ソース」→「行番号を表示」と、「エディタ」の「行番号」です。メニューコマンドは、作業中の書類を開いている間だけ変更します。設定は、書類を開いたときの表示や動作を決めます。</p>
+<p>ほとんどの項目は、ファイルを直接編集しなくてもTeXShopの中で変更できます。「設定」→「キーボード」には、キーバインド、コマンド補完の一覧（「コマンド補完ファイルを編集…」）、メニューのショートカットがあります。マクロはマクロエディタ（「マクロ」→「マクロエディタを開く...」）で、カラーテーマは「設定」→「テーマ」で編集します。</p>
 
-<p>
-もしあなたがTeXShopを初めてインストールする新規のユーザなら、最初の２つのセクションだけをお読みください。以前のバージョンからアップグレードする場合は、この２つに加えてその後の４つのセクションを読んでください。TeXShopのことをよくわかっていてカスタマイズしたいのであれば、残りのセクションも読んでください。
-</p>
+<h2 id="library">~/Library/TeXShopフォルダ</h2>
+<p>テンプレート、マクロ、エンジン、LaTeXパネルのファイル、キーバインド、コマンド補完の一覧、テーマなど、変更できるファイルは~/Library/TeXShop（ホームフォルダの「ライブラリ」フォルダにあるTeXShopフォルダ）に置かれています。「TeXShop」→「~/Library/TeXShopを開く」を選ぶと、Finderで開きます。TeXShopの新しいバージョンでも、ここで変更した内容は保たれます。どのファイルが更新されるかは「<a href="configure_correctinstall.htm">ライブラリの新しい項目を入手する</a>」で説明しています。</p>
+<p>マクロ、LaTeXパネルのファイル、キーバインド、テーマなど、TeXShopが必要とするファイルが見つからなかったり壊れていたりすると、TeXShopは起動時にメッセージを出さずに自前のコピーに置き換えます。壊れたファイルは~/Library/TeXShop/Backupsに残るので、そこから変更内容を取り戻せます。</p>
+<p>フォルダの中身をデフォルトに戻すには、TeXShopを終了し、そのフォルダ（たとえばTemplates）を~/Library/TeXShopの外、たとえばデスクトップに移してから、TeXShopをもう一度起動します。TeXShopはデフォルトの内容でフォルダを作り直します。残しておきたいものは、移したフォルダからコピーして戻してください。</p>
 
-<p>
-TeXShopを初めて起動すると、デフォルトの設定項目やマクロ、テンプレート、タイプセットエンジンなどが、ユーザのライブラリ・フォルダの中に置かれます。後々アプリケーションをアップグレードしても、これらの設定項目やマクロなどは更新されません──というのも、ユーザが編集している可能性があるからです。いくつかのケースにおいては、重要な変更がデフォルトの項目で行なわれました：そうした変更はここに挙げていますので、以前のバージョンからのユーザは初期設定やテンプレートを適切に修正できます。
-</p>
-
-<p>
-TeXShopにはいくつかの隠れた設定が、パワーユーザ用にあります。こうしたユーザは種々のplistファイルを設定してプログラムのふるまいを修正することができます。詳細は以下に示してあります。
-</p>
-
-<p>
-TeXShopの新しいバージョンでは、追加のメニュー項目やその他のインターフェイス・コンポーネントが必要になることがあります。新しい項目については、その部分が他の言語にローカライズされるまでは、英語で表示されます。これらの項目の翻訳は、<a href="https://github.com/TeXShopProject/TeXShop/issues">GitHub の Issues</a> へお寄せください。
-</p>
+<h2 id="more">隠し設定とマジックコメント</h2>
+<p>設定ウインドウにない設定がいくつかあり、ターミナルでコマンドを使って変更します。「<a href="configure_hidden.htm">隠し設定</a>」を参照してください。ソースファイルの先頭に書く<code>% !TEX program = lualatex</code>のようなマジックコメントは、そのファイルだけのエンジン、エンコーディング、ルートファイルなどを指定します。すべてのマジックコメントと隠し設定は、「ヘルプ」→「マジックコメントと隠し設定（英語）」にまとめられています。</p>
 </main>
 </body>
 </html>

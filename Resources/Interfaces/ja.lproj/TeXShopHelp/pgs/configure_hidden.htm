@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>隠れた設定項目</title>
+<title>隠し設定</title>
+<meta name="description" content="隠し設定; defaults write; ターミナル; マジックコメントと隠し設定; OtherTrashExtensions; ConTeXtTags; RedConsoleAfterError; RefreshTime">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -12,154 +13,38 @@
 <ul>
 <li><a href="configure_preliminaries.htm">まえがき</a></li>
 <li><a href="configure_prefchanges.htm">おすすめの設定変更</a></li>
-<li><a href="configure_correctinstall.htm">~/Library/TeXShopの新しい項目を入手する</a></li>
-<li><a href="configure_hidden.htm" class="current">隠れた設定項目</a></li>
-<li><a href="configure_panel.htm">LaTeXパネルを一部変更する</a></li>
+<li><a href="configure_correctinstall.htm">ライブラリの新しい項目を入手する</a></li>
+<li><a href="configure_hidden.htm" class="current">隠し設定</a></li>
+<li><a href="configure_panel.htm">LaTeXパネルを変更する</a></li>
 <li><a href="configure_autocompletion.htm">キーバインドを変更する</a></li>
-<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a></li>
+<li><a href="configure_menushortcuts.htm">メニューのショートカットを変更する</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>隠れた設定項目</h1>
+<h1>隠し設定</h1>
+<p>設定ウインドウには、たいていの人が必要とする設定が並んでいます。あまり使われない設定は隠し設定になっていて、設定ウインドウに項目がなく、ターミナルでコマンドを使って変更します。資料「マジックコメントと隠し設定」には、すべての隠し設定がそのコマンドとともに話題ごとにまとめられています。「ヘルプ」→「マジックコメントと隠し設定（英語）」、または「設定」→「一般」→「詳細」の「マジックコメントと隠し設定のマニュアルを開く…」で開きます。</p>
 
-<p>
-このページで説明しているのは、隠し設定の一部だけです。すべての隠し設定と、それぞれを変更するターミナルのコマンドは、ヘルプメニューの「マジックコメントと隠し設定（英語）」にまとめてあります。
-</p>
-<p>
-TeXShopでは、\section・ \subsection・ \subsubsectionあるいは \chapterという語で始まっている行をタグメニューに追加します。これをオフにするには、ターミナルを起動し、以下のコマンドを打ち込みます。NOをYESに変えれば、動作はまた元に戻ります。
-</p>
-<tt>
+<h2 id="change">隠し設定を変更する</h2>
+<ol>
+<li>TeXShopを終了します。</li>
+<li>ターミナル（「アプリケーション」フォルダの「ユーティリティ」フォルダにあります）を開き、コマンドを入力してReturnキーを押します。</li>
+<li>TeXShopをもう一度起動します。</li>
+</ol>
+<p>コマンドは<code>defaults write TeXShop <var>名前</var> <var>値</var></code>の形です。デフォルトの値に戻すには、<code>defaults delete TeXShop <var>名前</var></code>を使います。</p>
+
+<h2 id="examples">例</h2>
 <dl>
-<dd>defaults write TeXShop TagSections NO
-		</dd></dl>
-</tt>
-<p>
-ConTeXtユーザーは、もっと多くの語句がタグメニューに追加されることをお望みでしょう。以下の設定をすると、\subsubsubsection, \subsubsubsubsection, \part, \title, \subject, \subsubject, \subsubsubject, \subsubsubsubject, そして \subsubsubsubsubjectなどの語句が認識されるようになって、タグメニューに追加されます。
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop ConTeXtTags YES
-		</dd></dl>
-</tt>
-<hr/>
-<p>
-ソース・プレビュー・コンソールの各ウインドウの色（シンタックスハイライトの色、背景色や文字色、挿入ポイントの色、対応括弧の強調色や不可視文字の色、プレビューウインドウの背景色など）と、これらのウインドウの透明度は、現在は「設定」の「テーマ」カテゴリで設定します。
-</p>
-<hr/>
-<p>
-書類は、シンタックスハイライトがオンの状態で開きます。オフの状態で開くには、次のコマンドを実行します。そのうえで書類ごとにオンにするには、「ソース」メニューの「シンタックスハイライト」を選びます。この設定では、詳細検索パネルの入力欄とマクロエディタの内容にも色が付きません。
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop SyntaxColoringEnabled NO
-		</dd></dl>
-</tt>
-<hr/>
-<p>
-タイプセットの際に時たま、TeXによって自動的に生成される .auxファイルや .logファイル、その他のファイルがおかしくなったりして、取り除かねばならないことがあります。TeXShopには「作業ファイルを削除」というメニュー項目があり、さらにコンソールウインドウにもこれと連動しているボタンがあります。このいずれかを選択するとTeXShopは、ソースファイルを含むフォルダ内にあって、ソースと同じ名前で、拡張子がaux・bcf・blg・brf・css・ent・fdb_latexmk・fff・fls・gaux・glo・glog・gtex・idv・idx・ilg・ind・lg・loa・lof・log・lot・mlf・mtc・out・pdfsync・run.xml・synctex・synctex.gz・synctex(busy) ・toc・ttt・wrm・xref・4ct・4tcとなっているファイルをすべてゴミ箱へと移動します。このリストには、その他の拡張子を、ひとつずつ追加することができます。例として、.dviファイルを加えるには：
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop OtherTrashExtensions -array-add "dvi"
-		</dd></dl>
-</tt>
-<p>
-追加した拡張子を取り除いて元々のリストに戻すには──
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop OtherTrashExtensions -array
-		</dd></dl>
-</tt>
-<p>
-時として、さらに徹底したクリーンナップが望ましいことがあります。オプションキーを押しながら「作業ファイルを削除」を選択するとTeXShopは、「% !TEX root = ...」および「プロジェクトルートの設定」機能を使ってルートファイルを探し当てます。そしてルートファイルのあるフォルダ内、およびこのフォルダ内のサブフォルダの中にあり、該当する拡張子の付いたすべてのファイルを、そのファイル名の如何に関わらず、ゴミ箱に移します。「作業ファイルを削除」の動作を、オプションキーを押すことなく上述のようにすることもできます ； 次のようなコマンドを入れてください──
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop AggressiveTrashAUX YES
-		</dd></dl>
-</tt>
-<hr/>
-<p>
-pdfファイルが変更されたときにpdf画面を自動的に更新するようTeXShopを設定することができます。自動更新のためにTeXShopは、１秒に１度、pdfが最後に書き変えられた日付と時刻に変更があったかどうかチェックします。このチェックの間隔は変更することができます。Terminalを立ち上げ、次のコマンドを打ち込みます。1.00をお好みの秒数に変えてください。
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop RefreshTime 1.00
-		</dd></dl>
-</tt>
-<p>
-pdfの自動更新は、外部エディタを使うよう設定しているか、あるいは「プレビューを開く...」でTeXファイルを開いたときに便利です。これらの場合には、.texファイルは開かれていますが、TeXShopではただ関連づけの行なわれたpdfファイルを表示しているにすぎません。TeXShopはまた、pdfファイルを直接開くこともできます ； これはイラストをTeX文書に埋め込む前に一瞥しておくのに便利です。外部エディタのために開いたpdfファイルは自動的に更新させたいけれども、一瞥するために開いたpdfファイルは自動更新させたくない場合には、Terminalを立ち上げ、以下のコマンドを打ち込みます。この設定のデフォルトの値はYESです。
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop PdfFileRefresh NO
-		</dd></dl>
-</tt>
-<p>
-外部エディタで .texファイルを開いた際に、TeXShopはTeXファイルとpdfファイルの日付をチェックし、pdf出力が最新の状態になっているかどうか確認します。もし出力が古くなっているか、まったく存在しないようなら、TeXShopは .texファイルを改めてタイプセットします。この動作をオフにするには、Terminalを立ち上げ、以下のコマンドを打ち込みます。
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop ExternalEditorTypesetAtStart NO
-		</dd></dl>
-</tt>
-<hr/>
-<p>
-「Sync」という名前の新しいチェックボックスが、プレビューウインドウ用ツールにあります。これはデフォルトのツール・キットの一部にはなっていません。この項目がチェックされると、シンクロ・スポットをプレビュー文書内で見ることができます。プレビューウインドウが最初に表示された際は見えませんが、これを以下のようにして変更できます：
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop ShowSyncMarks YES
-		</dd></dl>
-</tt>
-<hr/>
-<p>
-タイプセット後にプレビューウインドウが更新されると、ウインドウは前面に来ます。この動作は、AppleのX11 Window Managerで実行させているX11エディタの使用でトラブルの種になります。そうした場合には、以下のようにしてこの動作をオフにできます：
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop BringPdfFrontOnAutomaticUpdate NO
-		</dd></dl>
-</tt>
-<hr/>
-<p>
-TeXShopではこれまで、タイプセットエンジンやファイルのエンコーディング方式、ルートファイルを決めるのに、現行のものとは異なるソースコマンドをサポートしていました； たとえば、%&amp;latex・ %&amp;encoding=UTF-8 Unicode・ %SourceDoc ../Main.texなどといったものです。この構文は私の不用意な選定によるものでしたので、変更しました。もし古いファイルがたくさんあって、一時的に以前の状態に戻すには、下記のコマンドを使用してください。そうすれば、新しいソースコマンドが認識されるだけでなく、古いソースコマンドもまた同様に機能します。この設定変更は応急の場合にのみ用いてください。
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop UseOldHeadingCommands YES
-		</dd></dl>
-</tt>
-<hr/>
-<p>
-タイプセットの状況やエラーを伝えるコンソールウインドウのテキストは黒で表示されます。隠れた設定により、最初のエラー以降の表示テキストを赤文字にすることができます。
-</p>
-<blockquote>
-<small>訳注：エラーをスキップしてタイプセットを継続すると、それ以降のコンソールテキストが赤になります。</small>
-</blockquote>
-<tt>
-<dl>
-<dd>defaults write TeXShop RedConsoleAfterError YES
-		</dd></dl>
-</tt>
-<hr/>
-<p>
-プレビューウインドウを開くと、当初はドロワーが非表示になっています。隠れた設定でこの挙動を変更すると、最初からドロワーが表示された状態でプレビューウインドウを開きます。
-</p>
-<tt>
-<dl>
-<dd>defaults write TeXShop PreviewDrawerOpen YES
-		</dd></dl>
-</tt>
-<hr/>
-<p>Optionキー・Controlキーとコマンド補完の呼び出すキーで、「編集」→「マーク」の次・前のマークへ移動する機能は、設定ウインドウの「キーボード」にある「Option・Controlと呼び出すキーで、次・前のマークへ移動」でオン・オフするようになりました。</p>
-<hr/>
-<p> TeXShop Ver.2.38では，括弧を打ち込んだときに，対応する括弧が黄色いインジケータで浮き上がり，すぐに消えます。これにより，長い間要求されていた，見やすさの改善要望を満たすことができました。（この機能にはLeopard以降が必要です。）ただし，この黄色いインジケータを消したい場合は，次の設定で変更できます。
-<dl>
-<dd> defaults write TeXShop brieflyFlashYellowForMatch NO
-</dd></dl>
-</p></p><p><a href="basic_preferences.htm#settings-search">設定の使い方と設定の検索</a></p><p>隠し設定のWatchServer、ExtraCommandsToCheckParameters、ExtraCommandsNotToCheckParametersと、macOSの設定ApplePersistenceは、TeXShopの起動時に読み込まれます。変更した場合はTeXShopを再起動してください。</p>
+<dt><code>defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'</code></dt>
+<dd>「ファイル」→「作業ファイルを削除」で、これらの拡張子のファイルも削除します。拡張子はドットを付けずに指定します。「<a href="advanced_removeaux.htm">作業ファイルを削除する</a>」を参照してください。</dd>
+<dt><code>defaults write TeXShop ConTeXtTags YES</code></dt>
+<dd>「タグ」メニューに、LaTeXの見出しコマンドではなく、<code>\title</code>や<code>\subject</code>などのConTeXtの見出しコマンドを表示します。</dd>
+<dt><code>defaults write TeXShop RedConsoleAfterError YES</code></dt>
+<dd>TeXのエラーに答えてコンソールに入力した文字と、そのタイプセットのそれ以降の出力を、すべて赤で表示します。</dd>
+<dt><code>defaults write TeXShop RefreshTime 2</code></dt>
+<dd>「設定」→「プレビュー」の「ほかのアプリによるPDFの変更を常に監視」がオンのとき、TeXShopはPDFが変わったかどうかを2秒ごとに確かめます。デフォルトは1秒で、最小は0.5秒です。</dd>
+</dl>
+
+<p>設定ウインドウにある設定は、隠し設定には重ねて載せていません。たとえば、Optionキー・Controlキーと補完の呼び出しキーで「編集」→「マーク」の次・前のマークへ移動する機能は、「設定」→「キーボード」の「Option・Controlと呼び出すキーで、次・前のマークへ移動」でオン・オフします。こうした設定は「設定を検索」で探せます（「<a href="basic_preferences.htm#settings-search">設定を検索</a>」を参照）。</p>
 </main>
 </body>
 </html>

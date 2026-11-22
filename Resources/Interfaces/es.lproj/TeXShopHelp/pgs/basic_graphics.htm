@@ -3,61 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Inclusi&oacute;n de gr&aacute;ficos</title>
+<title>Incluir gráficos</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="incluir gr&aacute;ficos; epstopdf; eps; pdf; jpg; tif; tiff; conversi&oacute;n aut&aacute;matica">
+<meta name="description" content="incluir gráficos; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; Convertir TIFF">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda b&aacute;sica</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">Preliminares</a></li>
-<li><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">C&oacute;mo obtener e instalar TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Componer (&lsquo;typeset&rsquo;) documentos</a></li>
-<li><a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a></li>
-<li><a href="basic_edittricks.htm">Trucos de edici&oacute;n</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edición</a></li>
+<li><a href="basic_find.htm">Buscar y reemplazar</a></li>
 <li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
-<li><a href="basic_spelling.htm">Corrección ortográfica</a></li>
-<li><a href="basic_autocompletion.htm">Autocompleci&oacute;n</a></li>
-<li><a href="basic_commandcompletion.htm">Compleci&oacute;n de comandos</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Autocompletado de comandos</a></li>
 <li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
 <li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
-<li><a href="basic_graphics.htm" class="current">Inclusi&oacute;n de gr&aacute;ficos</a></li>
+<li><a href="basic_graphics.htm" class="current">Incluir gráficos</a></li>
 <li><a href="basic_printing.htm">Imprimir</a></li>
-<li><a href="basic_preferences.htm">Establecer ajustes</a></li>
-<li><a href="basic_templates.htm">Personalizaci&oacute;n del men&uacute; Plantillas</a></li>
-<li><a href="basic_bugs.htm">Notificaci&oacute;n de errores (&lsquo;bugs&rsquo;)</a></li>
-<li><a href="basic_websites.htm">Sitios web &uacute;tiles</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
 <li><a href="basic_license.htm">Licencia</a></li>
-<li><a href="basic_thistranslation.htm">Sobre la traducci&oacute;n a espa&ntilde;ol</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Inclusi&oacute;n de gr&aacute;ficos</h1>
+<h1>Incluir gráficos</h1>
 
-		<p>Los programas pdftex y pdflatex pueden usar archivos gr&aacute;ficos que tengan formato pdf, jpg, png o mps. El formato nativo de gr&aacute;ficos de Mac OS X es pdf (portable document format), y tales archivos se imprimen bien en cualquier tama&ntilde;o. Es previsible que la mayor&iacute;a de los futuros programas gr&aacute;ficos para Mac generen pdf.</p>
-		<p>Para usar gr&aacute;ficos, incluye en el pre&aacute;mbulo de tu archivo fuente la l&iacute;nea</p>
-		<dl>
-			<dd><tt>\usepackage{graphicx}</tt>
-		</dl>
-		<p>Cuando desees insertar un archivo gr&aacute;fico, digamos &laquo;f1.pdf&raquo;, usa el comando</p>
-		<dl>
-			<dd><tt>\includegraphics[width=2in]{f1}</tt>
-		</dl>
-		<p>Si cambias el ancho indicado en este comando, el gr&aacute;fico se reescalar&aacute; al componer. Experimenta hasta que encuentres el tama&ntilde;o que deseas.</p>
-		<p>Si usabas TeX en el pasado, tus ilustraciones estar&aacute;n posiblemente en formato eps. Estos archivos deben convertirse a formato pdf antes de componerlos con pdftex y pdflatex. En TeX Live, a partir de 2011, esto se hace autom&aacute;ticamente, siempre que el archivo fuente cargue el paquete graphicx.</p>
-		<p>Tambi&eacute;n puedes convertir archivos eps sueltos a formato pdf abri&eacute;ndolos con TeXShop. Al hacerlo, el eps se convierte autom&aacute;ticamente en pdf: el archivo pdf se escribe en el disco y el archivo eps se queda donde estaba. Despu&eacute;s se abre el archivo pdf.</p>
-		<p>Los autores de pdflatex y los autores del paquete gr&aacute;fico graphicx han previsto una manera f&aacute;cil de incluir archivos gr&aacute;ficos en un documento LaTeX compuesto con pdflatex, incluso si el documento va a ser compuesto m&aacute;s tarde con latex est&aacute;ndar para generar un dvi que se distribuir&aacute; a otras personas. Esto puede ocurrir si compartes tus archivos fuente con colegas que usan LaTeX ordinario y requieren ilustraciones eps en lugar de ilustraciones pdf. Cuando desees incluir una ilustraci&oacute;n, digamos &laquo;f1.pdf&raquo;, usa el comando siguiente, omitiendo la extensi&oacute;n &laquo;.pdf&raquo; o &laquo;.eps&raquo;:</p>
-		<dl>
-			<dd><tt>\includegraphics[width=2in]{f1}</tt>
-		</dl>
-		<p>Este comando har&aacute; que tex use el archivo &laquo;f1.pdf&raquo; cuando el c&oacute;digo se compone con pdflatex, pero use el archivo &laquo;f1.eps&raquo; cuando el c&oacute;digo se compone con latex.</p>
-		<p>Tambi&eacute;n puedes usar ilustraciones tif y tiff. Para estos casos, TeXShop tiene la orden de men&uacute; &laquo;Convertir TIFF&raquo;, que convierte los archivos en archivos png, que pdftex y pdflatex entienden. La orden est&aacute; activa cuando la ventana del c&oacute;digo fuente est&aacute; activa. Al elegirla, aparece un cuadro de di&aacute;logo de apertura con todos los archivos de la carpeta que contiene el c&oacute;digo fuente. Solo los archivos tif y tiff se pueden elegir; los dem&aacute;s aparecen atenuados. Elige uno o varios archivos y pulsa &laquo;Convertir&raquo;. Todos los archivos elegidos se convertir&aacute;n en archivos png, y los archivos tiff quedar&aacute;n intactos.</p>
-		<p>Si tienes algunos archivos antiguos con ilustraciones eps, o si usas el paquete pstricks (que requiere PostScript), puedes componer con &laquo;V&iacute;a DVI&raquo; en lugar de con pdflatex. Mira los detalles en la secci&oacute;n &laquo;<a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a>&raquo; de la Ayuda de TeXShop. De ese modo, la conversi&oacute;n de archivos eps en pdf no es necesaria. Sin embargo, no es una buena idea usar este m&eacute;todo con proyectos nuevos que tengan gran cantidad de archivos eps, porque las ilustraciones eps deben convertirse impl&iacute;citamente en pdf cada vez que compones, y esto ralentiza enormemente la composici&oacute;n cuando las ilustraciones eps son complicadas. Esto es as&iacute; porque, en el modo &laquo;V&iacute;a DVI&raquo;, la conversi&oacute;n de PostScript a pdf tiene lugar al final de la composici&oacute;n, despu&eacute;s de que las ilustraciones se hayan incorporado al documento final completo.</p>
+<p>Al componer directamente a PDF, LaTeX incluye gráficos en formato PDF, PNG y JPEG. PDF mantiene nítidos los dibujos de líneas y el texto a cualquier tamaño, así que úselo para diagramas y gráficas; PNG y JPEG son adecuados para capturas de pantalla y fotografías.</p>
+<p>Cargue el paquete graphicx en el preámbulo:</p>
+<pre>\usepackage{graphicx}</pre>
+<p>e incluya un gráfico donde deba aparecer:</p>
+<pre>\includegraphics[width=0.8\textwidth]{diagram}</pre>
+<p>La extensión se puede omitir; LaTeX busca entonces <code>diagram.pdf</code>, <code>diagram.png</code>, <code>diagram.jpg</code> y los demás formatos que conoce. Cambie el ancho para cambiar el tamaño del gráfico. Ponga los archivos de los gráficos en la carpeta del documento, o indique una ruta relativa a ella, como <code>figures/diagram</code>.</p>
+
+<h2>Archivos EPS</h2>
+<p>TeX Live convierte automáticamente los gráficos EPS a PDF mientras compone, con epstopdf, siempre que el documento cargue graphicx. El archivo convertido, <code>diagram-eps-converted-to.pdf</code>, se escribe junto al archivo EPS y se usa a partir de entonces.</p>
+<p>Un archivo EPS abierto en TeXShop también se convierte: TeXShop escribe un archivo PDF con el mismo nombre junto a él y lo muestra.</p>
+
+<h2>Archivos TIFF</h2>
+<p>LaTeX no puede incluir archivos TIFF. Elija Archivo › Convertir TIFF mientras una ventana de código está activa: un cuadro de diálogo muestra la carpeta del documento, donde solo se pueden elegir archivos TIFF. Seleccione uno o varios y haga clic en Convertir. Cada uno se convierte en un archivo PNG con el mismo nombre en la misma carpeta; los archivos TIFF se conservan.</p>
+
+<h2>Componer vía DVI</h2>
+<p>Los documentos que usan código PostScript, por ejemplo con el paquete pstricks, se componen con el método Vía DVI, que por omisión ejecuta dvips. Los gráficos se incluyen entonces en formato EPS; no se pueden usar archivos PDF, PNG ni JPEG. Consulte <a href="basic_alternatetypeset.htm">Modo alternativo de composición</a>.</p>
 </main>
 </body>
 </html>

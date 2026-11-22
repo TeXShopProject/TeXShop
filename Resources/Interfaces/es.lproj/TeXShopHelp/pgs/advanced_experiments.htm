@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experimentos</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="Experimento; probar una fórmula; fragmento; panel de código; panel de vista previa; consola del experimento">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Más sobre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
+<li><a href="advanced_addengine.htm">Añadir motores de composición</a></li>
+<li><a href="advanced_formats.htm">Crear y usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX y LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificaciones</a></li>
+<li><a href="advanced_Japan.htm">Composición en japonés</a></li>
+<li><a href="advanced_root.htm">Establecer el archivo raíz de un proyecto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronización entre código y vista previa</a></li>
+<li><a href="advanced_removeaux.htm">Borrar archivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protección ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar un editor externo</a></li>
+<li><a href="advanced_experiments.htm" class="current">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar y pegar, arrastrar y soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a></li>
+<li><a href="advanced_coloredtext.htm">Texto en color</a></li>
+<li><a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizaciones</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Experimentos</h1>
+<p>Edición › Experimento… permite probar un fragmento de LaTeX corto pero delicado, como una fórmula, una tabla o un dibujo de TikZ, antes de incorporarlo al documento. Está disponible cuando hay una ventana de código activa.</p>
+<p>La orden abre un panel de código. Si hay texto seleccionado en la ventana de código, se copia en el panel; si no, el panel muestra lo que dejó en él la última vez. Escriba o edite el fragmento, por ejemplo <code>$$\sqrt{x^2 + y^2}$$</code>, y pulse el botón «Componer» de la parte inferior del panel. Un panel de vista previa muestra el resultado. La primera vez muestra la parte superior de la primera página; cuando vuelve a componer, conserva la parte de la página que está mirando. El fragmento puede ser cualquier cosa, desde una fórmula hasta varias páginas.</p>
+
+<h2>Cómo se compone el fragmento</h2>
+<p>TeXShop compone un archivo formado por el preámbulo del documento, es decir, todo lo que hay hasta <code>\begin{document}</code>, seguido del fragmento y de <code>\end{document}</code>. En un proyecto con archivo raíz, se usa el preámbulo del archivo raíz. Ni su documento ni su carpeta se modifican:</p>
+<ul>
+<li>El archivo se compone en una carpeta temporal que contiene copias de los archivos y carpetas situados junto al documento, de modo que las imágenes se encuentran igual que al componer el documento, también con rutas que empiezan por <code>./</code>. Las carpetas con más de 5000 elementos y los elementos que no se pueden copiar de esta manera, como los archivos de otro disco o los archivos solo en línea de un servicio en la nube, no se copian; los archivos situados junto al documento se siguen encontrando, pero no con rutas que empiezan por <code>./</code>.</li>
+<li>Se lee una copia del archivo <code>.aux</code> de la última composición del documento, de modo que <code>\ref</code>, <code>\pageref</code> y <code>\cite</code> muestran los números del documento.</li>
+</ul>
+<p>El motor es el que usa el documento: una línea <code>% !TEX program</code> al principio del archivo fuente o, si no la hay, lo elegido en la barra de herramientas de la ventana de código. Con LaTeX se sigue el método de composición del documento: «PDF directo», «Vía DVI» o «Script personal». Si está elegido BibTeX o MakeIndex, se usa pdfLaTeX. ConTeXt, MetaPost y plain TeX no se pueden usar para un experimento. Los motores propios se prueban, pero pueden fallar si no esperan LaTeX o no producen un archivo PDF.</p>
+
+<h2>Los paneles</h2>
+<p>El panel de código muestra el texto como la ventana de código, con el mismo tipo de letra, tabuladores, interlineado, ajuste de línea, colores de sintaxis, resaltado de la línea actual, cursor de bloque, caracteres invisibles, números de línea y correspondencia de paréntesis, y sigue los cambios que se hagan en los menús o en los ajustes. <kbd>⌘+</kbd> y <kbd>⌘-</kbd> agrandan o reducen el texto; igual que un tipo de letra elegido con el panel Tipos de letra, también cambian la ventana de código. Las combinaciones de teclas, el autocompletado de comandos y Edición › Completar etiqueta o clave de cita funcionan en el panel. El autocompletado de comandos usa la tecla elegida en Ajustes › Teclado › Tecla de activación.</p>
+<p>La barra de herramientas del panel de vista previa tiene las herramientas de la ventana de vista previa: «Desplazar», «Seleccionar texto», «Aumentar» y «Seleccionar PDF». «Aumentar» muestra al 150 % la página bajo el puntero mientras se mantiene pulsado el botón del ratón, o al 200 %, 250 % y 300 % con Comando, Opción y Control; haga doble clic para obtener una lupa mayor. Con «Seleccionar PDF», dibuje un rectángulo y cópielo en el formato elegido en PDF › Copiar con formato. El panel recuerda su herramienta independientemente de la ventana de vista previa. Junto a las herramientas están «Alejar», «Acercar», «Zoom al contenido», que amplía la parte compuesta de la página hasta llenar el panel, y «Zoom al ancho del contenido», que hace la parte compuesta tan ancha como el panel. El panel también se desplaza y se amplía con los gestos del ratón y del trackpad.</p>
+<p>La salida de la composición aparece en una consola propia, la consola del experimento. Pasa al frente cuando empieza la composición; haga clic en un panel para volver a traerlo al frente. <kbd>⌘0</kbd> (Archivo › Mostrar consola) en un panel trae al frente la consola del experimento, y al pulsarlo de nuevo se vuelve al panel. Si Ajustes › Consola › Mostrar consola está ajustado para mostrar la consola solo cuando hay un error, la consola del experimento permanece oculta hasta que TeX informa de un error o espera una entrada.</p>
+<p>Los paneles y la consola del experimento flotan sobre las ventanas de los documentos. Se pueden mover y redimensionar, y TeXShop recuerda sus tamaños y posiciones. Cierre un panel con su botón de cerrar o con <kbd>⌘W</kbd>. La tecla Esc también cierra el panel de vista previa, y el panel de código cuando el autocompletado de comandos usa la tecla Tab; cuando Esc es la tecla de activación del autocompletado, completa órdenes en el panel de código.</p>
+
+<h2>Conservar el resultado</h2>
+<p>Cuando el fragmento esté bien, cópielo del panel de código y péguelo en el documento. Los paneles conservan su contenido al cerrarlos y volver a abrirlos, pero no al salir de TeXShop, y no se pueden guardar.</p>
+<p>Cada documento tiene sus propios paneles. Con varios documentos abiertos, cierre los paneles que ya no necesite, para que quede claro a qué documento pertenece cada experimento.</p>
+</main>
+</body>
+</html>

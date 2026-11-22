@@ -3,51 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TeX Live beschaffen und installieren</title>
-<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Unter https://www.tug.org/mactex/ k&ouml;nnen Sie das MacTeX-Paket mit TeX Live herunterladen.">
+<title>TeX Live installieren</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeX Live installieren; MacTeX; BasicTeX; /usr/local/texlive; /Library/TeX/texbin; TeX Live Utility; Pfade erkennen; andere Distributionen">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-<li><a href="basic_installtetex.htm" class="current">TeX Live beschaffen und installieren</a></li>
-<li><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm" class="current">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
 <li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
 <li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
-<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
 <li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
-<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
 <li><a href="basic_printing.htm">Drucken</a></li>
 <li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
-<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-<li><a href="basic_bugs.htm">Fehlerberichte &uuml;bermitteln</a></li>
-<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
 <li><a href="basic_license.htm">Lizenz</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>TeX Live beschaffen und installieren</h1>
+<h1>TeX Live installieren</h1>
 
-		<p>Die Standard-TeX-Distribution hei&szlig;t TeX Live. Jedes Jahr erstellt die TeX Users Group (TUG) eine neue Version. Diese Distribution l&auml;uft unter macOS (sowohl auf Apple Silicon als auch auf Intel), unter Linux, unter Windows und auf vielen anderen Architekturen.</p>
-		<p>Die MacTeX-Arbeitsgruppe der TUG hat ein Apple-Installationspaket erstellt, das diese Distribution und alles Weitere enth&auml;lt, was man braucht, um TeX unter macOS zu benutzen. Das Paket ist in wenigen Minuten und fast ohne Zutun des Benutzers installiert. Es enth&auml;lt die vollst&auml;ndige TeX-Live-Distribution, Ghostscript und die Programme TeXShop, TeX Live Utility, BibDesk, LaTeXiT und hintview, die in /Applications/TeX installiert werden. Aktuelle Links zu dem Paket finden Sie unter</p>
-		<dl>
-			<dd><a href="https://www.tug.org/mactex/">www.tug.org/mactex/ </a>
-		</dl>
-		<p>Das MacTeX-Paket ist auch auf zahlreichen CTAN-Servern erh&auml;ltlich. Falls der Link auf der oben genannten Seite nicht funktioniert, gehen Sie auf</p>
-		<dl>
-			<dd><a href="https://www.ctan.org/">www.ctan.org/ </a>
-		</dl>
-		<p>und klicken Sie auf den Link &bdquo;our directories&ldquo;, auf der folgenden Seite auf den Link &bdquo;systems&ldquo;, auf der n&auml;chsten Seite auf &bdquo;mac&ldquo; und schlie&szlig;lich auf &bdquo;mactex&ldquo;.</p>
+<p>TeXShop braucht eine TeX-Distribution. Die übliche ist TeX Live, das die TeX-Anwendervereinigungen jedes Jahr für macOS, Windows, Linux und andere Systeme herausgeben. Auf dem Mac wird es mit MacTeX installiert, einem Installationspaket der TeX Users Group (TUG):</p>
+
+<p><a href="https://tug.org/mactex/">https://tug.org/mactex/</a></p>
+
+<p>Die Seite bietet zwei Pakete an. Doppelklicken Sie auf das geladene Paket und folgen Sie dem Installationsprogramm; danach ist TeX einsatzbereit.</p>
+
+<dl>
+<dt>MacTeX</dt>
+<dd>Das vollständige TeX Live, etwa 7 GB, mit Ghostscript sowie TeXShop und weiteren Programmen in /Programme/TeX. Fast jedes Beispiel aus einem Buch über TeX oder LaTeX funktioniert, ohne dass Sie etwas hinzufügen müssen. Wählen Sie dieses Paket für die eigentliche Arbeit.</dd>
+<dt>BasicTeX</dt>
+<dd>Ein kleiner Teil von TeX Live, etwa 140 MB, genug, um TeX auszuprobieren und viele LaTeX-Dokumente zu setzen. TeXShop wird damit nicht installiert; siehe <a href="basic_installtexshop.htm">TeXShop installieren</a>.</dd>
+</dl>
+
+<h2>Wo TeX Live installiert wird</h2>
+
+<p>MacTeX installiert TeX Live in <code>/usr/local/texlive/2026</code>, BasicTeX in <code>/usr/local/texlive/2026basic</code>. Beide können nebeneinander installiert sein. Jedes Jahr, etwa im April, erscheint ein neues TeX Live in einem Ordner, der nach seinem Jahr benannt ist. Um eine Installation zu entfernen, ziehen Sie ihren Ordner in den Papierkorb.</p>
+
+<p>Das Installationsprogramm legt außerdem <code>/Library/TeX/texbin</code> an. Dieser Pfad führt zu den Programmen des verwendeten TeX Live und folgt einem neu installierten TeX Live. TeXShop ruft TeX von dort auf (Einstellungen › Satz › Pfade › TeX-Engines), sodass Sie für ein neues Jahr nichts ändern müssen. „Pfade erkennen…“ in derselben Gruppe sucht die TeX- und Ghostscript-Installationen auf dem Mac und lässt Sie eine davon wählen.</p>
+
+<p>Zwischen den jährlichen Ausgaben erhalten die Pakete von TeX Live Aktualisierungen. Zum Installieren legt MacTeX das Programm TeX Live Utility in /Programme/TeX ab.</p>
+
+<h2>Andere TeX-Distributionen</h2>
+
+<p>TeXShop arbeitet auch mit TeX aus MacPorts oder Homebrew oder mit MiKTeX. Deren Programme liegen in anderen Ordnern: Verwenden Sie „Pfade erkennen…“ oder geben Sie den Ordner unter Einstellungen › Satz › Pfade › TeX-Engines ein. Siehe <a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a>.</p>
 </main>
 </body>
 </html>

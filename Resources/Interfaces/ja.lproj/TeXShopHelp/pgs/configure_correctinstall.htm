@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>~/Library/TeXShopの新しい項目を入手する</title>
+<title>ライブラリの新しい項目を入手する</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="~/Library/TeXShop; New; Templates; アップグレード">
+<meta name="description" content="~/Library/TeXShop; アップデート; Newフォルダ; bin; Scripts; Engines/Inactive; マクロ; 壊れたファイル; Backups; フォルダのデフォルトの内容">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -14,30 +14,37 @@
 <ul>
 <li><a href="configure_preliminaries.htm">まえがき</a></li>
 <li><a href="configure_prefchanges.htm">おすすめの設定変更</a></li>
-<li><a href="configure_correctinstall.htm" class="current">~/Library/TeXShopの新しい項目を入手する</a></li>
-<li><a href="configure_hidden.htm">隠れた設定項目</a></li>
-<li><a href="configure_panel.htm">LaTeXパネルを一部変更する</a></li>
+<li><a href="configure_correctinstall.htm" class="current">ライブラリの新しい項目を入手する</a></li>
+<li><a href="configure_hidden.htm">隠し設定</a></li>
+<li><a href="configure_panel.htm">LaTeXパネルを変更する</a></li>
 <li><a href="configure_autocompletion.htm">キーバインドを変更する</a></li>
-<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a></li>
+<li><a href="configure_menushortcuts.htm">メニューのショートカットを変更する</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>~/Library/TeXShopの新しい項目を入手する</h1>
+<h1>ライブラリの新しい項目を入手する</h1>
+<p>テンプレート、マクロ、エンジン、キーバインド、LaTeXパネルのファイル、テーマなど、変更できるファイルは~/Library/TeXShop（ホームフォルダの「ライブラリ」フォルダにあるTeXShopフォルダ）に置かれています。「TeXShop」→「~/Library/TeXShopを開く」を選ぶと、Finderで開きます。TeXShopを初めて起動したとき、このフォルダがデフォルトの内容で作られます。</p>
 
+<h2 id="updates">新しいバージョンで変わるもの</h2>
+<p>TeXShopの新しいバージョンは~/Library/TeXShopのほとんどの部分に手を付けないので、変更した内容は保たれます。ただし、TeXShop自身のサポートファイルや、必要に応じて使う項目を置く場所がいくつかあり、新しいバージョンではそこが最新の内容に更新されます。</p>
+<ul>
+<li>bin、Documents、ExternalEditorScripts、Scriptsの各フォルダ</li>
+<li>Engines/InactiveとHTML/Inactive（使うときに移すエンジンとHTMLファイルが入っています）</li>
+<li>HTML/Help.html（「ヘルプ」→「HTMLコマンド（英語）」で表示されるページ）</li>
+<li>Newフォルダ（全体が置き換えられます）</li>
+</ul>
+<p>これらの場所では、TeXShopに付属するファイルはすべて新しいバージョンに置き換えられるので、そうしたファイルに加えた変更は失われます。新しいファイルは追加され、自分で別の名前で加えたファイルはそのまま残ります。これらのファイルを自分で変更して使う場合は、別の名前で保存してください。</p>
+<p>使用中のエンジン、つまりEnginesフォルダ自体にあるエンジンは変更されません。ただし、このフォルダを最後に更新したのが6.00より前のバージョンのTeXShopだった場合に限り、TeXShopはEnginesにhtml.engineを一度だけ追加します。同じ名前のファイルがすでにある場合は追加しません。Macrosフォルダでは、TeXShopに付属していて一度も編集されていないマクロが、現在の内容に更新されることがあります。編集したマクロや自分で作ったマクロはそのまま残ります。そのほかはすべて、変更した内容が保たれます。</p>
+<p>TeXShopは自分のバージョンを~/Library/TeXShop/Newの隠しファイル<code>.Version</code>に記録し、そこに記録されたバージョンより新しいときだけフォルダを更新します。そのため、~/Library/TeXShopが起動のたびに書き換えられることはなく、古いバージョンのTeXShopを起動してもフォルダは変わりません。</p>
 
-<p>TeXShopの標準の動作は、設定を変える方法と、~/Library/TeXShopにあるファイルを編集する方法の2通りで変更できます。~/Libraryはホームフォルダにあるライブラリフォルダです。</p>
+<h2 id="new">Newフォルダ</h2>
+<p>Newフォルダには、新しいテンプレートなど、必要に応じて自分で追加する項目が入っています。使いたい項目はTemplatesなどの適切なフォルダに移し、自由に編集してください。取り込むものがあるときは、「ヘルプ」→「このリリースについて（英語）」に書かれています。</p>
 
-<p>TeXShopの新しいバージョンは、ユーザが知らないうちに変更されるのを嫌うため、原則としてこうしたユーザによる変更には手を付けません。ただし、新機能のために多少の変更が必要になることがあります。その変更は「ヘルプ」メニューの「このリリースについて（英語）」で説明しています。この書類はTeXShopのリリースごとに書き直されます。「このリリースについて（英語）」で説明している変更をしなくてもTeXShopは問題なく動作しますが、一部の新機能が説明どおりに動かないことがあります。</p>
+<h2 id="repair">見つからないファイルと壊れたファイル</h2>
+<p>マクロ、LaTeXパネルのファイル、キーバインド、KeyEquivalents.plist、テーマなど、TeXShopが必要とするファイルが見つからなかったり壊れていたりすると、TeXShopは起動時にメッセージを出さずに自前のコピーに置き換えます。壊れたファイルは~/Library/TeXShop/Backupsに残るので、そこから変更内容を取り戻せます。</p>
 
-<p>TeXShopは~/Library/TeXShopにある項目を原則として更新しませんが、例外があります。bin、Documents、Engines/Inactive、ExternalEditorScripts、HTML/Inactive、Scriptsの各フォルダと、「ヘルプ」メニューの「HTMLコマンド（英語）」で表示されるHTML/Help.htmlファイルは、新しいリリースのたびに更新されます。これらの場所では、TeXShopに付属するファイルがすべて新しい版に置き換えられるので、そうしたファイルに加えた変更は失われます。新しい標準のファイルは追加され、ユーザが別の名前で加えたファイルはそのまま残ります。これらのファイル（たとえばHelp.html）を自分用に変更したい場合は、別の名前で保存してください。有効になっているエンジンファイルはEnginesフォルダにあり、Inactiveサブフォルダにはないので、変更されません。ただし、6.00 beta 10より前のバージョンが最後に更新したライブラリを更新するときに限り、TeXShopはhtml.engineをEnginesフォルダに一度だけコピーします（同じ名前のファイルがすでにある場合はコピーしません）。Macrosフォルダでは、以前のTeXShopに付属していて一度も編集されていないマクロが、現在の内容に更新されることがあります。編集したマクロや自分で作ったマクロはそのまま残ります。それ以外の~/Library/TeXShopの内容は、ユーザによる変更がそのまま保たれます。</p>
-
-<p>この方式の利点は、エンジンによってはbinフォルダやscriptsフォルダに補助ファイルを置くので、TeXShopのアップグレードでこれらの補助ファイルをユーザの手を借りずに更新できることです。同様に、Engines/Inactiveフォルダに新しいエンジンが追加されることがあり、ユーザは何もしなくてもそれを入手できます。</p>
-
-<p>TeXShopをアップグレードするたびに、~/Library/TeXShop/Newフォルダが書き直されます。このフォルダには、ユーザがほかの設定フォルダに加えたくなるかもしれない新しい項目が入っています。たとえば新しいテンプレートは~/Library/TeXShop/Newに置かれます。新しいテンプレートを使いたい場合は、~/Library/TeXShop/Templatesに移して適宜編集してください。~/Library/TeXShop/Newの内容は必ず「このリリースについて（英語）」で説明しているので、そこで指示がない限り~/Library/TeXShop/Newを調べる必要はありません。</p>
-
-<p>この方式の技術的な詳細を1つ知っておくと役に立ちます。~/Library/TeXShop/Newにある不可視ファイルには、そのフォルダを書き込んだTeXShopのバージョン番号が記録されています。~/Library/TeXShopが更新されるのは、TeXShopのバージョン番号がこの不可視ファイルに記録されたバージョン番号より大きい場合だけです。そのため、~/Library/TeXShopはTeXShopを起動するたびに更新されるわけではなく、古いバージョンのTeXShopを起動しても~/Library/TeXShopが変更されることはありません。</p>
-
-<p>まれに、~/Library/TeXShopにあるフォルダの最新の標準ファイルを入手したい場合があります。そのフォルダをデスクトップに移すと、次にTeXShopを起動したときにそのフォルダが一から作り直されます。そのあとで、自分で加えた変更をデスクトップのコピーから取り込んでください。たとえば~/Library/TeXShopのTemplatesフォルダをデスクトップに移すと、次にTeXShopを起動したときに最新の標準のTemplatesフォルダができます。幸い、このような思い切った操作が必要になることはめったにありません。</p>
+<h2 id="defaults">フォルダのデフォルトの内容を入手する</h2>
+<p>Templatesなどのフォルダの最新のデフォルトの内容を入手するには、TeXShopを終了し、そのフォルダを~/Library/TeXShopの外（たとえばデスクトップ）に移してから、TeXShopをもう一度起動します。TeXShopはデフォルトの内容でフォルダを作ります。残しておきたいものは、移したフォルダからコピーして戻してください。</p>
 </main>
 </body>
 </html>

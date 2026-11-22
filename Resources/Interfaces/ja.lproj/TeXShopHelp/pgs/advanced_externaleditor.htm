@@ -3,102 +3,74 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>外部エディタを使用する</title>
+<title>外部エディタを使う</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="自分の好きなエディタでソースを編集する方法">
+<meta name="description" content="外部エディタ; プレビューを開く; 外部エディタでソースを編集; ほかのアプリによるPDFの変更を常に監視; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a></li>
-<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a></li>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
 <li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
-<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a></li>
-<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
 <li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
 <li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a></li>
-<li><a href="advanced_externaleditor.htm" class="current">外部エディタを使用する</a></li>
-<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストおよびドラッグ＆ドロップ</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm" class="current">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
 <li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
 <li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
-<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a></li>
-<li><a href="advanced_plist.htm">Plistファイル</a></li>
-<li><a href="advanced_localization.htm">各国語版へのローカライズ</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>外部エディタを使用する</h1>
+<h1>外部エディタを使う</h1>
+<p>ほかのエディタで書き、タイプセットとPDFの表示にTeXShopを使うことができます。</p>
 
+<h2>プレビューだけを開く</h2>
+<p>「ファイル」→「プレビューを開く...」でソースファイルを選ぶと、そのプレビューのウインドウだけが開きます。まだタイプセットしていないか、PDFがソースより古ければ、TeXShopはまずタイプセットします。ソースは自分のエディタで編集します。タイプセットするには、エディタで保存してから、プレビューのウインドウで「タイプセット」を押すか<kbd>⌘T</kbd>を押します。このモードでは、TeXShopはソースファイルを開くことも変更することもありません。プレビューのウインドウのツールバーに「タイプセット」ボタンがなければ、「ウインドウ」→「ツールバーをカスタマイズ...」で加えます。</p>
+<p>いつもこの方法で作業するなら、「設定」→「一般」→「起動時」の「外部エディタでソースを編集」をオンにします。すると「ファイル」→「開く...」と「最近使った項目を開く」はソースファイルをプレビューだけで開き、「ファイル」→「プレビューを開く...」は「開いて編集する...」に変わります。これを使えば、必要なときにソースファイルをTeXShop自身のエディタで開けます。PDF、画像、ログファイルなど、ほかのファイルはこれまでどおりに開きます。</p>
 
-<p>
-TeXShopではいくつかの方法で外部エディタを設定することができます。以下に示す方法は便利ですし、エディタの機能には依存しません。将来的には、設定でエディタを指定するようになるかもしれません。
-</p>
+<h2>プレビューを最新に保つ</h2>
+<p>自分のエディタやターミナルのlatexmkなど、ほかのプログラムがPDFを書き換えると、TeXShopは、TeXShopまたはプレビューのウインドウに戻ったときに、ページと倍率を保ったままPDFを読み直します。「設定」→「プレビュー」→「更新」の「ほかのアプリによるPDFの変更を常に監視」をオンにすると、TeXShopが後ろにあるときも、PDFが変わるとすぐに読み直します。プレビューをエディタの横に並べているときなどに便利です。保存していない注釈のあるプレビューは、注釈が失われないように読み直しません。</p>
+<p>TeXShopは、自身のエディタで開いているソースファイルも見張っています。ほかのエディタがそのファイルを変更すると、TeXShopは読み直します。ただし、TeXShopの側に保存していない変更があるときは読み直しません。</p>
 
-<p>
-「プレビューを開く...」というメニュー項目があります。この項目を選ぶと、拡張子が .texのソースファイルを選択するように言われます。ですが開かれるのは、関連づけの行なわれたpdfプレビューウインドウのみです。ソースがまだタイプセットされていなかったり、pdfが古くなっていた場合、ファイルを開くとともにTeXShopがタイプセットを行ないます。ソースファイルはどのエディタでも開くことができます。タイプセットの準備が整ったら、変更箇所をエディタで保存し、プレビューウインドウに切り替えてタイプセットします。このやり方の場合、TeXShopはソースファイルを開かず、また修正も行ないません。ただ単にファイルをUNIXのTeXもしくはLaTeXプロセスに渡すだけです。
-</p>
+<h2>エディタと同期する</h2>
+<p>プレビューのウインドウでCommandクリックしてエディタの該当行に移動したり、コンソールの「エラー箇所」でエラーの行をエディタで開いたりできます。それには「外部エディタでソースを編集」と隠し設定、およびエディタのコマンドラインプログラムが必要です。</p>
+<ul>
+<li>TextMateでは、コマンド<code>mate</code>が<code>/usr/local/bin</code>にあれば、<code>defaults write TeXShop TextMateSync YES</code>とします。</li>
+<li>ほかのエディタでは、<code>defaults write TeXShop OtherEditorSync YES</code>とし、実行可能なスクリプト<code>/usr/local/bin/othereditor</code>を用意します。このスクリプトは、行番号を<code>$1</code>、ファイルの完全なパスを<code>$2</code>として受け取ります。BBEditの場合は次のようになります。
+<pre>#!/bin/sh
+/usr/local/bin/bbedit "$2:$1"</pre></li>
+</ul>
+<p>逆方向、つまりエディタの行からプレビューのウインドウへ移動するには、エディタからAppleScriptでTeXShopのコマンド<code>sync_preview_line</code>、<code>sync_preview_index</code>、<code>sync_preview_name</code>を呼び出します。「ヘルプ」→「TeXShopマニュアル（英語）」の「Using an External Editor」の章に、完全なスクリプトがあります。</p>
+<p><code>~/Library/TeXShop/ExternalEditorScripts</code>フォルダには、すぐに使える支援ツールがドキュメント付きで入っています。BBEditの書類をTeXShopでタイプセットしてプレビューするAppleScriptと、Vim用のプラグインです。</p>
 
-<p>
-プレビューウインドウにはタイプセット・ボタンを配置することができます。もしそうしたボタンが見あたらない場合は、ウインドウ・メニューの「ツールバーをカスタマイズ...」を使ってボタンを付け加えてください。
-</p>
-
-<p>
-ほとんど常に外部エディタを使いたいユーザーのために、設定ウインドウには「外部エディタでソースを編集」という項目があります。この設定が選択されていると、「開く...」と「最近使った項目を開く」メニューでは、TeXソースファイルを外部エディタで編集するために、上述の方法で開きます。さらに「プレビューを開く...」メニューは「開いて編集する...」と変わり、TeXShopの内蔵エディタでソースファイルを開くようになりますが、これはごくまれに内蔵エディタを使いたい場合のためです。「開く...」と「最近使った項目を開く」メニューではまた、jpg・tiff・ps・pdf・dvi・logおよびその他のファイルを開くこともできます ； この動作については、新しい設定にした場合でも変わりません。
-</p>
-
-<p>
-UNIXのタイプセットコマンドを直接呼び出すことのできるエディタもあります。新しい設定項目「ほかのアプリによるPDFの変更を常に監視」は、こうしたエディタでの作業を改善するために付け加えられました。この項目が選択されており、「プレビューを開く...」を使って .texファイルを開いた場合には、pdfが書き改められたときにはいつでも、pdfプレビューワの画面が更新されます。なので、外部エディタからのタイプセットが可能になり、プレビューウインドウは自動的に変更を表示します。この設定は、TeXShopで開いた .pdfファイルについても同様に適用されますし、TeXShopが外部エディタを利用するように設定されていれば、「開く...」を使って開いた .texファイルについてもまた適用されます。
-</p>
-<p>
-TeXShop 6.00からは、TeXShopのエディタで開いたソースにも適用されます。また、この設定がオフのときも、TeXShopやプレビューのウインドウに戻ったときに、ほかのアプリケーション（Terminalのlatexmkなど）がpdfを書き換えていれば、表示中のページと拡大率を保ったまま読み直します。pdfが書き込みの途中なら、書き終わるのを待ち、続けて行われた組版の結果も表示します。保存していない注釈がある間は読み直しません。設定をオンにすると、TeXShopが後ろにあるとき（プレビューを外部エディタの横に並べているときなど）も読み直します。
-</p>
-
-<p>
-エディタから直接TeXShopを呼び出せるように、以下のAppleScriptコマンドが追加されています：
-</p>
-	<ol>
-		<li>typesetinteractive
-		<li>texinteractive
-		<li>latexinteractive
-		<li>contextinteractive
-		<li>bibtexinteractive
-		<li>makeindexinteractive
-		<li>metapostinteractive
-		<li>taskdone
-		<li>refreshpdf
-		<li>open_for_externaleditor
-	</ol>
-
-<p>
-最初の７つのコマンドはTeXShopのタイプセッティング・コマンドを作動させます。これらのコールの後でAppleScriptは、タイプセットの完了を待たずにすぐリターンします。「taskdone」コールは完了したかどうかを調べるのに使えます ； これはタイプセットが行なわれている間はNOを返し、終了するとYESを返すのです。これらのコールはそれぞれに、タイプセット完了時にはプレビューウインドウを更新します。使用するエディタがTeXShopを呼び出してタイプセットするのであれば、設定の「ほかのアプリによるPDFの変更を常に監視」はオフにしておけます。
-</p>
-
-<p>
-もし外部エディタがpdf出力をじかに修正するのであれば、「refreshpdf」を呼び出してpdf画面を更新することができます。これは「ほかのアプリによるPDFの変更を常に監視」がオフになっている場合にのみ必要となります。最後の「open_for_externaleditor」は「プレビューを開く...」を呼び出してtexファイルを開きます。
-</p>
-
-<p>
-AlphaXからこれらのコールを行なうためのTclコードは、TeXShopディストリビューションのTeXShop_Folderの中にあるAlphaTclフォルダ内に入っています。ファイルの初めに書かれていることを読み、意図に沿ってAlphaXを設定する方法を確認してください。
-</p>
-
-
-
-
-
-
-		
-	</body>
-
-</HTML>
+<h2>エディタから使うAppleScriptのコマンド</h2>
+<p>エディタからは、TeXShopの書類に対して次のAppleScriptのコマンドを呼び出せます。</p>
+<dl>
+<dt><code>typesetinteractive</code>、<code>texinteractive</code>、<code>latexinteractive</code>、<code>bibtexinteractive</code>、<code>makeindexinteractive</code>、<code>metapostinteractive</code></dt>
+<dd>タイプセットするか、plain TeX、LaTeX、BibTeX、MakeIndex、MetaPostを実行します。呼び出しはタイプセットの終了を待たずにすぐ戻り、終わったときにプレビューが更新されます。</dd>
+<dt><code>taskdone</code></dt><dd>タイプセットの実行中はNOを、終わるとYESを返します。</dd>
+<dt><code>refreshpdf</code></dt><dd>PDFを読み直し、プレビューのウインドウを手前に出します。</dd>
+<dt><code>refreshpdfbackground</code></dt><dd>プレビューのウインドウがすでに開いているとき、TeXShopを手前に出さずにPDFを読み直します。</dd>
+<dt><code>refreshtext</code></dt><dd>ソースファイルをディスクから読み直します。</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>「ファイル」→「プレビューを開く...」と同じようにソースファイルを開きます。</dd>
+</dl>
+<p>エディタがTeXShopを通してタイプセットするときは、「ほかのアプリによるPDFの変更を常に監視」は必要ありません。<a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>も参照してください。</p>
 </main>
 </body>
 </html>

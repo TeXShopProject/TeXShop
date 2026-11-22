@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Definici&oacute;n de nuevas macros</title>
+<title>Definir macros nuevas</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="nuevas macros; atajos de teclado">
+<meta name="description" content="macros nuevas; editor de macros; atajo de teclado; submenús; separadores; fichas de marcadores de posición; menú Insertar">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -13,23 +13,26 @@
 <nav id="menu">
 <ul>
 <li><a href="macros_preliminaries.htm">Preliminares</a></li>
-<li><a href="macros_default.htm">Comprensi&oacute;n de las macros predefinidas</a></li>
-<li><a href="macros_rearrange.htm">Reajuste del men&uacute; Macros</a></li>
-<li><a href="macros_define.htm" class="current">Definici&oacute;n de nuevas macros</a></li>
+<li><a href="macros_default.htm">Las macros predefinidas</a></li>
+<li><a href="macros_rearrange.htm">Reorganizar el menú Macros</a></li>
+<li><a href="macros_define.htm" class="current">Definir macros nuevas</a></li>
 <li><a href="macros_applescript.htm">Macros AppleScript</a></li>
 <li><a href="macros_includedscripts.htm">Macros AppleScript predefinidas</a></li>
-<li><a href="macros_defapplescript.htm">Definici&oacute;n de macros AppleScript</a></li>
-<li><a href="macros_dialogs.htm">Creaci&oacute;n de di&aacute;logos</a></li>
-<li><a href="macros_writingcompletescripts.htm">Scripts con comandos de composici&oacute;n de TeXShop</a></li>
-<li><a href="macros_writingcommandscripts.htm">Scripts con comandos del Shell</a></li>
+<li><a href="macros_defapplescript.htm">Definir macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crear diálogos</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts con los comandos de composición de TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts con comandos de shell</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Definici&oacute;n de nuevas macros</h1>
+<h1>Definir macros nuevas</h1>
+<p>En el editor de macros (Macros › Abrir editor de macros…), haga clic en + debajo de la lista para añadir un elemento. El menú del extremo derecho de la barra situada debajo de la lista (⋯) añade un submenú o un separador y duplica los elementos seleccionados; − los elimina. Un elemento o submenú nuevo se nombra en el momento: escriba su nombre y pulse Retorno. Los submenús se pueden anidar en cualquier número de niveles. Con un poco de práctica se ve cómo se comporta el editor.</p>
 
-		<P>Los nuevos &iacute;tem se crean con el bot&oacute;n + debajo de la lista, y los nuevos submen&uacute;s y separadores con el men&uacute; de su extremo derecho (&#8857;), que tambi&eacute;n duplica los &iacute;tem seleccionados; el bot&oacute;n &minus; los elimina. Un &iacute;tem o submen&uacute; nuevo se nombra enseguida: escriba su nombre y pulse Retorno. Un poco de pr&aacute;ctica ilustra el comportamiento b&aacute;sico del editor. Se pueden crear submen&uacute;s en cualquier nivel.</P>
-		<p>Para asignar un atajo de teclado a un &iacute;tem, selecci&oacute;nelo y haga clic en su atajo en la lista (o haga doble clic en el atajo) y pulse el nuevo atajo: Comando o Control con una tecla, o una de F1&ndash;F20, con May&uacute;sculas y Opci&oacute;n si hace falta. Si un comando del men&uacute; u otra macro ya usa el atajo, TeXShop lo indica debajo del contenido y no lo cambia; pulse otro atajo. Para eliminar un atajo, haga clic en &laquo;Eliminar atajo&raquo; (&#8854;) en el campo o pulse Borrar; Escape conserva el que ten&iacute;a. Un atajo inactivo porque un comando del men&uacute; o una macro anterior lo usa lleva un tri&aacute;ngulo de advertencia en la lista; seleccione el &iacute;tem para ver el motivo debajo del contenido.</p>
-		<p>En el contenido, los marcadores que una macro reemplaza (#SEL#, #INS#, #PASTE#, las se&ntilde;ales &bull;, y #FILEPATH# y las dem&aacute;s rutas de una macro AppleScript) se muestran como fichas redondeadas que dicen lo que representan, como &laquo;Texto seleccionado&raquo;. La macro los conserva tal como est&aacute;n escritos. Escriba un marcador o el&iacute;jalo en el men&uacute; Insertar debajo del contenido; el bot&oacute;n de ayuda de la derecha los muestra todos. Borrar junto a una ficha la borra entera.</p>
+<h2 id="shortcuts">Atajos</h2>
+<p>Para asignar un atajo de teclado a un elemento, selecciónelo y haga clic en su atajo en la lista (o haga doble clic en el atajo), y pulse después el nuevo atajo: Comando o Control con una tecla, o una de F1–F20, con Mayúsculas y Opción si hace falta. Si una orden de menú u otra macro ya usa el atajo, TeXShop lo indica debajo del contenido y no lo cambia; pulse otro atajo. Para quitar un atajo, haga clic en «Eliminar atajo» (⊖) en el campo o pulse la tecla Eliminar; Esc conserva el que tenía. Un atajo inactivo porque lo usa una orden de menú o una macro anterior se marca en la lista con un triángulo de advertencia; seleccione el elemento para ver el motivo debajo del contenido. Consulte <a href="configure_menushortcuts.htm">Redefinir los atajos de teclado de los menús</a> para saber cómo conviven los atajos de menú y los de macros.</p>
+
+<h2 id="tokens">Marcadores de posición</h2>
+<p>En el contenido, los marcadores de posición que sustituye una macro se muestran como fichas redondeadas que indican lo que representan, como «Texto seleccionado»: #SEL#, #INS#, #PASTE# y las señales • de una macro de texto (consulte <a href="macros_default.htm">Las macros predefinidas</a>), y #FILEPATH# y las demás rutas de una macro AppleScript (consulte <a href="macros_defapplescript.htm">Definir macros AppleScript</a>). La macro los conserva tal como están escritos, de modo que copiar y guardar funcionan como siempre. Escriba un marcador de posición o elíjalo en el menú «Insertar» situado debajo del contenido; el botón de ayuda de su derecha los muestra todos. Al borrar junto a una ficha, se borra la ficha entera.</p>
 </main>
 </body>
 </html>

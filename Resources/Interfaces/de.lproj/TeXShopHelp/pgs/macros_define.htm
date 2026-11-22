@@ -3,33 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neue Makros erstellen</title>
+<title>Neue Makros definieren</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Erstellen Sie neue Makros mit Hilfe des Makro-Editors.">
+<meta name="description" content="neue Makros; Makro-Editor; Tastaturkurzbefehl; Untermenüs; Trennlinien; Platzhalter; Menü Einfügen">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Hilfe zu Makros</span></header>
 <nav id="menu">
 <ul>
-<li><a href="macros_preliminaries.htm">Einleitung</a></li>
+<li><a href="macros_preliminaries.htm">Vorbemerkungen</a></li>
 <li><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
-<li><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
-<li><a href="macros_define.htm" class="current">Neue Makros erstellen</a></li>
-<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
-<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
-<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
+<li><a href="macros_rearrange.htm">Das Menü „Makros“ neu ordnen</a></li>
+<li><a href="macros_define.htm" class="current">Neue Makros definieren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-Makros</a></li>
+<li><a href="macros_includedscripts.htm">Mitgelieferte AppleScript-Makros</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-Makros definieren</a></li>
 <li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
-<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
-<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
+<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a></li>
+<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Neue Makros erstellen</h1>
+<h1>Neue Makros definieren</h1>
+<p>Klicken Sie im Makro-Editor (Makros › Makro-Editor öffnen…) unter der Liste auf +, um einen Eintrag hinzuzufügen. Das Menü am rechten Ende der Leiste unter der Liste (⋯) fügt ein Untermenü oder eine Trennlinie hinzu und dupliziert die ausgewählten Einträge; − löscht sie. Ein neuer Eintrag oder ein neues Untermenü wird sofort benannt: Geben Sie den Namen ein und drücken Sie den Zeilenschalter. Untermenüs lassen sich beliebig tief verschachteln. Nach ein wenig Übung wissen Sie, wie sich der Editor verhält.</p>
 
-		<P>Im Makro-Editor werden neue Eintr&auml;ge mit der Taste + unter der Liste erstellt, neue Untermen&uuml;s und Trenner mit dem Men&uuml; an ihrem rechten Ende (&#8857;), das auch die ausgew&auml;hlten Eintr&auml;ge dupliziert; die Taste &minus; l&ouml;scht sie. Einen neuen Eintrag oder ein neues Untermen&uuml; benennen Sie gleich: Geben Sie den Namen ein und dr&uuml;cken Sie den Zeilenschalter. Mit ein bisschen &Uuml;bung wird man schnell mit dem Verhalten des Editors vertraut. Untermen&uuml;s k&ouml;nnen beliebig tief angelegt werden.</P>
-		<p>Um einem Eintrag einen Kurzbefehl zuzuordnen, w&auml;hlt man ihn aus und klickt in der Liste auf seinen Kurzbefehl (oder doppelklickt auf den Kurzbefehl) und dr&uuml;ckt dann die Tastenkombination: Befehl oder Control mit einer Taste oder eine der Tasten F1&ndash;F20, nach Bedarf mit Umschalt und Option. Wird der Kurzbefehl schon von einem Men&uuml;befehl oder einem anderen Makro verwendet, meldet TeXShop das unter dem Inhalt und &auml;ndert nichts; dr&uuml;cken Sie dann einen anderen Kurzbefehl. Zum Entfernen klicken Sie im Feld auf &bdquo;Kurzbefehl entfernen&ldquo; (&#8854;) oder dr&uuml;cken die R&uuml;ckschritttaste; mit Escape bleibt der bisherige Kurzbefehl erhalten. Ein Kurzbefehl, der inaktiv ist, weil ein Men&uuml;befehl oder ein fr&uuml;heres Makro ihn verwendet, ist in der Liste mit einem Warndreieck markiert; w&auml;hlen Sie den Eintrag, um den Grund unter dem Inhalt zu sehen.</p>
-		<p>Im Inhalt werden die Platzhalter, die ein Makro ersetzt (#SEL#, #INS#, #PASTE#, die Marken &bull; sowie #FILEPATH# und die anderen Pfade eines AppleScript-Makros), als abgerundete Marken angezeigt, die sagen, wof&uuml;r sie stehen, etwa &bdquo;Ausgew&auml;hlter Text&ldquo;. Das Makro beh&auml;lt sie so, wie sie geschrieben sind. Man tippt einen Platzhalter oder w&auml;hlt ihn im Men&uuml; &bdquo;Einf&uuml;gen&ldquo; unter dem Inhalt; die Hilfetaste rechts davon listet alle auf. L&ouml;schen neben einer Marke l&ouml;scht sie ganz.</p>
+<h2 id="shortcuts">Kurzbefehle</h2>
+<p>Um einem Eintrag einen Tastaturkurzbefehl zu geben, wählen Sie ihn aus und klicken Sie in der Liste auf seinen Kurzbefehl (oder doppelklicken Sie darauf); drücken Sie dann den neuen Kurzbefehl: Befehlstaste oder Control-Taste mit einer Taste oder eine der Tasten F1–F20, nach Bedarf mit Umschalttaste und Wahltaste. Verwendet ein Menübefehl oder ein anderes Makro den Kurzbefehl bereits, meldet TeXShop dies unter dem Inhalt und ändert ihn nicht; drücken Sie einen anderen Kurzbefehl. Um einen Kurzbefehl zu entfernen, klicken Sie im Feld auf „Kurzbefehl entfernen“ (⊖) oder drücken die Rückschritttaste; Escape behält den bisherigen. Ein Kurzbefehl, der inaktiv ist, weil ein Menübefehl oder ein früheres Makro ihn verwendet, ist in der Liste mit einem Warndreieck gekennzeichnet; wählen Sie den Eintrag aus, um den Grund unter dem Inhalt zu sehen. Wie Menükurzbefehle und Makrokurzbefehle zusammenwirken, steht unter <a href="configure_menushortcuts.htm">Tastaturkurzbefehle für Menüs ändern</a>.</p>
+
+<h2 id="tokens">Platzhalter</h2>
+<p>Im Inhalt werden die Platzhalter, die ein Makro ersetzt, als abgerundete Felder angezeigt, die sagen, wofür sie stehen, etwa „Ausgewählter Text“: #SEL#, #INS#, #PASTE# und die Marken • eines Textmakros (siehe <a href="macros_default.htm">Die Standardmakros verstehen</a>) sowie #FILEPATH# und die anderen Pfade eines AppleScript-Makros (siehe <a href="macros_defapplescript.htm">AppleScript-Makros definieren</a>). Das Makro behält sie so, wie sie geschrieben sind; Kopieren und Sichern funktionieren also wie gewohnt. Geben Sie einen Platzhalter ein oder wählen Sie ihn im Menü „Einfügen“ unter dem Inhalt; die Hilfetaste rechts daneben listet alle auf. Löschen neben einem solchen Feld löscht es ganz.</p>
 </main>
 </body>
 </html>

@@ -3,42 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</title>
+<title>Kopieren und Einsetzen, Ziehen und Ablegen</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="F&uuml;gen Sie Teile Ihres LaTeX-Dokuments in anderen Programmen ein.">
+<meta name="description" content="kopieren und einsetzen; ziehen und ablegen; PDF-Auswahl; Bild-Kopierformat; Kopierformat; Farbmapping; Parameter; Auswahl als Datei sichern; Keynote">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</a></li>
-<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-<li><a href="advanced_addengine.htm">Zus&auml;tzliche Schriftsatz-Programme</a></li>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-<li><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
 <li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-<li><a href="advanced_pdfcopypaste.htm" class="current">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm" class="current">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
-<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-<li><a href="advanced_plist.htm">Plist Datein</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Lokalisierungen</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</h1>
+<h1>Kopieren und Einsetzen, Ziehen und Ablegen</h1>
+<p>Ein Teil einer Seite im Vorschaufenster lässt sich als Bild in ein anderes Programm kopieren, etwa in Keynote, Pages oder die App Vorschau.</p>
 
-<P>Man kann einen Teil des Inhalts des Vorschau-Fensters ausw&auml;hlen und mittels &bdquo;Kopieren und Einf&uuml;gen&ldquo; in ein anderes Programm &uuml;berf&uuml;hren. Dies k&ouml;nnen Sie auch per &bdquo;Drag und Drop&ldquo; erledigen. Sie k&ouml;nnen in den Einstellungen das Dateiformat zum Kopieren (pdf, png, jpg, tiff, etc.), die Hintergrund- und Vordergrundfarbe als auch die Transparenz festlegen.</P>
-		<P>Die Auswahl im Vorschau-Fenster und &bdquo;Drag und Drop&ldquo; kann auch zusammen mit Keynote verwendet werden. Mit den Standardeinstellungen k&ouml;nnen Sie eine Textauswahl in Keynote einf&uuml;gen. Der Hintergrund des Textes ist transparent, sodass der Folienhintergrund zwischen den Buchstaben zu sehen ist. Der Text kann auch in der Gr&ouml;&szlig;e ge&auml;ndert werden, da pdf als Standardformat zum Kopieren verwendet wird.</P>
-		<p>Die Oprion &bdquo;Alles ausw&auml;hlen&ldquo; aus dem Men&uuml; &bdquo;Bearbeiten&ldquo; kann dazu benutzt werden eine ganze Seite zu kopieren. Diese ist i, Multi-Seiten- und Doppel-Multi-Seiten-Modus jedoch auf Dokumente unter 20 Seiten beschr&auml;nkt. Ohne diese Beschr&auml;nkung w&uuml;rde die kopierte pdf-Seite zu gro&szlig; und der Computer w&uuml;rde unn&ouml;tig belastet.</p>
-	
+<h2>Auswählen und kopieren</h2>
+<ol>
+<li>Wählen Sie in der Symbolleiste des Vorschaufensters das Werkzeug „PDF-Auswahl“.</li>
+<li>Ziehen Sie ein Rechteck über den gewünschten Teil. Er kann Text, Formeln und Bilder enthalten.</li>
+<li>Wählen Sie Bearbeiten › Kopieren (<kbd>⌘C</kbd>) und setzen Sie die Kopie im anderen Programm ein, oder ziehen Sie die Auswahl in ein Dokument dieses Programms. Ziehen auf den Schreibtisch oder in ein Finder-Fenster erzeugt eine Datei.</li>
+</ol>
+<p>Vorschau › Auswahl als Datei sichern… sichert die Auswahl unter einem Namen und in einem Ordner Ihrer Wahl. Mit dem Werkzeug „PDF-Auswahl“ wählt Bearbeiten › Alles auswählen (<kbd>⌘A</kbd>) alles Angezeigte aus: die Seite bei den Darstellungen „Einzelseiten“ und „Doppelseiten“, das ganze Dokument bei „Einzelseiten, kontinuierlich“ und „Doppelseiten, kontinuierlich“. Bei den beiden letzteren funktioniert das nur für Dokumente mit höchstens 20 Seiten, damit die Kopie nicht riesig wird.</p>
+<p>Um Text statt eines Bildes zu kopieren, verwenden Sie das Werkzeug „Textauswahl“.</p>
+
+<h2>Das Format der Kopie</h2>
+<p>Einstellungen › Vorschau › Bilder kopieren › Bild-Kopierformat legt die Art des Bildes fest: PDF, TIFF, JPEG oder PNG, teils in mehreren Qualitäten. PDF, die Vorgabe, hält Text und Linien in jeder Größe scharf; eine in eine Keynote-Folie eingesetzte Auswahl lässt sich also beliebig vergrößern. Das Untermenü Vorschau › Kopierformat zeigt und ändert dieselbe Einstellung.</p>
+<p>Für Kopien als TIFF, JPEG und PNG gelten zwei weitere Einstellungen der Gruppe „Bilder kopieren“:</p>
+<ul>
+<li>„Farbmapping“ macht aus Schwarz eine Textfarbe und aus Weiß eine Hintergrundfarbe, damit eine Kopie zu den Farben einer Folie passt. Beide Farben werden unter Einstellungen › Themen › Farbmapping für Bildkopien bei „Text“ und „Hintergrund“ festgelegt, für jedes Thema getrennt. PDF-Kopien behalten die Farben der Seite.</li>
+<li>„Parameter“ legt fest, wie stark der Text in der Kopie betont wird.</li>
+</ul>
+<p>Die Farbe, die das Thema hellen Seiten im Vorschaufenster gibt, ist nicht Teil der Kopie.</p>
 </main>
 </body>
 </html>

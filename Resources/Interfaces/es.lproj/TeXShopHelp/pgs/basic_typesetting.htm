@@ -3,62 +3,94 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Componer (&lsquo;typeset&rsquo;) documentos</title>
+<title>Componer documentos</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="componer; typeset; marca; abrir; varios archivos; modificar comportamiento">
+<meta name="description" content="componer; primer documento; Componer; consola; errores; Ir al error; Abortar; Borrar archivos aux; perfil del motor; % !TEX program; archivo raíz; SyncTeX; Usar una ventana">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda b&aacute;sica</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">Preliminares</a></li>
-<li><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a></li>
-<li><a href="basic_installtexshop.htm">C&oacute;mo obtener e instalar TeXShop</a></li>
-<li><a href="basic_typesetting.htm" class="current">Componer (&lsquo;typeset&rsquo;) documentos</a></li>
-<li><a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a></li>
-<li><a href="basic_edittricks.htm">Trucos de edici&oacute;n</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm" class="current">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edición</a></li>
+<li><a href="basic_find.htm">Buscar y reemplazar</a></li>
 <li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
-<li><a href="basic_spelling.htm">Corrección ortográfica</a></li>
-<li><a href="basic_autocompletion.htm">Autocompleci&oacute;n</a></li>
-<li><a href="basic_commandcompletion.htm">Compleci&oacute;n de comandos</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Autocompletado de comandos</a></li>
 <li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
 <li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
-<li><a href="basic_graphics.htm">Inclusi&oacute;n de gr&aacute;ficos</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
 <li><a href="basic_printing.htm">Imprimir</a></li>
-<li><a href="basic_preferences.htm">Establecer ajustes</a></li>
-<li><a href="basic_templates.htm">Personalizaci&oacute;n del men&uacute; Plantillas</a></li>
-<li><a href="basic_bugs.htm">Notificaci&oacute;n de errores (&lsquo;bugs&rsquo;)</a></li>
-<li><a href="basic_websites.htm">Sitios web &uacute;tiles</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
 <li><a href="basic_license.htm">Licencia</a></li>
-<li><a href="basic_thistranslation.htm">Sobre la traducci&oacute;n a espa&ntilde;ol</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Componer (&lsquo;typeset&rsquo;) documentos</h1>
+<h1>Componer documentos</h1>
 
-		<P>Para usar TeXShop, escribe un archivo con c&oacute;digo LaTeX en la ventana de edici&oacute;n incorporada. Entonces pulsa el bot&oacute;n LaTeX que se encuentra en la parte de arriba de la ventana. TeXShop guarda el archivo y llama a pdflatex. Se abre una segunda ventana (la consola) en la que se muestran los mensajes que proporciona tex. Si hay errores, pdflatex se parar&aacute;; pulsa &laquo;return&raquo; para ignorar los errores uno a uno, o una de las instrucciones est&aacute;ndar de tex para salir, continuar en silencio, etc. Despu&eacute;s de compilar el documento con un m&iacute;nimo de &eacute;xito, aparece una nueva ventana mostrando el archivo pdf que hemos obtenido. Podemos alternar entre las dos ventanas tecleando comando-1.</P>
-		<p>Al pulsar con el rat&oacute;n en alguna parte de la ventana con la salida pdf, aparece una lupa que aumenta una peque&ntilde;a regi&oacute;n cercana al cursor. Haciendo doble click, se aumenta una regi&oacute;n mayor; y con triple click, otra aun mayor. Para predeterminar el tama&ntilde;o de la regi&oacute;n que se aumenta, basta usar la herramienta destinada a tal fin (y que se encuentra en la barra de herramientas, justo encima de la p&aacute;gina).</p>
-		<p>Para componer un documento TeX (m&aacute;s propiamente dicho, plain TeX), pulsa el bot&oacute;n &laquo;Programa&raquo; y selecciona plain TeX en lugar de LaTeX. Si generalmente usas plain TeX, elige plain TeX como opci&oacute;n por defecto en la ventana de Ajustes.</p>
-		<p>Si al compilar aparece un error en el c&oacute;digo (se muestra en la consola), puedes corregirlo de modo inmediato en la ventana de edici&oacute;n; entonces, pulsa el bot&oacute;n &laquo;Componer&raquo; de nuevo. En este momento, TeXShop interrumpir&aacute; la compilaci&oacute;n en curso y comenzar&aacute; una nueva con el c&oacute;digo corregido.</p>
-		<p>TeXShop memoriza los n&uacute;meros de l&iacute;nea en los que han ocurrido los veinte primeros errores. Para ir, de manera sucesiva, a estas l&iacute;neas de c&oacute;digo, elije &laquo;Ir al error&raquo; en el men&uacute; Edici&oacute;n o usa la correspondiente equivalencia de teclado.</p>
-		<p>Cuando corriges errores y vuelves a compilar, el visor de pdf recuerda en qu&eacute; p&aacute;gina te encontrabas y la muestra de nuevo.</p>
-		<p>Si una l&iacute;nea de c&oacute;digo comienza con los caracteres &laquo;%:&raquo;, TeXShop interpreta el resto de la l&iacute;nea como una &laquo;marca&raquo;, que aparecer&aacute; en el men&uacute; desplegable Marcas. Al elegir uno de los &iacute;tems de este men&uacute;, TeXShop nos llevar&aacute; a la correspondiente l&iacute;nea en el documento con el c&oacute;digo fuente. Las l&iacute;neas que comienzan con las palabras  \section, \subsection, \subsubsection o \chapter se a&ntilde;aden autom&aacute;ticamente al men&uacute; Marcas. Sin embargo, se puede cambiar este comportamiento tecleando el siguiente comando en el Terminal de Apple:
-		<dl>
-			<dd><tt>defaults write TeXShop TagSections NO</tt>
-		</dl>
-		<p>TeXShop puede manejar varios documentos. Si elegimos &laquo;Nuevo&raquo; o &laquo;Abrir&raquo;, el documento (o documentos) que ten&iacute;amos abierto permanece as&iacute; y se abre una nueva ventana de c&oacute;digo. Si abrimos un archivo tex de una carpeta en la cual hay un archivo pdf con el mismo nombre, tambi&eacute;n aparece una ventana que muestra el pdf.</p>
-		<p>A algunos usuarios les gusta dividir el c&oacute;digo fuente en m&uacute;ltiples archivos controlados por un archivo maestro que usa comandos \input. TeXShop siempre guarda el archivo fuente antes de componer.</p>
-		<p>Podemos cargar TeXShop haciendo doble click en un documento con extensi&oacute;n &laquo;.tex&raquo;. El programa abre este documento y (si existe) el documento pdf asociado.</p>
-		<p>Podemos cerrar la ventana con el pdf en cualquier momento. Reaparecer&aacute; al componer el documento de nuevo. Si cerramos la ventana de c&oacute;digo, entonces se cerrar&aacute; tambi&eacute;n, autom&aacute;ticamente, la ventana con su correspondiente pdf (las ventanas de otros documentos tex permanecer&aacute;n abiertas). Por tanto, si una ventana con c&oacute;digo te est&aacute; estorbando en la pantalla, puede ser preferible minimizarla, en lugar de cerrarla.</p>
-		<p>pdftex y pdflatex son programas unix derivados del programa TeX de Donald Knuth. La sintaxis de TeX no permite espacios en los nombres de archivos, luego no deber&iacute;amos incluir espacios en los nombres de los archivos creados con TeXShop. Sin embargo, TeXShop en s&iacute; mismo no tiene ning&uacute;n problema con tales archivos.</p>
-		<p>El comportamiento de la ventana con el pdf previsto se puede cambiar usando los &iacute;tem  &laquo;Aumento&raquo; y &laquo;Mostrar p&aacute;ginas&laquo; del men&uacute; PDF. Por ejemplo, puedes configurar el desplazamiento para que fluya de manera continua por todas las p&aacute;ginas del documento (opci&oacute;n &laquo;Multip&aacute;gina&laquo); la ventana con el pdf previsto puede mostrar dos paginas juntas; se puede conseguir que, al modificar el tama&ntilde;o de la ventana, se cambie el aumento proporcionado por la lupa. Experimenta hasta que encuentres lo que prefieres y, entonces, f&iacute;jalo de este modo en los ajustes.</p>
-	<p>Las lupas de la barra de herramientas de la ventana con el pdf te permiten aumentar porciones de texto. Haciendo doble o triple click con el rat&oacute;n, la porci&oacute;n de texto que se aumenta es mayor. Adem&aacute;s, mientras estamos usando la lupa se puede cambiar el aumento o la regi&oacute;n que se aumenta: para ello, pulsa las teclas apple, opci&oacute;n, control o may&uacute;sculas.</p>
-	<p>Usa la herramienta de selecci&oacute;n de pdf para seleccionar un trozo del pdf que se muestra en la ventana y arrastrarlo al escritorio o a la ventana de alg&uacute;n programa. Tambi&eacute;n puedes copiar la selecci&oacute;n y pegarla en otro documento. Por defecto, la regi&oacute;n que se selecciona contiene s&oacute;lo el texto del primer plano, en formato pdf. Esto es &uacute;til, por ejemplo, cuando se arrastra texto a Keynote; se respeta el fondo de la diapositiva por detr&aacute;s del texto, y adem&aacute;s el texto se puede cambiar de tama&ntilde;o sin p&eacute;rdida de claridad.</p>
-	<p>Usa la herramienta de selecci&oacute;n de texto para seleccionar un trozo del texto que se muestra en la ventana con el pdf. Este texto se puede copiar y pegar en cualquier procesador de texto. Si en el pdf aparecen enlaces, se pueden activar haciendo click en ellos con la herramienta de selecci&oacute;n de texto. Adem&aacute;s, puedes usar los botones Atr&aacute;s/Adelante para volver a la p&aacute;gina original. Usa el comando Buscar en el caj&oacute;n de la ventana para buscar texto en el documento pdf.</p>
-    <p>Puedes alternar entre puntos correspondientes de la ventana con el c&oacute;digo y la ventana con el pdf pulsando la tecla comando de Apple mientras haces click en una palabra o una frase. Si has hecho comando-click sobre una frase de la ventana con c&oacute;digo, el pdf se desplaza, en su correspondiente ventana, hasta el lugar oportuno, y la frase aparece destacada, rodeada por un c&iacute;rculo rojo. Si lo has hecho en la ventana con el pdf, la ventana con el c&oacute;digo se abre (si es necesario), el texto se desplaza hasta el lugar apropiado, y la frase aparece resaltada en amarillo.</p>  
+<h2>Un primer documento</h2>
+
+<p>Elija Archivo › Nuevo. En la barra de herramientas de la ventana nueva, elija LatexTemplate en el menú Plantillas; la ventana se llena con las líneas que necesita todo documento LaTeX. Escriba su texto entre <code>\begin{document}</code> y <code>\end{document}</code>. Una línea en blanco inicia un párrafo nuevo.</p>
+
+<p>Haga clic en Componer en la barra de herramientas o pulse <kbd>⌘T</kbd> (Componer › Componer). La primera vez, TeXShop pregunta dónde guardar el documento. TeX escribe varios archivos junto al código fuente, así que dé a cada documento una carpeta propia. Después TeXShop ejecuta TeX y abre una ventana de vista previa con el documento compuesto.</p>
+
+<p>A partir de entonces, escriba, componga y mire el resultado. TeXShop guarda el código fuente antes de cada composición, y la vista previa se queda en la página que estaba leyendo. <kbd>⌘T</kbd> funciona en el código fuente, en la vista previa y en la consola, y <kbd>⌘1</kbd> (Ventana › Código ⇔ PDF) alterna entre el código fuente y su vista previa. Ajustes › Composición › Después de componer elige qué ventana pasa al frente cuando TeX termina.</p>
+
+<p>Al abrir un archivo .tex se abre también el archivo PDF del mismo nombre, si existe. Al cerrar la ventana de vista previa, el código fuente sigue abierto y la vista previa vuelve a aparecer en la siguiente composición; al cerrar la ventana de código se cierra el documento.</p>
+
+<h2>La consola</h2>
+
+<p>Mientras TeX se ejecuta, sus mensajes aparecen en la consola. Ajustes › Consola › Mostrar consola elige si la consola pasa al frente en cada composición (Siempre) o solo cuando TeX informa de un error (Si aparecen errores). Archivo › Mostrar consola (<kbd>⌘0</kbd>) trae al frente la consola del documento activo, y <kbd>⌘0</kbd> en la consola vuelve a la ventana de la que venía. El texto de la consola se puede seleccionar y copiar en cualquier momento.</p>
+
+<p>Cuando TeX encuentra un error, escribe un mensaje al final de la consola y espera una respuesta. Escríbala en el campo de la parte inferior de la consola y pulse Retorno; Retorno solo pasa al siguiente error, y el campo enumera las demás respuestas que TeX acepta. Para detener TeX, haga clic en Abortar en la consola o elija Archivo › Abortar composición (<kbd>⌃⌥⌘A</kbd>).</p>
+
+<h2>Encontrar los errores</h2>
+
+<p>Ir al error en la consola, o Edición › Ir al error (<kbd>⌃⌘E</kbd>), desplaza el código fuente hasta la línea del primer error y la resalta; elíjalo de nuevo para ir al siguiente error. Si el error está en otro archivo del proyecto, ese archivo se abre. Suele ser más rápido corregir unos pocos errores y volver a componer, ya que un error puede provocar varios más. Ir al error se basa en los nombres de archivo y los números de línea que TeX escribe con <code>-file-line-error</code>, opción que usan los comandos y los archivos de motor de TeXShop.</p>
+
+<p>LaTeX escribe información para su siguiente ejecución, como el índice general y las referencias cruzadas, en un archivo .aux y en otros archivos auxiliares, de modo que un documento puede necesitar dos o tres ejecuciones hasta que todas las referencias sean correctas. Un error puede dejar estos archivos dañados, y entonces puede que el documento no se componga ni siquiera después de corregir el error. Elija Componer › Borrar archivos aux &amp; Componer (<kbd>⌥⌘T</kbd>) para mover los archivos auxiliares a la Papelera y volver a componer, o Archivo › Borrar archivos aux (<kbd>⌃⌘A</kbd>), que también es un botón de la consola. Consulte <a href="advanced_removeaux.htm">Borrar archivos AUX</a>.</p>
+
+<h2 id="engine">Elegir el motor</h2>
+
+<p>Ajustes › Composición › Perfil del motor prepara la composición para un motor en un solo paso. Elija el perfil del motor que utiliza; una hoja enumera los valores que establece, y Aceptar los aplica. En la hoja, «Ejecutar LaTeX» se puede poner en «Con latexmk», para que latexmk ejecute BibTeX, el índice y las pasadas adicionales que hagan falta. En cuanto se cambia uno de estos valores, el menú muestra Personalizado. El Manual de TeXShop enumera lo que establece cada perfil.</p>
+
+<p>Para un solo documento, elija el motor en el menú desplegable Programa, junto a Componer en la barra de herramientas. Enumera LaTeX, plain TeX y los archivos de motor de ~/Library/TeXShop/Engines, como LuaLaTeX y XeLaTeX, y la elección vale para esa ventana. Para que forme parte del documento, ponga una línea como esta entre las 20 primeras líneas del código fuente:</p>
+
+<pre>% !TEX program = LuaLaTeX</pre>
+
+<p>Entonces <kbd>⌘T</kbd> compone siempre el archivo con ese motor. El nombre es el de un archivo de motor, o uno de <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> y <code>tex</code> para LaTeX y plain TeX integrados (consulte <a href="basic_alternatetypeset.htm">Modo alternativo de composición</a>). Macros › Program inserta la línea, con el motor elegido de una lista. Ajustes › Composición › «Componer documentos nuevos con» establece el motor de los documentos que no tienen esa línea. Consulte <a href="advanced_addengine.htm">Añadir motores de composición</a> para los archivos de motor.</p>
+
+<p>El menú Componer también ejecuta BibTeX, MakeIndex y MetaPost sobre el documento; consulte <a href="advanced_bibtex.htm">BibTeX</a> y <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
+
+<h2>Documentos en varios archivos</h2>
+
+<p>Un libro suele dividirse en un archivo raíz, que contiene el preámbulo, y archivos de capítulo que este lee con <code>\include</code> o <code>\input</code>. Ponga una línea como <code>% !TEX root = ../Book.tex</code> al principio de cada archivo de capítulo, con la ruta del archivo raíz desde el archivo de capítulo. Entonces <kbd>⌘T</kbd> en un archivo de capítulo compone el archivo raíz, e Ir al error y SyncTeX encuentran el archivo de capítulo correcto. Consulte <a href="advanced_root.htm">Establecer el archivo raíz de un proyecto</a>.</p>
+
+<h2>Pasar del código fuente a la vista previa y viceversa</h2>
+
+<p>Haga clic con la tecla Comando en una palabra del código fuente, y la vista previa se desplaza hasta el texto compuesto y lo marca. Haga clic con la tecla Comando en la vista previa, y el código fuente pasa al frente con el texto correspondiente marcado; en un documento con archivos de capítulo, el archivo de capítulo se abre si hace falta. La correspondencia no siempre es exacta, así que mire alrededor del lugar marcado. Los colores de las marcas se establecen en Ajustes › Temas › SyncTeX.</p>
+
+<p>Esto usa SyncTeX, que los motores admiten cuando se ejecutan con <code>-synctex=1</code>, como hacen los comandos y los archivos de motor de TeXShop; Ajustes › Composición › Tipo de sincronía debe ser «SyncTeX (recomendado)». El archivo SyncTeX de un documento registra dónde están sus archivos, así que, después de mover la carpeta de un proyecto, componga una vez más antes de sincronizar.</p>
+
+<h2>Organizar las ventanas</h2>
+
+<p>Ventana › Usar una ventana coloca el código fuente y su vista previa uno junto a otro en una sola ventana, y Ventana › Usar ventanas separadas vuelve a separarlos. Para abrir así todos los documentos, ponga Ajustes › General › Ventanas › «Fuente y vista previa» en «Usar una ventana»; «Posición de la fuente en la ventana combinada» coloca el código fuente a la izquierda o a la derecha. Arrastre el divisor para dar más o menos espacio al código fuente; TeXShop abre todas las ventanas combinadas con el mismo reparto. Los documentos con archivos de capítulo no funcionan en una sola ventana, así que use ventanas separadas para ellos. Archivo › Nuevo solo abre una ventana de código: componga primero el documento nuevo y después elija Usar una ventana.</p>
+
+<p>Con ventanas separadas, coloque y dimensione las ventanas de código y de vista previa a su gusto, y después elija Código › Guardar posición ventana de código y PDF › Guardar posición ventana del PDF; las ventanas nuevas se abren allí.</p>
 </main>
 </body>
 </html>

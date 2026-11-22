@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TeX Liveの入手とインストール</title>
+<title>TeX Liveのインストール</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="TeX LiveとMacTeXパッケージの案内">
+<meta name="description" content="TeX Liveのインストール; MacTeX; BasicTeX; /usr/local/texlive; /Library/TeX/texbin; TeX Live Utility; パスの自動検出; ほかのディストリビューション">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -13,56 +13,59 @@
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">まえがき</a></li>
-<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a></li>
-<li><a href="basic_installtetex.htm" class="current">TeX Liveの入手とインストール</a></li>
-<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a></li>
-<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm" class="current">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
 <li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
-<li><a href="basic_edittricks.htm">編集上のコツ</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
 <li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
-<li><a href="basic_spelling.htm">スペルをチェックする</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
 <li><a href="basic_autocompletion.htm">キーバインド</a></li>
-<li><a href="basic_commandcompletion.htm">コマンドの補完</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
 <li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
 <li><a href="basic_matrixpanel.htm">行列パネル</a></li>
 <li><a href="basic_macros.htm">マクロ</a></li>
 <li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
 <li><a href="basic_graphics.htm">画像を入れる</a></li>
-<li><a href="basic_printing.htm">印刷</a></li>
-<li><a href="basic_preferences.htm">設定</a></li>
-<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a></li>
-<li><a href="basic_templates.htm">テンプレートメニューを変更する</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
 <li><a href="basic_bugs.htm">バグレポートを送る</a></li>
-<li><a href="basic_websites.htm">役に立つウェブ・サイト</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
 <li><a href="basic_license.htm">使用許諾</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>TeX Liveの入手とインストール</h1>
+<h1>TeX Liveのインストール</h1>
+<p>TeXShopを使うにはTeXディストリビューションが必要です。標準はTeX Liveで、TeXのユーザ会が毎年、macOS、Windows、Linuxなどのために作っています。Macでは、TeXユーザ会（TUG）が作るインストーラパッケージ、MacTeXでインストールします。</p>
 
-<p>
-標準的なTeXディストリビューションはTeX Liveと呼ばれています。TeXユーザグループ（TUG）によって毎年新しいバージョンが作成されています。このディストリビューションは、macOS（AppleシリコンとIntelの両方）、Linux、Windows、その他の多くのアーキテクチャで動作します。
-</p>
+<p><a href="https://tug.org/mactex/">https://tug.org/mactex/</a></p>
 
-<p>
-TUG内のMacTeX作業グループにより、このディストリビューションと、macOS上でTeXを実行するのに必要なその他すべてのものを収めた、Appleのインストーラ形式のパッケージが作成されています。このパッケージにより、ほとんど何の手間もなく数分でインストールが済みます。収録されているのは──TeX Liveのすべて、Ghostscript、それに/Applications/TeXにインストールされるTeXShop、TeX Live Utility、BibDesk、LaTeXiT、hintviewといったアプリケーションです。このパッケージについての最新のリンクは下記を参照して下さい。
-</p>
+<p>このページには2つのパッケージがあります。ダウンロードしたパッケージをダブルクリックしてインストーラの指示に従えば、終わったときにはTeXが使えるようになっています。</p>
 
-		<dl>
-			<dd><a href="https://www.tug.org/mactex/">www.tug.org/mactex/ </a>
-		</dl>
+<dl>
+<dt>MacTeX</dt>
+<dd>TeX Liveの全体（約7GB）で、Ghostscriptと、/Applications/TeXに入るTeXShopなどのアプリケーションが含まれます。TeXやLaTeXの本に載っている例は、ほとんど何も足さずに使えます。実際の仕事にはこちらを選んでください。</dd>
+<dt>BasicTeX</dt>
+<dd>TeX Liveの一部（約140MB）で、TeXを試したり、多くのLaTeX文書をタイプセットしたりするには十分です。TeXShopはインストールされません。「<a href="basic_installtexshop.htm">TeXShopのインストール</a>」を参照してください。</dd>
+</dl>
 
-<p>
-MacTeXパッケージは、多数のCTANサイトからも入手できます。上記のサイトのリンクがうまくいかない場合は、次のサイトへ行き、
-</p>
+<h2>TeX Liveのインストール先</h2>
 
-		<dl>
-			<dd><a href="https://www.ctan.org/">www.ctan.org/ </a>
-		</dl>
+<p>MacTeXはTeX Liveを<code>/usr/local/texlive/2026</code>に、BasicTeXは<code>/usr/local/texlive/2026basic</code>にインストールします。両方を並べてインストールすることもできます。TeX Liveは毎年4月ごろに新しい版が出て、その年の名前のフォルダに入ります。インストールしたものを削除するには、そのフォルダをゴミ箱に入れます。</p>
 
-<p>
-「our directories」のリンクをクリックし、表示されたページで「systems」のリンクを、次のページで「mac」のリンクを、最後のページで「mactex」のリンクをクリックしてください。
-</p>
+<p>インストーラは<code>/Library/TeX/texbin</code>も作ります。ここから、使用中のTeX Liveのプログラムを呼び出せ、新しいTeX Liveをインストールするとそちらに切り替わります。TeXShopはTeXをここから実行するので（「設定」→「タイプセット」→「パス」→「TeXエンジン」）、年が変わっても設定を変える必要はありません。同じグループの「パスの自動検出…」は、MacにあるTeXとGhostscriptを探して、使うものを選ばせてくれます。</p>
+
+<p>年に一度のリリースの間にも、TeX Liveのパッケージは更新されます。更新をインストールするには、MacTeXが/Applications/TeXに入れるTeX Live Utilityを使います。</p>
+
+<h2>ほかのTeXディストリビューション</h2>
+
+<p>TeXShopは、MacPortsやHomebrewでインストールしたTeXや、MiKTeXでも使えます。これらのプログラムは別のフォルダにあるので、「パスの自動検出…」を使うか、「設定」→「タイプセット」→「パス」→「TeXエンジン」にそのフォルダを入力してください。「<a href="advanced_otherdistributions.htm">ほかのTeXディストリビューションとの共存</a>」を参照してください。</p>
 </main>
 </body>
 </html>

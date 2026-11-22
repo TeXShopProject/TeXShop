@@ -3,54 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AppleScript Makros</title>
+<title>AppleScript-Makros</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="So benutzen Sie ApplScripts zusammen mit TeXShop Makros.">
+<meta name="description" content="Makros; AppleScript; --AppleScript; --AppleScript direct; ScriptRunner; View pdf with Preview">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Hilfe zu Makros</span></header>
 <nav id="menu">
 <ul>
-<li><a href="macros_preliminaries.htm">Einleitung</a></li>
+<li><a href="macros_preliminaries.htm">Vorbemerkungen</a></li>
 <li><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
-<li><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
-<li><a href="macros_define.htm">Neue Makros erstellen</a></li>
-<li><a href="macros_applescript.htm" class="current">AppleScript Makros</a></li>
-<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
-<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
+<li><a href="macros_rearrange.htm">Das Menü „Makros“ neu ordnen</a></li>
+<li><a href="macros_define.htm">Neue Makros definieren</a></li>
+<li><a href="macros_applescript.htm" class="current">AppleScript-Makros</a></li>
+<li><a href="macros_includedscripts.htm">Mitgelieferte AppleScript-Makros</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-Makros definieren</a></li>
 <li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
-<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
-<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
+<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a></li>
+<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>AppleScript Makros</h1>
+<h1>AppleScript-Makros</h1>
+<p>Ein Makro, dessen Inhalt mit</p>
+<pre>--AppleScript</pre>
+<p>oder</p>
+<pre>--AppleScript direct</pre>
+<p>beginnt, wird beim Wählen als AppleScript ausgeführt; Groß- und Kleinschreibung spielen keine Rolle. Zum Beispiel öffnet Makros › Applescript › View pdf with Preview das PDF des aktiven Dokuments in der App Vorschau, sobald das PDF gesetzt wurde. Sein Inhalt lautet</p>
+<pre>--AppleScript direct
 
-			<P>Beginnen Makros mit einem der folgenden Strings:</P>
-			<dl>
-				<dd><tt>--AppleScript</tt>
-			</dl>
-			<p>oder</p>
-			<dl>
-				<dd><tt>--AppleScript</tt>
-			</dl>
-			<p>wird der resultierende AppleScript Code ausgef&uuml;hrt, wenn das Makro gestartet wird. Nehmen wir zum Beispiel ein Makro mit dem Titel &bdquo;pdf-Datei mit Acrobat Reader &ouml;ffnen&ldquo; Wird dieses Makro ausgef&uuml;hrt, wenn die Quelltext-Datei aktiviert ist (und die pdf-Datei erstellt wurde), so startet der Adobe Acrobat Reader und die pdf-Ausgabe-Datei wird in diesem Programm angezeigt. Der dazu geh&ouml;rige AppleScript Code lautet:</p>
-			<dl>
-				<dd><tt>--AppleScript</tt>
-				<dd>
-				<dd><tt>tell application &quot;Acrobat Reader 5.0&quot;</tt>
-					<dl>
-						<dd><tt>activate</tt>
-						<dd><tt>open POSIX file #PDFPATH#</tt>
-					</dl>
-				<dd><tt>end tell</tt>
-				
-			</dl>
-			<p>Befehle, die mit &bdquo;--AppleScript direct&ldquo; beginnen, werden direkt von TeXShop ausgef&uuml;hrt. W&auml;hrend das Applescript ausgef&uuml;hrt wird, ist TeXShop unt&auml;tig, d.h. seine Event-Loop wird nicht ausgef&uuml;hrt. Daher kann auch w&auml;hrend der Ausf&uuml;hrung TeXShop nicht aufgerufen werden um z.B. Benutzereingaben zu erm&ouml;glichen. So kann auch TeXShop vom Skript nicht aufgefordert werden LaTeX auszuf&uuml;hren, da dieses bei einem eventuellen Fehler den Benutzer zu einer Benutzereingabe in der Fehlerkonsole aufforern w&uuml;rde. Eine solche Eingabe w&uuml;rde aber auf Grund der fehlenden Event-Loop nicht erkannt.</p>
-			<p>Befehle, die mit &bdquo;--AppleScript&ldquo; beginnen, werden durch kleine Hilfsprogramme in TeXShop ausgef&uuml;hrt. HIerbei k&ouml;nnen die Applescripts auch TeXShop auffordern gewisse Funktionen auszuf&uuml;hren, da bei etwaigen Benutzereingaben das Hilfsprogramm zwar gestoppt wird, TeXShop selbst aber weiter l&auml;uft. </p>
-			<p>Daher ist es empfehlenswert die Syntax &bdquo;--AppleScript direct&ldquo; f&uuml;r Routineskripte zu verwenden und &bdquo;--AppleScript&ldquo; f&uuml;r Skripte umfangreicherer Art.</p>
-		
+tell application "Preview"
+  activate
+  open POSIX file #PDFPATH#
+end tell</pre>
+<p>Bevor das Skript läuft, ersetzt TeXShop #PDFPATH# durch den Pfad des PDF; <a href="macros_defapplescript.htm">AppleScript-Makros definieren</a> listet alle solchen Zeichenfolgen auf. „View pdf with Adobe Acrobat Reader DC“ im selben Untermenü tut dasselbe mit Adobe Acrobat.</p>
+
+<h2 id="direct">--AppleScript direct und --AppleScript</h2>
+<p>Ein Skript, das mit <code>--AppleScript direct</code> beginnt, führt TeXShop selbst aus. Während es läuft, reagiert TeXShop auf nichts anderes; das Skript kann TeXShop daher nicht um etwas bitten, das Ihre Eingabe brauchen könnte. Es kann TeXShop zum Beispiel nicht LaTeX ausführen lassen: Hätte die Datei einen Fehler, würde die Konsole auf Ihre Eingabe warten, die TeXShop nicht entgegennehmen könnte.</p>
+<p>Ein Skript, das mit <code>--AppleScript</code> beginnt, führt ScriptRunner aus, ein kleines Programm innerhalb von TeXShop. Ein solches Skript kann TeXShop um Dinge bitten, die Ihre Eingabe brauchen könnten, denn ScriptRunner wartet, während TeXShop aktiv bleibt.</p>
+<p><code>--AppleScript direct</code> eignet sich also für einfache Makros, während <code>--AppleScript</code> für Skripte nötig ist, die setzen oder auf andere Weise mit TeXShop arbeiten.</p>
 </main>
 </body>
 </html>

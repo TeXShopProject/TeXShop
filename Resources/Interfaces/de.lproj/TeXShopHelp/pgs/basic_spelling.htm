@@ -4,76 +4,79 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rechtschreibprüfung</title>
+<meta name="description" content="Rechtschreibprüfung; LaTeX-bewusste Rechtschreibprüfung; Ausschlussregeln; bisherige Methode; Wörterbuch; Rechtschreibung und Grammatik einblenden; % !TEX spellcheck">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-<li><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-<li><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
 <li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
 <li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
 <li><a href="basic_spelling.htm" class="current">Rechtschreibprüfung</a></li>
-<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
 <li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
-<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
 <li><a href="basic_printing.htm">Drucken</a></li>
 <li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
-<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-<li><a href="basic_bugs.htm">Fehlerberichte &uuml;bermitteln</a></li>
-<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
 <li><a href="basic_license.htm">Lizenz</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Rechtschreibprüfung</h1>
 
+<p>TeXShop prüft die Rechtschreibung mit der Rechtschreibprüfung und den Wörterbüchern von macOS. Die LaTeX-bewusste Rechtschreibprüfung ist von Anfang an eingeschaltet: Sie prüft den Text und überspringt TeX-Befehle, Mathematik, Kommentare und die Argumente von Befehlen wie <code>\label</code>, <code>\ref</code>, <code>\cite</code> und <code>\usepackage</code> sowie Argumente gängiger Pakete, die kein Fließtext sind, etwa Schlüssel, Farben und Einheiten. Befehle, die das Dokument mit <code>\newcommand</code>, <code>\def</code> und Ähnlichem definiert, werden gelesen; ein Argument, das eine Definition an <code>\ref</code> oder in die Mathematik weitergibt, wird daher ebenfalls übersprungen. Text, der als andere Sprache ausgezeichnet ist, etwa mit <code>\foreignlanguage</code>, wird in dieser Sprache geprüft, aber beim Tippen nicht unterstrichen.</p>
 
-<p>Cocoa-Programme verwenden automatisch die Rechtschreibpr&uuml;fung von Apple. TeXShop unterst&uuml;tzt die Rechtschreibpr&uuml;fung w&auml;hrend der Eingabe, die mit einem Men&uuml;befehl ein- und ausgeschaltet werden kann. Eine Einstellung legt den Anfangszustand fest.</p>
+<h2>Ein Dokument prüfen</h2>
 
-<p>Die Rechtschreibpr&uuml;fung von Apple versteht LaTeX-Befehle von sich aus nicht und markiert viele Befehle als falsch geschrieben. W&auml;hlen Sie in den Einstellungen von TeXShop unter &bdquo;Rechtschreibung&ldquo; die Option &bdquo;LaTeX-bewusste Rechtschreibpr&uuml;fung verwenden (empfohlen)&ldquo;: TeXShop pr&uuml;ft dann den Flie&szlig;text und l&auml;sst Befehle, Formeln, Kommentare und Verweisargumente aus.</p>
+<p>Falsch geschriebene Wörter werden beim Tippen unterstrichen, solange Bearbeiten › Rechtschreibung und Grammatik › Während der Texteingabe prüfen eingeschaltet ist. Um das Dokument Wort für Wort durchzugehen, wählen Sie Bearbeiten › Rechtschreibung und Grammatik › Rechtschreibung und Grammatik einblenden (<kbd>⌘:</kbd>): Das Fenster zeigt das erste falsch geschriebene Wort nach der Einfügemarke. Klicken Sie im Fenster auf „Weitersuchen“ oder wählen Sie „Dokument jetzt prüfen“ (<kbd>⌘;</kbd>), um zum nächsten zu gehen. Halten Sie dabei die Wahltaste gedrückt, um die Suche von macOS zu verwenden, die kein Markup überspringt.</p>
 
-<p>Das Standardw&ouml;rterbuch w&auml;hlen Sie in den Einstellungen unter &bdquo;Rechtschreibung&ldquo; im Men&uuml; &bdquo;W&ouml;rterbuch&ldquo;. Schreiben Sie meist Englisch, w&auml;hlen Sie ein englisches W&ouml;rterbuch, schreiben Sie meist Franz&ouml;sisch, ein franz&ouml;sisches. Mit &bdquo;Automatische Spracherkennung&ldquo; wird je nach Text automatisch ein passendes W&ouml;rterbuch gew&auml;hlt.</p>
+<p>Um ein Wort überall zu ersetzen, geben Sie den Ersatz in das Feld „Ersatz für Alle ändern“ des Fensters ein oder wählen Sie einen Vorschlag aus, und klicken Sie auf „Alle ändern“; ein einziges Widerrufen nimmt die Änderung zurück. „Gelernte Wörter vergessen…“ im Untermenü „Rechtschreibung und Grammatik“ listet die Wörter des Dokuments auf, die für die aktuelle Sprache gelernt wurden, und entfernt die ausgewählten aus dem Wörterbuch. „Rechtschreibung automatisch korrigieren“ im selben Untermenü ändert Wörter beim Tippen; die Option ist zunächst ausgeschaltet, was zu TeX passt, wo sie auch Befehle ändern würde.</p>
 
-<p>Das W&ouml;rterbuch in den Einstellungen ist das Standardw&ouml;rterbuch f&uuml;r Dateien, die neu in TeXShop ge&ouml;ffnet werden. F&uuml;r bereits ge&ouml;ffnete Dateien &auml;ndert es sich nicht.</p>
+<h2>Einstellungen › Rechtschreibung</h2>
 
-<p>Im Men&uuml; &bdquo;W&ouml;rterbuch&ldquo; erscheint jede Sprache unter ihrem eigenen Namen (zum Beispiel &bdquo;Deutsch&ldquo; oder &bdquo;Fran&ccedil;ais&ldquo;); w&auml;hlen Sie das W&ouml;rterbuch also nach dem Namen der Sprache. Den Code, den die Rechtschreibpr&uuml;fung f&uuml;r diese Sprache verwendet, etwa &bdquo;de&ldquo; oder &bdquo;fr_CA&ldquo;, zeigt der Tooltip des Men&uuml;eintrags.</p>
-
-<p>&Ouml;ffnen Sie danach mehrere Quelldateien in TeXShop, erh&auml;lt jede das Standardw&ouml;rterbuch. Mit &bdquo;Rechtschreibung und Grammatik&ldquo; im Men&uuml; &bdquo;Bearbeiten&ldquo; l&auml;sst sich das W&ouml;rterbuch jedoch &auml;ndern, sodass jede Datei bei Bedarf ein eigenes W&ouml;rterbuch verwenden kann. Wer zum Beispiel Kundenbriefe auf Englisch, Franz&ouml;sisch, Deutsch und Japanisch schreibt, kann den vier Quelldateien diese W&ouml;rterb&uuml;cher zuordnen. Wechseln Sie dann zwischen den Quelldateien, wechselt das Fenster &bdquo;Rechtschreibung und Grammatik&ldquo; jedes Mal zum passenden W&ouml;rterbuch.</p>
-
-<p>Beim Schlie&szlig;en der Dateien geht diese Zuordnung verloren; wer in mehreren Sprachen schreibt, muss das passende W&ouml;rterbuch also nach jedem &Ouml;ffnen neu w&auml;hlen.</p>
-
-<p>Mit dem folgenden magischen Kommentar l&auml;sst sich das W&ouml;rterbuch jedoch festlegen, das beim &Ouml;ffnen einer Datei verwendet wird:</p>
+<p>In der Gruppe „Rechtschreibprüfung bei Eingabe“ legt „Rechtschreibung während der Eingabe prüfen“ fest, ob falsch geschriebene Wörter in einem Dokument beim Öffnen unterstrichen werden; „Wörterbuch“ ist weiter unten beschrieben. Die Gruppe „Methode“ legt fest, wie TeX-Quelltext geprüft wird:</p>
 <dl>
-<dd>% !TEX spellcheck = de-DE
-</dd></dl>
-<p>In diesem Beispiel wird beim &Ouml;ffnen der Datei immer ein deutsches W&ouml;rterbuch verwendet. Nach dem &Ouml;ffnen kann das W&ouml;rterbuch mit &bdquo;Rechtschreibung und Grammatik&ldquo; trotzdem ge&auml;ndert werden; beim n&auml;chsten &Ouml;ffnen wird wieder das deutsche W&ouml;rterbuch verwendet.</p>
+<dt>„LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)“</dt>
+<dd>Die oben beschriebene Methode. „LaTeX-Ausschlussregeln bearbeiten…“ am Ende ihrer Zeile öffnet die Regeln, die festlegen, was übersprungen wird.</dd>
+<dt>„Bisherige Methode“</dt>
+<dd>macOS prüft alles außer dem, was die drei Optionen darunter auslassen: „LaTeX-Befehle nicht überprüfen“, „Ausgewählte Parameter nicht überprüfen“, das die Parameter einiger Befehle mit besonderen Wörtern wie <code>\usepackage</code> überspringt, und „Kommentare nicht überprüfen“. Diese Optionen wirken nur bei eingeschalteter Syntaxhervorhebung, und „Dokument jetzt prüfen“ befolgt sie nicht.</dd>
+</dl>
+<p>Dateien, die kein TeX-Quelltext sind, etwa Sweave-Dateien, werden immer mit der bisherigen Methode geprüft.</p>
 
-<p>Die Zeile wird beim &Ouml;ffnen des Dokuments gelesen. Wenn Sie sie zum ersten Mal in eine Quelldatei schreiben, m&uuml;ssen Sie die Datei also sichern und erneut &ouml;ffnen. In einem Projekt mit Hauptdatei muss jede eingebundene Quelldatei die Zeile enthalten.</p>
+<h2>Ausschlussregeln</h2>
 
-<p>In dieser Zeile werden Apple-W&ouml;rterb&uuml;cher f&uuml;r die Sprache nach ISO 639-1 oder ISO 639-2 und f&uuml;r die Region nach ISO 3166-1 angegeben. Die Region unterscheidet eine Sprache, wie sie in einem Teil der Welt verwendet wird, von derselben Sprache in einem anderen Teil der Welt. Franz&ouml;sisch ist zum Beispiel &bdquo;fr&ldquo; in ISO 639-1 und &bdquo;fre&ldquo; in ISO 639-2; Franz&ouml;sisch (Frankreich) hat die Region &bdquo;FR&ldquo; und Franz&ouml;sisch (Kanada) die Region &bdquo;CA&ldquo;. Um in Kanada ein franz&ouml;sisches W&ouml;rterbuch zu w&auml;hlen, funktioniert also &bdquo;spellcheck = fr&ldquo;, und &bdquo;spellcheck = fr-CA&ldquo; ist noch besser. Da es sich um ISO-Normen handelt, funktionieren entsprechende Befehle auch auf anderen Plattformen, auch wenn TeXShop nur auf dem Mac l&auml;uft. Die Sprachnormen sind hier beschrieben:</p>
-<dl>
-<dd><a href="https://www.loc.gov/standards/iso639-2/php/English_list.php">https://www.loc.gov/standards/iso639-2/php/English_list.php</a>
-</dd></dl>
-<p>Die Regionen finden Sie hier:</p>
-<dl>
-<dd><a href="https://www.iso.org/iso-3166-country-codes.html">https://www.iso.org/iso-3166-country-codes.html</a>
-</dd></dl>
+<p>Die Regeln der LaTeX-bewussten Rechtschreibprüfung stehen in der Datei ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Öffnen Sie sie mit „LaTeX-Ausschlussregeln bearbeiten…“ in den Einstellungen oder mit Bearbeiten › Rechtschreibung und Grammatik › Rechtschreib-Ausnahmen bearbeiten…; sie öffnet sich in TeXShop, und ihr Anfang erklärt das Format. Diese Zeilen überspringen zum Beispiel das erste Argument eines Befehls <code>\mycommand</code> und den Inhalt der Umgebung <code>proof</code>:</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>Änderungen wirken bei der nächsten Rechtschreibprüfung. Wird die Datei gelöscht, legt TeXShop beim nächsten Start eine neue Kopie der Standarddatei an. Hilfe › Hilfe zur Rechtschreibprüfung beschreibt die Rechtschreibprüfung ausführlicher.</p>
 
-<p>Urspr&uuml;nglich tat TeXShop f&uuml;r W&ouml;rterb&uuml;cher nichts Besonderes, und man verwendete einfach &bdquo;Rechtschreibung und Grammatik&ldquo;. Sp&auml;ter wurde das oben beschriebene Verfahren teilweise und in TeXShop 3.81 vollst&auml;ndig eingef&uuml;hrt. Wer das urspr&uuml;ngliche Verhalten bevorzugt, bei dem TeXShop einfach das Standardverhalten von &bdquo;Rechtschreibung und Grammatik&ldquo; &uuml;bernahm, kann mit dieser versteckten Einstellung dazu zur&uuml;ckkehren:</p>
-<dl>
-<dd>defaults write TeXShop OriginalSpelling YES
-</dd></dl>
+<h2>Wörterbücher</h2>
 
-<p><a href="basic_preferences.htm#settings-search">Einstellungen verwenden und durchsuchen</a></p>
+<p>„Wörterbuch“ unter Einstellungen › Rechtschreibung legt das Wörterbuch für Dokumente fest, die von da an geöffnet werden; bereits geöffnete Dokumente behalten ihres. Das Menü zeigt jede Sprache unter ihrem eigenen Namen, etwa Deutsch oder Français, mit ihrem Code, etwa de oder fr_CA, als Hilfetext. Mit „Automatische Spracherkennung“ wählt macOS die Sprache anhand des Texts.</p>
+
+<p>Um für ein einzelnes Dokument ein anderes Wörterbuch zu verwenden, wählen Sie es im Einblendmenü unten im Fenster „Rechtschreibung und Grammatik“, während dieses Dokument vorn ist. Jedes geöffnete Dokument behält sein eigenes Wörterbuch, und das Fenster wechselt mit, wenn Sie das Dokument wechseln. Die Wahl geht beim Schließen des Dokuments verloren.</p>
+
+<p>Um einem Dokument bei jedem Öffnen sein Wörterbuch zu geben, schreiben Sie eine Zeile wie diese in seine ersten 20 Zeilen:</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>Der Wert ist ein Sprachcode wie in den Hilfetexten des Menüs „Wörterbuch“: <code>fr</code> für Französisch oder <code>fr-CA</code> für das Französisch Kanadas. Die Zeile wird beim Öffnen des Dokuments gelesen; sichern, schließen und öffnen Sie das Dokument also erneut, nachdem Sie sie hinzugefügt haben. In einem Dokument mit Kapiteldateien schreiben Sie die Zeile in jede Datei.</p>
+
+<p>Wie Sie Einstellungen im Fenster „Einstellungen“ finden, steht unter <a href="basic_preferences.htm#settings-search">Einstellungen suchen</a>.</p>
 </main>
 </body>
 </html>

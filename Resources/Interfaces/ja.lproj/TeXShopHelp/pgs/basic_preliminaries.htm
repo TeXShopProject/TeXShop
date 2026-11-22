@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>まえがき</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="TeXShopについての簡単な紹介">
+<meta name="description" content="TeXShopとは; TeX Live; MacTeX; pdfLaTeX; PDF; macOS 14.6; ヘルプの構成">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -13,48 +13,56 @@
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm" class="current">まえがき</a></li>
-<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a></li>
-<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a></li>
-<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a></li>
-<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
 <li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
-<li><a href="basic_edittricks.htm">編集上のコツ</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
 <li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
-<li><a href="basic_spelling.htm">スペルをチェックする</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
 <li><a href="basic_autocompletion.htm">キーバインド</a></li>
-<li><a href="basic_commandcompletion.htm">コマンドの補完</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
 <li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
 <li><a href="basic_matrixpanel.htm">行列パネル</a></li>
 <li><a href="basic_macros.htm">マクロ</a></li>
 <li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
 <li><a href="basic_graphics.htm">画像を入れる</a></li>
-<li><a href="basic_printing.htm">印刷</a></li>
-<li><a href="basic_preferences.htm">設定</a></li>
-<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a></li>
-<li><a href="basic_templates.htm">テンプレートメニューを変更する</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
 <li><a href="basic_bugs.htm">バグレポートを送る</a></li>
-<li><a href="basic_websites.htm">役に立つウェブ・サイト</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
 <li><a href="basic_license.htm">使用許諾</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>まえがき</h1>
+<p>TeXShopは、TeXやLaTeXで文書を書くためのmacOSのアプリケーションです。エディタのウインドウでソースを書き、クリックひとつか<kbd>⌘T</kbd>でタイプセットすると、その結果が隣のプレビューウインドウに表示されます。どちらかのウインドウでCommandキーを押しながらクリックすると、もう一方のウインドウの対応する場所が示されます。</p>
 
-<p>
-TeXShopはMac OSＸ用のプログラムです──TeXおよびLaTeXファイルをタイプセット（組版）し、出力結果を画面上でプレビューすることができます。TeXShopは通常、TeXやLaTeXの代わりにpdftexあるいはpdflatexを使ってタイプセットを行ないます。これらのプログラムはdviファイルではなくpdfファイルを出力します。というのもpdfはMac OSＸのネイティブなグラフィック・フォーマットなので、画面上に出力を表示するのが容易なのです。pdftexとpdflatexはHan The Thanhさん、Petr SojkaさんとJiri Zlatuskaさんによって作成されました。
-</p>
+<p>TeXShopにTeXは含まれていません。TeXShopはTeXディストリビューションのプログラムを実行します。ふつうはTeX Liveで、MacTeXのインストーラでMacに入れます。「<a href="basic_installtetex.htm">TeX Liveのインストール</a>」を参照してください。TeXShopにはmacOS 14.6以降が必要です。</p>
 
-<p>
-TeXShopによって生成されるpdfファイルは、標準的なpdfファイルなので、他の人々に渡したり、いろいろなコンピュータ・システムで表示させたりできます。たとえばAdobe Acrobatで表示させることができます。
-</p>
+<p>インストールした直後のTeXShopは、LaTeXの文書をpdfLaTeXでタイプセットします。pdfLaTeXはPDFファイルを直接書き出し、プレビューウインドウはそのファイルを表示します。これはふつうのPDFファイルなので、ほかの人に送ることも、どのコンピュータで読むこともできます。LuaLaTeXなど別のエンジンでタイプセットするには、設定でエンジンのプロファイルを選ぶか、文書の先頭にエンジンの名前を書きます。「<a href="basic_typesetting.htm#engine">書類をタイプセットする</a>」を参照してください。日本語の文書については「<a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a>」を参照してください。</p>
 
-<p>
-TeXShopにTeXは含まれていません。その代わり、標準的なTeXディストリビューションであれば、どれとでもいっしょに使うことができます。Mac OS X用の標準的なTeXディストリビューションの入手先については、「<A HREF="basic_installtetex.htm">TeX Liveの入手とインストール</A>」を参照してください。
-</p>
+<h2>このヘルプの内容</h2>
+<dl>
+<dt><a href="basic.htm">基本的なヘルプ</a></dt>
+<dd>TeX LiveとTeXShopのインストール、タイプセット、プレビューウインドウ、編集、検索と置換、スペルチェック、キーバインドとコマンド補完、各パネル、マクロ、プリント、設定。</dd>
+<dt><a href="advanced.htm">上級向けのヘルプ</a></dt>
+<dd>タイプセットのエンジン、ルートファイルのあるプロジェクト、BibTeXとMakeIndex、エンコーディング、外部エディタ、シンタックスハイライトなど。</dd>
+<dt><a href="macros.htm">マクロ・ヘルプ</a></dt>
+<dd>「マクロ」メニュー、マクロエディタ、AppleScriptで書くマクロ。</dd>
+<dt><a href="configure.htm">TeXShopの設定はどうすればよいか？</a></dt>
+<dd>おすすめの設定、~/Library/TeXShopの新しい項目、隠し設定、キーバインド、キーボードショートカット。</dd>
+</dl>
 
-<p>
-その前に、日本語ユーザ用にpTeXの導入について、次項「<A HREF = "basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</A>」で簡単に述べておきます。
-</p>
+<p>「ヘルプ」メニューからは、ほかの資料も開けます。「TeXShopマニュアル（英語）」はすべての機能を詳しく説明しています。「TeXShop入門（英語）」は初めて使う人向けの短い入門です。「このリリースについて（英語）」はアップデートのあとに手作業ですることがあればそれを伝え、「更新履歴（英語）」は各バージョンでの変更を一覧にしています。「マジックコメントと隠し設定（英語）」は、<code>% !TEX program =</code>のようなマジックコメントと、設定ウインドウにない設定の一覧です。</p>
+
+<p>TeXShopのWebサイトは<a href="https://texshop.app/">texshop.app</a>です。</p>
 </main>
 </body>
 </html>

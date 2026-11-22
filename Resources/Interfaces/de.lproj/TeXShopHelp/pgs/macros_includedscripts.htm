@@ -3,80 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Standard AppleScript Makros</title>
+<title>Mitgelieferte AppleScript-Makros</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="applescript">
+<meta name="description" content="AppleScript-Makros; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; Zeilenenden; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Hilfe zu Makros</span></header>
 <nav id="menu">
 <ul>
-<li><a href="macros_preliminaries.htm">Einleitung</a></li>
+<li><a href="macros_preliminaries.htm">Vorbemerkungen</a></li>
 <li><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
-<li><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
-<li><a href="macros_define.htm">Neue Makros erstellen</a></li>
-<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
-<li><a href="macros_includedscripts.htm" class="current">Standard AppleScript Makros</a></li>
-<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
+<li><a href="macros_rearrange.htm">Das Menü „Makros“ neu ordnen</a></li>
+<li><a href="macros_define.htm">Neue Makros definieren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-Makros</a></li>
+<li><a href="macros_includedscripts.htm" class="current">Mitgelieferte AppleScript-Makros</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-Makros definieren</a></li>
 <li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
-<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
-<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
+<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a></li>
+<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Standard AppleScript Makros</h1>
+<h1>Mitgelieferte AppleScript-Makros</h1>
+<p>TeXShop bringt eine Sammlung von AppleScript-Makros von Will Robertson, Claus Gerhardt und anderen mit. Einige davon führen eine Reihe von Satzbefehlen nacheinander aus. Indem Sie sie kopieren und ändern, können Sie Skripte für Ihre eigene Arbeit erstellen. Diese Seite beschreibt einige davon unter ihren Namen im Menü „Makros“.</p>
 
-<P>TeXShop liefert eine Sammlung verschiedener AppleScripts von Will Robertson, Claus Gerhardt und anderen mit. Viele dieser Skripts automatisieren die Arbeit, wenn man mehrere Satzkommandos nacheinander ausf&uuml;hren muss. Indem man die Skripts kopiert und modifiziert, k&ouml;nnen sie an die speziellen Bed&uuml;rfnisse einzelner Benutzer angepasst werden.</P>
-			<P>In diesem Abschnitt werden einige dieser Skripte beschrieben.</P>
-			<h5>Column Macros, Insert Reference, Open Quickly:</h5>
-			<p>Diese Makros stammen von Will Robertson. Mit Hilfe des ersten kann man sehr leicht eine Matrizen und Tabellen erstellen. Das zweite durchsucht die gerade ge&ouml;ffnete Datei nach dem Befehl &bdquo;\label{...}&ldquo;. Danach wird eine Liste angezeigt, in der Referenz-Beschriftungen eingegeben werden k&ouml;nnen. Mit Hilfe des dritten Makros k&ouml;nnen Sie direkt alle Dateien, die sich im gleichen Verzeichnis wie die Quelldatei befinden, &ouml;ffnen. </p>
-			<P>
-<B>Convert to Mac, Convert to Unix, Convert to Windows: </B>
-</P>
+<h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
+<p>Diese Makros stammen von Will Robertson. Im Untermenü „Column macros“ fügen New tabular und New array eine tabular- bzw. array-Umgebung mit der eingegebenen Anzahl von Zeilen und Spalten ein, und Add column und Delete column ändern die ausgewählten Zeilen. Insert reference durchsucht die aktuelle Datei nach Befehlen <code>\label{…}</code> und lässt Sie ein Label aus einer Liste wählen; es fügt das Label in <code>\ref{…}</code> ein, einen Befehl, den Sie im Skript ändern können. Ist Text ausgewählt, werden nur die Labels aufgeführt, die ihn enthalten. Open quickly… listet die .tex-, .sty- und .pdf-Dateien im Ordner der aktuellen Quelltextdatei auf und öffnet die gewählten.</p>
 
+<h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
+<p>Dieses Makro von Alan Munn setzt Zellen aus einer Tabellenkalkulation als Tabelle in Ihren LaTeX-Quelltext ein. Wählen Sie in Excel oder einer anderen Tabellenkalkulation einen Zellbereich aus und kopieren Sie ihn. Wählen Sie dann Makros › Paste Spreadsheet Cells und einen Tabellenstil:</p>
+<dl>
+<dt>cells</dt><dd>wandelt den kopierten Text nur in LaTeX-Tabellenzellen um.</dd>
+<dt>booktabs</dt><dd>nimmt die erste Zeile als Kopfzeile und setzt <code>\toprule</code>, <code>\midrule</code> und <code>\bottomrule</code> in eine tabular-Umgebung.</dd>
+<dt>simple</dt><dd>umgibt die Zellen mit einer einfachen tabular-Umgebung.</dd>
+<dt>longtable</dt><dd>nimmt die erste Zeile als Kopfzeile, fügt die Kopfzeilen einer longtable hinzu und setzt die Zellen in eine longtable-Umgebung.</dd>
+</dl>
+<p>Das Makro ersetzt den Inhalt der Zwischenablage durch den LaTeX-Text. Um dieselben Zellen in einem anderen Stil einzusetzen, kopieren Sie sie zuerst erneut in der Tabellenkalkulation.</p>
 
-<P>Fr&uuml;her wurden Fernschreiber zur Kommunikation benutzt. Der ASCII Zeichensatz hat immernoch remineszenzen an diese Zeit. So erzeugt z.B. 0x07 einen Klingelton. Das Zeichen 0x0a war ein Zeilenwechsel und das Zeichen 0x0d war ein Zeilenwechsel, der an die erste Position der neuen Zeile sprang. Um also einen echten Zeilenwechsel zu erhalten wurde die Zeichensequenz 0x0d 0x0a verwendet.</P>
+<h2 id="line-endings">Applescript › Convert to MAC, Convert to Unix, Convert to Windows</h2>
+<p>Textdateien beenden ihre Zeilen auf verschiedene Weise: macOS und Unix mit einem Zeilenvorschub, Windows mit einem Wagenrücklauf, gefolgt von einem Zeilenvorschub, und sehr alte Macintosh-Dateien mit einem Wagenrücklauf allein. TeXShop liest alle drei. Kann der Editor einer anderen Person das nicht, verwenden Sie diese Makros. Für eine Quelltextdatei MyFile.tex schreibt Convert to Unix eine Kopie der gesicherten Datei namens MyFile_Unix.tex mit Zeilenvorschüben; Convert to Windows schreibt MyFile_Windows.tex und Convert to MAC schreibt MyFile_Mac.tex. Die Makros verwenden das Programm flip von Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
 
-<P>Nachdem die Bl&uuml;tezeit der Fernschreiber vergangen war benutzten die verschiedenen Computer-Hersteller unterschiedliche Zeichen um einen vollst&auml;ndigen Zeilenwechsel anzuzeigen. In der Unix-Welt wurde 0x0a benutzt. Windows verwendete 0x0d 0x0a und auf dem klassischen Macintosh verwendete man 0x0d. Apples Richtlininen f&uuml;r Mac OS X stellen fest, dass Programme dieses Systems normalerweise Dokumente mit alle verschiedenen Zeilenwechseln &ouml;ffnen k&ouml;nnen. Die meisten Programme, wie z.B. TeXShop oder TextEdit befolgen diese Richtlinien auch. TeXShop benutzt f&uuml;r neue Dokumente die Unix Konvention. Werde jedoch Dokumente ge&ouml;ffnet, die mit der klassischen Mac OS Konvention erstellt wurden, so werden die Zeilenwechsel beibehalten. Nur neue Zeilenwechsel werden nach den Unix-Konventionen gesichert.</P>
+<h2 id="bibliography">Applescript › Bibliography</h2>
+<p>Ein Dokument mit Literaturverzeichnis braucht mehrere Läufe: LaTeX schreibt die .aux-Datei, BibTeX schreibt daraus die .bbl- und .blg-Dateien, LaTeX läuft erneut, um das Literaturverzeichnis aufzunehmen, und noch einmal, um die Verweise darauf zu aktualisieren. Das Makro Bibliography führt LaTeX, BibTeX, LaTeX und LaTeX nacheinander aus. <a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a> erklärt, wie es funktioniert.</p>
 
-<P>Unter Mac OS X bereiten die Zeilenwechsel also keinerlei Schwierigkeiten. Diese treten erst auf, wenn Sie Ihre Dateien auf einem anderen Betriebssystem &ouml;ffnen wollen. Zwar verstehen heute viele Editoren auf anderen Betriebssystemen auch mehrere unterschiedlichen Zeilenwechsel, sollte es jedoch einmal zu Problemen kommen, sollten sie die obigen Skripte benutzen. Nehmen wir an die Quelldatei eines Dokuments hat den Namen &bdquo;MeineDatei.tex&ldquo;. Das Skript &bdquo;Convert to Mac&ldquo; erstellt aus dieser Datei eine neue Datei mit dem gleichen Code, die ausschlie&szlig;lich klassische Macintosh Zeilenwechsel beinhaltet und den Namen &bdquo;MeineDatei_Mac.tex&ldquo; hat. &bdquo;Convert to Unix&ldquo; und &bdquo;Convert to Windows&ldquo; funktionieren auf die selbe Weise. Alle diese Skripte benutzen ein Programm mit dem Namen &bdquo;flip&ldquo;, dass sich in &bdquo;~/Library/TeXShop/bin&ldquo; befindet (Vgl. http://ccrma-www.stanford.edu/~craig/utility/flip/ f&uuml;r weitere Informationen). </P>
-
-<P>
-<B>Other Scripts->Bibliography:</B>
-</P>
-
-<P>Enth&auml;lt ein TeX Projekt eine Bibliographie muss eine Reihe von Befehlen ausgef&uuml;hrt werden um die Literaturliste zu aktualisieren. Zuerst wird LaTeX ausgef&uuml;hrt, damit eine .aux-Datei erstellt wird. Danach wird BiBTeX ausgef&uuml;hrt um aus dieser Datei .bbl- und .blg-Dateien zu erstellen. Schlie&szlig;lich muss wieder LaTeX ausgef&uuml;hrt werden, um die Bibliographie in das Dokument zu &uuml;bernehmen.</P>
-
-<P>Der &bdquo;Bibliography&ldquo;-Befehl f&uuml;hrt alle diese Schritte nacheinander aus. Erst wird die Datei gesichert und dann latex-&gt;bibtex-&gt;latex-&gt;latex ausgef&uuml;hrt. Schlie&szlig;lich wird das Vorschaufenster aktualisiert.</P>
-
-<P>
-<B>htlatexc, htlatexr:</B>
-</P>
-
-<P>Tex4ht ist ein TeX-Programm, das LaTeX-Dokumente in eine Webseite konvertiert. Die Quelldatei kann ein Standard-LaTeX-Dokument sein und eps-Illustrationen enthalten. Als Ergebnis erhalten Sie ein html-Dokument und eine Reihe von GIF-Dateien. Der Skript-Befehl &bdquo;htlatexc&ldquo; sichert das Quelldokument, f&uuml;hrt htlatex aus und &ouml;ffnet die fertige html-Seite in Safari. Es verh&auml;lt sich also wie eine neue TeXShop Satzvariante, die jedoch von einem Benutzer mit Hilfe des Skript-Codes erstellt wurde.</P>
-
-<P>Wenn Sie diese Skripte benutzen m&uuml;ssen Sie das Paket text4ht nicht extra einbinden. Das Paket wird automatisch geladen. Das Skript htlatexc ruft htlatex ohne zus&auml;tzliche Optionen auf. htlatexr &uuml;bergibt htlatex die Anweisung eventuell schon bestehende GIF-Dateien neu zu erstellen.</P>
-
-<P>
-<B>pdfselectc:</B>
-</P>
-
-<P>Dieses Akript f&uuml;hrt das Shell-Skript pdfselect aus, um pdf-Dokumente zu erstellen, die nur einen gewissen Seitenbereich enthalten. Wird es ausgef&uuml;hrt erscheint ein Dialog, der darum bittet die Anzahl der zu erstellenden pdf-Dokumente einzugeben. Nehmen wir an Sie geben hier &bdquo;drei&ldquo; an.  Der n&auml;chste Dialog fordert Sie auf die Seitenfolge der einzelnen Dokumente anzugeben. Nehmenwir an sie geben f&uuml;r das erste Dokument &bdquo;5:8&ldquo;, f&uuml;r das zweite &bdquo;20&ldquo; und f&uuml;r das dritte &bdquo;20:30&ldquo; an. Das Ergebnis wird sein, dass sie drei pdf-Dateien erhalten, wobei die erste die Seiten f&uuml;nf bis acht, die zweite die Seite zehn und die dritte Seiten 20-30 enth&auml;lt.</P>
-
-<P>
-<B>mpostc, mpostcpl, latex-makeindex-mpost:</B>
-</P>
-
-<P>Das Skript &bdquo;mpostc&ldquo; ruft mpost und danach pdflatex auf. &bdquo;mpostcpl&ldquo; f&uuml;hrt pdflatex-&gt;mpost-&gt;pdflatex aus. Lesen Sie auch in der TeXShop Hilfe unter <a href="advanced_context.htm">Allgemeine Hilfe: Context und Metapost</a> nach um ein Beispiel daf&uuml;r zu finden, wie Sie diese Befehle nacheinander ausf&uuml;hren k&ouml;nnen.</P>
-
-<P>Das Skript latex-makeindex-mpost sichert die Quelldatei, ruft pdflatex, makeindex, mpost und wieder pdflatex auf, wobei relevante log-Dateien w&auml;hrend dessen ge&ouml;ffnet werden.</P>
-
-<P><B>Andere:</B>
-</P>
-
-<P>Der Ordner &bdquo;TeXShop_Folder&ldquo; der mit TeXShop mitgeliefert wird enth&auml;lt einen Unterordner mit dem Namen &bdquo;Scripts by Claus Gerhardt&ldquo; mit weiteren Skripts sowie ausf&uuml;hrlicher Dokumentation. Bitte sehen Sie hier nach um weitere Informationen zu erhalten.
-	
+<h2 id="gerhardt">Claus Gerhardt Macros</h2>
+<p>Die Makros dieses Untermenüs rufen gleichnamige Shell-Skripte in ~/Library/TeXShop/bin auf. Sie arbeiten mit einer gesicherten Datei. <a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a> erklärt pdflatexc als Beispiel.</p>
+<h3>htlatexc, htlatexr</h3>
+<p>TeX4ht wandelt ein LaTeX-Dokument in eine Webseite um: eine HTML-Seite und Bilddateien. htlatexc führt htlatex für das Dokument aus und öffnet die entstandene HTML-Datei in Safari. Das Paket tex4ht muss im Dokument nicht geladen werden; htlatex lädt es. htlatexr führt htlatex mit der Option <code>-r</code> aus, die die Bilder neu erstellt, auch wenn sie schon vorhanden sind.</p>
+<h3>pdfselectc</h3>
+<p>pdfselectc erstellt PDF-Dateien, die ausgewählte Seiten des PDF des Dokuments enthalten. Es fragt zuerst, wie viele Dateien erstellt werden sollen, dann nach den Seiten jeder Datei, etwa <code>5:8</code> für die Seiten 5 bis 8 oder <code>3:4,6,8:12</code>. Heißt das Dokument MyFile, werden die Dateien als MyFile-1.pdf, MyFile-2.pdf und so weiter gesichert.</p>
+<h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
+<p>mpostc führt MetaPost und dann pdfLaTeX aus; mpostcpl führt pdfLaTeX, MetaPost und erneut pdfLaTeX aus. latex-makeindex-mpost führt pdfLaTeX, MakeIndex, MetaPost und erneut pdfLaTeX aus und öffnet dabei die Log-Dateien. Zu MetaPost siehe <a href="advanced_context.htm">ConTeXt und MetaPost</a>.</p>
 </main>
 </body>
 </html>

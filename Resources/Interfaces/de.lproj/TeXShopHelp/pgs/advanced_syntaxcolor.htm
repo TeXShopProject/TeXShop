@@ -5,38 +5,63 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Syntaxhervorhebung</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Passen Sie die Farben der Syntaxhervorhebung an Ihre Bed&uuml;rfnisse an.">
+<meta name="description" content="Syntaxhervorhebung; Syntaxfarben; Farben; Thema; expl3; Indexeinträge; Fußnote; Markierung; Klammern; vollbreit; SyntaxColoringEnabled">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</a></li>
-<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-<li><a href="advanced_addengine.htm">Zus&auml;tzliche Schriftsatz-Programme</a></li>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-<li><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
 <li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
 <li><a href="advanced_syntaxcolor.htm" class="current">Syntaxhervorhebung</a></li>
-<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-<li><a href="advanced_plist.htm">Plist Datein</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Lokalisierungen</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Syntaxhervorhebung</h1>
+<p>Das Quelltextfenster zeigt TeX farbig an: Kommentare, Befehle, Fußnoten, die Zeichen <code>$</code> und <code>&amp;</code> sowie die Klammern <code>( )</code>, <code>{ }</code> und <code>[ ]</code> haben jeweils eine eigene Farbe. Quelltext › Syntaxhervorhebung schaltet die Hervorhebung für das aktive Dokument ein oder aus. Dokumente öffnen sich mit eingeschalteter Hervorhebung; um sie ausgeschaltet zu öffnen, verwenden Sie die versteckte Einstellung</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
 
-		<P>Wenn die Syntaxhervorhebung im Eingabefenster eingeschaltet ist, erscheinen Kommentare, Befehle und die Symbole $, { und } in eigenen Farben. Diese Farben geh&ouml;ren zum Thema. Sie lassen sich in den Einstellungen unter &bdquo;Themen&ldquo; in der Gruppe &bdquo;Syntaxhervorhebung&ldquo; &auml;ndern. Jedes Thema hat seine eigenen Farben, so dass das Hellmodus-Thema und das Dunkelmodus-Thema verschiedene Farben verwenden k&ouml;nnen.</P>
-		<p>Fr&uuml;here Versionen von TeXShop stellten diese Farben mit versteckten Einstellungen wie markerred, markergreen und markerblue ein. Sie werden nicht mehr verwendet.</p>
+<h2>Was hervorgehoben wird</h2>
+<ul>
+<li>Befehle sind ein Backslash, gefolgt von Buchstaben. Einstellungen › Editor › Syntaxhervorhebung › „@ als Teil von Befehlsnamen“ zählt auch <code>@</code> als Buchstaben, wie in den internen Befehlen von Paketen.</li>
+<li>Der Text von <code>\footnote</code>, <code>\footcite</code> und <code>\autocite</code> erscheint in der Farbe „Fußnote“. Die versteckte Einstellung <code>defaults write TeXShop SyntaxColorFootnote NO</code> färbt nur den Befehl.</li>
+<li>Quelltext › Indexeinträge hervorheben zeigt die Argumente von <code>\index</code> und <code>\esindex</code> in der Farbe „Index“. Einstellungen › Editor › Syntaxhervorhebung › „Indexeinträge standardmäßig hervorheben“ schaltet dies beim Öffnen von Dokumenten ein.</li>
+<li>Quelltext › expl3-Code hervorheben färbt außerdem die Funktionen, Variablen und anderen Teile von expl3-Code, der Programmierebene von LaTeX, für alle, die Pakete schreiben. „expl3-Code standardmäßig hervorheben“ in derselben Gruppe schaltet dies beim Öffnen von Dokumenten ein.</li>
+<li>„Vollbreite Buchstaben und Symbole hervorheben“ in derselben Gruppe zeigt Buchstaben, Ziffern und Symbole voller Breite, die sich in japanischem Text leicht mit ASCII-Zeichen verwechseln lassen, in den Farben „Vollbreit“.</li>
+</ul>
+<p>„Indexeinträge hervorheben“ und „expl3-Code hervorheben“ gelten für das aktive Dokument; jedes Quelltextfenster hat seine eigene Wahl. Dateien, die keine TeX-Quelltexte sind, etwa Log-Dateien, werden nicht hervorgehoben; die Liste der Endungen und wie man eine hinzufügt, steht unter <a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a>.</p>
+
+<h2>Die Farben ändern</h2>
+<p>Die Farben gehören zum Thema. Wählen Sie sie unter Einstellungen › Themen:</p>
+<ul>
+<li>Die Gruppe „Syntaxhervorhebung“ enthält „Kommentar“, „Befehl“, „Fußnote“, „Markierung“ und „Index“;</li>
+<li>die Gruppe „Klammern“ enthält die Farben von <code>( )</code>, <code>{ }</code> und <code>[ ]</code>;</li>
+<li>die Gruppe „expl3“ enthält function, __function, key, variable, __variable, argument und msg;</li>
+<li>die Gruppe „Hervorhebungen“ enthält unter anderem die Farben „Vollbreit“;</li>
+<li>die Gruppe „XML-Syntax“ enthält die Farben für HTML- und XML-Dateien.</li>
+</ul>
+<p>Jedes Thema hat seine eigenen Farben, sodass sich Hellmodus-Thema und Dunkelmodus-Thema unterscheiden können.</p>
 </main>
 </body>
 </html>

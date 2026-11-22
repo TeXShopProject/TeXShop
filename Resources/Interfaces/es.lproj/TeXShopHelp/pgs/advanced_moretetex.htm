@@ -3,50 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>M&aacute;s sobre TeX Live</title>
+<title>Más sobre TeX Live</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="texlive; a&ntilde;adir archivos sty; sty">
+<meta name="description" content="TeX Live; MacTeX; BasicTeX; /usr/local/texlive; /Library/TeX/texbin; ruta de los motores TeX; documentación">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">A&ntilde;adir archivos personales a TeX Live</a></li>
-<li><a href="advanced_moretetex.htm" class="current">M&aacute;s sobre TeX Live</a></li>
+<li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm" class="current">Más sobre TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
-<li><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a></li>
-<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a></li>
+<li><a href="advanced_addengine.htm">Añadir motores de composición</a></li>
+<li><a href="advanced_formats.htm">Crear y usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX y LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
-<li><a href="advanced_root.htm">Establecer un documento ra&iacute;z</a></li>
-<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a></li>
-<li><a href="advanced_removeaux.htm">Borrado de archivos AUX</a></li>
+<li><a href="advanced_encoding.htm">Codificaciones</a></li>
+<li><a href="advanced_Japan.htm">Composición en japonés</a></li>
+<li><a href="advanced_root.htm">Establecer el archivo raíz de un proyecto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronización entre código y vista previa</a></li>
+<li><a href="advanced_removeaux.htm">Borrar archivos AUX</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a></li>
-<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a></li>
-<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar</a></li>
+<li><a href="advanced_shellescape.htm">Protección ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar un editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar y pegar, arrastrar y soltar</a></li>
 <li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a></li>
-<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a></li>
-<li><a href="advanced_plist.htm">Archivos .plist</a></li>
+<li><a href="advanced_coloredtext.htm">Texto en color</a></li>
+<li><a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizaciones</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>M&aacute;s sobre TeX Live</h1>
+<h1>Más sobre TeX Live</h1>
+<h2>Dónde está instalado TeX Live</h2>
+<p>MacTeX instala TeX Live en <code>/usr/local/texlive/2026</code>, y BasicTeX en <code>/usr/local/texlive/2026basic</code>. TeX Live se publica una vez al año, y cada año se instala en su propia carpeta, por ejemplo <code>2027</code>, de modo que varios años pueden convivir en el Mac. Para eliminar uno, arrastre su carpeta a la Papelera.</p>
+<p>La carpeta <code>/usr/local</code> está oculta en el Finder. Para ver su contenido, elija Ir › Ir a la carpeta… en el Finder y escriba la ruta.</p>
 
-		<p>TeX Live, del TUG, se instala en el directorio /usr/local/texlive, que no es visible desde el Finder. Pero el instalador crea en /Library/TeX/Root un enlace simb&oacute;lico al directorio de la distribuci&oacute;n de TeX activa. Por tanto, ve a /Library/TeX/Root para examinar los archivos de tu distribuci&oacute;n.</p>
-		<p>La documentaci&oacute;n de la distribuci&oacute;n activa est&aacute; en /Library/TeX/Documentation (que en realidad es un enlace a varias carpetas de documentaci&oacute;n de la distribuci&oacute;n).</p>
-		<p>Es posible almacenar archivos de estilo adicionales, tipos (&lsquo;fonts&rsquo;), etc. en el mismo TeX Live. Pero el &laquo;propietario&raquo; de TeX Live es &laquo;root&raquo;, y TeX Live est&aacute; en una carpeta en la que los usuarios no pueden escribir. Adem&aacute;s, es buena idea mantener este directorio intacto, para poder actualizarlo f&aacute;cilmente cuando salgan versiones posteriores. Es mejor construir una r&eacute;plica de la estructura de directorios de TeX Live dentro de tu carpeta Library y guardar all&iacute; tus archivos personales.</p>
-		<p>Los archivos deben estar en sus directorios apropiados. TeX Live usa la estructura de directorios ideada por el grupo de trabajo de TeX. Sup&oacute;n que quieres a&ntilde;adir un archivo de estilo llamado new.sty a los que usa LaTeX. TeX Live guarda los archivos de estilo de LaTeX en subcarpetas de texmf-dist/tex/latex.</p>
-		<p>Por tanto, dentro de la carpeta Library de tu directorio personal, crea una serie de subdirectorios como sigue:</p>
-		<dl>
-			<dd>Library  --&gt;  texmf  --&gt;  tex  --&gt;  latex  --&gt;  misc
-		</dl>
-		<p>y almacena &laquo;new.sty&raquo; dentro de este directorio misc.</p>
-		<p>TeX Live busca los archivos bib de BibTeX en ~/Library/texmf/bibtex/bib, y los archivos bst de BibTeX en ~/Library/texmf/bibtex/bst.</p>
-		<p>MacTeX tambi&eacute;n instala TeX Live Utility en /Applications/TeX. Si tienes varias distribuciones de TeX instaladas en la m&aacute;quina, puedes pasar de una a otra en TeX Live Utility con el comando &laquo;Reconfigure Distributions&raquo; del men&uacute; &laquo;Configure&raquo;. La distribuci&oacute;n activa es la que usan TeX desde la l&iacute;nea de comandos, las p&aacute;ginas MAN en el Terminal y todas las aplicaciones gr&aacute;ficas que encuentran TeX a trav&eacute;s de /Library/TeX/texbin. Si instalaste TeX Live sin MacTeX y TeX Live Utility no lo muestra, indica en su lugar la carpeta de programas de ese TeX Live (por ejemplo, /usr/local/texlive/2026/bin/universal-darwin) en Ajustes &gt; Composici&oacute;n &gt; Rutas &gt; Motores TeX de TeXShop.</p>
+<h2>Cómo encuentra TeXShop a TeX</h2>
+<p>TeXShop ejecuta TeX desde la carpeta indicada en el campo «Motores TeX» de Ajustes › Composición › Rutas. El valor predeterminado es <code>/Library/TeX/texbin</code>, un enlace que los instaladores de MacTeX y BasicTeX hacen apuntar a los programas del TeX Live recién instalado. Cuando se instala un nuevo año de TeX Live, el enlace lo sigue, y TeXShop usa el nuevo TeX sin cambiar nada en los ajustes.</p>
+<p>Para usar otra instalación, escriba en «Motores TeX» la carpeta de sus programas, por ejemplo <code>/usr/local/texlive/2026/bin/universal-darwin</code>, o pulse «Detectar rutas…» para elegir entre las instalaciones que encuentra TeXShop; consulte <a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a>.</p>
+
+<h2>Deje TeX Live como está</h2>
+<p>Las carpetas de TeX Live pertenecen al sistema, y una actualización o un nuevo año de TeX Live las sustituye. No añada ni modifique archivos en ellas. Guarde sus propios archivos de estilo, clases y bibliografías en su árbol personal, donde TeX los encuentra primero y donde las actualizaciones no los tocan; consulte <a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a>.</p>
+
+<h2>Documentación</h2>
+<p>TeX Live contiene documentación para casi todos los paquetes. Ayuda › Mostrar ayuda del paquete… abre la documentación de un paquete por su nombre, por ejemplo <code>hyperref</code> o <code>tikz</code>. Ayuda › Documentación de TeX Live indica dónde encontrar en internet la guía de TeX Live y otra documentación.</p>
 </main>
 </body>
 </html>

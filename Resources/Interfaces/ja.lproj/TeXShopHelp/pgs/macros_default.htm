@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>デフォルトのマクロを理解する</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="文字列を挿入するタイプのマクロの基本的な原理">
+<meta name="description" content="デフォルトのマクロ; Insert Begin/End; #SEL#; #INS#; #PASTE#; マーク; カーソルの位置; テキストマクロ">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +14,7 @@
 <ul>
 <li><a href="macros_preliminaries.htm">まえがき</a></li>
 <li><a href="macros_default.htm" class="current">デフォルトのマクロを理解する</a></li>
-<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a></li>
+<li><a href="macros_rearrange.htm">マクロメニューを並べ替える</a></li>
 <li><a href="macros_define.htm">新しいマクロを定義する</a></li>
 <li><a href="macros_applescript.htm">AppleScriptマクロ</a></li>
 <li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a></li>
@@ -26,43 +26,26 @@
 </nav>
 <main id="content">
 <h1>デフォルトのマクロを理解する</h1>
+<p>デフォルトのマクロを理解するいちばんの方法は、マクロエディタ（「マクロ」→「マクロエディタを開く...」）で見てみることです。一覧でマクロを選ぶと、その内容が横に表示されます。</p>
+<p>たとえば、theorem環境を使いたいとします。theoremと入力して選び、「マクロ」→「Insert Begin/End」を選びます。すると、この語が次のように置き換わり、</p>
+<pre>\begin{theorem}
 
+\end{theorem}</pre>
+<p>挿入位置は間の行に置かれます。</p>
+<p>Insert Begin/EndはAppleScriptマクロです（<a href="macros_applescript.htm">AppleScriptマクロ</a>を参照）。語を選んでいるときに同じことをするテキストマクロは、次のようになります。</p>
+<pre>\begin{#SEL#}
+#INS#
+\end{#SEL#}</pre>
 
-<p>
-デフォルトのマクロを理解するいちばんいい方法は、その定義をマクロエディタで調べてみることです。たとえば「Begin/End」と題されたマクロについて考えてみましょう。theorem環境のような環境を使いたいとします。「theorem」という単語を打ち込み、これを選択してください。そして「Begin/End」マクロを選びます。「theorem」という語が、次のようなテキストに置き換えられます──
-</p>
-
-<tt>
-	<dl>
-		<dd>\begin{theorem}
-		<p>
-		<dd>\end{theorem}
-	</dl>
-</tt>
-
-<p>
-カーソルはbeginとendの間に配置されています。
-</p>
-
-<p>
-では「Begin/End」というマクロのコードを調べてみます：
-</p>
-
-<tt>
-		<dl>
-			<dd>\begin{#SEL#}
-			<dd>#INS#
-			<dd>\end{#SEL#}
-		</dl>
-</tt>
-
-<p>
-マクロ内のテキストがソースファイルに挿入される。#SEL# という文字列はそれぞれに、マクロが実行されたときに選択されていたテキストで置き換えられる。もしテキストが何も選択されていなければ、#SEL# は空っぽの文字列で置き換えられる。#PASTE# という文字列はそれぞれに、クリップボードのテキストで置き換えられる（クリップボードにテキストがなければ空っぽの文字列）。カーソルは挿入したテキストの最後に置かれるが、#INS# という文字列が含まれている場合には、そこにカーソルが配置される。
-</p>
-
-<p>
-これがわかっていれば、デフォルトのマクロを理解したり修正したりするのは簡単なことです。
-</p>
+<h2 id="placeholders">テキストマクロのプレースホルダ</h2>
+<p>テキストマクロの文字列は、次の置き換えをしたうえでソースに挿入されます。</p>
+<dl>
+<dt>#SEL#</dt><dd>マクロを選んだときに選択していた文字列に置き換わります。何も選択していなければ、何も入りません。</dd>
+<dt>#INS#</dt><dd>挿入位置を置く場所を示します。これがなければ、挿入位置は挿入した文字列の末尾に置かれます。</dd>
+<dt>#PASTE#</dt><dd>クリップボードの文字列に置き換わります。クリップボードに文字列がなければ、何も入りません。</dd>
+<dt>•</dt><dd>マークです。「編集」→「マーク」で移動できます。</dd>
+</dl>
+<p>マクロエディタでは、これらのプレースホルダは角丸の札で表示されます。入れ方は<a href="macros_define.htm">新しいマクロを定義する</a>で説明しています。これだけ分かれば、デフォルトのマクロは簡単に理解でき、変更もできます。</p>
 </main>
 </body>
 </html>

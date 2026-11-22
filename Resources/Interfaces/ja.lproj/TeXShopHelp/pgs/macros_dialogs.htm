@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ダイアログを作る</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScriptで作るダイアログの作例">
+<meta name="description" content="AppleScript; ダイアログ; display dialog; activate; ScriptRunner">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +14,7 @@
 <ul>
 <li><a href="macros_preliminaries.htm">まえがき</a></li>
 <li><a href="macros_default.htm">デフォルトのマクロを理解する</a></li>
-<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a></li>
+<li><a href="macros_rearrange.htm">マクロメニューを並べ替える</a></li>
 <li><a href="macros_define.htm">新しいマクロを定義する</a></li>
 <li><a href="macros_applescript.htm">AppleScriptマクロ</a></li>
 <li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a></li>
@@ -26,41 +26,31 @@
 </nav>
 <main id="content">
 <h1>ダイアログを作る</h1>
+<p>AppleScriptでは、ダイアログを表示し、入力された内容に応じて処理ができます。たとえば、次の内容でマクロを作って試してみてください。</p>
+<pre>-- AppleScript
+-- Use a dialog to enter user defined information into an AppleScript.
+-- There are two feedbacks possible 'text' and "choice of buttons".
+-- The returned information can be used to define corresponding
+-- variables.
+-- The number of buttons may not exceed three.
+-- In the three examples below it is shown how to use text return,
+-- button return, and both.
 
-
-<p>
-AppleScriptでダイアログを作成し、ユーザの入力に応じて動作するようにできます。たとえば、以下のスクリプトを書き入れて、ふるまいを試してみてください。
-</p>
-
-<tt>
-	<dl>
-		<dd>-- AppleScript
-		<dd>-- Use a dialog to enter user defined information into an applescript.
-		<dd>-- ダイアログを使い、ユーザの定めるデータをAppleScriptに取り込みます。
-		<dd>-- There are two feedbacks possible 'text' and "choice of buttons".
-		<dd>-- 「テキスト」と「ボタン選択」による２つのフィードバックが利用可能です。
-		<dd>-- The returned information can be used to define corresponding variables.
-		<dd>-- 返されたデータは該当する変数を定義するのに使えます。
-		<dd>-- The number of buttons may not exceed three.
-		<dd>-- ボタンの数は３つを超えないように。
-		<dd>-- In the three examples below it is shown how to use text return, button return, and both.
-		<dd>-- 以下の３つの例では、テキスト、ボタン、テキスト＆ボタンの使い方について示しています。
-		<p>
-		<dd>activate
-		<dd>display dialog "Test dialog: type something below" default answer "Hello World!" buttons {"A", "B", "C"} default button "B"
-		<dd>set theText to (the text returned of the result)
-		<p>
-		<dd>display dialog "Test dialog: type something below" default answer "Hello World!" buttons {"A", "B", "C"} default button "B"
-		<dd>set theButton to (the button returned of the result)
-		<p>
-		<dd>display dialog "Test dialog: type something below" default answer "Hello World!" buttons {"A", "B", "C"} default button "B"
-		<dd>set {theText, theButton} to {the text returned of the result, the button returned of the result}
-	</dl>
-</tt>
-
-<p>
-この例にあるコマンド「activate」には解説が必要です。AppleScriptを実行するよう要請されるとTeXShopは、別のプログラムを呼び出してスクリプトを実行します。そのプログラム──Scriptrunnerは、TeXShopに組み込まれています。スクリプトで作成したダイアログはすべて、TeXShopではなくScriptrunnerで表示されます。「activate」コマンドはScriptrunnerを前面に持ってくるので、ダイアログは他のウインドウよりも手前に表示されます。
-</p>
+activate
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set theText to (the text returned of the result)
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set theButton to (the button returned of the result)
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set {theText, theButton} to ¬
+  {the text returned of the result, the button returned of the result}</pre>
+<p><code>activate</code>のコマンドには説明が必要でしょう。<code>-- AppleScript</code>で始まるマクロは、TeXShopの中にある別のプログラムScriptRunnerが実行するので、ダイアログもTeXShopではなくScriptRunnerが表示します。<code>activate</code>はScriptRunnerを手前に出し、ダイアログがほかのウインドウより手前に表示されるようにします。</p>
 </main>
 </body>
 </html>

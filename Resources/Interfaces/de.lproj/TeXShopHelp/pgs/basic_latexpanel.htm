@@ -4,50 +4,60 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LaTeX Palette</title>
-<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Mit Hilfe der LaTeX-Palette k&ouml;nnen Sie h&auml;ufig benutzte Befehle einfach in Ihren LaTeX-Quelltext einf&uuml;gen.">
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="LaTeX Palette; Symbole; griechische Buchstaben; Umgebungen; Schriftart; amssymb; completion.plist; eigene Tasten">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-<li><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-<li><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
 <li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
 <li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
-<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
 <li><a href="basic_latexpanel.htm" class="current">LaTeX Palette</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
-<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
 <li><a href="basic_printing.htm">Drucken</a></li>
 <li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
-<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-<li><a href="basic_bugs.htm">Fehlerberichte &uuml;bermitteln</a></li>
-<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
 <li><a href="basic_license.htm">Lizenz</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>LaTeX Palette</h1>
-	
-		<P>Im Men&uuml; &bdquo;Fenster&ldquo; befindet sich der Punkt &bdquo;Latex Palette...&ldquo;. Beim Ausw&auml;hlen dieses Befehls &ouml;ffnet sich eine Palette mit einer gro&szlig;en Anzahl von mathematischen Symbolen, griechischen Zeichen, Internationalen Symbolen und Umgebungen. Klicken Sie auf ein Symbol und der jeweilige Befehl wird in Ihren Quelltext eingef&uuml;gt. Diese sch&ouml;ne Palette ist die Arbeit von Geoffroy Lenglin, der unter <a href="mailto:geoffroy.lenglin@m4x.org">geoffroy.lenglin@m4x.org</a> zu erreichen ist.</P>
-		<p>Einige Symbole in der Palette ben&ouml;tigen die Zeile</p>
-		<dl>
-			<dd><tt>\usepackage{amssymb}</tt>
-		</dl>
-		<p>am Anfang des Quelltexts.</p>
-		<p>Es ist m&ouml;glich das verhalten der Palette anzupassen. Beim ersten Start von TeXShop wird die Datei &bdquo;~/Library/TeXShop/LatexPanel/completion.plist&ldquo; in ihrem Library-Ordner erstellt. Diese Datei ist eine gew&ouml;hnliche Textdatei welche mit TeXShop ge&ouml;ffnet und bearbeitet werden kann. Die Datei enth&auml;lt alle Befehle die in Ihren Quelltext eingef&uuml;gt werden, wenn Sie ein Symbol ausw&auml;hlen. Wenn ein Befehl #SEL# beinhaltet, dann wird die aktuelle Auswahl durch den Ausdruck des eingef&uuml;gten Befehls ersetzt. Wenn ein Befehl #INS# beinhaltet, dann wird der Cursor beim Einf&uuml;gen an diese Stelle bewegt. Um das Verhalten der Palette zu &auml;ndern, bearbeiten Sie die Datei &bdquo;completion.plist&ldquo;.</p>
-		<p>Das Editieren von plist-Dateien ist etwas schwierig. Lesen Sie auch die Hinweise hier&uuml;ber in dem entsprechenden Abschnitt. Sichern Sie die Dateien mit UTF-8 Kodierung, wenn Sie Unicode Zeichen verwenden.</p>
-		<p>Benutzer k&ouml;nnen bis zu 16 zus&auml;tzliche Kn&ouml;pfe zur LaTeX Palette hinzuf&uuml;gen, indem die Datei &bdquo;completion.plist&ldquo; bearbeitet wird. Diese werden dann unter der Registerkarte &bdquo;Angepasst&ldquo; in der LaTeX Palette angezeigt. Schauen Sie sich die Kommentare am Anfang der Datei &bdquo;completion.plist&ldquo; an.</p>
-	
+
+<p>Fenster › LaTeX Palette... öffnet eine Palette mit LaTeX-Code: mathematische Symbole, griechische Buchstaben, Funktionen, Buchstaben mit Akzent und internationale Zeichen, Umgebungen und Befehle für Schriftarten. Klicken Sie im Quelltext an die Stelle, an die der Code soll, und klicken Sie dann auf eine Taste der Palette. Ihr Code wird an der Einfügemarke eingefügt. Die Palette bleibt beim Arbeiten vor den Quelltextfenstern.</p>
+<p>Die Tasten sind auf Seiten angeordnet. Wählen Sie eine Seite mit den Tasten oben in jedem Teil der Palette: Mathematik, Griechisch, Symbole, Funktionen und International sowie Umgebungen, Typographie und Eigene.</p>
+<p>Ist beim Klicken auf eine Schriftart- oder Umgebungstaste Text ausgewählt, kommt der ausgewählte Text in den eingefügten Code, wie in <code>\textbf{ausgewählter Text}</code>.</p>
+<p>Einige Symbole brauchen das Paket amssymb. Fügen Sie diese Zeile in die Präambel eines Dokuments ein, das sie verwendet:</p>
+<pre>\usepackage{amssymb}</pre>
+
+<h2>Die Palette anpassen</h2>
+<p>Der Code, den jede Taste einfügt, steht in <code>~/Library/TeXShop/LatexPanel/completion.plist</code>. Öffnen Sie diese Datei in TeXShop, um ihn zu ändern; die Kommentare am Anfang erklären ihren Aufbau. Die Namen der Standardtasten lassen sich nicht ändern, wohl aber der Code, den sie einfügen. In diesem Code gilt:</p>
+<ul>
+<li><code>#SEL#</code> steht für den ausgewählten Text;</li>
+<li><code>#INS#</code> gibt an, wo die Einfügemarke nach dem Einfügen des Codes steht;</li>
+<li><code>#PASTE#</code> steht für den Text in der Zwischenablage.</li>
+</ul>
+<p>Die Seite „Eigene“ bietet Platz für bis zu sechzehn eigene Tasten. Jede wird in der Liste <code>Customized</code> der Datei durch zwei Zeichenketten definiert, den Namen der Taste und den Code, den sie einfügt:</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>Sichern Sie die Datei in UTF-8, beenden Sie TeXShop und starten Sie es neu, um die Änderungen in der Palette zu sehen. Fehlt die Datei oder ist sie beschädigt, ersetzt TeXShop sie durch seine eigene Kopie. Siehe <a href="configure_panel.htm">Die LaTeX Palette anpassen</a> und <a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a>.</p>
 </main>
 </body>
 </html>

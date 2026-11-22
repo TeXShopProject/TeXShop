@@ -5,110 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MakeIndex</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="索引の作成について">
+<meta name="description" content="索引; makeindex; makeidx; mendex; upmendex; 索引作成; idxファイル">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
-<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a></li>
-<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a></li>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
 <li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
-<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a></li>
-<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
-<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
 <li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
 <li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm" class="current">MakeIndex</a></li>
-<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a></li>
-<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a></li>
-<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストおよびドラッグ＆ドロップ</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
 <li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
 <li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
-<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a></li>
-<li><a href="advanced_plist.htm">Plistファイル</a></li>
-<li><a href="advanced_localization.htm">各国語版へのローカライズ</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>MakeIndex</h1>
-
-
-<p>
-MakeIndexはLaTeX文書に索引（インデックス）を付けるのに使われるツールです。索引を作成するには、以下のようにします──
-</p>
-
-
-		<ol>
-			<li type="a">
-			ソースファイルの冒頭にコマンド「\usepackage{makeidx}」を加える
-			<li type="a">
-			「\makeindex」コマンドをプリアンブルに入れる
-			<li type="a">
-			索引を表示させたい場所に「\printindex」コマンドを入れる──たいていは「\end{document}」の手前
-			<li type="a">
-			ソース内で索引語を指示する──下の例のように：
-		</ol>
-</font>
-
-<BLOCKQUOTE>
-<p><tt>
-&quot;There are many animals in the world\index{animal}. Examples include bears\index{animal!bear} and tigers\index{animal!tiger}  and various insects\index{insect|see{animal}}.&quot;
-</tt></p>
-</BLOCKQUOTE>
-
-	<BLOCKQUOTE>
-		<p>
-			<tt>
-				「世界には数多くの動物がいます\index{どうぶつ@動物}。動物にはクマ\index{どうぶつ@動物!クマ}やトラ\index{どうぶつ@動物!トラ}、それに多種多様な昆虫\index{こんちゅう@昆虫|see{どうぶつ@動物}}も含まれます。」
-			</tt>
-		</p>
-	</BLOCKQUOTE>
-
-	<BLOCKQUOTE>
-		<p>
-			<small>
-				訳注：日本語部分はmendex用のコマンドに置き換えました。
-			</small>
-		</p>
-	</BLOCKQUOTE>
-
-<p>
-索引を作成するには、いつも通りに文書をタイプセットします。つづけてMakeIndexを実行します。その後で再度タイプセットを行ないます。
-</p>
-
-<!-- 
-<p>
-さらに詳しいことについては、Goossens・Mittelbach・Samarinの共著『The LaTeX Companion』に書かれています。
-</p>
- -->
-
-<p>
-さらに詳しいことについては、Goossensさん・Mittelbachさん・Samarinさんの共著『The LaTeX Companion』に書かれています。
-</p>
-
-	<BLOCKQUOTE>
-		<p>
-			<small>
-				補足：『The LaTeXコンパニオン』アスキー書籍編集部監訳（1998年）
-			</small>
-		</p>
-	</BLOCKQUOTE>
-
-
-
-
-
-
-		
-	</body>
-
-</HTML>
+<p>MakeIndexは、LaTeXの書類の索引項目を並べ替えて、索引を書き出します。書類に索引を付けるには、次のようにします。</p>
+<ol>
+<li>プリアンブルに<code>\usepackage{makeidx}</code>と<code>\makeindex</code>を書きます。</li>
+<li>索引を置きたい場所（多くは<code>\end{document}</code>の直前）に<code>\printindex</code>を書きます。</li>
+<li>本文で索引項目に印を付けます。
+<pre>There are many animals in the world\index{animal}.
+Examples include bears\index{animal!bear}
+and tigers\index{animal!tiger}.</pre></li>
+</ol>
+<p>索引を作るには、書類をタイプセットしてから、「タイプセット」→「MakeIndex」（<kbd>⇧⌘I</kbd>）を選ぶか、「タイプセット」ボタンの横のポップアップメニューで「MakeIndex」を選んで「タイプセット」を押し、もう一度タイプセットします。latexmkでタイプセットすれば、MakeIndexは自動的に実行されます。</p>
+<p>MakeIndexは、「設定」→「タイプセット」→「周辺ツール」の「索引作成」にあるプログラムを、idxファイルの名前を付けて実行します。初期値は<code>makeindex</code>です。日本語の書類のための<code>mendex</code>や<code>upmendex</code>など、別のプログラムを必要なオプションとともに入力することもできます（<code>upmendex -s mystyle.ist</code>など）。エンジンのプロファイルはこの欄を設定します。日本語以外のプロファイルでは<code>makeindex</code>、pLaTeX + dvipdfmxでは<code>mendex</code>、upLaTeX + dvipdfmxとLuaLaTeX（日本語）では<code>upmendex</code>になります。</p>
+<p>「ソース」→「索引をハイライト」を選ぶと、<code>\index</code>の引数がテーマの「索引」の色で表示されます。<a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>を参照してください。</p>
 </main>
 </body>
 </html>

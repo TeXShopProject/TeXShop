@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Scripts con comandos de composici&oacute;n de TeXShop</title>
+<title>Scripts con los comandos de composición de TeXShop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="applescript; bibliograf&iacute;a">
+<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; secuencia de órdenes de composición">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -13,101 +13,74 @@
 <nav id="menu">
 <ul>
 <li><a href="macros_preliminaries.htm">Preliminares</a></li>
-<li><a href="macros_default.htm">Comprensi&oacute;n de las macros predefinidas</a></li>
-<li><a href="macros_rearrange.htm">Reajuste del men&uacute; Macros</a></li>
-<li><a href="macros_define.htm">Definici&oacute;n de nuevas macros</a></li>
+<li><a href="macros_default.htm">Las macros predefinidas</a></li>
+<li><a href="macros_rearrange.htm">Reorganizar el menú Macros</a></li>
+<li><a href="macros_define.htm">Definir macros nuevas</a></li>
 <li><a href="macros_applescript.htm">Macros AppleScript</a></li>
 <li><a href="macros_includedscripts.htm">Macros AppleScript predefinidas</a></li>
-<li><a href="macros_defapplescript.htm">Definici&oacute;n de macros AppleScript</a></li>
-<li><a href="macros_dialogs.htm">Creaci&oacute;n de di&aacute;logos</a></li>
-<li><a href="macros_writingcompletescripts.htm" class="current">Scripts con comandos de composici&oacute;n de TeXShop</a></li>
-<li><a href="macros_writingcommandscripts.htm">Scripts con comandos del Shell</a></li>
+<li><a href="macros_defapplescript.htm">Definir macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crear diálogos</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">Scripts con los comandos de composición de TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts con comandos de shell</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Scripts con comandos de composici&oacute;n de TeXShop</h1>
+<h1>Scripts con los comandos de composición de TeXShop</h1>
+<p>Un documento con bibliografía necesita una secuencia de composiciones: LaTeX escribe el archivo .aux, BibTeX lo usa para escribir los archivos .bbl y .blg, LaTeX vuelve a ejecutarse para añadir la bibliografía al documento, y una vez más para actualizar las referencias a ella. Sus proyectos pueden necesitar secuencias parecidas, y una macro AppleScript puede ejecutarlas por usted.</p>
+<p>La macro Macros › Applescript › Bibliography, incluida en TeXShop, muestra cómo hacerlo. Este es su contenido:</p>
+<pre>--Applescript
 
-	<P>Si un proyecto LaTeX contiene una bibliograf&iacute;a, se requieren varios pasos para actualizar la bibliograf&iacute;a. Primero hay que usar LaTeX para crear un archivo .aux. Entonces se ejecuta BibTeX, que usa este archivo crear los archivos .bbl y .blg. Luego, de nuevo LaTeX para a&ntilde;adir la bibliograf&iacute;a al documento.
-</P>
+set fileName to #FILEPATH#
+if fileName is equal to  ""
+activate
+display dialog "Please save the file first"  buttons {"OK"} default button "OK"
+return
+end if
 
-<P>Tu proyecto concreto puede requerir otras secuencias similares de comandos de composici&oacute;n. Es una buena idea usar AppleScript para automatizar estas secuencias.
-</P>
+set frontName to #DOCUMENTNAME#
 
-<P>Para ver c&oacute;mo hacerlo, examinemos el script OtherScripts->Bibliography que viene con TeXShop. &Eacute;ste es el c&oacute;digo del script:
-<dl>
-<dd>--Applescript
-<p>
-<dd>set fileName to #FILEPATH#
-<dd>if fileName is equal to  ""
-<dd>display dialog "Please save the file first"  buttons {"OK"} default button "OK"
-<dd>return
-<dd>end if
-<p>
-<dd>set frontName to #DOCUMENTNAME#
-<dd>tell application "TeXShop"
-<dd>save document frontName
-<dd>end tell
+tell document frontName of application "TeXShop"
 
-<p>
-<dd>tell document frontName of application "TeXShop" 
-<p>
-<dl>
-<dd>	latex
-<p>
-<dd>	repeat
-<dl>
-<dd>		delay 2
-<dd>		if taskdone
-<dd>			exit repeat
-<dd>		end if
-</dl>
-<dd>	end repeat
-<p>
-<dd>
-<dd>	bibtex
-<p>
-<dd>	repeat
-<dl>
-<dd>		delay 2
-<dd>		if taskdone
-<dd>			exit repeat
-<dd>		end if
-</dl>
-<dd>	end repeat
-<p>
-<dd>	latex
-<p>
-<dd>	repeat
-<dl>
-<dd>		delay 2
-<dd>		if taskdone
-<dd>			exit repeat
-<dd>		end if
-</dl>
-<dd>	end repeat
-<p>
-<dd> latex
-<p>
-<dd>	repeat
-<dl>
-<dd>		delay 2
-<dd>		if taskdone
-<dd>			exit repeat
-<dd>		end if
-</dl>
-<dd>	end repeat
-<p>
-</dl>
-end tell
-</dl>
-</P>
+    latexinteractive
 
-		<P>La primera l&iacute;nea indica que esto es una macro AppleScript. Las siguientes l&iacute;neas comprueban #FILEPATH#, un par&aacute;metro que da la ruta completa al archivo con el c&oacute;digo tex. Cuando se crea un documento nuevo, este par&aacute;metro es una cadena vac&iacute;a, hasta que guardamos el documento por primera vez. Si el documento a&uacute;n no est&aacute; guardado, el script pregunta al usuario si lo quiere guardar, y entonces termina.</P>
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
 
- <P>La siguiente l&iacute;nea manda a TeXShop que guarde el documento. N&oacute;tese que usamos #DOCUMENTNAME# para referirnos al documento en cuesti&oacute;n.</P>
+    bibtex
 
-<P>Los siguientes comandos ejecutan latex, bibtex, latex, y latex. Recuerda que el control vuelve a applescript inmediamente tras cada llamada a un comando de composici&oacute;n, sin esperar a que la composici&oacute;n de p&aacute;ginas termine. El bucle que se repite le dice al script que compruebe si cada proceso de composici&oacute;n ha concluido ya, antes de empezar la siguiente tarea. La l&iacute;nea &laquo;delay 2&raquo; hace que applescript haga una pausa en lugar de estar preguntando continuamente si la tarea ha acabado, lo que ralentizar&iacute;a todo el ordenador.
-</P>
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+end tell</pre>
+<p>La primera línea convierte esto en una macro AppleScript que ejecuta ScriptRunner, de modo que puede pedir a TeXShop que componga (consulte <a href="macros_applescript.htm">Macros AppleScript</a>). Las líneas siguientes comprueban #FILEPATH#, la ruta completa del archivo fuente. Es una cadena vacía cuando el documento aún no se ha guardado; en ese caso, el script le pide que lo guarde y se detiene.</p>
+<p>A continuación, el script se refiere al documento mediante #DOCUMENTNAME#. TeXShop guarda el documento por sí mismo cuando empieza una orden de composición, así que el script no necesita guardarlo.</p>
+<p>Las órdenes restantes ejecutan latexinteractive, bibtex, latex y latex. Una orden de composición devuelve el control al script de inmediato, antes de que termine la composición, así que después de cada orden un bucle <code>repeat</code> espera hasta que <code>taskdone</code> indica que el trabajo ha terminado. La línea <code>delay 2</code> hace que el script haga una pausa entre comprobaciones en lugar de preguntar continuamente y ralentizar el ordenador. Las órdenes se enumeran en <a href="macros_defapplescript.htm">Definir macros AppleScript</a>.</p>
 </main>
 </body>
 </html>

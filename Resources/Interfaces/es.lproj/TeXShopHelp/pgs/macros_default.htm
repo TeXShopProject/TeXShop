@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Comprensi&oacute;n de las macros predefinidas</title>
+<title>Las macros predefinidas</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="macros predefinidas; posici&oacute;n del cursor">
+<meta name="description" content="macros predefinidas; Insert Begin/End; #SEL#; #INS#; #PASTE#; señales; colocar el cursor; macros de texto">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -13,34 +13,39 @@
 <nav id="menu">
 <ul>
 <li><a href="macros_preliminaries.htm">Preliminares</a></li>
-<li><a href="macros_default.htm" class="current">Comprensi&oacute;n de las macros predefinidas</a></li>
-<li><a href="macros_rearrange.htm">Reajuste del men&uacute; Macros</a></li>
-<li><a href="macros_define.htm">Definici&oacute;n de nuevas macros</a></li>
+<li><a href="macros_default.htm" class="current">Las macros predefinidas</a></li>
+<li><a href="macros_rearrange.htm">Reorganizar el menú Macros</a></li>
+<li><a href="macros_define.htm">Definir macros nuevas</a></li>
 <li><a href="macros_applescript.htm">Macros AppleScript</a></li>
 <li><a href="macros_includedscripts.htm">Macros AppleScript predefinidas</a></li>
-<li><a href="macros_defapplescript.htm">Definici&oacute;n de macros AppleScript</a></li>
-<li><a href="macros_dialogs.htm">Creaci&oacute;n de di&aacute;logos</a></li>
-<li><a href="macros_writingcompletescripts.htm">Scripts con comandos de composici&oacute;n de TeXShop</a></li>
-<li><a href="macros_writingcommandscripts.htm">Scripts con comandos del Shell</a></li>
+<li><a href="macros_defapplescript.htm">Definir macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crear diálogos</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts con los comandos de composición de TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts con comandos de shell</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Comprensi&oacute;n de las macros predefinidas</h1>
+<h1>Las macros predefinidas</h1>
+<p>La mejor forma de entender las macros predefinidas es examinarlas en el editor de macros (Macros › Abrir editor de macros…): seleccione una macro en la lista, y su contenido aparece al lado.</p>
+<p>Por ejemplo, suponga que quiere un entorno theorem. Escriba la palabra theorem, selecciónela y elija Macros › Insert Begin/End. La palabra se sustituye por</p>
+<pre>\begin{theorem}
 
-		<P>La mejor manera de comprender las macros predefinidas es examinar su definici&oacute;n con el editor de macros. Por ejemplo, considera la macro titulada &laquo;Begin/End&raquo;. Sup&oacute;n que deseas usar un entorno de tipo theorem. Teclea la palabra &laquo;theorem&raquo; y selecci&oacute;nala. Entonces elige la macro &laquo;Begin/End&raquo;. La palabra &laquo;theorem&raquo; es reemplazada por el texto</P>
-		<div id="source">
-			\begin{theorem}<br>
-			\end{theorem}
-		</div>
-		<p>y el cursor se coloca entre este par de l&iacute;neas.</p>
-		<p>Ahora, examina el c&oacute;digo de la macro Begin/End:</p>
-		<div id="source">
-			\begin{#SEL#}<br>
-			#INS#<br>
-			\end{#SEL#}
-		</div>
-		<p>El texto de la macro se inserta en el archivo con el c&oacute;digo fuente. Cada aparici&oacute;n de la palabra #SEL# es reemplazada por el texto seleccionado al invocar la macro. Si no hay texto seleccionado, #SEL# es reemplazada por una cadena vac&iacute;a. El cursor se coloca al final de del texto insertado, salvo que la macro contenga la palabra #INS#, en cuyo caso el cursor se coloca en esa posici&oacute;n.</p>
-		<p>Extrapolando con l&oacute;gica, es f&aacute;cil comprender y modificar las macros predefinidas.</p>
+\end{theorem}</pre>
+<p>y el punto de inserción se coloca en la línea intermedia.</p>
+<p>Insert Begin/End es una macro AppleScript (consulte <a href="macros_applescript.htm">Macros AppleScript</a>). Una macro de texto que hace lo mismo cuando hay una palabra seleccionada es:</p>
+<pre>\begin{#SEL#}
+#INS#
+\end{#SEL#}</pre>
+
+<h2 id="placeholders">Marcadores de posición en las macros de texto</h2>
+<p>El texto de una macro de texto se inserta en el archivo fuente con estas sustituciones:</p>
+<dl>
+<dt>#SEL#</dt><dd>se sustituye por el texto que estaba seleccionado al elegir la macro, o por nada si no había texto seleccionado.</dd>
+<dt>#INS#</dt><dd>marca dónde va el punto de inserción. Sin él, el punto de inserción se coloca al final del texto insertado.</dd>
+<dt>#PASTE#</dt><dd>se sustituye por el texto del portapapeles, o por nada si el portapapeles no contiene texto.</dd>
+<dt>•</dt><dd>es una señal, a la que se puede ir con Edición › Señales.</dd>
+</dl>
+<p>En el editor de macros, estos marcadores de posición se muestran como fichas redondeadas; <a href="macros_define.htm">Definir macros nuevas</a> explica cómo insertarlos. Con esto, las macros predefinidas son fáciles de entender y de modificar.</p>
 </main>
 </body>
 </html>

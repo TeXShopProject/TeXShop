@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>テンプレートメニューを変更する</title>
+<title>テンプレートとひな形</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="ソースの雛形の作成や編集について">
+<meta name="description" content="テンプレート; テンプレートメニュー; ~/Library/TeXShop/Templates; More; ひな形を用いて新規作成; ひな形; Stationeryフォルダ">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -13,65 +13,50 @@
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">まえがき</a></li>
-<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a></li>
-<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a></li>
-<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a></li>
-<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
 <li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
-<li><a href="basic_edittricks.htm">編集上のコツ</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
 <li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
-<li><a href="basic_spelling.htm">スペルをチェックする</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
 <li><a href="basic_autocompletion.htm">キーバインド</a></li>
-<li><a href="basic_commandcompletion.htm">コマンドの補完</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
 <li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
 <li><a href="basic_matrixpanel.htm">行列パネル</a></li>
 <li><a href="basic_macros.htm">マクロ</a></li>
 <li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
 <li><a href="basic_graphics.htm">画像を入れる</a></li>
-<li><a href="basic_printing.htm">印刷</a></li>
-<li><a href="basic_preferences.htm">設定</a></li>
-<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a></li>
-<li><a href="basic_templates.htm" class="current">テンプレートメニューを変更する</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm" class="current">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
 <li><a href="basic_bugs.htm">バグレポートを送る</a></li>
-<li><a href="basic_websites.htm">役に立つウェブ・サイト</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
 <li><a href="basic_license.htm">使用許諾</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>テンプレートメニューを変更する</h1>
+<h1>テンプレートとひな形</h1>
+<h2>テンプレート</h2>
+<p>ソースウインドウのツールバーにある「テンプレート」メニューは、テンプレートをカーソル位置に、現在の行と同じだけ字下げして入れます。TeXShopには次のテンプレートが付属しています。</p>
+<ul>
+<li>「LatexTemplate」「XeLaTeX Template」「LatexSpanishTemplate」「BeamerTemplate」：LaTeXの論文、XeLaTeXの文書、スペイン語のLaTeXの論文、Beamerのプレゼンテーションの冒頭部分。</li>
+<li>「TexTemplate」：plain TeXの文書を終える<code>\end</code>。</li>
+<li>「GraphicsTemplate」：画像を取り込むコード。</li>
+<li>「TeX4ht-Header」と「TeX4ht-Interactive」：TeX4htでHTMLに変換する文書のためのコード。</li>
+<li>「More」：プリアンブル、article、letter、memoirなどの文書クラス、図や表のフロート、<code>align</code>や行列などの数式の組み方を集めたサブメニュー。</li>
+</ul>
+<p>テンプレートは<code>~/Library/TeXShop/Templates</code>にあるふつうのファイルです。このフォルダは「TeXShop」→「~/Library/TeXShopを開く」から開けます。自分のテンプレート、たとえば論文でいつも使うプリアンブルを作るには、拡張子<code>.tex</code>のファイルをこのフォルダに保存するか、テンプレートを複製して書き換えます。サブフォルダはサブメニューになります。追加、名称変更、削除したテンプレートは、そのあとに開いたウインドウのメニューに反映されます。</p>
+<p>TeXShopをアップデートしてもこのフォルダは変わらないので、自分のテンプレートはそのまま残ります。付属のテンプレートを取り戻すには、Templatesフォルダを<code>~/Library/TeXShop</code>の外（デスクトップなど）に移してTeXShopを再起動します。TeXShopが、付属のテンプレートの入ったフォルダを作り直します。</p>
 
-
-<p>
-TeXShopを初めて起動すると、次のようなフォルダが作られます──
-</p>
-
-	<dl>
-		<dd><tt>~/Library/TeXShop/Templates</tt>
-	</dl>
-	
-<p>
-そしてこのフォルダ内にはGraphics.tex・LatexTemplate.tex（それと追加ファイル用の「More」という名称のフォルダ）が置かれます。これらのファイルの名前は入力ウインドウ上部にあるプルダウンメニュー「テンプレート」で見られます。これらの項目の１つを選ぶと、ソース内のカーソル位置にテンプレート・ファイルの内容が挿入されます。GraphicsとLaTeXテンプレートはWill Robertsonにより新しく作り直され、最近のTeXの慣習に従うようになりました ；Robertsonはサブフォルダ「More」内のテンプレートも提供してくれています。
-</p>
-
-<p>
-テンプレート・ファイルは、TeXShopで開いたり編集したりできる標準的なTeXファイルです。追加のTeXファイルをTemplatesフォルダに入れることができます ； それらはプルダウンメニュー「テンプレート」に現われますが、名前は拡張子「.tex」で終わるようにしておきます。もし邪魔なら、もともとのテンプレート・ファイルは捨ててもかまいません。
-</p>
-
-<p>
-テンプレートメニューで階層構造を作るには ~/Library/TeXShop/Templatesのサブフォルダにテンプレート・ファイルを置きます。
-</p>
-
-<p>
-オリジナルのテンプレート・ファイルを復元するには、Templatesフォルダを削除しTeXShopを再起動します。フォルダが作り直され、オリジナルの内容が復元されます。
-</p>
-
-<p>
-ユーザが修正を加えているかもしれないので、TeXShopをアップグレードした際も、このテンプレート・フォルダは更新されません。もしアップグレードによりデフォルトのテンプレートを変えるのであれば、~/Library/TeXShop/Templatesフォルダをデスクトップに移動し、TeXShopにゼロからフォルダを作り直させ、そのうえで古いほうのテンプレート・フォルダから追加のテンプレートを移し替えるのがよいでしょう。
-</p>
-
-<p>
-先に触れた \usepackage{amssymb} と \usepackage{graphicx} というコマンドが、最近のLatexTemplateには含まれていますが、だいぶ以前のバージョンのTeXShopには入っていません。
-</p>
+<h2>ひな形</h2>
+<p>「ファイル」→「ひな形を用いて新規作成...」は、完成した見本から新しい書類を作ります。それぞれの説明が表示される一覧からひな形を選び、「OK」をクリックします。新しい書類は名称未設定なので、好きな場所に保存してください。TeXShopには、AMSの論文、Beamerのプレゼンテーション、手紙、PreTeXtの文書、ルートファイルと章からなるプロジェクト、XeLaTeXの文書のひな形が付属しています。</p>
+<p>ひな形は<code>~/Library/TeXShop/Stationery</code>に置かれています。自分のひな形を加えるには、<code>Report.tex</code>のようなファイルを、そのひな形を説明する1文を書いたファイル<code>Report.comment</code>と一緒にここに置きます。</p>
 </main>
 </body>
 </html>

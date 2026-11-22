@@ -4,44 +4,61 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Matrix Palette</title>
-<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="matrix palette">
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Matrix Palette; Matrix; array; tabular; Tabelle; Begrenzer; Einheitsmatrix; Tabellenkalkulation; matrixpanel_1.plist">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-<li><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-<li><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
 <li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
 <li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
-<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
 <li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
 <li><a href="basic_matrixpanel.htm" class="current">Matrix Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
-<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
 <li><a href="basic_printing.htm">Drucken</a></li>
 <li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
-<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-<li><a href="basic_bugs.htm">Fehlerberichte &uuml;bermitteln</a></li>
-<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
 <li><a href="basic_license.htm">Lizenz</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Matrix Palette</h1>
 
-			<P>Das Men&uuml; &bdquo;Fenster&ldquo; enth&auml;lt einen Men&uuml;punkt &bdquo;Matrix Palette...&ldquo;. Mit Hilfe dieser Palette k&ouml;nnen Sie sehr leicht Matrizen erstellen. F&uuml;r jeden Matrizen-Eintrag wird nur ein kleiner Raum zur Verf&uuml;gung gestellt. Sie k&ouml;nnen jedoch die Eintr&auml;ge auch an anderer Stelle erstellen und in die Matrix kopieren. Diese wundervolle Palette ist die Arbeit von Jonas Zimmermann, den Sie unter  <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a> erreichen k&ouml;nnen.</P>
-			<p>Seit TeXShop 1.35 k&ouml;nnen mit Hilfe der Matrix Palette auch Tabellen erstellt werden. Die Palette kann mit Hilfe der Datei &bdquo;matrixpanel_1.plist&ldquo; konfiguriert werden, welche im Ordner &bdquo;~/Library/TeXShop/MatrixPanel&ldquo; liegt. Die Struktur dieser Datei wurde mit der Version 1.35 ge&auml;ndert. Daher kann es sein, dass noch eine alte Date &bdquo;matrixpanel.plist&ldquo; von Version 1.34 vorhanden ist.</p>
-			<p>Die Tabelle funktioniert wie eine Tabellenkalkulation. Klicken Sie auf eine Zelle, um sie auszuw&auml;hlen; ziehen Sie oder klicken Sie mit gedr&uuml;ckter Umschalttaste, um mehrere auszuw&auml;hlen. Tippen ersetzt den Wert; Doppelklick, F2 oder Control-U bearbeitet ihn. Return geht nach unten, Tab nach rechts, die Pfeiltasten in jede Richtung; Entfernen leert die ausgew&auml;hlten Zellen. Mit Kopieren und Einsetzen tauschen Sie Zellen mit Tabellenkalkulationen aus. Ziehen Sie die Nummer einer Zeile, um die Zeile zu verschieben, und dr&uuml;cken Sie Befehl-Return, um die Matrix einzuf&uuml;gen. Eine Matrix kann bis zu 999 Zeilen und Spalten haben; die Zellen au&szlig;erhalb der Matrix behalten ihre Werte und werden grau angezeigt.</p>
-		
+<p>Fenster › Matrix Palette... öffnet eine Palette, die Matrizen und Tabellen für Sie schreibt. Füllen Sie die Einträge in ihrer Tabelle aus, wählen Sie, wie das Ergebnis aussehen soll, und fügen Sie es an der Einfügemarke in den Quelltext ein.</p>
+
+<h2>Eine Matrix oder Tabelle erstellen</h2>
+<ol>
+<li>Geben Sie die Größe unter „Zeilen“ und „Spalten“ ein, jeweils bis 999.</li>
+<li>Wählen Sie unter „Umgebung“ matrix für eine Matrix in einer Formel (eine Umgebung <code>array</code>) oder tabular für eine Tabelle mit Text. Bei tabular setzt „In table-Umgebung einbetten“ die Tabelle in ein Gleitobjekt <code>table</code> mit Beschriftung und Label.</li>
+<li>Wählen Sie für eine Matrix die linke und rechte Klammer. Der Punkt lässt diese Seite ohne Klammer, und die letzte Taste verwendet die Klammer, die im Feld daneben eingegeben ist.</li>
+<li>Die beiden Tasten mit dem Bild einer Matrix fügen einen Rahmen um die Einträge und Linien zwischen ihnen hinzu.</li>
+<li>Füllen Sie die Einträge aus. „Löschen“ leert alle; „Einheitsmatrix“ und „Nullmatrix“ füllen sie mit einer Einheitsmatrix oder mit Nullen.</li>
+<li>Klicken Sie auf „Einfügen“ oder drücken Sie <kbd>⌘Zeilenschalter</kbd>.</li>
+</ol>
+
+<h2>In der Tabelle arbeiten</h2>
+<p>Die Tabelle funktioniert wie eine Tabellenkalkulation. Klicken Sie auf eine Zelle, um sie zu wählen, ziehen Sie oder klicken Sie mit gedrückter Umschalttaste, um mehrere zu wählen, und tippen Sie, um den Wert zu ersetzen; doppelklicken Sie, drücken Sie F2 oder Control-U, um ihn zu bearbeiten. Der Zeilenschalter geht nach unten, die Tabulatortaste nach rechts und die Pfeiltasten in jede Richtung; die Rückschritttaste leert die gewählten Zellen. Kopieren und Einsetzen tauschen Zellen mit Tabellenkalkulationen aus. Ziehen Sie die Nummer einer Zeile, um die Zeile zu bewegen. Widerrufen und Wiederholen wirken auf die Tabelle, solange die Palette aktiv ist.</p>
+<p>Wird die Matrix verkleinert, behalten die Zellen außerhalb ihre Werte, grau dargestellt, und kommen zurück, wenn sie wieder vergrößert wird. Vergrößern Sie die Palette, um mehr von der Tabelle zu sehen.</p>
+
+<h2>Den eingefügten Code anpassen</h2>
+<p>Der Code, den die Palette um die Einträge schreibt, steht in <code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code>: Anfang und Ende der Umgebungen, die Klammern, die Trennzeichen zwischen Einträgen und zwischen Zeilen, die Linien eines Rahmens oder Gitters und der Buchstabe <code>c</code>, der die Ausrichtung jeder Spalte festlegt. Ändern Sie zum Beispiel <code>c</code> in <code>r</code>, um die Spalten rechtsbündig auszurichten. Behalten Sie Anzahl und Reihenfolge der Zeichenketten in der Datei bei und starten Sie TeXShop nach einer Änderung neu. Siehe <a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a>.</p>
 </main>
 </body>
 </html>

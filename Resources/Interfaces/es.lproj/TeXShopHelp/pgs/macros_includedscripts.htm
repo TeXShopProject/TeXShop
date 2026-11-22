@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Macros AppleScript predefinidas</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="applescript; fines de l&iacute;nea; bibtex, tex4ht; Metapost">
+<meta name="description" content="macros AppleScript; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; finales de línea; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -13,157 +13,48 @@
 <nav id="menu">
 <ul>
 <li><a href="macros_preliminaries.htm">Preliminares</a></li>
-<li><a href="macros_default.htm">Comprensi&oacute;n de las macros predefinidas</a></li>
-<li><a href="macros_rearrange.htm">Reajuste del men&uacute; Macros</a></li>
-<li><a href="macros_define.htm">Definici&oacute;n de nuevas macros</a></li>
+<li><a href="macros_default.htm">Las macros predefinidas</a></li>
+<li><a href="macros_rearrange.htm">Reorganizar el menú Macros</a></li>
+<li><a href="macros_define.htm">Definir macros nuevas</a></li>
 <li><a href="macros_applescript.htm">Macros AppleScript</a></li>
 <li><a href="macros_includedscripts.htm" class="current">Macros AppleScript predefinidas</a></li>
-<li><a href="macros_defapplescript.htm">Definici&oacute;n de macros AppleScript</a></li>
-<li><a href="macros_dialogs.htm">Creaci&oacute;n de di&aacute;logos</a></li>
-<li><a href="macros_writingcompletescripts.htm">Scripts con comandos de composici&oacute;n de TeXShop</a></li>
-<li><a href="macros_writingcommandscripts.htm">Scripts con comandos del Shell</a></li>
+<li><a href="macros_defapplescript.htm">Definir macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crear diálogos</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts con los comandos de composición de TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts con comandos de shell</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Macros AppleScript predefinidas</h1>
+<p>TeXShop incluye una colección de macros AppleScript de Will Robertson, Claus Gerhardt y otros autores. Algunas ejecutan una serie de órdenes de composición una tras otra. Copiándolas y modificándolas, puede crear scripts para su propio trabajo. Esta página describe algunas de ellas, con los nombres que tienen en el menú Macros.</p>
 
-<P>TeXShop contiene una amplia colecci&oacute;n de applescripts desarrollada por Will Robertson, Claus Gerhardt
-y otros. Muchos de esos scripts automatizan el flujo de trabajo, pues
-permiten realizar una serie de comandos de composici&oacute;n de una sola vez.
-Copiando y modificando los scripts incorporados, el usuario puede
-construir scripts propios adecuados para su trabajo.</P>
+<h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
+<p>Estas macros son de Will Robertson. En el submenú Column macros, New tabular y New array insertan un entorno tabular o array con el número de filas y columnas que indique, y Add column y Delete column modifican las filas que seleccione. Insert reference busca órdenes <code>\label{…}</code> en el archivo actual y le permite elegir una etiqueta de una lista; inserta la etiqueta dentro de <code>\ref{…}</code>, una orden que puede cambiar en el script. Si hay texto seleccionado, solo se muestran las etiquetas que lo contienen. Open quickly… muestra los archivos .tex, .sty y .pdf de la carpeta del archivo fuente actual y abre los que elija.</p>
 
-<P>En esta secci&oacute;n
-describimos algunos de estos scripts.
-</P>
+<h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
+<p>Esta macro, de Alan Munn, pega celdas de una hoja de cálculo en su archivo fuente LaTeX como una tabla. Seleccione un rango de celdas en Excel o en otra aplicación de hojas de cálculo y cópielas. Después elija Macros › Paste Spreadsheet Cells y elija un estilo de tabla:</p>
+<dl>
+<dt>cells</dt><dd>convierte el texto copiado solo en celdas de tabla de LaTeX.</dd>
+<dt>booktabs</dt><dd>toma la primera línea como cabecera y coloca <code>\toprule</code>, <code>\midrule</code> y <code>\bottomrule</code> en un entorno tabular.</dd>
+<dt>simple</dt><dd>rodea las celdas con un entorno tabular sencillo.</dd>
+<dt>longtable</dt><dd>toma la primera línea como cabecera, añade las líneas de cabecera de un longtable y coloca las celdas en un entorno longtable.</dd>
+</dl>
+<p>La macro sustituye el contenido del portapapeles por el texto LaTeX. Para pegar las mismas celdas con otro estilo, cópielas antes de nuevo en la hoja de cálculo.</p>
 
-<P>
-<h5>Column Macros, Insert Reference, Open Quickly: </h5>
-</P>
+<h2 id="line-endings">Applescript › Convert to MAC, Convert to Unix, Convert to Windows</h2>
+<p>Los archivos de texto terminan sus líneas de maneras distintas: macOS y Unix con un salto de línea, Windows con un retorno de carro seguido de un salto de línea, y los archivos de Macintosh muy antiguos solo con un retorno de carro. TeXShop lee los tres. Si el editor de otra persona no puede hacerlo, use estas macros. Para un archivo fuente MyFile.tex, Convert to Unix escribe una copia del archivo guardado llamada MyFile_Unix.tex con saltos de línea; Convert to Windows escribe MyFile_Windows.tex y Convert to MAC escribe MyFile_Mac.tex. Las macros usan el programa flip de Craig Stuart Sapp, situado en ~/Library/TeXShop/bin.</p>
 
-<p> Estas macros se deben a Will Robertson. La primera proporciona una manera muy &uacute;til de construir una matriz o tabla arbitraria.
-La segunda busca todos los comandos \label{...} del archivo y los muestra
-en una lista desde la que se puede insertar una referencia a una etiqueta,
-junto con un comando LaTeX opcional que se puede configurar.
-La macro final permite abrir r&aacute;pidamente cualquier archivo que est&eacute;
-en el mismo directorio que el archivo con c&oacute;digo que tengamos abierto.
+<h2 id="bibliography">Applescript › Bibliography</h2>
+<p>Un documento con bibliografía necesita varias composiciones: LaTeX escribe el archivo .aux, BibTeX lo usa para escribir los archivos .bbl y .blg, LaTeX vuelve a ejecutarse para añadir la bibliografía, y una vez más para actualizar las referencias a ella. La macro Bibliography ejecuta LaTeX, BibTeX, LaTeX y LaTeX una tras otra. <a href="macros_writingcompletescripts.htm">Scripts con los comandos de composición de TeXShop</a> explica cómo funciona.</p>
 
-<P>
-<h5>Convert to Mac, Convert to Unix, Convert to Windows:</h5>
-</P>
-
-
-<P>
-En los primeros tiempos de las comnunicaciones, se usaban terminales de
-teletipo. El juego de caracteres ascii tiene todav&iacute;a
-reminiscencias de esos tiempos; por ejemplo, 0x07 hace sonar la campana
-del teletipo. El car&aacute;cter 0x0a es un avance de l&iacute;nea que
-gira el carro a la siguiente l&iacute;nea, y el car&aacute;cter 0x0d es
-un retorno de carro que lleva el carro al comienzo de la l&iacute;nea.
-Para mover el carro al principio de la siguiente l&iacute;nea se usaba
-la secuencia 0x0d 0x0a.</P>
-
-<P>
-Cuando termin&oacute; la era de los teletipos, los fabricantes de
-ordenadores seleccionaron diferentes subconjuntos de estos caracteres
-para indicar el cambio de l&iacute;nea. En el mundo Unix se us&oacute;
-0x0a, en el mundo Windows se us&oacute; 0x0d 0x0a, y en el antiguo
-Macintosh Classic se usaba 0x0d. Las indicaciones de Apple para Mac OS X
-establecen que los programas deben abrir autom&aacute;ticamente archivos
-que usen cualquiera de estas tres convenciones. La mayor&iacute;a de los
-programas, incluyendo TextEdit, TeXShop, etc., lo hacen. En TeXShop, los
-nuevos archivos se crean con las convenciones de Unix, pero si abres un
-archivo creado con Mac OS Classic y a&ntilde;ades l&iacute;neas extra,
-las porciones antiguas del documento seguir&aacute;n con las
-convenciones del Classic, y las secciones nuevas se guardar&aacute;n con
-las convenciones de Unix.  
-</P>
-
-<P>
-Esto no causa ning&uacute;n problema hasta que no env&iacute;es un
-archivo a un amigo que use un sistema operativo diferente. Ahora, muchos
-editores comprenden las m&uacute;ltiples convenciones de fines de
-l&iacute;nea y no tienen problemas. Pero otros pueden tenerlos; si ese
-es el caso (o para evitarlo), usa los tres scripts anteriores.
-Sup&oacute;n que el c&oacute;digo fuente de un documento se llama
-MyFile.tex. Entonces, &laquo;Convert to Mac&raquo; crea un nuevo archivo
-llamado MyFile_Mac.tex con el mismo c&oacute;digo fuente y cambios de
-l&iacute;nea con las convenciones de Macintosh Classic. &laquo;Convert
-to Unix&raquo; y &laquo;Convert to Windows&raquo; trabajan de la misma
-manera. Todos estos scripts llaman a un programa binario llamado
-&laquo;flip&raquo;, que ha sido dessarrollado por Craig Stuart Sapp.
-Puedes ver los detalles en http://ccrma-www.stanford.edu/~craig/utility/flip/.
-</P>
-
-<P>
-<h5>Other Scripts->Bibliography:</h5>
-</P>
-
-<P>
-Procesar un archivo con bibliograf&iacute;a requiere m&uacute;ltiples
-operaciones de composici&oacute;n. Primero hay que usar LaTeX para crear
-un archivo .aux. Entonces se ejecuta BibTeX, que usa este archivo para
-crear los archivos .bbl y .blg. Luego, de nuevo LaTeX para a&ntilde;adir
-la bibliograf&iacute;a al documento. Y LaTeX una vez m&aacute;s para
-actualizar las referencias del texto a la bibliograf&iacute;a.
-</P>
-
-<P>
-El comando &laquo;Bibliography&raquo; hace todas estas cosas de una sola vez.
-Primero guarda el archivo. Luego ejecuta la secuencia
-latex->bibtex->latex->latex. Finalmente, actualiza la ventana con el pdf
-previsto.
-</P>
-
-<P>
-<h5>htlatexc, htlatexr:</h5>
-</P>
-
-<P>
-Tex4ht es un programa que convierte un documento LaTeX en una
-p&aacute;gina web. El c&oacute;digo fuente tiene que ser un archivo
-LaTeX est&aacute;ndar, y puede incluir ilustraciones en eps. El
-resultado final es una p&aacute;gina html y un gran n&uacute;mero de
-ficheros gif. El script &laquo;htlatexc&raquo; guarda los documentos con
-c&oacute;digo, ejecuta htlatex y abre el archivo html resultante con
-Safari. As&iacute;, su comportamiento es como el de un nuevo comando de
-composici&oacute;n de TeXShop, &iexcl;excepto que ha sido construido por
-un usuario sin necesidad de nuevo c&oacute;digo en TeXShop!
-</P>
-
-<P>
-Al usar estos scripts no es necesario emplear el paquete text4ht, puesto
-que lo cargan autom&aacute;ticamente. El script &laquo;htlatexc&raquo;
-llama a htlatex sin opciones adicionales. El script
-&laquo;htlatexr&raquo; lo llama con la opci&oacute;n &laquo;-r&raquo;,
-que sirve para indicar al programa que reconstruya cualquier .gif que ya
-exista.
-</P>
-
-<P>
-<h5>pdfselectc:</h5>
-</P>
-
-<P>
-Este script ejecuta el comando pdfselect del shell para crear archivos pdf que s&oacute;lo contengan una cierto rango de p&aacute;ginas del documento. Cuando se usa, aparece un di&aacute;logo que pregunta el n&uacute;mero de archivos que queremos crear. Sup&oacute;n que la respuesta es 3. Aparece otro di&aacute;logo que pregunta el rango de p&aacute;ginas del primer documento. Sup&oacute;n que la respuesta es 5:8. Aparece otro di&aacute;logo que pregunta el rango para el segundo documento. Sup&oacute;n que la respuesta es 10. Finalmente, otro di&aacute;logo pregunta el rango para el tercer documento. Sup&oacute;n que la respuesta es 20:30. En estas circunstancias, obtendremos tres documentos, uno con las p&aacute;ginas 5 - 8 del original, otro con la p&aacute;gina 10, y el &uacute;ltimo con las p&aacute;ginas 20 - 30.
-</P>
-
-<P>
-<h5>mpostc, mpostcpl, combination-example:</h5>
-</P>
-
-<P>
-El script &laquo;mpostc&raquo; ejecuta mpost y luego pdflatex; el script
-&laquo;mpostcpl&raquo; ejecuta pdflatex, luego mpost, y finalmente
-pdflatex de nuevo. En la ayuda de TeXShop, consulta &laquo;General:
-ConTeXt y MetaPost&raquo; para ver un ejemplo del uso consecutivo de
-estos tres comandos.</P>
-
-<P> 
-El script &laquo;combination-example&raquo; guarda el c&oacute;digo y
-ejecuta pdflatex, makeindex, mpost, y pdflatex de nuevo; en el proceso
-abre todos los archivos log relevantes. 
-</P>
+<h2 id="gerhardt">Claus Gerhardt Macros</h2>
+<p>Las macros de este submenú llaman a scripts de shell del mismo nombre situados en ~/Library/TeXShop/bin. Funcionan con un archivo guardado. <a href="macros_writingcommandscripts.htm">Scripts con comandos de shell</a> explica pdflatexc como ejemplo.</p>
+<h3>htlatexc, htlatexr</h3>
+<p>TeX4ht convierte un documento LaTeX en una página web: una página HTML y archivos de imagen. htlatexc ejecuta htlatex sobre el documento y abre en Safari el archivo HTML resultante. No hace falta cargar el paquete tex4ht en el documento; htlatex lo carga. htlatexr ejecuta htlatex con la opción <code>-r</code>, que vuelve a crear las imágenes aunque ya existan.</p>
+<h3>pdfselectc</h3>
+<p>pdfselectc crea archivos PDF que contienen páginas seleccionadas del PDF del documento. Primero pregunta cuántos archivos debe crear y luego las páginas de cada archivo, como <code>5:8</code> para las páginas 5 a 8 o <code>3:4,6,8:12</code>. Si el documento se llama MyFile, los archivos se guardan como MyFile-1.pdf, MyFile-2.pdf, etc.</p>
+<h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
+<p>mpostc ejecuta MetaPost y después pdfLaTeX; mpostcpl ejecuta pdfLaTeX, MetaPost y otra vez pdfLaTeX. latex-makeindex-mpost ejecuta pdfLaTeX, MakeIndex, MetaPost y otra vez pdfLaTeX, abriendo por el camino los archivos log. Para MetaPost, consulte <a href="advanced_context.htm">ConTeXt y MetaPost</a>.</p>
 </main>
 </body>
 </html>

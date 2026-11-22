@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>まえがき</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="マクロとマクロエディタについての概要">
+<meta name="description" content="マクロ; マクロエディタ; Macros_Latex.plist; Macrosフォルダ; 選択したマクロをファイルに保存; ファイルからマクロを追加; 宍倉">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +14,7 @@
 <ul>
 <li><a href="macros_preliminaries.htm" class="current">まえがき</a></li>
 <li><a href="macros_default.htm">デフォルトのマクロを理解する</a></li>
-<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a></li>
+<li><a href="macros_rearrange.htm">マクロメニューを並べ替える</a></li>
 <li><a href="macros_define.htm">新しいマクロを定義する</a></li>
 <li><a href="macros_applescript.htm">AppleScriptマクロ</a></li>
 <li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a></li>
@@ -26,41 +26,20 @@
 </nav>
 <main id="content">
 <h1>まえがき</h1>
+<p>TeXShopのマクロとマクロエディタは、宍倉光広（Mitsuhiro Shishikura）によるものです。LaTeX用のデフォルトのマクロは、宍倉光広とHirokazu Ogawaが作成しました。</p>
+<p>マクロは、「マクロ」メニューと、ソースのウインドウのツールバーにある「マクロ」ポップアップメニューに並んでいます。マクロには2種類あります。テキストマクロは、LaTeXパネルのボタンのように、ソースに文字列を挿入します。AppleScriptマクロは、AppleScriptを実行します。<a href="macros_applescript.htm">AppleScriptマクロ</a>を参照してください。</p>
 
+<h2 id="files">マクロの保存場所</h2>
+<p>マクロは次のファイルに保存されています。</p>
+<pre>~/Library/TeXShop/Macros/Macros_Latex.plist</pre>
+<p>「マクロ」メニューには、どのタイプセットエンジンのときもこのマクロが表示されます。組み込みのエンジンであるplain TeX、BibTeX、MakeIndex、MetaPostには、別のマクロを用意しておくこともできます。書類でこれらのどれかが選ばれているとき、マクロエディタはMacros_Tex.plistのような専用のファイルにマクロを保存し、Macros_Latex.plistは変更しません。</p>
+<p>マクロのファイルは普通のテキストファイルですが、変更にはマクロエディタを使うのが最善です。「マクロ」→「マクロエディタを開く...」を選んでください。マクロの追加、削除、名前の付け方、ショートカットの割り当て方は、<a href="macros_define.htm">新しいマクロを定義する</a>で説明しています。</p>
 
-<!-- 
-<p>
-TeXShopマクロとマクロエディタは宍倉光広さんによるものです。デフォルトのLaTeXマクロは宍倉光広さんと小川弘和さんが作成しました。デフォルトのConTeXtマクロはHans Hagenによって作成されました。
-</p>
- -->
+<h2 id="missing">Macrosフォルダがないとき</h2>
+<p>TeXShopの起動時にMacrosフォルダがないと、TeXShopはデフォルトのマクロでフォルダを作り直します。Macros_Latex.plistが壊れていると、TeXShopは起動時にメッセージを出さずに自分のコピーで置き換え、壊れたファイルを~/Library/TeXShop/Backupsに残します。デフォルトのマクロでやり直したいときは、TeXShopを終了してMacrosフォルダをデスクトップに移し、TeXShopを起動し直します。移したフォルダには、それまでのマクロが残っています。</p>
 
-<p>
-TeXShopマクロとマクロエディタは宍倉光広さんによるものです。デフォルトのLaTeXマクロは宍倉光広さんと小川弘和さんが作成しました。デフォルトのConTeXtマクロはHans Hagenさんによって作成されました。
-</p>
-
-<p>
-タイプセットエンジンの選択によって、利用できるマクロは異なります。エンジンをLaTeXにした場合、LaTeXに適した一連のマクロが表示されます。エンジンをConTeXTにすれば、ConTeXt用のマクロが表示されます。TeXShopをインストールした当初は、この２つのエンジン用のマクロだけが入っています ；LaTeX用のマクロは、ConTeXtを除くすべてのエンジンに対して表示されます。
-</p>
-
-<p>
-マクロには２種類あります。ひとつはTeXのソースファイルに文字列を挿入するものです ； こうしたマクロはLaTeXパネルのボタンと似ています。もうひとつのマクロはAppleScriptのスクリプトを実行します。
-</p>
-
-<p>
-マクロは ~/Library/TeXShop/Macros/Macros_Latex.plistと ~/Library/TeXShop/Macros/Macros_Context.plistに格納されています。TeXShopを起動した際にこれらのファイルがなければ、デフォルト・マクロのファイルが前述の場所に作られます。これらのファイルはごく普通のテキストファイルなので、TeXShopで開いたり調べたりできます。これは通常は不必要なことです──というのも、マクロエディタで扱うのがいちばんですから。
-</p>
-
-<p>
-Macros_Latex.plistとMacros_Context.plistに格納されているマクロは、それぞれのタイプセットエンジンが選択されているときにマクロエディタで修正できます。しかしもしTeXのような他のタイプセットエンジンが選ばれているときには、マクロエディタは、デフォルトのLaTeXマクロのセットをユーザがTeX用に定義したセットに置き換えます──その結果はMacros_Tex.plistに保存されますが、もとのMacros_Latex.plistは変更されずに残ります。
-</p>
-
-<p>
-あなたが便利なマクロを定義し、それを他の人たちに渡したいと思ったときは、マクロエディタを開き、マクロメニューから「選択したマクロをファイルに保存...」を選べばよいだけのことです。保存先はいずれの場所でもかまいません。マクロを配布するには、このファイルを送ります。
-</p>
-
-<p>
-他の人たちが作成したマクロをマクロリストに追加するには、マクロエディタを開いたうえで「ファイルからマクロを追加...」を選択します。その後マクロエディタを使ってマクロを好きなように配列します。
-</p>
+<h2 id="sharing">マクロを共有する</h2>
+<p>マクロエディタを開いている間、「マクロ」メニューには2つのコマンドが加わります。「選択したマクロをファイルに保存...」は、選んだマクロを専用のファイルに保存します。このファイルはほかの人に渡せます。「ファイルからマクロを追加...」は、そうしたファイルのマクロを自分の一覧に加えます。加えたあとは、マクロエディタで好きなように並べてください。</p>
 </main>
 </body>
 </html>

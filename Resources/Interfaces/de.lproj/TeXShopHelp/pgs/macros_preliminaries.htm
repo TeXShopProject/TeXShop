@@ -3,36 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Einleitung</title>
+<title>Vorbemerkungen</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="So arbeiten Sie mit Makros in TeXShop.">
+<meta name="description" content="Makros; Makro-Editor; Macros_Latex.plist; Ordner Macros; Auswahl in Datei sichern; Makros aus Datei hinzufügen; Shishikura">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
 <header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Hilfe zu Makros</span></header>
 <nav id="menu">
 <ul>
-<li><a href="macros_preliminaries.htm" class="current">Einleitung</a></li>
+<li><a href="macros_preliminaries.htm" class="current">Vorbemerkungen</a></li>
 <li><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
-<li><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
-<li><a href="macros_define.htm">Neue Makros erstellen</a></li>
-<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
-<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
-<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
+<li><a href="macros_rearrange.htm">Das Menü „Makros“ neu ordnen</a></li>
+<li><a href="macros_define.htm">Neue Makros definieren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-Makros</a></li>
+<li><a href="macros_includedscripts.htm">Mitgelieferte AppleScript-Makros</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-Makros definieren</a></li>
 <li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
-<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
-<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
+<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a></li>
+<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Einleitung</h1>
+<h1>Vorbemerkungen</h1>
+<p>Die Makros von TeXShop und der Makro-Editor stammen von Mitsuhiro Shishikura; die Standardmakros für LaTeX haben Mitsuhiro Shishikura und Hirokazu Ogawa erstellt.</p>
+<p>Makros stehen im Menü „Makros“ und im Einblendmenü „Makros“ der Symbolleiste des Quelltextfensters. Es gibt zwei Arten. Textmakros fügen Text in den Quelltext ein, wie die Tasten der LaTeX Palette. AppleScript-Makros führen ein AppleScript aus; siehe <a href="macros_applescript.htm">AppleScript-Makros</a>.</p>
 
-		<P>TeXShop Makros und der Makro Editor stammen von Mitsuhiro Shishikura. Die Standard Makros wurden von Mitsuhiro Shishikura und Hirokazu Ogawa erstellt. Die Standard Context Makros erstellt Hans Hagen</P>
-		<p>Die m&ouml;glichen Makros h&auml;ngen von der verwendeten Schriftsatz Methode ab. Benutzen Sie LaTeX werden die LaTeX Makros angezeigt. Verwenden Sie ConTeXT erscheinen die ConTeXT Makros. Bei der Erstinstallation von TeXShop werden diese beiden Makropakete erstellt. Die LaTeX Makros erden auch bei anderen Schriftsatzmethoden angezeigt.</p>
-		<p>Makros kommen in zwei Varianten vor. Einige f&uuml;gen - &auml;hnlich wie die Kn&ouml;pfe in der LaTeX Palette - Strings in den TeX-Quelltext ein. Andere Makros f&uuml;hren AppleScripts aus.</p>
-		<p>Makros werden in &bdquo;~/Library/TeXShop/Macros/Macros.plist&ldquo; abgelegt. Ist diese Datei beim Starten von TeXShop nicht vorhanden, so wird in dem Ordner ein Standardmakro angelegt. Die Datei Macros.plist ist eine normale Text-Datei und kann somit auch mit TeXShop ge&ouml;ffnet und bearbeitet werden. Normalerweise ist die manuelle Bearbeitung der Datei jedoch nicht n&ouml;tig, da sie am besten mit dem Makro Editor bearbeitet wird.</p>
-		<p>Wenn Sie n&uuml;tzliche Makros erstellt haben und diese an andere weiter geben m&ouml;chten, w&auml;hlen Sie einfach &bdquo;Auswahl in Datei sichern&ldquo;&ldquo; aus dem Makro-Men&uuml;, nachdem Sie den Makroeditor gestartet haben. Daraufhin wird eine Datei an dem von Ihnen angegebenen Ort angelegt. Diese Datei k&ouml;nnen Sie nun anderen schicken.</p>
-		<p>Um Makros, die von anderen erstellt wurden, zu Ihren Makros hinzuzuf&uuml;gen, starten Sie zun&auml;chst den Makroeditor. W&auml;hlen Sie nun &bdquo;Makros aus Datei hinzuf&uuml;gen&ldquo; aus dem Makro-Men&uuml;. Mit Hilfe des Makro Editors k&ouml;nnen Sie die Makros nun beliebig sortieren.</p>
+<h2 id="files">Wo die Makros gespeichert sind</h2>
+<p>Die Makros sind gespeichert in</p>
+<pre>~/Library/TeXShop/Macros/Macros_Latex.plist</pre>
+<p>und das Menü „Makros“ zeigt sie für jede Satz-Engine. Für die eingebauten Engines plain TeX, BibTeX, MakeIndex und MetaPost kann ein eigener Satz gepflegt werden: Ist eine davon für das Dokument gewählt, sichert der Makro-Editor seine Makros in einer eigenen Datei, etwa Macros_Tex.plist, und lässt Macros_Latex.plist unverändert.</p>
+<p>Die Makrodateien sind gewöhnliche Textdateien, werden aber am besten mit dem Makro-Editor geändert: Wählen Sie Makros › Makro-Editor öffnen…. <a href="macros_define.htm">Neue Makros definieren</a> erklärt, wie Sie Makros hinzufügen, löschen und benennen und ihnen Kurzbefehle geben.</p>
+
+<h2 id="missing">Wenn der Ordner „Macros“ fehlt</h2>
+<p>Fehlt der Ordner „Macros“ beim Start von TeXShop, legt TeXShop ihn mit den Standardmakros neu an. Ist Macros_Latex.plist beschädigt, ersetzt TeXShop die Datei beim Start ohne Meldung durch eine eigene Kopie und bewahrt die beschädigte Datei in ~/Library/TeXShop/Backups auf. Um mit den Standardmakros neu anzufangen, beenden Sie TeXShop, bewegen den Ordner „Macros“ auf den Schreibtisch und starten TeXShop erneut; der bewegte Ordner enthält Ihre alten Makros.</p>
+
+<h2 id="sharing">Makros weitergeben</h2>
+<p>Solange der Makro-Editor geöffnet ist, hat das Menü „Makros“ zwei weitere Befehle. „Auswahl in Datei sichern…“ sichert die ausgewählten Makros in einer eigenen Datei, die Sie an andere weitergeben können. „Makros aus Datei hinzufügen…“ fügt die Makros einer solchen Datei Ihrer Liste hinzu; ordnen Sie sie dann im Makro-Editor nach Belieben an.</p>
 </main>
 </body>
 </html>
