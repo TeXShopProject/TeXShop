@@ -173,7 +173,13 @@ static inline NSMenuToolbarItem *TSPreviewLayoutItem(id target, NSString *identi
             action:NSSelectorFromString(layout ? @"changePreviewLayout:" : @"changePreviewArrangement:") keyEquivalent:@""];
         choice.target = target;
         choice.tag = tag;
-        if (layout) choice.image = TSPreviewLayoutImage(tag);
+        if (layout) {
+            choice.image = TSPreviewLayoutImage(tag);
+            // From macOS 27 AppKit usually hides the images of menu items; these show which icon is which format.
+#if defined(MAC_OS_VERSION_27_0)   // SDKs before 27 do not have the setting
+            if (@available(macOS 27.0, *)) choice.preferredImageVisibility = NSMenuItemImageVisibilityVisible;
+#endif
+        }
         [menu addItem:choice];
     }
     item.menu = menu;
