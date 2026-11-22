@@ -13,7 +13,7 @@
 	
 <p> TeXShop has several build-in methods to typeset documents. But it is possible to add additional typesetting methods; these new methods are called "engines."</p>
 
-<p> An engine can call any sequence of programs in a processing chain which starts from a tex source file and ends with a pdf output file. Strictly speaking, even this pdf output file is optional; one engine supplied with TeXShop uses the TeX Live program tex4ht to convert LaTeX source to an html file; the engine then opens this html file in Safari. Instructions for the sequence of programs called by an engine are given in a shell script.</p> 
+<p> An engine can call any sequence of programs in a processing chain which starts from a tex source file and ends with a pdf output file. Strictly speaking, even this pdf output file is optional; one engine supplied with TeXShop uses the TeX Live program tex4ht to convert LaTeX source to an html file; TeXShop then shows the html file in its HTML window, beside the pdf. Instructions for the sequence of programs called by an engine are given in a shell script.</p> 
 
 <p>There is a folder in ~/Library/TeXShop named Engines; the files in this folder are shell
 scripts which call typesetting programs. When TeXShop first starts, it examines this folder and adds

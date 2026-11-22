@@ -13,7 +13,7 @@
 
 <p>TeXShop hat mehrere eingebaute Satzmethoden. Es ist aber m&ouml;glich, weitere Satzmethoden hinzuzuf&uuml;gen; diese neuen Methoden hei&szlig;en &bdquo;Engines&ldquo;.</p>
 
-<p>Eine Engine kann eine beliebige Folge von Programmen aufrufen, die mit einer TeX-Quelldatei beginnt und mit einer PDF-Datei endet. Genau genommen ist selbst die PDF-Datei nicht n&ouml;tig: Eine mit TeXShop gelieferte Engine wandelt LaTeX-Quelltext mit dem TeX-Live-Programm tex4ht in eine HTML-Datei um und &ouml;ffnet diese HTML-Datei dann in Safari. Die Programme, die eine Engine aufruft, stehen in einem Shell-Skript.</p>
+<p>Eine Engine kann eine beliebige Folge von Programmen aufrufen, die mit einer TeX-Quelldatei beginnt und mit einer PDF-Datei endet. Genau genommen ist selbst die PDF-Datei nicht n&ouml;tig: Eine mit TeXShop gelieferte Engine wandelt LaTeX-Quelltext mit dem TeX-Live-Programm tex4ht in eine HTML-Datei um und TeXShop zeigt diese HTML-Datei dann neben der PDF-Datei in seinem HTML-Fenster. Die Programme, die eine Engine aufruft, stehen in einem Shell-Skript.</p>
 
 <p>Im Ordner ~/Library/TeXShop gibt es einen Ordner namens Engines; die Dateien darin sind Shell-Skripte, die Satzprogramme aufrufen. Beim Start untersucht TeXShop diesen Ordner und f&uuml;gt die Namen der enthaltenen Skripte dem Auswahlmen&uuml; der Satzmethoden hinzu. W&auml;hlt man einen dieser Eintr&auml;ge und klickt auf &bdquo;Setzen&ldquo;, wird das Skript aufgerufen. Sie k&ouml;nnen eigene Skripte schreiben und in den Ordner Engines legen. Jedes Skript braucht einen Namen ohne Leerzeichen und die Endung &bdquo;.engine&ldquo;, und es muss ausf&uuml;hrbar sein (Execute-Bit gesetzt).</p>
 
