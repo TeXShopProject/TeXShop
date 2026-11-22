@@ -1405,8 +1405,11 @@ static void TSPreviewPlacePartByFrame(NSView *part)
     // Pages one below the other in a bottom part that stays: they stay where they are on the
     // screen, and the window shows above them what comes before them, as the top part that
     // stays shows what comes after it (#66).
+    // The place is taken before the parts change places: Fit to Content Width fits the part
+    // again after the switch and may then show it a little elsewhere.
     BOOL staysBelow = keepsSecondPart && self.horizontal &&
         (secondView.displayMode == kPDFDisplaySinglePageContinuous || secondView.displayMode == kPDFDisplayTwoUpContinuous);
+    TSPreviewPanePlace secondTop = TSPreviewPaneCapture(secondView);
     NSPoint secondEdge = TSPreviewPaneWindowEdge(secondView);
     CGFloat secondScale = secondView.scaleFactor;
     if (keepsSecondPart)
@@ -1556,7 +1559,7 @@ static void TSPreviewPlacePartByFrame(NSView *part)
     // Only at the same magnification: a magnification that fits the page to the height of the
     // window enlarges the pages, which then start at the top of the window.
     if (staysBelow && fabs(firstView.scaleFactor - secondScale) < 1e-6)
-        TSPreviewPaneRestoreAt(firstView, firstTop, secondEdge);
+        TSPreviewPaneRestoreAt(firstView, secondTop, secondEdge);
     else
         TSPreviewPaneRestore(firstView, firstTop);
     if (self.windowIsSplit && continuesBelow)
