@@ -20,14 +20,20 @@ HEADER = 'Sources/Typesetting/TSTeXOptions.h'
 JOBS = 'Sources/Typesetting/TSDocument-Jobs.m'
 MUTATIONS = {
     # Only --shell-escape is noticed again.
-    'two-hyphens-only': (HEADER, '@"(?<![^\\\\s\\"\'/])--?shell-escape(?![^\\\\s\\"\'/])"', '@"(?<![^\\\\s\\"\'/])--shell-escape(?![^\\\\s\\"\'/])"'),
-    # -no-shell-escape counts as -shell-escape.
-    'no-shell-escape-counts': (HEADER, '@"(?<![^\\\\s\\"\'/])--?shell-escape(?![^\\\\s\\"\'/])"', '@"--?shell-escape(?![^\\\\s\\"\'/])"'),
+    'two-hyphens-only': (HEADER, ')([\\"\']?)--?shell-escape\\\\1(?=', ')([\\"\']?)--shell-escape\\\\1(?='),
+    # A path or a longer name that contains the option counts as the option.
+    'loose-boundaries': (HEADER, '@"(?:(?<=^)|(?<=\\\\s)|(?<=q/))([\\"\']?)--?shell-escape', '@"([\\"\']?)--?shell-escape'),
+    # A command started through env is not seen as LuaTeX.
+    'env-ignored': (HEADER, '        if (!afterEnv && [name isEqualToString:@"env"]) { afterEnv = YES; continue; }\n', ''),
+    # Options inside paths and longer names are written with one hyphen for the comparison too.
+    'normalize-anywhere': (HEADER, '(?=[\\\\s\\"\']|$|/(?:[\\\\s\\"\']|$))"\n            options:0', '"\n            options:0'),
     # Every engine gets two hyphens.
     'two-for-all': (HEADER, '    return TSTeXCommandRunsLuaTeX(command) ? @"--" : @"-";', '    return @"--";'),
     # The confirmation looks for --shell-escape only.
     'confirmation-old': (JOBS, '		if (! TSTeXCommandHasShellEscape(myEngine))\n			warningGiven = YES;',
                          '		if ([myEngine rangeOfString:@"--shell-escape"].location == NSNotFound)\n			warningGiven = YES;'),
+    # The probe ends badly without printing anything.
+    'probe-silent-exit': ('PROBE', '    return failures ? 1 : 0;', '    return 7;'),
     # A script run adds --interaction for every engine.
     'interaction-two': (JOBS, '[myEngine stringByAppendingFormat:@" %@interaction=nonstopmode ", TSTeXOptionDashes(myEngine)]',
                         '[myEngine stringByAppendingString:@" --interaction=nonstopmode "]'),
@@ -49,9 +55,16 @@ int main(void) {
         check([TSTeXCommandWithoutShellEscape(@"pdflatex -shell-escape -file-line-error") isEqualToString:@"pdflatex  -file-line-error"], @"-shell-escape removed");
         check([TSTeXCommandWithoutShellEscape(@"lualatex --shell-escape --synctex=1") isEqualToString:@"lualatex  --synctex=1"], @"--shell-escape removed");
         check([TSTeXCommandWithoutShellEscape(@"pdflatex -no-shell-escape") isEqualToString:@"pdflatex -no-shell-escape"], @"-no-shell-escape kept");
-        for (NSString *c in @[@"lualatex -file-line-error", @"luatex x", @"/Library/TeX/texbin/luahbtex x", @"  lualatex-dev x"])
+        check([TSTeXCommandWithoutShellEscape(@"pdflatex \"-shell-escape\" x") isEqualToString:@"pdflatex  x"], @"a quoted -shell-escape goes with its quotes");
+        check([TSTeXCommandWithoutShellEscape(@"latexmk -e \"$pdflatex=q/pdflatex -shell-escape/\"") isEqualToString:@"latexmk -e \"$pdflatex=q/pdflatex /\""], @"inside latexmk");
+        for (NSString *c in @[@"pdflatex -output-directory=/tmp/-shell-escape x", @"pdflatex -kpathsea-debug=-shell-escape", @"pdflatex x/-shell-escape/y", @"pdflatex --shell-escape-extra"])
+            check(!TSTeXCommandHasShellEscape(c), [NSString stringWithFormat:@"no shell escape in a path or longer name: %@", c]);
+        check([TSTeXCommandWithoutShellEscape(@"pdflatex -output-directory=/tmp/-shell-escape -shell-escape x") isEqualToString:@"pdflatex -output-directory=/tmp/-shell-escape  x"], @"only the argument is removed, not the path");
+        for (NSString *c in @[@"pdflatex --file-line-error-extra", @"pdflatex -output-directory=/x/--file-line-error", @"pdflatex --synctex=abc"])
+            check([TSTeXCommandWithOneHyphenOptions(c) isEqualToString:c], [NSString stringWithFormat:@"other names, values and paths unchanged: %@", c]);
+        for (NSString *c in @[@"lualatex -file-line-error", @"luatex x", @"/Library/TeX/texbin/luahbtex x", @"  lualatex-dev x", @"env TEXINPUTS=. lualatex x", @"/usr/bin/env -i lualatex x"])
             check([TSTeXOptionDashes(c) isEqualToString:@"--"], [NSString stringWithFormat:@"two hyphens for %@", c]);
-        for (NSString *c in @[@"pdflatex x", @"xelatex x", @"platex x", @"latexmk -lualatex", @"ptex2pdf -l", @"uplatex"])
+        for (NSString *c in @[@"pdflatex x", @"xelatex x", @"platex x", @"latexmk -lualatex", @"ptex2pdf -l", @"uplatex", @"env LUAINPUTS=x pdflatex y"])
             check([TSTeXOptionDashes(c) isEqualToString:@"-"], [NSString stringWithFormat:@"one hyphen for %@", c]);
         check([TSTeXCommandWithOneHyphenOptions(@"pdflatex --file-line-error --synctex=1") isEqualToString:@"pdflatex -file-line-error -synctex=1"], @"former profile command compared with one hyphen");
         check([TSTeXCommandWithOneHyphenOptions(@"latexmk -e \"$lualatex=q/lualatex --synctex=1 --file-line-error/\"") isEqualToString:@"latexmk -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\""], @"inside latexmk too");
@@ -81,11 +94,21 @@ def run(texts):
     for note in sorted((root / 'Resources/Interfaces').glob('*.lproj/SettingsCategories.strings')):
         line = [l for l in note.read_text(encoding='utf-8').splitlines() if l.startswith('"catalog.typesetting.4.2.note"')]
         check(line and '-shell-escape' in line[0] and '--shell-escape' not in line[0], f'{note.parent.name}: the note writes -shell-escape: {line}')
+    # The manual writes LuaTeX's form with two ASCII hyphens (TeX would join -- into a dash), in both copies.
+    try:
+        import pypdf
+    except ImportError:
+        pypdf = None
+        print('note: pypdf not found; the manual is not checked')
+    if pypdf is not None:
+        for copy in ('DocumentSources/Manual Source/Manual.pdf', 'Resources/Interfaces/Base.lproj/Manual.pdf'):
+            text = ''.join(page.extract_text() or '' for page in pypdf.PdfReader(str(root / copy)).pages if 'LuaTeX writes them' in (page.extract_text() or ''))
+            check('LuaTeX writes them with two (--file-line-error)' in text, f'{copy}: LuaTeX writes them with two (--file-line-error), in ASCII')
     with tempfile.TemporaryDirectory(prefix='tex-options-') as tmp:
         tmp = Path(tmp)
         (tmp / 'h').mkdir()
         (tmp / 'h/TSTeXOptions.h').write_text(texts[HEADER])
-        (tmp / 'probe.m').write_text(PROBE)
+        (tmp / 'probe.m').write_text(texts['PROBE'])
         built = subprocess.run(['clang', '-fobjc-arc', '-framework', 'Foundation', '-I', str(tmp / 'h'), str(tmp / 'probe.m'), '-o', str(tmp / 'probe')], capture_output=True, text=True)
         if built.returncode:
             failures.append('probe did not compile: ' + built.stderr[-1500:])
@@ -93,6 +116,11 @@ def run(texts):
         out = subprocess.run([str(tmp / 'probe')], capture_output=True, text=True, timeout=60)
         for line in out.stdout.splitlines():
             failures.append(line[6:] if line.startswith('FAIL: ') else line)
+        # A probe that ends badly without a word fails too.
+        if out.returncode != 0 and not out.stdout.strip():
+            failures.append(f'the probe ended with status {out.returncode}: {out.stderr[-500:]}')
+        if out.returncode == 0 and out.stdout.strip():
+            failures.append('the probe printed failures but ended with status 0')
 
 
 def main():
@@ -106,6 +134,7 @@ def main():
                 bad.append(name)
         sys.exit(1 if bad else 0)
     texts = {p: (root / p).read_text(encoding='utf-8') for p in (HEADER, JOBS)}
+    texts['PROBE'] = PROBE
     if args[:1] == ['--mutation']:
         path, old, new = MUTATIONS[args[1]]
         if texts[path].count(old) != 1:
