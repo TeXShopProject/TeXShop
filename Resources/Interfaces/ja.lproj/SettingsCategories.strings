@@ -241,8 +241,7 @@
 "catalog.preview.0.6.title" = "リンク先をポップアップ";
 "catalog.preview.0.6.note" = "これから開く書類の初期値です。開いている書類では、「プレビュー」メニューで切り替えます。";
 "catalog.preview.0.8.title" = "リンク先のポップアップにページ番号を表示";
-"catalog.preview.0.7.title" = "フルスクリーンでも倍率とページレイアウトを保つ";
-"catalog.preview.0.7.note" = "分割したウインドウも分割したままにします。オフのときは、フルスクリーンで分割を解き、倍率の設定とページレイアウトを、前回フルスクリーンで使ったものにします。";
+"catalog.preview.0.7.title" = "フルスクリーンにするとき、倍率・ページレイアウト・分割状態を保つ";
 "group.preview.1.title" = "見開きの配置";
 "catalog.preview.1.0.title" = "ページの方向";
 "catalog.preview.1.1.title" = "先頭ページを表紙として単独表示";

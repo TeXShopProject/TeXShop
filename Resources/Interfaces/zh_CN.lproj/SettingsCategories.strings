@@ -241,8 +241,7 @@
 "catalog.preview.0.6.title" = "链接预览";
 "catalog.preview.0.6.note" = "今后打开的文稿的初始值。已打开的文稿请在“预览”菜单中切换。";
 "catalog.preview.0.8.title" = "在链接预览中显示页码";
-"catalog.preview.0.7.title" = "全屏时保持放大和页面格式";
-"catalog.preview.0.7.note" = "分割的窗口也保持分割。关闭时，全屏会取消分割，并使用上次全屏时的放大方式和页面格式。";
+"catalog.preview.0.7.title" = "进入全屏时保持放大、页面格式和分割状态";
 "group.preview.1.title" = "双页模式";
 "catalog.preview.1.0.title" = "页面方向";
 "catalog.preview.1.1.title" = "将第一页单独显示为封面";

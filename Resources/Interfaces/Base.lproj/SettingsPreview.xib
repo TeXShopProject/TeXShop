@@ -330,7 +330,7 @@
               <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-full-screen-keeps-display-button" identifier="settings.preview-full-screen-keeps-display-button">
                 <rect key="frame" x="19" y="9" width="215" height="18" />
                 <autoresizingMask key="autoresizingMask" />
-                <buttonCell key="cell" type="check" title="Keep magnification and display format in full screen" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-full-screen-keeps-display-cell">
+                <buttonCell key="cell" type="check" title="Keep magnification, display format and split when entering full screen" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-full-screen-keeps-display-cell">
                   <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                   <font key="font" metaFont="system" />
                 </buttonCell>

@@ -11644,7 +11644,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
 - (void)enterFullScreen: (NSNotification *)notification
 {
-    // With Keep magnification and display format in full screen, the window
+    // With Keep magnification, display format and split when entering full screen, the window
     // keeps its split, and each part its magnification and display format (#63).
     fullscreenKeptDisplay = [SUD boolForKey: KeepPreviewDisplayInFullScreenKey];
     if (fullscreenKeptDisplay)

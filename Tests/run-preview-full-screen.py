@@ -3,7 +3,7 @@
 
 The production enterFullScreen: and exitFullScreen: of TSDocument run against
 stand-in views, window and settings:
-- With Keep magnification and display format in full screen off (the default),
+- With Keep magnification, display format and split when entering full screen off (the default),
   the window is unsplit, both parts take the full-screen magnification and
   display format, a change made in full screen is remembered for the next time,
   and leaving full screen brings back the earlier ones.
