@@ -2853,7 +2853,7 @@ TeXShop has a large ``Changes'' document, available in the Help menu. ``Changes'
 
 Until recently, I wrote Changes source using TeXShop  and opened the html file  in Safari to check for mistakes. This was tedious; for one thing, Safari opened the document at the beginning and I would have to scroll down to find the section currently being written.
 
-But now this and similar html files can be previewed directly in TeXShop. Check to see if {\bf html.engine} is one of your active engines. If not, go to \path{~/Library/TeXShop/Engines/Inactive/html} and move a copy of the file html.engine to the active folder \path{~/Library/TeXShop/Engines}. Then find an arbitrary html file; I'll use Changes.html. Html files begin with a mandatory first line. Just below this line, add the comment shown below.
+But now this and similar html files can be previewed directly in TeXShop. They are typeset with {\bf html.engine}, which TeXShop puts among the active engines in \path{~/Library/TeXShop/Engines}; if you removed it, copy it again from \path{~/Library/TeXShop/Engines/Inactive/html}. Then find an arbitrary html file; I'll use Changes.html. Html files begin with a mandatory first line. Just below this line, add the comment shown below.
 \begin{verbatim}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -2872,22 +2872,12 @@ If you create complicated web pages, use special software designed for that purp
 
 I'm no html expert, so when writing Changes I often have to use Google to find appropriate commands. The TeXShop Help menu now has a document named {\bf HTML Commands} to make this easier. This opens a window with a list of tasks and appropriate html solutions. But it has got to be the ugliest help document ever, because it is written in html. 
 
-Notice, however, that the top of the document contains an instruction to typeset using the html.engine. You are supposed to open this source and then typeset to get a readable document. Try that now. The web version is easy to read and explains, among other things, how to embed images, movies, and YouTube videos in a web page. In particular, if you right click on a YouTube video in a browser like Safari, a contextual menu appears allowing you to copy code which can be pasted directly into an html document and thereby provide that video for viewers of your page.
-I found a lecture by James Maynard, one of the four Fields Medal winners at the International Congress of Mathematicians for 2022. It is fun to watch this video for the depth and clarity of his mathematics.
-Here is the code provided for this video, which is Greek to me:
-\begin{verbatim}
-<iframe width="928" height="522"
-src="https://www.youtube.com/embed/kQqBeuk_xQw"
-title="13. Large gaps between primes in subsets - James Maynard 
-(University of Oxford) [2017]" frameborder="0" 
-allow="accelerometer; autoplay; clipboard-write;
-encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-\end{verbatim}
+Notice, however, that the top of the document contains an instruction to typeset using the html.engine. You are supposed to open this source and then typeset to get a readable document. Try that now. The web version is easy to read and explains, among other things, how to embed images and how to link to pdf documents and other web pages.
 
-When the html help document is edited in TeXShop, the changes will automatically be saved. So when you need a command not listed, look it up using Google and then add that example to the help file. The initial document provided in TeXShop doesn't list many commands because I don't know much html, but if you expand it, it will gradually become more useful.
+The initial document provided in TeXShop doesn't list many commands. When you need a command not listed, look it up and add the example to a copy of the help file with another name in the same folder, as explained below.
 
 The actual source for the help document is contained in a new directory \path{~/Library/TeXShop/HTML}, and the source is named ``Help.html''. This folder can also contain support files. It currently contains an image ``topdot.jpg'' used by Help.html and a few other support files, and you can add similar support files.
-When TeXShop is updated, Help.html and the various support files will not be touched, because you may have edited these items. But the HTML folder also contains a subfolder named ``Inactive'' and that folder will be updated. So more extensive help files may be provided in the future, which you can merge with your own additions to the default file. I encourage users to contribute better initial Help.html files for this Inactive folder.
+When TeXShop is updated, Help.html is replaced by the new version, so keep your own examples in a copy with another name; the support files you added are not touched. But the HTML folder also contains a subfolder named ``Inactive'' and that folder will be updated. So more extensive help files may be provided in the future, which you can merge with your own additions to the default file. I encourage users to contribute better initial Help.html files for this Inactive folder.
 
 \section{TeX4ht}
 

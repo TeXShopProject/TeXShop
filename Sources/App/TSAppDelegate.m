@@ -434,7 +434,8 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	// Compare display versions (6.00 beta-1), not build numbers, so a new build of the same version copies nothing.
 	currentVersion = [[[NSBundle bundleForClass:[self class]]
 					   infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-	needsUpdating = TSLibraryNeedsUpdating(TSLibraryVersionInFolder(NewPath), currentVersion);
+	NSString *libraryVersion = TSLibraryVersionInFolder(NewPath);
+	needsUpdating = TSLibraryNeedsUpdating(libraryVersion, currentVersion);
 
 		
 	if (! [fileManager fileExistsAtPath: [TeXShopPath stringByStandardizingPath]] ) {
@@ -476,6 +477,16 @@ static void TSInstallAdvancedFindFieldStyle(void)
 				  toPath:[EngineInactivePath stringByStandardizingPath]];
 	}
     
+    // Help > HTML Commands typesets with html.engine. Earlier versions kept it among the inactive
+    // engines, so users of those versions get a copy among the active ones, once: a copy they
+    // remove later stays removed, and an engine of their own with that name is kept.
+    if (needsUpdating && TSLibraryNeedsUpdating(libraryVersion, @"6.00 beta-10")) {
+        NSString *htmlEngine = [[EnginePath stringByStandardizingPath] stringByAppendingPathComponent:@"html.engine"];
+        NSString *bundledEngine = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/Engines/html.engine"];
+        if (bundledEngine && ![fileManager fileExistsAtPath:htmlEngine] && [fileManager fileExistsAtPath:bundledEngine])
+            [fileManager copyItemAtPath:bundledEngine toPath:htmlEngine error:NULL];
+    }
+
     if (! [fileManager fileExistsAtPath: [HTMLHelpPath stringByStandardizingPath]] ){
         [self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/HTML"]
               toPath:[HTMLHelpPath stringByStandardizingPath]];
