@@ -156,5 +156,25 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
    if([hit.category isEqual:@"typesetting"] && [hit.targetIdentifier isEqual:@"row.catalog.typesetting.9.0"] && [hit.title isEqual:otfTitle])found=YES;
   Check(found,[NSString stringWithFormat:@"Former otf name finds the renamed setting: %@ (%@)",query,otfLanguage]);searchChecks++;
  }
+ // The system color switches of the cursor and the selection share their title: each has one result, named after
+ // its color, that leads to it, whether the title, a part of it or the whole name is searched.
+ {
+  NSString *title=[resources localizedStringForKey:@"catalog.appearance.3.0.switch" value:nil table:@"SettingsCategories"];
+  NSString *cursor=[NSString stringWithFormat:@"%@ — %@",[resources localizedStringForKey:@"catalog.appearance.3.0.item.0" value:nil table:@"SettingsCategories"],title];
+  NSString *selection=[NSString stringWithFormat:@"%@ — %@",[resources localizedStringForKey:@"catalog.appearance.3.0.item.3" value:nil table:@"SettingsCategories"],title];
+  NSString *part=[title substringToIndex:MAX((NSUInteger)2,title.length/2)];
+  for(NSString *query in @[title,part,cursor,selection]){
+   NSMutableDictionary<NSString *,NSString *> *names=[NSMutableDictionary dictionary];NSUInteger count=0;
+   for(TSSettingsSearchResult *hit in [index resultsForQuery:query])
+    if([hit.targetIdentifier isEqual:@"settings.cK4-Ip-S8y"] || [hit.targetIdentifier isEqual:@"settings.sK6-Sl-T1y"]){count++;names[hit.targetIdentifier]=hit.title;}
+   // The title finds both; a whole name finds its own switch (the other one too where a word of the name is also
+   // in the category's text, as Auswahl is in German), each result under its own name.
+   BOOL both=[query isEqual:title] || [query isEqual:part];
+   NSString *own=[query isEqual:cursor]?@"settings.cK4-Ip-S8y":[query isEqual:selection]?@"settings.sK6-Sl-T1y":nil;
+   Check(count==names.count && (!names[@"settings.cK4-Ip-S8y"] || [names[@"settings.cK4-Ip-S8y"] isEqual:cursor]) && (!names[@"settings.sK6-Sl-T1y"] || [names[@"settings.sK6-Sl-T1y"] isEqual:selection]) && (both?names.count==2:names[own]!=nil),
+         [NSString stringWithFormat:@"The system color switches are told apart in the results of %@: %@",query,names]);
+   searchChecks++;
+  }
+ }
  printf("SEARCH PASS %lu queries\n",(unsigned long)searchChecks);
 }
