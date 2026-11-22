@@ -3,61 +3,49 @@
 <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
 <title>スペルをチェックする</title>
 <meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="自動スペルチェックやスペルチェック・ソフトについての説明" name="description"/>
+<meta content="スペルチェック; 辞書; LaTeXの構文を考慮する; spellcheck" name="description"/>
 <link href="../sty/screen.css" media="all" rel="stylesheet"/>
 </head>
 <body>
 
 <div id="content_border">
-<!--
-<p>
-CocoaプログラムにはAppleの提供するスペルチェック技術が自動的に具わりますが、AppleのスペルチェッカーはLaTeXを理解しません。しかしながら、他のスペルサービスをAppleの技術に付け加えることができます ； そうするとすべてのCocoaプログラムで利用できるようになります。
-</p>
--->
-<!-- 
-<p>
-CocoaプログラムにはAppleの提供するスペルチェック技術が自動的に具わります。
-Mac OS X 10.4以上のスペルチェッカーでは、
-LaTeXのコマンドにもいくらかは対応していますが、
-AppleのスペルチェッカーはLaTeXのコマンドを理解せず、
-多くのコマンドにスペルミスの印を付けてしまいます。
-しかしながら、他のスペルサービスをAppleの技術に付け加えることができます ；
-そうするとすべてのCocoaプログラムで利用できるようになります。
-</p>
- -->
-<p>
-CocoaプログラムにはAppleの提供するスペルチェック機能が最初から備わっています。Mac OS X 10.4以上のスペルチェッカーでは、LaTeXのコマンドにもいくらかは対応していますが、AppleのスペルチェッカーはLaTeXのコマンドを理解せず、多くのコマンドにスペルミスの印を付けてしまいます。しかしながら、他のスペルサービスをAppleの技術に付け加えることができます ； そうするとすべてのCocoaプログラムで利用できるようになります。
-</p>
-<!-- 
-<p>
-TeXShopは自動スペルチェックをサポートします──メニューコマンドで入・切ができます。設定で入・切の初期状態を選定します。
-</p>
- -->
-<p>
-TeXShopは自動スペルチェックをサポートしています──メニューコマンドで入・切ができます。設定でデフォルトの（入・切）状態を設定することができます。
-</p>
-<!-- 
-<p>
-AspellはUnixマシン用にKevin Adkinsonが作成した「より賢いIspell」です。それがAnton LeuskiによってMac OS Xに移植され、スペルサービス化されました。この新しいスペルチェッカーはLaTeXをサポートしています。これを入手するには以下のサイトを訪れます──
-</p>
- -->
-<p>
-<b>Aspell</b> はUnixマシン用にKevin Adkinsonさんが作成した「より賢いIspell」です。それがAnton LeuskiさんによってMac OS Xに移植され、スペルサービス化されました。この新しいスペルチェッカーはLaTeXをサポートしています。これを入手するには以下のサイトを訪れます──
-</p>
+
+<p>CocoaプログラムにはAppleの提供するスペルチェック機能が最初から備わっています。TeXShopは入力中のスペルチェックに対応しており、メニューコマンドで入・切を切り替えられます。最初の状態は設定で選べます。</p>
+
+<p>Appleのスペルチェッカーは、そのままではLaTeXのコマンドを理解せず、多くのコマンドにスペルミスの印を付けてしまいます。TeXShopの「設定」の「スペルチェック」で「LaTeXの構文を考慮する（推奨）」を選ぶと、TeXShopはコマンド、数式、コメント、参照の引数などを除いて、本文だけを検査します。</p>
+
+<p>デフォルトの辞書は「設定」の「スペルチェック」にある「辞書」で選びます。ふだん英語で書くなら英語の辞書を、フランス語で書くならフランス語の辞書を選びます。「言語を自動判別」を選ぶと、テキストに応じて適切な辞書が自動的に選ばれます。</p>
+
+<p>設定の「辞書」で選ぶのは、TeXShopで新しくファイルを開いたときに使うデフォルトの辞書です。すでに開いているファイルの辞書は変わりません。</p>
+
+<p>「辞書」のメニューには、各言語がその言語自身の名前（たとえば「Deutsch」や「Français」）で表示されるので、辞書は言語の名前で選びます。スペルチェッカーがその言語に使うコード（「de」や「fr_CA」など）は、メニュー項目のツールチップに表示されます。</p>
+
+<p>辞書を設定したあとでTeXShopで複数のソースファイルを開くと、どのファイルにもデフォルトの辞書が割り当てられます。辞書は「編集」メニューの「スペルと文法」で変更できるので、必要ならファイルごとに別の辞書を使えます。たとえば英語、フランス語、ドイツ語、日本語で顧客への手紙を書いているなら、4つのソースファイルにそれぞれの辞書を割り当てられます。ソースファイルを切り替えると、そのたびに「スペルと文法」パネルが対応する辞書に切り替わります。</p>
+
+<p>ファイルを閉じるとこの対応は失われるので、複数の言語で書く場合は、ファイルを開くたびに適切な辞書を選び直す必要があります。</p>
+
+<p>ただし、次のようなマジックコメントを書いておくと、ファイルを開いたときに使う辞書を固定できます。</p>
 <dl>
-<dd><a href="http://cocoaspell.leuski.net/">http://cocoaspell.leuski.net/</a>
+<dd>% !TEX spellcheck = de-DE
 </dd></dl>
-<!-- 
-<p>
-もうひとつ、ExcaliburというLaTeXスペルチェッカーがよく使われています。このスペルチェッカーはRick Zacconeにより作成されました ； これはTeXShopファイルを開くことができます。入手するには、以下のサイトを訪れます──
-</p>
- -->
-<p>
-他には、Rick Zacconeさんの <b>Excalibur</b> というLaTeXスペルチェッカーがよく使われています。このスペルチェッカーはTeXShopファイルを開くことができます。入手するには、以下のサイトを訪れます──
-</p>
+<p>この例では、このファイルを開いたときには必ずドイツ語の辞書を使うことになります。ファイルを開いたあとで「スペルと文法」を使って辞書を変えることもできますが、次にファイルを閉じて開き直すと、またドイツ語の辞書が使われます。</p>
+
+<p>この行は書類を開いたときに読み取られるので、ソースファイルに初めて書き加えたときは、ファイルを保存して開き直すまで有効になりません。ルートファイルのあるプロジェクトでは、取り込まれる各ソースファイルにこの行が必要です。</p>
+
+<p>このコマンドでは、Appleの辞書を、言語についてはISO 639-1またはISO 639-2の規格で、地域についてはISO 3166-1の規格で指定します。地域の指定は、同じ言語でも使われる地域による違いを区別するためのものです。たとえばフランス語はISO 639-1では「fr」、ISO 639-2では「fre」で、フランスのフランス語の地域指定は「FR」、カナダのフランス語の地域指定は「CA」です。したがってカナダでフランス語の辞書を選ぶには「spellcheck = fr」でもかまいませんが、「spellcheck = fr-CA」とするほうがより適切です。これらはISO規格なので、ほかのプラットフォームでも同様のコマンドが使えます（TeXShop自体はMacでしか動きませんが）。言語の規格は次のサイトにあります。</p>
 <dl>
-<dd><a href="http://www.eg.bucknell.edu/%7eexcalibr/excalibur.html">http://www.eg.bucknell.edu/~excalibr/excalibur.html</a>
+<dd><a href="https://www.loc.gov/standards/iso639-2/php/English_list.php">https://www.loc.gov/standards/iso639-2/php/English_list.php</a>
 </dd></dl>
+<p>地域の規格は次のサイトにあります。</p>
+<dl>
+<dd><a href="https://www.iso.org/iso-3166-country-codes.html">https://www.iso.org/iso-3166-country-codes.html</a>
+</dd></dl>
+
+<p>以前のTeXShopは辞書について特別な処理をせず、ユーザは「スペルと文法」を使うだけでした。その後、上記の方式が部分的に実装され、TeXShop 3.81で完全に実装されました。TeXShopが「スペルと文法」の標準の動作にそのまま従っていた以前の方式を好む方は、次の隠し設定で元の動作に戻せます。</p>
+<dl>
+<dd>defaults write TeXShop OriginalSpelling YES
+</dd></dl>
+
 <p><a href="basic_preferences.htm#settings-search">設定の使い方と設定の検索</a></p></div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
@@ -67,7 +55,7 @@ AspellはUnixマシン用にKevin Adkinsonが作成した「より賢いIspell�
 <ul>
 <li><a href="basic_preliminaries.htm">まえがき</a>
 <li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
-<li><a href="basic_installtetex.htm">teTeXの入手とインストール</a>
+<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a>
 <li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
 <li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
 <li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>

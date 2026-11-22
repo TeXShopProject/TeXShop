@@ -448,3 +448,45 @@
 "Auto Rotate" = "Girar Automaticamente";
 "Scale:" = "Ajustar Tamanho:";
 "Scale to Fit" = "Ajustar Para";
+
+/* Help > Show Help for Package: texdoc found nothing */
+"No documentation was found for “%@”." = "Nenhuma documentação foi encontrada para “%@”.";
+
+/* The Settings window, as the first step of a path to a setting */
+"Settings" = "Ajustes";
+
+/* Help > Show Help for Package: %@ is the path of the setting */
+"Another TeX installation on this Mac may have it. The installation that TeXShop uses is set in %@." = "Outra instalação do TeX neste Mac pode tê-la. A instalação usada pelo TeXShop é definida em %@.";
+
+/* Help > Show Help for Package: no texdoc */
+"texdoc was not found." = "O texdoc não foi encontrado.";
+
+/* Help > Show Help for Package: the folder of the TeX engines and the path of the setting */
+"There is no texdoc in %@, the folder set in %@." = "Não há texdoc em %@, a pasta definida em %@.";
+
+/* Help > Show Help for Package: texdoc failed */
+"texdoc could not show the documentation for “%@”." = "O texdoc não pôde mostrar a documentação de “%@”.";
+
+/* Help > Show Help for Package: the path of texdoc and its exit status */
+"%@ ended with status %d." = "%@ terminou com o estado %d.";
+
+/* Help > Show Help for Package: kpsewhich did not tell where texdoc looked; %@ is the path of texdoc */
+"The folders that %@ searched could not be determined." = "Não foi possível determinar as pastas em que %@ procurou.";
+
+/* Help > Show Help for Package: texdoc is there but not executable */
+"texdoc cannot be run." = "O texdoc não pode ser executado.";
+
+/* Help > Show Help for Package: the path of texdoc and the path of the setting */
+"%@ is not executable. The folder is set in %@." = "%@ não é executável. A pasta é definida em %@.";
+
+/* Help > Show Help for Package: followed by the folders texdoc is set to search */
+"texdoc of the TeX installation in %@ is set to search these folders:" = "O texdoc da instalação do TeX em %@ está configurado para procurar nestas pastas:";
+
+/* Help > Show Help for Package: followed by the folders texdoc is set to search, none of which exists */
+"None of the folders that texdoc of the TeX installation in %@ is set to search exists:" = "Nenhuma das pastas em que o texdoc da instalação do TeX em %@ está configurado para procurar existe:";
+
+/* Help > Show Help for Package: below the folders, for those marked with an asterisk */
+"* In this folder, only the files listed in its ls-R index are searched." = "* Nesta pasta, procura-se somente os arquivos do índice ls-R.";
+
+/* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
+"In these folders, only the files listed in their ls-R index are searched." = "Nestas pastas, procura-se somente os arquivos do índice ls-R.";

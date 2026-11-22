@@ -448,3 +448,45 @@
 "Auto Rotate" = "자동 회전";
 "Scale:" = "크기 조절:";
 "Scale to Fit" = "크기에 맞게 조절";
+
+/* Help > Show Help for Package: texdoc found nothing */
+"No documentation was found for “%@”." = "‘%@’에 대한 설명서를 찾을 수 없습니다.";
+
+/* The Settings window, as the first step of a path to a setting */
+"Settings" = "설정";
+
+/* Help > Show Help for Package: %@ is the path of the setting */
+"Another TeX installation on this Mac may have it. The installation that TeXShop uses is set in %@." = "이 Mac의 다른 TeX에는 있을 수 있습니다. TeXShop이 사용하는 TeX는 %@에서 정합니다.";
+
+/* Help > Show Help for Package: no texdoc */
+"texdoc was not found." = "texdoc을 찾을 수 없습니다.";
+
+/* Help > Show Help for Package: the folder of the TeX engines and the path of the setting */
+"There is no texdoc in %@, the folder set in %@." = "%2$@에 지정한 폴더 %1$@에 texdoc이 없습니다.";
+
+/* Help > Show Help for Package: texdoc failed */
+"texdoc could not show the documentation for “%@”." = "texdoc이 ‘%@’의 설명서를 표시하지 못했습니다.";
+
+/* Help > Show Help for Package: the path of texdoc and its exit status */
+"%@ ended with status %d." = "%@이(가) 상태 %d(으)로 종료되었습니다.";
+
+/* Help > Show Help for Package: kpsewhich did not tell where texdoc looked; %@ is the path of texdoc */
+"The folders that %@ searched could not be determined." = "%@이(가) 찾아본 폴더를 알 수 없습니다.";
+
+/* Help > Show Help for Package: texdoc is there but not executable */
+"texdoc cannot be run." = "texdoc을 실행할 수 없습니다.";
+
+/* Help > Show Help for Package: the path of texdoc and the path of the setting */
+"%@ is not executable. The folder is set in %@." = "%1$@은(는) 실행할 수 없는 파일입니다. 폴더는 %2$@에서 정합니다.";
+
+/* Help > Show Help for Package: followed by the folders texdoc is set to search */
+"texdoc of the TeX installation in %@ is set to search these folders:" = "%@에 있는 TeX의 texdoc은 다음 폴더를 찾도록 설정되어 있습니다:";
+
+/* Help > Show Help for Package: followed by the folders texdoc is set to search, none of which exists */
+"None of the folders that texdoc of the TeX installation in %@ is set to search exists:" = "%@에 있는 TeX의 texdoc이 찾도록 설정된 폴더가 하나도 없습니다:";
+
+/* Help > Show Help for Package: below the folders, for those marked with an asterisk */
+"* In this folder, only the files listed in its ls-R index are searched." = "* 표시가 있는 폴더에서는 ls-R 색인에 있는 파일만 찾습니다.";
+
+/* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
+"In these folders, only the files listed in their ls-R index are searched." = "이 폴더들에서는 ls-R 색인에 있는 파일만 찾습니다.";

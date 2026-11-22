@@ -2,90 +2,38 @@
 
 <HEAD>
 			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>きちんとインストールしましたか？</TITLE>
+			<TITLE>~/Library/TeXShopの新しい項目を入手する</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="アップグレード時の注意点">
+			<META NAME="description" CONTENT="~/Library/TeXShop; New; Templates; アップグレード">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
 <BODY>
 <div id="content_border">
 
-<!-- 
-<p>
-バージョン1.34以降ひきつづき1.35でも、TeXShopにはpdfsyncという機能があります：プレビューウィンドウ上の一点をクリックすると、その箇所に応じてソースウィンドウをアクティブにするとともに、ソースコード内の相当する行を選択します。この機能を使うには 「pdfsync.sty」 「pdfsync.tex」 「pdfsync4context.tex」といったファイルを ~/Library/texmf/tex/latex・  ~/Library/texmf/tex/plainおよび ~/Library/texmf/tex/contextにそれぞれインストールしておく必要があります。もし古い「pdfsync.sty」があるなら、~/Library/texmf/tex/latexから取り除いておいてください。そのうえで、TeXShopのディストリビューション内にある新しいファイルを、それぞれ適切なフォルダにドラッグしてください。~/Libraryはユーザのホーム・ディレクトリにあるライブラリ・フォルダのことです。texmf・tex・latex・plain・contextといったフォルダを作らねばならないかもしれません。
-</p>
- -->
+<p>TeXShopの標準の動作は、設定を変える方法と、~/Library/TeXShopにあるファイルを編集する方法の2通りで変更できます。~/Libraryはホームフォルダにあるライブラリフォルダです。</p>
 
-<p>
-バージョン1.34以降ひきつづき1.35でも、TeXShopにはpdfsyncという機能があります：プレビューウインドウ上の一点をクリックすると、その箇所に応じてソースウインドウをアクティブにするとともに、ソースコード内の相当する行を選択します。この機能を使うには 「pdfsync.sty」 「pdfsync.tex」 「pdfsync4context.tex」といったファイルを ~/Library/texmf/tex/latex・ ~/Library/texmf/tex/plainおよび ~/Library/texmf/tex/contextにそれぞれインストールしておく必要があります。もし古い「pdfsync.sty」があるなら、~/Library/texmf/tex/latexから取り除いておいてください。そのうえで、TeXShopのディストリビューション内にある新しいファイルを、それぞれ適切なフォルダにドラッグしてください。~/Libraryはユーザのホーム・ディレクトリにあるライブラリ・フォルダのことです。texmf・tex・latex・plain・contextといったフォルダを作る必要があるかもしれません。
-</p>
+<p>TeXShopの新しいバージョンは、ユーザが知らないうちに変更されるのを嫌うため、原則としてこうしたユーザによる変更には手を付けません。ただし、新機能のために多少の変更が必要になることがあります。その変更は「ヘルプ」メニューの「このリリースについて（英語）」で説明しています。この書類はTeXShopのリリースごとに書き直されます。「このリリースについて（英語）」で説明している変更をしなくてもTeXShopは問題なく動作しますが、一部の新機能が説明どおりに動かないことがあります。</p>
 
-<blockquote>
-	<small>
-	【補足】
-		<ul>
-			<li>上記以外にも、~/texmf内の対応する各フォルダ（~/texmf/tex/latex・ ~/texmf/tex/plain・ ~/texmf/tex/context）にインストールすることで利用可能になるようです。
-			<li>また最新の小川版パッケージにはpdfsync.styが収録されていますので、改めてインストールする必要はありません。
-		</ul>
-	</small>
-</blockquote>
+<p>TeXShopは~/Library/TeXShopにある項目を原則として更新しませんが、例外があります。bin、Documents、Engines/Inactive、ExternalEditorScripts、HTML/Inactive、Scriptsの各フォルダと、「ヘルプ」メニューの「HTMLコマンド（英語）」で表示されるHTML/Help.htmlファイルは、新しいリリースのたびに更新されます。これらの場所では、TeXShopに付属するファイルがすべて新しい版に置き換えられるので、そうしたファイルに加えた変更は失われます。新しい標準のファイルは追加され、ユーザが別の名前で加えたファイルはそのまま残ります。これらのファイル（たとえばHelp.html）を自分用に変更したい場合は、別の名前で保存してください。有効になっているエンジンファイルはEnginesフォルダにあり、Inactiveサブフォルダにはないので、変更されません。ただし、6.00 beta 10より前のバージョンが最後に更新したライブラリを更新するときに限り、TeXShopはhtml.engineをEnginesフォルダに一度だけコピーします（同じ名前のファイルがすでにある場合はコピーしません）。Macrosフォルダでは、以前のTeXShopに付属していて一度も編集されていないマクロが、現在の内容に更新されることがあります。編集したマクロや自分で作ったマクロはそのまま残ります。それ以外の~/Library/TeXShopの内容は、ユーザによる変更がそのまま保たれます。</p>
 
-<!-- 
-<p>
-TeXShop 1.35にはClaus GerhardtとWill Robertsonによる追加のAppleScriptが付属しています。前のバージョンからアップグレードした場合、これらは自動では現われません。
-</p>
- -->
+<p>この方式の利点は、エンジンによってはbinフォルダやscriptsフォルダに補助ファイルを置くので、TeXShopのアップグレードでこれらの補助ファイルをユーザの手を借りずに更新できることです。同様に、Engines/Inactiveフォルダに新しいエンジンが追加されることがあり、ユーザは何もしなくてもそれを入手できます。</p>
 
-<p>
-TeXShop 1.35にはClaus GerhardtさんとWill Robertsonさんによる追加のAppleScriptが付属しています。以前のバージョンからアップグレードする場合、これらのスクリプトは手動で追加してやる必要があります。
-</p>
+<p>TeXShopをアップグレードするたびに、~/Library/TeXShop/Newフォルダが書き直されます。このフォルダには、ユーザがほかの設定フォルダに加えたくなるかもしれない新しい項目が入っています。たとえば新しいテンプレートは~/Library/TeXShop/Newに置かれます。新しいテンプレートを使いたい場合は、~/Library/TeXShop/Templatesに移して適宜編集してください。~/Library/TeXShop/Newの内容は必ず「このリリースについて（英語）」で説明しているので、そこで指示がない限り~/Library/TeXShop/Newを調べる必要はありません。</p>
 
-<!-- 
-<p>
-デフォルトのマクロ・セットを少しもいじっていないのであれば、~/Library/TeXShop内のMacrosフォルダを丸ごと取り除くことで、新しいマクロを導入できます。TeXShopを立ち上げると、最新のマクロといっしょにこのフォルダを作り直します。Macrosフォルダの中のファイルを取り除くだけでは不十分です ； フォルダ自体を取り除かねばなりません。
-</p>
- -->
+<p>この方式の技術的な詳細を1つ知っておくと役に立ちます。~/Library/TeXShop/Newにある不可視ファイルには、そのフォルダを書き込んだTeXShopのバージョン番号が記録されています。~/Library/TeXShopが更新されるのは、TeXShopのバージョン番号がこの不可視ファイルに記録されたバージョン番号より大きい場合だけです。そのため、~/Library/TeXShopはTeXShopを起動するたびに更新されるわけではなく、古いバージョンのTeXShopを起動しても~/Library/TeXShopが変更されることはありません。</p>
 
-<!-- 
-<p>
-デフォルトのマクロセットを少しもいじっていないのであれば、~/Library/TeXShop内のMacrosフォルダを丸ごと捨ててしまうことで、新しいマクロを導入できます。Macrosフォルダを取り除いたままの状態でTeXShopを立ち上げると、最新のマクロの入ったフォルダが新たに生成されます。Macrosフォルダの中のファイルを捨てるだけでは不十分です ； フォルダ自体を捨てなければなりません。
-</p>
- -->
+<p>まれに、~/Library/TeXShopにあるフォルダの最新の標準ファイルを入手したい場合があります。そのフォルダをデスクトップに移すと、次にTeXShopを起動したときにそのフォルダが一から作り直されます。そのあとで、自分で加えた変更をデスクトップのコピーから取り込んでください。たとえば~/Library/TeXShopのTemplatesフォルダをデスクトップに移すと、次にTeXShopを起動したときに最新の標準のTemplatesフォルダができます。幸い、このような思い切った操作が必要になることはめったにありません。</p>
 
-<p>
-デフォルトのマクロセットを少しもいじっていないのであれば、~/Library/TeXShop内のMacrosフォルダを丸ごと取り除くことで、新しいマクロを導入できます。Macrosフォルダを取り除いたままの状態でTeXShopを立ち上げると、最新のマクロの入ったフォルダが新たに生成されます。Macrosフォルダの中のファイルを捨てるだけでは不十分です ； フォルダ自体を取り除かなければなりません。
-</p>
-
-<!-- 
-<p>
-もしデフォルトのマクロを編集しており、そのうえで新しいマクロセットを追加したいのであれば、いったんMacrosフォルダを取り除き、TeXShopに新しいマクロセットを作成させます。その後で古いマクロを、マクロエディタを使って追加してください。
-</p>
- -->
-
-<p>
-デフォルトのマクロを編集してしまっており、新しいマクロセットは単に追加したいというのであれば、いったんMacrosフォルダを別の場所に移動させ、TeXShopに新しいマクロセットを生成させます。その後で以前からのマクロを、マクロエディタを使って追加してください。
-</p>
-
-<!-- 
-<p>
-TeXShop 1.35にはWill Robertsonによる新しいテンプレート集が付属しています。このテンプレートは自動ではインストールされません。~/Library/TeXShop内のテンプレート・フォルダを丸ごとデスクトップに移動させることで手に入れます。次回TeXShopを起動した際に、最新のテンプレートを含んだテンプレート・フォルダが作り直されます。その後、自分で編集した古いテンプレートを、デスクトップに置いたフォルダから新しく作られたフォルダ ~/Library/TeXShop/Templatesへ移します。
-</p>
- -->
-
-<p>
-TeXShop 1.35にはWill Robertsonさんによる新しいテンプレート集が付属しています。が、このテンプレートも自動ではインストールされません。~/Library/TeXShop内のテンプレートフォルダを丸ごとデスクトップに移動させておくことでインストールします。そのままの状態でTeXShopを起動すると、最新のテンプレートを含んだテンプレートフォルダが新たに生成されます。その後、デスクトップに置いたフォルダから、自分で編集したテンプレートを、新しく生成されたフォルダ ~/Library/TeXShop/Templatesへと移します。
-</p>
-
-</div>		
-		<div id="header_background"></div>
+</div>
+<div id="header_background"></div>
 		<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 		<div id="header_chapter">TeXShopの設定はどうすればよいか？</div>
-		<div id="header_title">きちんとインストールしましたか？</div>
+		<div id="header_title">~/Library/TeXShopの新しい項目を入手する</div>
 		<div id="menu_border">
 			<UL>
 				<li><a href="configure_preliminaries.htm">まえがき</a>
-				<li><a href="configure_correctinstall.htm">きちんとインストールしましたか？</a>
+				<li><a href="configure_correctinstall.htm">~/Library/TeXShopの新しい項目を入手する</a>
 				<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
 				<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
 				<li><a href="configure_defaults.htm">初期設定について</a>

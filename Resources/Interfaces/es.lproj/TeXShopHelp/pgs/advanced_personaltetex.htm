@@ -2,49 +2,55 @@
 
 <HEAD>
 		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>A&ntilde;adir archivos personales a teTeX</TITLE>
+		<TITLE>A&ntilde;adir archivos personales a TeX Live</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="tetex; a&ntilde;adir archivos sty">
+		<META NAME="description" CONTENT="texlive; texmf; a&ntilde;adir archivos sty">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 
 <BODY>
 	<div id="content_border">
-		<P>
-Es habitual que los usuarios creen archivos sty, cls, bib y tex para utilizarlos en varios proyectos. Seguro que tex y latex los encuentran si est&aacute;n en la misma carpeta que el documento con c&oacute;digo tex que se est&aacute; componiendo, pero de esta manera hay que tener m&uacute;ltiples copias de estos archivos en el ordenador.
- </P>
-
-<P>
-Si lo deseamos, podemos hacer que estos archivos sean visibles para todos los proyectos de teTeX, tanto si componemos con TeXShop o desde el Terminal. Para ello, en la carpeta Library de tu directorio personal, crea una subcarpeta y ll&aacute;mala texmf. Crea en ella subcarpetas llamadas tex, bibtex y makeindex. Y, dentro de tex, crea otra subcarpeta llamada latex. Almacena tus archivos personales en estas carpetas.
- </P>
-
-<P>
-Tex encontrar&aacute; cualquier archivo que est&eacute; en ~/Library/texmf/tex o en una subcarpeta de este directorio. Latex encontrar&aacute; cualquier archivo en ~/Library/texmf/tex/latex o en una subcarpeta de este directorio, y bibtex y makeindex encontrar&aacute;n cualquier archivo en ~/Library/texmf/bibtex o ~/Library/texmf/makeindex respectivamente, o en sus subcarpetas. No es necesario ejecutar texhash despu&eacute;s de a&ntilde;adir estas carpetas.
- </P>
-
-<P>
-En otras m&aacute;quinas Unix, suele ser com&uacute;n que haya que notificar a tex la localizaci&oacute;n de los archivos personales por medio de las variables de entorno TEXINPUTS, BSTINPUTS, and BIBINPUTS. Habitualmente, esto no es necesario en la distribuci&oacute;n de teTeX de Gerben Wierda, pero se puede hacer en algunas circunstancias. Mac OS X permite que los usuarios notifiquen a los programas el valor de las variables de entorno creando en el directorio ra&iacute;z (del usuario) un archivo llamado ~/.MacOSX/environment.plist.
-Estas variables de entorno tienen efecto en cualquier shell, y las usan todos los programas Carbon y Cocoa, o sea que hay que ser cuidadoso al crear este archivo.
- </P>
-
-<P>
-A continuaci&oacute;n mostramos un ejemplo de archivo environment.plist que me ha enviado Nathan Potter; &iexcl;gracias! 
-Para m&aacute;s detalles, cons&uacute;ltese
-<a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>.
-
- </P>
+		<p>Todas las distribuciones de TeX esperan encontrar los a&ntilde;adidos personales (como archivos de estilo propios o paquetes que no forman parte de la distribuci&oacute;n principal) en una carpeta o directorio local. Esta carpeta se llama &laquo;texmf&raquo; y tiene una estructura determinada de subcarpetas para que los programas de TeX encuentren correctamente los archivos.</p>
+		<p>En un Mac, la carpeta texmf local est&aacute; dentro de la carpeta Library de tu directorio de usuario. Normalmente se escribe &laquo;~/Library/texmf&raquo;, donde &laquo;~&raquo; significa &laquo;tu directorio de usuario&raquo; (es decir, lo que ves al hacer clic en el icono de tu carpeta de inicio en una ventana del Finder).</p>
+<h2>&iquest;Cu&aacute;ndo debo poner algo en la texmf local?</h2>
+		<p>Antes de poner nada en la carpeta texmf local, comprueba que el paquete en cuesti&oacute;n no forma ya parte de TeX Live y, por tanto, no est&aacute; incluido en la distribuci&oacute;n MacTeX. La forma m&aacute;s f&aacute;cil de hacerlo es usar TeX Live Utility. Esto vale sobre todo para los paquetes de CTAN: la mayor&iacute;a est&aacute;n incluidos en TeX Live y ya deber&iacute;as tenerlos disponibles.</p>
+		<p>Si sabes que un paquete no est&aacute; disponible como parte de TeX Live, ponlo en tu carpeta texmf local.</p>
+<h2>&iquest;Qu&eacute; va en cada sitio?</h2>
+		<p>La carpeta texmf contiene varias carpetas, que a su vez contienen otras carpetas. Para la mayor&iacute;a de los usuarios, las tres carpetas de primer nivel m&aacute;s importantes son las siguientes:</p>
+<table>
+<tr><th>Carpeta</th><th>Qu&eacute; se pone en ella</th></tr>
+<tr><th>bibtex</th><td>Aqu&iacute; van los archivos bib y bst. Debe contener al menos las carpetas siguientes:</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>bst</td><td>Pon aqu&iacute; los archivos bst.</td></tr>
+<tr><td>bib</td><td>Pon aqu&iacute; los archivos bib.</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><th>tex</th><td>Aqu&iacute; van los paquetes nuevos. Debe contener las carpetas siguientes:</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>latex</td><td>Pon aqu&iacute; los paquetes de LaTeX.</td></tr>
+<tr><td>plain</td><td>Pon aqu&iacute; los archivos de plain TeX.</td></tr>
+<tr><td>xelatex</td><td>Pon aqu&iacute; los paquetes espec&iacute;ficos de XeLaTeX.</td></tr>
+<tr><td>xetex</td><td>Pon aqu&iacute; los archivos de plain XeTeX.</td></tr>
+<tr><td>context</td><td>Pon aqu&iacute; los archivos de ConTeXt.</td></tr>
+<tr><td>generic</td><td>Pon aqu&iacute; los archivos que sirven para cualquier variante de TeX.</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><th>doc</th><td>Pon aqu&iacute; la documentaci&oacute;n de los paquetes instalados en la carpeta tex. As&iacute; la encontrar&aacute; el sistema texdoc (y tambi&eacute;n &laquo;Mostrar ayuda del paquete...&raquo; en el men&uacute; Ayuda de TeXShop).</td></tr>
+</table>
+		<p>Otras carpetas de primer nivel son fonts, scripts y source.</p>
+<h2>Variables de entorno</h2>
+		<p>En otras m&aacute;quinas Unix, a veces se indica a tex la localizaci&oacute;n de los archivos personales por medio de las variables de entorno TEXINPUTS, BSTINPUTS y BIBINPUTS. Con TeX Live esto casi nunca es necesario; en su lugar, pon los archivos personales en los subdirectorios apropiados de ~/Library/texmf.</p>
+		<p>En circunstancias muy especiales se pueden establecer estas variables de entorno. Mac OS X permite comunicar variables de entorno a los programas creando en el directorio de usuario un archivo llamado ~/.MacOSX/environment.plist. Estas variables de entorno tienen efecto en todas las shells del usuario y en todos los programas Carbon y Cocoa, as&iacute; que hay que ser cuidadoso al crear este archivo.</p>
+		<p>A continuaci&oacute;n mostramos un ejemplo de archivo environment.plist que me ha enviado Nathan Potter; &iexcl;gracias! Para m&aacute;s detalles, cons&uacute;ltese <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>.</p>
 <br>
-
-
 <center><img align=center src="environment.tiff" border=3></center>
 </div>
+
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">Ayuda avanzada</div><div id="header_title">A&ntilde;adir archivos personales a teTeX</div>
+<div id="header_chapter">Ayuda avanzada</div><div id="header_title">A&ntilde;adir archivos personales a TeX Live</div>
 	<div id="menu_border">
 		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adici&oacute;n de estilos personales y men&uacute;s de macros a teTeX</a>
-			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales y codificaci&oacute;n de caracteres</a>
+			<LI><a href="advanced_personaltetex.htm">Adici&oacute;n de archivos de estilo y de macros personales a TeX Live</a>
+			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a>
 			<LI><a href="advanced_removeaux.htm">Borrado de archivos AUX</a>
 			<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a>
 			<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar desde la ventana del PDF</a>
@@ -60,8 +66,7 @@ Para m&aacute;s detalles, cons&uacute;ltese
 			<li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a>
 			<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a>
 			<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a>
-			<li><a href="advanced_moretetex.htm">M&aacute;s sobre teTeX</a>
-			<li><a href="advanced_fink.htm">Coexistencia con Fink</a>
+			<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a>
 			<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a>
 			<li><a href="advanced_context.htm">ConTeXt y MetaPost</a>
 			<li><a href="advanced_plist.htm">Archivos .plist</a>

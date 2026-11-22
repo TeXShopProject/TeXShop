@@ -9,6 +9,7 @@
 #import "HelpDocuments.h"
 #import "TSLibraryRepair.h"
 #import "TSDialogButtonLayout.h"
+#import "TSTexdocReport.h"
 #import "TSDocumentController.h"
 #import "globals.h"
 #import "TSDocument.h"
@@ -19,6 +20,10 @@
 
 - (void)mirrorPath:(NSString *)srcPath toPath:(NSString *)dstPath;
 
+@end
+
+@interface HelpDocuments ()
+- (void)showTexdocAlert:(NSArray<NSString *> *)texts;
 @end
 
 @implementation HelpDocuments
@@ -260,34 +265,66 @@
 	}
 	
 	binPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
-	if ([binPath length] == 0)
+	enginePath = [binPath stringByAppendingPathComponent:@"texdoc"];
+	// No folder set, or no texdoc that can run in it (no TeX installed, another folder set).
+	if (binPath.length == 0 || ![[NSFileManager defaultManager] isExecutableFileAtPath:enginePath]) {
+		[self showTexdocAlert:TSTexdocMissingTexts(binPath, binPath.length && [[NSFileManager defaultManager] fileExistsAtPath:enginePath])];
 		return;
-	enginePath = [binPath stringByAppendingString:@"/texdoc"];
+	}
 
 	// get copy of environment and add the preferences paths
 	env = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
 	path = [env objectForKey:@"PATH"] ?: @"/usr/bin:/bin:/usr/sbin:/sbin";
-	path = [path stringByAppendingString:@":"];
-	// [path appendString:[SUD stringForKey:TetexBinPath]];
-	path = [path stringByAppendingString:binPath];
+	// texdoc is a texlua script (#!/usr/bin/env texlua): the texlua of the same TeX installation must come first,
+	// or another one on the PATH looks for texdoc's library in its own tree and fails.
+	path = [[binPath stringByAppendingString:@":"] stringByAppendingString:path];
  	[env setObject: path forKey: @"PATH"];
-	
-	
+
 	displayPackageHelpTask = [[NSTask alloc] init];
 	[displayPackageHelpTask setExecutableURL:[NSURL fileURLWithPath:enginePath]];
-	args = [NSMutableArray array];
+	// -I: no interactive menus or questions, which would read the (absent) terminal and end with status 1;
+	// it shows the best match, and ends with status 3 when there is none.
+	args = [NSMutableArray arrayWithObject:@"-I"];
 	[args addObject: packageString];
+	[displayPackageHelpTask setStandardInput:[NSFileHandle fileHandleWithNullDevice]];
 	[displayPackageHelpTask setArguments:args];
 	[displayPackageHelpTask setEnvironment:env];
-	// No texdoc there, or one that cannot be started (no TeX installed, another folder set): -launch would raise.
-	if (![displayPackageHelpTask launchAndReturnError:NULL]) {
+	// texdoc ends with status 3 when it finds no documentation (a misspelt name, a TeX installed without its
+	// documentation) and with another status when it cannot run; say which, and for the first, which TeX
+	// installation and folders texdoc searched. A task replaced by a later request, or stopped here, says nothing.
+	NSPipe *errors = [NSPipe pipe];
+	[displayPackageHelpTask setStandardError:errors];
+	NSTask *task = displayPackageHelpTask;
+	NSDictionary *environment = [env copy];
+	task.terminationHandler = ^(NSTask *finished) {
+		NSData *data = [[errors fileHandleForReading] readDataToEndOfFile];
+		int status = finished.terminationStatus;
+		BOOL exited = finished.terminationReason == NSTaskTerminationReasonExit;
+		NSString *installation = nil;
+		NSArray<NSDictionary *> *folders = nil;
+		if (exited && status == TSTexdocNothingFound)
+			TSTexdocSearch(binPath, environment, &installation, &folders);
+		NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		NSArray<NSString *> *texts = TSTexdocFailureTexts(status, exited, packageString, enginePath, output, installation, folders);
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (self->displayPackageHelpTask == task && texts != nil)
+				[self showTexdocAlert:texts];
+		});
+	};
+	NSError *launchError = nil;
+	if (![displayPackageHelpTask launchAndReturnError:&launchError]) {
 		displayPackageHelpTask = nil;
-		NSBeep();
-		NSAlert *alert = [[NSAlert alloc] init];
-		alert.messageText = NSLocalizedString(@"Error", @"Error");
-		alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"%@ does not exist.", @"%@ does not exist."), enginePath];
-		[alert runModal];
+		[self showTexdocAlert:@[[NSString stringWithFormat:NSLocalizedString(@"texdoc could not show the documentation for “%@”.", @"Help > Show Help for Package: texdoc failed"), packageString],
+		                        [NSString stringWithFormat:@"%@\n\n%@", enginePath, launchError.localizedDescription ?: @""]]];
 	}
+}
+
+- (void)showTexdocAlert:(NSArray<NSString *> *)texts
+{
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = texts[0];
+	alert.informativeText = texts[1];
+	[alert runModal];
 }
 
 - (IBAction)displayStyleFile:sender
@@ -545,17 +582,6 @@
  	
 	fileName = [[NSBundle mainBundle] pathForResource:@"Tables" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
-}
-
-- (IBAction)supplementsToDesktop:sender
-{
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		
-		if (! [fileManager fileExistsAtPath: [[DesktopPath stringByAppendingString:@"Course Supplements"] stringByStandardizingPath]] ) {
-		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Course Supplements"]
-			  toPath:[[DesktopPath stringByAppendingString:@"Course Supplements"] stringByStandardizingPath]];
-		}
-
 }
 
 - (void) okForPanel: sender

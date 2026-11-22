@@ -76,54 +76,56 @@ BoundingBoxの情報をここからコピーして使用することができま
 <hr>
 
 <p>
-プログラムpdftexとpdflatexでは、pdf・jpg・pngないしはmps形式の画像ファイルを使用できます。デフォルトのLaTeXテンプレートを使っており、Gerben Wierdaのディストリビューションから画像変換パッケージをインストールしているのであれば、epsあるいはtif形式の画像ファイルも同じように使用できます ； タイプセット時にこれらは自動的にpdfまたはpng形式に変換されます。ひとつ変わっている点は、tiffファイルは拡張子が「.tiff」ではなく「.tif」でなくてはならないことです。Mac OS Xのネイティブなグラフィック・フォーマットはpdf（portable document format）なので、この形式のファイルならどんなサイズでも印刷がうまくゆきます。おそらくこの先、Macのグラフィックス・プログラムのほとんどがpdfを出力するようになりそうです。
+プログラムpdftexとpdflatexでは、pdf・jpg・pngないしはmps形式の画像ファイルを使用できます。Mac OS Xのネイティブなグラフィック・フォーマットはpdf（portable document format）なので、この形式のファイルならどんなサイズでも印刷がうまくゆきます。おそらくこの先、Macのグラフィックス・プログラムのほとんどがpdfを出力するようになりそうです。
 </p>
 
 <p>
-過去にTeXを使ったことがある場合、イラストがeps形式になっているかもしれません。この形式のファイルは、pdftexやpdflatexでタイプセットする前に、pdf形式に変換されねばなりません。上で説明したように、デフォルトのLaTeXテンプレートを使っていれば、これは自動で行なわれます。TeXShopで開くことによってもまた、eps形式のイラストを変換することができます。イラストがグラフィックウインドウに表示されるのと同時に、当該するpdfファイルをTeXShopがディスクに書き込みます。Ghostscriptにも変換用のコマンドライン・プログラムがあります ； 実際にTeXShopでもこのプログラムを呼び出します。myfile.epsをmyfile.pdfに変換するには、Terminalで次のように打ち込みます──
+画像を使うには、ソースファイルのプリアンブルに次の行を入れます。
 </p>
 
-	<dl>
-		<dd><tt>epstopdf myfile.eps</tt>
-	</dl>
+		<dl>
+			<dd><tt>\usepackage{graphicx}</tt>
+		</dl>
 
 <p>
-pdflatexの作者とグラフィックス・パッケージgraphicxの作者は、pdflatexでタイプセットするLaTeX文書の中に画像ファイルを含めるのを容易にしました──たとえその書類が後に、標準的なLaTeXでタイプセットされ、他の人たちに配布するためのdviファイルに書き出されるとしても、です。こうしたLaTeX入力ファイルの冒頭には、次の１行を含めておきます──
+画像ファイル、たとえば「f1.pdf」を挿入したいときは、次のコマンドを使います。
 </p>
 
-	<dl>
-		<dd><tt>\usepackage{graphicx}</tt>
-	</dl>
+		<dl>
+			<dd><tt>\includegraphics[width=2in]{f1}</tt>
+		</dl>
 
 <p>
-たとえば「f1.pdf」という画像ファイルを含めたいときは、次のようなコマンドを用います──
+このコマンドで指定している幅を変えれば、タイプセットの際に画像の大きさを変えられます。いろいろ試して、ちょうどよい大きさを見つけてください。
 </p>
 
-	<dl>
-		<dd><tt>\includegraphics[width=2in]{f1}</tt>
-	</dl>
+<p>
+過去にTeXを使ったことがある場合、イラストがeps形式になっているかもしれません。この形式のファイルは、pdftexやpdflatexでタイプセットする前に、pdf形式に変換されねばなりません。2011年以降のTeX Liveでは、ソースファイルでgraphicxパッケージを読み込んでいれば、これは自動で行なわれます。
+</p>
+
+<p>
+単独のepsファイルは、TeXShopで開くことでpdf形式に変換できます。このとき、epsは自動的にpdfに変換され、pdfファイルがディスクに書き出されます。epsファイルはそのまま残ります。そのあとでpdfファイルが開かれます。
+</p>
+
+<p>
+pdflatexの作者とグラフィックス・パッケージgraphicxの作者は、pdflatexでタイプセットするLaTeX文書の中に画像ファイルを含めるのを容易にしました──たとえその書類が後に、標準的なLaTeXでタイプセットされ、他の人たちに配布するためのdviファイルに書き出されるとしても、です。これは、ふつうのLaTeXを使っていて、pdfではなくepsのイラストを必要とする同僚とソースファイルを共有する場合などに起こりえます。イラスト、たとえば「f1.pdf」を含めたいときは、拡張子「.pdf」や「.eps」を省いて、次のコマンドを使います。
+</p>
+
+		<dl>
+			<dd><tt>\includegraphics[width=2in]{f1}</tt>
+		</dl>
 
 <p>
 このコマンドはTeXに対し、pdflatexでテキストをタイプセットするときには画像ファイル「f1.pdf」を入力させますが、LaTeXでタイプセットする際には画像ファイル「f1.eps」を入力させます。
 </p>
 
 <p>
-もし以前のバージョンのTeXShopからアップグレードしており、タイプセット時にepsおよびtifファイルの自動変換をお望みなら、次の点を確認してください──
+tifやtiffのイラストも使えます。この場合のために、TeXShopには「TIFFファイルを変換」というメニューコマンドがあり、ファイルを、pdftexとpdflatexが扱えるpngファイルに変換します。このメニューコマンドは、ソースウインドウがアクティブなときに使えます。メニューを選ぶと、ソースのあるフォルダ内のすべてのファイルを一覧表示するダイアログが現われます。選べるのはtifとtiffのファイルだけで、その他のファイルは灰色で表示されます。ファイルを1つまたは複数選んで「変換」を押してください。選んだファイルはすべてpngファイルに変換され、tiffファイルはそのまま残ります。
 </p>
 
-	<ol>
-		<li type="a">Gerben WierdaのインストーラでGhostscript 8・Freetype 2・wmf・iconv conversion supportそれからImageMagickをインストールしてある。
-		<li type="a">pdflatexプログラムの設定が「pdflatex --shell-escape」になっている。
-		<li type="a">LaTeXヘッダに以下の行が含まれている──
-	</ol>
-
-<tt>
-	<dl>
-		<dd>\usepackage{graphicx}
-		<dd>\usepackage{epstopdf}
-		<dd>\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `basename #1 .tif`.png}
-	</dl>
-</tt>
+<p>
+epsのイラストを使った古いファイルが少しある場合や、TeXでPostScriptのパッケージpstricksを使う場合は、pdflatexの代わりに「DVI経由」でタイプセットできます。詳しくはTeXShopヘルプの「<a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>」を参照してください。このモードでは、epsファイルをpdf形式に変換する必要はありません。けれども、epsファイルをたくさん使う新しいプロジェクトにこのモードを使うのはよい考えではありません。タイプセットのたびにepsのイラストが暗黙のうちにpdf形式に変換されねばならず、epsのイラストが複雑な場合はタイプセットがひどく遅くなるからです。というのも「DVI経由」モードでは、PostScriptからpdfへの変換は、イラストが最終的な文書全体に埋め込まれた後、タイプセットのいちばん最後に行なわれるからです。
+</p>
 
 </div>
 
@@ -136,7 +138,7 @@ pdflatexの作者とグラフィックス・パッケージgraphicxの作者は�
 		<ul>
 			<li><a href="basic_preliminaries.htm">まえがき</a>
 			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">teTeXの入手とインストール</a>
+			<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a>
 			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
 			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
 			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	

@@ -10,22 +10,17 @@
 
 <BODY>
 	<div id="content_border">
-		<P>Se ha suprimido el soporte autom&aacute;tico de archivos con formato tiff, que estaba presente en versiones anteriores de pdftex y pdflatex. Sin embargo, es posible configurar TeXShop para que convierta autom&aacute;ticamente gr&aacute;ficos tiff en png al componer. Adem&aacute;s, el programa convierte gr&aacute;ficos eps en pdf al componer. En ambos casos, el archivo gr&aacute;fico original se conserva, y se crea un nuevo archivo con el formato apropiado. Los archivos tiff tienen que tener extensi&oacute;n &laquo;.tif&raquo;, no &laquo;.tiff&raquo;.</P>
-		<p>Las instalaciones de TeXShop nuevas est&aacute;n configuradas adecuadamente. Pero los usuarios que est&eacute;n actualizando TeXShop deber&iacute;an hacer los cambios listados en las dos secciones siguientes. Adem&aacute;s, deber&iacute;an usar i-Installer de Gerben Wierda para instalar los siguientes paquetes, si no est&aacute;n ya presentes:</p>
-		<dl>
-			<dd>Ghostscript 8
-			<dd>Freetype 2
-			<dd>wmf and iconv conversion support
-			<dd>ImageMagick
-		</dl>
+		<p>Hace ya tiempo que se suprimi&oacute; el soporte de archivos tiff en pdftex y pdflatex. Sin embargo, TeXShop tiene la orden de men&uacute; &laquo;Convertir TIFF&raquo;, que convierte los archivos tiff al formato png, que pdftex y pdflatex s&iacute; entienden.</p>
+		<p>Aunque pdftex y pdflatex entienden archivos gr&aacute;ficos en formato pdf, jpg y png, no entienden el formato eps. Muchos proyectos antiguos de TeX usaban ilustraciones eps porque dvips las entend&iacute;a. Desde 2011, TeX Live convierte autom&aacute;ticamente los archivos eps a formato pdf al componer, siempre que el documento fuente cargue el paquete graphicx. Esta conversi&oacute;n no requiere el flag &laquo;--shell-escape&raquo;, que plantea problemas de seguridad.</p>
 </div>
+
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 <div id="header_chapter">&iquest;C&oacute;mo configuro TeXShop?</div><div id="header_title">Conversi&oacute;n autom&aacute;tica de formatos gr&aacute;ficos</div>
 		<div id="menu_border">
 		<UL>
 			<LI><a href="configure_preliminaries.htm">Preliminares</a>
-			<LI><a href="configure_correctinstall.htm">&iquest;Has instalado TeXShop correctamente?</a>
+			<LI><a href="configure_correctinstall.htm">Obtener elementos nuevos de ~/Library/TeXShop</a>
 			<LI><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a>
 			<LI><a href="configure_convertgraphics.htm">Conversi&oacute;n autom&aacute;tica de formatos gr&aacute;ficos</a>
 			<LI><a href="configure_defaults.htm">Ajustes predeterminados</a>

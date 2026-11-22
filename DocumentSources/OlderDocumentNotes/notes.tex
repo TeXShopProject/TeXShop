@@ -1,0 +1,19 @@
+% The notes of the older Help documents, one letter-size page each, the note at the top.
+% make-notes.py puts page N on the first page of document N (see README.txt).
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{tikz}
+\pagestyle{empty}
+\geometry{letterpaper,margin=0pt}
+\newcommand\note[1]{% text
+  \null
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north,yshift=-0.32in,text width=6.2in,align=center,font=\small\itshape] at (current page.north) {#1};
+  \end{tikzpicture}\clearpage}
+\begin{document}
+\note{This document was written in 2014. Fonts, their installation and the menu and setting names in TeXShop have changed since; see the TeXShop manual and https://tug.org/FontCatalogue for current ones.}
+\note{This document was written in 2015 for TeXShop 3.50. Menu and setting names in TeXShop have changed since; see the TeXShop manual for the current ones.}
+\note{Ce document a été écrit en 2018 pour TeXShop 4. Les noms des menus et des réglages de TeXShop ont changé depuis ; consultez le manuel de TeXShop pour les noms actuels.}
+\end{document}
