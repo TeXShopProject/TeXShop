@@ -56,10 +56,11 @@ static void TSLegacyKeepRemovedFullscreen(NSMutableArray<NSMenuItem *> *items)
     }];
     if (fullScreen != NSNotFound) [items insertObject:[[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""] atIndex:fullScreen];
 }
-// 6.00 moved the older documents of the Help menu into its Older Documents submenu and removed Short Course
-// Supplements --> Desktop; Spell Checking Help is added at launch. Positions saved before count the Help menu as it was,
+// 6.00 moved the older documents of the Help menu into its Older Documents submenu and George Grätzer's Short
+// Course with the symbol tables into a submenu of their own, and removed Short Course Supplements --> Desktop;
+// Spell Checking Help is added at launch. Positions saved before count the Help menu as it was,
 // with the moved items in their former places, a place for the removed one, and without Spell Checking Help.
-static NSString *const TSLegacyOlderDocumentsMarker = @"TSShortcut.displayTipsandTricks:.0";
+static NSString *const TSLegacyHelpMenuMarker = @"TSShortcut.displayThisRelease:.0";
 static NSArray<NSString *> *TSLegacyFormerHelpMenu(void)
 {
     return @[@"TSShortcut.displayThisRelease:.0", @"TSShortcut.displayChanges:.0", @"", @"TSShortcut.displayTeXLiveDocumentation:.0",
@@ -72,12 +73,11 @@ static NSArray<NSString *> *TSLegacyFormerHelpMenu(void)
 }
 static NSMutableArray<NSMenuItem *> *TSLegacyFormerHelpItems(NSMenu *menu)
 {
-    BOOL hasOlderDocuments = NO;
+    // The Help menu itself has About This Release among its own items; the menus above it do not.
+    BOOL helpMenu = NO;
     for (NSMenuItem *item in menu.itemArray)
-        // Only the Help menu itself has the submenu among its items; the menus above it do not count.
-        for (NSMenuItem *child in item.submenu.itemArray)
-            if ([child.identifier isEqualToString:TSLegacyOlderDocumentsMarker]) hasOlderDocuments = YES;
-    if (!hasOlderDocuments) return nil;
+        if ([item.identifier isEqualToString:TSLegacyHelpMenuMarker]) helpMenu = YES;
+    if (!helpMenu) return nil;
     NSMutableArray<NSMenuItem *> *items = [NSMutableArray array];
     for (NSString *identifier in TSLegacyFormerHelpMenu()) {
         NSMenuItem *item = identifier.length ? TSLegacyItemWithIdentifier(menu, identifier) : nil;

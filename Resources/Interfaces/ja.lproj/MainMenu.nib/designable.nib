@@ -1478,6 +1478,128 @@
                             <menuItem isSeparatorItem="YES" id="704">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="George Grätzerによるショートコース（英語）" id="GrC-Mn-Itm">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="George Grätzerによるショートコース（英語）" id="GrC-Mn-Sub">
+                                    <items>
+                                        <menuItem title="ショートコース" id="700" identifier="TSShortcut.displayShortCourse:.0">
+                                            <connections>
+                                                <action selector="displayShortCourse:" target="690" id="758"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GrC-00-Sep"/>
+                                        <menuItem title="記号一覧（全体）" id="796" identifier="TSShortcut.displayTables:.0">
+                                            <connections>
+                                                <action selector="displayTables:" target="690" id="797"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GrC-03-Sep"/>
+                                        <menuItem title="ヘブライ文字とギリシア文字" id="GrC-04-Itm" identifier="TSShortcut.displayHG:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayHG:" target="690" id="GrC-04-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="二項関係" id="GrC-05-Itm" identifier="TSShortcut.displayBinary:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayBinary:" target="690" id="GrC-05-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="その他の二項関係" id="GrC-06-Itm" identifier="TSShortcut.displayMoreBinary:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMoreBinary:" target="690" id="GrC-06-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="否定の二項関係" id="GrC-07-Itm" identifier="TSShortcut.displayNegatedBinary:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayNegatedBinary:" target="690" id="GrC-07-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="二項演算" id="GrC-08-Itm" identifier="TSShortcut.displayBinaryOperations:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayBinaryOperations:" target="690" id="GrC-08-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="矢印" id="GrC-09-Itm" identifier="TSShortcut.displayArrows:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayArrows:" target="690" id="GrC-09-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="その他の記号" id="GrC-10-Itm" identifier="TSShortcut.displayMiscSymbols:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMiscSymbols:" target="690" id="GrC-10-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="区切り記号" id="GrC-11-Itm" identifier="TSShortcut.displayDelimiters:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayDelimiters:" target="690" id="GrC-11-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="演算子" id="GrC-12-Itm" identifier="TSShortcut.displayOperators:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayOperators:" target="690" id="GrC-12-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="大型演算子" id="GrC-13-Itm" identifier="TSShortcut.displayLargeOperators:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayLargeOperators:" target="690" id="GrC-13-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="数式のアクセントと書体" id="GrC-14-Itm" identifier="TSShortcut.displayMathAccents:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMathAccents:" target="690" id="GrC-14-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="数式の空白" id="GrC-15-Itm" identifier="TSShortcut.displayMathSpacing:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMathSpacing:" target="690" id="GrC-15-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GrC-16-Sep"/>
+                                        <menuItem title="ヨーロッパの文字" id="GrC-17-Itm" identifier="TSShortcut.displayEuropean:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayEuropean:" target="690" id="GrC-17-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="本文のアクセント" id="GrC-18-Itm" identifier="TSShortcut.displayTextAccents:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextAccents:" target="690" id="GrC-18-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="文字の大きさ" id="GrC-19-Itm" identifier="TSShortcut.displayTextSizes:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextSizes:" target="690" id="GrC-19-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="その他の本文の記号" id="GrC-20-Itm" identifier="TSShortcut.displayTextSymbols:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextSymbols:" target="690" id="GrC-20-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="本文の空白" id="GrC-21-Itm" identifier="TSShortcut.displayTextSpacing:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextSpacing:" target="690" id="GrC-21-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="以前の資料" id="HlO-Dc-Mnu">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="以前の資料" id="HlO-Dc-Sub">
@@ -1517,17 +1639,6 @@
                                         <menuItem title="数式のタイプセット法の入門記事（英語）" id="701" identifier="TSShortcut.displayGettingStartedLatex:.0">
                                             <connections>
                                                 <action selector="displayGettingStartedLatex:" target="690" id="757"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="HlO-Dc-Sp2"/>
-                                        <menuItem title="George Grätzerによるショートコース（英語）" id="700" identifier="TSShortcut.displayShortCourse:.0">
-                                            <connections>
-                                                <action selector="displayShortCourse:" target="690" id="758"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="記号一覧（英語）" id="796" identifier="TSShortcut.displayTables:.0">
-                                            <connections>
-                                                <action selector="displayTables:" target="690" id="797"/>
                                             </connections>
                                         </menuItem>
                                     </items>

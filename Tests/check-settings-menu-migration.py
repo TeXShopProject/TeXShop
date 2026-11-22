@@ -8,8 +8,11 @@ removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
 # Supplements --> Desktop left too: it copied the samples of the 4th edition next to the 5th edition of the Short Course.
 retired={'fullscreen:','supplementsToDesktop:'}
 # Commands added to the Edit menu later (Copy with Style in 6.00 beta 8), and Source > Show Status Bar and
-# Source > Highlight Index Entries (6.00); they are outside the fixed contract.
-added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:','toggleStatusBar:','toggleIndexColor:',
+# Source > Highlight Index Entries (6.00), and the symbol tables of George Grätzer's Short Course, which joined its
+# Help submenu in 6.00; they are outside the fixed contract.
+added={'displayHG:','displayBinary:','displayMoreBinary:','displayNegatedBinary:','displayBinaryOperations:','displayArrows:','displayMiscSymbols:',
+       'displayDelimiters:','displayOperators:','displayLargeOperators:','displayMathAccents:','displayMathSpacing:','displayEuropean:',
+       'displayTextAccents:','displayTextSizes:','displayTextSymbols:','displayTextSpacing:','convertCharacterType:','normalizeSelectedString:','exchangePaste:','toggleStatusBar:','toggleIndexColor:',
        'copyWithLightTheme:','copyWithLightThemeAndBackground:','copyWithDarkTheme:','copyWithDarkThemeAndBackground:'}
 # Fit to Content Width (tag 6 of the magnifications) and the zooms to the content width joined Preview > Magnification in 6.00.
 added_items={('zoomToContentWidth:','0'),('zoomToContent:','0'),('changePDFViewSize:','6')}

@@ -1476,6 +1476,128 @@
                             <menuItem isSeparatorItem="YES" id="686">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="Corso breve di George Grätzer (in inglese)" id="GrC-Mn-Itm">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Corso breve di George Grätzer (in inglese)" id="GrC-Mn-Sub">
+                                    <items>
+                                        <menuItem title="Corso breve" id="682" identifier="TSShortcut.displayShortCourse:.0">
+                                            <connections>
+                                                <action selector="displayShortCourse:" target="672" id="740"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GrC-00-Sep"/>
+                                        <menuItem title="Tutte le tabelle dei simboli" id="778" identifier="TSShortcut.displayTables:.0">
+                                            <connections>
+                                                <action selector="displayTables:" target="672" id="779"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GrC-03-Sep"/>
+                                        <menuItem title="Lettere ebraiche e greche" id="GrC-04-Itm" identifier="TSShortcut.displayHG:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayHG:" target="672" id="GrC-04-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Relazioni binarie" id="GrC-05-Itm" identifier="TSShortcut.displayBinary:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayBinary:" target="672" id="GrC-05-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Altre relazioni binarie" id="GrC-06-Itm" identifier="TSShortcut.displayMoreBinary:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMoreBinary:" target="672" id="GrC-06-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Relazioni binarie negate" id="GrC-07-Itm" identifier="TSShortcut.displayNegatedBinary:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayNegatedBinary:" target="672" id="GrC-07-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Operazioni binarie" id="GrC-08-Itm" identifier="TSShortcut.displayBinaryOperations:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayBinaryOperations:" target="672" id="GrC-08-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Frecce" id="GrC-09-Itm" identifier="TSShortcut.displayArrows:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayArrows:" target="672" id="GrC-09-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Simboli vari" id="GrC-10-Itm" identifier="TSShortcut.displayMiscSymbols:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMiscSymbols:" target="672" id="GrC-10-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Delimitatori" id="GrC-11-Itm" identifier="TSShortcut.displayDelimiters:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayDelimiters:" target="672" id="GrC-11-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Operatori" id="GrC-12-Itm" identifier="TSShortcut.displayOperators:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayOperators:" target="672" id="GrC-12-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Operatori grandi" id="GrC-13-Itm" identifier="TSShortcut.displayLargeOperators:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayLargeOperators:" target="672" id="GrC-13-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Accenti e font matematici" id="GrC-14-Itm" identifier="TSShortcut.displayMathAccents:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMathAccents:" target="672" id="GrC-14-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Spaziature matematiche" id="GrC-15-Itm" identifier="TSShortcut.displayMathSpacing:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMathSpacing:" target="672" id="GrC-15-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GrC-16-Sep"/>
+                                        <menuItem title="Caratteri europei" id="GrC-17-Itm" identifier="TSShortcut.displayEuropean:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayEuropean:" target="672" id="GrC-17-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Accenti del testo" id="GrC-18-Itm" identifier="TSShortcut.displayTextAccents:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextAccents:" target="672" id="GrC-18-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Dimensioni del testo" id="GrC-19-Itm" identifier="TSShortcut.displayTextSizes:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextSizes:" target="672" id="GrC-19-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Altri simboli del testo" id="GrC-20-Itm" identifier="TSShortcut.displayTextSymbols:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextSymbols:" target="672" id="GrC-20-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Spaziature del testo" id="GrC-21-Itm" identifier="TSShortcut.displayTextSpacing:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextSpacing:" target="672" id="GrC-21-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Documenti precedenti" id="HlO-Dc-Mnu">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Documenti precedenti" id="HlO-Dc-Sub">
@@ -1515,17 +1637,6 @@
                                         <menuItem title="Primi passi con la composizione matematica (in inglese)" id="683" identifier="TSShortcut.displayGettingStartedLatex:.0">
                                             <connections>
                                                 <action selector="displayGettingStartedLatex:" target="672" id="739"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="HlO-Dc-Sp2"/>
-                                        <menuItem title="Corso breve di George Grätzer (in inglese)" id="682" identifier="TSShortcut.displayShortCourse:.0">
-                                            <connections>
-                                                <action selector="displayShortCourse:" target="672" id="740"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Tabelle dei simboli del corso breve (in inglese)" id="778" identifier="TSShortcut.displayTables:.0">
-                                            <connections>
-                                                <action selector="displayTables:" target="672" id="779"/>
                                             </connections>
                                         </menuItem>
                                     </items>
