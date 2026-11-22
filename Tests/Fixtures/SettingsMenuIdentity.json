@@ -1,17 +1,17 @@
 {
-  "source": "Fixed command identity of commit 127ecbab90b1ad199c9d7e6adfa86258e3f36c6c, excluding the two intentionally removed editor actions and Window > Fullscreen (Old Method), removed in 6.00. The Italian File Encoding and TeXShop item calls displayFileEncoding: since 6.00; it called displayGettingStartedConTeXt: before. Update only after reviewing a deliberate command migration.",
+  "source": "Fixed command identity of commit 127ecbab90b1ad199c9d7e6adfa86258e3f36c6c, excluding the two intentionally removed editor actions, and Window > Fullscreen (Old Method) and Help > Short Course Supplements --> Desktop, removed in 6.00. The Italian File Encoding and TeXShop item calls displayFileEncoding: since 6.00; it called displayGettingStartedConTeXt: before. Update only after reviewing a deliberate command migration.",
   "languages": {
-    "Base": "cc4a606e66ff3d944ab5c6d4a7f318aff822523cfef6f83267b03ba83c772c9b",
-    "de": "5cd24aade31f20ac1dcddd10c52fdd79e9b9c2bd2628de44ffbf6dbba55c5a62",
-    "es": "0eb90952223f589c4571a6260b11fe7207ee0ac9615f6c46586ec983254c9b6e",
-    "fr": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
-    "it": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
-    "ja": "5d1295892627ef65b1bc2b66e0295d911d01c49a15c365a7f03b46bf5cb9999b",
-    "ko": "09a48091e6a38b406a408b76a00b25e942bce6699f163f0ec8f3803ffd0a0bfb",
-    "nl": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
-    "pt-PT": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
-    "pt": "f18e19be08a974590d97d31cfe71134c54f1df296878a2905c18aa7c9c396409",
-    "ro": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
-    "zh_CN": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0"
+    "Base": "4c33e5b191f4a9eec0d4de7ca053793e4af6294c196e9315198676383e5d4396",
+    "de": "88b80b9a62802aa49839db6c971b3a3cf85e175ce2e700b0f1ba5001aa8c366c",
+    "es": "4484f59b1b94fdcd10a557f5e7f6efb5053b64f68034f8e546ddb82f2bc59a32",
+    "fr": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
+    "it": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
+    "ja": "e256d5068912465d0d0301920f7e4c2e5d10b5e19932f730db23b49708329985",
+    "ko": "b28ab9ea6478d83e6019719b8d8ee450fa562661f532328c178a213c9e48b128",
+    "nl": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
+    "pt-PT": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
+    "pt": "07cc6e93df759dcc3c5fb320441687082e043a5e1cde4218c526fe868e0ff168",
+    "ro": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
+    "zh_CN": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61"
   }
 }

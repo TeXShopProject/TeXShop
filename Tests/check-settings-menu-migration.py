@@ -4,8 +4,9 @@ from pathlib import Path
 import hashlib,json,xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[1]
 removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
-# Window > Fullscreen (Old Method) left the menu in 6.00; Enter Full Screen is the macOS item.
-retired={'fullscreen:'}
+# Window > Fullscreen (Old Method) left the menu in 6.00; Enter Full Screen is the macOS item. Help > Short Course
+# Supplements --> Desktop left too: it copied the samples of the 4th edition next to the 5th edition of the Short Course.
+retired={'fullscreen:','supplementsToDesktop:'}
 # Commands added to the Edit menu later (Copy with Style in 6.00 beta 8), and Source > Show Status Bar and
 # Source > Highlight Index Entries (6.00); they are outside the fixed contract.
 added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:','toggleStatusBar:','toggleIndexColor:',
@@ -36,7 +37,7 @@ def main():
   siblings=[item for item in tree.iter('items') if encoding[0] in list(item)][0]
   assert list(siblings)[0] is encoding[0] and siblings.find("menuItem/connections/action[@selector='uppercaseWord:']") is not None,(language,'Change Encoding opens Edit > Transformations')
   assert not any(a.get('selector') in removed for a in tree.iter('action')),(language,'old editor menu remains')
-  assert not any(a.get('selector') in retired for a in tree.iter('action')),(language,'Fullscreen (Old Method) remains')
+  assert not any(a.get('selector') in retired for a in tree.iter('action')),(language,'Fullscreen (Old Method) or Short Course Supplements remains')
   toggle=[i for i in tree.iter('menuItem') if i.find("connections/action[@selector='changeAutoComplete:']") is not None]
   assert len(toggle)==1 and toggle[0].get('identifier')=='TSShortcut.changeAutoComplete:.0'
   parents={child:parent for parent in tree.iter() for child in parent};menu=parents[parents[toggle[0]]];owner=parents[menu]
