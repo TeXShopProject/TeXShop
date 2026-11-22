@@ -59,8 +59,9 @@ static inline NSPoint TSPreviewPaneWindowEdge(PDFView *view)
     return clip ? [clip convertPoint:TSPreviewPaneEdge(scroll) toView:nil] : NSZeroPoint;
 }
 
-// Scrolls so that the place is at the left end of the top edge, as far as the document allows.
-static inline void TSPreviewPaneRestore(PDFView *view, TSPreviewPanePlace place)
+// Scrolls so that the place is at a point given in window coordinates, or at the left end of
+// the top edge without one, as far as the document allows.
+static inline void TSPreviewPaneRestoreToPoint(PDFView *view, TSPreviewPanePlace place, const NSPoint *windowPoint)
 {
     if (!place.valid || !view.document.pageCount) return;
     PDFPage *page = [view.document pageAtIndex:MIN(place.pageIndex, view.document.pageCount - 1)];
@@ -72,7 +73,7 @@ static inline void TSPreviewPaneRestore(PDFView *view, TSPreviewPanePlace place)
     NSClipView *clip = scroll.contentView;
     if (!clip || NSIsEmptyRect(clip.bounds)) return;
     NSPoint point = [clip convertPoint:[view convertPoint:place.pagePoint fromPage:page] fromView:view];
-    NSPoint edge = TSPreviewPaneEdge(scroll);
+    NSPoint edge = windowPoint ? [clip convertPoint:*windowPoint fromView:nil] : TSPreviewPaneEdge(scroll);
     NSRect target = clip.bounds;
     target.origin.x += point.x - edge.x;
     target.origin.y += point.y - edge.y;
@@ -93,6 +94,19 @@ static inline void TSPreviewPaneRestore(PDFView *view, TSPreviewPanePlace place)
     [scroll reflectScrolledClipView:clip];
     // A change of the size in the same turn of the event loop does not bring its own text back.
     TSPreviewPlaceChosenByProgram(view);
+}
+
+// Scrolls so that the place is at the left end of the top edge, as far as the document allows.
+static inline void TSPreviewPaneRestore(PDFView *view, TSPreviewPanePlace place)
+{
+    TSPreviewPaneRestoreToPoint(view, place, NULL);
+}
+
+// Scrolls so that the place is at a point given in window coordinates, such as the top edge of
+// another pane that was there, as far as the document allows.
+static inline void TSPreviewPaneRestoreAt(PDFView *view, TSPreviewPanePlace place, NSPoint windowPoint)
+{
+    TSPreviewPaneRestoreToPoint(view, place, &windowPoint);
 }
 // The place of a pinned popup on the page under its upper left corner, from its frame in window
 // coordinates, as the popup keeps it when the preview is zoomed (#56).
