@@ -82,8 +82,9 @@ for path in nibs:
     # saveRelatedButtonPressed: (Save related files) set a default that nothing read; removed.
     # EditingStyleChoice: (the menu of the theme to edit), SaveNewStyle: (New Theme) and the theme name sheet's
     # okForStylePanel: / cancelForStylePanel: gave way to the list of themes in Settings › Themes.
+    # syntaxColorPressed: (Syntax Coloring of Editor) left Settings when it became the hidden setting SyntaxColoringEnabled.
     retired = {'scrollPressed:', 'distillerChanged:', 'antialiasChanged:', 'NewStyleFromPrefs:', 'saveRelatedButtonPressed:',
-               'EditingStyleChoice:', 'SaveNewStyle:', 'okForStylePanel:', 'cancelForStylePanel:'}
+               'EditingStyleChoice:', 'SaveNewStyle:', 'okForStylePanel:', 'cancelForStylePanel:', 'syntaxColorPressed:'}
     problems += [f'{lang}: action {s} is not a TSPreferences method' for s in sorted(actions - declared - retired)]
     for prop, want in sorted(base.items()):
         have = outlets.get(prop)
@@ -120,7 +121,9 @@ missing=set(old)-set(new)
 # _engineTextField and _alternateEngineTextField gave way to menus built in code; _savePSButton
 # (Save PostScript File), _useTransparencyButton (-dALLOWPSTRANSPARENCY) and _saveRelatedButton
 # (Save related files) were removed. EditingStyle (the menu of the theme to edit), stylePanel and styleTitle (the
-# theme name sheet) gave way to the list of themes in Settings › Themes.
-assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField','_alternateEngineTextField','_savePSButton','_useTransparencyButton','_saveRelatedButton','EditingStyle','stylePanel','styleTitle'},missing
-assert len(new)==162
+# theme name sheet) gave way to the list of themes in Settings › Themes. _syntaxColorButton (Syntax Coloring of
+# Editor) left Settings when it became the hidden setting SyntaxColoringEnabled.
+assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField','_alternateEngineTextField','_savePSButton','_useTransparencyButton','_saveRelatedButton','EditingStyle','stylePanel','styleTitle','_syntaxColorButton'},missing
+# 162 until Syntax Coloring left Settings.
+assert len(new)==161
 print(f'PASS: {len(new)} used outlets each migrate exactly once into shared panes')

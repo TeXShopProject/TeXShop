@@ -41,12 +41,17 @@ INDEX_COLOR=('indexColorBox','indexColorSplitBox')
 # are gone in every language. Nothing else may change.
 PANELS=('annotationChoices','EditModeCheckBox','SaveAllCheckBox','stringWindow','stringWindowTextView','stringLeft','stringCenter','stringRight')
 PANEL_WINDOWS=('annotationChoices','stringWindow')
+# The window of Fullscreen (Old Method) left the document nib in 6.00 with the menu item: the outlets to it
+# and its PDF view, and its own outlet to the document, are gone in every language.
+FULLSCREEN=('fullscreenWindow','fullscreenPDFView')
+FULLSCREEN_WINDOWS=('fullscreenWindow',)
 def inside_panels(r):
-    """The connection elements inside the two panel windows of a nib (none once they are gone)."""
+    """The connection elements inside the two panel windows and the old full screen window of a nib
+    (none once they are gone)."""
     ids={e.get('id'):e for e in r.iter() if e.get('id')}
     inside=set()
     for o in r.iter('outlet'):
-        if o.get('property') in PANEL_WINDOWS and o.get('destination') in ids:
+        if o.get('property') in PANEL_WINDOWS+FULLSCREEN_WINDOWS and o.get('destination') in ids:
             for e in ids[o.get('destination')].iter():
                 if e.tag in ('outlet','action'): inside.add(id(e))
     return inside
@@ -59,7 +64,7 @@ for kind in ('TSDocument',):
             panel_connections=inside_panels(r) if kind=='TSDocument' else set()
             for e in r.findall('.//connections/*'):
                 attrs=dict(e.attrib)
-                if kind=='TSDocument' and (id(e) in panel_connections or attrs.get('property') in PANELS): continue
+                if kind=='TSDocument' and (id(e) in panel_connections or attrs.get('property') in PANELS+FULLSCREEN): continue
                 if kind=='TSDocument' and (attrs.get('property') in STATISTICS or attrs.get('selector')=='updateStatistics:' or e.tag=='accessibilityConnection'): continue
                 if kind=='TSDocument' and (attrs.get('property') in INDEX_COLOR or attrs.get('selector')=='showIndexColor:'): continue
                 if kind=='TSDocument' and attrs.get('property')=='htmlView': attrs['property']='htmlViewContainer'
@@ -80,6 +85,8 @@ for kind in ('TSDocument',):
             assert not [e for e in current.iter('outlet') if e.get('property') in STATISTICS],path
             assert not [e for e in current.iter('outlet') if e.get('property') in PANELS],path
             assert not [e for e in current.iter('outlet') if e.get('property') in INDEX_COLOR],path
+            assert not [e for e in current.iter('outlet') if e.get('property') in FULLSCREEN],path
+            assert not [w for w in current.iter('window') if w.get('customClass')=='TSFullscreenWindow'],path
             assert not [e for e in current.iter('action') if e.get('selector')=='showIndexColor:'],path
             assert not [w for w in current.iter('window') if w.get('identifier')=='TextPanel'],path
             assert not [e for e in current.iter('action') if e.get('selector')=='updateStatistics:'],path

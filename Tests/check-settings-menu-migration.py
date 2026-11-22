@@ -4,6 +4,8 @@ from pathlib import Path
 import hashlib,json,xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[1]
 removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
+# Window > Fullscreen (Old Method) left the menu in 6.00; Enter Full Screen is the macOS item.
+retired={'fullscreen:'}
 # Commands added to the Edit menu later (Copy with Style in 6.00 beta 8), and Source > Show Status Bar and
 # Source > Highlight Index Entries (6.00); they are outside the fixed contract.
 added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:','toggleStatusBar:','toggleIndexColor:',
@@ -19,7 +21,7 @@ def records(tree,language='Base'):
  skipped=added|(added_outside_base if language!='Base' else added_to_base)
  for item in tree.iter('menuItem'):
   action=item.find('connections/action')
-  if action is None or action.get('selector') in removed|skipped or (action.get('selector'),item.get('tag','0')) in added_items:continue
+  if action is None or action.get('selector') in removed|retired|skipped or (action.get('selector'),item.get('tag','0')) in added_items:continue
   result.append({'identifier':item.get('identifier'),'selector':action.get('selector'),'tag':item.get('tag','0'),'key':item.get('keyEquivalent',''),'mask':[child.attrib for child in item if child.tag=='modifierMask']})
  return sorted(result,key=lambda entry:json.dumps(entry,sort_keys=True))
 def digest(tree,language='Base'):return hashlib.sha256(json.dumps(records(tree,language),sort_keys=True,ensure_ascii=False).encode()).hexdigest()
@@ -34,6 +36,7 @@ def main():
   siblings=[item for item in tree.iter('items') if encoding[0] in list(item)][0]
   assert list(siblings)[0] is encoding[0] and siblings.find("menuItem/connections/action[@selector='uppercaseWord:']") is not None,(language,'Change Encoding opens Edit > Transformations')
   assert not any(a.get('selector') in removed for a in tree.iter('action')),(language,'old editor menu remains')
+  assert not any(a.get('selector') in retired for a in tree.iter('action')),(language,'Fullscreen (Old Method) remains')
   toggle=[i for i in tree.iter('menuItem') if i.find("connections/action[@selector='changeAutoComplete:']") is not None]
   assert len(toggle)==1 and toggle[0].get('identifier')=='TSShortcut.changeAutoComplete:.0'
   parents={child:parent for parent in tree.iter() for child in parent};menu=parents[parents[toggle[0]]];owner=parents[menu]
