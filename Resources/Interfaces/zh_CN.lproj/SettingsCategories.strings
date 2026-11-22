@@ -280,7 +280,7 @@
 "catalog.typesetting.4.0.title" = "plain TeX";
 "catalog.typesetting.4.1.title" = "LaTeX";
 "catalog.typesetting.4.2.title" = "shell-escape时确认";
-"catalog.typesetting.4.2.note" = "上方的plain TeX或LaTeX命令中含有 --shell-escape时，在排版前先确认。";
+"catalog.typesetting.4.2.note" = "上方的plain TeX或LaTeX命令中含有 -shell-escape时，在排版前先确认。";
 "group.typesetting.5.title" = "经由DVI";
 "catalog.typesetting.5.0.title" = "plain TeX";
 "catalog.typesetting.5.1.title" = "LaTeX";

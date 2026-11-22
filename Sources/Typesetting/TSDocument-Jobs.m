@@ -28,6 +28,7 @@
 #import <objc/runtime.h>
 
 #import "TSDocument.h"
+#import "TSTeXOptions.h"
 #import "TSExperimentConsoleController.h"
 
 #import "MyPDFView.h"
@@ -1133,9 +1134,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 		else
 			myEngine = [[SUD stringForKey:TexCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)
 		
-		// search for --shell-escape
-		aRange = [myEngine rangeOfString:@"--shell-escape"];
-		if (aRange.location == NSNotFound)
+		// search for -shell-escape or --shell-escape
+		if (! TSTeXCommandHasShellEscape(myEngine))
 			warningGiven = YES;
 		else {
 			// The answer goes on with this request only (sheetDidEnd:returnCode:contextInfo:).
@@ -1532,20 +1532,16 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 						else
 							myEngine = [[SUD stringForKey:TexCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)
 						
+						// Run from a script, TeX must not stop at an error to wait for an answer.
 						if (continuous) {
-							myEngine = [myEngine stringByAppendingString:@" --interaction=nonstopmode "];
+							myEngine = [myEngine stringByAppendingFormat:@" %@interaction=nonstopmode ", TSTeXOptionDashes(myEngine)];
 						}
 							
 							if (omitShellEscape) {
-								aRange = [myEngine rangeOfString:@"--shell-escape"];
-								if (aRange.location == NSNotFound)
+								if (TSTeXCommandHasShellEscape(myEngine))
+									myEngine = TSTeXCommandWithoutShellEscape(myEngine);
+								else
 									warningGiven = YES;
-								else {
-									NSString* myEngineFirst = [myEngine substringToIndex: aRange.location];
-									here = aRange.location + aRange.length;
-									NSString* myEngineLast = [myEngine substringFromIndex: here];
-									myEngine = [myEngineFirst stringByAppendingString: myEngineLast];
-								}
 							}
 							break;
 						
@@ -1852,7 +1848,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 			[self completeSaveFinished];
 			break;
 			
-		case NSAlertAlternateReturn: // this says omit --shell-escape
+		case NSAlertAlternateReturn: // this says omit -shell-escape
 			warningGiven = YES;
 			omitShellEscape = YES;
 			[self completeSaveFinished];

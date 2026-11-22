@@ -8,7 +8,8 @@ from source_tree import include_args, source_file
 
 R = Path(__file__).resolve().parents[1]
 FACTORY = R / 'Resources/Defaults/FactoryDefaults.plist'
-PDF = '--file-line-error --synctex=1'
+PDF = '-file-line-error -synctex=1'
+LUA = '--file-line-error --synctex=1'
 SIMP = '--extratexopts "-file-line-error -synctex=1"'
 PT = '-ot "-synctex=1 -file-line-error"'
 DVIPDF = '-e "$dvipdf=q/dvipdfmx %O -o %D %S/"'
@@ -17,11 +18,11 @@ DVIPDF = '-e "$dvipdf=q/dvipdfmx %O -o %D %S/"'
 TABLE = {
     1: (100, 'pdflatex ' + PDF, 'pdftex ' + PDF, 'latexmk -pdf -e "$pdflatex=q/pdflatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=latex'),
     2: (100, 'xelatex ' + PDF, 'xetex ' + PDF, 'latexmk -xelatex -e "$xelatex=q/xelatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=xelatex'),
-    3: (100, 'lualatex ' + PDF, 'luatex ' + PDF, 'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=lualatex'),
+    3: (100, 'lualatex ' + LUA, 'luatex ' + LUA, 'latexmk -lualatex -e "$lualatex=q/lualatex --synctex=1 --file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=lualatex'),
     4: (101, 'simpdftex latex --mode dvipdfmx ' + SIMP, 'simpdftex etex --mode dvipdfmx ' + SIMP,
         'latexmk -pdfdvi -e "$latex=q/latex -synctex=1 -file-line-error/" ' + DVIPDF + ' -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=latex'),
-    5: (100, 'lualatex ' + PDF, 'luatex ' + PDF,
-        'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" -norc', 'upbibtex', 'upmendex', 'mpost', 'kpsewhich -progname=lualatex'),
+    5: (100, 'lualatex ' + LUA, 'luatex ' + LUA,
+        'latexmk -lualatex -e "$lualatex=q/lualatex --synctex=1 --file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" -norc', 'upbibtex', 'upmendex', 'mpost', 'kpsewhich -progname=lualatex'),
     6: (101, 'ptex2pdf -l ' + PT, 'ptex2pdf -e ' + PT,
         'latexmk -pdfdvi -e "$latex=q/platex -synctex=1 -file-line-error/" -e "$bibtex=q/pbibtex/" -e "$makeindex=q/mendex/" ' + DVIPDF + ' -norc', 'pbibtex', 'mendex', 'pmpost', 'kpsewhich -progname=platex'),
     7: (101, 'ptex2pdf -u -l ' + PT, 'ptex2pdf -e -u ' + PT,
@@ -111,6 +112,20 @@ int main(int argc, char **argv) { @autoreleasepool {
         d.values[@"BibTeXengine"] = TSEngineProfileValues(p.integerValue, mk.boolValue)[@"BibTeXengine"];
         d.values[@"DefaultScript"] = @102;
         check(TSEngineProfileMatchingSettings(d, NULL) == 0, @"the personal script is Custom");
+        d.values[@"DefaultScript"] = TSEngineProfileValues(p.integerValue, mk.boolValue)[@"DefaultScript"];
+        // The commands as earlier versions wrote them, with two hyphens for every engine (and one inside latexmk),
+        // still match: the number of hyphens of a TeX option does not decide.
+        for (NSString *command in @[@"LatexCommand", @"TexCommand", @"LatexGSCommand", @"TexGSCommand"]) {
+            NSString *value = TSEngineProfileValues(p.integerValue, mk.boolValue)[command];
+            if (value == nil) continue;
+            NSString *former = [[[value stringByReplacingOccurrencesOfString:@" -file-line-error -synctex=1" withString:@" --file-line-error --synctex=1"]
+                stringByReplacingOccurrencesOfString:@"q/lualatex --synctex=1 --file-line-error/" withString:@"q/lualatex -synctex=1 -file-line-error/"]
+                stringByReplacingOccurrencesOfString:@"--extratexopts \"-file-line-error" withString:@"--extratexopts \"-file-line-error"];
+            d.values[command] = former;
+        }
+        check(TSEngineProfileMatchingSettings(d, NULL) == p.integerValue, [NSString stringWithFormat:@"profile %@ as earlier versions wrote its commands still matches", p]);
+        for (NSString *command in @[@"LatexCommand", @"TexCommand", @"LatexGSCommand", @"TexGSCommand"])
+            if (TSEngineProfileValues(p.integerValue, mk.boolValue)[command]) d.values[command] = TSEngineProfileValues(p.integerValue, mk.boolValue)[command];
     }
     // The keys watched for the menu: every key of every profile, once.
     NSMutableSet *all = [NSMutableSet set];
@@ -312,6 +327,11 @@ MUTATIONS = {
     'other place written': ('    values[direct ? TexCommandKey : TexGSCommandKey] = row[2];',
                             '    values[direct ? TexCommandKey : TexGSCommandKey] = row[2]; values[direct ? LatexGSCommandKey : LatexCommandKey] = row[1];'),
     'latexmk ignored': ('latexmk ? row[3] : row[1]', 'row[1]'),
+    # The number of hyphens of a TeX option decides again, so the commands of earlier versions are Custom.
+    'hyphens decide': ('    return [TSTeXCommandWithOneHyphenOptions([value stringByTrimmingCharactersInSet:blank])\n            isEqualToString:TSTeXCommandWithOneHyphenOptions([expected stringByTrimmingCharactersInSet:blank])];',
+                       '    return [[value stringByTrimmingCharactersInSet:blank] isEqualToString:[expected stringByTrimmingCharactersInSet:blank]];'),
+    # LuaLaTeX gets the one-hyphen options of the other engines.
+    'lua one hyphen': ('    NSString *const luaOptions = @"--file-line-error --synctex=1";', '    NSString *const luaOptions = @"-file-line-error -synctex=1";'),
     'otf for every Japanese engine': ('profile == TSEngineProfilePLaTeXDvipdfmx ? @YES : @NO;', 'TSEngineProfileIsJapanese(profile) ? @YES : @NO;'),
     'no Japanese companions': ('    if (TSEngineProfileIsJapanese(profile)) {\n        // New documents', '    if (NO) {\n        // New documents'),
     'stored NO differs from @NO': ('        return [value respondsToSelector:@selector(boolValue)] && [value boolValue] == [expected boolValue];', '        return [value isEqual:expected];'),

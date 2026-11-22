@@ -60,7 +60,7 @@
 
 \begin{document}
 \maketitle
-\noindent\textit{This document was written in 2015. Menu and setting names in TeXShop have changed since; see the TeXShop manual for the current ones.}
+\noindent\textit{Revised in 2026 for TeXShop 6.00 (menu and setting names).}
 
 
 \section{Introduction}
@@ -71,7 +71,7 @@ There are three features of \TS\ which often get mixed up: \cmd{Key Bindings} (a
 
 \textbf{\cmd{Key Bindings}} assign a set of keystrokes to the press of a single key; e.g., typing \verb"_" produces \verb"_{…|}" (where \verb"…|" is any selected text followed by the insertion point --- the place where text is inserted) or typing \(\leq\) (\cmd{Opt-,} with the English keyboard layout) produces \verb"\leq".
 
-\noindent\textbf{\cmd{Macros}} can also insert simple text and be given a keyboard shortcut (that always uses the \cmdkey\ plus other keys) but are most useful when attached to Applescript programs so they can do special processing of Source text, etc.
+\noindent\textbf{\cmd{Macros}} can also insert simple text and be given a keyboard shortcut (that uses the \cmdkey\ or \ctlkey\ key plus other keys, or a function key) but are most useful when attached to Applescript programs so they can do special processing of Source text, etc.
 
 \noindent\textbf{\cmd{Command Completion}} (\emph{NOT} to be confused with \cmd{Auto-Completion}) allows you to type a partial command or short abbreviation and, when a trigger key is pressed (\esckey\ by default but it can be set to \tabkey), have that expanded into a full command or even a full environment structure.
 
@@ -79,9 +79,9 @@ Details follow.
 
 \section{\cmd{Key Bindings}}
 
-\cmd{Key Bindings} are turned on by checking \mnu{TeXShop}\To\mnu{Preferences}\To\mnu{Source}\To\mnu{Key Bindings}. Of course they can be turned off by un-checking that preference setting. They can be turned On/Off for a given editing session by using the \mnu{Source}\To\mnu{Key Bindings}\To\mnu{Toggle On/Off} menu item (a Check Mark means it's on).
+\cmd{Key Bindings} are turned on for new documents by checking \mnu{Use key bindings (default for new documents)} in the \mnu{Keyboard} category of \mnu{TeXShop}\To\mnu{Settings…}. Of course they can be turned off by un-checking that setting. They can be turned On/Off for a given editing session by using the \mnu{Source}\To\mnu{Key Bindings} menu item (a Check Mark means it's on).
 
-You can see the list of \cmd{Key Bindings}, edit and add/delete them by starting up the \cmd{Key Bindings Editor} using the \mnu{Source}\To\mnu{Key Bindings}\To\mnu{Edit Key Bindings File…} menu item.
+You can see the list of \cmd{Key Bindings}, edit and add/delete them in the \mnu{Key Bindings} list of the same \mnu{Keyboard} category of \mnu{TeXShop}\To\mnu{Settings…}.
 
 \subsection{Special Notes}
 
@@ -91,7 +91,7 @@ You can see the list of \cmd{Key Bindings}, edit and add/delete them by starting
 
 \section{\cmd{Macros}}
 
-The \mnu{Macros} Menu contains a fairly large number of pre-defined macros. It is possible to create more macros by enabling the Macro Editor with \mnu{Macros}\To\mnu{Open Macro Editor…}. Macros can be added either by copying text into a newly created macro or by adding a macro file (which has the extension \cmd{plist}) using \mnu{Macros}\To\mnu{Add macros from file…} (only visible and available when the Macro Editor is active). The order of appearance of the macros in the \cmd{Macros} Menu can also be changed by simply moving them around on the left panel of the \cmd{Macro Editor}.
+The \mnu{Macros} Menu contains a fairly large number of pre-defined macros. It is possible to create more macros by enabling the Macro Editor with \mnu{Macros}\To\mnu{Open Macro Editor…}. Macros can be added either by copying text into a newly created macro or by adding a macro file (which has the extension \cmd{plist}) using \mnu{Macros}\To\mnu{Add macros from file…} (only visible and available when the Macro Editor is active). The order of appearance of the macros in the \cmd{Macros} Menu can also be changed by simply moving them around in the list on the left of the \cmd{Macro Editor}.
 
 \subsection{Special Notes}
 
@@ -99,7 +99,7 @@ The \mnu{Macros} Menu contains a fairly large number of pre-defined macros. It i
 
 \section{\cmd{Command Completion}}
 
-For \cmd{Command Completion} you enter a partial command name or a short abbreviation, press a trigger key (\esckey\ or, as mentioned above, \tabkey\ if set in \mnu{TeXShop}\To\mnu{Preferences}\To\mnu{Source}\To\mnu{Command Completion Triggered By:}) and it gets expanded. E.g., enter
+For \cmd{Command Completion} you enter a partial command name or a short abbreviation, press a trigger key (\esckey\ or, as mentioned above, \tabkey\ if set in \mnu{TeXShop}\To\mnu{Settings…}\To\mnu{Keyboard}\To\mnu{Completion trigger}) and it gets expanded. E.g., enter
 \begin{verbatim}
 \sec
 \end{verbatim}
@@ -115,7 +115,7 @@ and another press of the trigger gives
 \begin{verbatim}
 \section[|selmark]{•}
 \end{verbatim}
-for separate section titles in the \cmd{toc} and the document. In the last case there is a second \cmd{Mark}~(•) for the second argument. After entering the \cmd{toc} section title you jump to and select the next \cmd{Mark} by using \mnu{Source}\To\mnu{Command Completion}\To\mnu{Marks}\To\mnu{Next Mark} (\cmd{Ctl-Cmd-F}) so you can immediately start typing the section title for that document.
+for separate section titles in the \cmd{toc} and the document. In the last case there is a second \cmd{Mark}~(•) for the second argument. After entering the \cmd{toc} section title you jump to and select the next \cmd{Mark} by using \mnu{Edit}\To\mnu{Marks}\To\mnu{Next Mark} (\cmd{Ctl-Cmd-F}) so you can immediately start typing the section title for that document.
 
 Better yet are abbreviations. E.g., type
 \begin{verbatim}

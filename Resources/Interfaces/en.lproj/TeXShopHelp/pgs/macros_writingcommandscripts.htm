@@ -25,7 +25,7 @@ TeXShop and can be run from the Terminal by typing "pdflatexc myfile.tex" provid
 <p>
 set path= ($path /Library/TeX/texbin /usr/local/bin)</p>
 <p>
-pdflatex --shell-escape "$1"</p>
+pdflatex -shell-escape "$1"</p>
 </div>
 Of course you are likely to write a more complicated script which performs several operations
 in sequence. That is when these techniques become useful.

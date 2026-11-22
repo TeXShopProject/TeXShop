@@ -280,7 +280,7 @@
 "catalog.typesetting.4.0.title" = "plain TeX";
 "catalog.typesetting.4.1.title" = "LaTeX";
 "catalog.typesetting.4.2.title" = "Bei Shell-Escape nachfragen";
-"catalog.typesetting.4.2.note" = "Fragt vor dem Setzen nach, wenn der Befehl für plain TeX oder LaTeX oben --shell-escape enthält.";
+"catalog.typesetting.4.2.note" = "Fragt vor dem Setzen nach, wenn der Befehl für plain TeX oder LaTeX oben -shell-escape enthält.";
 "group.typesetting.5.title" = "Über DVI";
 "catalog.typesetting.5.0.title" = "plain TeX";
 "catalog.typesetting.5.1.title" = "LaTeX";

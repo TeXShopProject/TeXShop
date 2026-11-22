@@ -1474,8 +1474,135 @@
                                     <action selector="displayCommentLines:" target="259" id="Clk-hS-f4o"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="단축키, 매크로, 자동완성에 대하여 (영문)" id="473" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="259" id="474"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="233">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="George Grätzer 짧은 입문서 (영문)" id="GrC-Mn-Itm">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="George Grätzer 짧은 입문서 (영문)" id="GrC-Mn-Sub">
+                                    <items>
+                                        <menuItem title="짧은 입문서" id="237" identifier="TSShortcut.displayShortCourse:.0">
+                                            <connections>
+                                                <action selector="displayShortCourse:" target="259" id="410"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="기호 일람 전체" id="240" identifier="TSShortcut.displayTables:.0">
+                                            <connections>
+                                                <action selector="displayTables:" target="259" id="417"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GrC-03-Sep"/>
+                                        <menuItem title="히브리 문자와 그리스 문자" id="GrC-04-Itm" identifier="TSShortcut.displayHG:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayHG:" target="259" id="GrC-04-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="이항 관계" id="GrC-05-Itm" identifier="TSShortcut.displayBinary:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayBinary:" target="259" id="GrC-05-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="그 밖의 이항 관계" id="GrC-06-Itm" identifier="TSShortcut.displayMoreBinary:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMoreBinary:" target="259" id="GrC-06-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="부정 이항 관계" id="GrC-07-Itm" identifier="TSShortcut.displayNegatedBinary:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayNegatedBinary:" target="259" id="GrC-07-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="이항 연산" id="GrC-08-Itm" identifier="TSShortcut.displayBinaryOperations:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayBinaryOperations:" target="259" id="GrC-08-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="화살표" id="GrC-09-Itm" identifier="TSShortcut.displayArrows:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayArrows:" target="259" id="GrC-09-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="여러 기호" id="GrC-10-Itm" identifier="TSShortcut.displayMiscSymbols:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMiscSymbols:" target="259" id="GrC-10-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="구분 기호" id="GrC-11-Itm" identifier="TSShortcut.displayDelimiters:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayDelimiters:" target="259" id="GrC-11-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="연산자" id="GrC-12-Itm" identifier="TSShortcut.displayOperators:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayOperators:" target="259" id="GrC-12-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="큰 연산자" id="GrC-13-Itm" identifier="TSShortcut.displayLargeOperators:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayLargeOperators:" target="259" id="GrC-13-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="수식 악센트와 글꼴" id="GrC-14-Itm" identifier="TSShortcut.displayMathAccents:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMathAccents:" target="259" id="GrC-14-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="수식 간격" id="GrC-15-Itm" identifier="TSShortcut.displayMathSpacing:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayMathSpacing:" target="259" id="GrC-15-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GrC-16-Sep"/>
+                                        <menuItem title="유럽 문자" id="GrC-17-Itm" identifier="TSShortcut.displayEuropean:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayEuropean:" target="259" id="GrC-17-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="본문 악센트" id="GrC-18-Itm" identifier="TSShortcut.displayTextAccents:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextAccents:" target="259" id="GrC-18-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="글자 크기" id="GrC-19-Itm" identifier="TSShortcut.displayTextSizes:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextSizes:" target="259" id="GrC-19-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="그 밖의 본문 기호" id="GrC-20-Itm" identifier="TSShortcut.displayTextSymbols:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextSymbols:" target="259" id="GrC-20-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="본문 간격" id="GrC-21-Itm" identifier="TSShortcut.displayTextSpacing:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTextSpacing:" target="259" id="GrC-21-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                             <menuItem title="이전 문서" id="HlO-Dc-Mnu">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1485,12 +1612,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="259" id="451"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="단축키, 매크로, 자동완성에 대하여 (영문)" id="473" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="259" id="474"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="최신 TeX 서체에 대하여 (영문)" id="231" identifier="TSShortcut.displayRecentTeXFonts:.0">
@@ -1516,17 +1637,6 @@
                                         <menuItem title="수식 입력 방법 (영문)" id="236" identifier="TSShortcut.displayGettingStartedLatex:.0">
                                             <connections>
                                                 <action selector="displayGettingStartedLatex:" target="259" id="411"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="HlO-Dc-Sp2"/>
-                                        <menuItem title="George Grätzer 짧은 입문서 (영문)" id="237" identifier="TSShortcut.displayShortCourse:.0">
-                                            <connections>
-                                                <action selector="displayShortCourse:" target="259" id="410"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="기호 일람 (영문)" id="240" identifier="TSShortcut.displayTables:.0">
-                                            <connections>
-                                                <action selector="displayTables:" target="259" id="417"/>
                                             </connections>
                                         </menuItem>
                                     </items>

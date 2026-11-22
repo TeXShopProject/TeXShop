@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSPreferenceProfile.h"
 #import "globals.h"
+#import "TSTeXOptions.h"
 
 TSPreferenceKey const TSSettingsSelectedCategoryKey = @"TSSettingsSelectedCategory";
 
@@ -44,7 +45,9 @@ BOOL TSEngineProfileIsJapanese(TSEngineProfile profile)
 // program name with which kpsewhich finds the files of Open Style File.
 static NSArray *TSEngineProfileRow(TSEngineProfile profile)
 {
-    NSString *const pdfOptions = @"--file-line-error --synctex=1";
+    // As each engine's usage writes them: one hyphen for pdfTeX and XeTeX, two for LuaTeX (TSTeXOptions.h).
+    NSString *const pdfOptions = @"-file-line-error -synctex=1";
+    NSString *const luaOptions = @"--file-line-error --synctex=1";
     NSString *const simpdfOptions = @"--extratexopts \"-file-line-error -synctex=1\"";
     NSString *const ptexOptions = @"-ot \"-synctex=1 -file-line-error\"";
     NSString *const dvipdfmx = @"-e \"$dvipdf=q/dvipdfmx %O -o %D %S/\"";
@@ -56,15 +59,15 @@ static NSArray *TSEngineProfileRow(TSEngineProfile profile)
             return @[@(TSEngineProfileDirectPDF), [@"xelatex " stringByAppendingString:pdfOptions], [@"xetex " stringByAppendingString:pdfOptions],
                      @"latexmk -xelatex -e \"$xelatex=q/xelatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost", @"xelatex"];
         case TSEngineProfileLuaLaTeX:
-            return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:pdfOptions], [@"luatex " stringByAppendingString:pdfOptions],
-                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost", @"lualatex"];
+            return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:luaOptions], [@"luatex " stringByAppendingString:luaOptions],
+                     @"latexmk -lualatex -e \"$lualatex=q/lualatex --synctex=1 --file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost", @"lualatex"];
         case TSEngineProfileLaTeXDvipdfmx:
             return @[@(TSEngineProfileViaDVI), [@"simpdftex latex --mode dvipdfmx " stringByAppendingString:simpdfOptions],
                      [@"simpdftex etex --mode dvipdfmx " stringByAppendingString:simpdfOptions],
                      [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/latex -synctex=1 -file-line-error/\" %@ -norc", dvipdfmx], @"bibtex", @"makeindex", @"mpost", @"latex"];
         case TSEngineProfileLuaLaTeXJapanese:
-            return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:pdfOptions], [@"luatex " stringByAppendingString:pdfOptions],
-                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" -norc", @"upbibtex", @"upmendex", @"mpost", @"lualatex"];
+            return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:luaOptions], [@"luatex " stringByAppendingString:luaOptions],
+                     @"latexmk -lualatex -e \"$lualatex=q/lualatex --synctex=1 --file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" -norc", @"upbibtex", @"upmendex", @"mpost", @"lualatex"];
         case TSEngineProfilePLaTeXDvipdfmx:
             return @[@(TSEngineProfileViaDVI), [@"ptex2pdf -l " stringByAppendingString:ptexOptions], [@"ptex2pdf -e " stringByAppendingString:ptexOptions],
                      [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/platex -synctex=1 -file-line-error/\" -e \"$bibtex=q/pbibtex/\" -e \"$makeindex=q/mendex/\" %@ -norc", dvipdfmx], @"pbibtex", @"mendex", @"pmpost", @"platex"];
@@ -108,7 +111,8 @@ NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile
     return values;
 }
 
-// Equal in meaning: a stored "NO" is the same switch as @NO, and blanks around a command do not count.
+// Equal in meaning: a stored "NO" is the same switch as @NO, and blanks around a command and the
+// number of hyphens of a TeX option do not count.
 BOOL TSEngineProfileSame(id value, id expected)
 {
     if ([expected isKindOfClass:NSNumber.class] && CFGetTypeID((__bridge CFTypeRef)expected) == CFBooleanGetTypeID())
@@ -117,7 +121,10 @@ BOOL TSEngineProfileSame(id value, id expected)
         return [value respondsToSelector:@selector(integerValue)] && [value integerValue] == [expected integerValue];
     if (![value isKindOfClass:NSString.class]) return NO;
     NSCharacterSet *blank = NSCharacterSet.whitespaceAndNewlineCharacterSet;
-    return [[value stringByTrimmingCharactersInSet:blank] isEqualToString:[expected stringByTrimmingCharactersInSet:blank]];
+    // Commands that differ only in one or two hyphens of a TeX option are the same: the profiles of
+    // earlier versions wrote --file-line-error --synctex=1 for every engine.
+    return [TSTeXCommandWithOneHyphenOptions([value stringByTrimmingCharactersInSet:blank])
+            isEqualToString:TSTeXCommandWithOneHyphenOptions([expected stringByTrimmingCharactersInSet:blank])];
 }
 
 // The profile all of whose values but those of the ignored key the settings have now.
