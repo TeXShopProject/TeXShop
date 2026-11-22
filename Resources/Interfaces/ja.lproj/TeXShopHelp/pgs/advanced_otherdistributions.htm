@@ -17,15 +17,15 @@
 </p>
 
 <p>
-2007年1月、Gerben WierdaさんとJerome Laurensさんは、複数のTeXディストリビューションを1台のマシンに共存させられる新しいデータ構造を考案しました。ユーザは「TeX Distribution」環境設定パネルを使って、アクティブなディストリビューションを選ぶことができます。このデータ構造では /Library/TeX/texbin というシンボリック・リンクが作成され、これは常にアクティブなディストリビューションのバイナリを指します。ですからGUIプログラムは、バイナリのディレクトリを /Library/TeX/texbin に、pdftexの場所を /Library/TeX/texbin/pdftex に、というように設定しておけば、一度の設定で済みます。
+2007年1月、Gerben WierdaさんとJerome Laurensさんは、複数のTeXディストリビューションを1台のマシンに共存させられる新しいデータ構造を考案しました。ユーザはTeX Live Utilityの「Reconfigure Distributions」コマンドで、アクティブなディストリビューションを選ぶことができます。このデータ構造では /Library/TeX/texbin というシンボリック・リンクが作成され、これは常にアクティブなディストリビューションのバイナリを指します。ですからGUIプログラムは、バイナリのディレクトリを /Library/TeX/texbin に、pdftexの場所を /Library/TeX/texbin/pdftex に、というように設定しておけば、一度の設定で済みます。
 </p>
 
 <p>
-このデータ構造は、MacTeXのどのパッケージでも、あるいはGerben WierdaさんのTeXをi-Installerでダウンロードした場合でも、自動的にインストールされます。将来はMac OS X上のすべてのTeXディストリビューションがこのデータ構造を採用することが期待されます。
+このデータ構造は、MacTeXのどのパッケージでも自動的にインストールされます。MacTeXを使わずにTeX Liveのインストールスクリプトでインストールした場合は作成されないので、設定の「タイプセット &gt; パス &gt; TeXエンジン」にそのTeX Liveのバイナリのフォルダを指定するか、次に説明する「パスの自動検出…」を使ってください。
 </p>
 
 <p>
-TeXShop 6.00からは、TeXとGhostscriptの場所をTeXShopが探せるようになりました。初めてTeXShopを使うときと、設定の「タイプセット」カテゴリで「自動設定…」を押したときに、/Library/TeX/texbin、TeX Liveのフォルダ、Homebrew、MacPortsなどのよく使われる場所を探し、見つかった環境をバージョンとともに一覧表示します。最も新しいものが選ばれた状態になりますが、TeXとGhostscriptのそれぞれで別のものも選べます。パスが変わるのは「この設定を使用」を押したときだけです。独自のエンジンや「第二のTeXエンジン」は変更しません。
+TeXShop 6.00からは、TeXとGhostscriptの場所をTeXShopが探せるようになりました。初めてTeXShopを使うときと、設定の「タイプセット」カテゴリで「パスの自動検出…」を押したときに、/Library/TeX/texbin、TeX Liveのフォルダ、Homebrew、MacPortsなどのよく使われる場所を探し、見つかった環境をバージョンとともに一覧表示します。最も新しいものが選ばれた状態になりますが、TeXとGhostscriptのそれぞれで別のものも選べます。パスが変わるのは「OK」を押したときだけです。独自のエンジンや「第二のTeXエンジン」は変更しません。
 </p>
 
 <div id="header_background"></div>
