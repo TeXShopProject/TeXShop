@@ -64,7 +64,6 @@
 "group.editor.9.title" = "When a Document Opens";
 "group.editor.0.title" = "Display";
 "catalog.editor.0.0.title" = "Document Font";
-"catalog.editor.0.1.title" = "Syntax Coloring";
 "catalog.editor.0.2.title" = "Line Numbers";
 "catalog.editor.0.3.title" = "Line Number Size";
 "catalog.editor.0.4.title" = "Highlight Current Line";

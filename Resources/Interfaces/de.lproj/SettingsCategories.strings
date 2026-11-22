@@ -64,7 +64,6 @@
 "group.editor.9.title" = "Beim Öffnen eines Dokuments";
 "group.editor.0.title" = "Darstellung";
 "catalog.editor.0.0.title" = "Dokument-Schriftart";
-"catalog.editor.0.1.title" = "Syntax farblich hervorheben";
 "catalog.editor.0.2.title" = "Zeilennummerierung";
 "catalog.editor.0.3.title" = "Größe der Zeilennummern";
 "catalog.editor.0.4.title" = "Aktuelle Zeile hervorheben";

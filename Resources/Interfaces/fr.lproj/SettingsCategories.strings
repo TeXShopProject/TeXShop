@@ -64,7 +64,6 @@
 "group.editor.9.title" = "À l’ouverture d’un document";
 "group.editor.0.title" = "Affichage";
 "catalog.editor.0.0.title" = "Police du document";
-"catalog.editor.0.1.title" = "Distinctions syntaxiques en couleurs";
 "catalog.editor.0.2.title" = "Numérotation des lignes";
 "catalog.editor.0.3.title" = "Taille du numéro de ligne";
 "catalog.editor.0.4.title" = "Surbrillance de la ligne courante";

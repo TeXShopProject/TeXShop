@@ -1434,15 +1434,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 }
 
 
-/*" This method is connected to the 'syntax coloring' checkbox.
-"*/
-- (IBAction)syntaxColorPressed:sender
-{
-
-    [SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:SyntaxColoringEnabledKey];
-    TSPostPreferenceNotifications([NSSet setWithArray:@[SyntaxColoringEnabledKey]], self);
-}
-
 
 
 /*" This method is connected to the 'syntax line coloring' checkbox.

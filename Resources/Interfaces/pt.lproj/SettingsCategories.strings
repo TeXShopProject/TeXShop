@@ -64,7 +64,6 @@
 "group.editor.9.title" = "Ao abrir um documento";
 "group.editor.0.title" = "Exibição";
 "catalog.editor.0.0.title" = "Fonte para o documento";
-"catalog.editor.0.1.title" = "Colorir a sintaxe";
 "catalog.editor.0.2.title" = "Número de linhas";
 "catalog.editor.0.3.title" = "Tamanho do número da linha";
 "catalog.editor.0.4.title" = "Destacar linha atual";

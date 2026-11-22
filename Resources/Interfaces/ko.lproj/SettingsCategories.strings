@@ -64,7 +64,6 @@
 "group.editor.9.title" = "문서를 열 때";
 "group.editor.0.title" = "표시";
 "catalog.editor.0.0.title" = "서체";
-"catalog.editor.0.1.title" = "구문 색상 표시";
 "catalog.editor.0.2.title" = "행 번호 보이기";
 "catalog.editor.0.3.title" = "행 번호 크기";
 "catalog.editor.0.4.title" = "현재 줄 강조";

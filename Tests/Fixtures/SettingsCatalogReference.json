@@ -321,14 +321,6 @@
      "rows": [
       {
        "kind": "switch",
-       "title": "ソースのカラー表示",
-       "on": true,
-       "src": [
-        "621#1"
-       ]
-      },
-      {
-       "kind": "switch",
        "title": "行番号",
        "on": true,
        "src": [

@@ -64,7 +64,6 @@
 "group.editor.9.title" = "All’apertura di un documento";
 "group.editor.0.title" = "Visualizzazione";
 "catalog.editor.0.0.title" = "Font del Documento";
-"catalog.editor.0.1.title" = "Sintassi Colorata";
 "catalog.editor.0.2.title" = "Numeri di linea";
 "catalog.editor.0.3.title" = "Dimensione numeri di linea";
 "catalog.editor.0.4.title" = "Evidenzia la linea corrente";

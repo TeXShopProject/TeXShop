@@ -100,7 +100,6 @@
     _showSpaceCharacterButton = editor.showSpaceCharacterButton;
     _showTabCharacterButton = editor.showTabCharacterButton;
     _spellCheckButton = editor.spellCheckButton;
-    _syntaxColorButton = editor.syntaxColorButton;
     _makeatletterButton = editor.makeatletterButton;
     _expl3SyntaxColorButton = editor.expl3SyntaxColorButton;
     _highlightFullwidthSymbolsButton = editor.highlightFullwidthSymbolsButton;

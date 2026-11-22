@@ -64,7 +64,6 @@
 "group.editor.9.title" = "打开文稿时";
 "group.editor.0.title" = "显示";
 "catalog.editor.0.0.title" = "文档字体";
-"catalog.editor.0.1.title" = "语法高亮";
 "catalog.editor.0.2.title" = "显示行号";
 "catalog.editor.0.3.title" = "行号字体大小";
 "catalog.editor.0.4.title" = "高亮当前行";

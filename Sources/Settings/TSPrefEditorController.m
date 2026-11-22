@@ -22,7 +22,6 @@
 - (IBAction)spellCheckPressed:(id)sender { [self.preferences spellCheckPressed:sender]; }
 - (IBAction)spellCorrectPressed:(id)sender { [self.preferences spellCorrectPressed:sender]; }
 - (IBAction)syntaxColorLinePressed:(id)sender { [self.preferences syntaxColorLinePressed:sender]; }
-- (IBAction)syntaxColorPressed:(id)sender { [self.preferences syntaxColorPressed:sender]; }
 - (IBAction)tabIndentPressed:(id)sender { [self.preferences tabIndentPressed:sender]; }
 - (IBAction)tagMenuButtonPressed:(id)sender { [self.preferences tagMenuButtonPressed:sender]; }
 - (IBAction)useTabPressed:(id)sender { [self.preferences useTabPressed:sender]; }

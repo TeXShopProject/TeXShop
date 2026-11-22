@@ -64,7 +64,6 @@
 "group.editor.9.title" = "Al abrir un documento";
 "group.editor.0.title" = "Visualización";
 "catalog.editor.0.0.title" = "Tipografía para el documento";
-"catalog.editor.0.1.title" = "Colores para sintaxis";
 "catalog.editor.0.2.title" = "Números de línea";
 "catalog.editor.0.3.title" = "Tamaño de números de línea";
 "catalog.editor.0.4.title" = "Resaltar línea actual";

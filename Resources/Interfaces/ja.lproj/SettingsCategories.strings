@@ -64,7 +64,6 @@
 "group.editor.9.title" = "書類を開いたときの状態";
 "group.editor.0.title" = "表示";
 "catalog.editor.0.0.title" = "フォント";
-"catalog.editor.0.1.title" = "ソースのカラー表示";
 "catalog.editor.0.2.title" = "行番号";
 "catalog.editor.0.3.title" = "行番号の文字サイズ";
 "catalog.editor.0.4.title" = "現在の行をハイライト";
