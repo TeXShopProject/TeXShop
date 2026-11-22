@@ -21,7 +21,7 @@ from production_fragments import method as production_method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['split-ignored', 'no-become-key', 'command-allowed', 'key-ignored', 'no-flags-monitor',
+parser.add_argument('--mutation', choices=['split-ignored', 'no-become-key', 'command-allowed', 'key-ignored', 'no-flags-monitor', 'no-catch-up', 'catch-up-default-mode-only',
                                            'menu-orientation-ignored', 'no-resign-reset', 'unturned',
                                            'split-shows-own-image', 'source-orientation-ignored', 'added-item-unturned',
                                            'added-item-condition-negated', 'split-tool-tip-kept', 'added-source-unturned'])
@@ -136,6 +136,14 @@ elif args.mutation == 'key-ignored':
     old = 'NSEventModifierFlags held = window.isKeyWindow ? flags : 0;'
     assert cue.count(old) == 1
     cue = cue.replace(old, 'NSEventModifierFlags held = flags;')
+elif args.mutation == 'no-catch-up':
+    old = '        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);\n'
+    assert cue.count(old) == 1
+    cue = cue.replace(old, '')
+elif args.mutation == 'catch-up-default-mode-only':
+    old = 'CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);'
+    assert cue.count(old) == 1
+    cue = cue.replace(old, 'CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopDefaultMode);')
 elif args.mutation == 'no-flags-monitor':
     old = '                TSSplitToggleItemsFollow(window, event.modifierFlags);\n            return event;'
     assert cue.count(old) == 1
@@ -154,6 +162,8 @@ static NSString *kSplitID = @"Split";
 static NSString *kSplitKKTID = @"SplitKIT";
 static NSEventModifierFlags flags;
 static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
+static NSWindow *keyWin;
+static NSWindow *currentKeyWindow(id s, SEL c) { return keyWin.isKeyWindow ? keyWin : nil; }
 void TSSplitToggleItemsFollowSplit(void);
 
 @interface PreviewWindow : NSObject
@@ -221,6 +231,7 @@ static void Key(KeyWindow *window, BOOL key) {
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     method_setImplementation(class_getClassMethod(NSEvent.class, @selector(modifierFlags)), (IMP)currentFlags);
+    method_setImplementation(class_getInstanceMethod(NSApplication.class, @selector(keyWindow)), (IMP)currentKeyWindow);
     const NSEventModifierFlags O = NSEventModifierFlagOption, S = NSEventModifierFlagShift,
         C = NSEventModifierFlagCommand, K = NSEventModifierFlagControl;
 
@@ -253,7 +264,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(NSEqualSizes(turned.size, previewImage.size),
           [NSString stringWithFormat:@"The same size as the button's own symbol: %@ and %@", NSStringFromSize(turned.size), NSStringFromSize(previewImage.size)]);
 
-    TSInstallSplitToggleOptionMonitor();
+    TSInstallSplitToggleOptionMonitor(); keyWin = w;
+    // The toolbar's own update after adding its items runs first.
+    CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.05, false);
     Check(w.windowNumber > 0 && [NSApp windowWithWindowNumber:w.windowNumber] == w, @"The window has a number for its events");
 
     // Option pressed in the key window: both buttons show the side-by-side split,
@@ -275,6 +288,18 @@ int main(int argc, char **argv) { @autoreleasepool {
     Key(w, YES);
     Check([Pixels(preview.image) isEqual:sideBySide], @"A window that becomes key with Option held shows the side-by-side split");
     Press(w, 0);
+
+    // A tracking loop, such as the magnifying glass or a menu, takes the flagsChanged
+    // events itself: the buttons catch up while the loop waits for events, and after it.
+    Check(preview.image == previewImage, @"Before the tracking loop");
+    flags = O; CFRunLoopRunInMode((CFStringRef)NSEventTrackingRunLoopMode, 0.05, false);
+    Check([Pixels(preview.image) isEqual:sideBySide] && [Pixels(source.image) isEqual:sideBySide], @"Option pressed during a tracking loop");
+    flags = 0; CFRunLoopRunInMode((CFStringRef)NSEventTrackingRunLoopMode, 0.05, false);
+    Check(preview.image == previewImage && source.image == sourceImage, @"Option released during a tracking loop");
+    flags = O; CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.05, false);
+    Check([Pixels(preview.image) isEqual:sideBySide], @"Option pressed while no event reached the monitor, after the loop");
+    flags = 0; CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.05, false);
+    Check(preview.image == previewImage, @"Option released while no event reached the monitor, after the loop");
 
     // In a split window the button unsplits: only the other window part's button turns.
     doc.pdfKitWindow.pdfKitSplitView = [NSSplitView new];

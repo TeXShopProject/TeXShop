@@ -235,10 +235,37 @@ void TSSplitToggleItemsFollowSplit(void)
             TSSplitToggleItemsFollow(window, NSEvent.modifierFlags);
 }
 
+// Event tracking loops, such as the magnifying glass and menus, take the flagsChanged
+// events from the queue themselves, so the monitor below never sees them. Each time
+// the run loop is about to wait, in any common mode (tracking loops included), the
+// buttons of the key window catch up with the keys held then, so the image always
+// tells what a click does.
+static void TSSplitToggleCatchUp(void)
+{
+    static __weak NSWindow *shownWindow;
+    static BOOL shownHeld;
+    NSWindow *window = NSApp.keyWindow;
+    NSEventModifierFlags flags = NSEvent.modifierFlags;
+    BOOL held = TSSplitToggleOptionHeld(flags);
+    NSWindow *previous = shownWindow;
+    if (window == previous && held == shownHeld)
+        return;
+    shownWindow = window;
+    shownHeld = held;
+    if (previous && previous != window && previous.toolbar)
+        TSSplitToggleItemsFollow(previous, flags);
+    if (window.toolbar)
+        TSSplitToggleItemsFollow(window, flags);
+}
+
 static void TSInstallSplitToggleOptionMonitor(void)
 {
     static dispatch_once_t once;
     dispatch_once(&once, ^{
+        CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(NULL, kCFRunLoopBeforeWaiting, true, 0,
+            ^(CFRunLoopObserverRef runLoopObserver, CFRunLoopActivity activity) { TSSplitToggleCatchUp(); });
+        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);
+        CFRelease(observer);
         [NSEvent addLocalMonitorForEventsMatchingMask: NSEventMaskFlagsChanged handler: ^NSEvent *(NSEvent *event) {
             NSWindow *window = event.window ?: NSApp.keyWindow;
             if (window.toolbar)
