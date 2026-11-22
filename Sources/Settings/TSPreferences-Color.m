@@ -131,7 +131,7 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 // opacity wells behind the sliders keep it.
 - (void)useOpaqueColorWells
 {
-    NSColorWell * __strong wells[] = {SourceTextColorWell, SourceBackgroundColorWell, SourceInsertionPointColorWell,
+    NSColorWell * __strong wells[] = {SourceTextColorWell, SourceBackgroundColorWell, SourceInsertionPointColorWell, SourceSelectionColorWell,
         PreviewBackgroundColorWell, ConsoleTextColorWell, ConsoleBackgroundColorWell, LogTextColorWell, LogBackgroundColorWell,
         SyntaxCommentColorWell, SyntaxCommandColorWell, SyntaxMarkerColorWell, SyntaxIndexColorWell,
         markerParenColorWell, markerCurlyColorWell, markerSquareColorWell,
@@ -243,6 +243,46 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
     
     XMLValueColorWell.color = [self editingColorForKey: @"XMLValue"];
     [self useOpaqueColorWells];
+    [self fillInSystemColorControls];
+}
+
+// A system color as the Settings window draws it.
+- (NSColor *)settingsWindowColor: (NSColor *)color
+{
+    NSAppearance *appearance = _prefsWindow.effectiveAppearance ?: NSApp.effectiveAppearance;
+    __block NSColor *resolved = color;
+    [appearance performAsCurrentDrawingAppearance:^{
+        resolved = [color colorUsingColorSpace: NSColorSpace.sRGBColorSpace] ?: color;
+    }];
+    return resolved;
+}
+
+// The switches of the cursor and the selection (TSThemeSystemColor.h) and their wells. A well whose switch is on cannot
+// be changed and shows the system's color, as the Settings window draws it; the theme's color stays in the theme.
+- (void)fillInSystemColorControls
+{
+    [[NSNotificationCenter defaultCenter] removeObserver: self name: NSSystemColorsDidChangeNotification object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(systemColorsDidChange:) name: NSSystemColorsDidChangeNotification object: nil];
+    BOOL editable = EditingColors != nil;
+    BOOL cursor = TSThemeUsesSystemColor(EditingColors, TSThemeInsertionPointUsesSystemColorKey);
+    BOOL selection = TSThemeUsesSystemColor(EditingColors, TSThemeSelectionUsesSystemColorKey);
+    SourceInsertionPointSystemColorButton.state = cursor ? NSControlStateValueOn : NSControlStateValueOff;
+    SourceSelectionSystemColorButton.state = selection ? NSControlStateValueOn : NSControlStateValueOff;
+    SourceInsertionPointSystemColorButton.enabled = editable;
+    SourceSelectionSystemColorButton.enabled = editable;
+    SourceInsertionPointColorWell.enabled = editable && !cursor;
+    SourceSelectionColorWell.enabled = editable && !selection;
+    if (!editable) return;
+    SourceInsertionPointColorWell.color = cursor ? [self settingsWindowColor: NSColor.textInsertionPointColor] : [self editingOpaqueColorForKey: @"EditorInsertionPoint"];
+    SourceSelectionColorWell.color = selection ? [self settingsWindowColor: NSColor.selectedTextBackgroundColor] : [self editingOpaqueColorForKey: TSThemeSelectionKey];
+}
+
+// The accent or highlight color changed in System Settings: the wells of the switches that are on show it. The themes
+// are not changed.
+- (void)systemColorsDidChange: (NSNotification *)notification
+{
+    if (EditingColors != nil)
+        [self fillInSystemColorControls];
 }
 
 - (IBAction)SaveEditedStyle:(id)sender
@@ -341,6 +381,59 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorInsertionPoint" fromColorWell:sender];
     [self SaveEditedStyle:sender];
     
+}
+
+- (IBAction)SourceSelectionColorChanged:sender
+{
+    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
+    
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
+    {
+        [self deactivatePreferenceColorWells];
+        ((NSColorWell *)sender).color = [self editingOpaqueColorForKey: TSThemeSelectionKey];
+        return;
+    }
+    [colorSupport changeColorValueInDictionary: EditingColors forKey: TSThemeSelectionKey fromColorWell:sender];
+    [self SaveEditedStyle:sender];
+}
+
+// Turns a switch of the cursor or the selection on or off; the theme's color stays. A theme without a selection color
+// turned off gets one, so that what is drawn does not change at once: the color of the theme of the same name that comes
+// with TeXShop, or else the system's as it is drawn now.
+- (void)setSystemColorSwitch: (TSThemeSystemColorKey)switchKey colorKey: (NSString *)colorKey from: (NSButton *)sender
+{
+    if (EditingColors == nil) {
+        [self fillInSystemColorControls];
+        return;
+    }
+    BOOL on = sender.state == NSControlStateValueOn;
+    EditingColors[switchKey] = @(on);
+    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
+    if (!on && [colorKey isEqualToString: TSThemeSelectionKey] && [colorSupport colorFromDictionary: EditingColors andKey: colorKey] == nil) {
+        NSString *title = self.editingThemeTitle;
+        NSString *bundledPath = (title.length && ![title containsString: @"/"]) ? TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent: (NSString *_Nonnull)title] stringByAppendingPathExtension: @"plist"]) : nil;
+        NSDictionary *bundled = bundledPath ? [NSDictionary dictionaryWithContentsOfFile: (NSString *_Nonnull)bundledPath] : nil;
+        if ([colorSupport colorFromDictionary: bundled andKey: colorKey] != nil) {
+            NSArray *color = bundled[colorKey];
+            EditingColors[colorKey] = @[color[0], color[1], color[2], @1];
+        } else {
+            NSColor *system = [[self settingsWindowColor: NSColor.selectedTextBackgroundColor] colorUsingColorSpace: NSColorSpace.sRGBColorSpace];
+            if (system != nil)
+                EditingColors[colorKey] = @[@(system.redComponent), @(system.greenComponent), @(system.blueComponent), @1];
+        }
+    }
+    [self SaveEditedStyle: sender];
+    [self fillInSystemColorControls];
+}
+
+- (IBAction)SourceInsertionPointSystemColorChanged:sender
+{
+    [self setSystemColorSwitch: TSThemeInsertionPointUsesSystemColorKey colorKey: @"EditorInsertionPoint" from: sender];
+}
+
+- (IBAction)SourceSelectionSystemColorChanged:sender
+{
+    [self setSystemColorSwitch: TSThemeSelectionUsesSystemColorKey colorKey: TSThemeSelectionKey from: sender];
 }
 
 - (IBAction)PreviewBackgroundColorChanged:sender
@@ -1000,7 +1093,14 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 - (void)setThemeEditingEnabled:(BOOL)enabled inView:(NSView *)view
 {
     for (NSView *child in view.subviews) {
-        if ([child isKindOfClass:NSColorWell.class] && ((NSColorWell *)child).action != @selector(BlockCursorColorChanged:))
+        // A well whose system color switch is on stays off (fillInSystemColorControls).
+        if (child == SourceInsertionPointColorWell)
+            [(NSColorWell *)child setEnabled:enabled && !TSThemeUsesSystemColor(EditingColors, TSThemeInsertionPointUsesSystemColorKey)];
+        else if (child == SourceSelectionColorWell)
+            [(NSColorWell *)child setEnabled:enabled && !TSThemeUsesSystemColor(EditingColors, TSThemeSelectionUsesSystemColorKey)];
+        else if (child == SourceInsertionPointSystemColorButton || child == SourceSelectionSystemColorButton)
+            [(NSButton *)child setEnabled:enabled];
+        else if ([child isKindOfClass:NSColorWell.class] && ((NSColorWell *)child).action != @selector(BlockCursorColorChanged:))
             [(NSColorWell *)child setEnabled:enabled];
         [self setThemeEditingEnabled:enabled inView:child];
     }

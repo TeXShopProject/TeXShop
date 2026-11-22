@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "Eingabe";
 "catalog.appearance.3.0.item.1" = "Aufleuchten";
 "catalog.appearance.3.0.item.2" = "Aktuelle Zeile";
+"catalog.appearance.3.0.item.3" = "Auswahl";
+"catalog.appearance.3.0.switch" = "Systemfarbe verwenden";
 "group.appearance.4.title" = "Syntaxhervorhebung";
 "catalog.appearance.4.0.item.0" = "Kommentar";
 "catalog.appearance.4.0.item.1" = "Befehl";

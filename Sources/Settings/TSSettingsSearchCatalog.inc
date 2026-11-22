@@ -152,6 +152,10 @@ add(TSSettingsCategoryAppearance, @"heading.group.appearance.3", @"SettingsCateg
 add(TSSettingsCategoryAppearance, @"settings.Rp9-1a-atr", @"SettingsCategories", @"catalog.appearance.3.0.item.0", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"settings.fIc-C1-M6K", @"SettingsCategories", @"catalog.appearance.3.0.item.1", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"settings.QyC-Pf-rbS", @"SettingsCategories", @"catalog.appearance.3.0.item.2", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryAppearance, @"settings.Sq7-Lc-W2n", @"SettingsCategories", @"catalog.appearance.3.0.item.3", TSSettingsSearchWeightLabel);
+// The switches of the cursor and the selection have the same title; each result is named after its color too.
+addSwitch(TSSettingsCategoryAppearance, @"settings.cK4-Ip-S8y", @"SettingsCategories", @"catalog.appearance.3.0.item.0", @"catalog.appearance.3.0.switch");
+addSwitch(TSSettingsCategoryAppearance, @"settings.sK6-Sl-T1y", @"SettingsCategories", @"catalog.appearance.3.0.item.3", @"catalog.appearance.3.0.switch");
 add(TSSettingsCategoryAppearance, @"heading.group.appearance.4", @"SettingsCategories", @"group.appearance.4.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryAppearance, @"settings.fFa-bR-0xj", @"SettingsCategories", @"catalog.appearance.4.0.item.0", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"settings.4y8-qP-NW7", @"SettingsCategories", @"catalog.appearance.4.0.item.1", TSSettingsSearchWeightLabel);

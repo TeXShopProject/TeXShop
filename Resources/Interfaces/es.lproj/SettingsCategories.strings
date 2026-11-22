@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "Inserción";
 "catalog.appearance.3.0.item.1" = "Destello";
 "catalog.appearance.3.0.item.2" = "Línea actual";
+"catalog.appearance.3.0.item.3" = "Selección";
+"catalog.appearance.3.0.switch" = "Usar el color del sistema";
 "group.appearance.4.title" = "Resaltado de sintaxis";
 "catalog.appearance.4.0.item.0" = "Comentario";
 "catalog.appearance.4.0.item.1" = "Comando";

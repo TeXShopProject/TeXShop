@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "Insertion";
 "catalog.appearance.3.0.item.1" = "Flash";
 "catalog.appearance.3.0.item.2" = "Current Line";
+"catalog.appearance.3.0.item.3" = "Selection";
+"catalog.appearance.3.0.switch" = "Use system color";
 "group.appearance.4.title" = "Syntax Highlighting";
 "catalog.appearance.4.0.item.0" = "Comment";
 "catalog.appearance.4.0.item.1" = "Command";

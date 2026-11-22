@@ -32,6 +32,9 @@
         <outlet property="SourceAlphaColorWell" destination="2U5-cN-QJw" id="0Gc-FK-Eap" />
         <outlet property="SourceBackgroundColorWell" destination="0fE-JX-Dl8" id="hHu-fO-AHS" />
         <outlet property="SourceInsertionPointColorWell" destination="Rp9-1a-atr" id="wA4-kq-6ch" />
+        <outlet property="SourceInsertionPointSystemColorButton" destination="cK4-Ip-S8y" id="oA2-Ck-Ip1" />
+        <outlet property="SourceSelectionColorWell" destination="Sq7-Lc-W2n" id="oA1-Sl-Wl1" />
+        <outlet property="SourceSelectionSystemColorButton" destination="sK6-Sl-T1y" id="oA3-Ck-Sl1" />
         <outlet property="SourceTextColorWell" destination="L8Q-Ov-EVr" id="f7K-6O-Vji" />
         <outlet property="SyntaxCommandColorWell" destination="4y8-qP-NW7" id="VgA-Vl-GY8" />
         <outlet property="SyntaxCommentColorWell" destination="fFa-bR-0xj" id="oTx-gx-eBZ" />
@@ -492,6 +495,36 @@
                             <action selector="SourceInsertionPointColorChanged:" target="-2" id="gjt-JN-tcj" />
                           </connections>
                         </colorWell>
+                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cK4-Ip-S8y" identifier="settings.cK4-Ip-S8y">
+                          <rect key="frame" x="113" y="289" width="160" height="16" />
+                          <autoresizingMask key="autoresizingMask" />
+                          <buttonCell key="cell" type="check" title="Use system color" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="cK5-Ic-S9y">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                            <font key="font" metaFont="smallSystem" />
+                          </buttonCell>
+                          <connections>
+                            <action selector="SourceInsertionPointSystemColorChanged:" target="-2" id="aA2-Ck-Ip1" />
+                          </connections>
+                        </button>
+                        <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sq7-Lc-W2n" identifier="settings.Sq7-Lc-W2n">
+                          <rect key="frame" x="290" y="309" width="59" height="24" />
+                          <autoresizingMask key="autoresizingMask" />
+                          <color key="color" red="0.70196078431372544" green="0.84313725490196079" blue="1" alpha="1" colorSpace="calibratedRGB" />
+                          <connections>
+                            <action selector="SourceSelectionColorChanged:" target="-2" id="aA1-Sl-Wl1" />
+                          </connections>
+                        </colorWell>
+                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sK6-Sl-T1y" identifier="settings.sK6-Sl-T1y">
+                          <rect key="frame" x="290" y="289" width="160" height="16" />
+                          <autoresizingMask key="autoresizingMask" />
+                          <buttonCell key="cell" type="check" title="Use system color" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="sK7-Sc-T2y">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                            <font key="font" metaFont="smallSystem" />
+                          </buttonCell>
+                          <connections>
+                            <action selector="SourceSelectionSystemColorChanged:" target="-2" id="aA3-Ck-Sl1" />
+                          </connections>
+                        </button>
                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f7c-Uy-IWR" identifier="settings.f7c-Uy-IWR">
                           <rect key="frame" x="117" y="333.5" width="51" height="14" />
                           <autoresizingMask key="autoresizingMask" />

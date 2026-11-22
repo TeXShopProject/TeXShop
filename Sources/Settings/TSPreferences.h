@@ -174,6 +174,9 @@
     IBOutlet NSColorWell    *SourceTextColorWell;
     IBOutlet NSColorWell    *SourceBackgroundColorWell;
     IBOutlet NSColorWell    *SourceInsertionPointColorWell;
+    IBOutlet NSButton       *SourceInsertionPointSystemColorButton;
+    IBOutlet NSColorWell    *SourceSelectionColorWell;
+    IBOutlet NSButton       *SourceSelectionSystemColorButton;
     IBOutlet NSColorWell    *PreviewBackgroundColorWell;
     IBOutlet NSColorWell    *ConsoleTextColorWell;
     IBOutlet NSColorWell    *ConsoleBackgroundColorWell;
@@ -433,6 +436,9 @@
 - (IBAction)SourceTextColorChanged:sender;
 - (IBAction)SourceBackgroundColorChanged:sender;
 - (IBAction)SourceInsertionPointColorChanged:sender;
+- (IBAction)SourceInsertionPointSystemColorChanged:sender;
+- (IBAction)SourceSelectionColorChanged:sender;
+- (IBAction)SourceSelectionSystemColorChanged:sender;
 - (IBAction)PreviewBackgroundColorChanged:sender;
 - (IBAction)ConsoleTextColorChanged:sender;
 - (IBAction)ConsoleBackgroundColorChanged:sender;

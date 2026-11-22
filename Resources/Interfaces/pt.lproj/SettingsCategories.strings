@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "Inserção";
 "catalog.appearance.3.0.item.1" = "Piscar";
 "catalog.appearance.3.0.item.2" = "Linha atual";
+"catalog.appearance.3.0.item.3" = "Seleção";
+"catalog.appearance.3.0.switch" = "Usar cor do sistema";
 "group.appearance.4.title" = "Destaque de sintaxe";
 "catalog.appearance.4.0.item.0" = "Comentário";
 "catalog.appearance.4.0.item.1" = "Comando";

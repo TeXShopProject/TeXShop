@@ -32,6 +32,9 @@
 - (IBAction)SourceAlphaChanged:(id)sender { [self.preferences SourceAlphaChanged:sender]; }
 - (IBAction)SourceBackgroundColorChanged:(id)sender { [self.preferences SourceBackgroundColorChanged:sender]; }
 - (IBAction)SourceInsertionPointColorChanged:(id)sender { [self.preferences SourceInsertionPointColorChanged:sender]; }
+- (IBAction)SourceInsertionPointSystemColorChanged:(id)sender { [self.preferences SourceInsertionPointSystemColorChanged:sender]; }
+- (IBAction)SourceSelectionColorChanged:(id)sender { [self.preferences SourceSelectionColorChanged:sender]; }
+- (IBAction)SourceSelectionSystemColorChanged:(id)sender { [self.preferences SourceSelectionSystemColorChanged:sender]; }
 - (IBAction)SourceTextColorChanged:(id)sender { [self.preferences SourceTextColorChanged:sender]; }
 - (IBAction)SyntaxCommandColorChanged:(id)sender { [self.preferences SyntaxCommandColorChanged:sender]; }
 - (IBAction)SyntaxCommentColorChanged:(id)sender { [self.preferences SyntaxCommentColorChanged:sender]; }
