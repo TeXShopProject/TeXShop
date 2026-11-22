@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "삽입";
 "catalog.appearance.3.0.item.1" = "플래시";
 "catalog.appearance.3.0.item.2" = "현재 줄";
+"catalog.appearance.3.0.item.3" = "선택 부분";
+"catalog.appearance.3.0.switch" = "시스템 색상 사용";
 "group.appearance.4.title" = "구문 하이라이트";
 "catalog.appearance.4.0.item.0" = "주석문";
 "catalog.appearance.4.0.item.1" = "명령어";

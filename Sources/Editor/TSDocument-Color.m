@@ -24,12 +24,26 @@
 #import "TSDocument.h"
 #import "globals.h"
 #import "TSColorSupport.h"
+#import "TSThemeSystemColor.h"
 #import "TSSyntaxColorScheme.h"
 #import "TSThemeAlpha.h"
 #import "MyPDFKitView.h"
 
 
 @implementation TSDocument (Color)
+
+- (void) applySourceSelectionColorToTextView: (NSTextView *)aTextView
+{
+    TSThemeSetSelectionColor(aTextView, self.sourceSelectionColor);
+}
+
+- (void) endReverseSyncSelection
+{
+    // The view marked, or, if it has gone (its part of a split closed), the one in use.
+    NSTextView *marked = self.reverseSyncTextView ?: [self textView];
+    [self setTextSelectionYellow: NO];
+    [self applySourceSelectionColorToTextView: marked];
+}
 
 - (void)changeColors: (BOOL)toDark;
 {
@@ -159,9 +173,16 @@
     myColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"EditorReverseSync" fromDictionary: colorDictionary isWindowDark: withDarkColors];
     ReverseSyncColor = myColor;
     
-    myColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"EditorInsertionPoint" fromDictionary: colorDictionary isWindowDark: withDarkColors];
+    myColor = [[TSColorSupport sharedInstance] insertionPointColorFromDictionary: colorDictionary isWindowDark: withDarkColors];
     [textView1 setInsertionPointColor: myColor];
     [textView2 setInsertionPointColor: myColor];
+    
+    // The selection; a view the reverse sync has marked keeps its mark until the next click or key.
+    self.sourceSelectionColor = [[TSColorSupport sharedInstance] selectionColorFromDictionary: colorDictionary isWindowDark: withDarkColors];
+    for (NSTextView *view in @[textView1 ?: (id)NSNull.null, textView2 ?: (id)NSNull.null]) {
+        if ([view isKindOfClass: NSTextView.class] && !([self textSelectionYellow] && view == self.reverseSyncTextView))
+            [self applySourceSelectionColorToTextView: view];
+    }
     
     myColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"EditorInvisibleChar" fromDictionary: colorDictionary isWindowDark: withDarkColors];
     InvisibleColor = myColor;

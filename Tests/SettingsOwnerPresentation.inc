@@ -135,6 +135,8 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
                 if ([kind isEqual:@"switch"] || [kind isEqual:@"switchpopup"]) expected[0]++;
                 if ([kind isEqual:@"radio"]) expected[2]++;
                 if ([kind isEqual:@"checks"] || [kind isEqual:@"checkgrid"]) expected[1] += [row[@"choices"] count];
+                // A color with a system color switch (the cursor and the selection of a theme) has a check box under it.
+                if ([kind isEqual:@"colors"]) for (NSDictionary *item in row[@"items"]) if (item[@"switch"]) expected[1]++;
             }
         }
         CountPresentedControls(pane, actual);
@@ -143,8 +145,8 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
     // Preview, the Advanced Find panel switch and Highlight Fullwidth Letters and Symbols of Editor, and the
     // mark switch of Keyboard, and Keep magnification, display format and split when entering full screen and Show page number in
     // link popups of Preview were added; Syntax Coloring of Editor became a hidden setting; Highlight Index Entries by
-    // Default of Editor was added.
-    Check(expected[0] == 54 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty-four switches and two exclusive spelling choices");
+    // Default of Editor was added; the system color check boxes of the cursor and the selection of Themes were added.
+    Check(expected[0] == 54 && expected[1] == 17 && expected[2] == 2, @"Reference contains fifty-four switches and two exclusive spelling choices");
     {
         // Updates: Updates to Include above Automatic Checks; the last check and Check for Updates below the cards.
         NSView *updates=[shell viewForCategoryIdentifier:@"updates"];

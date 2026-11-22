@@ -42,6 +42,13 @@
         NSString *text = [bundle localizedStringForKey:key value:key table:table];
         if (text.length) [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:category target:target text:text weight:weight command:NO]];
     };
+    // A switch whose title another setting's switch shares is found and named as "<setting> — <switch>" (its title
+    // alone would name two results alike).
+    void (^addSwitch)(TSSettingsCategoryID, NSString *, NSString *, NSString *, NSString *) = ^(TSSettingsCategoryID category, NSString *target, NSString *table, NSString *settingKey, NSString *switchKey) {
+        NSString *setting = [bundle localizedStringForKey:settingKey value:settingKey table:table];
+        NSString *title = [bundle localizedStringForKey:switchKey value:switchKey table:table];
+        if (setting.length && title.length) [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:category target:target text:[NSString stringWithFormat:@"%@ — %@", setting, title] weight:TSSettingsSearchWeightLabel command:NO]];
+    };
     // Only resource keys and category/control identifiers live in the map. The
     // localized text is read from the same tables used by the interface.
 #include "TSSettingsSearchCatalog.inc"

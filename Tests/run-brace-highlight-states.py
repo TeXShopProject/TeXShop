@@ -189,6 +189,7 @@ marker_keys = '\n'.join(f'NSString *{k} = {keys[k]};' for k in [
 
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TSThemeSystemColor.h"
 #import "TSFontSupport.h"
 #import "TSSyntaxTeXScanner.h"
 #import "TSSyntaxHighlighter.h"
@@ -271,6 +272,15 @@ static NSColor *FlashColor, *ThemeBackground, *DarkFlashColor, *DarkBackground, 
 {
     return [self colorFromDictionary:dictionary andKey:key] ?: (dark ? [self darkColorWithKey:key] : [self liteColorWithKey:key]);
 }
+// The cursor and the selection, as TSColorSupport gives them.
+- (NSColor *)insertionPointColorFromDictionary:(NSDictionary *)dictionary isWindowDark:(BOOL)dark
+{
+    return TSThemeUsesSystemColor(dictionary, TSThemeInsertionPointUsesSystemColorKey) ? NSColor.textInsertionPointColor : [self opaqueColorForKey:@"EditorInsertionPoint" fromDictionary:dictionary isWindowDark:dark];
+}
+- (NSColor *)selectionColorFromDictionary:(NSDictionary *)dictionary isWindowDark:(BOOL)dark
+{
+    return TSThemeUsesSystemColor(dictionary, TSThemeSelectionUsesSystemColorKey) ? NSColor.selectedTextBackgroundColor : [self opaqueColorForKey:TSThemeSelectionKey fromDictionary:dictionary isWindowDark:dark];
+}
 @end
 
 // Reports itself visible without being ordered on screen.
@@ -328,6 +338,10 @@ extern NSColor *InvisibleColor;
     *indexColorAttribute, *markerColorAttribute, *markerColorCurlyAttribute, *markerColorParenAttribute,
     *markerColorSquareAttribute, *regularColorAttribute;
 @property BOOL blockCursor, fileIsXML, syntaxColor, syntaxcolorEntry, useExplColor, coloringWaitsForMarkedText;
+// The selection of the source and the view marked by a reverse sync (TSDocument).
+@property (strong) NSColor *sourceSelectionColor;
+@property (weak) NSTextView *reverseSyncTextView;
+@property (getter=textSelectionYellow) BOOL textSelectionYellow;
 @property (strong) TSSyntaxColorScheme *syntaxColorScheme;
 @property (strong) NSTextStorage *textStorage;
 @property (strong) NSTextView *textView;

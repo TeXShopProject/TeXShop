@@ -42,6 +42,7 @@
 #import "TSMacroContentTokens.h"
 #import "TSMacroContentKind.h"
 #import "TSColorSupport.h"
+#import "TSThemeSystemColor.h"
 #import "TSMarkMenu.h"
 #import "TSPreferenceEffects.h"
 #import "TSSyntaxHighlighter.h"
@@ -196,7 +197,8 @@ static TSFilterMode savedFilter = kNoFilterMode;
     contentTextView.drawsBackground = YES;
     contentTextView.backgroundColor = opaque(@"EditorBackground");
     contentTextView.textColor = text;
-    contentTextView.insertionPointColor = opaque(@"EditorInsertionPoint");
+    contentTextView.insertionPointColor = [colors insertionPointColorFromDictionary:theme isWindowDark:dark];
+    TSThemeSetSelectionColor(contentTextView, [colors selectionColorFromDictionary:theme isWindowDark:dark]);
     NSMutableDictionary *typing = [contentTextView.typingAttributes mutableCopy] ?: [NSMutableDictionary dictionary];
     typing[NSForegroundColorAttributeName] = text;
     contentTextView.typingAttributes = typing;

@@ -45,8 +45,10 @@ enum { RootForPdfSync = 1 };
 - (BOOL)checkMasterFile:(NSString *)text forTask:(NSInteger)task;
 - (BOOL)checkRootFile_forTask:(NSInteger)task;
 - (void)doPreviewSyncWithFilename:(NSString *)file andLine:(NSInteger)line andCharacterIndex:(NSUInteger)index andTextView:(id)view;
+- (void)endReverseSyncSelection;
 @end
 @implementation RecordingDocument
+- (void)endReverseSyncSelection { self.textSelectionYellow = NO; }
 - (BOOL)checkMasterFile:(NSString *)text forTask:(NSInteger)task { return self.master; }
 - (BOOL)checkRootFile_forTask:(NSInteger)task { return self.root; }
 - (void)doPreviewSyncWithFilename:(NSString *)file andLine:(NSInteger)line andCharacterIndex:(NSUInteger)index andTextView:(id)view {

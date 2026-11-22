@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "Insertion";
 "catalog.appearance.3.0.item.1" = "Flash";
 "catalog.appearance.3.0.item.2" = "Ligne courante";
+"catalog.appearance.3.0.item.3" = "Sélection";
+"catalog.appearance.3.0.switch" = "Utiliser la couleur du système";
 "group.appearance.4.title" = "Surlignage syntaxique";
 "catalog.appearance.4.0.item.0" = "Commentaire";
 "catalog.appearance.4.0.item.1" = "Commande";

@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSColorWell *SourceAlphaColorWell NS_SWIFT_NAME(sourceAlphaColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *SourceBackgroundColorWell NS_SWIFT_NAME(sourceBackgroundColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *SourceInsertionPointColorWell NS_SWIFT_NAME(sourceInsertionPointColorWell);
+@property (strong, nullable) IBOutlet NSButton *SourceInsertionPointSystemColorButton NS_SWIFT_NAME(sourceInsertionPointSystemColorButton);
+@property (strong, nullable) IBOutlet NSColorWell *SourceSelectionColorWell NS_SWIFT_NAME(sourceSelectionColorWell);
+@property (strong, nullable) IBOutlet NSButton *SourceSelectionSystemColorButton NS_SWIFT_NAME(sourceSelectionSystemColorButton);
 @property (strong, nullable) IBOutlet NSColorWell *SourceTextColorWell NS_SWIFT_NAME(sourceTextColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *SyntaxCommandColorWell NS_SWIFT_NAME(syntaxCommandColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *SyntaxCommentColorWell NS_SWIFT_NAME(syntaxCommentColorWell);

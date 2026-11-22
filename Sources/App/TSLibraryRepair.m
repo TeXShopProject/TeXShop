@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSLibraryRepair.h"
+#import "TSThemeSystemColor.h"
 #import <libproc.h>
 #import <stdio.h>
 
@@ -92,8 +93,11 @@ TSLibraryFileCheck TSLibraryThemeCheck(void)
         }
         if (![reference isKindOfClass:NSDictionary.class]) reference = nil;
         // A color is read as red, green, blue and alpha. A key that the copy inside TeXShop has as a color must be one;
-        // any other array must be one too. Keys may be missing (TeXShop has defaults for them).
+        // any other array must be one too. Keys may be missing (TeXShop has defaults for them). The switches of the
+        // cursor and the selection may hold anything: what is not a number is read as if they were missing, so they
+        // never make a theme of the user's own go to the backups.
         for (id key in theme) {
+            if (TSThemeIsSystemColorSwitch(key)) continue;
             id value = theme[key], expected = reference[key];
             BOOL color = [expected isKindOfClass:NSArray.class] || (expected == nil && [value isKindOfClass:NSArray.class]);
             if (color) {

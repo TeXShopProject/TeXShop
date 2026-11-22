@@ -24,7 +24,8 @@ root = Path(__file__).resolve().parents[1]
 support = (root / 'Sources/Editor/TSColorSupport.m').read_text(encoding='utf-8')
 signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
               '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:', '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:',
-              '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:', '- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary:']
+              '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:', '- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary:',
+              '- (NSColor *)insertionPointColorFromDictionary:', '- (NSColor *)selectionColorFromDictionary:']
 readers = [method(support, s) for s in signatures]
 document_source = (root / 'Sources/Editor/TSDocument-Color.m').read_text(encoding='utf-8')
 start = document_source.index('    myBackgroundColor = [[TSColorSupport sharedInstance] ')
@@ -45,6 +46,7 @@ PROGRAM = r'''
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
 #import "TSThemeAlpha.h"
+#import "TSThemeSystemColor.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr, "FAIL %s %d: %s\n", mode, __LINE__, #__VA_ARGS__); exit(1); } } while (0)
 static const char *mode = "";
 NSDictionary *liteColors, *darkColors;
@@ -56,6 +58,8 @@ NSDictionary *liteColors, *darkColors;
 - (NSColor *)colorFromDictionary:(NSDictionary *)theDictionary andKey:(NSString *)theKey;
 - (NSColor *)colorAndAlphaFromDictionary:(NSDictionary *)theDictionary andKey:(NSString *)theKey;
 - (NSArray *)colorArrayFromDictionary:(NSDictionary *)theDictionary andKey:(NSString *)theKey;
+- (NSColor *)insertionPointColorFromDictionary:(NSDictionary *)theDictionary isWindowDark:(BOOL)mode;
+- (NSColor *)selectionColorFromDictionary:(NSDictionary *)theDictionary isWindowDark:(BOOL)mode;
 @end
 @implementation TSColorSupport
 + (instancetype)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }

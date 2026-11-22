@@ -101,6 +101,11 @@ static ExperimentMemoryDefaults *testDefaults;
 + (id)sharedInstance { static id instance; if (!instance) instance = [self new]; return instance; }
 - (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
 { return theme[key] ?: (dark ? NSColor.blackColor : NSColor.whiteColor); }
+// As TSColorSupport: the theme's cursor and the system's selection without the switches.
+- (NSColor *)insertionPointColorFromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
+{ return TSThemeUsesSystemColor(theme, TSThemeInsertionPointUsesSystemColorKey) ? NSColor.textInsertionPointColor : [self opaqueColorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark]; }
+- (NSColor *)selectionColorFromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
+{ return TSThemeUsesSystemColor(theme, TSThemeSelectionUsesSystemColorKey) ? NSColor.selectedTextBackgroundColor : [self opaqueColorForKey:TSThemeSelectionKey fromDictionary:theme isWindowDark:dark]; }
 @end
 @interface ExperimentSourceFixture : NSTextView
 @end

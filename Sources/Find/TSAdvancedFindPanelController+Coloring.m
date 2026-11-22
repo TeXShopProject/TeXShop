@@ -7,6 +7,7 @@
 #import "TSAdvancedFindFieldScanners.h"
 #import "TSRegexFindPattern.h"
 #import "TSSyntaxTeXScanner.h"
+#import "TSThemeSystemColor.h"
 
 static void *TSFieldAppearanceContext = &TSFieldAppearanceContext;
 
@@ -103,6 +104,7 @@ static void *TSFieldAppearanceContext = &TSFieldAppearanceContext;
         field.font = style.fieldFont;
         field.textColor = style.textColor ?: NSColor.textColor;
         field.insertionPointColor = style.insertionPointColor ?: NSColor.textColor;
+        TSThemeSetSelectionColor(field, style.selectionColor);
         NSMutableDictionary<NSAttributedStringKey, id> *typing = [field.typingAttributes mutableCopy] ?: [NSMutableDictionary dictionary];
         typing[NSForegroundColorAttributeName] = field.textColor;
         typing[NSFontAttributeName] = field.font;
