@@ -241,8 +241,7 @@
 "catalog.preview.0.6.title" = "Pop-up pour les liens";
 "catalog.preview.0.6.note" = "Valeur initiale des documents ouverts désormais. Pour un document ouvert, utilisez le menu « Page ».";
 "catalog.preview.0.8.title" = "Afficher le numéro de page dans les pop-up des liens";
-"catalog.preview.0.7.title" = "Conserver l’agrandissement et le format d’affichage en plein écran";
-"catalog.preview.0.7.note" = "Une fenêtre partagée reste aussi partagée. Si l’option est désactivée, le plein écran annule le partage et utilise le type d’agrandissement et le format d’affichage utilisés la dernière fois en plein écran.";
+"catalog.preview.0.7.title" = "Conserver l’agrandissement, le format d’affichage et la division en passant en plein écran";
 "group.preview.1.title" = "Page double (variantes)";
 "catalog.preview.1.0.title" = "Sens des pages";
 "catalog.preview.1.1.title" = "Afficher la première page seule comme couverture";

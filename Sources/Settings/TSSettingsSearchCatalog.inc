@@ -206,7 +206,6 @@ add(TSSettingsCategoryPreview, @"row.catalog.preview.0.6", @"SettingsCategories"
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.6", @"SettingsCategories", @"catalog.preview.0.6.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.8", @"SettingsCategories", @"catalog.preview.0.8.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.7", @"SettingsCategories", @"catalog.preview.0.7.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryPreview, @"row.catalog.preview.0.7", @"SettingsCategories", @"catalog.preview.0.7.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryPreview, @"heading.group.preview.1", @"SettingsCategories", @"group.preview.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.1.0", @"SettingsCategories", @"catalog.preview.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.1.1", @"SettingsCategories", @"catalog.preview.1.1.title", TSSettingsSearchWeightLabel);

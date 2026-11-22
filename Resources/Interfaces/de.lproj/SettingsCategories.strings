@@ -241,8 +241,7 @@
 "catalog.preview.0.6.title" = "Link-Popups";
 "catalog.preview.0.6.note" = "Anfangswert für Dokumente, die Sie danach öffnen. In einem geöffneten Dokument im Menü „Vorschau“ umschalten.";
 "catalog.preview.0.8.title" = "Seitenzahl in Link-Popups anzeigen";
-"catalog.preview.0.7.title" = "Vergrößerung und PDF-Darstellung im Vollbild beibehalten";
-"catalog.preview.0.7.note" = "Ein geteiltes Fenster bleibt auch geteilt. Wenn aus, hebt das Vollbild die Teilung auf und verwendet die zuletzt im Vollbild benutzte Vergrößerungsart und PDF-Darstellung.";
+"catalog.preview.0.7.title" = "Vergrößerung, PDF-Darstellung und Teilung beim Wechsel ins Vollbild beibehalten";
 "group.preview.1.title" = "Doppelseiten-Modus";
 "catalog.preview.1.0.title" = "Seitenrichtung";
 "catalog.preview.1.1.title" = "Erste Seite einzeln als Deckblatt anzeigen";

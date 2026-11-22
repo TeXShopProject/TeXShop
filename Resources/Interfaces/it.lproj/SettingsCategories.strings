@@ -241,8 +241,7 @@
 "catalog.preview.0.6.title" = "Collegamento popup";
 "catalog.preview.0.6.note" = "Valore iniziale per i documenti aperti d’ora in poi. In un documento aperto, si cambia dal menu «Pagina».";
 "catalog.preview.0.8.title" = "Mostra il numero di pagina nei popup dei collegamenti";
-"catalog.preview.0.7.title" = "Mantieni ingrandimento e vista documento a schermo intero";
-"catalog.preview.0.7.note" = "Anche una finestra divisa resta divisa. Se disattivato, lo schermo intero annulla la divisione e usa il tipo di ingrandimento e la vista documento usati l’ultima volta a schermo intero.";
+"catalog.preview.0.7.title" = "Mantieni ingrandimento, vista documento e divisione passando a tutto schermo";
 "group.preview.1.title" = "Modalità pagine affiancate";
 "catalog.preview.1.0.title" = "Direzione delle pagine";
 "catalog.preview.1.1.title" = "Mostra la prima pagina da sola come copertina";
