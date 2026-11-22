@@ -60,6 +60,14 @@ int main(int argc,char **argv){@autoreleasepool{
   NSMenuItem *expl=Item(source.submenu,@"Highlight expl3 Code");expl.identifier=@"TSShortcut.toggleExplColor:.0";
   Apply(main,@{@"Source":@{@"Show Syntax Color":@[@"y",@NO,@YES],@"expl3-Syntax farblich hervorheben":@[@"x",@NO,@YES]}});
   Check([syntax.keyEquivalent isEqual:@"y"] && [expl.keyEquivalent isEqual:@"x"],@"the former titles reach Syntax Highlighting and Highlight expl3 Code");
+  // Source › Highlight Index Entries is new in 6.00, right after Highlight expl3 Code: positions saved before skip it,
+  // so the position of Highlight Current Line still reaches it; the title reaches the new item.
+  NSMenuItem *index=Item(source.submenu,@"Highlight Index Entries");index.identifier=@"TSShortcut.toggleIndexColor:.0";
+  NSMenuItem *line=Item(source.submenu,@"Highlight Current Line");line.identifier=@"TSShortcut.toggleSyntaxColorEntry:.14";
+  Apply(main,@{@"1":@{@"3":@[@"3",@NO,@YES],@"4":@[@"4",@NO,@YES]}});
+  Check([expl.keyEquivalent isEqual:@"3"] && [line.keyEquivalent isEqual:@"4"] && [index.keyEquivalent isEqual:@""],@"positions skip Highlight Index Entries, added in 6.00");
+  Apply(main,@{@"Source":@{@"Highlight Index Entries":@[@"i",@NO,@YES]}});
+  Check([index.keyEquivalent isEqual:@"i"],@"the title reaches Highlight Index Entries");
  }
  // Edit › Find: only the English menu had Find and Replace… before 6.00. Positions saved for another language's menu
  // skip it, which that menu now has after Find…; the English positions count it, as before. Titles reach it in both.
@@ -291,5 +299,5 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(checkedWindows>=10,@"Window menu positions are checked in most languages");
   printf("PASS: Window menu positions of 5.58 keep the place of Fullscreen (Old Method) in %lu languages\n",(unsigned long)checkedWindows);
  }
- puts("PASS: Show Status Bar skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
+ puts("PASS: Show Status Bar and Highlight Index Entries skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}
