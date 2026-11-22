@@ -795,6 +795,12 @@
                                     <action selector="toggleExplColor:" target="-1" id="lnh-uA-TUu"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Evidenzia le voci dell'indice" id="gCW-wD-llJ" identifier="TSShortcut.toggleIndexColor:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleIndexColor:" target="-1" id="tWR-6z-qlI"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Evidenzia la linea corrente" tag="14" id="EvI-8n-QGc" identifier="TSShortcut.toggleSyntaxColorEntry:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

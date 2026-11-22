@@ -122,10 +122,6 @@ tiLabelSearchKIT				= "Caută în PDF";
 tiPaletteLabelSearchKIT         = "Caută în PDF";
 tiToolTipSearchKIT				= "Caută în PDF";
 
-tiLabelColorIndex				= "Index culori";
-tiPaletteLabelColorIndex		= "Index de culori";
-tiToolTipColorIndex				= "Comenzi pentru indexul de culori";
-
 tiLabelTypesetKIT				= "Compilare";
 tiPaletteLabelTypesetKIT		= "Compilare";
 tiToolTipTypesetKIT				= "Rulați programul de tehnoredactare";
@@ -208,10 +204,6 @@ tiToolTipGotoPageSplit          = "Accesați pagina";
 tiLabelMagnificationSplit		= "Mărire";
 tiPaletteLabelMagnificationSplit   = "Mărire";
 tiToolTipMagnificationSplit     = "Stabiliți mărirea paginii";
-
-tiLabelColorIndexSplit			= "Index culori";
-tiPaletteLabelColorIndexSplit     = "Index culori";
-tiToolTipColorIndexSplit          = "Comenzi pentru indexul de culori";
 
 tiLabelAutoCompleteSplit		= "Completare Automată";
 tiPaletteLabelAutoCompleteSplit   = "Completare Automată";

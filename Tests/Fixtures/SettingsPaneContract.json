@@ -1090,6 +1090,13 @@
         "value": "syntaxColorLinePressed:"
       },
       {
+        "key": "index-highlight-button.action",
+        "view": "settings.index-highlight-button",
+        "kind": "view",
+        "property": "action",
+        "value": "indexColorStartChanged:"
+      },
+      {
         "key": "fullwidth-highlight-button.action",
         "view": "settings.fullwidth-highlight-button",
         "kind": "view",
@@ -3430,6 +3437,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
         },
         {
           "key": "fullwidth-highlight-cell.title",
@@ -6195,6 +6209,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
+        },
+        {
           "key": "fullwidth-highlight-cell.title",
           "view": "settings.fullwidth-highlight-button",
           "kind": "cell",
@@ -8956,6 +8977,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
         },
         {
           "key": "fullwidth-highlight-cell.title",
@@ -11721,6 +11749,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
+        },
+        {
           "key": "fullwidth-highlight-cell.title",
           "view": "settings.fullwidth-highlight-button",
           "kind": "cell",
@@ -14482,6 +14517,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
         },
         {
           "key": "fullwidth-highlight-cell.title",
@@ -17247,6 +17289,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
+        },
+        {
           "key": "fullwidth-highlight-cell.title",
           "view": "settings.fullwidth-highlight-button",
           "kind": "cell",
@@ -20008,6 +20057,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
         },
         {
           "key": "fullwidth-highlight-cell.title",
@@ -22773,6 +22829,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
+        },
+        {
           "key": "fullwidth-highlight-cell.title",
           "view": "settings.fullwidth-highlight-button",
           "kind": "cell",
@@ -25534,6 +25597,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
         },
         {
           "key": "fullwidth-highlight-cell.title",
@@ -28299,6 +28369,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
+        },
+        {
           "key": "fullwidth-highlight-cell.title",
           "view": "settings.fullwidth-highlight-button",
           "kind": "cell",
@@ -31062,6 +31139,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
+        },
+        {
           "key": "fullwidth-highlight-cell.title",
           "view": "settings.fullwidth-highlight-button",
           "kind": "cell",
@@ -33823,6 +33907,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "index-highlight-cell.title",
+          "view": "settings.index-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Index Entries by Default"
         },
         {
           "key": "fullwidth-highlight-cell.title",

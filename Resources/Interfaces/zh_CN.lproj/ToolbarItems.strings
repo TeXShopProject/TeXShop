@@ -3,7 +3,6 @@
     tiLabelBackForthKIT = "返回/前进";
     tiLabelBackForthKITSplit = "返回/前进";
     tiLabelBibTeX = BibTeX;
-    tiLabelColorIndex = "索引着色";
     tiLabelConTeX = ConTeXt;
     tiLabelDrawerKIT = "\U8f85\U52a9\U9762\U677f";
     tiLabelGotoPage = "\U8f6c\U5230\U9875";
@@ -44,7 +43,6 @@
     tiPaletteLabelBackForthKIT = "返回/前进";
     tiPaletteLabelBackForthKITSplit = "返回/前进";
     tiPaletteLabelBibTeX = BibTeX;
-    tiPaletteLabelColorIndex = "索引着色";
     tiPaletteLabelConTeX = ConTeXt;
     tiPaletteLabelDrawerKIT = "\U8f85\U52a9\U9762\U677f";
     tiPaletteLabelGotoPage = "\U8f6c\U5230\U9875";
@@ -87,7 +85,6 @@
     tiBack = "返回";
     tiForward = "前进";
     tiToolTipBibTeX = "\U8fd0\U884cBibTeX";
-    tiToolTipColorIndex = "为索引命令着色";
     tiToolTipConTeX = "\U8fd0\U884cConTeXt";
     tiToolTipDrawerKIT = "\U5207\U6362\U8f85\U52a9\U9762\U677f";
     tiToolTipGotoPage = "\U8f6c\U5230\U9875";
@@ -230,10 +227,7 @@
 "Applies when displaying two pages" = "显示双页时适用";
 "Continuous" = "多页";
 "Right to left" = "从右到左";
-"tiToolTipColorIndexSplit" = "为索引命令着色";
 "Show first page alone as cover" = "将第一页单独显示为封面";
 
-"tiLabelColorIndexSplit" = "索引着色";
-"tiPaletteLabelColorIndexSplit" = "索引着色";
 "tiToolTipUnsplit" = "取消窗口分割";
 "tiToolTipUnsplitKIT" = "取消窗口分割";

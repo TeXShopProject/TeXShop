@@ -90,6 +90,8 @@
 "group.editor.3.title" = "Destaque de sintaxe";
 "catalog.editor.3.0.title" = "@ faz parte dos comandos";
 "catalog.editor.3.1.title" = "Destacar o código expl3 por padrão";
+"catalog.editor.3.3.title" = "Destacar as entradas do índice por padrão";
+"catalog.editor.3.3.former" = "Índice de cores";
 "catalog.editor.3.2.title" = "Destacar letras e símbolos de largura total";
 "group.editor.4.title" = "Correspondência de parênteses";
 "catalog.editor.4.0.title" = "Equilibrar parênteses";

@@ -118,10 +118,6 @@ tiLabelSyncMarks			= "Syncpunten";
 tiPaletteLabelSyncMarks			= "Synchronisatiepunten";
 tiToolTipSyncMarks			= "Toon synchronisatiepunten";
 
-tiLabelColorIndex				= "Kleurindex";
-tiPaletteLabelColorIndex		= "Kleurindex";
-tiToolTipColorIndex				= "Kleur de indexcommando's";
-
 tiLabelTypesetKIT				= "Zet";
 tiPaletteLabelTypesetKIT		= "Zet";
 tiToolTipTypesetKIT				= "Voer zetprogramma uit";
@@ -208,10 +204,6 @@ tiToolTipGotoPageSplit          = "Ga naar pagina";
 tiLabelMagnificationSplit		= "Vergroting";
 tiPaletteLabelMagnificationSplit   = "Vergroting";
 tiToolTipMagnificationSplit     = "Stel vergroting in";
-
-tiLabelColorIndexSplit			= "Kleurindex";
-tiPaletteLabelColorIndexSplit     = "Kleurindex";
-tiToolTipColorIndexSplit          = "Kleur de indexcommando's";
 
 tiLabelAutoCompleteSplit		= "Automatisch aanvullen";
 tiPaletteLabelAutoCompleteSplit   = "Automatisch aanvullen";

@@ -79,8 +79,8 @@ DOCUMENT_METHODS = [
     '- (IBAction)toggleSyntaxColorEntry:sender {', '- (IBAction)toggleBlockCursor:sender {',
     '- (void) applyInvisibleCharactersShowing', '- (void) showHideInvisibleCharacters: sender',
     '- (void) showHideLineNumbers: sender', '- (void)setDocumentFontFromPreferences:(NSNotification *)notification',
-    '- (void)fixUpTabs {', '- (void)setLineBreakMode:(id)sender', '- (void) flipIndexColor: (NSInteger)state',
-    '- (void) showIndexColor: sender', '- (BOOL)indexColorState',
+    '- (void)fixUpTabs {', '- (void)setLineBreakMode:(id)sender', '- (IBAction)toggleIndexColor:sender {',
+    '- (BOOL)indexColorState',
     '- (void)resetHighlight:(id)sender', '- (void)showIndicator:(NSString*)range', '- (void)resetBackgroundColor:(id)sender',
     '- (void)resetBackgroundColorOfTextView:(id)sender', '- (void)highlightContent:(NSString*)range',
     '- (void)highlightBracesAt:(NSArray*)locations',
@@ -213,7 +213,6 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
     NSTextView *textView1, *textView2, *scrapTextView, *textView;
     NSScrollView *scrollView, *scrollView2;
     NSWindow *textWindow;
-    NSButton *indexColorSplitBox;
 }
 @property (strong) NSDictionary *EntryColorAttribute, *commandColorAttribute, *commentColorAttribute,
     *explColorAttribute1, *explColorAttribute2, *explColorAttribute3, *explColorAttribute4, *explColorAttribute5,
@@ -226,7 +225,6 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 @property (strong) NSTextView *textView;
 @property (strong) NSScrollView *logScrollView;
 @property (strong) NoodleLineNumberView *lineNumberView1, *lineNumberView2, *logLineNumberView;
-@property (strong) NSButton *indexColorBox;
 - (BOOL)indexColorState;
 - (void)setupTagsAndLabelsAfterLoading;
 - (void)setupTags;
@@ -257,8 +255,7 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 - (void)applyInvisibleCharactersShowing;
 - (void)showHideInvisibleCharacters:(id)sender;
 - (void)showHideLineNumbers:(id)sender;
-- (void)flipIndexColor:(NSInteger)state;
-- (void)showIndexColor:(id)sender;
+- (IBAction)toggleIndexColor:(id)sender;
 - (IBAction)toggleSyntaxColorEntry:(id)sender;
 - (IBAction)toggleBlockCursor:(id)sender;
 - (IBAction)toggleXML:(id)sender;

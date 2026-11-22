@@ -792,6 +792,12 @@
                                     <action selector="toggleExplColor:" target="-1" id="1cU-Vb-wfE"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Highlight Index Entries" id="KGp-Oy-QNc" identifier="TSShortcut.toggleIndexColor:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleIndexColor:" target="-1" id="dOy-Zb-kBF"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Highlight Current Line" tag="14" id="Z8G-Qf-KjP" identifier="TSShortcut.toggleSyntaxColorEntry:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

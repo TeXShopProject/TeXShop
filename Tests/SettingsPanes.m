@@ -202,7 +202,8 @@ int main(int argc, const char **argv) { @autoreleasepool {
     // -dALLOWPSTRANSPARENCY were removed; the arrow keys switch of Preview and the Advanced Find panel switch
     // of Editor were added; Save related files was removed; Highlight Fullwidth Letters and Symbols of Editor was added;
     // the menu of the theme to edit and the theme name sheet (its panel and field) gave way to the theme list;
-    // Keep magnification, display format and split when entering full screen and Show page number in link popups of Preview were added.
-    Check(outlets == 170, @"Every typed outlet loads");
-    puts("PASS: 11 panes and 170 typed outlets");
+    // Keep magnification, display format and split when entering full screen and Show page number in link popups of Preview were added;
+    // Highlight Index Entries by Default of Editor was added.
+    Check(outlets == 171, @"Every typed outlet loads");
+    puts("PASS: 11 panes and 171 typed outlets");
 } return 0; }

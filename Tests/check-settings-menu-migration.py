@@ -4,8 +4,9 @@ from pathlib import Path
 import hashlib,json,xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[1]
 removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
-# Commands added to the Edit menu later (Copy with Style in 6.00 beta 8), and Source > Show Status Bar (6.00); they are outside the fixed contract.
-added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:','toggleStatusBar:',
+# Commands added to the Edit menu later (Copy with Style in 6.00 beta 8), and Source > Show Status Bar and
+# Source > Highlight Index Entries (6.00); they are outside the fixed contract.
+added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:','toggleStatusBar:','toggleIndexColor:',
        'copyWithLightTheme:','copyWithLightThemeAndBackground:','copyWithDarkTheme:','copyWithDarkThemeAndBackground:'}
 # Fit to Content Width (tag 6 of the magnifications) and the zooms to the content width joined Preview > Magnification in 6.00.
 added_items={('zoomToContentWidth:','0'),('zoomToContent:','0'),('changePDFViewSize:','6')}

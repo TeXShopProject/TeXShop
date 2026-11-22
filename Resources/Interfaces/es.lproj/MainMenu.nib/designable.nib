@@ -795,6 +795,12 @@
                                     <action selector="toggleExplColor:" target="-1" id="Okq-HD-lHp"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Resaltar las entradas del índice" id="svi-34-zWH" identifier="TSShortcut.toggleIndexColor:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleIndexColor:" target="-1" id="8xM-S9-BMo"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Resaltar línea actual" tag="14" id="q2U-4o-LjN" identifier="TSShortcut.toggleSyntaxColorEntry:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

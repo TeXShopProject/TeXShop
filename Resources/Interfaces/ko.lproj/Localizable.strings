@@ -66,7 +66,6 @@
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "이 버전의 TeXShop을 사용하려면 Mac OS X 10.4 이상이 필요합니다. 대신 TeXShop 1.37을 사용하십시오.";
 "Hard Wrap" = "행나눔 삽입";
 "Newline Removal" = "줄바꿈 제거";
-"Color Index" = "색인 색상";
 "Help" = "도움말";
 "Sync" = "동기화";
 "ShowFullPath" = "전체경로 표시";

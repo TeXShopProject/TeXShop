@@ -28,6 +28,8 @@ MUTATIONS = {
     # Nothing is copied.
     'never': ('            [fileManager copyItemAtPath:bundledEngine toPath:htmlEngine error:NULL];', '            ;'),
     # The previous version is read after it was overwritten with the current one.
+    # The page of Inactive links to history.html again, which a case-sensitive volume does not find.
+    'lowercase-link': ('Resources/TeXShop/HTML/Inactive/InitialVersion/Help.html', 'HREF="History.html"', 'HREF="history.html"'),
     'version-late': ('	NSString *libraryVersion = TSLibraryVersionInFolder(NewPath);\n', '	NSString *libraryVersion = currentVersion;\n'),
 }
 
@@ -70,21 +72,23 @@ class Tags(html.parser.HTMLParser):
         self.tags.append((tag, attrs))
 
 
-def check_help_page():
+def check_help_page(overrides=None):
     """Help.html of HTML Commands, and the copy in HTML/Inactive/InitialVersion that TeXShop also
     gives users, no longer point to the removed Help > TeXShop Demos movies or embed a video, are not
     signed as Richard Koch's page, link only to files beside them, and show img with real
     attributes (alt text, no misspelled ones a browser drops)."""
     for folder in ('Resources/TeXShop/HTML', 'Resources/TeXShop/HTML/Inactive/InitialVersion'):
         name = folder + '/Help.html'
-        page = (root / name).read_text(encoding='utf-8')
+        page = (overrides or {}).get(name) or (root / name).read_text(encoding='utf-8')
         for word in ('TeXShop Demos', '<video', '<iframe', 'Getting Started.mp4', 'University of Oregon'):
             if word in page:
                 return name + ' still contains ' + word
         if '% !TEX TS-program = html' not in page:
             return name + ' must still be typeset with html.engine'
+        # Compare with the names in the folder, letter case too: a case-sensitive volume finds nothing else.
+        names = {p.name for p in (root / folder).iterdir()}
         for link in re.findall(r'(?i)(?:href|src)="([^":]+)"', page):
-            if not (root / folder / link).exists():
+            if link not in names:
                 return name + ' links to a missing file: ' + link
         parser = Tags()
         parser.feed(page)
@@ -99,7 +103,15 @@ def check_help_page():
 
 
 def run(mutation=None):
-    problem = check_help_page()
+    overrides = {}
+    if mutation and len(MUTATIONS[mutation]) == 3:
+        path, old, new = MUTATIONS[mutation]
+        page = (root / path).read_text(encoding='utf-8')
+        if page.count(old) != 1:
+            return 'mutation target must be unique: ' + mutation
+        overrides[path] = page.replace(old, new)
+        mutation = None
+    problem = check_help_page(overrides)
     if problem:
         return problem
     text = source_file(root, 'TSAppDelegate.m').read_text(encoding='utf-8')

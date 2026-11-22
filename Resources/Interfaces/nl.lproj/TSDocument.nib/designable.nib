@@ -27,8 +27,6 @@
                 <outlet property="htmlViewContainer" destination="khd-Qx-pgv" id="cvx-HY-GgS"/>
                 <outlet property="htmlWindow" destination="bDj-No-YCO" id="fW2-vB-L8I"/>
                 <outlet property="iLog" destination="iTL-2M-tAA" id="W8P-Zc-PUD"/>
-                <outlet property="indexColorBox" destination="923" id="924"/>
-                <outlet property="indexColorSplitBox" destination="qYp-2D-7n2" id="9fp-BL-3cd"/>
                 <outlet property="labels" destination="Wgs-fL-Icc" id="y61-Ha-Zl5"/>
                 <outlet property="leftView" destination="pHh-xY-0Fm" id="gdA-UZ-0Cr"/>
                 <outlet property="lineBox" destination="217" id="221"/>
@@ -558,17 +556,6 @@ DQ
             <rect key="frame" x="0.0" y="0.0" width="964" height="224"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="923">
-                    <rect key="frame" x="485" y="62" width="92" height="18"/>
-                    <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Kleurindex" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3870">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="showIndexColor:" target="-2" id="925"/>
-                    </connections>
-                </button>
                 <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="782">
                     <rect key="frame" x="773" y="54" width="39" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
@@ -1179,17 +1166,6 @@ DQ
                     </view>
                     <font key="titleFont" metaFont="system"/>
                 </box>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qYp-2D-7n2">
-                    <rect key="frame" x="15" y="23" width="92" height="18"/>
-                    <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Kleurindex" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2L3-if-tnw">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="showIndexColor:" target="-2" id="Dbg-Tz-Dmt"/>
-                    </connections>
-                </button>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YEd-13-bgC">
                     <rect key="frame" x="121" y="23" width="165" height="24"/>
                     <autoresizingMask key="autoresizingMask"/>
