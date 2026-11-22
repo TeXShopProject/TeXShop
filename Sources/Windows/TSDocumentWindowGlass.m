@@ -120,6 +120,11 @@ void TSDocumentWindowPrepare(NSWindow *window)
     dispatch_once(&once, ^{
         [NSNotificationCenter.defaultCenter addObserverForName:NSDrawerWillOpenNotification object:nil queue:nil
                                                     usingBlock:^(NSNotification *notification) { TSDrawerWillOpen(notification); }];
+        // A drawer left open while the window goes into or out of full screen keeps its place
+        // otherwise: out of full screen it would stay at the top, beside the rounded corner (#67).
+        for (NSNotificationName name in @[NSWindowDidEnterFullScreenNotification, NSWindowDidExitFullScreenNotification])
+            [NSNotificationCenter.defaultCenter addObserverForName:name object:nil queue:nil
+                                                        usingBlock:^(NSNotification *notification) { TSDocumentWindowPlaceDrawers(notification.object); }];
     });
     if (TSDocumentWindowsUseFullSizeContent() && !(window.styleMask & NSWindowStyleMaskFullSizeContentView)) {
         // AppKit keeps the content size and makes the window lower by the height of the title

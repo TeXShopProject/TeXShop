@@ -23,9 +23,9 @@ BOOL TSDocumentWindowsUseFullSizeContent(void);
 void TSDocumentWindowPrepare(NSWindow * _Nullable window);
 
 // Places the open drawers of a document window again after the band under its toolbar
-// changed height, as when the annotation toolbar is shown or hidden: a drawer never starts
-// above that band where the band is lower than the rounding of the window's corner, as in
-// full screen.
+// changed height, as when the annotation toolbar is shown or hidden; the window does this
+// itself when it goes into or out of full screen. A drawer never starts above that band
+// where the band is lower than the rounding of the window's corner, as in full screen.
 void TSDocumentWindowPlaceDrawers(NSWindow * _Nullable window);
 
 // The height of the band at the top of a view that lies under the title bar and the
