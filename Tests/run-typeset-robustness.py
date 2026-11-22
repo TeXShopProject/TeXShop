@@ -101,6 +101,7 @@ pieces = {
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import "TSPreferenceInput.h"
+#import "TSTexdocReport.h"
 #import <objc/runtime.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -180,6 +181,8 @@ static int probe_kill(pid_t pid, int sig) {
 @property (strong) NSTask *texTask, *bibTask, *indexTask, *metaFontTask;
 @property (strong) NSPipe *outputPipe, *inputPipe;
 @property (copy) NSString *helpEnginePath, *helpPATH;
+@property (copy) NSArray *helpAlert;
+- (void)showTexdocAlert:(NSArray *)texts;
 - (NSDictionary *)environmentForSubTask;
 - (void)checkATaskStatusFromTerminationRoutine:(id)task;
 - (void)fixMacroMenu;
@@ -188,6 +191,7 @@ static int probe_kill(pid_t pid, int sig) {
 @implementation Probe
 - (void)checkATaskStatusFromTerminationRoutine:(id)task { }
 - (void)fixMacroMenu { }
+- (void)showTexdocAlert:(NSArray *)texts { self.helpAlert = texts; }
 ENVIRONMENT
 SCRAP_ENVIRONMENT
 - (void)helpPathFor:(id)unused
@@ -197,6 +201,7 @@ SCRAP_ENVIRONMENT
     __unused NSString *binPath = nil;
     self.helpEnginePath = nil;
     self.helpPATH = nil;
+    self.helpAlert = nil;
 HELP_PATH
     self.helpEnginePath = enginePath;
     self.helpPATH = [env objectForKey:@"PATH"];
@@ -300,13 +305,24 @@ int main(int argc, char **argv) {
         CHECK(([NSString stringWithFormat:@"package help PATH %@, TeX bin path unset", label]), {
             [probePreferences.values removeAllObjects];
             [p helpPathFor:nil];
-            ok = (p.helpEnginePath == nil);
+            ok = (p.helpEnginePath == nil) && p.helpAlert.count > 0;
         });
-        CHECK(([NSString stringWithFormat:@"package help PATH %@, TeX bin path set", label]), {
-            probePreferences.values[TetexBinPath] = @"/Library/TeX/texbin";
+        // A folder without a texdoc that can run: TeXShop says so instead of running it.
+        NSString *texdocFolder = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"texdoc-%d", getpid()]];
+        [[NSFileManager defaultManager] createDirectoryAtPath:texdocFolder withIntermediateDirectories:YES attributes:nil error:NULL];
+        CHECK(([NSString stringWithFormat:@"package help PATH %@, no texdoc in the TeX bin path", label]), {
+            probePreferences.values[TetexBinPath] = texdocFolder;
             [p helpPathFor:nil];
-            ok = [p.helpEnginePath isEqualToString:@"/Library/TeX/texbin/texdoc"]
-                && [p.helpPATH isEqualToString:[base stringByAppendingString:@":/Library/TeX/texbin"]];
+            ok = (p.helpEnginePath == nil) && p.helpAlert.count > 0;
+        });
+        [[NSFileManager defaultManager] createFileAtPath:[texdocFolder stringByAppendingPathComponent:@"texdoc"] contents:[@"#!/bin/sh\n" dataUsingEncoding:NSUTF8StringEncoding]
+                                              attributes:@{NSFilePosixPermissions: @0755}];
+        CHECK(([NSString stringWithFormat:@"package help PATH %@, TeX bin path set", label]), {
+            // texdoc's folder comes first, so that the texlua of the same TeX runs it.
+            probePreferences.values[TetexBinPath] = texdocFolder;
+            [p helpPathFor:nil];
+            ok = [p.helpEnginePath isEqualToString:[texdocFolder stringByAppendingPathComponent:@"texdoc"]] && p.helpAlert == nil
+                && [p.helpPATH isEqualToString:[texdocFolder stringByAppendingFormat:@":%@", base]];
         });
 
         if (envPath) {
