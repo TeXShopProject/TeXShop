@@ -792,9 +792,6 @@ enum RootCommand
 @property (weak, readonly) NSTextView *reverseSyncTextView;
 // The color of the selection in the source (the theme's, or the system's: TSColorSupport), set with the theme's colors.
 @property (strong) NSColor *sourceSelectionColor;
-- (void) applySourceSelectionColorToTextView: (NSTextView *)aTextView;
-// Gives the view the reverse sync marked its selection color again.
-- (void) endReverseSyncSelection;
 - (void) saveSourcePosition;
 - (void) savePreviewPosition;
 - (void) savePortableSourcePosition;
@@ -1123,6 +1120,9 @@ enum RootCommand
 @interface TSDocument (Color)
 
 - (void) changeColors:(BOOL)toDark;
+- (void) applySourceSelectionColorToTextView: (NSTextView *)aTextView;
+// Gives the view the reverse sync marked its selection color again.
+- (void) endReverseSyncSelection;
 - (void) changeColorsUsingDictionary: (NSDictionary *)colorDictionary;
 - (void) changeColorsFromNotification:(NSNotification *)notification;
 @end
