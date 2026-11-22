@@ -379,7 +379,8 @@
  },
  "shared": {
   "de": [
-   "Variante"
+   "Variante",
+   "Operatoren"
   ],
   "es": [
    "Variante"
@@ -396,12 +397,15 @@
    "Pag.",
    "Pagina",
    "Variante",
-   "Pagina %@"
+   "Pagina %@",
+   "Delimitatori",
+   "Operatori"
   ],
   "nl": [
    "Extensie:",
    "Pagina %@",
-   "Pop-up"
+   "Pop-up",
+   "Operatoren"
   ],
   "pt-PT": [
    "Formato:",
@@ -420,7 +424,9 @@
    "Principal:",
    "Texte",
    "Pagina %@",
-   "Pop-up"
+   "Pop-up",
+   "Delimitatori",
+   "Operatori"
   ]
  },
  "pending": {}
