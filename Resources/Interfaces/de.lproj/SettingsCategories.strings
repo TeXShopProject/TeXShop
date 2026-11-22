@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "Vergrößerung, PDF-Darstellung und Teilung beim Wechsel ins Vollbild beibehalten";
 "catalog.preview.1.0.title" = "Seitenrichtung";
 "catalog.preview.1.1.title" = "Erste Seite einzeln als Deckblatt anzeigen";
-"catalog.preview.1.2.title" = "Für „Seitenrichtung“ und „Erste Seite einzeln als Deckblatt anzeigen“ haben magische Kommentare und die Leserichtung im PDF Vorrang.";
+"catalog.preview.1.2.title" = "Für „Seitenrichtung“ und „Erste Seite einzeln als Deckblatt anzeigen“ haben magische Kommentare Vorrang, für „Seitenrichtung“ auch die Leserichtung im PDF.";
 "group.preview.2.title" = "Aktualisierung";
 "catalog.preview.2.0.title" = "PDF-Änderungen durch andere Apps ständig überwachen";
 "catalog.preview.2.0.note" = "Die Vorschau sofort neu laden, wenn ein externer Editor, latexmk oder eine andere App das PDF neu schreibt, auch wenn TeXShop im Hintergrund ist.";

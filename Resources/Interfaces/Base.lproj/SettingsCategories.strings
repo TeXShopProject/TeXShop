@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "Keep magnification, display format and split when entering full screen";
 "catalog.preview.1.0.title" = "Page direction";
 "catalog.preview.1.1.title" = "Show first page alone as cover";
-"catalog.preview.1.2.title" = "For “Page direction” and “Show first page alone as cover”, magic comments and the PDF’s viewing direction take precedence.";
+"catalog.preview.1.2.title" = "For “Page direction” and “Show first page alone as cover”, magic comments take precedence; for “Page direction”, so does the PDF’s viewing direction.";
 "group.preview.2.title" = "Refresh";
 "catalog.preview.2.0.title" = "Always Watch for PDF Changes by Other Apps";
 "catalog.preview.2.0.note" = "Reload the preview as soon as an external editor, latexmk or another app rewrites the PDF, even while TeXShop is in the background.";

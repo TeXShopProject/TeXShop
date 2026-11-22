@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "Mantieni ingrandimento, vista documento e divisione passando a tutto schermo";
 "catalog.preview.1.0.title" = "Direzione delle pagine";
 "catalog.preview.1.1.title" = "Mostra la prima pagina da sola come copertina";
-"catalog.preview.1.2.title" = "Per «Direzione delle pagine» e «Mostra la prima pagina da sola come copertina» hanno precedenza i commenti magici e la direzione di lettura del PDF.";
+"catalog.preview.1.2.title" = "Per «Direzione delle pagine» e «Mostra la prima pagina da sola come copertina» hanno precedenza i commenti magici; per «Direzione delle pagine», anche la direzione di lettura del PDF.";
 "group.preview.2.title" = "Aggiornamento";
 "catalog.preview.2.0.title" = "Controlla sempre le modifiche al PDF fatte da altre app";
 "catalog.preview.2.0.note" = "Ricaricare l’anteprima appena un editor esterno, latexmk o un’altra app riscrive il PDF, anche con TeXShop in secondo piano.";

@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "전체 화면 시작 시 배율, 보기 형식, 분할 상태 유지";
 "catalog.preview.1.0.title" = "페이지 방향";
 "catalog.preview.1.1.title" = "첫 페이지를 표지로 따로 표시";
-"catalog.preview.1.2.title" = "‘페이지 방향’과 ‘첫 페이지를 표지로 따로 표시’는 매직 주석과 PDF의 보기 방향이 우선합니다.";
+"catalog.preview.1.2.title" = "‘페이지 방향’과 ‘첫 페이지를 표지로 따로 표시’는 매직 주석이 우선합니다. ‘페이지 방향’은 PDF의 보기 방향도 우선합니다.";
 "group.preview.2.title" = "새로 고침";
 "catalog.preview.2.0.title" = "다른 앱의 PDF 변경을 항상 감시";
 "catalog.preview.2.0.note" = "외부 편집기나 latexmk 등이 PDF를 다시 쓰면 TeXShop이 뒤에 있을 때도 바로 보기 창을 다시 불러옵니다.";

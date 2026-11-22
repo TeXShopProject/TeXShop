@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "Vergroting, weergavetype en splitsing behouden bij overschakelen naar schermvullende weergave";
 "catalog.preview.1.0.title" = "Paginarichting";
 "catalog.preview.1.1.title" = "Eerste pagina apart als omslag tonen";
-"catalog.preview.1.2.title" = "Voor ‘Paginarichting’ en ‘Eerste pagina apart als omslag tonen’ hebben magische commentaarregels en de weergaverichting van de pdf voorrang.";
+"catalog.preview.1.2.title" = "Voor ‘Paginarichting’ en ‘Eerste pagina apart als omslag tonen’ hebben magische commentaarregels voorrang, voor ‘Paginarichting’ ook de weergaverichting van de pdf.";
 "group.preview.2.title" = "Vernieuwen";
 "catalog.preview.2.0.title" = "Pdf-wijzigingen door andere apps altijd volgen";
 "catalog.preview.2.0.note" = "De voorvertoning direct opnieuw laden wanneer een externe editor, latexmk of een andere app de pdf herschrijft, ook als TeXShop op de achtergrond staat.";

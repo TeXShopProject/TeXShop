@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "Păstrează mărirea, formatul de afișare și scindarea la trecerea pe tot ecranul";
 "catalog.preview.1.0.title" = "Direcția paginilor";
 "catalog.preview.1.1.title" = "Arată prima pagină separat, ca o copertă";
-"catalog.preview.1.2.title" = "Pentru „Direcția paginilor” și „Arată prima pagină separat, ca o copertă”, comentariile speciale și direcția de vizualizare a PDF-ului au prioritate.";
+"catalog.preview.1.2.title" = "Pentru „Direcția paginilor” și „Arată prima pagină separat, ca o copertă”, comentariile speciale au prioritate; pentru „Direcția paginilor”, și direcția de vizualizare a PDF-ului.";
 "group.preview.2.title" = "Actualizare";
 "catalog.preview.2.0.title" = "Urmărește permanent modificările PDF-ului făcute de alte aplicații";
 "catalog.preview.2.0.note" = "Reîncarcă imediat previzualizarea când un editor extern, latexmk sau altă aplicație rescrie PDF-ul, chiar dacă TeXShop este în fundal.";

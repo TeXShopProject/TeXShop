@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "フルスクリーンにするとき、倍率・ページレイアウト・分割状態を保つ";
 "catalog.preview.1.0.title" = "ページの方向";
 "catalog.preview.1.1.title" = "先頭ページを表紙として単独表示";
-"catalog.preview.1.2.title" = "「ページの方向」と「先頭ページを表紙として単独表示」は、マジックコメントと、PDF内の表示方向が優先されます。";
+"catalog.preview.1.2.title" = "「ページの方向」と「先頭ページを表紙として単独表示」は、マジックコメントが優先されます。「ページの方向」は、PDF内の表示方向も優先されます。";
 "group.preview.2.title" = "更新";
 "catalog.preview.2.0.title" = "ほかのアプリによるPDFの変更を常に監視";
 "catalog.preview.2.0.note" = "外部エディタやlatexmkなどでPDFが書き換えられたら、TeXShopが後ろにあるときもすぐにプレビューを読み直します。";

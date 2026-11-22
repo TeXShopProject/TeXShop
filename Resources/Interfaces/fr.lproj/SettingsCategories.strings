@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "Conserver l’agrandissement, le format d’affichage et la division en passant en plein écran";
 "catalog.preview.1.0.title" = "Sens des pages";
 "catalog.preview.1.1.title" = "Afficher la première page seule comme couverture";
-"catalog.preview.1.2.title" = "Pour « Sens des pages » et « Afficher la première page seule comme couverture », les commentaires magiques et le sens de lecture du PDF sont prioritaires.";
+"catalog.preview.1.2.title" = "Pour « Sens des pages » et « Afficher la première page seule comme couverture », les commentaires magiques sont prioritaires ; pour « Sens des pages », le sens de lecture du PDF l’est aussi.";
 "group.preview.2.title" = "Actualisation";
 "catalog.preview.2.0.title" = "Toujours surveiller les modifications du PDF par d’autres apps";
 "catalog.preview.2.0.note" = "Recharger l’aperçu dès qu’un éditeur externe, latexmk ou une autre app réécrit le PDF, même quand TeXShop est en arrière-plan.";

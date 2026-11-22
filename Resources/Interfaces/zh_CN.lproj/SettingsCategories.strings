@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "进入全屏幕时保持放大、页面格式和分割状态";
 "catalog.preview.1.0.title" = "页面方向";
 "catalog.preview.1.1.title" = "将第一页单独显示为封面";
-"catalog.preview.1.2.title" = "“页面方向”和“将第一页单独显示为封面”以特殊注释和PDF的查看方向优先。";
+"catalog.preview.1.2.title" = "“页面方向”和“将第一页单独显示为封面”以特殊注释优先；“页面方向”还以PDF的查看方向优先。";
 "group.preview.2.title" = "刷新";
 "catalog.preview.2.0.title" = "始终监视其他应用对PDF的更改";
 "catalog.preview.2.0.note" = "外部编辑器、latexmk或其他应用改写PDF时，即使TeXShop在后台也立即重新载入预览。";

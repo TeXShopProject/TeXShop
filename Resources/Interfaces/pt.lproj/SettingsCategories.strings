@@ -237,7 +237,7 @@
 "catalog.preview.0.7.title" = "Manter a ampliação, o formato de visualização e a divisão ao entrar em tela cheia";
 "catalog.preview.1.0.title" = "Direção das páginas";
 "catalog.preview.1.1.title" = "Mostrar a primeira página sozinha como capa";
-"catalog.preview.1.2.title" = "Em “Direção das páginas” e “Mostrar a primeira página sozinha como capa”, os comentários especiais e a direção de exibição do PDF têm prioridade.";
+"catalog.preview.1.2.title" = "Em “Direção das páginas” e “Mostrar a primeira página sozinha como capa”, os comentários especiais têm prioridade; em “Direção das páginas”, também a direção de exibição do PDF.";
 "group.preview.2.title" = "Atualização";
 "catalog.preview.2.0.title" = "Sempre monitorar alterações no PDF feitas por outros apps";
 "catalog.preview.2.0.note" = "Recarregar a pré-visualização assim que um editor externo, o latexmk ou outro app regrava o PDF, mesmo com o TeXShop em segundo plano.";
