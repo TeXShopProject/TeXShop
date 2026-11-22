@@ -192,6 +192,7 @@
         ]],
         @"settings.024-V2-dVf": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.preview-link-popups-button"] kind:TSSettingsRowControls indentation:0], // linkPopupsButton
+            [TSSettingsLayoutRow controls:@[@"settings.preview-link-popup-page-label-button"] kind:TSSettingsRowControls indentation:1], // linkPopupPageLabelButton
             [TSSettingsLayoutRow controls:@[@"settings.preview-scroll-page-turn-button"] kind:TSSettingsRowControls indentation:0], // scrollPageTurnButton
             [TSSettingsLayoutRow controls:@[@"settings.preview-arrow-keys-page-button"] kind:TSSettingsRowControls indentation:0], // arrowKeysPageButton
             [TSSettingsLayoutRow controls:@[@"settings.preview-full-screen-keeps-display-button"] kind:TSSettingsRowControls indentation:0], // fullScreenKeepsDisplayButton

@@ -44,6 +44,7 @@ static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
 #define LinkPopupsKey @"LinkPopups"
 #define LeftRightArrowsAlwaysPageKey @"LeftRightArrowsAlwaysPage"
 #define KeepPreviewDisplayInFullScreenKey @"KeepPreviewDisplayInFullScreen"
+#define LinkPopupPageLabelKey @"LinkPopupPageLabel"
 #define PdfFirstPageStyleKey @"PdfFirstPageStyle"
 #define PdfMagnificationKey @"PdfMagnification"
 #define PDF_MAX_SCALE 10000
@@ -122,7 +123,7 @@ PARSE
 - (BOOL)setFrameAutosaveName:(NSString *)name { return NO; }
 - (void)saveFrameUsingName:(NSString *)name {}
 @end
-@interface TSPreferences : NSObject { @public NSButton *_displayAsBookButton; NSButton *_linkPopupsButton; NSButton *_arrowKeysPageButton; NSButton *_fullScreenKeepsDisplayButton; }
+@interface TSPreferences : NSObject { @public NSButton *_displayAsBookButton; NSButton *_linkPopupsButton; NSButton *_arrowKeysPageButton; NSButton *_fullScreenKeepsDisplayButton; NSButton *_linkPopupPageLabelButton; }
 @property NSMutableDictionary *outlets;
 @end
 @implementation TSPreferences
@@ -334,6 +335,11 @@ int main(int argc,char **argv){@autoreleasepool{
  [defaults removeObjectForKey:KeepPreviewDisplayInFullScreenKey];keeps.state=NSControlStateValueOff;[keeps performClick:nil];
  Check([defaults boolForKey:KeepPreviewDisplayInFullScreenKey],@"Full screen switch sets the setting the document reads");
  [keeps performClick:nil];Check(![defaults boolForKey:KeepPreviewDisplayInFullScreenKey],@"Full screen switch clears the setting");
+ owner->_linkPopupPageLabelButton=pane.linkPopupPageLabelButton;NSButton *pageLabel=owner->_linkPopupPageLabelButton;
+ Check(pageLabel && pageLabel.action==@selector(linkPopupPageLabelChanged:) && [pageLabel.identifier isEqual:@"settings.preview-link-popup-page-label-button"],@"Page number switch outlet and action");
+ [defaults setBool:YES forKey:LinkPopupPageLabelKey];pageLabel.state=NSControlStateValueOn;[pageLabel performClick:nil];
+ Check(![defaults boolForKey:LinkPopupPageLabelKey],@"Page number switch clears the setting the link popups read");
+ [pageLabel performClick:nil];Check([defaults boolForKey:LinkPopupPageLabelKey],@"Page number switch sets the setting");
  NSWindow *settings=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,620,900) styleMask:0 backing:NSBackingStoreBuffered defer:NO];
  settings.releasedWhenClosed=NO;settings.contentView=pane.view;[pane.view layoutSubtreeIfNeeded];
  if(argc>2 && strcmp(argv[2],"-")!=0) Snapshot(pane.view,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);
@@ -341,7 +347,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, pinned popup on its page, immediate preferences");
 }}
 '''
-for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('BACKFORWARDITEM',backforward),('REGRESSION',(root/'Tests/PreviewLayoutRegression.inc').read_text()),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:')+'\n'+method(prefs,'- (IBAction)linkPopupsChanged:')+'\n'+method(prefs,'- (IBAction)arrowKeysPageChanged:')+'\n'+method(prefs,'- (IBAction)fullScreenKeepsDisplayChanged:'))]:program=program.replace(key,value)
+for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('BACKFORWARDITEM',backforward),('REGRESSION',(root/'Tests/PreviewLayoutRegression.inc').read_text()),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:')+'\n'+method(prefs,'- (IBAction)linkPopupsChanged:')+'\n'+method(prefs,'- (IBAction)arrowKeysPageChanged:')+'\n'+method(prefs,'- (IBAction)fullScreenKeepsDisplayChanged:')+'\n'+method(prefs,'- (IBAction)linkPopupPageLabelChanged:'))]:program=program.replace(key,value)
 verify_embedded(program,[f for f in fragments if f[0] not in ['complete method:- (BOOL)readFromURL:', 'complete method:- (NSStringEncoding)dataEncoding:', 'complete method:- (void) doTemplate:']]+[('preview initialization',doc,initialize)])
 lang=next((a for a in sys.argv[1:] if a in ('en','ja')),'en')
 with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
