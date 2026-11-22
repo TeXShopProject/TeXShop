@@ -1303,8 +1303,7 @@
 Original developer: Richard Koch
 
 © 2001–2026 Richard Koch
-© 2026 Yusuke Terada
-https://texshop.app/</string>
+© 2026 Yusuke Terada</string>
 	<key>NSPrincipalClass</key>
 	<string>TSApplication</string>
 	<key>SUFeedURL</key>
