@@ -18,6 +18,7 @@
         <outlet property="scrollPageTurnButton" destination="preview-scroll-page-turn-button" id="preview-scroll-page-turn-outlet" />
         <outlet property="arrowKeysPageButton" destination="preview-arrow-keys-page-button" id="preview-arrow-keys-page-outlet" />
         <outlet property="fullScreenKeepsDisplayButton" destination="preview-full-screen-keeps-display-button" id="preview-full-screen-keeps-display-outlet" />
+        <outlet property="linkPopupPageLabelButton" destination="preview-link-popup-page-label-button" id="preview-link-popup-page-label-outlet" />
         <outlet property="magTextField" destination="113" id="114" />
         <outlet property="mouseModePopup" destination="345" id="371" />
         <outlet property="pageStylePopup" destination="340" id="372" />
@@ -291,6 +292,17 @@
                 </buttonCell>
                 <connections>
                   <action selector="linkPopupsChanged:" target="-2" id="preview-link-popups-action" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-link-popup-page-label-button" identifier="settings.preview-link-popup-page-label-button">
+                <rect key="frame" x="19" y="9" width="215" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Show page number in link popups" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-link-popup-page-label-cell">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="linkPopupPageLabelChanged:" target="-2" id="preview-link-popup-page-label-action" />
                 </connections>
               </button>
               <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-scroll-page-turn-button" identifier="settings.preview-scroll-page-turn-button">

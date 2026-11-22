@@ -240,6 +240,8 @@
 "catalog.preview.0.5.note" = "Auch wenn eine vergrößerte Seite breiter als das Fenster ist, blättern die Pfeiltasten links und rechts um, statt seitlich zu scrollen.";
 "catalog.preview.0.6.title" = "Link-Popups";
 "catalog.preview.0.6.note" = "Anfangswert für Dokumente, die Sie danach öffnen. In einem geöffneten Dokument im Menü „Vorschau“ umschalten.";
+"catalog.preview.0.8.title" = "Seitenzahl in Link-Popups anzeigen";
+"catalog.preview.0.8.note" = "Die Seitenzahl, die das PDF der Zielseite gibt, unten rechts in der Ecke.";
 "catalog.preview.0.7.title" = "Vergrößerung und PDF-Darstellung im Vollbild beibehalten";
 "catalog.preview.0.7.note" = "Ein geteiltes Fenster bleibt auch geteilt. Wenn aus, hebt das Vollbild die Teilung auf und verwendet die zuletzt im Vollbild benutzte Vergrößerungsart und PDF-Darstellung.";
 "group.preview.1.title" = "Doppelseiten-Modus";

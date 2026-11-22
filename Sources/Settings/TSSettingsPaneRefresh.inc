@@ -173,6 +173,7 @@
     [_scrollPageTurnButton setState:[defaults boolForKey:NoScrollPageTurnKey] ? NSControlStateValueOn : NSControlStateValueOff];
     [_arrowKeysPageButton setState:[defaults boolForKey:LeftRightArrowsAlwaysPageKey] ? NSControlStateValueOn : NSControlStateValueOff];
     [_fullScreenKeepsDisplayButton setState:[defaults boolForKey:KeepPreviewDisplayInFullScreenKey] ? NSControlStateValueOn : NSControlStateValueOff];
+    [_linkPopupPageLabelButton setState:[defaults boolForKey:LinkPopupPageLabelKey] ? NSControlStateValueOn : NSControlStateValueOff];
     magnification = [defaults floatForKey:PdfMagnificationKey];
     mag = round(magnification * 100.0);
     myNumber = [NSNumber numberWithInteger:mag];

@@ -106,6 +106,8 @@
 	<string>NO</string>
 	<key>KeepPreviewDisplayInFullScreen</key>
 	<string>NO</string>
+	<key>LinkPopupPageLabel</key>
+	<string>YES</string>
 	<key>LineBreakMode</key>
 	<string>1</string>
 	<key>LineNumberEnabled</key>
