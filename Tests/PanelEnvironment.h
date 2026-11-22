@@ -1,6 +1,6 @@
 #pragma once
 // What the Matrix and LaTeX panels need from the application when a check loads them with their
-// controllers: the factory defaults (matrixsize, LPanelOutlines; TS_FACTORY_DEFAULTS), atLeastMojave as
+// controllers: the factory defaults (LPanelOutlines; TS_FACTORY_DEFAULTS), atLeastMojave as
 // TSAppDelegate sets it, and the pictures the panels name, which come from the application's asset catalog
 // and are read here from Resources/Images.xcassets (TS_IMAGE_ASSETS). panel_environment in panel_sources.py
 // sets both variables and an isolated home with ~/Library/TeXShop/LatexPanel and MatrixPanel.

@@ -96,7 +96,6 @@ NSString *GSBinPath = @"GSBinPath";
 NSString *TexCommandKey = @"TexCommand";
 NSString *TexGSCommandKey = @"TexGSCommand";
 NSString *TexScriptCommandKey = @"TexScriptCommand";
-NSString *MatrixSizeKey = @"matrixsize"; // Jonas' Matrix addition
 NSString *TSHasBeenUsedKey = @"TSHasBeenUsed";
 NSString *UserInfoPath = @"UserInfoPath";
 
