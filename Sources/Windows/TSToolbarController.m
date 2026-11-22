@@ -190,6 +190,10 @@ static NSString*    kHtmlSearchTID              = @"HtmlSearch";
 @end
 
 static char TSSplitToggleSideBySideKey, TSSplitToggleImageKey;
+// The key window whose buttons were updated last, and whether Option was held then,
+// whichever way the update came (TSSplitToggleCatchUp).
+static __weak NSWindow *TSSplitToggleShownWindow;
+static BOOL TSSplitToggleShownHeld;
 
 // The split buttons of a window show the side-by-side split while Option is held
 // in the key window when it is not split, and in a window split side by side
@@ -197,6 +201,10 @@ static char TSSplitToggleSideBySideKey, TSSplitToggleImageKey;
 static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flags)
 {
     NSEventModifierFlags held = window.isKeyWindow ? flags : 0;
+    if (window.isKeyWindow) {
+        TSSplitToggleShownWindow = window;
+        TSSplitToggleShownHeld = TSSplitToggleOptionHeld(flags);
+    }
     for (NSToolbarItem *item in window.toolbar.items) {
         BOOL preview = [item.itemIdentifier isEqual: kSplitKKTID];
         if ((!preview && ![item.itemIdentifier isEqual: kSplitID]) || ![item.target isKindOfClass: [TSDocument class]])
@@ -242,16 +250,14 @@ void TSSplitToggleItemsFollowSplit(void)
 // tells what a click does.
 static void TSSplitToggleCatchUp(void)
 {
-    static __weak NSWindow *shownWindow;
-    static BOOL shownHeld;
     NSWindow *window = NSApp.keyWindow;
     NSEventModifierFlags flags = NSEvent.modifierFlags;
     BOOL held = TSSplitToggleOptionHeld(flags);
-    NSWindow *previous = shownWindow;
-    if (window == previous && held == shownHeld)
+    NSWindow *previous = TSSplitToggleShownWindow;
+    if (window == previous && held == TSSplitToggleShownHeld)
         return;
-    shownWindow = window;
-    shownHeld = held;
+    TSSplitToggleShownWindow = window;
+    TSSplitToggleShownHeld = held;
     if (previous && previous != window && previous.toolbar)
         TSSplitToggleItemsFollow(previous, flags);
     if (window.toolbar)

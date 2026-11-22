@@ -21,7 +21,7 @@ from production_fragments import method as production_method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['split-ignored', 'no-become-key', 'command-allowed', 'key-ignored', 'no-flags-monitor', 'no-catch-up', 'catch-up-default-mode-only',
+parser.add_argument('--mutation', choices=['split-ignored', 'no-become-key', 'command-allowed', 'key-ignored', 'no-flags-monitor', 'no-catch-up', 'catch-up-default-mode-only', 'monitor-not-recorded',
                                            'menu-orientation-ignored', 'no-resign-reset', 'unturned',
                                            'split-shows-own-image', 'source-orientation-ignored', 'added-item-unturned',
                                            'added-item-condition-negated', 'split-tool-tip-kept', 'added-source-unturned'])
@@ -144,6 +144,10 @@ elif args.mutation == 'catch-up-default-mode-only':
     old = 'CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);'
     assert cue.count(old) == 1
     cue = cue.replace(old, 'CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopDefaultMode);')
+elif args.mutation == 'monitor-not-recorded':
+    old = '        TSSplitToggleShownHeld = TSSplitToggleOptionHeld(flags);\n    }\n'
+    assert cue.count(old) == 1
+    cue = cue.replace(old, '    }\n')
 elif args.mutation == 'no-flags-monitor':
     old = '                TSSplitToggleItemsFollow(window, event.modifierFlags);\n            return event;'
     assert cue.count(old) == 1
@@ -300,6 +304,14 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check([Pixels(preview.image) isEqual:sideBySide], @"Option pressed while no event reached the monitor, after the loop");
     flags = 0; CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.05, false);
     Check(preview.image == previewImage, @"Option released while no event reached the monitor, after the loop");
+    // Option pressed through the monitor, then released inside a tracking loop that
+    // takes the event, without a wait in between; and the other way round.
+    Press(w, O); flags = 0; CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.05, false);
+    Check(preview.image == previewImage && source.image == sourceImage, @"Option pressed through the monitor and released in a tracking loop");
+    flags = O; CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.05, false);
+    Press(w, 0); flags = O; CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.05, false);
+    Check([Pixels(preview.image) isEqual:sideBySide] && [Pixels(source.image) isEqual:sideBySide], @"Option released through the monitor and pressed in a tracking loop");
+    Press(w, 0);
 
     // In a split window the button unsplits: only the other window part's button turns.
     doc.pdfKitWindow.pdfKitSplitView = [NSSplitView new];
