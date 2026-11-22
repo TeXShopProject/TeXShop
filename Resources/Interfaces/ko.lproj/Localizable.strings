@@ -485,5 +485,8 @@
 /* Help > Show Help for Package: followed by the folders texdoc is set to search, none of which exists */
 "None of the folders that texdoc of the TeX installation in %@ is set to search exists:" = "%@에 있는 TeX의 texdoc이 찾도록 설정된 폴더가 하나도 없습니다:";
 
-/* Help > Show Help for Package: a folder texdoc searches only through its ls-R index */
-"%@ (only the files listed in its ls-R index)" = "%@ (ls-R 색인에 있는 파일만)";
+/* Help > Show Help for Package: below the folders, for those marked with an asterisk */
+"* In this folder, only the files listed in its ls-R index are searched." = "* 표시가 있는 폴더에서는 ls-R 색인에 있는 파일만 찾습니다.";
+
+/* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
+"In these folders, only the files listed in their ls-R index are searched." = "이 폴더들에서는 ls-R 색인에 있는 파일만 찾습니다.";

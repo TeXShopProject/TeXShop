@@ -78,20 +78,36 @@ static inline void TSTexdocSearch(NSString *binPath, NSDictionary *environment, 
     *folders = list;
 }
 
-// The folders of TSTexdocSearch as lines: the existing ones, or all when none exists; a folder
-// searched only through its ls-R index says so.
+// The folders of TSTexdocSearch as lines: the existing ones, or all when none exists. kpathsea
+// reads a folder marked "!!" only through its ls-R index: when only some of the listed folders are
+// such, they end with an asterisk and a line below explains it once; when all are, a sentence below
+// says so. Nothing is added when none is.
 static inline NSArray<NSString *> *TSTexdocFolderLines(NSArray<NSDictionary *> *folders, BOOL existing)
 {
-    NSMutableArray<NSString *> *lines = [NSMutableArray array];
-    for (NSDictionary *folder in folders) {
-        if (existing && ![folder[TSTexdocFolderExists] boolValue])
-            continue;
-        NSString *line = folder[TSTexdocFolderPath];
+    NSMutableArray<NSDictionary *> *listed = [NSMutableArray array];
+    for (NSDictionary *folder in folders)
+        if (!existing || [folder[TSTexdocFolderExists] boolValue])
+            [listed addObject:folder];
+    NSUInteger indexOnly = 0;
+    for (NSDictionary *folder in listed)
         if ([folder[TSTexdocFolderIndexOnly] boolValue])
-            line = [NSString stringWithFormat:NSLocalizedString(@"%@ (only the files listed in its ls-R index)", @"Help > Show Help for Package: a folder texdoc searches only through its ls-R index"), line];
-        [lines addObject:line];
-    }
+            indexOnly++;
+    BOOL mixed = indexOnly > 0 && indexOnly < listed.count;
+    NSMutableArray<NSString *> *lines = [NSMutableArray array];
+    for (NSDictionary *folder in listed)
+        [lines addObject:mixed && [folder[TSTexdocFolderIndexOnly] boolValue] ? [folder[TSTexdocFolderPath] stringByAppendingString:@" *"] : folder[TSTexdocFolderPath]];
+    if (mixed)
+        [lines addObject:NSLocalizedString(@"* In this folder, only the files listed in its ls-R index are searched.", @"Help > Show Help for Package: below the folders, for those marked with an asterisk")];
+    else if (indexOnly > 0)
+        [lines addObject:NSLocalizedString(@"In these folders, only the files listed in their ls-R index are searched.", @"Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index")];
     return lines;
+}
+
+// The beginning of what texdoc wrote: that it found nothing, and where to look online.
+static inline NSString *TSTexdocOutputHead(NSString *output)
+{
+    NSArray<NSString *> *lines = [[output stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] componentsSeparatedByString:@"\n"];
+    return [[lines subarrayWithRange:NSMakeRange(0, MIN(lines.count, (NSUInteger)2))] componentsJoinedByString:@"\n"];
 }
 
 // The message and the details of the alert for a texdoc that ended with status, or nil when it
@@ -120,6 +136,9 @@ static inline NSArray<NSString *> *TSTexdocFailureTexts(int status, BOOL exited,
         message = [NSString stringWithFormat:NSLocalizedString(@"texdoc could not show the documentation for “%@”.", @"Help > Show Help for Package: texdoc failed"), package];
         [details addObject:[NSString stringWithFormat:NSLocalizedString(@"%@ ended with status %d.", @"Help > Show Help for Package: the path of texdoc and its exit status"), texdoc, status]];
     }
+    // For "nothing found", texdoc's first two lines (no documentation, the online version); otherwise all of it.
+    if (exited && status == TSTexdocNothingFound)
+        output = TSTexdocOutputHead(output);
     if (output.length)
         [details addObject:output];
     return @[message, [details componentsJoinedByString:@"\n\n"]];

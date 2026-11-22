@@ -485,5 +485,8 @@
 /* Help > Show Help for Package: followed by the folders texdoc is set to search, none of which exists */
 "None of the folders that texdoc of the TeX installation in %@ is set to search exists:" = "Nessuna delle cartelle in cui texdoc dell’installazione TeX in %@ è impostato per cercare esiste:";
 
-/* Help > Show Help for Package: a folder texdoc searches only through its ls-R index */
-"%@ (only the files listed in its ls-R index)" = "%@ (solo i file elencati nel suo indice ls-R)";
+/* Help > Show Help for Package: below the folders, for those marked with an asterisk */
+"* In this folder, only the files listed in its ls-R index are searched." = "* In questa cartella si cercano solo i file elencati nel suo indice ls-R.";
+
+/* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
+"In these folders, only the files listed in their ls-R index are searched." = "In queste cartelle si cercano solo i file elencati nel loro indice ls-R.";

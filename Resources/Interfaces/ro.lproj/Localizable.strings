@@ -485,5 +485,8 @@
 /* Help > Show Help for Package: followed by the folders texdoc is set to search, none of which exists */
 "None of the folders that texdoc of the TeX installation in %@ is set to search exists:" = "Niciunul dintre dosarele în care texdoc al instalării TeX din %@ este configurat să caute nu există:";
 
-/* Help > Show Help for Package: a folder texdoc searches only through its ls-R index */
-"%@ (only the files listed in its ls-R index)" = "%@ (doar fișierele din indexul său ls-R)";
+/* Help > Show Help for Package: below the folders, for those marked with an asterisk */
+"* In this folder, only the files listed in its ls-R index are searched." = "* În acest dosar se caută doar fișierele din indexul său ls-R.";
+
+/* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
+"In these folders, only the files listed in their ls-R index are searched." = "În aceste dosare se caută doar fișierele din indexul lor ls-R.";

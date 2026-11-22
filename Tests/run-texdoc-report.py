@@ -26,9 +26,11 @@ MUTATIONS = {
     # The kpathsea marks stay in the listed folders.
     'marks-kept': (HEADER, 'NSString *folder = indexOnly ? [entry substringFromIndex:2] : entry;', 'NSString *folder = entry;'),
     # A folder searched only through its ls-R index is shown like the others.
-    'index-unmarked': (HEADER, '        if ([folder[TSTexdocFolderIndexOnly] boolValue])\n            line =', '        if (NO)\n            line ='),
+    'index-unmarked': (HEADER, '    BOOL mixed = indexOnly > 0 && indexOnly < listed.count;', '    BOOL mixed = NO;'),
+    # texdoc's whole output is shown again.
+    'whole-output': (HEADER, '        output = TSTexdocOutputHead(output);', '        ;'),
     # Folders that do not exist are listed as searched.
-    'missing-listed': (HEADER, '        if (existing && ![folder[TSTexdocFolderExists] boolValue])\n            continue;', '        if (NO)\n            continue;'),
+    'missing-listed': (HEADER, '        if (!existing || [folder[TSTexdocFolderExists] boolValue])', '        if (YES)'),
     # Without kpsewhich the installation is guessed again.
     'guessed': (HEADER, '    *installation = root.length ? root : nil;', '    *installation = root.length ? root : binPath.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent;'),
     # texdoc may ask questions again (it reads EOF and ends with status 1).
@@ -64,6 +66,9 @@ int main(int argc, const char **argv)
         NSArray *absent = @[@{TSTexdocFolderPath: @"/no/doc", TSTexdocFolderIndexOnly: @NO, TSTexdocFolderExists: @NO},
                             @{TSTexdocFolderPath: @"/no/dist/doc", TSTexdocFolderIndexOnly: @YES, TSTexdocFolderExists: @NO}];
         show(@"absent", TSTexdocFailureTexts(3, YES, @"nosuchpkg", [bin stringByAppendingPathComponent:@"texdoc"], @"", installation, absent));
+        NSArray *allIndexed = @[@{TSTexdocFolderPath: @"/a/doc", TSTexdocFolderIndexOnly: @YES, TSTexdocFolderExists: @YES},
+                                @{TSTexdocFolderPath: @"/b/doc", TSTexdocFolderIndexOnly: @YES, TSTexdocFolderExists: @YES}];
+        show(@"allindexed", TSTexdocFailureTexts(3, YES, @"nosuchpkg", @"/t/texdoc", @"line one\nline two\nline three\nline four", @"/T", allIndexed));
         NSString *texdoc = [bin stringByAppendingPathComponent:@"texdoc"];
         show(@"found", TSTexdocFailureTexts(0, YES, @"amsmath", texdoc, @"", installation, folders));
         show(@"nothing", TSTexdocFailureTexts(3, YES, @"nosuchpkg", texdoc, @"Sorry, no local documentation found for \"nosuchpkg\".\nYou can try the online version of Texdoc at <https://texdoc.org>.\n", installation, folders));
@@ -143,7 +148,7 @@ def run(texts):
     check(folders == [f'{docs}/home/texmf/doc index=0 exists=1', f'{docs}/missing/doc index=0 exists=0', f'{docs}/dist/doc index=1 exists=1', f'{docs}/guides index=1 exists=1'],
           f'the roots of TEXDOCS, without !! and //, once each, also not named doc, with their marks: {folders}')
     message, details = sections.get('absent', ('', ''))
-    check('None of the folders that texdoc of the TeX installation in /Applications/TeXLive/2026 is set to search exists:\n/no/doc\n/no/dist/doc (only the files listed in its ls-R index)' in details,
+    check('None of the folders that texdoc of the TeX installation in /Applications/TeXLive/2026 is set to search exists:\n/no/doc\n/no/dist/doc *\n* In this folder, only the files listed in its ls-R index are searched.' in details,
           f'when no folder exists, the alert says so and lists them: {details!r}')
     check('fallback=nil folders=nil' in out, 'without kpsewhich neither the installation nor the folders are guessed')
     message, details = sections.get('unknown', ('', ''))
@@ -154,11 +159,15 @@ def run(texts):
     check(sections.get('found', ('',))[0] == '(none)', 'nothing is said when texdoc showed the documentation')
     message, details = sections.get('nothing', ('', ''))
     check(message == 'No documentation was found for “nosuchpkg”.', f'status 3: {message!r}')
-    check(f'texdoc of the TeX installation in /Applications/TeXLive/2026 is set to search these folders:\n{docs}/home/texmf/doc\n{docs}/dist/doc (only the files listed in its ls-R index)\n{docs}/guides (only the files listed in its ls-R index)\n\n' in details,
+    check(f'texdoc of the TeX installation in /Applications/TeXLive/2026 is set to search these folders:\n{docs}/home/texmf/doc\n{docs}/dist/doc *\n{docs}/guides *\n* In this folder, only the files listed in its ls-R index are searched.\n\n' in details,
           f'status 3 names the installation and the folders: {details!r}')
     check('Another TeX installation on this Mac may have it.' in details and '› typesetting › group.typesetting.3.title › catalog.typesetting.3.0.title' in details,
           f'status 3 says where the TeX installation is chosen: {details!r}')
     check('https://texdoc.org' in details, 'texdoc\'s own hint is kept')
+    message, details = sections.get('allindexed', ('', ''))
+    check(details.startswith('texdoc of the TeX installation in /T is set to search these folders:\n/a/doc\n/b/doc\nIn these folders, only the files listed in their ls-R index are searched.') and '*' not in details,
+          f'when all folders are read through ls-R, one sentence says so, without marks: {details!r}')
+    check(details.endswith('line one\nline two'), f'only the first two lines of texdoc are shown when it found nothing: {details!r}')
     for name, status in (('failed', '1'), ('signal', '9'), ('signal3', '3')):
         message, details = sections.get(name, ('', ''))
         check(message == 'texdoc could not show the documentation for “amsmath”.', f'{name}: {message!r}')
