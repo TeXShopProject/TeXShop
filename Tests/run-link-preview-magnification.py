@@ -24,7 +24,7 @@ import subprocess
 import tempfile
 from source_tree import include_args
 
-INSET = '        inset = bend > 0 ? MAX(clear, TSLinkPreviewCornerRadius - bend / (CGFloat)M_SQRT2 - radius) : clear;\n'
+INSET = '                insetX = MIN(tried, middleX);\n                inset = MIN(tried, middleY);\n'
 MUTATIONS = {
     'edge-on-screen': ('    CGFloat width = MAX(TSLinkPreviewEdgeWidth, [self unitsPerPixel]);\n',
                        '    CGFloat width = [self unitsPerScreenPoint];\n'),
@@ -34,9 +34,11 @@ MUTATIONS = {
                              '    CGFloat fontSize = TSLinkPreviewLabelFontSize;\n'),
     'label-uncapped': ('    CGFloat scale = MIN(unit, 1);\n',
                        '    CGFloat scale = unit;\n'),
-    'label-in-corner': (INSET, '        inset = margin;\n'),
-    'label-ignores-curve': (INSET, '        inset = clear;\n'),
-    'label-old-inset': (INSET, '        inset = MAX(margin, TSLinkPreviewCornerRadius + edge);\n'),
+    'label-in-corner': (INSET, '                insetX = inset = margin;\n'),
+    'label-ignores-curve': ('    if (!(rx > 0) || !(ry > 0)) return least;\n', '    return least;\n'),
+    'label-circle-corners': ('    CGFloat rx = MIN(line, (w - edge) / 2), ry = MIN(line, (h - edge) / 2);\n',
+                             '    CGFloat rx = line, ry = line;\n'),
+    'label-old-inset': (INSET, '                insetX = inset = MAX(margin, TSLinkPreviewCornerRadius + edge);\n'),
     'drops-short-label': ('        fontSize = next;\n',
                           '        return;\n'),
     'label-estimate-floor': ('        CGFloat next = fontSize * fit;\n'
@@ -70,6 +72,7 @@ EXPECTED = {
     'label-in-corner': 'the page label stays clear of the frame',
     'label-ignores-curve': 'the page label stays clear of the frame',
     'label-old-inset': 'the page label sits in the corner',
+    'label-circle-corners': ('the page label stays visible', 'the page label keeps its size on screen', 'the page label sits in the corner'),
     'drops-short-label': 'the page label stays visible',
     'label-estimate-floor': 'the page label stays visible',
     'label-ceil-page-points': "the page label's capsule stays one size on screen",
@@ -103,6 +106,13 @@ static void check(BOOL ok, const char *message) {
 // A window that is not shown keeps no record of what needs drawing, so the requests to draw
 // the popup again are counted instead.
 static NSInteger redraws;
+// The pixels per screen point the test gives the window, or 0 for its own.
+static CGFloat backingOverride;
+// The pixels per screen point the popup takes for its window; 0 keeps the window's own.
+static CGFloat (*originalBacking)(id, SEL);
+static CGFloat testBacking(NSWindow *self, SEL sel) {
+    return backingOverride > 0 ? backingOverride : originalBacking(self, sel);
+}
 static void (*originalSetNeedsDisplay)(id, SEL, BOOL);
 static void countingSetNeedsDisplay(NSView *self, SEL sel, BOOL flag) {
     if (flag && [self isKindOfClass:[TSLinkPreviewView class]]) redraws++;
@@ -172,13 +182,26 @@ static NSInteger labelWidth(NSBitmapImageRep *rep) {
     return best;
 }
 // How far, in page points, the middle of pixel (x, y) lies inside the black edge: from the
-// straight part of the edge or, in a corner, from the curve of the six-point corner.
+// straight part of the edge or, in a corner, from its curve. The edge is stroked along the
+// rectangle half its width inside the popup, with six-point corners less half the width.
+// AppKit limits each radius to half the side, so a popup lower than its corners has
+// elliptical corners. The distance to the ellipse is found by trying points along it.
 static CGFloat insideEdge(NSInteger x, NSInteger y, CGFloat pagePixels) {
     CGFloat edge = MAX(0.75, 1 / pagePixels), radius = 6;
     CGFloat w = rendered.width, h = rendered.height;
     CGFloat px = (x + 0.5) / pagePixels, py = (y + 0.5) / pagePixels;
     CGFloat qx = MIN(px, w - px), qy = MIN(py, h - py);
-    if (qx < radius && qy < radius) return radius - edge - hypot(radius - qx, radius - qy);
+    CGFloat rx = MIN(radius - edge / 2, (w - edge) / 2), ry = MIN(radius - edge / 2, (h - edge) / 2);
+    CGFloat cx = edge / 2 + rx, cy = edge / 2 + ry;
+    if (qx < cx && qy < cy) {
+        CGFloat least = CGFLOAT_MAX;
+        for (NSInteger i = 0; i <= 2000; i++) {
+            CGFloat t = M_PI_2 * i / 2000;
+            least = MIN(least, hypot(cx - rx * cos(t) - qx, cy - ry * sin(t) - qy));
+        }
+        CGFloat ex = (cx - qx) / rx, ey = (cy - qy) / ry;
+        return (ex * ex + ey * ey <= 1 ? least : -least) - edge / 2;
+    }
     return MIN(qx, qy) - edge;
 }
 // The gray capsule, and the light and dark pixels inside it. The black edge and its
@@ -379,22 +402,22 @@ int main(void) { @autoreleasepool {
               "the page label's capsule stays one size on screen");
     }
 
-    // At 500% the short popup is 46 by 20 page points. Forty-three characters still fit
-    // at six points on screen. Fifty, fifty-five and sixty fit only below that, so they
-    // are left out. A twelve-character label at 1000% in a 20-point-wide popup fits
+    // At 500% the short popup is 46 by 20 page points. Fifty characters still fit at six
+    // points on screen. Fifty-two, fifty-six and sixty fit only below that, so they are
+    // left out. A twelve-character label at 1000% in a 20-point-wide popup fits
     // between six and ten points; guessing the next size must not skip it.
     popup.frame = NSMakeRect(20, 20, 46, 20);
     view.scaleFactor = 5;
-    for (NSNumber *length in @[@43, @50, @55, @60]) {
+    for (NSNumber *length in @[@50, @52, @56, @60]) {
         NSMutableString *longLabel = [@"Page " mutableCopy];
         while ((NSInteger)longLabel.length < length.integerValue) [longLabel appendString:@"9"];
         popup.pageLabel = longLabel;
         CGFloat pixels = backing / [popup unitsPerScreenPoint];
         LabelBox box = measureLabel(render(popup, pixels), pixels);
-        if (length.integerValue == 43) {
+        if (length.integerValue == 50) {
             check(box.gray > 8 && box.white > 0, "the page label stays visible");
             CGFloat screen = 11 * (box.maxY - box.minY + 1) / referenceHeight;
-            printf("label 500%% length 43 is %.2f points on screen\n", screen);
+            printf("label 500%% length 50 is %.2f points on screen\n", screen);
             check(screen >= 6, "the page label stays at least six points on screen");
         } else {
             printf("label 500%% length %ld is %s\n", (long)length.integerValue, box.gray ? "drawn" : "left out");
@@ -414,20 +437,54 @@ int main(void) { @autoreleasepool {
         printf("label 1000%% length 12 is %.2f points on screen\n", screen);
         check(screen >= 6, "the page label stays at least six points on screen");
     }
-    // At 2000% a short linked page leaves less than one page point of room, which is
-    // still about eleven points on screen. "Page 2" fits there above the six-point floor.
-    // The capsule is about 2.3 page points in from the bottom and the top.
+    // A pinned popup dragged to 250 by a few dozen points on screen at 800% to 2000% is lower
+    // than its corners, which are then elliptical. The label goes by the corners as drawn:
+    // eleven points where they leave room, smaller where they leave less, and left out where
+    // even six points do not fit, at one and two pixels per point (#14).
+    Method backingMethod = class_getInstanceMethod(NSWindow.class, @selector(backingScaleFactor));
+    originalBacking = (void *)method_setImplementation(backingMethod, (IMP)testBacking);
     popup.pageLabel = @"Page 2";
-    popup.frame = NSMakeRect(20, 20, 35, 5.2);
-    view.scaleFactor = 20;
-    {
-        CGFloat pixels = backing / [popup unitsPerScreenPoint];
-        LabelBox box = measureLabel(render(popup, pixels), pixels);
-        check(box.gray > 8 && box.white > 0, "the page label stays visible");
-        CGFloat screen = 11 * (box.maxY - box.minY + 1) / referenceHeight;
-        printf("label 2000%% page 2 is %.2f points on screen\n", screen);
-        check(screen >= 6, "the page label stays at least six points on screen");
+    for (NSNumber *density in @[@1, @2]) {
+        backingOverride = density.doubleValue;
+        view.scaleFactor = 1;
+        popup.frame = NSMakeRect(20, 20, 200, 50);
+        CGFloat reference;
+        {
+            CGFloat pixels = backingOverride / [popup unitsPerScreenPoint];
+            LabelBox box = measureLabel(render(popup, pixels), pixels);
+            reference = box.maxY - box.minY + 1;
+            check(box.gray > 8 && reference > 5, "fixture: the eleven-point label has a height");
+        }
+        // Heights on screen: the label fits at eleven points, fits smaller, does not fit.
+        NSDictionary<NSNumber *, NSArray<NSNumber *> *> *cases = @{
+            @8: @[@48, @28, @22], @10: @[@48, @31, @26], @20: @[@56, @48, @40]};
+        for (NSNumber *magnification in @[@8, @10, @20]) {
+            NSArray<NSNumber *> *heights = cases[magnification];
+            for (NSUInteger kind = 0; kind < 3; kind++) {
+                CGFloat mag = magnification.doubleValue;
+                view.scaleFactor = mag;
+                popup.frame = NSMakeRect(20, 20, 250 / mag, heights[kind].doubleValue / mag);
+                CGFloat unit = [popup unitsPerScreenPoint];
+                CGFloat pixels = backingOverride / unit;
+                LabelBox box = measureLabel(render(popup, pixels), pixels);
+                CGFloat screen = box.gray ? 11 * (box.maxY - box.minY + 1) / reference : 0;
+                printf("label %.0f%% at %.0fx in 250 by %.0f points: %s, %.2f points on screen, %.2f inside the black edge\n",
+                       mag * 100, backingOverride, heights[kind].doubleValue, box.gray ? "drawn" : "left out", screen,
+                       box.gray ? box.clearance / unit : 0.0);
+                if (kind == 2) {
+                    check(box.gray == 0, "the page label keeps the six-point floor");
+                    continue;
+                }
+                check(box.gray > 8 && box.white > 0, "the page label stays visible");
+                check(box.dark == 0 && box.clearance >= 3 * unit - 1 / pixels, "the page label stays clear of the frame");
+                check(box.clearance <= 3 * unit + 1 / pixels, "the page label sits in the corner");
+                if (kind == 0) check(screen > 10, "the page label keeps its size on screen");
+                else check(screen >= 6 && screen < 10, "the page label stays at least six points on screen");
+            }
+        }
     }
+    backingOverride = 0;
+    method_setImplementation(backingMethod, (IMP)originalBacking);
     popup.pageLabel = @"Page 180";
 
     Method setNeedsDisplay = class_getInstanceMethod(NSView.class, @selector(setNeedsDisplay:));

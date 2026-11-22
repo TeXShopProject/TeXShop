@@ -31,6 +31,41 @@ static const CGFloat TSLinkPreviewEdgeWidth = 0.75;
 // A popup shows its linked page and, in the continuous displays, the next one (#14).
 #define TSLinkPreviewMaximumPages 2
 
+// Samples along each rounded corner of the edge, for the room of the page label.
+#define TSLinkPreviewCornerSamples 48
+
+// How far a page label capsule of `capsuleSize`, `inset.x` in from the right and `inset.y`
+// up from the bottom of a popup of `size`, stays inside the black edge of width `edge`,
+// measured to the inner side of the edge. A popup lower or narrower than its corners has
+// elliptical corners: AppKit limits each radius of a rounded rectangle to half its side,
+// for the clip and the edge alike. The edge is stroked along the rectangle `edge / 2`
+// inside the popup, so the inner side of the edge is `edge / 2` inside that line. The
+// capsule is a bar between the centers of its two half circles, widened by its radius (#14).
+static CGFloat TSLinkPreviewLabelClearance(NSSize size, CGFloat edge, NSSize capsuleSize, NSPoint inset)
+{
+    CGFloat w = size.width, h = size.height, r = capsuleSize.height / 2;
+    CGFloat cy = inset.y + r, x0 = w - inset.x - capsuleSize.width + r, x1 = w - inset.x - r;
+    // The straight sides.
+    CGFloat least = MIN(MIN(inset.x - edge, inset.y - edge),
+                        MIN(h - edge - inset.y - capsuleSize.height, w - edge - inset.x - capsuleSize.width));
+    // The corners of the line the edge is stroked along.
+    CGFloat line = MAX(TSLinkPreviewCornerRadius - edge / 2, 0);
+    CGFloat rx = MIN(line, (w - edge) / 2), ry = MIN(line, (h - edge) / 2);
+    if (!(rx > 0) || !(ry > 0)) return least;
+    CGFloat lo = edge / 2, cxs[2] = {lo + rx, w - lo - rx}, cys[2] = {lo + ry, h - lo - ry};
+    for (NSInteger corner = 0; corner < 4; corner++) {
+        CGFloat ccx = cxs[corner & 1], ccy = cys[corner >> 1];
+        CGFloat sx = (corner & 1) ? 1 : -1, sy = (corner >> 1) ? 1 : -1;
+        for (NSInteger i = 0; i <= TSLinkPreviewCornerSamples; i++) {
+            CGFloat t = (CGFloat)M_PI_2 * i / TSLinkPreviewCornerSamples;
+            CGFloat bx = ccx + sx * rx * cos(t), by = ccy + sy * ry * sin(t);
+            CGFloat nearX = MIN(MAX(bx, x0), x1);
+            least = MIN(least, hypot(bx - nearX, by - cy) - r - edge / 2);
+        }
+    }
+    return least;
+}
+
 typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     TSLinkPreviewDragNone,
     TSLinkPreviewDragMove,
@@ -195,12 +230,13 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     CGFloat fontFloor = MIN(fontSize, TSLinkPreviewLabelMinimumScreenSize * unit);
     CGFloat margin = TSLinkPreviewLabelMargin * scale;
     // The corners and the edge are in page points, so they grow on screen. The capsule
-    // keeps the margin clear inside the edge, also along the rounded corner, and otherwise
-    // goes as far into the corner as that allows (#14).
+    // keeps the margin clear inside the edge, also along the rounded corners, and otherwise
+    // goes as far into the lower right corner as that allows (#14).
     CGFloat edge = MAX(TSLinkPreviewEdgeWidth, [self unitsPerPixel]);
     CGFloat clear = edge + margin;
-    CGFloat inset = clear;
+    CGFloat inset = clear, insetX = clear;
     CGFloat roomW = NSWidth(bounds) - 2 * inset, roomH = NSHeight(bounds) - 2 * inset;
+    BOOL placed = NO;
     // The capsule is never nearer the edge than `clear`. A fraction of a page point is many
     // screen points at a high magnification. Reject only a room that is not there; the
     // six-point floor decides whether the label fits.
@@ -224,15 +260,40 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         height = ceil(size.height / px) * px;
         CGFloat textWidth = ceil(size.width / px) * px;
         radius = height / 2;
-        // The right end of the capsule is a half circle. When its center lies inside the
-        // rounded corner, the half circle keeps the margin inside the curve of the edge: on
-        // the diagonal, its center is at most `bend` from the center of the curve (#14).
-        CGFloat bend = TSLinkPreviewCornerRadius - clear - radius;
-        inset = bend > 0 ? MAX(clear, TSLinkPreviewCornerRadius - bend / (CGFloat)M_SQRT2 - radius) : clear;
-        roomW = NSWidth(bounds) - 2 * inset; roomH = NSHeight(bounds) - 2 * inset;
-        capsule = NSMakeRect(NSMaxX(bounds) - inset - textWidth - height, NSMinY(bounds) + inset,
-                             textWidth + height, height);
-        if (NSWidth(capsule) <= roomW && NSHeight(capsule) <= roomH) break;
+        // Move the capsule in from the corner along the diagonal, in steps of a pixel, to
+        // the first place that keeps the margin inside the edge, then to within a hundredth
+        // of a pixel. A popup lower than its corners has a curve all along its right side,
+        // so the capsule stops at the middle of the height and goes on to the left; likewise
+        // it stops at the middle of the width of a narrow popup. Once it is a corner radius in
+        // from the right and the bottom, the corners there no longer limit it (#14).
+        NSSize capsuleSize = NSMakeSize(textWidth + height, height);
+        CGFloat middleX = MAX((NSWidth(bounds) - capsuleSize.width) / 2, clear);
+        CGFloat middleY = MAX((NSHeight(bounds) - capsuleSize.height) / 2, clear);
+        CGFloat step = MAX(px, TSLinkPreviewCornerRadius / 256), last = clear;
+        CGFloat farthest = MIN(clear + TSLinkPreviewCornerRadius, MAX(middleX, middleY));
+        placed = NO;
+        for (CGFloat d = clear; d <= farthest + step / 2; d += step) {
+            CGFloat tried = MIN(d, farthest);
+            if (TSLinkPreviewLabelClearance(bounds.size, edge, capsuleSize,
+                                            NSMakePoint(MIN(tried, middleX), MIN(tried, middleY))) >= margin) {
+                CGFloat near = MIN(last, tried);
+                for (NSInteger halve = 0; tried - near > px / 100 && halve < 20; halve++) {
+                    CGFloat middle = (near + tried) / 2;
+                    if (TSLinkPreviewLabelClearance(bounds.size, edge, capsuleSize,
+                                                    NSMakePoint(MIN(middle, middleX), MIN(middle, middleY))) >= margin)
+                        tried = middle;
+                    else near = middle;
+                }
+                insetX = MIN(tried, middleX);
+                inset = MIN(tried, middleY);
+                placed = YES;
+                break;
+            }
+            last = tried;
+        }
+        capsule = NSMakeRect(NSMaxX(bounds) - insetX - capsuleSize.width, NSMinY(bounds) + inset,
+                             capsuleSize.width, capsuleSize.height);
+        if (placed) break;
         // A step that barely misses stalls on the rounded line height, so drop by a tenth
         // then. Otherwise try the size that was measured to fit, and stop at the floor.
         CGFloat fit = MIN(roomW / NSWidth(capsule), roomH / NSHeight(capsule));
@@ -245,7 +306,7 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         }
         fontSize = next;
     }
-    if (NSWidth(capsule) > roomW || NSHeight(capsule) > roomH) return;
+    if (!placed) return;
     [NSGraphicsContext saveGraphicsState];
     [[NSGraphicsContext currentContext] setShouldAntialias:YES];
     [[NSColor colorWithWhite:0.55 alpha:0.8] setFill];
