@@ -4,20 +4,20 @@
 <META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
 <TITLE>TeXShop beschaffen und installieren</TITLE>
 <META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Unter https://texshop.app/ k&ouml;nnen Sie TeXShop herunterladen und nach dieser Anleitung installieren.">
+		<META NAME="description" CONTENT="TeXShop wird mit MacTeX installiert und ist auch unter https://texshop.app/ erh&auml;ltlich.">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 <BODY>
-	<div id="content_border">	
-			<P>Rufen Sie im Webbrowser folgende Seite auf:
-			<p><a href="https://texshop.app/">https://texshop.app/</a></p>
-			<p>Klicken Sie auf den Link &bdquo;TeXShop&ldquo; um die Datei &bdquo;TeXShop.dmg&ldquo; herunterzuladen. Nachdem Sie doppelt auf die Datei geklickt haben, erscheint ein Ordner, der TeXShop und einige andere Dateien enth&auml;lt. Diese zus&auml;tzlichen Dateien k&ouml;nnen Sie lesen oder auch l&ouml;schen. Ziehen Sie TeXShop in den Ordner &bdquo;Programme&ldquo;. Wenn Sie es h&auml;ufiger benutzen m&ouml;chten, sollten Sie das Icon in das Dock ziehen.</p>
-				<p> TeXShop beinhaltet eine Funktion mit Namen pdfsync. Hiermit k&ouml;nnen Sie durch Klicken in das Vorschau-Fenster zum entsprechenden Punkt im Quelltext gelangen. Um diese Funktion zu nutzen, m&uuml;ssen die Dateien &bdquo;pdfsync.sty&ldquo;, "pdfsync.tex" und "pdfsync4context.tex in teTeX installiert sein. Kopieren Sie diese Datei aus der TeXShop Distribution, die Sie aus dem Internet geladen haben, und kopieren Sie diese nach &bdquo;~/Library/texmf/tex/latex&ldquo;, ~/Library/texmf/tex/plain und ~/Library/texmf/tex/contex. Wobei &bdquo;~/Library&ldquo; der Library-Ordner Ihres Privat-Verzeichnisses ist. Sollten einige der oben genannten Ordner nicht existieren, m&uuml;ssen Sie diese erstellen.</p>
-				<p>Seit Version 1.35 werden mit TeXShop AppleScripts von Will Robertson und Claus Gerhardt mitgeliefert. Wenn Sie von einer &auml;lteren Verion aktualisieren erscheinen diese Skripte nicht automatisch im Men&uuml; &bdquo;Makros&ldquo;.</p>
-				<p>Wenn Sie die Standardmakros nicht ver&auml;ndert haben, k&ouml;nnen Sie die Skripte erhalten, indem Sie den Ordner &bdquo;Macros&ldquo; aus dem Ordner &bdquo;~/Library/TeXShop&ldquo; l&ouml;schen. Beim n&auml;chsten Start wird TeXShop den Ordner mit den neuen Skripten neu anlegen. Es gen&uuml;gt nicht, den Inhalt des Makro Ordners zu l&ouml;schen, der gesammte Ordner muss entfernt werden.</p>
-				<p>Wenn Sie die Standardmakros ge&auml;ndert haben, solten Sie den oben genannten Ordner &bdquo;Macros&ldquo; nur an einen anderen Ort verschieben. Nachdem TeXShop den neuen Ordner angelegt hat, k&ouml;nnen Sie Ihre angepassten Makros mit Hilfe des Makro-Editors wieder einf&uuml;gen.</p>
-				<p>TeXShop 1.35 enth&auml;lt neue Vorlagen von Will Robertson. Diese Vorlagen werden nicht automatisch installiert. Um diese zu nutzen ist der gesamte "Templates" Ordner aus &bdquo;~/Library/TeXShop&ldquo; am besten auf den Desktop zu verschieben. Beim n&auml;chsten Start erstellt TeXShop den Ordner mit den aktuellen Vorlagen neu. Ältere von Ihnen bearbeitete Vorlagen k&ouml;nnen dann von dem auf den Desktop befindlichen alten Ordner in den neuen zurückbewegt werden. 
-	</div>		
+	<div id="content_border">
+		<p>TeXShop wird von den im vorigen Abschnitt beschriebenen MacTeX-Paketen automatisch installiert. Sie k&ouml;nnen es auch von der TeXShop-Webseite laden:</p>
+		<dl>
+			<dd><a href="https://texshop.app/">https://texshop.app/</a>
+		</dl>
+		<p>Neue Versionen von TeXShop enthalten manchmal &uuml;berarbeitete Makros, Engines und Vorlagen. Diese erscheinen nicht automatisch, wenn Sie von einer &auml;lteren Version von TeXShop aktualisieren. Wie Sie sie bekommen, steht in &bdquo;&Uuml;ber diese Version (Englisch)&ldquo; im Men&uuml; &bdquo;Hilfe&ldquo;.</p>
+		<p>Ein grober Weg zu den neuen Standarddateien: Gehen Sie zu ~/Library/TeXShop; dabei ist ~/Library der Ordner &bdquo;Library&ldquo; in Ihrem Benutzerordner. Verschieben Sie den gesamten Ordner &bdquo;Macros&ldquo; (oder &bdquo;Engines&ldquo; oder &bdquo;Templates&ldquo;) auf den Schreibtisch. Beim n&auml;chsten Start legt TeXShop den fehlenden Ordner neu an. &Uuml;bernehmen Sie danach Ihre eigenen &Auml;nderungen aus dem alten Ordner auf dem Schreibtisch.</p>
+		<p>Viel einfachere Wege zum Aktualisieren beschreibt der Abschnitt &bdquo;<a href="configure.htm">Wie konfiguriere ich TeXShop?</a>&ldquo; der Hilfe.</p>
+</div>
+
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 <div id="header_chapter">Grundlagen</div>
@@ -27,7 +27,7 @@
 	<div id="menu_border">
 		<UL>
 			<LI><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-			<LI><a href="basic_installtetex.htm">teTeX beschaffen und installieren</a></li>
+			<LI><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
 			<LI><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
 			<LI><a href="basic_typesetting.htm">Dokumente setzen</a></li>
 			<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
