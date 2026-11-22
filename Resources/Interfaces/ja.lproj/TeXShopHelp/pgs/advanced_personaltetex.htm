@@ -2,58 +2,90 @@
 
 <HEAD>
 		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-		<TITLE>スタイルとマクロをteTeXに追加する</TITLE>
+		<TITLE>スタイルとマクロをTeX Liveに追加する</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="自己作成したtexmfと環境変数について">
+		<META NAME="description" CONTENT="ローカルなtexmfフォルダと環境変数について">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
 <body>	
 
 <div id="content_border">
-	
 <p>
-ユーザはいくつかの異なるプロジェクトで共用するために追加のsty・cls・bibおよびtexなどのファイルを作成することもあります。texのソース・ファイルをタイプセットするときに、それらのファイルが同一のフォルダ内にあれば、TeXやLaTeXにはきちんと読み取ってもらえますが、ファイルの多重コピーをコンピュータ上に保持しなければなりません。
+どのTeXディストリビューションも、個人的に追加したもの（自作のスタイルファイルや、メインのディストリビューションに含まれていないパッケージなど）は、ローカルなフォルダ（ディレクトリ）の中にあるものとしています。このフォルダの名前は「texmf」で、TeXのプログラムがファイルを正しく見つけられるように、決まった構造のサブフォルダを持っています。
 </p>
 
 <p>
-すべてのteTeXプロジェクトに対してこれらのファイルを読み取り可能にすることができます──タイプセットをTeXShopから行なうにしろ、ターミナルから行なうにしろ。そうするためには、ホーム・ディレクトリ内のライブラリ・フォルダにtexmfという名前でサブフォルダを作ります。そしてtexとbibtexという名前でサブフォルダを作ります。texフォルダ内にはlatexという名前のサブフォルダも作ります。これらのフォルダに個人的なファイルをしまっておきます。
+Macでは、ローカルなtexmfフォルダはホームディレクトリのライブラリフォルダの中にあります。これはふつう「~/Library/texmf」と表記されます。「~」は「ホームディレクトリ」（Finderウインドウでホームのアイコンをクリックしたときに開くフォルダ）を意味します。
+</p>
+
+<h2>ローカルなtexmfに置くのはどんなときか？</h2>
+
+<p>
+ローカルなtexmfフォルダに何かを置く前に、そのパッケージがすでにTeX Liveの一部になっていないか──つまりMacTeXディストリビューションに含まれていないか──を確認してください。いちばん簡単なのはTeX Live Utilityを使う方法です。特にCTANにあるパッケージは、そのほとんどがTeX Liveに含まれており、すでに利用できるはずです。
 </p>
 
 <p>
-TeXは ~/Library/texmf/texないしはこのディレクトリ以下のサブフォルダ内にあるすべてのファイルを検知します。LaTeXは ~/Library/texmf/tex/latexないしはこのディレクトリ以下のサブフォルダ内にあるすべてのファイルを検知し、BibTeXとMakeIndexはそれぞれ ~/Library/texmf/bibtexあるいは ~/Library/texmf/makeindexにあるすべてのファイルを検知するでしょう。これらのフォルダにファイルを追加した後でtexhashを実行する必要はありません。
+パッケージがTeX Liveに含まれていないとわかっている場合は、ローカルなtexmfフォルダに置いてください。
+</p>
+
+<h2>何をどこに置くか？</h2>
+
+<p>
+texmfフォルダはいくつかのフォルダを含み、それらのフォルダがさらに別のフォルダを含んでいます。たいていのユーザにとって重要なのは、次の3つの最上位フォルダです。
+</p>
+
+<table>
+<tr><th>フォルダ</th><th>置くもの</th></tr>
+<tr><th>bibtex</th><td>bibファイルとbstファイルを置く場所です。少なくとも次のフォルダが必要です：</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>bst</td><td>bstファイルをここに置きます。</td></tr>
+<tr><td>bib</td><td>bibファイルをここに置きます。</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><th>tex</th><td>新しいパッケージを置く場所です。次のフォルダが必要です：</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>latex</td><td>LaTeXのパッケージをここに置きます。</td></tr>
+<tr><td>plain</td><td>plain TeXのファイルをここに置きます。</td></tr>
+<tr><td>xelatex</td><td>XeLaTeX専用のパッケージをここに置きます。</td></tr>
+<tr><td>xetex</td><td>plain XeTeXのファイルをここに置きます。</td></tr>
+<tr><td>context</td><td>ConTeXtのファイルをここに置きます。</td></tr>
+<tr><td>generic</td><td>どの種類のTeXでも使えるファイルをここに置きます。</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><th>doc</th><td>texフォルダにインストールしたパッケージのドキュメントをここに置きます。ここに置いておくと、texdocの仕組み（あるいはTeXShopのヘルプメニューの「パッケージのヘルプを表示...」）でドキュメントが見つかるようになります。</td></tr>
+</table>
+
+<p>
+その他の最上位フォルダには、fonts、scripts、sourceがあります。
+</p>
+
+<h2>環境変数</h2>
+
+<p>
+他のUNIXマシンでは、個人的な入力ファイルの所在を、環境変数（TEXINPUTS・BSTINPUTSおよびBIBINPUTS）の設定によってTeXに知らせることがあります。TeX Liveではまずその必要はありません。代わりに、個人的な入力ファイルを ~/Library/texmf の適切なサブディレクトリに置いてください。
 </p>
 
 <p>
-他のUNIXマシンにおいて、TeXは個人的な入力ファイルの所在を環境変数（TEXINPUTS・BSTINPUTSおよびBIBINPUTS）の設定により知らされることもあります。これはGerben WierdaのteTeXディストリビューションでは通常は不要ですけれども、特別な状況ではそうすることもできます。Mac OS Xでは ~/.MacOSX/environment.plistという名前のファイルをホーム・ディレクトリに作ることで、環境変数についてプログラムに知らせることをユーザに許可しています。これらの環境変数はすべてのユーザ・シェルおよびすべてのCarbonとCocoaプログラムに読み込まれます──ですから、このファイルを作るに際しては注意を払うべきです。
+ごく特殊な状況では、これらの環境変数を設定することもできます。Mac OS Xでは、ホームディレクトリに ~/.MacOSX/environment.plist というファイルを作成することで、プログラムに環境変数を知らせることができます。これらの環境変数はすべてのユーザシェルとすべてのCarbonおよびCocoaプログラムに読み込まれるので、このファイルを作成する際には注意が必要です。
 </p>
 
-<!-- 
 <p>
-下にあるのはNathan Potterが送ってくれたenvironment.plistファイルのサンプルです ； ありがとう！ さらなる詳細については、
+下にあるのはNathan Potterさんが送ってくれたenvironment.plistファイルのサンプルです ； ありがとう！ さらなる詳細については
 <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>
-でお調べください
-</p>
- -->
-
-<p>
-下にあるのはNathan Potterさんが送ってくれたenvironment.plistファイルのサンプルです ； ありがとう！ さらなる詳細については、
-<a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>
-でお調べください
+でお調べください。
 </p>
 
 <br>
-
 <center><img align=center src="environment.tiff" border=3></center>
+</div>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 <div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title">スタイルとマクロをteTeXに追加する</div>
+<div id="header_title">スタイルとマクロをTeX Liveに追加する</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
 			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
 			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
 			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
@@ -70,7 +102,7 @@ TeXは ~/Library/texmf/texないしはこのディレクトリ以下のサブフ
 			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
 			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
 			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
 			<li><a href="advanced_fink.htm">Finkとの共存</a>
 			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
 			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>

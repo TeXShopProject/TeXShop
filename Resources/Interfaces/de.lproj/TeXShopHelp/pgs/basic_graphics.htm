@@ -8,36 +8,28 @@
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 <BODY>
-	<div id="content_border">	
-		<p>Die Programme pdftex und pdflatex erlauben es Grafiken in den Formaten pdf, jpg oder tiff einzuf&uuml;gen. Zu beachten ist jedoch, dass tiff-Grafiken die Endung &bdquo;.tif&ldquo; anstelle von &bdquo;.tiff&ldquo; haben m&uuml;ssen. Das native Ausgabeformat von Mac OS X ist pdf. (portable document format) Diese Dateien k&ouml;nnen in jeder Gr&ouml;&szlig;e in guter Qualit&auml;t ausgedruckt werden. Sehr wahrscheinlich werden die meisten Programme f&uuml;r Mac OS X in Zukunft pdf-Dateien erstellen k&ouml;nnen.</p>
-		<p>Sollten Sie schon fr&uuml;her TeX benutzt haben, liegen Ihre Grafiken vielleicht im eps-Format vor. Pdftex und pdflatex k&ouml;nnen diese Dateien nicht direkt verarbeiten. Sie m&uuml;ssen erst in das pdf-Format umgewandelt werden. Um eine eps-Datei zu konvertieren, &ouml;ffnen Sie sie in TeXShop. Sobald die Datei im Anzeigefenster erscheint wird eine eine pdf-Datei des selben Inhalts erstellt und gesichert. Es existiert auch ein Kommandzeilen-Programm, mit dem die Konvertierung vollzogen werden kann. (TeXShop selbst benutzt auch dieses Programm im Hintergrund). Um die Datei &bdquo;meinedatei.eps&ldquo; in &bdquo;meinedatei.pdf&ldquo; umzuwandeln, geben Sie im Terminal-Fenster</p>
-		<dl>
-			<dd><tt>epstopdf myfile.eps</tt> 
-		</dl>
-		<p>ein und d&uuml;cken die Eingabetaste. Die Autoren von pdflatex und die Autoren des Grafikpakets &bdquo;graphics&ldquo; haben es vereinfacht Grafiken in ein LaTeX Dokument einzuf&uuml;gen und mit pdflatex zu setzen. Selbst wenn das Dokument sp&auml;ter mit Standard LaTeX gesetzt wird und, f&uuml;r die Weitergabe an andere, in eine dvi-Datei konvertiert wird. F&uuml;gen Sie am Anfang der LaTeX-Quelldatei folgende Zeile ein:</p>
+	<div id="content_border">
+		<p>Die Programme pdftex und pdflatex k&ouml;nnen Grafikdateien in den Formaten pdf, jpg, png oder mps verwenden. Das native Grafikformat von Mac OS X ist pdf (portable document format); solche Dateien lassen sich in jeder Gr&ouml;&szlig;e gut drucken. Wahrscheinlich werden die meisten k&uuml;nftigen Grafikprogramme f&uuml;r den Mac pdf ausgeben.</p>
+		<p>Um Grafiken zu verwenden, f&uuml;gen Sie die folgende Zeile in die Pr&auml;ambel Ihrer Quelldatei ein:</p>
 		<dl>
 			<dd><tt>\usepackage{graphicx}</tt>
 		</dl>
-		<p>Wenn sie jetzt eine Grafik einf&uuml;gen wollen, beispielsweise &quot;f1.pdf&quot;, dann benutzten sie den Befehl</p>
+		<p>Wenn Sie eine Grafikdatei einf&uuml;gen wollen, beispielsweise &bdquo;f1.pdf&ldquo;, benutzen Sie den Befehl</p>
 		<dl>
 			<dd><tt>\includegraphics[width=2in]{f1}</tt>
 		</dl>
-		<p>Dieser Befehl l&auml;sst TeX die Grafik &quot;f1.pdf&quot; beim n&auml;chsten Setzen mit pdflatex einf&uuml;gen, jedoch  erst wenn der Text mit latex gesetzt wird.</p>
-		<p>Wenn Sie von einer &auml;lteren Version aktualisiert haben und die automatische Umwandlung von eps und tif Dateien w&auml;hrend des Setzen m&ouml;chten, dann stellen Sie sicher, dass</p>
-		<ol>
-			<li type="a">sie folgende Programme installiert haben: Ghostscript 8, Freetype 2, wmf und iconv conversion Unterst&uuml;tzung, au&szlig;erdem<br>
-					
-					
-					ImageMagick mit Gerben Wierda's Installationsprogramm
-			<li type="a">die Einstellung von pdflatex &quot;pdflatex --shell-escape&quot; ist
-			<li type="a">die Kopfzeile Ihres Quelltextes folgende Zeilen enth&auml;lt:
-		</ol>
+		<p>Indem Sie die angegebene Breite in diesem Befehl &auml;ndern, k&ouml;nnen Sie die Gr&ouml;&szlig;e der Grafik beim Setzen anpassen. Probieren Sie aus, welche Gr&ouml;&szlig;e Ihnen zusagt.</p>
+		<p>Sollten Sie schon fr&uuml;her TeX benutzt haben, liegen Ihre Grafiken vielleicht im eps-Format vor. Diese Dateien m&uuml;ssen in das pdf-Format umgewandelt werden, bevor sie mit pdftex und pdflatex gesetzt werden. Ab TeX Live 2011 geschieht das automatisch, sofern die Quelldatei das Paket graphicx l&auml;dt.</p>
+		<p>Einzelne eps-Dateien k&ouml;nnen Sie in das pdf-Format umwandeln, indem Sie sie in TeXShop &ouml;ffnen. Dabei wird die eps-Datei automatisch in pdf umgewandelt; die pdf-Datei wird auf die Festplatte geschrieben, und die eps-Datei bleibt erhalten. Anschlie&szlig;end wird die pdf-Datei ge&ouml;ffnet.</p>
+		<p>Die Autoren von pdflatex und die Autoren des Grafikpakets graphicx haben es einfach gemacht, Grafikdateien in ein LaTeX-Dokument einzuf&uuml;gen, das mit pdflatex gesetzt wird &ndash; selbst wenn das Dokument sp&auml;ter mit Standard-LaTeX gesetzt und f&uuml;r die Weitergabe an andere in eine dvi-Datei umgewandelt wird. Das kann vorkommen, wenn Sie Quelldateien mit einem Kollegen austauschen, der gew&ouml;hnliches LaTeX benutzt und eps-Grafiken statt pdf-Grafiken braucht. Wenn Sie eine Grafik einf&uuml;gen wollen, beispielsweise &bdquo;f1.pdf&ldquo;, benutzen Sie den folgenden Befehl und lassen dabei die Endung &bdquo;.pdf&ldquo; bzw. &bdquo;.eps&ldquo; weg:</p>
 		<dl>
-			<dd><tt>\usepackage{graphicx}</tt>
-			<dd><tt>\usepackage{epstopdf}</tt>
-			<dd><tt>\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `basename #1 .tif`.png}</tt>
+			<dd><tt>\includegraphics[width=2in]{f1}</tt>
 		</dl>
-	</div>		
+		<p>Dieser Befehl l&auml;sst TeX die Datei &bdquo;f1.pdf&ldquo; einlesen, wenn der Text mit pdflatex gesetzt wird, aber die Datei &bdquo;f1.eps&ldquo;, wenn der Text mit latex gesetzt wird.</p>
+		<p>Sie k&ouml;nnen auch tif- und tiff-Grafiken verwenden. Daf&uuml;r hat TeXShop den Men&uuml;befehl &bdquo;TIFF umwandeln&ldquo;, der die Dateien in png-Dateien umwandelt, die pdftex und pdflatex verstehen. Der Befehl ist verf&uuml;gbar, wenn das Quelltextfenster aktiv ist. Wenn Sie ihn w&auml;hlen, erscheint ein &Ouml;ffnen-Dialog, der alle Dateien im Ordner der Quelldatei anzeigt. Nur tif- und tiff-Dateien sind ausw&auml;hlbar, alle anderen sind ausgegraut. W&auml;hlen Sie eine oder mehrere Dateien und klicken Sie auf &bdquo;Konvertieren&ldquo;. Alle gew&auml;hlten Dateien werden in png-Dateien umgewandelt; die tiff-Dateien bleiben unver&auml;ndert.</p>
+		<p>Wenn Sie einige &auml;ltere Dateien mit eps-Grafiken haben oder in TeX das PostScript-Paket pstricks benutzen, k&ouml;nnen Sie statt mit pdflatex &bdquo;&Uuml;ber DVI&ldquo; setzen. Einzelheiten finden Sie im Abschnitt &bdquo;<a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a>&ldquo; der TeXShop-Hilfe. In diesem Modus m&uuml;ssen eps-Dateien nicht in das pdf-Format umgewandelt werden. F&uuml;r neue Projekte mit vielen eps-Dateien ist dieser Modus jedoch keine gute Wahl, weil die eps-Grafiken bei jedem Setzen implizit in pdf umgewandelt werden m&uuml;ssen; bei komplizierten Grafiken verlangsamt das das Setzen enorm. Im Modus &bdquo;&Uuml;ber DVI&ldquo; findet die Umwandlung von PostScript in pdf n&auml;mlich ganz am Ende des Setzens statt, nachdem die Grafiken in das vollst&auml;ndige Dokument eingebettet wurden.</p>
+</div>
+
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 <div id="header_chapter">Grundlagen</div>
@@ -47,7 +39,7 @@
 	<div id="menu_border">
 		<UL>
 			<LI><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-			<LI><a href="basic_installtetex.htm">teTeX beschaffen und installieren</a></li>
+			<LI><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
 			<LI><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
 			<LI><a href="basic_typesetting.htm">Dokumente setzen</a></li>
 			<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>

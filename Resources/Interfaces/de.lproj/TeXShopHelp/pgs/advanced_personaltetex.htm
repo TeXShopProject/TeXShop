@@ -2,38 +2,56 @@
 
 <HEAD>
 		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Pers&ouml;nliche Dateien zu teTeX hinzuf&uuml;gen</TITLE>
+		<TITLE>Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="&Uuml;ber teTeX: Pers&ouml;nliche Dateien hinzuf&uuml;gen">
+		<META NAME="description" CONTENT="Der lokale texmf-Ordner f&uuml;r pers&ouml;nliche Dateien und Umgebungsvariablen">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 <BODY>
 	<div id="content_border">
-		<P>Manche benutzer erstellen zus&auml;tzliche sty, cls, bib und tex Dateien um sie in verschiedenen Projekten zu verwenden. Diese Dateien werden von tex und latex erkannt, wenn sie im selben Ordner liegen wie die tex-Quelldatei, die gerade gesetzt wird. Hierdurch kann es jedoch vorkommen, dass mehrere Kopien einer Datei aufbewahrt werden m&uuml;ssen.</P>
-
-<P>Es ist m&ouml;glich, dass diese Dateien allen teTeX Projekten zur Verf&uuml;gung gestellt werden, die aus TeXShop oder vom Terminal aus gesetzt werden. Hierf&uuml;r m&uuml;ssen Sie einen Ordner &bdquo;texmf&ldquo; in Ihrem privaten &bdquo;Library&ldquo;-Ordner anlegen. Erstellen Sie nun Unterordner, die Sie &bdquo;tex&ldquo; und &bdquo;bibtex&ldquo; nennen. Im &bdquo;tex&ldquo;-Ordner m&uuml;ssen Sie nun einen Ordner &bdquo;latex&ldquo; erstellen. Legen Sie Ihre pers&ouml;nlichen Dateien hierin ab.</P>
-
-<P>Tex findet jede Datei in &bdquo;~/Library/texmf/tex&ldquo; oder in einem seiner Unterordner. Latex findet jede Datei in &bdquo;~/Library/texmf/tex/latex&ldquo; oder einem seiner Unterordner. Ebenso verh&auml;lt es sich mit bibtex und dem Ordner &bdquo;~/Library/texmf/bibtex&ldquo;. Nachdem Sie die Dateien abgelegt haben m&uuml;ssen Sie texhash nicht ausf&uuml;hren.</P>
-
-<P>In anderen Unix Umgebungen m&uuml;ssen pers&ouml;nliche Dateien durch die Umgebungsvariablen TEXINPUTS, BSTINPUTS und BIBINPUTS dem System bekannt gemacht werden. Normalerweise ist dies bei Gerben Wierdas teTeX Distribution nicht n&ouml;tig. Es kann jedoch in Ausnahmef&auml;llen gemacht werden. Mac OS X erlaubt es Benutzern die Variablen bekannt zu machen, indem im Homeverzeichnis eine Datei namens &bdquo;~/.MacOSX/environment.plist&ldquo; erstellt wird. Diese Umgebungsvariablen werden von allen Carbon und Cocoa Programmen erkannt. Daher ist diese Funktion mit Bedacht zu verwenden. </P>
-
-<P>Hier ist eine Beispiel environment.plist&#150;Dtaei von Nathan Potter. Danke! F&uuml;r weitere Details besuchen Sie <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>.
-</P>
+		<p>Jede TeX-Distribution erwartet pers&ouml;nliche Erg&auml;nzungen (etwa eigene Style-Dateien oder Pakete, die nicht zur eigentlichen Distribution geh&ouml;ren) in einem lokalen Ordner bzw. Verzeichnis. Dieser Ordner hei&szlig;t &bdquo;texmf&ldquo; und hat eine bestimmte Struktur von Unterordnern, damit die TeX-Programme die Dateien richtig finden.</p>
+		<p>Auf dem Mac liegt der lokale texmf-Ordner im Ordner &bdquo;Library&ldquo; Ihres Benutzerordners. Man schreibt daf&uuml;r meist &bdquo;~/Library/texmf&ldquo;, wobei &bdquo;~&ldquo; f&uuml;r &bdquo;Ihren Benutzerordner&ldquo; steht (also den Ordner, den Sie sehen, wenn Sie in einem Finder-Fenster auf das Symbol Ihres Benutzerordners klicken).</p>
+<h2>Wann geh&ouml;rt etwas in den lokalen texmf-Ordner?</h2>
+		<p>Bevor Sie etwas in den lokalen texmf-Ordner legen, sollten Sie pr&uuml;fen, ob das betreffende Paket nicht schon zu TeX Live geh&ouml;rt und damit in der MacTeX-Distribution enthalten ist. Am einfachsten geht das mit TeX Live Utility. Das gilt besonders f&uuml;r Pakete auf CTAN: Die meisten davon sind in TeX Live enthalten und sollten Ihnen bereits zur Verf&uuml;gung stehen.</p>
+		<p>Wenn Sie wissen, dass ein Paket nicht zu TeX Live geh&ouml;rt, legen Sie es in Ihren lokalen texmf-Ordner.</p>
+<h2>Was geh&ouml;rt wohin?</h2>
+		<p>Der texmf-Ordner enth&auml;lt eine Reihe von Ordnern, die ihrerseits weitere Ordner enthalten. F&uuml;r die meisten Benutzer sind die folgenden drei Ordner der obersten Ebene am wichtigsten:</p>
+<table>
+<tr><th>Ordner</th><th>Was hineingeh&ouml;rt</th></tr>
+<tr><th>bibtex</th><td>Hierher geh&ouml;ren bib- und bst-Dateien. Er sollte mindestens die folgenden Ordner enthalten:</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>bst</td><td>Legen Sie bst-Dateien hier ab.</td></tr>
+<tr><td>bib</td><td>Legen Sie bib-Dateien hier ab.</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><th>tex</th><td>Hierher geh&ouml;ren neue Pakete. Er sollte die folgenden Ordner enthalten:</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>latex</td><td>Legen Sie LaTeX-Pakete hier ab.</td></tr>
+<tr><td>plain</td><td>Legen Sie Dateien f&uuml;r plain TeX hier ab.</td></tr>
+<tr><td>xelatex</td><td>Legen Sie Pakete speziell f&uuml;r XeLaTeX hier ab.</td></tr>
+<tr><td>xetex</td><td>Legen Sie Dateien f&uuml;r plain XeTeX hier ab.</td></tr>
+<tr><td>context</td><td>Legen Sie ConTeXt-Dateien hier ab.</td></tr>
+<tr><td>generic</td><td>Legen Sie Dateien, die mit jeder TeX-Variante funktionieren, hier ab.</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><th>doc</th><td>Legen Sie hier die Dokumentation der Pakete ab, die Sie im Ordner &bdquo;tex&ldquo; installiert haben. Dann findet texdoc sie (ebenso wie &bdquo;Hilfe f&uuml;r Paket einblenden...&ldquo; im Men&uuml; &bdquo;Hilfe&ldquo; von TeXShop).</td></tr>
+</table>
+		<p>Weitere Ordner der obersten Ebene sind fonts, scripts und source.</p>
+<h2>Umgebungsvariablen</h2>
+		<p>In anderen Unix-Umgebungen teilt man tex den Ort pers&ouml;nlicher Eingabedateien manchmal &uuml;ber die Umgebungsvariablen TEXINPUTS, BSTINPUTS und BIBINPUTS mit. Mit TeX Live ist das fast nie n&ouml;tig; legen Sie pers&ouml;nliche Eingabedateien stattdessen in passende Unterordner von ~/Library/texmf.</p>
+		<p>Unter ganz besonderen Umst&auml;nden k&ouml;nnen diese Umgebungsvariablen gesetzt werden. Unter Mac OS X kann man Programmen Umgebungsvariablen mitteilen, indem man im Benutzerordner eine Datei ~/.MacOSX/environment.plist anlegt. Diese Umgebungsvariablen werden von allen Shells des Benutzers und allen Carbon- und Cocoa-Programmen &uuml;bernommen; legen Sie die Datei daher mit Vorsicht an.</p>
+		<p>Hier ist eine Beispieldatei environment.plist von Nathan Potter. Danke! F&uuml;r weitere Details besuchen Sie <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>.</p>
 <br>
-
-
 <center><img align=center src="environment.tiff" border=3></center>
+</div>
 
-	</div>		
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 <div id="header_chapter">Erweitert</div>
-<div id="header_title">Pers&ouml;nliche Sty- und Makrodateien zu teTeX hinzuf&uuml;gen</div>
+<div id="header_title">Pers&ouml;nliche Sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</div>
 
 
 	<div id="menu_border">
 		<UL>
-			<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu teTeX hinzuf&uuml;gen</a></li>
+			<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</a></li>
 			<LI><a href="advanced_addengine.htm">Zusätzliche Schriftsatz-Programme</a>
 			<LI><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a>
 			<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
@@ -49,7 +67,7 @@
 			<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung </a></li>
 			<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
 			<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber teTeX</a></li>
+			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
 			<li><a href="advanced_fink.htm">Zusammenarbeit mit Fink</a></li>
 			<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
 			<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
