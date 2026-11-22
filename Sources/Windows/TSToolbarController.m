@@ -189,15 +189,22 @@ static NSString*    kHtmlSearchTID              = @"HtmlSearch";
 }
 @end
 
-static char TSSplitToggleCueKey, TSSplitToggleSideBySideKey, TSSplitToggleImageKey;
+static char TSSplitToggleSideBySideKey, TSSplitToggleImageKey;
+// The key window whose buttons were updated last, and whether Option was held then,
+// whichever way the update came (TSSplitToggleCatchUp).
+static __weak NSWindow *TSSplitToggleShownWindow;
+static BOOL TSSplitToggleShownHeld;
 
 // The split buttons of a window show the side-by-side split while Option is held
-// over them in a window that is not split, and in a window split side by side
+// in the key window when it is not split, and in a window split side by side
 // (TSSplitToggleCue.h).
 static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flags)
 {
-    BOOL option = window.isKeyWindow && TSSplitToggleOptionHeld(flags);
-    NSPoint point = window.mouseLocationOutsideOfEventStream;
+    NSEventModifierFlags held = window.isKeyWindow ? flags : 0;
+    if (window.isKeyWindow) {
+        TSSplitToggleShownWindow = window;
+        TSSplitToggleShownHeld = TSSplitToggleOptionHeld(flags);
+    }
     for (NSToolbarItem *item in window.toolbar.items) {
         BOOL preview = [item.itemIdentifier isEqual: kSplitKKTID];
         if ((!preview && ![item.itemIdentifier isEqual: kSplitID]) || ![item.target isKindOfClass: [TSDocument class]])
@@ -205,8 +212,7 @@ static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flag
         TSDocument *document = item.target;
         BOOL split = preview ? document.pdfKitWindow.windowIsSplit : document.isSplit;
         BOOL splitSideBySide = preview ? document.pdfKitWindow.pdfKitSplitView.isVertical : document.isSplitSideBySide;
-        BOOL sideBySide = TSSplitToggleShowsSideBySide(flags, split, splitSideBySide,
-                                                       option && TSSplitTogglePointOnItem(window, item, point));
+        BOOL sideBySide = TSSplitToggleShowsSideBySide(held, split, splitSideBySide);
         // In a split window a click unsplits, so the tool tip and the spoken name say so.
         NSString *tip = TSSplitToggleToolTip(preview, split);
         if (![item.toolTip isEqualToString: tip])
@@ -230,74 +236,6 @@ static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flag
     }
 }
 
-// While Option is held in the key window, follows the pointer over the window so
-// that a split button turns when the pointer reaches it and back when it leaves.
-@interface TSSplitToggleCue : NSObject
-@property (weak) NSWindow *window;
-@property (weak) NSView *frameView;
-@property (strong) NSTrackingArea *area;
-@end
-
-@implementation TSSplitToggleCue
-- (instancetype)initWithWindow:(NSWindow *)window
-{
-    self = [super init];
-    if (self) {
-        self.window = window;
-        NSView *frameView = window.contentView.superview;
-        self.frameView = frameView;
-        self.area = [[NSTrackingArea alloc] initWithRect: NSZeroRect
-            options: NSTrackingMouseMoved | NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect
-            owner: self userInfo: nil];
-        [frameView addTrackingArea: self.area];
-        [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(windowResignedKey:)
-                                                     name: NSWindowDidResignKeyNotification object: window];
-    }
-    return self;
-}
-
-- (void)stop
-{
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
-    [self.frameView removeTrackingArea: self.area];
-    self.area = nil;
-}
-
-- (void)dealloc
-{
-    [self stop];
-}
-
-- (void)mouseMoved:(NSEvent *)event { TSSplitToggleItemsFollow(self.window, NSEvent.modifierFlags); }
-- (void)mouseEntered:(NSEvent *)event { TSSplitToggleItemsFollow(self.window, NSEvent.modifierFlags); }
-- (void)mouseExited:(NSEvent *)event { TSSplitToggleItemsFollow(self.window, 0); }
-
-- (void)windowResignedKey:(NSNotification *)notification
-{
-    NSWindow *window = self.window;
-    [self stop];
-    objc_setAssociatedObject(window, &TSSplitToggleCueKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    TSSplitToggleItemsFollow(window, 0);
-}
-@end
-
-// Option pressed or released in a window.
-static void TSSplitToggleOptionChanged(NSWindow *window, NSEventModifierFlags flags)
-{
-    if (!window.toolbar)
-        return;
-    TSSplitToggleCue *cue = objc_getAssociatedObject(window, &TSSplitToggleCueKey);
-    BOOL follow = window.isKeyWindow && TSSplitToggleOptionHeld(flags);
-    if (follow && !cue)
-        objc_setAssociatedObject(window, &TSSplitToggleCueKey, [[TSSplitToggleCue alloc] initWithWindow: window],
-                                 OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    else if (!follow && cue) {
-        [cue stop];
-        objc_setAssociatedObject(window, &TSSplitToggleCueKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    TSSplitToggleItemsFollow(window, flags);
-}
-
 void TSSplitToggleItemsFollowSplit(void)
 {
     for (NSWindow *window in NSApp.windows)
@@ -305,14 +243,49 @@ void TSSplitToggleItemsFollowSplit(void)
             TSSplitToggleItemsFollow(window, NSEvent.modifierFlags);
 }
 
+// Event tracking loops, such as the magnifying glass and menus, take the flagsChanged
+// events from the queue themselves, so the monitor below never sees them. Each time
+// the run loop is about to wait, in any common mode (tracking loops included), the
+// buttons of the key window catch up with the keys held then, so the image always
+// tells what a click does.
+static void TSSplitToggleCatchUp(void)
+{
+    NSWindow *window = NSApp.keyWindow;
+    NSEventModifierFlags flags = NSEvent.modifierFlags;
+    BOOL held = TSSplitToggleOptionHeld(flags);
+    NSWindow *previous = TSSplitToggleShownWindow;
+    if (window == previous && held == TSSplitToggleShownHeld)
+        return;
+    TSSplitToggleShownWindow = window;
+    TSSplitToggleShownHeld = held;
+    if (previous && previous != window && previous.toolbar)
+        TSSplitToggleItemsFollow(previous, flags);
+    if (window.toolbar)
+        TSSplitToggleItemsFollow(window, flags);
+}
+
 static void TSInstallSplitToggleOptionMonitor(void)
 {
     static dispatch_once_t once;
     dispatch_once(&once, ^{
+        CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(NULL, kCFRunLoopBeforeWaiting, true, 0,
+            ^(CFRunLoopObserverRef runLoopObserver, CFRunLoopActivity activity) { TSSplitToggleCatchUp(); });
+        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);
+        CFRelease(observer);
         [NSEvent addLocalMonitorForEventsMatchingMask: NSEventMaskFlagsChanged handler: ^NSEvent *(NSEvent *event) {
-            TSSplitToggleOptionChanged(event.window ?: NSApp.keyWindow, event.modifierFlags);
+            NSWindow *window = event.window ?: NSApp.keyWindow;
+            if (window.toolbar)
+                TSSplitToggleItemsFollow(window, event.modifierFlags);
             return event;
         }];
+        // A window that becomes key with Option held shows the side-by-side split, and one
+        // that stops being key shows its own image again.
+        for (NSNotificationName name in @[NSWindowDidBecomeKeyNotification, NSWindowDidResignKeyNotification])
+            [[NSNotificationCenter defaultCenter] addObserverForName: name object: nil queue: nil usingBlock: ^(NSNotification *notification) {
+                NSWindow *window = notification.object;
+                if (window.toolbar)
+                    TSSplitToggleItemsFollow(window, NSEvent.modifierFlags);
+            }];
     });
 }
 
