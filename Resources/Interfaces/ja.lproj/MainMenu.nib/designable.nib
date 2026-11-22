@@ -1421,7 +1421,7 @@
                             <menuItem isSeparatorItem="YES" id="bIK-Md-xsk">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeXLiveドキュメント（英語）" id="8YC-Wr-7Pb" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
+                            <menuItem title="TeX Liveドキュメント（英語）" id="8YC-Wr-7Pb" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXLiveDocumentation:" target="690" id="7Ue-Ba-Bsk"/>

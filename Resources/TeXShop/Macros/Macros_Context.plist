@@ -58,7 +58,7 @@ open location "https://texshop.app/"</string>
 
 open location "http://www.rna.nl/tex.html"</string>
 					<key>name</key>
-					<string>teTeX/TeXLive home page</string>
+					<string>teTeX/TeX Live home page</string>
 				</dict>
 			</array>
 		</dict>

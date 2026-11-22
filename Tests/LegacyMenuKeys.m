@@ -61,6 +61,13 @@ int main(int argc,char **argv){@autoreleasepool{
   Apply(main,@{@"Source":@{@"Show Syntax Color":@[@"y",@NO,@YES],@"expl3-Syntax farblich hervorheben":@[@"x",@NO,@YES]}});
   Check([syntax.keyEquivalent isEqual:@"y"] && [expl.keyEquivalent isEqual:@"x"],@"the former titles reach Syntax Highlighting and Highlight expl3 Code");
  }
+ // Help › TeX Live Documentation in Japanese was written without the space before 6.00.
+ {
+  NSMenu *main=[NSMenu new];NSMenuItem *help=Item(main,@"ヘルプ");help.submenu=[NSMenu new];
+  NSMenuItem *doc=Item(help.submenu,@"TeX Liveドキュメント（英語）");doc.identifier=@"TSShortcut.displayTeXLiveDocumentation:.0";
+  Apply(main,@{@"ヘルプ":@{@"TeXLiveドキュメント（英語）":@[@"t",@NO,@YES]}});
+  Check([doc.keyEquivalent isEqual:@"t"],@"the former Japanese title reaches TeX Live Documentation");
+ }
  // Edit › Find: only the English menu had Find and Replace… before 6.00. Positions saved for another language's menu
  // skip it, which that menu now has after Find…; the English positions count it, as before. Titles reach it in both.
  for(NSNumber *english in @[@YES,@NO]){
