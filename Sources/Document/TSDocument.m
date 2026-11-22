@@ -9630,11 +9630,17 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
 - (void)trashAUXFiles: sender
 {
+	// Option trashes the files of the whole folder tree.
+	[self trashAUXFilesAggressively:((GetCurrentKeyModifiers() & optionKey) != 0)];
+}
+
+// Trash Aux & Typeset is chosen with Option held (Option-Command-T), so it asks for the
+// files of the document alone instead of reading the keys.
+- (void)trashAUXFilesAggressively:(BOOL)aggressive
+{
 	NSString        *theSource;
     
-	aggressiveTrash = NO;
-	if ((GetCurrentKeyModifiers() & optionKey) != 0)
-		aggressiveTrash = YES;
+	aggressiveTrash = aggressive;
 	if ([SUD boolForKey:AggressiveTrashAUXKey])
 		aggressiveTrash = YES;
 	

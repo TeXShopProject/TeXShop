@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Trash Aux Files from a chapter file trashes the root's files, Option or not."""
+"""Trash Aux Files from a chapter file trashes the root's files, Option or not. Trash Aux & Typeset
+(Option-Command-T, or Option-clicking Typeset) trashes the files of the document alone although
+Option is held; only AggressiveTrashAUX makes it sweep the folder tree."""
 from pathlib import Path
 import re, subprocess, sys, tempfile
 
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Document/TSDocument.m').read_text(encoding='latin-1')
+jobs = (root / 'Sources/Typesetting/TSDocument-Jobs.m').read_text(encoding='latin-1')
 rootfile = (root / 'Sources/Document/TSDocument-RootFile.m').read_text(encoding='latin-1')
 
 def method(text, signature):
@@ -12,7 +15,8 @@ def method(text, signature):
     end = text.index('\n}\n', start) + 3
     return text[start:end]
 
-methods = method(source, '- (void)trashAUXFiles: sender') + method(source, '- (void)trashAUXWithAggressiveness:(BOOL)aggressive')
+methods = (method(source, '- (void)trashAUXFiles: sender') + method(source, '- (void)trashAUXFilesAggressively:(BOOL)aggressive')
+           + method(source, '- (void)trashAUXWithAggressiveness:(BOOL)aggressive'))
 mutation = sys.argv[1] if len(sys.argv) > 1 else ''
 if mutation == 'setting-only-root':
     methods = methods.replace('\ttheSource = [[self textView] string];\n\tif ([self checkMasterFile',
@@ -21,6 +25,15 @@ elif mutation == 'stale-flag':
     methods = methods.replace('\taggressiveTrash = aggressive;\n', '')
 elif mutation == 'plain-forward':
     rootfile = rootfile.replace('[obj trashAUXWithAggressiveness:aggressiveTrash];', '[obj trashAUX];', 1)
+elif mutation == 'typeset-reads-option':
+    # Trash Aux & Typeset goes back to the menu command, which reads the Option key.
+    jobs = jobs.replace('[self trashAUXFilesAggressively:NO];', '[self trashAUXFiles:self];', 1)
+elif mutation == 'setting-ignored':
+    methods = methods.replace('\tif ([SUD boolForKey:AggressiveTrashAUXKey])\n\t\taggressiveTrash = YES;\n', '')
+
+# Trash Aux & Typeset (tag -2, or Option held when typesetting) asks for the document's files alone.
+typeset = jobs[jobs.index('(modifiers == NSAlternateKeyMask)'):][:200]
+typesetPlain = '[self trashAUXFilesAggressively:NO];' in typeset
 
 # Every branch of the root lookup that hands the task to the root document forwards the flag.
 forwards = rootfile.count('[obj trashAUXWithAggressiveness:aggressiveTrash];')
@@ -55,6 +68,7 @@ static FakeDefaults *Defaults(void) { static FakeDefaults *d; if (!d) d = [FakeD
 - (NSTextView *)textView;
 - (void)trashAUX;
 - (void)trashAUXWithAggressiveness:(BOOL)aggressive;
+- (void)trashAUXFilesAggressively:(BOOL)aggressive;
 @end
 @implementation Doc
 - (NSURL *)fileURL { return self.url; }
@@ -98,9 +112,20 @@ int main(void) { @autoreleasepool {
         [log removeAllObjects]; [other trashAUXFiles:nil];
         Expect(@"non-TeX document trashes nothing", log, @[]);
     }
+    // Trash Aux & Typeset with Option held: the document's files, unless AggressiveTrashAUX is set.
+    for (int setting = 0; setting < 2; setting++) {
+        gModifiers = optionKey; gAggressiveSetting = setting;
+        NSString *want = setting ? @"tree" : @"folder";
+        [log removeAllObjects];
+        if (TYPESET_PLAIN) [single trashAUXFilesAggressively:NO]; else [single trashAUXFiles:nil];
+        Expect([NSString stringWithFormat:@"Trash Aux & Typeset with Option, setting %d", setting], log, @[[@"single:" stringByAppendingString:want]]);
+        [log removeAllObjects];
+        if (TYPESET_PLAIN) [chapter trashAUXFilesAggressively:NO]; else [chapter trashAUXFiles:nil];
+        Expect([NSString stringWithFormat:@"Trash Aux & Typeset from a chapter, setting %d", setting], log, @[[@"root:" stringByAppendingString:want]]);
+    }
     return failures ? 1 : 0;
 } }
-'''.replace('METHODS', methods).replace('FORWARDS', '1' if (forwards == 3 and plain == 0) else '0')
+'''.replace('METHODS', methods).replace('FORWARDS', '1' if (forwards == 3 and plain == 0) else '0').replace('TYPESET_PLAIN', '1' if typesetPlain else '0')
 
 with tempfile.TemporaryDirectory(prefix='texshop-trash-aux-root-') as tmp:
     src, exe = Path(tmp) / 'test.m', Path(tmp) / 'test'
@@ -112,4 +137,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-trash-aux-root-') as tmp:
         print('detected mutation', mutation)
     else:
         if r.returncode: raise SystemExit(r.stdout + r.stderr)
-        print('PASS: chapter files go to the root with and without Option or AggressiveTrashAUX; the Option tree sweep reaches the root; single, untitled and non-TeX documents')
+        print('PASS: chapter files go to the root with and without Option or AggressiveTrashAUX; the Option tree sweep reaches the root; single, untitled and non-TeX documents; Trash Aux & Typeset trashes the document\'s files with Option held, the tree only with AggressiveTrashAUX')
