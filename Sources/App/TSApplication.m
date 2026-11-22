@@ -10,6 +10,7 @@
 #import "TSDocumentController.h"
 #import "TSDocument.h"
 #import "Globals.h"
+#import "TSAboutCredits.h"
 
 @implementation TSApplication
 
@@ -66,6 +67,13 @@
     [super sendEvent:anEvent];
 }
 
+
+// About TeXShop shows the standard panel; its credits start with a link to the web site.
+- (void)orderFrontStandardAboutPanel:(id)sender
+{
+    NSAttributedString *credits = TSAboutCreditsWithWebsiteLink(TSAboutBundleCredits([NSBundle mainBundle]));
+    [self orderFrontStandardAboutPanelWithOptions:@{NSAboutPanelOptionCredits: credits}];
+}
 
 - (IBAction)GotoLibraryTeXShop: (id)sender;
 {
