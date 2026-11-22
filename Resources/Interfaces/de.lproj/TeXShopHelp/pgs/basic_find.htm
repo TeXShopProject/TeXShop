@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suchen und Ersetzen</title>
+<meta name="description" content="suchen und ersetzen; Erweiterte Suchmaske; Suchoberfläche; reguläre Ausdrücke; Alle suchen; Alle hervorheben; Alles ersetzen; Mehrfach ersetzen; Apple Suchleiste; OgreKit Suchmaske">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
+<li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm" class="current">Suchen und Ersetzen</a></li>
+<li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
+<li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_macros.htm">Makros</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
+<li><a href="basic_printing.htm">Drucken</a></li>
+<li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
+<li><a href="basic_license.htm">Lizenz</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Suchen und Ersetzen</h1>
+
+<p>Die Befehle zum Suchen stehen im Untermenü „Suchen“ des Menüs „Bearbeiten“: Suchen... (<kbd>⌘F</kbd>), Suchen und ersetzen... (<kbd>⌥⌘F</kbd>), Weitersuchen (vorwärts) (<kbd>⌘G</kbd>), Weitersuchen (rückwärts) (<kbd>⇧⌘G</kbd>), Auswahl für Suche verwenden (<kbd>⌘E</kbd>) und Auswahl anzeigen (<kbd>⌘J</kbd>). Wie Sie Text im gesetzten Dokument finden, steht unter <a href="basic_preview.htm#search">Das Vorschaufenster</a>.</p>
+
+<h2>Die Suchoberfläche wählen</h2>
+
+<p>Einstellungen › Editor › Suchoberfläche legt fest, was „Suchen“ öffnet:</p>
+<dl>
+<dt>Erweiterte Suchmaske (empfohlen)</dt>
+<dd>Ein Fenster mit regulären Ausdrücken, einer Liste aller Treffer und „Mehrfach ersetzen“, auf dieser Seite beschrieben. Mit ihr beginnt jeder Benutzer.</dd>
+<dt>Apple Suchleiste</dt>
+<dd>Die Suchleiste von macOS oben im Quelltext, wie in Safari und Xcode.</dd>
+<dt>Apple Suchmaske</dt>
+<dd>Das einfache Suchfenster von macOS.</dd>
+<dt>OgreKit Suchmaske (veraltet)</dt>
+<dd>Das Suchfenster von OgreKit von Isao Sonobe, mit eigenen regulären Ausdrücken. Ein Wechsel zu ihm oder von ihm wird nach einem Neustart von TeXShop wirksam.</dd>
+</dl>
+
+<h2>Die Erweiterte Suchmaske</h2>
+
+<p>„Suchen“ öffnet die Suchmaske mit ausgewähltem Suchfeld, „Suchen und ersetzen“ mit ausgewähltem Ersetzungsfeld. In einem Feld findet der Zeilenschalter den nächsten Treffer, und die Tabulatortaste wechselt ins andere Feld; Wahltaste-Zeilenschalter und Wahltaste-Tabulator fügen einen Zeilenumbruch und einen Tabulator ein. Das Symbol links in einem Feld listet dessen letzte Einträge auf, und das rechte Ende des Suchfelds zeigt die Position des aktuellen Treffers, etwa „3 von 12“.</p>
+
+<p>Unter den Feldern stehen „Regulärer Ausdruck“, „Groß-/Kleinschreibung ignorieren“ und „In der Auswahl“. Die Taste mit drei Punkten zeigt weitere Optionen: am Ende des Dokuments fortsetzen, nur ganze Wörter, diakritische Zeichen oder den Unterschied zwischen voller und halber Breite ignorieren, Optionen für reguläre Ausdrücke, die Ersetzungssyntax und „¥ als \ behandeln“. Die Optionen bleiben von einer Sitzung zur nächsten erhalten.</p>
+
+<p>Unten stehen die Tasten „Alle suchen“, „Alles ersetzen“, „Mehrfach ersetzen …“, „Ersetzen &amp; Suchen“ und die Pfeile für den vorherigen und den nächsten Treffer.</p>
+<ul>
+<li>„Alle suchen“ listet jeden Treffer mit seiner Zeilennummer auf. Klicken Sie auf eine Zeile, um den Treffer im Quelltext auszuwählen; doppelklicken Sie, um außerdem das Quelltextfenster nach vorn zu holen. Ist „Automatisch aktualisieren“ eingeschaltet, folgt die Liste Ihren Änderungen. Das Menü von „Alle suchen“ enthält außerdem „Alle hervorheben“, das jeden Treffer im Text markiert, „Alle auswählen“, das alle auswählt, und „Hervorhebungen entfernen“.</li>
+<li>„Alles ersetzen“ ersetzt jeden Treffer oder, wenn „In der Auswahl“ eingeschaltet ist, jeden Treffer in der Auswahl. Ein einziges Widerrufen nimmt die ganze Ersetzung zurück.</li>
+<li>„Ersetzen &amp; Suchen“ ersetzt den ausgewählten Treffer und sucht den nächsten; sein Menü enthält auch „Ersetzen“ allein.</li>
+</ul>
+
+<p>Mit der Erweiterten Suchmaske enthält das Untermenü „Suchen“ auch die Befehle der Suchmaske, die bei geschlossener Suchmaske funktionieren: Alle suchen (<kbd>⇧⌘F</kbd>), Alle Treffer auswählen, Auswahl für Ersetzen verwenden (<kbd>⇧⌘E</kbd>), Ersetzen, Ersetzen und suchen (<kbd>⌥⌘G</kbd>), Alles ersetzen, Alle hervorheben (<kbd>⇧⌘H</kbd>) und Hervorhebungen entfernen (<kbd>⌃⇧⌘H</kbd>). Ihre Kurzbefehle können Sie unter Einstellungen › Tastatur ändern.</p>
+
+<p>„Alles ersetzen“, „Alle suchen“ und „Mehrfach ersetzen“ arbeiten im Hintergrund, und das Dokument lässt sich erst nach ihrem Ende bearbeiten. Dauert einer länger, zeigt ein Dialog am Dokumentfenster den Fortschritt; „Abbrechen“ im Dialog oder die Escape-Taste hält ihn an und lässt den Text, wie er war.</p>
+
+<p>Die Suchmaske findet Text auch in der Konsole, im Protokoll und in den Fenstern von Bearbeiten › Testen.... Ersetzen ist in der Konsole, im Protokoll und in der Konsole zum Testen nicht möglich, da sie die Ausgabe von TeX zeigen.</p>
+
+<p>Die Suchmaske gehört zu den Dokumentfenstern; ein Klick in den Quelltext legt sie daher hinter dieses Fenster, und „Suchen“ holt sie zurück. Um sie vor den Dokumentfenstern zu halten, schalten Sie „Erweiterte Suchmaske immer im Vordergrund halten“ unter Einstellungen › Editor › Suchen ein.</p>
+
+<h2>Reguläre Ausdrücke</h2>
+
+<p>Ist „Regulärer Ausdruck“ eingeschaltet, ist der Suchbegriff ein Muster in der Syntax von ICU, den regulären Ausdrücken von macOS. Die meisten Muster schreiben Sie wie in anderen Programmen. Eine geschweifte Klammer, die nicht zu einer Wiederholung gehört, muss als <code>\{</code> oder <code>\}</code> geschrieben werden; suchen Sie also nach <code>\\section\{</code> statt nach <code>\\section{</code>.</p>
+
+<p>Im Ersatztext ist <code>$0</code> der gesamte Treffer, <code>$1</code>, <code>$2</code>, … sind die Gruppen und <code>\$</code> ist ein Dollarzeichen; eine Formel <code>$x$</code> schreiben Sie also als <code>\$x\$</code>. Ein Backslash wird doppelt geschrieben: <code>\\section</code> ergibt <code>\section</code>. Die Syntax von OgreKit mit <code>\1</code>, <code>\2</code>, … für die Gruppen und <code>$</code> als gewöhnlichem Zeichen lässt sich unter den Optionen wählen; Benutzer, die von der OgreKit Suchmaske kommen, beginnen mit ihr.</p>
+
+<p>Die kleine Taste „?“ neben „Regulärer Ausdruck“ öffnet eine Kurzreferenz der Syntax von Mustern und Ersetzungen und ihrer Unterschiede zu OgreKit. Die Felder zeigen die Teile eines Musters in den Farben des Themas, einen Fehler in Rot und das, was OgreKit anders lesen würde, in Orange; die Zeile unter den Optionen erklärt sie.</p>
+
+<p>Einige Beispiele:</p>
+<ul>
+<li>Um <code>\section{Intro}</code> in <code>\section*{Intro}</code> zu ändern, suchen Sie nach <code>\\section\{([^}]*)\}</code> und ersetzen durch <code>\\section*{$1}</code>.</li>
+<li>Um jedes Zeichen zu finden, das kein ASCII ist, suchen Sie nach <code>[^[:ascii:]]</code> und klicken dann auf „Alle suchen“ oder wählen „Alle hervorheben“.</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>Mehrfach ersetzen</h2>
+
+<p>„Mehrfach ersetzen bearbeiten …“ im Untermenü „Suchen“ oder die Taste „Mehrfach ersetzen …“ der Suchmaske öffnet das Fenster „Mehrfach ersetzen“. Es verwaltet Sätze von Such- und Ersetzungspaaren, Regeln genannt, und wendet die Regeln eines Satzes der Reihe nach von oben an. Links stehen die Regelsätze, rechts die Regeln des ausgewählten Satzes. Jede Regel hat einen eigenen Such- und Ersatztext, eine eigene Wahl für regulären Ausdruck (RE) und für das Ignorieren der Groß-/Kleinschreibung (IC) sowie eine Beschreibung; das Markierungsfeld links schaltet sie aus. Die Tasten + und − fügen Regeln hinzu und entfernen sie, und durch Ziehen ändern Sie ihre Reihenfolge. Die Taste mit drei Punkten unter den Regeln enthält die Optionen des ganzen Satzes. Eine Regel, die sich nicht verwenden lässt, etwa wegen eines ungültigen Musters, zeigt ein Warnzeichen und wird übersprungen.</p>
+
+<p>„Alles ersetzen“ im Fenster wendet die Regeln auf den ganzen Text an oder, wenn „In der Auswahl“ eingeschaltet ist, auf die Auswahl; ein einziges Widerrufen nimmt das zurück. „Alle hervorheben“ markiert, was die Regeln finden. Jede Änderung im Fenster wird sofort gesichert. Das Untermenü „Mehrfach ersetzen“ des Untermenüs „Suchen“ listet die Regelsätze auf und wendet den gewählten auf den ganzen Text des vordersten Quelltexts an.</p>
+
+<p>Jeder Regelsatz ist eine Datei in ~/Library/TeXShop/MultipleReplace im JSON-Format der Ersetzungsdefinitionen von CotEditor. Die Tasten + und − unter der Liste der Regelsätze legen einen neuen Satz an und legen den ausgewählten in den Papierkorb; das Menü mit drei Punkten daneben dupliziert, importiert und exportiert Regelsätze. Beim Importieren werden auch Ersetzungsdefinitionen von CotEditor gelesen und durch Tabulatoren getrennter Text mit einer Regel pro Zeile. Zwei Beispielsätze wandeln zwischen Unicode-Zeichen und den Befehlen des Pakets ajmacros um, wie es „Zeichentyp umwandeln“ tut; sie werden nur angelegt, wenn es den Ordner MultipleReplace noch nicht gibt.</p>
+
+<h2>In allen Dateien eines Projekts suchen</h2>
+
+<p>Wie Sie in der Hauptdatei und allen Kapiteldateien eines Dokuments zugleich suchen und ersetzen, steht unter <a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a>.</p>
+</main>
+</body>
+</html>

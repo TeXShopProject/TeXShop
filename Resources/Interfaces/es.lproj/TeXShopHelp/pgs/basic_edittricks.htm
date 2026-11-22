@@ -1,101 +1,112 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trucos de edición</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="trucos de edición; paréntesis correspondientes; seleccionar líneas; comentar; sangrar; menú Marcas; Cerrar el entorno actual; dividir el código; arrastrar y soltar; barra de estado; estadísticas; Intercambiar con el portapapeles; Copiar con estilo; Conversión de tipo de carácter; archivo de copia de seguridad">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm" class="current">Trucos de edición</a></li>
+<li><a href="basic_find.htm">Buscar y reemplazar</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Autocompletado de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
+<li><a href="basic_license.htm">Licencia</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Trucos de edición</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Trucos de edici&oacute;n</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="trucos de edici&oacute;n; comentarios; sangr&iacute;a; dividir ventana; arrastrar y soltar; archivo de respaldo; backup file; OgreKit">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Seleccionar</h2>
 
-<BODY>
-	<div id="content_border">
-<p>Al hacer doble click en un delimitador (par&eacute;ntesis, corchete o llave, ya sea de abrir o cerrar) es decir, en (, {, [, ], } o ), se seleccionar&aacute; todo lo que haya entre los correspondientes delimitadores de abrir y cerrar. Si hacemos doble click con la tecla opci&oacute;n pulsada, se seleccionar&aacute; s&oacute;lo el delimitador.</p>
+<p>Haga doble clic en un delimitador, como ( o }, para seleccionar todo lo que hay entre él y el delimitador que le corresponde; esto ayuda a encontrar una llave que falta. Haga doble clic con la tecla Opción pulsada para seleccionar solo el delimitador. Haga clic o arrastre sobre los números de línea para seleccionar líneas completas. El grupo «Correspondencia de paréntesis» de Ajustes › Editor establece cómo se muestran los delimitadores correspondientes mientras escribe.</p>
 
-<p>El panel de b&uacute;squeda avanzada, que se elige en Ajustes &gt; Editor &gt; Interfaz de b&uacute;squeda, busca y reemplaza con expresiones regulares. Todos los usuarios empiezan con &eacute;l: la primera vez que se abre TeXShop 6.00, los usuarios de versiones anteriores pasan a &eacute;l una sola vez, fuera cual fuera su m&eacute;todo, y pueden volver a elegir otro all&iacute;. Quienes usaban el panel de b&uacute;squedas de OgreKit encuentran elegida en &laquo;M&aacute;s opciones&raquo; la sintaxis de reemplazo OgreKit (\1). &laquo;Buscar todo&raquo; lista en el panel todas las coincidencias con su n&uacute;mero de l&iacute;nea; al hacer click en una fila se selecciona la coincidencia. &laquo;Resaltar todo&raquo;, &laquo;Seleccionar todo&raquo; y &laquo;Quitar resaltados&raquo; est&aacute;n en el men&uacute; de &laquo;Buscar todo&raquo;. &laquo;Reemplazar todo&raquo; se deshace con un solo &laquo;Deshacer&raquo;. Las opciones que hay bajo los campos y tras el bot&oacute;n de los tres puntos se conservan de sesi&oacute;n en sesi&oacute;n. Al hacer click en la ventana del c&oacute;digo fuente, el panel queda detr&aacute;s de ella; para mantenerlo delante de las ventanas de los documentos, active &laquo;Mantener el panel de b&uacute;squeda avanzada en primer plano&raquo; en Ajustes &gt; Editor.</p>
-<p>El panel usa las expresiones regulares de ICU. Una llave que no forme parte de una repetici&oacute;n se debe escribir \{ o \}. En el reemplazo, $1, $2, ... son los grupos y \$ es un signo de d&oacute;lar; la sintaxis de OgreKit, con \1, \2, ... y un $ literal, se puede elegir entre las opciones. Una barra invertida en el reemplazo se escribe dos veces. El bot&oacute;n ? junto a &laquo;Expresi&oacute;n regular&raquo; abre una referencia r&aacute;pida de la sintaxis y del reemplazo, que tambi&eacute;n indica en qu&eacute; se diferencian ICU y OgreKit. Los campos usan un tipo de letra monoespaciado del tama&ntilde;o del tipo de letra del c&oacute;digo fuente y los colores de su tema. Con &laquo;Expresi&oacute;n regular&raquo; desactivada, se colorean como el c&oacute;digo TeX en la ventana del c&oacute;digo fuente; con ella activada, muestran en los colores del tema las partes de un patr&oacute;n, en rojo los errores y en naranja lo que OgreKit lee de otra manera; la l&iacute;nea que hay bajo las opciones explica estos colores.</p>
-<p><a name="multiplereplace"></a>&laquo;Editar reemplazo m&uacute;ltiple&hellip;&raquo;, en el submen&uacute; &laquo;Buscar&raquo;, guarda conjuntos de pares de b&uacute;squeda y reemplazo, que se aplican en orden y se deshacen con un solo &laquo;Deshacer&raquo;. El bot&oacute;n &laquo;Reemplazo m&uacute;ltiple&hellip;&raquo;, a la derecha de &laquo;Reemplazar todo&raquo; en el panel de b&uacute;squeda avanzada, tambi&eacute;n lleva all&iacute;. Los conjuntos son archivos en ~/Library/TeXShop/MultipleReplace, en el formato JSON de las definiciones de reemplazo de CotEditor. El submen&uacute; &laquo;Reemplazo m&uacute;ltiple&raquo; aplica un conjunto a todo el texto de una vez.</p>
-<p>Para buscar y reemplazar en todos los archivos de un documento dividido en archivos de cap&iacute;tulos, vea <a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a>.</p>
-<p>&laquo;Reemplazar todo&raquo;, &laquo;Buscar todo&raquo; y el reemplazo m&uacute;ltiple se ejecutan en segundo plano, y el documento no se puede editar hasta que terminan. Cuando uno de ellos tarda, un cuadro de di&aacute;logo en la ventana del documento muestra cu&aacute;ntas coincidencias ha encontrado o cu&aacute;ntas reglas ha aplicado; su bot&oacute;n &laquo;Cancelar&raquo;, o la tecla Escape, lo detiene y deja el texto como estaba.</p>
-<p>El panel tambi&eacute;n busca en las ventanas de la consola, del archivo log y de Experiment. En la consola, en el archivo log y en la consola de Experiment, que muestran la salida de TeX, reemplazar aparece atenuado.</p>
-<p>El panel de b&uacute;squedas de OgreKit, de Isao Sonobe, sigue disponible en los Ajustes como opci&oacute;n heredada; cambiar a &eacute;l o dejarlo requiere reiniciar TeXShop. El manual de TeXShop describe en detalle el panel de b&uacute;squeda avanzada.</p>
+<h2>Comentarios y sangría</h2>
 
-		<P>Podemos comentar grupos de l&iacute;neas usando un comando en el correspondiente men&uacute; y, si lo deseamos, activarlas de nuevo m&aacute;s tarde. Tambi&eacute;n podemos sangrar varias l&iacute;neas a la vez, o quitarles la sangr&iacute;a. Si el comienzo de una l&iacute;nea est&aacute; tabulado, las nuevas l&iacute;neas que vayamos creando comienzan con la misma tabulaci&oacute;n, hasta que cancelemos este comportamiento con la tecla de retroceso. Este comportamiento con tabuladores ha sido a&ntilde;adido a TeXShop por Nicol&aacute;s Ojeda B&auml;r, de Argentina, cuyo correo electr&oacute;nico es <a href="mailto:lojedaortiz@interlink.com.ar">lojedaortiz@interlink.com.ar</a>. &iexcl;Gracias!</P>
-		<P>La ventana con el c&oacute;digo fuente se puede dividir en dos usando la correspondiente herramienta que aparece en la parte de arriba de la ventana. Cuando la ventana est&aacute; dividida, se muestran dos vistas del mismo c&oacute;digo. Puedes teclear en cualqueira de las dos partes, y los cambios que efect&uacute;es en una aparecer&aacute;n tambi&eacute;n &mdash;autom&aacute;ticamente&mdash; en la otra. De este modo, puedes efectuar modificaciones en una secci&oacute;n del c&oacute;digo teniendo a la vista otra secci&oacute;n del c&oacute;digo.</P>
-		<P>Una barra de estado debajo del c&oacute;digo fuente muestra las l&iacute;neas, los caracteres y las palabras del documento, entre par&eacute;ntesis los de la selecci&oacute;n, y la posici&oacute;n, la l&iacute;nea y la columna del punto de inserci&oacute;n. Los caracteres se cuentan tal como se ven: una letra con acento o un emoji cuenta como uno, y los comandos de TeX se cuentan tal como est&aacute;n escritos. A la derecha aparece el tama&ntilde;o del archivo guardado. C&oacute;digo &gt; Mostrar barra de estado la muestra u oculta en todas las ventanas.</P>
-		<P>Estad&iacute;sticas del texto&hellip; en la barra de estado, o Edici&oacute;n &gt; Estad&iacute;sticas..., cuenta el texto sin los comandos de TeX. El programa detex de TeX Live los quita del documento, o de la selecci&oacute;n, y a&ntilde;ade los archivos le&iacute;dos con \input e \include; TeXShop cuenta lo que queda igual que la barra de estado. No hace falta guardar el documento. Se cuenta al abrir la ventana emergente y al pulsar su bot&oacute;n de actualizar, y arriba aparece la hora del recuento.</P>
+<p>Código › Comentar (<kbd>⌘{</kbd>) pone % al principio de las líneas seleccionadas, y Código › Descomentar (<kbd>⌘}</kbd>) lo quita. Código › Sangrar y Código › Quitar sangría mueven las líneas seleccionadas a la derecha o a la izquierda, un tabulador cuando «Usar tabulador para sangría» está activado en Ajustes › Editor › Estilo y, si no, tantos espacios como indique «Tamaño del tabulador». Una línea nueva empieza con los mismos tabuladores y espacios que la línea anterior; pulse la tecla de borrar para quitarlos.</p>
 
-		<P>Podemos hacer que TeXShop conserve un archivo de respaldo cada vez que guardamos. Cuando &ldquo;Activar guardado autom&aacute;tico y versiones&rdquo; est&aacute; desactivado, activa &ldquo;Conservar el archivo anterior como &lsquo;nombre~&rsquo;&rdquo; en Ajustes &gt; Documentos y guardado. El respaldo tiene el nombre del archivo seguido de una tilde.
-</P>
+<h2>Moverse por el código fuente</h2>
 
-<p> Un panel llamado Estad&iacute;sticas lista el n&uacute;mero de palabras, l&iacute;neas y caracteres de un documento. Internamente, este panel llama a</p>
+<p>El menú Marcas de la barra de herramientas enumera los capítulos, las secciones y otras divisiones del documento; elija una para ir allí. Una línea que empieza por <code>%:</code> añade el resto de la línea al menú como marca propia. «Marcas en barra de menús», en Ajustes › Editor › Visualización, pone el mismo menú en la barra de menús. El elemento Etiquetas de la barra de herramientas enumera las etiquetas del documento. Edición › Línea número... (<kbd>⌘L</kbd>) va a una línea por su número.</p>
+
+<p>Ventana › Dividir ventana (<kbd>⌃2</kbd>), o el elemento Dividir ventana de la barra de herramientas, divide la ventana de código en dos partes que muestran el mismo texto, para que pueda leer una parte del documento mientras escribe otra. Mantenga pulsada la tecla Opción para dividirla en dos partes una junto a otra. Lo que escribe en una parte aparece también en la otra.</p>
+
+<h2>Escribir menos</h2>
+
+<p>Código › Cerrar el entorno actual (<kbd>⌃⌘C</kbd>) añade la línea <code>\end</code> del entorno que sigue abierto, por ejemplo <code>\end{itemize}</code> después de una lista. El autocompletado de comandos termina los comandos y entornos que ha empezado a escribir; consulte <a href="basic_commandcompletion.htm">Autocompletado de comandos</a>. Las combinaciones de teclas sustituyen un carácter escrito por un texto; consulte <a href="basic_autocompletion.htm">Combinaciones de teclas</a>. El panel LaTeX, el panel matrices y el menú Macros insertan fragmentos de texto más largos.</p>
+
+<h2>Soltar archivos sobre el código fuente</h2>
+
+<p>Arrastre un archivo desde el Finder hasta el código fuente para insertar un comando que lo use:</p>
+
+<table>
+<tr><th>Archivo</th><th>Comando insertado</th></tr>
+<tr><td>.pdf, .png, .jpg, .jpeg, .tif, .tiff, .eps, .ps</td><td><code>\includegraphics[]{<var>ruta</var>}</code></td></tr>
+<tr><td>.bib</td><td><code>\bibliography{<var>nombre</var>}</code></td></tr>
+<tr><td>.bst</td><td><code>\bibliographystyle{<var>nombre</var>}</code></td></tr>
+<tr><td>.sty</td><td><code>\usepackage{<var>nombre</var>}</code></td></tr>
+<tr><td>.cls</td><td><code>\documentclass{<var>nombre</var>}</code></td></tr>
+<tr><td>otros archivos, como .tex</td><td><code>\input{<var>ruta</var>}</code></td></tr>
+</table>
+
+<p>Aquí <var>ruta</var> es la ruta del archivo desde la carpeta del archivo fuente, y <var>nombre</var> es el nombre del archivo sin su extensión. Un alias soltado se sustituye por el archivo que representa, que TeX no podría encontrar por sí mismo. Un archivo cuya ruta contiene un espacio no se inserta; TeXShop muestra un aviso en su lugar.</p>
+
+<p>Para insertar otra cosa para un tipo de archivo, abra el editor de macros (Macros › Abrir editor de macros...) y añada un submenú llamado <code>Drag &amp; Drop</code>. En él, añada un elemento con el nombre de la extensión, como <code>.pdf</code>, cuyo contenido sea el texto que se va a insertar, por ejemplo <code>\includegraphics[#INS#]{%r}</code>; un elemento llamado <code>.*</code> se usa para todas las extensiones que no tienen un elemento propio. El contenido puede usar estas abreviaturas:</p>
+
 <dl>
-<dd> detex myfile | wc
+<dt><code>%F</code></dt><dd>la ruta completa del archivo soltado</dd>
+<dt><code>%f</code></dt><dd>el nombre del archivo</dd>
+<dt><code>%r</code></dt><dd>la ruta del archivo desde la carpeta del archivo fuente</dd>
+<dt><code>%n</code></dt><dd>el nombre del archivo sin su extensión</dd>
+<dt><code>%e</code></dt><dd>la extensión</dd>
 </dl>
-<p> El comando detex borra las &oacute;rdenes tex, y el recuento de palabras que se obtiene es s&oacute;lo aproximado. Este m&eacute;todo s&iacute; que tiene en cuenta los caracteres procedentes de ficheros a&ntilde;adidos con \input e \include.</p>
 
-<P>
-Podemos arrastrar y soltar iconos de archivos en la ventana de c&oacute;digo.
-Si el archivo que se arrastra es un archivo TeX, TeXShop a&ntilde;ade un comando \input con la ruta (relativa) que lleva al archivo. Si es un archivo gr&aacute;fico, en lugar de un \input lo que se a&ntilde;ade es un \includegraphics. TeXShop reconoce los siguientes tipos de gr&aacute;ficos: pdf, jpg, jpeg, tif, tiff, eps, ps.
-</P>
+<h2>La barra de estado y las estadísticas del texto</h2>
 
-<P>
-Arrastrar un archivo cls produce un \documentclass y una referencia al
-archivo; arrastrar un sty produce un \usepackage; arrastar un bib produce un \bibliographystyle; cualqueir otro archivo de texto produce un \input.
-</P>
+<p>La barra de estado, bajo el código fuente, muestra las líneas, los caracteres y las palabras del documento, con las cifras de la selección entre paréntesis, y la posición, la línea y la columna del punto de inserción. Los caracteres se cuentan tal como se ven, de modo que una letra acentuada o un emoji cuentan como uno, y los comandos de TeX se cuentan tal como están escritos; un emoji cuenta además como una palabra. El tamaño del archivo guardado se muestra a la derecha. Código › Mostrar barra de estado muestra u oculta la barra de estado en todas las ventanas.</p>
 
-<P>
-Arrastrar y soltar tiene en cuenta los alias. Por ejemplo, si un archivo gr&aacute;fico es realmente un alias, se puede arrastrar y soltar el archivo dentro de la ventana de c&oacute;digo, y todo funcionar&aacute; bien. TeX en s&iacute; mismo no es capaz de manejar alias, aunque s&iacute; &lsquo;symbolic links&rsquo;. As&iacute;, si tecleamos el nombre de un alias de un gr&aacute;fico en la ventana de c&oacute;digo, se producir&aacute; un error al componer p&aacute;ginas.
-</P>
+<p>«Estadísticas del texto…», en la barra de estado, o Edición › Estadísticas..., cuenta el texto sin los comandos de TeX. El programa detex de TeX Live los quita del documento, o de la selección, y añade los archivos leídos con <code>\input</code> e <code>\include</code>; TeXShop cuenta lo que queda del mismo modo que la barra de estado. No hace falta guardar el documento. El recuento se hace cuando se abre la ventana emergente y cuando se hace clic en su botón de actualizar.</p>
 
-<P>
-El usuario puede configurar el comportamiento del arrastar y soltar.
-Se hace mediante el men&uacute; Macro. Inserta un nuevo submen&uacute; titulado &laquo;Drag &amp; Drop&raquo;.
-Dentro de este submen&uacute; coloca &iacute;tems cuyo nombre sea el de la extensi&oacute;n cuyo comportamiento quieras describir, y pon el c&oacute;digo que TeXShop debe insertar con archivos de este tipo.
-Por ejemplo, si el &iacute;tem es .pdf, el c&oacute;digo podr&iacute;a ser
-\includegraphics[#INS#]{%r}. En estas inclusiones, puedes usar las siguientes abreviaturas:
+<h2>El portapapeles</h2>
 
-<dl>
-<dd>	%F ruta completa (&lsquo;full path&rsquo;) del archivo soltado
-<dd>	%f nombre (&lsquo;filename&rsquo;) del archivo
-<dd>	%r ruta relativa (&lsquo;relative path&rsquo;) del archivo
-<dd>	%n nombre del archivo sin extensi&oacute;n
-<dd>	%e extensi&oacute;n.
-</dl>
-</P>
+<p>Edición › Intercambiar con el portapapeles sustituye la selección por el texto del portapapeles y pone la selección en el portapapeles. Para intercambiar dos fragmentos de texto, copie el primero, seleccione el segundo y elija Intercambiar con el portapapeles; después seleccione el lugar del primero y pegue. Cuando no hay nada seleccionado, pega.</p>
 
-<P>
-Cualquier extensi&oacute;n que no aparezca expresamente en el Editor de Macros ser&aacute; tratada de la manera predeterminda descrita anteriormente. As&iacute;, la mayor&iacute;a de los usuarios no necesitar&aacute;n el submen&uacute; &laquo;Drag &amp; Drop&raquo;.
-</P>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda b&aacute;sica</div><div id="header_title">Trucos de edici&oacute;n</div>
-		<div id="menu_border">
-		<ul>
-			<LI><a href="basic_preliminaries.htm">Preliminares</a>
-			<LI><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">C&oacute;mo obtener e instalar TeXShop</a>
-			<li><a href="basic_typesetting.htm">Componer (&lsquo;typeset&rsquo;) documentos</a>
-			<li><a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a>
-			<li><a href="basic_spelling.htm">Correcci&oacute;n ortogr&aacute;fica</a>
-			<li><a href="basic_latexpanel.htm">Panel LaTeX</a>
-			<li><a href="basic_matrixpanel.htm">Panel matrices</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a>
-			<li><a href="basic_graphics.htm">Inclusi&oacute;n de gr&aacute;ficos</a>
-			<li><a href="basic_printing.htm">Imprimir</a>
-			<li><a href="basic_preferences.htm">Establecer ajustes</a>
-			<li><a href="basic_templates.htm">Personalizaci&oacute;n del men&uacute; Plantillas</a>
-			<li><a href="basic_edittricks.htm">Trucos de edici&oacute;n</a>
-			<li><a href="basic_autocompletion.htm">Autocompleci&oacute;n</a>
-			<li><a href="basic_commandcompletion.htm">Compleci&oacute;n de comandos</a>
-			<li><a href="basic_bugs.htm">Notificaci&oacute;n de errores (&lsquo;bugs&rsquo;)</a>
-			<li><a href="basic_websites.htm">Sitios web &uacute;tiles</a>
-			<li><a href="basic_license.htm">Licencia</a>
-			<li><a href="basic_thistranslation.htm">Sobre la traducci&oacute;n a espa&ntilde;ol</a>
-		</UL>
-	</div>
-	</BODY>
+<p>Edición › Copiar con estilo copia la selección con el tipo de letra del código fuente y con los colores del tema del modo claro o del modo oscuro, con o sin el color de fondo, para pegarla en un procesador de textos, una presentación o un correo electrónico. A cada uno de sus cuatro elementos se le puede asignar un atajo en Ajustes › Teclado.</p>
 
-</HTML>
+<h2>Convertir caracteres</h2>
+
+<p>Los submenús Conversión de tipo de carácter y Normalización Unicode del menú Edición, también presentes en el menú contextual del código fuente, reescriben la selección; si no hay nada seleccionado, TeXShop pregunta si debe reescribir todo el documento. Conversión de tipo de carácter está pensada sobre todo para documentos en japonés. Convierte entre hiragana y katakana, entre dígitos y letras de ancho completo y de medio ancho, entre caracteres como los números en círculo y los comandos del paquete ajmacros, y entre los caracteres que no están en JIS X 0208 y los comandos <code>\UTF</code> y <code>\CID</code> del paquete otf. También cambia las comillas tipográficas por comillas de TeX. Normalización Unicode convierte la selección a NFC, NFD, NFKC o NFKD, o a Modified NFC o Modified NFD, que dejan sin cambios los ideogramas de compatibilidad CJK. Ambas conversiones se pueden deshacer.</p>
+
+<h2>Archivos de copia de seguridad</h2>
+
+<p>Cuando «Activar guardado automático y versiones» está desactivado en Ajustes › Documentos y guardado, active allí «Conservar el archivo anterior como “nombre~”» para conservar la versión anterior de un archivo cada vez que se guarda. La copia de seguridad tiene el nombre del archivo seguido de una virgulilla (~).</p>
+
+<p>La búsqueda y el reemplazo, con expresiones regulares y con Reemplazo múltiple, se describen en <a href="basic_find.htm">Buscar y reemplazar</a>.</p>
+</main>
+</body>
+</html>

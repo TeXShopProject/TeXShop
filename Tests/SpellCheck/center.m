@@ -35,7 +35,12 @@ static NSUInteger ProseLine(NSString *text, double fraction)
     NSRange line = [text lineRangeForRange:NSMakeRange((NSUInteger)(text.length * fraction), 0)];
     while (NSMaxRange(line) < text.length) {
         NSString *s = [text substringWithRange:line];
-        if (s.length > 40 && [NSCharacterSet.letterCharacterSet characterIsMember:[s characterAtIndex:0]] &&
+        // Not inside verbatim, which the spell checker skips.
+        NSRange before = NSMakeRange(0, line.location);
+        NSUInteger begin = [text rangeOfString:@"\\begin{verbatim}" options:NSBackwardsSearch range:before].location;
+        NSUInteger end = [text rangeOfString:@"\\end{verbatim}" options:NSBackwardsSearch range:before].location;
+        BOOL inVerbatim = begin != NSNotFound && (end == NSNotFound || end < begin);
+        if (!inVerbatim && s.length > 40 && [NSCharacterSet.letterCharacterSet characterIsMember:[s characterAtIndex:0]] &&
             [s rangeOfString:@"\\"].location == NSNotFound && [s rangeOfString:@"%"].location == NSNotFound) return line.location;
         line = [text lineRangeForRange:NSMakeRange(NSMaxRange(line), 0)];
     }

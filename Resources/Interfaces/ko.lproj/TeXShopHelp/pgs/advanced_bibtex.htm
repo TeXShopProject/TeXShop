@@ -1,116 +1,72 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BibTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="BibTeX; 참고 문헌; 인용; bib 파일; biber; biblatex; upbibtex; pbibtex; % !BIB program; BibTeX 엔진">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm" class="current">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>BibTeX</h1>
+<p>BibTeX는 참고 문헌 데이터베이스, 즉 확장자가 <code>.bib</code>인 파일을 바탕으로 LaTeX 문서의 참고 문헌 목록을 만듭니다. 문서는 키로 항목을 인용하며, BibTeX는 인용된 항목만 목록에 넣습니다.</p>
+<p>데이터베이스 <code>mybibliography.bib</code>에는 다음과 같은 항목이 들어 있고</p>
+<pre>@book{Knuth:TeXbook,
+  author    = {Donald E. Knuth},
+  title     = {The {\TeX}book},
+  publisher = {Addison-Wesley},
+  year      = {1986}
+}</pre>
+<p>문서는 이 항목을 인용하고, 스타일과 데이터베이스를 지정합니다.</p>
+<pre>As explained in~\cite{Knuth:TeXbook}, …
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>BibTeX</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="bibtex; bibliography; citation">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+\bibliographystyle{plain}
+\bibliography{mybibliography}</pre>
 
-<BODY>
-	<div id="content_border">
-		<P>BibTeX is a tool used to create bibliographies in LaTeX documents. The tool assumes that you have a large database of references which you often quote. Simple commands allow you to cite certain of these references in your LaTeX source, and BibTeX then creates a bibliography for your article containing only the items cited. </P>
-		<p>Here is a brief example taken from The LaTeX Companion by Goossens, Mittelbach, and Samarin. Consult this book for many additional details.  Suppose the database is a file called &quot;mybibliography.bib&quot; containing the text shown below. In this text, the entries &quot;Felici:1991, Knuth:WEB,&quot; and &quot;Liang:1983&quot; are key values used to cite the articles in the LaTeX source.</p>
-		<dl>
-			<dd><tt>@article{Felici:1991,</tt>
-			<dd><tt>author	={James Felici},</tt>
-			<dd><tt>title	={{PostScript versus TrueType}},</tt>
-			<dd><tt>journal	={Macworld},</tt>
-			<dd><tt>volume	=8, pages={195--201},</tt>
-			<dd><tt>month	=sep, year = 1991		}</tt>
-			<dd>
-			<dd><tt>@techreport{Knuth:WEB,</tt>
-			<dd><tt>title	={{The \textsf{WEB} System of</tt>
-			<dd><tt>Structured Documentation}},</tt>
-			<dd><tt>month	=sep, year = 1983,</tt>
-			<dd><tt>author	={Donald E. Knuth},</tt>
-			<dd><tt>address	={Stanford, CA 94305},</tt>
-			<dd><tt>number	={STAN-CS-83-980},</tt>
-			<dd><tt>institution={Department of Computer</tt>
-			<dd><tt>Science, Stanford University}  }</tt>
-			<dd>
-			<dd><tt>@phdthesis{Liang:1983,</tt>
-			<dd><tt>author	={Franklin Mark Liang},</tt>
-			<dd><tt>month	=jun, year = 1983,</tt>
-			<dd><tt>school	={Stanford University},</tt>
-			<dd><tt>address	={Stanford, CA 94305},</tt>
-			<dd><tt>title	={{Word Hy-phen-a-tion by</tt>
-			<dd><tt>Com-pu-ter}},</tt>
-			<dd><tt>note	={Also available as Stanford</tt>
-			<dd><tt>University, Department of</tt>
-			<dd><tt>Computer Science Report</tt>
-			<dd><tt>No. STAN-CS-83-977}   }</tt>
-		</dl>
-		<p>Suppose the LaTeX source file is called &quot;myfile.tex&quot; and contains the following text:</p>
-		<dl>
-			<dd><tt>\begin{document}</tt>
-			<dd><tt>Consider the  argument of Felici~\cite{Felici:1991} in light of these comments.</tt>
-			<dd><tt>\nocite{Liang:1983} We provide further remarks later.</tt>
-			<dd>
-			<dd><tt>\bibliographystyle{plain}</tt>
-			<dd><tt>\bibliography{mybibliography}</tt>
-			<dd><tt>\end{document}</tt>
-		</dl>
-		<p>When this source is typeset, a reference to Felici's article will appear in the text, and a bibliography will be created at the end of the text containing the articles of Felici and Liang, but not the article of Knuth.</p>
-		<p>TeXShop can be used with this example in the following way. First edit and typeset the document &quot;myfile.tex&quot; as usual. Citations will appear in the output as &quot;[?]&quot; and the bibliography will be missing. Then select &quot;BibTeX&quot; under the Program button and run BibTeX. Next select &quot;LaTeX&quot; and typeset again. Citations will still appear as &quot;[?]&quot;, but the bibliography will be added to the output. Typeset a final time, and citations will have their correct values.</p>
-<p> Notice that the BibTeX menu command has a keyboard equivalent.</p>
-		<p>The file &quot;mybibliography.bib&quot; can be opened and edited by TeXShop. If you use TeXShop to create the file &quot;mybibliography.bib&quot; in the first place, use the pulldown tag labeled &quot;file format&quot; to save the file as a bib file rather than as a tex file.</p>
+<h2>BibTeX 실행하기</h2>
+<ol>
+<li>문서를 조판합니다. 인용은 [?]로 표시되고 참고 문헌 목록은 없습니다.</li>
+<li>조판 › BibTeX(<kbd>⇧⌘B</kbd>)를 선택하거나, 조판 버튼 옆의 팝업 메뉴에서 BibTeX를 선택하고 조판 버튼을 누릅니다.</li>
+<li>두 번 더 조판합니다. 첫 번째 조판에서 참고 문헌 목록이 추가되고, 두 번째 조판에서 인용이 채워집니다.</li>
+</ol>
+<p>latexmk로 조판하면, 예를 들어 pdflatexmk 엔진이나 “latexmk 사용”으로 설정한 프로파일로 조판하면 BibTeX와 추가 조판이 자동으로 실행됩니다.</p>
+<p>TeXShop에서 새 데이터베이스를 만들려면 저장 대화상자의 파일 유형 메뉴에서 bib 유형을 선택하여 파일의 확장자가 <code>.bib</code>가 되게 합니다. 데이터베이스는 모든 문서에서 찾을 수 있는 개인 TeX 트리에 둘 수도 있습니다. <a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a>를 참고하십시오.</p>
 
-<p> In recent years, additional programs like biber have been written to handle bibliographies.
-Japanese typesetting is done using a modified TeX and still other programs like pbibtex and
-ubibtex are available there for bibliographies. So TeXShop has a setting to set
-the program called when the BibTeX menu item is chosen. It is in Settings &gt; &#51312;&#54032; &gt; &#44288;&#47144; &#46020;&#44396; &gt; BibTeX &#50644;&#51652;. Fill in with the appropriate name, and any flags that should be used when calling this command line program.
-
-<p> Often users use different bibliography programs for different projects, or when working with
-different coauthors. TeXShop allows the bibliography program to be set on a file-by-file basis.
-To set it for a given source file, include the following line within the first twenty lines of the
-source, replacing "biber" with the desired program names and any desired flags.
-<dl>
-<dd> % !BIB TS-program = biber
-</dl>		
-<p> For compatibility with other platforms, the following syntax is also acceptable
-<dl>
-<dd> % !BIB program = biber
-</dl>		
-<p> If this line is missing from the source file, the corresponding setting will be used when the BibTeX menu command is selected.		
-
-
-
-
-		</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">BibTeX</div>
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>프로그램 선택하기</h2>
+<p>조판 › BibTeX는 설정 › 조판 › 관련 도구 › BibTeX 엔진에 있는 명령을 실행하며, 기본값은 <code>bibtex</code>입니다. 다른 프로그램을 사용하려면 필요한 옵션과 함께 이곳에 입력합니다. 예를 들어 biblatex 패키지를 사용하는 문서에는 <code>biber</code>를 입력합니다. 엔진 프로파일이 이 필드를 설정합니다. pLaTeX + dvipdfmx는 <code>pbibtex</code>로, upLaTeX + dvipdfmx와 LuaLaTeX(일본어)는 <code>upbibtex</code>로, 나머지 프로파일은 <code>bibtex</code>로 설정합니다.</p>
+<p>한 문서에 사용할 프로그램을 지정하려면 문서의 처음 20줄 안에 다음과 같은 줄을 넣습니다.</p>
+<pre>% !BIB program = biber</pre>
+<p>이 줄은 설정보다 우선합니다. <code>% !BIB TS-program =</code> 형식도 같은 뜻으로 읽습니다.</p>
+</main>
+</body>
+</html>

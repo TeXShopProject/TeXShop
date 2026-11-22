@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeX-Formate erstellen und verwenden</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="Format; fmt-Datei; initex; -ini; -fmt; dump; Engine-Datei; Präambel">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm" class="current">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
+<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeX-Formate erstellen und verwenden</h1>
+<p>Eine Formatdatei (Endung <code>.fmt</code>) ist eine Momentaufnahme von TeX, nachdem es eine Reihe von Makros gelesen hat. LaTeX selbst ist ein Format: TeX lädt es in einem Augenblick, statt jedes Mal die Quellen von LaTeX zu lesen. Sie können aus einer langen Präambel ein eigenes Format erstellen, damit das Setzen schneller beginnt, oder ein Format verwenden, das ein Projekt oder eine Organisation bereitstellt.</p>
+<p>Ein Format funktioniert nur mit der Engine und der Version von TeX Live, mit der es erstellt wurde. Ein mit pdfLaTeX aus TeX Live 2026 erstelltes Format kann weder XeLaTeX noch ein anderer Jahrgang von TeX Live verwenden; erstellen Sie es nach der Installation eines neuen TeX Live erneut.</p>
+
+<h2>Ein Format erstellen</h2>
+<p>Schreiben Sie die Zeilen, die das Format enthalten soll, in eine Datei und beenden Sie sie mit <code>\dump</code>. Zum Beispiel <code>uo.tex</code>:</p>
+<pre>\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\dump</pre>
+<p>Wechseln Sie im Terminal in den Ordner dieser Datei und geben Sie ein:</p>
+<pre>pdflatex -ini -jobname=uo "&amp;pdflatex" uo.tex</pre>
+<p>Das lädt das LaTeX-Format, liest <code>uo.tex</code> und schreibt <code>uo.fmt</code>. Ein Dokument, das mit diesem Format gesetzt wird, lässt die Zeilen weg, die im Format stehen, und beginnt mit <code>\begin{document}</code>.</p>
+
+<h2>Ein Format in TeXShop verwenden</h2>
+<ol>
+<li>Bewegen Sie <code>uo.fmt</code> in den Ordner <code>~/Library/texmf/web2c</code> und legen Sie die Ordner bei Bedarf an, damit TeX das Format aus jedem Ordner findet.</li>
+<li>Öffnen Sie im Finder <code>~/Library/TeXShop/Engines</code> (TeXShop › Den Ordner „~/Library/TeXShop“ im Finder öffnen), duplizieren Sie eine Engine wie <code>XeLaTeX.engine</code> und benennen Sie die Kopie um, etwa in <code>Oregon.engine</code>. Der Name erscheint in TeXShop und muss nicht zum Format passen.</li>
+<li>Öffnen Sie die Kopie in TeXShop und ändern Sie ihre letzte Zeile, sodass die Engine so lautet:
+<pre>#!/bin/tcsh
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
+</ol>
+<p>Danach geöffnete Dokumente führen Oregon im Einblendmenü neben der Taste „Setzen“ auf. Um das Format für ein Dokument zu verwenden, gleich was dort gewählt ist, schreiben Sie diese Zeile an den Anfang des Quelltexts:</p>
+<pre>% !TEX program = Oregon</pre>
+<p>Um es zur Vorgabe zu machen, wählen Sie unter Einstellungen › Satz › Engine › Neue Dokumente setzen mit „Engine-Datei“ und im Menü „Engine-Datei“ Oregon. Siehe <a href="advanced_addengine.htm">Satz-Engines hinzufügen</a>.</p>
+<p>Für ein Format für plain TeX verwenden Sie in der Engine <code>pdftex</code> statt <code>pdflatex</code>. Bei einem Format, das „Über DVI“ verwendet wird, muss die Engine die DVI-Datei außerdem in PDF umwandeln, etwa mit <code>dvipdfmx "${1:r}.dvi"</code> in einem zsh-Skript, denn TeXShop zeigt die PDF-Datei mit dem Namen der Quelltextdatei an.</p>
+</main>
+</body>
+</html>

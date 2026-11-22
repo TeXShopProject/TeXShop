@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La ventana de vista previa</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="ventana de vista previa; mostrar páginas; disposición de página; páginas dobles; aumento; ajustar a la ventana; lupa; seleccionar PDF; copiar imágenes; buscar en el PDF; cajón; desplegar enlaces; ventana emergente fijada; dividir ventana; intercambiar vistas; pantalla completa; barra de herramientas de anotaciones">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm" class="current">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edición</a></li>
+<li><a href="basic_find.htm">Buscar y reemplazar</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Autocompletado de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
+<li><a href="basic_license.htm">Licencia</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>La ventana de vista previa</h1>
+
+<p>La ventana de vista previa muestra el archivo PDF compuesto. Se actualiza después de cada composición y se queda en la página que usted estaba leyendo. Sus ajustes están en Ajustes › Vista previa: los del grupo «Al abrir un documento» se aplican cuando se abre un documento, y el menú PDF los cambia para la ventana que está al frente.</p>
+
+<h2>Moverse por el documento</h2>
+
+<p>PDF › Mostrar páginas elige cómo se disponen las páginas: Página simple y Página doble muestran una página o un par de páginas, y Multipágina y Multipágina doble muestran todas las páginas en una sola columna larga. «Mostrar páginas», en «Al abrir un documento», establece el formato con el que empieza una ventana. Página anterior y Página siguiente, en el menú PDF y en la barra de herramientas, pasan las páginas; el campo «Ir a la página» de la barra de herramientas va a una página por su número, y los dos galones de Atrás/Adelante de la barra de herramientas vuelven a los lugares por los que ha pasado, como en un navegador web.</p>
+
+<p>En Página simple y Página doble, al desplazarse más allá del principio o del final de una página se pasa de página; active «No pasar de página al desplazar» en Ajustes › Vista previa › Visualización y navegación para detenerse en el borde de la página. Las teclas de flecha arriba y abajo desplazan dentro de la página. Las teclas de flecha izquierda y derecha desplazan lateralmente cuando una página ampliada es más ancha que la ventana y, si no, pasan de página; «Pasar siempre de página con las teclas de flecha izquierda y derecha» hace que siempre pasen de página.</p>
+
+<p>Con Ventana › Personalizar barra de herramientas... se pueden añadir dos menús a la barra de herramientas. Disposición de página elige el formato de las páginas. Con páginas dobles elige, solo para este documento, si un par de páginas se lee de izquierda a derecha o de derecha a izquierda, y si la primera página se muestra sola como portada; su elemento «Restaurar ajustes del documento» vuelve a los ajustes. Los ajustes son «Dirección de las páginas» y «Mostrar la primera página sola como portada», en «Al abrir un documento», y las líneas mágicas <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> y <code>% !TEX standardDisplay</code> los establecen para un documento.</p>
+
+<h2>Aumento</h2>
+
+<p>PDF › Aumento ofrece estas opciones:</p>
+<dl>
+<dt>Ajustar a la ventana</dt>
+<dd>La página ocupa el ancho de la ventana, y al cambiar el tamaño de la ventana cambia el aumento.</dd>
+<dt>Ajustar al ancho del contenido</dt>
+<dd>Como Ajustar a la ventana, pero sin los márgenes blancos: la parte compuesta de las páginas ocupa el ancho de la ventana.</dd>
+<dt>Aumento fijo</dt>
+<dd>El aumento se mantiene como se haya establecido en el campo Escala de la barra de herramientas, o con Acercar (<kbd>⇧⌘=</kbd>) y Alejar (<kbd>⇧⌘-</kbd>).</dd>
+<dt>Tamaño real</dt>
+<dd>Las páginas al tamaño del papel.</dd>
+</dl>
+
+<p>Zoom al contenido y Zoom al ancho del contenido, al final del mismo submenú, establecen el aumento una sola vez, de modo que la parte compuesta de la página quepa en la ventana u ocupe su ancho. Al cambiar el aumento con la barra de herramientas, con estos comandos o pellizcando en el trackpad, la ventana pasa a Aumento fijo; elija de nuevo Ajustar a la ventana para volver. Al hacer clic en la palabra situada junto al campo Escala se abre el menú Aumento. «Después de redimensionar la ventana» y «Aumento», en «Al abrir un documento», establecen el aumento con el que empieza una ventana.</p>
+
+<h2>Las herramientas del ratón</h2>
+
+<p>El elemento Modo de ratón de la barra de herramientas elige qué hace el puntero sobre la página. Desplazar mueve la página. Seleccionar texto selecciona texto para copiarlo. Aumentar y Aumentar (Grande) muestran una lupa mientras se mantiene pulsado el botón del ratón: haga doble clic y mantenga pulsado para una lupa más grande, haga triple clic y mantenga pulsado para ampliar toda la ventana, y pulse Comando, Opción o Control para ampliar más, o Mayúsculas para ampliar menos. Seleccionar PDF selecciona una zona de la página para copiarla como imagen. «Modo de ratón», en «Al abrir un documento», elige la herramienta con la que empieza una ventana.</p>
+
+<p>Con Seleccionar PDF, arrastre sobre una zona de la página y después cópiela con <kbd>⌘C</kbd> o arrástrela a otra aplicación o al escritorio; PDF › Guardar selección en archivo... la guarda en un archivo. PDF › Copiar con formato elige si la copia es PDF o una imagen como PNG, TIFF o JPEG; «Formato de imagen al copiar», en Ajustes › Vista previa › Copia de imágenes, establece el valor por omisión. Consulte <a href="advanced_pdfcopypaste.htm">Copiar y pegar, arrastrar y soltar</a>.</p>
+
+<h2 id="search">Buscar y el cajón</h2>
+
+<p>Escriba una palabra en el campo Buscar de la barra de herramientas y pulse Retorno para seleccionar su primera aparición; <kbd>⌘G</kbd> va a la siguiente. Mientras la ventana de vista previa está al frente, <kbd>⌘F</kbd> lleva a este campo.</p>
+
+<p>PDF › Cajón, o el elemento Cajón de la barra de herramientas, muestra el cajón. Su parte superior es el esquema del documento, que el paquete hyperref crea a partir de los capítulos y las secciones; haga clic en una entrada para ir allí, o elija una con las teclas de flecha y pulse Retorno. Su parte inferior es un segundo campo de búsqueda, que enumera cada aparición con su página; haga clic en una para ir allí.</p>
+
+<h2>Enlaces y enlaces desplegables</h2>
+
+<p>Los enlaces creados por el paquete hyperref funcionan en la vista previa: haga clic en una referencia para ir al teorema o a la entrada de la bibliografía, y el galón izquierdo de Atrás/Adelante le devuelve. Una dirección web se abre en su navegador.</p>
+
+<p>Mantenga el puntero sobre un enlace para ver el lugar enlazado en una ventana emergente, con el número de página en su esquina inferior derecha. La ventana emergente desaparece al cabo de unos segundos. Las teclas que se mantienen pulsadas cuando aparece la ventana emergente la cambian:</p>
+<dl>
+<dt>Mayúsculas</dt>
+<dd>muestra la ventana emergente encima del enlace en lugar de debajo.</dd>
+<dt>Comando</dt>
+<dd>muestra una ventana emergente más grande.</dd>
+<dt>Opción</dt>
+<dd>fija la ventana emergente, de modo que se queda. Pulsar Opción mientras se muestra una ventana emergente también la fija.</dd>
+<dt>Control</dt>
+<dd>invierte Desplegar enlaces para este enlace: mientras Desplegar enlaces está activado, no aparece ninguna ventana emergente, de modo que ninguna estorba un clic con la tecla Control; mientras está desactivado, la ventana emergente aparece de todos modos.</dd>
+</dl>
+
+<p>Una ventana emergente fijada se puede mover, cambiar de tamaño y desplazar, y su texto se puede seleccionar y copiar. Se queda en su sitio en su página mientras usted hace clic, se desplaza, cambia el aumento, sigue enlaces o trabaja en otras ventanas, hasta que pulse Escape en la ventana de vista previa. Mientras hay una ventana emergente fijada, siguen apareciendo otras, y Opción fija una de ellas en su lugar.</p>
+
+<p>PDF › Desplegar enlaces activa o desactiva las ventanas emergentes en la ventana, y «Desplegar enlaces», en «Al abrir un documento», establece si están activadas cuando se abre un documento. «Mostrar el número de página al desplegar enlaces», en Ajustes › Vista previa › Visualización y navegación, muestra el número de página; desactívelo para omitirlo. No aparece ninguna ventana emergente mientras está elegida la herramienta Seleccionar PDF.</p>
+
+<h2>Dividir la ventana</h2>
+
+<p>Ventana › Dividir ventana (<kbd>⌃2</kbd>), o el elemento Dividir ventana de la barra de herramientas, divide la ventana de vista previa en dos partes que pueden mostrar lugares distintos del documento; elíjalo de nuevo para quitar la división. Mantenga pulsada la tecla Opción para dividir la ventana en dos partes una junto a otra (Ventana › Dividir ventana verticalmente, <kbd>⌃⌥2</kbd>). Cada parte tiene su propio formato de páginas y su propio aumento. La parte en la que hizo clic por última vez es la parte activa, marcada con una línea fina del color de acentuación: la barra de herramientas, el cajón, SyncTeX y el menú PDF actúan sobre ella, y se conserva al quitar la división.</p>
+
+<p>Haga clic con la tecla Control en un enlace interno, o haga clic en él con el botón derecho del ratón, y elija Dividir ventana con enlace para mostrar el lugar enlazado en la otra parte mientras el enlace sigue a la vista; si hace falta, la ventana se divide primero.</p>
+
+<p>Ventana › Intercambiar vistas (<kbd>⌥2</kbd>) intercambia las dos partes de una ventana dividida. En una ventana que no está dividida, alterna entre dos vistas del documento, cada una con su propio lugar, formato de páginas y aumento, para que pueda ir y venir entre dos lugares.</p>
+
+<h2>Pantalla completa</h2>
+
+<p>Ventana › Usar pantalla completa (<kbd>⌃⌘F</kbd>) muestra la vista previa en toda la pantalla. Entonces se quita la división de la ventana y se usan el aumento y el formato de páginas usados por última vez en pantalla completa, y al salir de la pantalla completa se recuperan los anteriores. Para conservar la división, el aumento y el formato de páginas, active «Mantener el aumento, el formato de páginas y la división al usar pantalla completa» en Ajustes › Vista previa › Visualización y navegación. En pantalla completa, el primer Escape cierra una ventana emergente fijada y el segundo sale de la pantalla completa.</p>
+
+<h2>Anotaciones</h2>
+
+<p>PDF › Mostrar barra de herramientas de anotaciones muestra las herramientas de anotación bajo la barra de herramientas de la ventana. Haga clic en Edición, en el extremo izquierdo de la barra de herramientas de anotaciones, y use después sus botones para tachar, resaltar o subrayar el texto seleccionado, o para añadir formas, flechas, texto y notas. Las anotaciones no forman parte del código fuente, y la siguiente composición sustituye el archivo PDF, así que guárdelas con «Guardar anotaciones…» en la barra de herramientas de anotaciones; se guarda una copia del archivo PDF, llamada por ejemplo Fourier-Annotated.pdf para Fourier.tex. Después de haber trabajado en el modo Edición, TeXShop ofrece guardar las anotaciones antes de volver a componer o de cerrar la ventana. El Manual de TeXShop describe las anotaciones en detalle.</p>
+
+<h2>Más</h2>
+
+<p>Haga clic con la tecla Comando en la vista previa para ir al lugar correspondiente del código fuente; consulte <a href="basic_typesetting.htm">Componer documentos</a>. Rotar en sentido horario y Rotar en sentido antihorario, en el menú PDF, giran las páginas. Cuando otra aplicación, como latexmk, reescribe el archivo PDF, la vista previa lo vuelve a cargar en el mismo lugar; active «Vigilar siempre los cambios del PDF hechos por otras apps» en Ajustes › Vista previa › Actualización para que también se vuelva a cargar mientras TeXShop está en segundo plano. PDF › Guardar posición ventana del PDF hace que las ventanas de vista previa nuevas se abran en el lugar y con el tamaño de la ventana que está al frente.</p>
+</main>
+</body>
+</html>

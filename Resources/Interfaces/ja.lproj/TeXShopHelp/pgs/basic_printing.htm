@@ -1,54 +1,50 @@
-<HTML>
-
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>印刷</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="「プリント...」と「ソースをプリント...」">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>プリント</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="プリント; 印刷; ソースをプリント; 自動回転; 用紙サイズに合わせる; ページ設定">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
 <body>
-
-<div id="content_border">
-
-<p>
-TeXによる出力結果を印刷するには、メニュー項目の「プリント...」を選びます。TeXソースを印刷するには「ソースをプリント...」を選択してください。
-</p>
-
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">基本的なヘルプ</div>
-<div id="header_title"> 印刷 </div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="basic_preliminaries.htm">まえがき</a>
-			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a>
-			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
-			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
-			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
-			<li><a href="basic_spelling.htm">スペルをチェックする</a>
-			<li><a href="basic_latexpanel.htm">Latexパネル</a>
-			<li><a href="basic_matrixpanel.htm">行列パネル</a>
-			<li><a href="basic_macros.htm">マクロ</a>
-			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
-			<li><a href="basic_graphics.htm">画像を入れる</a>
-			<li><a href="basic_printing.htm">印刷</a>
-			<li><a href="basic_preferences.htm">設定</a>
-			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
-			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
-			<li><a href="basic_edittricks.htm">編集上のコツ</a>
-			<li><a href="basic_autocompletion.htm">キーバインド</a>
-			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
-			<li><a href="basic_bugs.htm">バグレポートを送る</a>
-			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
-			<li><a href="basic_license.htm">使用許諾</a>
-		</ul>
-	</div>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
+<li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm">行列パネル</a></li>
+<li><a href="basic_macros.htm">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm">画像を入れる</a></li>
+<li><a href="basic_printing.htm" class="current">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>プリント</h1>
+<p>タイプセットした書類をプリントするには、プレビューウインドウかソースウインドウで「ファイル」→「プリント...」（<kbd>⌘P</kbd>）を選びます。ルートファイルのあるプロジェクトでは、タイプセットしたルートの書類がプリントされます。</p>
+<p>プリントダイアログにはTeXShopの項目があり、Appleの「プレビュー」と同じ選択肢が並びます。「自動回転」をオンにすると、各ページが用紙に合わせて回転するので、横長のページは縦長の用紙に横向きにプリントされます。「用紙サイズに合わせる」を選ぶと、各ページが用紙に収まるよう拡大・縮小されます。決まった比率でプリントするには、代わりに「サイズ調整:」を選びます。「自動回転」と「用紙サイズに合わせる」は初めから選ばれていて、最後にプリントしたときの選択は、その書類を開いているあいだ保たれます。用紙の向きは最初のページに合わせます。</p>
+<p>ソースのテキストをプリントするには、「ファイル」→「ソースをプリント...」を選びます。用紙サイズは「ファイル」→「ページ設定...」で選びます。</p>
+</main>
 </body>
-
-</HTML>
+</html>

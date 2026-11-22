@@ -1,101 +1,71 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppleScriptマクロを定義する</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; #FILEPATH#; #PDFPATH#; #TEXPATH#; #FOLDERPATH#; #NAMEPATH#; #DOCUMENTNAME#; typeset; latexinteractive; taskdone; refreshpdf; goto line">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">マクロ・ヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">まえがき</a></li>
+<li><a href="macros_default.htm">デフォルトのマクロを理解する</a></li>
+<li><a href="macros_rearrange.htm">マクロメニューを並べ替える</a></li>
+<li><a href="macros_define.htm">新しいマクロを定義する</a></li>
+<li><a href="macros_applescript.htm">AppleScriptマクロ</a></li>
+<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a></li>
+<li><a href="macros_defapplescript.htm" class="current">AppleScriptマクロを定義する</a></li>
+<li><a href="macros_dialogs.htm">ダイアログを作る</a></li>
+<li><a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a></li>
+<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>AppleScriptマクロを定義する</h1>
+<p>AppleScriptは、それ自体が1つの言語です。AppleのデベロッパWebサイトにある、Appleの<cite>AppleScript Language Guide</cite>に詳しく説明されています。</p>
 
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>AppleScriptマクロを定義する</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="AppleScriptコマンドを書く方法について">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<h2 id="paths">パスと書類の名前</h2>
+<p>AppleScriptマクロを実行する前に、TeXShopは次の文字列を、作業中の書類のファイルのパスに置き換えます。パスはダブルクォートで囲まれます。</p>
+<dl>
+<dt>#FILEPATH#</dt><dd>ソースファイル</dd>
+<dt>#TEXPATH#</dt><dd>.texファイル</dd>
+<dt>#NAMEPATH#</dt><dd>拡張子を除いたソースファイル</dd>
+<dt>#FOLDERPATH#</dt><dd>ソースのあるフォルダ。末尾はスラッシュです</dd>
+<dt>#PDFPATH#、#DVIPATH#、#PSPATH#、#LOGPATH#、#AUXPATH#</dt><dd>.pdf、.dvi、.ps、.log、.auxの各ファイル</dd>
+<dt>#INDPATH#、#BBLPATH#、#HTMLPATH#</dt><dd>.ind、.bbl、.htmlの各ファイル</dd>
+</dl>
+<p>たとえば、#FILEPATH#が/Users/name/Projects/Fourier/Fourier.texなら、#FOLDERPATH#は/Users/name/Projects/Fourier/です。書類を一度も保存していなければ、#FILEPATH#は空の文字列です。</p>
+<p>#DOCUMENTNAME#は、ソースのウインドウのタイトルに表示されているとおりの書類の名前に置き換わります。拡張子を表示していれば拡張子付き、隠していれば拡張子なしです。スクリプトでは、これを使って自分を呼び出した書類を指定します。</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  latex
+end tell</pre>
 
-<BODY>
-<div id="content_border">
-
-<p>
-AppleScriptの文法はそれ自体でひとつのテーマです。AppleScriptについてさらに学ぶには、関連本をどれか１冊読んでみてください。Mac OS Xに付属するデベロッパー・ツールズをインストールしているのであれば、AppleScriptについてのオンライン本がDeveloperフォルダの中に入っています。
-</p>
-
-<p>
-TeXShopがAppleScriptマクロを実行するときには、最初に #FILEPATH# ・ #PDFPATH# ・ #DVIPATH# ・ #PSPATH# ・ #LOGPATH# ・ #AUXPATH# といった文字列をすべて、TeXソースファイル、pdfファイル、dviファイル、psファイル、logファイル、あるいはauxファイルそれぞれの完全パス名で置き換えます。同様に文字列 #INDPATH# ・ #BBLPATH# ・ #HTMLPATH# は、indファイル、bblファイル、htmlファイルの完全パス名に置き換えられます。
-</p>
-
-<p>
-加えて、文字列 #NAMEPATH# はすべて、TeXソースファイルの拡張子を省いた完全パス名で置き換えられますし、文字列 #DOCUMENTNAME# はすべて、現在の文書の表示名で置き換えられます。この最後の置き換えは、いくぶん微妙なものです ； ソースウインドウの上部に示されている文書のタイトルが使われるのです。もし「拡張子を隠す」にチェックを入れて文書を保存していた場合には、#DOCUMENTNAME# は文書名のみになります。けれども「拡張子を隠す」にチェックを入れずに文書を保存していれば、#DOCUMENTNAME# には文書名＋拡張子が入ります。このことは、次のようにAppleScriptコードで呼び出す文書を見つけるのに使えます：
-</p>
-
-<tt>
-	<dl>
-		<dd>tell document #DOCUMENTNAME# of application "TeXShop"
-		<dd>latex
-		<dd>end tell
-	</dl>
-</tt>
-
-<p>
-AppleScriptコマンドを書く方法は、少なくとも２つあります。AppleScriptはシェルコマンドを実行できるので、AppleScriptで前処理をした後、シェルコマンドを呼び出して実作業をさせることができます。TeXShopにはこの手法についての例がいくつか付属しています ； こうした例の中には、ヘルプの後節で説明するものもあります。AppleScriptコマンドは、TeXShopに組み込まれているコマンドを呼び出して直接作動させることもできます。後節ではこちらの手法の例について触れます。
-</p>
-
-<p>
-TeXShopは以下のコマンドを理解します：
-</p>
-
-<tt>
-	<ol>
-		<li>typeset
-		<li>latex
-		<li>tex
-		<li>context
-		<li>bibtex
-		<li>makeindex
-		<li>metapost
-		<li>typesetinteractive
-		<li>latexinteractive
-		<li>texinteractive
-		<li>contextinteractive
-		<li>bibtexinteractive
-		<li>makeindexinteractive
-		<li>metapostinteractive
-		<li>taskdone
-		<li>refreshpdf
-		<li>refreshtext
-		<li>goto line
-	</ol>
-</tt>
-
-<p>
-最初の７つのコマンドはTeXShopのタイプセット・ルーチンを呼び出します。これらのコマンドはエラー箇所で止まることなしにタイプセットを継続します。次の７つのコマンドもまたTeXShopのタイプセットコマンドですが、こちらはもしエラーがあれば、コンソールで対話的に作業を行なえます。タイプセットコマンドが呼び出されると、作業が完了するのを待たずに、コントロールはすぐにAppleScriptに戻ります。「taskdone」は、タイプセット中はNOを返し、完了するとYESを返します。「refreshpdf」と「refreshtext」は、pdfおよびテキスト文書を最新の状態で画面に表示します。「goto line」コマンドは、指定の行を選択するようエディタに命じます ； たとえば：
-</p>
-
-<tt>
-	<dl>
-		<dd>tell document #DOCUMENTNAME# of application "TeXShop"
-		<dd>goto line 37
-		<dd>end tell
-	</dl>
-</tt>
-
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">マクロ・ヘルプ</div>
-<div id="header_title">AppleScriptマクロを定義する</div>
-
-<div id="menu_border">
-
-	<UL>
-		<li><a href="macros_preliminaries.htm">まえがき</a> 
-		<li><a href="macros_default.htm">デフォルトのマクロを理解する</a>
-		<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a>
-		<li><a href="macros_define.htm">新しいマクロを定義する</a>
-		<li><a href="macros_applescript.htm">AppleScriptマクロ</a>
-
-		<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a>
-		<li><a href="macros_defapplescript.htm">AppleScriptマクロを定義する</a>
-		<li><a href="macros_dialogs.htm">ダイアログを作る</a>
-		<li><a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>
-		<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>
-	</UL>
-</div>
-</BODY>
-
-</HTML>
+<h2 id="commands">TeXShopのコマンド</h2>
+<p>AppleScriptが仕事をする方法は2つあります。<a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>で説明するようにシェルコマンドを実行するか、<a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>で説明するようにTeXShop自身のコマンドを呼び出すかです。TeXShopは次のコマンドを理解します。</p>
+<pre>typeset
+latex
+tex
+bibtex
+makeindex
+metapost
+typesetinteractive
+latexinteractive
+texinteractive
+bibtexinteractive
+makeindexinteractive
+metapostinteractive
+taskdone
+refreshpdf
+refreshtext
+goto line</pre>
+<p>最初の6つのコマンドは、エラーで止まらずに続けてタイプセットします。次の6つもタイプセットしますが、エラーで止まり、コンソールで応答できるようにします。タイプセットのコマンドは、タイプセットが終わる前にすぐ戻ります。<code>taskdone</code>は、タイプセットがまだ実行中ならNOを、終わっていればYESを返します。<code>refreshpdf</code>と<code>refreshtext</code>は、PDFとテキストのウインドウにファイルの最新の版を表示させます。<code>goto line</code>はソースの行を選択します。</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  goto line 37
+end tell</pre>
+</main>
+</body>
+</html>

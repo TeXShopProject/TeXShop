@@ -1,46 +1,61 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barra de herramientas y AppleScript</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="barra de herramientas; Personalizar barra de herramientas; Disposición de página; Con páginas dobles; Escala; barra de herramientas de anotaciones; Ruta completa; Mostrar ruta completa en título de ventana; AppleScript">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edición</a></li>
+<li><a href="basic_find.htm">Buscar y reemplazar</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Autocompletado de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm" class="current">Barra de herramientas y AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
+<li><a href="basic_license.htm">Licencia</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Barra de herramientas y AppleScript</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Barra de herramientas y AppleScript</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="barra de herramientas; soporte applescript">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Cambiar la barra de herramientas</h2>
+<p>La ventana de código, la ventana de vista previa y la ventana que muestra ambas tienen cada una su propia barra de herramientas. Para cambiar una, active la ventana y elija Ventana › Personalizar barra de herramientas..., o haga clic con la tecla Control en la barra de herramientas y elija allí Personalizar barra de herramientas…. Arrastre elementos a la barra de herramientas o fuera de ella, o arrastre el conjunto por omisión a la barra de herramientas para empezar de nuevo. Ventana › Ocultar barra de herramientas oculta la barra de herramientas de la ventana activa.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>Podemos configurar a nuestro gusto las herramientas que aparecen en la parte de arriba de las ventanas del c&oacute;digo TeX y del PDF previsto. Para ello, basta usar el men&uacute; &laquo;Personalizar barra de herramientas...&raquo;. Esta posibilidad ha sido implementada completamente por Anton Leuski. &iexcl;Gracias!</P>
-		<p>TeXShop soporta AppleScript. Esto tambi&eacute;n ha sido implementado por Anton Leuski.</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda b&aacute;sica</div><div id="header_title">Barra de herramientas y AppleScript</div>
-		<div id="menu_border">
-		<ul>
-			<LI><a href="basic_preliminaries.htm">Preliminares</a>
-			<LI><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">C&oacute;mo obtener e instalar TeXShop</a>
-			<li><a href="basic_typesetting.htm">Componer (&lsquo;typeset&rsquo;) documentos</a>
-			<li><a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a>
-			<li><a href="basic_spelling.htm">Correcci&oacute;n ortogr&aacute;fica</a>
-			<li><a href="basic_latexpanel.htm">Panel LaTeX</a>
-			<li><a href="basic_matrixpanel.htm">Panel matrices</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a>
-			<li><a href="basic_graphics.htm">Inclusi&oacute;n de gr&aacute;ficos</a>
-			<li><a href="basic_printing.htm">Imprimir</a>
-			<li><a href="basic_preferences.htm">Establecer ajustes</a>
-			<li><a href="basic_templates.htm">Personalizaci&oacute;n del men&uacute; Plantillas</a>
-			<li><a href="basic_edittricks.htm">Trucos de edici&oacute;n</a>
-			<li><a href="basic_autocompletion.htm">Autocompleci&oacute;n</a>
-			<li><a href="basic_commandcompletion.htm">Compleci&oacute;n de comandos</a>
-			<li><a href="basic_bugs.htm">Notificaci&oacute;n de errores (&lsquo;bugs&rsquo;)</a>
-			<li><a href="basic_websites.htm">Sitios web &uacute;tiles</a>
-			<li><a href="basic_license.htm">Licencia</a>
-			<li><a href="basic_thistranslation.htm">Sobre la traducci&oacute;n a espa&ntilde;ol</a>
-		</UL>
-	</div>
-	</BODY>
+<h2>Elementos de la ventana de código</h2>
+<p>Componer, con el menú Programa a su lado, compone el documento con el programa elegido allí; también hay botones para programas concretos, como BibTeX y MakeIndex. Plantillas y Macros insertan texto (consulte <a href="basic_templates.htm">Plantillas y documentos modelo</a> y <a href="basic_macros.htm">Macros</a>). Marcas y Etiquetas desplazan el código fuente hasta una sección o una etiqueta. Autocompleción activa o desactiva las combinaciones de teclas para el documento, y Dividir ventana divide la ventana (haga clic con la tecla Opción para dividirla en dos partes una junto a otra).</p>
+<p>Ruta completa muestra la ruta completa del archivo en el título de la ventana en lugar de solo su nombre; haga clic de nuevo para mostrar el nombre. La elección se conserva para las ventanas que se abran después.</p>
 
-</HTML>
+<h2>Elementos de la ventana de vista previa</h2>
+<p>La ventana de vista previa tiene, entre otros, Página anterior y Página siguiente, Ir a la página, Atrás/Adelante, Escala, Modo de ratón, Buscar, Cajón, Marcas de sincronización, Dividir ventana y Aspecto, que muestra las páginas claras u oscuras. Haga clic en la palabra situada junto al campo de la escala para abrir el menú Aumento.</p>
+<p>Disposición de página elige Página simple, Página doble, Multipágina o Multipágina doble para el documento. Con páginas dobles elige, para el documento mientras está abierto, si dos páginas van de izquierda a derecha o de derecha a izquierda y si la primera página se muestra sola como portada; «Restaurar ajustes del documento», en este menú, vuelve a los Ajustes y a las líneas de comentario mágicas del documento. Zoom al contenido y Zoom al ancho del contenido cambian el aumento una sola vez para que la parte compuesta de la página, sin sus márgenes blancos, quepa en la ventana o en su ancho. Consulte <a href="basic_preview.htm">La ventana de vista previa</a>.</p>
+<p>PDF › Mostrar barra de herramientas de anotaciones muestra una segunda barra de herramientas bajo la barra de herramientas, con las herramientas para añadir notas, resaltados y formas al PDF. Haga clic en el botón de cerrar de su extremo derecho, o elija PDF › Ocultar barra de herramientas de anotaciones, para quitarla. Las anotaciones se describen en el Manual de TeXShop (Ayuda › Manual de TeXShop (en inglés)).</p>
+
+<h2>AppleScript</h2>
+<p>TeXShop se puede controlar con AppleScript: los scripts pueden componer documentos, ejecutar BibTeX y MakeIndex y trabajar con el texto del código fuente. Las macros de AppleScript del menú Macros ejecutan scripts de este tipo; consulte <a href="macros_applescript.htm">Macros AppleScript</a>. Los comandos que entiende TeXShop se explican en Ayuda › Documentos anteriores › Notas sobre AppleScript en TeXShop (en inglés), y se enumeran en el diccionario de scripts de TeXShop, que Editor de Scripts abre con Archivo › Abrir diccionario….</p>
+</main>
+</body>
+</html>

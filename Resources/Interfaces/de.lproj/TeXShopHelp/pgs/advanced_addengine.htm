@@ -1,80 +1,86 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Satz-Engines hinzufügen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="Engine; Engine-Datei; .engine; Ordner Engines; % !TEX program; % !TEX parameter; Alternate Engine; Inactive; Shell-Skript">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm" class="current">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
+<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Satz-Engines hinzufügen</h1>
+<p>Außer mit plain TeX und LaTeX setzt TeXShop mit <em>Engines</em>: kleinen Shell-Skripten mit der Endung <code>.engine</code> im Ordner <code>~/Library/TeXShop/Engines</code>. Eine Engine kann ein einzelnes Programm starten oder eine Folge von Programmen, etwa LuaLaTeX, dann Biber und dann noch zweimal LuaLaTeX. TeXShop bringt Engines wie LuaLaTeX, XeLaTeX und pdflatexmk mit; der Unterordner <code>Inactive</code> enthält viele weitere.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Zus&auml;tzliche Schriftsatz-Programme</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Satzmethoden; Engines; TS-program">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Eine Engine wählen</h2>
+<p>Das Einblendmenü neben der Taste „Setzen“ in der Symbolleiste des Quelltextfensters listet die Engines auf. Wählen Sie eine aus und klicken Sie auf „Setzen“ oder drücken Sie <kbd>⌘T</kbd>. Die Wahl gilt nur für dieses Dokument.</p>
+<p>Um neue Dokumente mit einer Engine zu setzen, wählen Sie unter Einstellungen › Satz › Engine › Neue Dokumente setzen mit „Engine-Datei“ und darunter im Menü „Engine-Datei“ die Engine. „Engine-Liste bearbeiten…“ öffnet den Ordner „Engines“ im Finder; das Menü „Engine-Datei“ folgt dem Ordner, wenn Sie Dateien hinzufügen, entfernen oder umbenennen. Ist die gewählte Engine-Datei nicht mehr im Ordner, zeigt das Menü sie als nicht gefunden an, und Dokumente werden mit LaTeX gesetzt.</p>
+<p>Um ein Dokument an eine Engine zu binden, schreiben Sie eine Zeile wie diese in eine seiner ersten zwanzig Zeilen:</p>
+<pre>% !TEX program = XeLaTeX</pre>
+<p>Der Name ist der Name der Engine-Datei ohne <code>.engine</code>; <code>tex</code> und <code>latex</code> setzen plain TeX und LaTeX „Über DVI“, <code>pdftex</code> und <code>pdflatex</code> setzen sie „PDF direkt“. Die Zeile hat Vorrang vor der Symbolleiste, vor den Einstellungen und vor „Setzen mit Alternate Engine“. Die Form <code>% !TEX TS-program =</code> wird genauso gelesen. Schreiben Sie die Zeile genau wie gezeigt, mit je einem Leerzeichen vor und nach dem Gleichheitszeichen; das Makro „Program“ im Menü „Makros“ listet die Engines auf und fügt die Zeile für Sie ein. In einem Projekt mit Hauptdatei braucht nur die Hauptdatei die Zeile.</p>
+<p>Setzen › Setzen mit Alternate Engine (<kbd>⌃⌥⌘T</kbd>) setzt einmal mit der Engine unter Einstellungen › Satz › Engine › Alternativer Engine, als Vorgabe pdflatexmk, ohne die Symbolleiste zu ändern. Das eignet sich für Dokumente, die meist in einem schnellen Durchlauf gesetzt werden und gelegentlich vollständig mit latexmk.</p>
 
-<BODY>
-	<div id="content_border">
+<h2>Eine Engine schreiben</h2>
+<p>Am einfachsten erstellen Sie eine Engine, indem Sie im Finder eine Engine im Ordner „Engines“ duplizieren, die Kopie umbenennen und sie zum Bearbeiten in TeXShop öffnen. Eine Engine-Datei muss die Endung <code>.engine</code> haben und ausführbar sein; ein Duplikat behält diese Berechtigung. Danach geöffnete Dokumente führen die neue Engine in ihrer Symbolleiste auf. Hier ist XeLaTeX.engine:</p>
+<pre>#!/bin/tcsh
 
-<p>TeXShop hat mehrere eingebaute Satzmethoden. Es ist aber m&ouml;glich, weitere Satzmethoden hinzuzuf&uuml;gen; diese neuen Methoden hei&szlig;en &bdquo;Engines&ldquo;.</p>
-
-<p>Eine Engine kann eine beliebige Folge von Programmen aufrufen, die mit einer TeX-Quelldatei beginnt und mit einer PDF-Datei endet. Genau genommen ist selbst die PDF-Datei nicht n&ouml;tig: Eine mit TeXShop gelieferte Engine wandelt LaTeX-Quelltext mit dem TeX-Live-Programm tex4ht in eine HTML-Datei um und TeXShop zeigt diese HTML-Datei dann neben der PDF-Datei in seinem HTML-Fenster. Die Programme, die eine Engine aufruft, stehen in einem Shell-Skript.</p>
-
-<p>Im Ordner ~/Library/TeXShop gibt es einen Ordner namens Engines; die Dateien darin sind Shell-Skripte, die Satzprogramme aufrufen. Beim Start untersucht TeXShop diesen Ordner und f&uuml;gt die Namen der enthaltenen Skripte dem Auswahlmen&uuml; der Satzmethoden hinzu. W&auml;hlt man einen dieser Eintr&auml;ge und klickt auf &bdquo;Setzen&ldquo;, wird das Skript aufgerufen. Sie k&ouml;nnen eigene Skripte schreiben und in den Ordner Engines legen. Jedes Skript braucht einen Namen ohne Leerzeichen und die Endung &bdquo;.engine&ldquo;, und es muss ausf&uuml;hrbar sein (Execute-Bit gesetzt).</p>
-
-<p>Die Eintr&auml;ge in ~/Library/TeXShop/Engines k&ouml;nnen in den Einstellungen von TeXShop auch als Standard-Satzmethode gew&auml;hlt werden. In den Einstellungen erscheint der Name einer Methode ohne die Endung.</p>
-
-<p>Das Programm f&uuml;r ein Dokument kann in einer der ersten zwanzig Zeilen des Quelltextes mit einer Zeile wie dieser festgelegt werden:</p>
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+xelatex  -file-line-error -synctex=1 "$1"</pre>
+<p>Die erste Zeile nennt die Shell oder Sprache des Skripts; zsh, bash, tcsh, Perl und andere funktionieren, sofern das Skript in dieser Sprache geschrieben ist. TeXShop startet die Engine im Ordner der Quelltextdatei und übergibt ihr drei Werte:</p>
 <dl>
-<dd> % !TEX TS-program = xelatex
+<dt><code>$1</code></dt><dd>Der Name der Quelltextdatei mit Endung, ohne Ordner, etwa <code>main.tex</code>. Ein Skript, das in einen anderen Ordner wechselt, muss sich vorher den vollständigen Pfad merken, zum Beispiel als <code>"$PWD/$1"</code>. In einem Projekt ist dies die Hauptdatei.</dd>
+<dt><code>$2</code></dt><dd>Der Rest einer Zeile <code>% !TEX parameter = …</code> am Anfang des Quelltexts (der Hauptdatei), mit mehreren Optionen durch Leerzeichen getrennt, zum Beispiel <code>% !TEX parameter = -shell-escape</code>. Ohne eine solche Zeile ist es ein einzelnes Leerzeichen.</dd>
+<dt><code>$3</code></dt><dd>Der Ordner im Feld „TeX-Engines“ unter Einstellungen › Satz › Pfade, oder der Ordner unter „Zweite TeX-Engines“, wenn das Dokument die Zeile <code>% !TEX useAlternatePath</code> enthält.</dd>
 </dl>
+<p>Wenn die Engine endet, öffnet TeXShop die PDF-Datei mit dem Namen der Quelltextdatei und der Endung <code>.pdf</code> im Vorschaufenster, sofern es sie gibt, und blättert an die Stelle, die vor dem Setzen angezeigt wurde. Ein Skript, das andere Ausgaben erzeugt, kann mit den folgenden Zeilen festlegen, was angezeigt wird; sie stehen an beliebiger Stelle der Engine in einem Kommentar ihrer Sprache:</p>
+<table>
+<tr><th>Zeile</th><th>Wirkung</th></tr>
+<tr><td><code>!TEX-noPreview</code></td><td>kein Vorschaufenster, auch wenn weitere der folgenden Zeilen vorhanden sind</td></tr>
+<tr><td><code>!TEX-pdfPreview</code></td><td>die PDF-Datei anzeigen</td></tr>
+<tr><td><code>!TEX-htmlPreview</code></td><td>die gleichnamige HTML-Datei im HTML-Fenster anzeigen</td></tr>
+<tr><td><code>!TEX-bothPreview</code></td><td>die PDF-Datei und die HTML-Datei anzeigen</td></tr>
+<tr><td><code>!TEX-noConsole</code></td><td>die Konsole nicht anzeigen</td></tr>
+</table>
+<p>Eine Engine, die LuaLaTeX, Biber und noch zweimal LuaLaTeX startet, könnte in zsh zum Beispiel so lauten; <code>${1:r}</code> ist dabei der Name ohne Endung:</p>
+<pre>#!/bin/zsh
+export PATH="/Library/TeX/texbin:$PATH"
+lualatex -file-line-error -synctex=1 "$1"
+biber "${1:r}"
+lualatex -file-line-error -synctex=1 "$1"
+lualatex -file-line-error -synctex=1 "$1"</pre>
 
-<p>Vor und nach dem Gleichheitszeichen muss je ein Leerzeichen stehen. Ein mit TeXShop gelieferter Makro f&uuml;gt diese Zeile bequem ein; er listet alle aktiven Engines auf, sodass Sie die gew&uuml;nschte Engine in einem Dialog ausw&auml;hlen k&ouml;nnen.</p>
-
-<p>Diese Schreibweise wurde sp&auml;ter von TeXworks und anderen Editoren &uuml;bernommen. Um die Zusammenarbeit zu erleichtern, versteht TeXShop auch die TeXworks-Form der Zeile:</p>
-<dl>
-<dd> % !TEX program = xelatex
-</dl>
-
-<p>Die Zeile &bdquo;% !TEX TS-program = ...&ldquo; hat Vorrang vor der in der Symbolleiste gew&auml;hlten Satzmethode. Steht zum Beispiel die obige Zeile mit &bdquo;xelatex&ldquo; im Quelltext, dann wird das Dokument mit xelatex gesetzt, wenn Sie auf &bdquo;Setzen&ldquo; klicken, im Men&uuml; &bdquo;Setzen&ldquo; den Befehl &bdquo;Setzen&ldquo; w&auml;hlen oder dessen Tastenkurzbefehl dr&uuml;cken, auch wenn im Auswahlmen&uuml; der Symbolleiste pdflatex eingestellt ist. Besteht ein Projekt aus einer Hauptdatei und mehreren Kapiteldateien, braucht nur die Hauptdatei eine Zeile &bdquo;% !TEX TS-program&ldquo;.</p>
-
-<p>Wenn Sie eine neue Engine schreiben, duplizieren Sie am besten eine vorhandene Engine in ~/Library/TeXShop/Engines. Die Kopie ist automatisch ausf&uuml;hrbar. Anschlie&szlig;end bearbeiten Sie die Datei in TeXShop.</p>
-
-<p>Der Ordner ~/Library/TeXShop/Engines enth&auml;lt einen Unterordner &bdquo;Inactive&ldquo; mit vielen weiteren Engine-Skripten. Sie zeigen an Beispielen, wie Engine-Dateien geschrieben werden. Beim Aufruf einer Engine enth&auml;lt die Variable &bdquo;$1&ldquo; den Namen der Quelldatei, die beim Aufruf aktiv war, ohne ihren Ordner, und die Engine startet in dem Ordner, der diese Datei enth&auml;lt. F&uuml;r /Users/me/paper/main.tex ist &bdquo;$1&ldquo; zum Beispiel main.tex, und die Engine l&auml;uft in /Users/me/paper. Wechselt ein Skript in einen anderen Ordner, muss es sich deshalb vorher den vollst&auml;ndigen Pfad merken, etwa als &bdquo;$PWD/$1&ldquo;. Diese Datei muss nicht die Endung &bdquo;.tex&ldquo; haben. Das Skript kann viele Zwischenschritte enthalten, verschiedene Hilfsdateien erzeugen und sie mit anderen Kommandozeilenprogrammen verarbeiten. TeXShop geht davon aus, dass am Ende eine PDF-Datei mit dem Namen der Quelldatei und der Endung &bdquo;.pdf&ldquo; entsteht. Dann &ouml;ffnet TeXShop nach dem Lauf der Engine automatisch die PDF-Datei und rollt an dieselbe Stelle wie in der PDF-Datei vor dem Setzen. Entsteht keine PDF-Datei, l&auml;sst TeXShop diesen Schritt aus. In diesem Fall muss das Skript das Ergebnis bei Bedarf selbst in einem passenden Programm &ouml;ffnen.</p>
-
-<p>Engine-Skripte k&ouml;nnen in jeder geeigneten Sprache geschrieben werden. Die meisten Engines verwenden tcsh oder zsh, aber auch Skripte in perl und anderen Sprachen funktionieren.</p>
-
-<p>Manche Engines gehen so vor: Sie setzen eine Eingabedatei, erzeugen dabei eine Hilfsdatei mit gleichem Namen und anderer Endung und verarbeiten diese Hilfsdatei mit einem anderen Programm. Die Engine &bdquo;sage&ldquo; im Ordner &bdquo;Inactive&ldquo; ist ein Beispiel; ihre Hilfsdatei hat die Endung &bdquo;.sage&ldquo; und wird vom Computeralgebrasystem Sage verarbeitet. In solchen F&auml;llen ist die folgende Zeile aus der Engine &bdquo;sage&ldquo; n&uuml;tzlich:</p>
-<dl>
-<dd> sagename=${filename/%tex/sagetex.sage}
-</dl>
-
-<p>Dabei ersetzt ${filename/%tex/sagetex.sage} das &bdquo;tex&ldquo; am Ende des Dateinamens durch &bdquo;sagetex.sage&ldquo;, den Namen der Datei, die sagetex schreibt.</p>
-
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Erweitert</div><div id="header_title">Zus&auml;tzliche Schriftsatz-Programme</div>
-	<div id="menu_border">
-		<ul>
-			<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</a></li>
-			<LI><a href="advanced_addengine.htm">Zus�tzliche Schriftsatz-Programme</a>
-			<LI><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a>
-			<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-			<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-			<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-			<li><a href="advanced_unicode.htm">Unicode</a></li>
-			<li><a href="advanced_bibtex.htm">BibTeX</a></li>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-			<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
-			<li><a href="advanced_mathematica.htm">Mathematica</a></li>
-			<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
-			<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung </a></li>
-			<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
-			<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-			<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-			<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-			<li><a href="advanced_plist.htm">Plist Dateien</a></li>
-			<li><a href="advanced_menushortcuts.htm">Tastaturk&uuml;rzel neubelegen</a></li>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>Der Ordner „Inactive“</h2>
+<p>Der Unterordner <code>Engines/Inactive</code> enthält Engines für besondere Arbeitsabläufe, oft mit Dokumentation und Beispielen, etwa für latexmk, ConTeXt, Sage, PreTeXt, pythontex und Typst. Um eine davon zu verwenden, bewegen Sie sie aus ihrem Ordner in den Ordner „Engines“ selbst. Bei einem Update von TeXShop wird der Ordner „Inactive“ durch die aktuelle Version ersetzt, während die Dateien direkt im Ordner „Engines“ nie angetastet werden; von Ihnen bearbeitete Engines bleiben also erhalten.</p>
+<p>Mehr über Engines steht in den Kapiteln über Satz-Engines in Hilfe › TeXShop Handbuch (Englisch).</p>
+</main>
+</body>
+</html>

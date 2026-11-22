@@ -1,168 +1,93 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typesetting in Japanese</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Japan; Japanese; pLaTeX; upLaTeX; LuaLaTeX; dvipdfmx; otf package; \UTF; \CID; UTF-8-MAC; Unicode normalization; yen; backslash">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
+<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_Japan.htm" class="current">Typesetting in Japanese</a></li>
+<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
+<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
+<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
+<li><a href="advanced_experiments.htm">Experiments</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
+<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
+<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Typesetting in Japanese</h1>
+<p>TeX Live includes the Japanese TeX engines pTeX and upTeX, with pLaTeX and upLaTeX, as well as LuaLaTeX with the LuaTeX-ja package. The Japanese help of TeXShop describes Japanese typesetting in more detail.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-		<TITLE>Japan</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="Japan; japanese; ">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Engine profiles for Japanese</h2>
+<p>The quickest way to set up TeXShop for Japanese documents is an engine profile. In Settings › Typesetting › Engine Profile, choose one of the three Japanese profiles:</p>
+<table>
+<tr><th>Profile</th><th>Typesetting</th><th>BibTeX, index, MetaPost</th></tr>
+<tr><td>upLaTeX + dvipdfmx</td><td>uplatex, then dvipdfmx</td><td>upbibtex, upmendex, upmpost</td></tr>
+<tr><td>pLaTeX + dvipdfmx</td><td>platex, then dvipdfmx</td><td>pbibtex, mendex, pmpost</td></tr>
+<tr><td>LuaLaTeX (Japanese)</td><td>lualatex</td><td>upbibtex, upmendex, mpost</td></tr>
+</table>
+<p>The Japanese profiles also set UTF-8 as the encoding for new documents, set the spelling dictionary to automatic language detection, and turn on “Automatically convert UTF-8-MAC to UTF-8”. pLaTeX + dvipdfmx also turns on “Convert to otf Package \UTF / \CID”, and every other profile turns it off. A sheet lists the values the profile sets before you confirm.</p>
 
-<BODY>
-	<div id="content_border">
-		<p>In Japan, modified versions of TeX and LaTeX called ptex and platex are sometimes used. TeXShop has been modified by Makoto Inoue, Seiji Zenitani,  Mitsuhiro Shishikura, and Yusuke Terada to deal with these versions. Their modifications are activated by a small number of items in the TeXShop Settings window. 
-		
-<p> In recent years, Yusuke Terada has become a particularly close collaborator,
-and many recent TeXShop additions are due to him. Recently a number of questions were
-asked about the Settings for Japan. Below are
-these questions and Yusuke Terada's answers.
-
-<p> QUESTION: In the Typesetting category of Settings, the group "Japanese pLaTeX" has the setting "Convert to otf Package \UTF / \CID". What does it do?
-
-<p> ANSWER: In Japan, many kinds of TeX engines are used, such as pTeX, upTeX, XeTeX and LuaTeX.
-pTeX is the most traditional engine.
-Though upTeX is its successor, pTeX is still the most widely used engine in Japan.
-
-<p> pTeX does not support Unicode fully, while upTeX can handle Unicode appropriately.
-Though pTeX accepts TeX sources written in UTF-8, it converts internally the sources to EUC-JP.
-EUC-JP is one of the traditional Japanese encodings, which has much smaller character set than Unicode.
-So there are Unicode characters which can't be converted into EUC-JP.
-You can handle such Unicode characters with pTeX by using otf.sty.
-
-<p> For example, if you compile the following UTF-8 source with pLaTeX, the character "鷗" is lost because it can't be converted into EUC-JP.
-
-\documentclass{jsarticle}
-\begin{document}
-森鷗外 was a famous novelist in Japan.
-\end{document}
-
-<p> Instead, you need to write the source as follows.
-
-<PRE>
-\documentclass{jsarticle}
+<h2>Characters outside JIS X 0208 with pLaTeX</h2>
+<p>pTeX reads UTF-8 source, but internally it knows only the characters of JIS X 0208, so other characters, such as 鷗 in 森鷗外, are lost. The otf package prints them with commands like <code>\UTF{9DD7}</code>. The setting “Convert to otf Package \UTF / \CID” in the group “Japanese pLaTeX” of Settings › Typesetting lets you type these characters as they are:</p>
+<ul>
+<li>When the document is saved, every character outside JIS X 0208 is written as <code>\UTF{XXXX}</code>, and a glyph variant chosen in the editor as <code>\CID{number}</code>. If such a command ends a line, <code>%</code> is added after it so that no space appears in the output.</li>
+<li>When a document is opened, these commands are turned back into the characters, whether the setting is on or off, so the source window always shows the characters themselves.</li>
+</ul>
+<p>The document needs <code>\usepackage{otf}</code>. For example, the source window shows</p>
+<pre>\documentclass{jsarticle}
 \usepackage{otf}
 \begin{document}
-森\UTF{9DD7}外 was a famous novelist in Japan.
-\end{document}
-</PRE>
+森鷗外 was a famous novelist in Japan.
+\end{document}</pre>
+<p>while the file contains <code>森\UTF{9DD7}外</code>. upLaTeX and LuaLaTeX handle Unicode directly and need no conversion.</p>
+<p>To convert part of a text by hand, select it and use Edit › Character Type Conversion › Unicode Characters → \UTF / \CID, or \UTF / \CID → Unicode Characters. The same submenu converts between hiragana and katakana, between fullwidth and halfwidth digits and letters, between characters such as circled numbers and the commands of the ajmacros package, and curly quotation marks to TeX quotes. With nothing selected, TeXShop asks whether to convert the whole document; every conversion can be undone.</p>
 
-<p> However, it is too difficult for normal users to input sources in this way.
-The TeXShop setting "Convert to otf Package \UTF / \CID" helps this.
-When this setting is on, "鷗" is converted to "\UTF{9DD7}" when the document is saved. When a document is opened, "\UTF{9DD7}" is converted back to "鷗" whether or not this setting is on. Only commands for characters outside JIS X 0208, which saving writes, are converted back; a command written after an escaped backslash, such as "\\UTF{9DD7}", is left as it is.
-Other characters outside JIS X 0208 are converted in the same way.
-A glyph variant chosen in the editor or a character outside the Basic Multilingual Plane is written as "\CID{number}" instead, using its Adobe-Japan1 CID as drawn in Hiragino. A glyph variant counts only when Hiragino registers it; otherwise the variation selector cannot be kept and the base character is written alone. If Hiragino has no single glyph for a character, the glyph number in the editor font is used, which is a CID only in an Adobe-Japan1 font such as Hiragino.
-If a converted character ends a line, "%" is added after it so that no space appears in the output.
-U+2015 HORIZONTAL BAR is written as U+2014 EM DASH, which pTeX can read.
-Thanks to this feature, users can handle UTF-8 sources seamlessly as if pTeX interpreted UTF-8 source directly.
+<h2>Composed and decomposed characters</h2>
+<p>Some Japanese characters have two Unicode forms. が can be a single character (U+304C), or か (U+304B) followed by the combining voiced sound mark (U+3099). Both look the same, but TeX treats them as different, so a command defined with one form is not found when it is used with the other:</p>
+<pre>\def\が{GA}
+\が   % Undefined control sequence if this が is decomposed</pre>
+<p>Decomposed text often comes from file names, which HFS+ disks store in decomposed form; this form is called UTF-8-MAC. When Settings › Documents and Saving › Saving Documents › “Automatically convert UTF-8-MAC to UTF-8” is on, TeXShop combines such characters into single characters when it saves a document. It leaves the CJK compatibility ideographs and other characters that the standard composition (NFC) would replace by different characters unchanged; this form is called Modified NFC.</p>
+<p>The submenu Edit › Unicode Normalization converts a selection, or the whole document, to NFC, Modified NFC, NFD, Modified NFD, NFKC or NFKD, and then shows the Character Info panel for the result, since normalized text usually looks the same as before.</p>
 
-<p> QUESTION: In the Documents and Saving category, the group "Saving Documents" has the setting "Automatically convert UTF-8-MAC to UTF-8". What does it do?
-
-<p> ANSWER: In Japanese, some characters have two (or more) different Unicode representations.
-For example, the letter "が" can be represented in the following two ways.
+<h2>The yen sign and the backslash</h2>
+<p>On Japanese keyboards the key at the place of the backslash types the yen sign ¥, while TeX commands begin with the backslash \.</p>
 <ul>
-<li>
-1) が (U+304C, HIRAGANA LETTER GA) [composed form]
-<li>
-2) か (U+304B, HIRAGANA LETTER KA) +  ゙(U+3099, COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK) [decomposed form]
+<li>With UTF-8, the encoding the Japanese profiles set, ¥ and \ are different characters and both are kept. Turn on Source › Key Bindings for the document: the key binding list that comes with TeXShop turns a typed ¥ into \, and, because its Paste column is checked, also the ¥ in text pasted into the source. See <a href="basic_autocompletion.htm">Key Bindings</a>.</li>
+<li>When the encoding for new documents is one of the Japanese encodings, TeXShop converts between ¥ and \ as you type and paste. With Japanese (Mac OS, ShiftJIS ¥) and Japanese (Shift JIS X0213), the source window shows the TeX command character as ¥; with the other Japanese encodings it shows \.</li>
+<li>When a file is saved in a Japanese encoding, the backslash and the tilde are always written as the bytes 0x5C and 0x7E, which TeX expects.</li>
 </ul>
 
-<p> The composed form is more common and more widely used than the decomposed form.
-In fact, most Unix tools handle the character in the composed form.
-The Mac filesystem HFS+, however, stores filenames in the decomposed form.
-
-<p> Mixture of these representations causes a lot of troubles.
-For example, the following simple source causes the error "Undefined control sequence."
-
-<PRE>
-\def\が{GA}
-\が
-</PRE>
-
-<p> That's because the composed form is used in the first line and the decomposed form is used in the second line.
-However, they look exactly the same and it is impossible for normal users to distinguish them.
-
-<p>So I added the setting "Automatically convert UTF-8-MAC to UTF-8" into TeXShop.
-If this is enabled, the decomposed form is converted into the composed form when the document is saved. 
-This conversion is called Unicode normalization.
-This is useful to prevent troubles caused by the mixture of both representations. 
-
-<p> The name "UTF-8-Mac" is a common name for the decomposed form. 
-This name is derived from the fact that HFS+ adopts the decomposed form.
-
-<p> Strictly speaking, the normalization forms used here are a little different from standardized Unicode normalization forms like NFC or NFD.
-HFS+ stores a decomposed form that leaves some characters, such as CJK compatibility ideographs, unchanged; it is sometimes called modified NFD.
-When saving, TeXShop composes characters as in NFC but leaves unchanged every character that NFC would replace by a different character, such as the CJK compatibility ideographs. This form is sometimes called modified NFC.
-
-
-<p> I presented these features of TeXShop at the TUG 2013 annual conference.
-You can see the explanation of "Convert to otf Package \UTF / \CID" on pp. 26-28 in my slides
-<A HREF=https://tug.org/tug2013/slides/Terada-TeXShop.pdf> https://tug.org/tug2013/slides/Terada-TeXShop.pdf></A>.
-Besides, you can get more detailed information about Unicode normalization on pp. 29-52.
-
-<p> ADDITIONAL INFORMATION: During the internet discussion about these modifications,
-additional historic information about pTeX was given by Yusuki Kuroki. Yusuke Terada then
-wrote "I am Yusuke Terada, a Japanese developer.
-Yusuke Kuroki is a friend of mine. He is one of the leading persons in Japanese TeX community.
-Please do not confuse these two Yusukes :-)"
-
-<p> Here is Yusuke Kuroki's elaboration:
-
-<p> Background:
+<h2>Other settings for Japanese</h2>
 <ul>
-<li>
-- pTeX was developed before Unicode-age; it operates with the JIS X 0208
-character set (roughly speaking, a subset of Unicode) internally,
-and accepts  files encoded by ISO-2022-JP, EUC-JP, or Shift_JIS
-(a related encoding of JIS X 0208 set).
-<li>
-- Recent development extend the external character encoding
- for pTeX to UTF-8 (but internally it is JIS X 0208).
-<li>
-- The otf package (that I often use in the sample files) was developed
- to input UTF/CID characters by Unicode point or CID such as
- \UTF{3251} or \CID{8091}.
-
-<p> The support transliterates  input UTF-8 characters outside JIS X 0208
-to \UTF{...} representation.
-See Terada-san's slides
-<A HREF=https://tug.org/tug2013/slides/Terada-TeXShop.pdf> https://tug.org/tug2013/slides/Terada-TeXShop.pdf></A>, (pp. 20--28).
+<li>Settings › Editor › Invisible › Japanese Space shows the fullwidth space when invisible characters are shown.</li>
+<li>Settings › Editor › Syntax Highlighting › Highlight Fullwidth Letters and Symbols marks fullwidth letters, digits and symbols, which are easily mistaken for their ASCII counterparts, with the Fullwidth colors of the theme.</li>
+<li>Settings › Preview › Page direction shows pages from right to left, as needed for vertical text. The lines <code>% !TEX PageDirectionR2L</code> and <code>% !TEX PageDirectionL2R</code> set the direction for one document.</li>
 </ul>
-		
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Japan</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_Japan.htm">Settings for Japan</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<p>The conversion to <code>\UTF</code> / <code>\CID</code> and Unicode normalization are explained in detail in Yusuke Terada’s TUG 2013 slides, <a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>.</p>
+</main>
+</body>
+</html>

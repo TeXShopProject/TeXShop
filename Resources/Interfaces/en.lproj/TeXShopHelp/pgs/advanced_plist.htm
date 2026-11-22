@@ -1,59 +1,70 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Files in ~/Library/TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop; plist files; configuration files; completion.plist; autocompletion.plist; KeyEquivalents.plist; Macros_Latex.plist; matrixpanel; themes; CommandCompletion.txt; backups">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Advanced Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
+<li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
+<li><a href="advanced_root.htm">Setting a Project Root File</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
+<li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Protection</a></li>
+<li><a href="advanced_externaleditor.htm">Using an External Editor</a></li>
+<li><a href="advanced_experiments.htm">Experiments</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a></li>
+<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
+<li><a href="advanced_coloredtext.htm">Colored Text</a></li>
+<li><a href="advanced_plist.htm" class="current">Files in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Files in ~/Library/TeXShop</h1>
+<p>TeXShop keeps the files you can customize in the folder <code>~/Library/TeXShop</code>, which it creates the first time it runs. TeXShop › Open ~/Library/TeXShop opens the folder in the Finder. To take your customizations to another Mac, copy this folder there.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Plist Files</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="plist file; xml; latex panel; auto complete; keyboard shortcut; macro menu">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>What the folder contains</h2>
+<p>Most of these files are edited in TeXShop itself, and there is no need to open them:</p>
+<table>
+<tr><th>File or folder</th><th>Contents</th><th>Where to change it</th></tr>
+<tr><td><code>Keyboard/autocompletion.plist</code>, with <code>autocompletionPaste.plist</code> and <code>autocompletionDisplayOrder.plist</code></td><td>Key bindings</td><td>Settings › Keyboard › Key Binding List</td></tr>
+<tr><td><code>CommandCompletion/CommandCompletion.txt</code></td><td>Command completion list</td><td>Settings › Keyboard › Edit Command Completion…</td></tr>
+<tr><td><code>Menus/KeyEquivalents.plist</code></td><td>Default menu shortcuts</td><td>Settings › Keyboard, list of menu shortcuts</td></tr>
+<tr><td><code>Macros/Macros_Latex.plist</code></td><td>Macros menu</td><td>Macros › Open Macro Editor…</td></tr>
+<tr><td><code>Themes/</code></td><td>Color themes</td><td>Settings › Themes</td></tr>
+<tr><td><code>SpellCheck/SpellingExclusions.txt</code></td><td>What LaTeX-aware spell checking skips</td><td>Settings › Spell Checking › Edit LaTeX exclusion rules…</td></tr>
+<tr><td><code>Engines/</code></td><td>Typesetting engines</td><td>Settings › Typesetting › Edit Engine List…</td></tr>
+<tr><td><code>LatexPanel/completion.plist</code></td><td>Texts of the LaTeX Panel</td><td>By hand; see <a href="configure_panel.htm">Modifying the LaTeX Panel</a></td></tr>
+<tr><td><code>MatrixPanel/matrixpanel_1.plist</code></td><td>Texts of the Matrix Panel</td><td>By hand</td></tr>
+<tr><td><code>Templates/</code>, <code>Stationery/</code></td><td>Templates menu, File › New from Stationery…</td><td>In the Finder; see <a href="basic_templates.htm">Modifying the Templates Menu</a></td></tr>
+</table>
+<p>The menu shortcuts in <code>KeyEquivalents.plist</code> become the defaults of the shortcut list in Settings › Keyboard; shortcuts changed in Settings take precedence. See <a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>Mac OS X makes extensive use of xml files; xml is a structured language closely related to html.</P>
-		<p>TeXShop uses five xml files for configuration: completion.plist, autocompletion.plist, KeyEquivalents.plist, Macros_Latex.plist, and Macros_Context.plist. These files reside inside your personal library in a folder called ~/Library/TeXShop created when TeXShop first runs. If you have modified the default TeXShop configuration and want to move TeXShop to another machine preserving your modifications, copy ~/Library/TeXShop to the new machine.</p>
-		<p>The files are used to configure the Latex Panel, Key Bindings, the Keyboard Menu Shortcuts, and the Macro menu. Details are given elsewhere in this document. </p>
-		<p>Files of type plist are ordinary text files, so they can be opened and edited with TeXShop, TextEdit, or other text editors. Editing the file is straightforward, but somewhat tedious. </p>
-		<p>If a plist file contains unicode characters, it needs to be edited and saved in UTF-8 format. Before opening such a file in TeXShop, change the TeXShop encoding setting to UTF-8. Then edit and save the file. Then change the encoding setting back to the original value. The default value is MacOSRoman if you did not reset it earlier.</p>
-		<p>If you installed the Developer distribution of Mac OS X and you double click a .plist file, it will open in a program named Property List Editor. This program is useful for editing plist files, but it is buggy and does not display all file information. In particular, comments are missing. It is better to use TeXShop.</p>
-		<ul>
-			
-		</ul>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Plist Files</div>
+<h2>Editing a file by hand</h2>
+<p>Files with the extension <code>.plist</code> are XML text. They can be opened and edited in TeXShop, in another text editor or in Xcode. Several of them begin with comments that explain their format. Keep them in UTF-8, the encoding they are written in. Edit the colors of themes in Settings › Themes rather than in their files.</p>
+<p>If a file you edited stops working, move it out of the folder, or move its folder to the desktop, and restart TeXShop: it creates the file again with its original contents.</p>
 
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_Japan.htm">Settings for Japan</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>Missing or damaged files</h2>
+<p>When one of the files that TeXShop needs, such as the macros, the key bindings, the texts of the LaTeX Panel and the Matrix Panel, the menu shortcuts, the command completion list, the spelling exclusions or the standard themes, is missing, or is found damaged when TeXShop starts, TeXShop puts its own copy in its place without an error message. A damaged file is moved to the folder <code>~/Library/TeXShop/Backups</code>, in a folder named after the date and time, so that you can recover your changes from it.</p>
+<p>Files you may delete on purpose, such as templates, stationery, engines and your own themes, are not restored.</p>
+</main>
+</body>
+</html>

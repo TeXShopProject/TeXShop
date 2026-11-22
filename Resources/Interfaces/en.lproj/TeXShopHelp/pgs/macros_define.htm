@@ -1,38 +1,38 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defining New Macros</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="new macros; Macro Editor; keyboard shortcut; submenus; separators; placeholder tokens; Insert menu">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Macros Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminaries</a></li>
+<li><a href="macros_default.htm">Understanding Default Macros</a></li>
+<li><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
+<li><a href="macros_define.htm" class="current">Defining New Macros</a></li>
+<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
+<li><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
+<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
+<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
+<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
+<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Defining New Macros</h1>
+<p>In the Macro Editor (Macros › Open Macro Editor…), click + below the list to add an item. The menu at the right end of the bar below the list (⋯) adds a submenu or a separator and duplicates the selected items; − deletes them. A new item or submenu is named at once: type its name and press Return. Submenus can be nested to any level. A little practice shows how the editor behaves.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Defining New Macros</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="new macros; keyboard equivalent; submenus">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2 id="shortcuts">Shortcuts</h2>
+<p>To give an item a keyboard shortcut, select it and click its shortcut in the list (or double-click the shortcut), then press the new shortcut: Command or Control with a key, or one of F1–F20, with Shift and Option as needed. If a menu command or another macro already uses the shortcut, TeXShop says so below the contents and does not change it; press another shortcut. To remove a shortcut, click “Remove Shortcut” (⊖) in the field or press Delete; Escape keeps the one it had. A shortcut that is inactive because a menu command or an earlier macro uses it is marked with a warning triangle in the list; select the item to see the reason below the contents. See <a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a> for how menu and macro shortcuts work together.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>New items are created with the + button below the list, and new submenus and separators with the menu at its right end (&#8857;), which also duplicates the selected items; the &minus; button deletes them. A new item or submenu is named at once: type its name and press Return. A little practice illustrates the basic behavior of the editor. Submenus can be created to any level.</P>
-		<p>To assign a keyboard shortcut to an item, select it and click its shortcut in the list (or double-click the shortcut), then press the new shortcut: Command or Control with a key, or one of F1&ndash;F20, with Shift and Option as needed. If a menu command or another macro already uses the shortcut, TeXShop says so below the contents and does not change it; press another shortcut. To remove a shortcut, click &#8220;Remove Shortcut&#8221; (&#8854;) in the field or press Delete; Escape keeps the one it had. A shortcut that is inactive because a menu command or an earlier macro uses it is marked with a warning triangle in the list; select the item to see the reason below the contents.</p>
-		<p>In the contents, the placeholders that a macro replaces (#SEL#, #INS#, #PASTE#, the marks &bull;, and #FILEPATH# and the other paths of an AppleScript macro) are shown as rounded tokens which say what they stand for, such as &ldquo;Selected Text&rdquo;. The macro keeps them as they are written. Type a placeholder, or choose it from the Insert menu below the contents; the help button at the right lists them all. Deleting next to a token deletes all of it.</p>
-	</div>
-	<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Macros Help</div>
-<div id="header_title">Defining New Macros</div>
-
-	<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Preliminaries</a></li>
-			<LI><a href="macros_default.htm">Understanding Default Macros</a></li>
-			<LI><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
-			<LI><a href="macros_define.htm">Defining New Macros</a></li>
-			<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
-			<LI><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
-			<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
-			<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
-			<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
-			<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2 id="tokens">Placeholders</h2>
+<p>In the contents, the placeholders that a macro replaces are shown as rounded tokens that say what they stand for, such as “Selected Text”: #SEL#, #INS#, #PASTE# and the marks • of a text macro (see <a href="macros_default.htm">Understanding Default Macros</a>), and #FILEPATH# and the other paths of an AppleScript macro (see <a href="macros_defapplescript.htm">Defining AppleScript Macros</a>). The macro keeps them as they are written, so copying and saving work as usual. Type a placeholder, or choose it from the Insert menu below the contents; the help button at its right lists them all. Deleting next to a token deletes all of it.</p>
+</main>
+</body>
+</html>

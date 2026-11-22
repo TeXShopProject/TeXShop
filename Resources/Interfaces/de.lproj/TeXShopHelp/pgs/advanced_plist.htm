@@ -1,52 +1,70 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dateien in ~/Library/TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="~/Library/TeXShop; plist-Dateien; Konfigurationsdateien; completion.plist; autocompletion.plist; KeyEquivalents.plist; Macros_Latex.plist; matrixpanel; Themen; CommandCompletion.txt; Backups">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
+<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm" class="current">Dateien in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Dateien in ~/Library/TeXShop</h1>
+<p>TeXShop bewahrt die Dateien, die Sie anpassen können, im Ordner <code>~/Library/TeXShop</code> auf, den es beim ersten Start anlegt. TeXShop › Den Ordner „~/Library/TeXShop“ im Finder öffnen öffnet den Ordner im Finder. Um Ihre Anpassungen auf einen anderen Mac zu übertragen, kopieren Sie diesen Ordner dorthin.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Plist Datein</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Bearbeiten Sie plist-Dateien mit TeXShop und passen Sie damit Einstellungen an.">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">	
-		<P>Mac OS X benutzt sehr viele xml Dateien. Xml ist eine Sprache, die an html angelehnt ist.</P>
-		<p>TeXShop verwendet f&uuml;nf xml Datein f&uuml;r die Konfiguration: completion.plist, autocompletion.plist, KeyEquivalents.plist, Macros_Latex und Macros_Context.plist. Diese Dateien liegen in dem Ordner Library in Ihrem Heimverzeichnis: ~/Library/TeXShop, welcher angelegt wird, wenn Sie TeXShop zum ersten mal ausf&uuml;hren. Wenn Sie die Standardeinstellungen von TeXShop ge&auml;ndert haben und auf einem anderen Rechner benutzen wollen, dann m&uuml;ssen Sie ~/Library/TeXShop auf den anderen Rechner kopieren.</p>
-		<p>Die Dateien werden ben&ouml;tigt um die Latex Palette, AutoVervollst&auml;ndigen, Tastaturk&uuml;rzel und Makromen&uuml; zu konfigurieren. Weitere Informationen gibt es in dieser Hilfe an anderer Stelle.</p>
-		<p>Dateien des Typs plist sind einfache Textdateien, die Sie mit TeXShop, TextEdit oder einem anderen Editor &ouml;ffnen und bearbeiten k&ouml;nnen. Die Dateien zu bearbeiten ist meist fortschrittlich, k&ouml;nnte jedoch langwierig sein.</p>
-		<p>Wenn eine plist-Datei Unicode Zeichen beinhaltet, dann muss sie im UTF-8 Format bearbeitet und gesichert werden. Bevor Sie diese Datei in TeXShop &ouml;ffnen m&uuml;ssen Sie das UTF-8 Format einstellen. Bearbeiten Sie die Datei anschlie&szlig;end und sichern Sie sie nochmals. Schalten Sie das Zeichenformat daraufhin wieder zur&uuml;ck in die Ausgangsstellung. Standard ist MacOSRoman.</p>
-		<p>Wenn Sie die Developer Tools von Mac OS X installiert haben und auf eine .plist Datei doppelklicken, &ouml;ffnet sich der Property List Editor. Diese Programm ist n&uuml;tzlich um plist-Dateien zu bearbeiten, jedoch fehlerhaft, so dass nicht alle Dateiinformationen angezeigt werden. Vor allem Kommentare werden nicht angezeigt. Benutzen Sie daher lieber TeXShop</p>
-</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Erweitert</div>
-<div id="header_title">Plist Datein</div>
+<h2>Was der Ordner enthält</h2>
+<p>Die meisten dieser Dateien werden in TeXShop selbst bearbeitet, und Sie müssen sie nicht öffnen:</p>
+<table>
+<tr><th>Datei oder Ordner</th><th>Inhalt</th><th>Wo Sie sie ändern</th></tr>
+<tr><td><code>Keyboard/autocompletion.plist</code>, mit <code>autocompletionPaste.plist</code> und <code>autocompletionDisplayOrder.plist</code></td><td>Tastenbelegungen</td><td>Einstellungen › Tastatur › Liste der Tastenbelegungen</td></tr>
+<tr><td><code>CommandCompletion/CommandCompletion.txt</code></td><td>Liste der Befehlsvervollständigung</td><td>Einstellungen › Tastatur › Befehlsvervollständigung bearbeiten…</td></tr>
+<tr><td><code>Menus/KeyEquivalents.plist</code></td><td>Vorgaben der Menükurzbefehle</td><td>Einstellungen › Tastatur, Liste der Menükurzbefehle</td></tr>
+<tr><td><code>Macros/Macros_Latex.plist</code></td><td>Menü „Makros“</td><td>Makros › Makro-Editor öffnen…</td></tr>
+<tr><td><code>Themes/</code></td><td>Farbthemen</td><td>Einstellungen › Themen</td></tr>
+<tr><td><code>SpellCheck/SpellingExclusions.txt</code></td><td>Was die LaTeX-bewusste Rechtschreibprüfung überspringt</td><td>Einstellungen › Rechtschreibung › LaTeX-Ausschlussregeln bearbeiten…</td></tr>
+<tr><td><code>Engines/</code></td><td>Satz-Engines</td><td>Einstellungen › Satz › Engine-Liste bearbeiten…</td></tr>
+<tr><td><code>LatexPanel/completion.plist</code></td><td>Texte der LaTeX Palette</td><td>Von Hand; siehe <a href="configure_panel.htm">Die LaTeX Palette anpassen</a></td></tr>
+<tr><td><code>MatrixPanel/matrixpanel_1.plist</code></td><td>Texte der Matrix Palette</td><td>Von Hand</td></tr>
+<tr><td><code>Templates/</code>, <code>Stationery/</code></td><td>Menü „Vorlagen“, Ablage › Neue Datei aus Vorlagen</td><td>Im Finder; siehe <a href="basic_templates.htm">Vorlagen</a></td></tr>
+</table>
+<p>Die Menükurzbefehle in <code>KeyEquivalents.plist</code> werden zu den Vorgaben der Liste der Kurzbefehle unter Einstellungen › Tastatur; in den Einstellungen geänderte Kurzbefehle haben Vorrang. Siehe <a href="configure_menushortcuts.htm">Tastaturkurzbefehle für Menüs ändern</a>.</p>
 
+<h2>Eine Datei von Hand bearbeiten</h2>
+<p>Dateien mit der Endung <code>.plist</code> sind XML-Text. Sie lassen sich in TeXShop, in einem anderen Texteditor oder in Xcode öffnen und bearbeiten. Mehrere beginnen mit Kommentaren, die ihr Format erklären. Behalten Sie UTF-8 bei, die Kodierung, in der sie geschrieben sind. Bearbeiten Sie die Farben von Themen unter Einstellungen › Themen statt in ihren Dateien.</p>
+<p>Funktioniert eine bearbeitete Datei nicht mehr, bewegen Sie sie aus dem Ordner oder bewegen Sie ihren Ordner auf den Schreibtisch, und starten Sie TeXShop neu: Es legt die Datei mit ihrem ursprünglichen Inhalt neu an.</p>
 
-	<div id="menu_border">
-		<UL>
-			<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</a></li>
-			<LI><a href="advanced_addengine.htm">Zus�tzliche Schriftsatz-Programme</a>
-			<LI><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a>
-			<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-			<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-			<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-			<li><a href="advanced_unicode.htm">Unicode</a></li>
-			<li><a href="advanced_bibtex.htm">BibTeX</a></li>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-			<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
-			<li><a href="advanced_mathematica.htm">Mathematica</a></li>
-			<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
-			<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung </a></li>
-			<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
-			<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-			<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-			<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-			<li><a href="advanced_plist.htm">Plist Dateien</a></li>
-			<li><a href="advanced_menushortcuts.htm">Tastaturk&uuml;rzel neubelegen</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2>Fehlende oder beschädigte Dateien</h2>
+<p>Fehlt eine der Dateien, die TeXShop braucht, etwa die Makros, die Tastenbelegungen, die Texte der LaTeX Palette und der Matrix Palette, die Menükurzbefehle, die Liste der Befehlsvervollständigung, die Ausschlussregeln der Rechtschreibprüfung oder die Standardthemen, oder wird sie beim Start von TeXShop als beschädigt erkannt, ersetzt TeXShop sie ohne Fehlermeldung durch eine eigene Kopie. Eine beschädigte Datei wird in den Ordner <code>~/Library/TeXShop/Backups</code> bewegt, in einen nach Datum und Uhrzeit benannten Ordner, damit Sie Ihre Änderungen daraus zurückholen können.</p>
+<p>Dateien, die Sie absichtlich löschen könnten, etwa Vorlagen, Stationery-Dateien, Engines und eigene Themen, werden nicht wiederhergestellt.</p>
+</main>
+</body>
+</html>

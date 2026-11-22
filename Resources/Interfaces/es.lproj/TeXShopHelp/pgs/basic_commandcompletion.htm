@@ -1,60 +1,70 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autocompletado de comandos</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="autocompletado de comandos; tecla Escape; tecla de activación; señales; Señal siguiente; etiquetas y claves de cita">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composición</a></li>
+<li><a href="basic_preview.htm">La ventana de vista previa</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edición</a></li>
+<li><a href="basic_find.htm">Buscar y reemplazar</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
+<li><a href="basic_spelling.htm">Comprobar la ortografía</a></li>
+<li><a href="basic_autocompletion.htm">Combinaciones de teclas</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">Autocompletado de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Cambiar los ajustes</a></li>
+<li><a href="basic_templates.htm">Plantillas y documentos modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Ventanas y pestañas</a></li>
+<li><a href="basic_bugs.htm">Informar de errores</a></li>
+<li><a href="basic_websites.htm">Sitios web útiles</a></li>
+<li><a href="basic_license.htm">Licencia</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducción al español</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Autocompletado de comandos</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Compleci&oacute;n de comandos</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="compleci&oacute;n de comandos; tecla escape">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<p>Escriba las primeras letras de un comando o de un entorno y pulse Escape: TeXShop lo completa a partir de su archivo de autocompletado. Pulse Escape de nuevo para recorrer los demás autocompletados que empiezan por las mismas letras, desde el final del archivo hacia el principio; Mayúsculas-Escape recorre en el otro sentido. Uno de ellos es el texto que usted escribió. Por ejemplo, <code>\begin{th</code> seguido de Escape ofrece <code>\begin{theorem}</code> y otros entornos.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>
-		El editor de c&oacute;digo soporta compleci&oacute;n de comandos. Teclea las primeras letras de una palabra y pulsa la tecla escape. Las restantes letras aparecer&aacute;n autom&aacute;ticamente. Pulsando escape de nuevo, se va alternando, de manera c&iacute;clica, entre todas las posibles compleciones, desde el final del archivo de compleciones hacia el principio; con may&uacute;sculas-escape, en el orden inverso.</p>
+<p>Un autocompletado puede hacer algo más que terminar la palabra. El de <code>\begin{theorem}</code> escribe también la línea <code>\end{theorem}</code> y pone señales (•) donde usted va a escribir: la primera señal queda seleccionada, de modo que lo que escriba la sustituye. Pulsar Escape varias veces suele dar el mismo comando con más argumentos, como hace <code>\newc</code> para <code>\newcommand</code>. Un autocompletado no tiene por qué empezar por una barra invertida: al principio de una línea o después de un espacio, <code>sec</code> da lo mismo que <code>\sec</code>.</p>
 
-<P>La tecla que activa el autocompletado se puede cambiar de escape a tabulador con &#171;Tecla de activaci&#243;n&#187; en Ajustes &#8594; Teclado. El panel de c&#243;digo de Edici&#243;n &#8250; &#171;Experimento&#8230;&#187; usa la misma tecla que la ventana de c&#243;digo.</p>
+<p>Cuando el archivo de autocompletado no tiene nada para el texto, Escape muestra en su lugar los autocompletados de palabras de macOS.</p>
 
-<P>
-         Inicialmente, esto tiene una utilidad muy limitada, pues el diccionario con compleciones est&aacute; casi vac&iacute;o. Para a&ntilde;adir una palabra a este diccionario, selecciona la palabra y elige &laquo;A&ntilde;adir a la lista de autocompletado de comandos&raquo; en el men&uacute; &laquo;C&oacute;digo&raquo; (o su equivalencia de teclado). Para ver y editar el diccionario entero, abre Ajustes &#8594; Teclado y pulsa �Editar autocompletado de comandos&#8230;�. N&oacute;tese que la compleci&oacute;n puede ser m&aacute;s complicada que &uacute;nicamente una palabra, y que el cursor se puede colocar dentro de la compleci&oacute;n. Para ver los detalles, examina los ejemplos que vienen en el archivo de compleciones predeterminado.</p>
+<h2>Ajustes</h2>
 
-<P>
-        Todo esto se mejorar&aacute; en posteriores versiones de TeXShop.</p>
-<h3><a name="labels"></a>Autocompletado de etiquetas y claves de cita</h3>
-<p>Edici&#243;n &#8250; &#171;Completar etiqueta o clave de cita&#187; (F5) completa una etiqueta o una clave de cita a partir de una lista. Justo despu&#233;s de \ref{, \pageref{, \eqref{ o \autoref{, o tras las primeras letras de una etiqueta, la lista muestra las etiquetas definidas con \label en el archivo. Tras \cite{ y &#243;rdenes similares, muestra claves de cita de BibDesk si est&#225; activado &#171;Ofrecer tambi&#233;n claves de cita de BibDesk&#187; en Ajustes &#8594; Teclado. En otros lugares muestra las compleciones de palabras de macOS. En muchos teclados hay que mantener pulsada la tecla fn (la tecla del globo) al pulsar F5.</p>
-<h3><a name="marks"></a>Se�ales</h3>
-<p>Una se�al (&#8226;) marca un lugar al que volver m�s tarde; una se�al con nota (&#8226;&#8249;nota&#8250;) indica adem�s qu� debe ir all�. Las compleciones de comandos, las macros y las combinaciones de teclas pueden contener se�ales, y puedes insertarlas con Edici�n &#8250; Se�ales &#8250; �Insertar se�al� (&#8984;8) e �Insertar se�al con nota� (&#8963;&#8984;8). �Insertar se�al con nota� inserta &#8226;&#8249;&#8250; con el punto de inserci�n entre los signos, o convierte el texto seleccionado en la nota.</p>
-<p>�Se�al siguiente� (&#8963;&#8984;F) y �Se�al anterior� (&#8963;&#8984;G) seleccionan la se�al siguiente o anterior junto con su nota, de modo que al escribir se reemplaza. Con la tecla Opci�n se borra solo el &#8226; y se selecciona la nota (&#8963;&#8997;&#8984;F, &#8963;&#8997;&#8984;G).</p>
-<p>Con la tecla Opci&#243;n y la tecla de activaci&#243;n se va a la se&#241;al siguiente, y con Control y la tecla de activaci&#243;n, a la anterior (Opci&#243;n-escape y Control-escape, u Opci&#243;n-tabulador y Control-tabulador si el tabulador activa el autocompletado). Si otra utilidad usa estas teclas, desactiva &#171;Ir a la se&#241;al siguiente o anterior con Opci&#243;n o Control y la tecla de activaci&#243;n&#187; en Ajustes &#8594; Teclado.</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda b&aacute;sica</div><div id="header_title">Compleci&oacute;n de comandos</div>
-		<div id="menu_border">
-		<ul>
-			<LI><a href="basic_preliminaries.htm">Preliminares</a>
-			<LI><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">C&oacute;mo obtener e instalar TeXShop</a>
-			<li><a href="basic_typesetting.htm">Componer (&lsquo;typeset&rsquo;) documentos</a>
-			<li><a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a>
-			<li><a href="basic_spelling.htm">Correcci&oacute;n ortogr&aacute;fica</a>
-			<li><a href="basic_latexpanel.htm">Panel LaTeX</a>
-			<li><a href="basic_matrixpanel.htm">Panel matrices</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a>
-			<li><a href="basic_graphics.htm">Inclusi&oacute;n de gr&aacute;ficos</a>
-			<li><a href="basic_printing.htm">Imprimir</a>
-			<li><a href="basic_preferences.htm">Establecer ajustes</a>
-			<li><a href="basic_templates.htm">Personalizaci&oacute;n del men&uacute; Plantillas</a>
-			<li><a href="basic_edittricks.htm">Trucos de edici&oacute;n</a>
-			<li><a href="basic_autocompletion.htm">Autocompleci&oacute;n</a>
-			<li><a href="basic_commandcompletion.htm">Compleci&oacute;n de comandos</a>
-			<li><a href="basic_bugs.htm">Notificaci&oacute;n de errores (&lsquo;bugs&rsquo;)</a>
-			<li><a href="basic_websites.htm">Sitios web &uacute;tiles</a>
-			<li><a href="basic_license.htm">Licencia</a>
-			<li><a href="basic_thistranslation.htm">Sobre la traducci&oacute;n a espa&ntilde;ol</a>
-		</UL>
-	</div>
-	</BODY>
+<p>En Ajustes › Teclado, «Tecla de activación» elige Escape o Tabulador como la tecla que completa. El panel de código de Edición › Experimento… usa la misma tecla que la ventana de código.</p>
 
-</HTML>
+<p>Para añadir una palabra al archivo de autocompletado, selecciónela y elija Código › Añadir a la lista de autocompletado de comandos. Para editar el archivo, haga clic en «Editar autocompletado de comandos…» en Ajustes › Teclado. Estudiar los autocompletados que ya hay es la mejor manera de aprender a escribir otros nuevos; la carpeta ~/Library/TeXShop/CommandCompletion contiene además un documento detallado sobre ellos.</p>
+
+<h2><a name="marks"></a>Señales</h2>
+
+<p>Una señal (•) es un lugar al que volver; una señal con nota (•‹nota›) indica además qué va allí. Los autocompletados de comandos, las macros y las combinaciones de teclas pueden contener señales, y usted puede insertarlas con Edición › Señales › Insertar señal (<kbd>⌘8</kbd>) e Insertar señal con nota (<kbd>⌃⌘8</kbd>). Insertar señal con nota inserta •‹› con el punto de inserción entre los signos, o convierte el texto seleccionado en la nota.</p>
+
+<p>Señal siguiente (<kbd>⌃⌘F</kbd>) y Señal anterior (<kbd>⌃⌘G</kbd>) seleccionan la señal siguiente o la anterior junto con su nota, de modo que lo que escriba la sustituye. Mantenga pulsada la tecla Opción para borrar solo el • y seleccionar en su lugar la nota (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+
+<p>La tecla de activación también lleva de una señal a otra: con Escape como tecla de activación, Opción-Escape va a la señal siguiente y Control-Escape a la anterior; con Tabulador, Opción-Tabulador y Control-Tabulador. Si otra aplicación necesita estas teclas, desactive «Ir a la señal siguiente o anterior con Opción o Control y la tecla de activación» en Ajustes › Teclado.</p>
+
+<h2><a name="labels"></a>Autocompletado de etiquetas y claves de cita</h2>
+
+<p>Edición › Completar etiqueta o clave de cita (<kbd>F5</kbd>) completa una etiqueta o una clave de cita a partir de una lista. Elíjalo justo después de <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> o <code>\autoref{</code>, o después de las primeras letras de una etiqueta escrita allí, y la lista muestra las etiquetas definidas con <code>\label</code> en el archivo; elija una con las teclas de flecha y pulse Retorno. Después de <code>\cite{</code> y comandos similares, la lista muestra claves de cita de BibDesk cuando «Ofrecer también claves de cita de BibDesk» está activado en Ajustes › Teclado. En otros lugares, muestra los autocompletados de palabras de macOS. En muchos teclados hay que mantener pulsada la tecla fn (la tecla del globo) al pulsar F5.</p>
+</main>
+</body>
+</html>

@@ -1,47 +1,47 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Redefining Keyboard Menu Shortcuts</title>
-<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="keyboard shortcut; KeyEquivalents.plist" name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<meta name="description" content="menu shortcuts; keyboard shortcuts; Settings Keyboard; Search by Function; Search by Key; Restore Default; macro shortcuts; KeyEquivalents.plist; App Shortcuts">
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-
-<div id="content_border">
-<p>Choose Settings and select Keyboard. Search by Function finds command names and menu paths. Search by Key records a key and lists matching menu commands and macros with their assignment priority. Plain Escape, clicking the mode control again, changing categories, switching windows, or closing Settings ends recording. Choose Show in Macro Editor to edit a macro.</p>
-<p>Choose Settings and select Keyboard to edit menu shortcuts. Select a command and click its shortcut (or double-click the command, or press Return), then press the new shortcut. Press Escape to keep the old one. A shortcut must use the Command or Control key, or be a function key F1&#8211;F20. If the shortcut is already used by another command, TeXShop says so below the list and does not change it; press another shortcut. To remove a shortcut, click &#8220;Remove Shortcut&#8221; (&#8854;) in the field or press Delete. The line below the list shows the default shortcut of the selected command; &#8220;Restore Default&#8221; and &#8220;Restore All&#8230;&#8221; restore shortcuts. Changes take effect immediately and are kept when TeXShop restarts.</p>
-<p>If another menu command uses the default shortcut, Restore Default refuses to restore it; change the other command first.</p>
-<p>When &#8220;Enable Autosave and Versions&#8221; is on in Documents and Saving, macOS adds &#8220;Duplicate&#8221; and &#8220;Close All&#8221; to the File menu. Their shortcuts can be changed like those of other commands. &#8220;Save As...&#8221; then keeps the shortcut macOS gives it and is dimmed in the list; with autosave off, it can be changed too.</p>
-<p>For the same key and modifiers, menu commands take precedence over macros, using their customized shortcuts when present. Macros can use keys freed by customization. Assigning or restoring a menu shortcut used by a macro asks for confirmation; the macro remains available in the menu, but its shortcut becomes inactive. The Macro Editor marks inactive shortcuts and shows the conflicting command and key. Saving asks only about newly assigned or changed conflicting keys, including imported macros. You can return to editing, save with those keys inactive, or remove the conflicting keys and save. Among macros, the first occurrence of a key takes precedence. &#8220;Shortcut Unavailable&#8221; applies only to conflicts between menu commands. In the Preview window, Command-F and Command-G follow Find and Find Next, including custom assignments and removal.</p>
-<p>Shortcuts set in KeyEquivalents.plist, described below, remain the defaults. Shortcuts for macros are set in the Macro Editor, and key bindings that insert text are set in the Key Bindings editor.</p>
-<p>The keyboard menu shortcuts for TeXShop can be redefined. To do this, read the comments at the top of the file "KeyEquivalents.plist" and make appropriate changes. To do so, edit the file
-	<dl>
-<dd>~/Library/TeXShop/Menus/KeyEquivalents.plist
-	</dd></dl>
- with TeXShop. Be sure to edit and save in UTF-8 format if you use Unicode characters.</p>
-<p lang="en">Clicking a result row keeps key recording active. Only the result list scrolls vertically. Inactive results identify the winning assignment and key; macro paths use separators between groups.</p>
-<p><a href="basic_preferences.htm#settings-search">Using Settings and Search Settings</a></p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a></div>
-<div id="header_chapter">How do I configure TeXShop?</div><div id="header_title">Redefining Keyboard Menu Shortcuts</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">How do I configure TeXShop?</span></header>
+<nav id="menu">
 <ul>
-<li><a href="configure_preliminaries.htm">Preliminaries</a>
-<li><a href="configure_prefchanges.htm">Recommended Changes to Settings</a>
-<li><a href="configure_correctinstall.htm">Obtaining New Library Items</a>
-<li><a href="configure_convertgraphics.htm">Converting Graphic Formats Automatically</a>
-<li><a href="configure_defaults.htm">TeX Command Line Settings </a>
-<li><a href="configure_latextemplate.htm">Default Latex Template</a>
-<li><a href="configure_hidden.htm">Hidden Settings</a>
-<li><a href="configure_plist.htm">.plist Files</a>
-<li><a href="configure_panel.htm">Modifying the Latex Panel</a>
-<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a>
-<li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-<li><a href="configure_macros.htm">Modifying the Macros Menu</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
+<li><a href="configure_preliminaries.htm">Preliminaries</a></li>
+<li><a href="configure_prefchanges.htm">Recommended Changes to Settings</a></li>
+<li><a href="configure_correctinstall.htm">Obtaining New Library Items</a></li>
+<li><a href="configure_hidden.htm">Hidden Settings</a></li>
+<li><a href="configure_panel.htm">Modifying the LaTeX Panel</a></li>
+<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a></li>
+<li><a href="configure_menushortcuts.htm" class="current">Redefining Keyboard Menu Shortcuts</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Redefining Keyboard Menu Shortcuts</h1>
+<p>Any menu command of TeXShop can be given a shortcut of your choice, or have its shortcut removed, in Settings › Keyboard. Shortcuts of macros are set in the Macro Editor.</p>
 
+<h2 id="settings">Changing a menu shortcut</h2>
+<p>Choose TeXShop › Settings… and select Keyboard. The Menu Shortcuts group lists the menu commands with their shortcuts. Select a command and click its shortcut (or double-click the command, or press Return), then press the new shortcut. Escape or Return keeps the old one, and Tab moves on. A shortcut must use the Command or Control key, or be one of the function keys F1–F20. If another command already uses the shortcut, TeXShop says so below the list and does not change anything; press another shortcut. To remove a shortcut, click “Remove Shortcut” (⊖) in the field or press Delete.</p>
+<p>Changes take effect immediately and are kept when TeXShop restarts. The line below the list shows the default shortcut of the selected command. “Restore Default” gives the selected command its default shortcut back, and “Restore All…” does this for all commands. If another command now uses the default shortcut, Restore Default does not restore it; change the other command first.</p>
+<p>When “Enable Autosave and Versions” is on in Settings › Documents and Saving, macOS adds Duplicate and Close All to the File menu; their shortcuts can be changed like those of other commands. Save As… then keeps the shortcut macOS gives it and is dimmed in the list; with autosave off, it can be changed too.</p>
 
+<h2 id="search">Finding a command or a key</h2>
+<p>“Search by Function” finds a command by its name or by its menu path. “Search by Key” finds what a key does: press a shortcut, and the list shows the menu commands and macros that use it, which one is in effect and why the others are inactive. Clicking a result keeps the recording on; plain Escape, clicking the search mode again, choosing another category, switching windows or closing Settings ends it. For a macro, choose “Show in Macro Editor” to edit it. A menu command found with Search Settings opens Keyboard with the command in Search by Function; see <a href="basic_preferences.htm#settings-search">Using Settings and Search Settings</a>.</p>
+
+<h2 id="macros">Macro shortcuts</h2>
+<p>Shortcuts of macros are set in the list of the Macro Editor, as described in <a href="macros_define.htm">Defining New Macros</a>. For the same key and modifiers, a menu command takes precedence over a macro, and among macros the first one with the key takes it. Giving a menu command a shortcut that a macro uses asks for confirmation; the macro stays in the Macros menu, but its shortcut becomes inactive. The Macro Editor marks inactive shortcuts and shows which command uses the key. When you save macros whose new shortcuts are used by menu commands, the Macro Editor lets you go back to editing, save with those shortcuts inactive, or remove them and save.</p>
+<p>In the Preview window, Command-F and Command-G follow Find and Find Next, including shortcuts you give them. Key bindings, which insert text when a single character is typed, are set in the Key Binding List of Settings › Keyboard; see <a href="configure_autocompletion.htm">Modifying Key Bindings</a>.</p>
+
+<h2 id="legacy">Older methods</h2>
+<p>Two other ways to set shortcuts still work. Settings › Keyboard is easier and is recommended.</p>
+<h3 id="keyequivalents">KeyEquivalents.plist</h3>
+<p>TeXShop reads the file ~/Library/TeXShop/Menus/KeyEquivalents.plist when it starts. The shortcuts set there become the default shortcuts in Settings › Keyboard, so Restore Default returns to them. The comments at the top of the file explain its format; edit it with TeXShop, save it in UTF-8 and start TeXShop again.</p>
+<h3 id="app-shortcuts">App Shortcuts of macOS</h3>
+<p>In macOS System Settings, Keyboard › Keyboard Shortcuts… › App Shortcuts can give a TeXShop menu command a shortcut by its exact title, in the language of your menus. Such a shortcut stops working when TeXShop renames the menu command, so set shortcuts in Settings › Keyboard instead.</p>
+</main>
 </body>
 </html>

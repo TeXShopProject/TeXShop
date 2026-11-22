@@ -1,75 +1,82 @@
-<HTML>
-
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-		<TITLE>pTeXとTeXShopで日本語環境を構築する</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="pTeX; upTeX; 日本語; エンジンのプロファイル; upLaTeX; pLaTeX; LuaLaTeX">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日本語の文書をタイプセットする</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="日本語; pTeX; upTeX; pLaTeX; upLaTeX; LuaLaTeX; LuaTeX-ja; dvipdfmx; エンジンのプロファイル; otfパッケージ; \UTF; \CID; JIS X 0208; 縦組み">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
 <body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm" class="current">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
+<li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm">行列パネル</a></li>
+<li><a href="basic_macros.htm">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm">画像を入れる</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>日本語の文書をタイプセットする</h1>
+<p>TeX Live（MacTeX）には、日本語のTeXエンジンpTeXとupTeX、それを使うpLaTeXとupLaTeXが含まれています。pTeXは横組みだけでなく縦組みにも対応した日本語のTeXで、upTeXはpTeXをUnicodeに対応させたものです。LuaTeX-jaパッケージを使えば、LuaLaTeXでも日本語の文書をタイプセットできます。TeX Liveの入手については「<a href="basic_installtetex.htm">TeX Liveのインストール</a>」を参照してください。日本語のTeXについての情報は、TeX Wiki（<a href="https://texwiki.texjp.org/">https://texwiki.texjp.org/</a>）にまとめられています。</p>
 
-<div id="content_border">
-
-<p>
-TeXShopにTeXは含まれていないので、TeXShopとは別にTeXをインストールしておく必要があります。pLaTeXやupLaTeXで日本語の文書を作成するにはpTeXやupTeXを含むTeXが必要ですが、TeX Live（MacTeX）にはpTeXもupTeXも含まれています。pTeX（Publishing TeX）は、横組みだけでなく縦組みの日本語組版にも対応した日本語TeXで、アスキーにより作成されました。upTeXはpTeXをUnicodeに対応させたものです。TeX Live（MacTeX）の入手については「<A HREF="basic_installtetex.htm">TeX Liveの入手とインストール</A>」を参照してください。
-</p>
-
-<p>
-日本語の文書をタイプセットするには、「設定」の「タイプセット」にある「エンジンのプロファイル」で日本語用のプロファイルを選びます。日本語用のプロファイルは次の3つです。upLaTeXとpLaTeXのプロファイルでは、ソースをいったんdviファイルにしてから、dvipdfmxでPDFファイルに変換します。
-</p>
-
-<center>
-<table border cellpadding="2">
-<tr align="center"><th><font size="1">プロファイル<th><font size="1">タイプセットの流れ</tr>
-<tr align="center"><td><font size="1">upLaTeX + dvipdfmx<td><font size="1">uplatex → dvipdfmx</tr>
-<tr align="center"><td><font size="1">pLaTeX + dvipdfmx<td><font size="1">platex → dvipdfmx</tr>
-<tr align="center"><td><font size="1">LuaLaTeX（日本語）<td><font size="1">lualatex</tr>
+<h2>日本語用のエンジンのプロファイル</h2>
+<p>日本語の書類のための設定は、エンジンのプロファイルを使うのがいちばん手早い方法です。「設定」→「タイプセット」→「エンジンのプロファイル」で、日本語用の3つのプロファイルのどれかを選びます。</p>
+<table>
+<tr><th>プロファイル</th><th>タイプセット</th><th>BibTeX、索引作成、MetaPost</th></tr>
+<tr><td>upLaTeX + dvipdfmx</td><td>uplatexのあとdvipdfmx</td><td>upbibtex、upmendex、upmpost</td></tr>
+<tr><td>pLaTeX + dvipdfmx</td><td>platexのあとdvipdfmx</td><td>pbibtex、mendex、pmpost</td></tr>
+<tr><td>LuaLaTeX（日本語）</td><td>lualatex</td><td>upbibtex、upmendex、mpost</td></tr>
 </table>
-<font size="1" face="Lucida Grande,Geneva,Arial,ヒラギノ角ゴ Pro W3">
-※プロファイルを選ぶと、設定される値が一覧になります。
-</font>
-</center>
+<p>日本語のプロファイルは、新しい書類のエンコーディングをUTF-8にし、スペルチェックの辞書を「言語を自動判別」にし、「UTF-8-MACをUTF-8に自動変換」をオンにします。「pLaTeX + dvipdfmx」は「otfパッケージの \UTF / \CIDに自動変換」もオンにし、ほかのプロファイルはこれをオフにします。設定される値は、確定する前にシートに一覧で表示されます。</p>
+<p>画像の扱いについては「<a href="basic_graphics.htm">画像を入れる</a>」を、エンコーディングと¥・\については「<a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a>」を参照してください。</p>
 
-<p>
-画像の扱いについてはヘルプ項目「<A HREF="basic_graphics.htm">画像を入れる</A>」を、TeXShop自体のインストールについては「<A HREF="basic_installtexshop.htm">TeXShopの入手とインストール</A>」を参照してください。TeXShopとTeXのインストールは、どちらが先でもかまいません。日本語TeXについての情報は、TeX Wiki（<a href="https://texwiki.texjp.org/">https://texwiki.texjp.org/</a>）にまとめられています。
-</p>
+<h2>pLaTeXでJIS X 0208にない文字を使う</h2>
+<p>pTeXはUTF-8のソースを読めますが、内部ではJIS X 0208の文字しか扱えないので、「森鷗外」の「鷗」のようなそれ以外の文字は失われます。otfパッケージを使うと、こうした文字を<code>\UTF{9DD7}</code>のようなコマンドで出力できます。「設定」→「タイプセット」の「日本語pLaTeX用」グループにある「otfパッケージの \UTF / \CIDに自動変換」をオンにすると、こうした文字をそのまま入力できます。</p>
+<ul>
+<li>書類を保存するとき、JIS X 0208にない文字はすべて<code>\UTF{XXXX}</code>として書き出され、エディタで選んだ異体字は<code>\CID{番号}</code>として書き出されます。番号は、ヒラギノで描いたときのAdobe-Japan1のCIDです。こうしたコマンドが行末に来たときは、出力に余分な空白が入らないよう直後に<code>%</code>を付けます。U+2015（HORIZONTAL BAR）は、pTeXが読めるU+2014（EM DASH）にします。</li>
+<li>書類を開くときは、この設定のオンとオフにかかわらず、これらのコマンドを元の文字に戻します。そのため、ソースウインドウにはいつも文字そのものが表示されます。</li>
+</ul>
+<p>書類には<code>\usepackage{otf}</code>が必要です。たとえば、ソースウインドウには</p>
+<pre>\documentclass{jsarticle}
+\usepackage{otf}
+\begin{document}
+森鷗外は日本の文豪です。
+\end{document}</pre>
+<p>と表示されますが、ファイルには<code>森\UTF{9DD7}外</code>と書かれています。upLaTeXとLuaLaTeXはUnicodeを直接扱うので、変換は必要ありません。</p>
+<p>テキストの一部を手作業で変換するには、そこを選択して「編集」→「文字種一括変換」→「Unicode文字 → \UTF / \CID」か「\UTF / \CID → Unicode文字」を使います。同じサブメニューでは、ひらがなとカタカナ、全角と半角の数字や英字、丸数字などの文字とajmacrosパッケージのコマンドの間の変換や、全角引用符からTeXの引用符への変換もできます。何も選択していないときは、書類全体を変換するかどうかを尋ねられます。どの変換も取り消せます。</p>
 
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">基本的なヘルプ</div>
-<div id="header_title">pTeXとTeXShopで日本語環境を構築する</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="basic_preliminaries.htm">まえがき</a>
-			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a>
-			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
-			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
-			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
-			<li><a href="basic_spelling.htm">スペルをチェックする</a>
-			<li><a href="basic_latexpanel.htm">Latexパネル</a>
-			<li><a href="basic_matrixpanel.htm">行列パネル</a>
-			<li><a href="basic_macros.htm">マクロ</a>
-			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
-			<li><a href="basic_graphics.htm">画像を入れる</a>
-			<li><a href="basic_printing.htm">印刷</a>
-			<li><a href="basic_preferences.htm">設定</a>
-			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
-			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
-			<li><a href="basic_edittricks.htm">編集上のコツ</a>
-			<li><a href="basic_autocompletion.htm">キーバインド</a>
-			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
-			<li><a href="basic_bugs.htm">バグレポートを送る</a>
-			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
-			<li><a href="basic_license.htm">使用許諾</a>
-		</ul>
-	</div>
+<h2>日本語のためのほかの設定</h2>
+<ul>
+<li>「設定」→「エディタ」→「不可視文字」→「全角スペース」をオンにすると、不可視文字を表示するときに全角スペースも表示されます。</li>
+<li>「設定」→「エディタ」→「シンタックスハイライト」→「全角英数記号を強調」をオンにすると、ASCIIの文字と見間違えやすい全角の英字、数字、記号に、テーマの「全角英数記号」の色が付きます。</li>
+<li>「設定」→「プレビュー」→「ページの方向」で、縦組みに必要な右から左へのページの並びにできます。書類ごとには、<code>% !TEX PageDirectionR2L</code>と<code>% !TEX PageDirectionL2R</code>の行で向きを指定します。</li>
+</ul>
+<p>\UTF / \CIDへの変換とUnicodeの正規化については、TUG 2013での寺田侑祐のスライド（<a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>）で詳しく説明しています。</p>
+</main>
 </body>
-
-
-</HTML>
+</html>

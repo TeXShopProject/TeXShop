@@ -1,166 +1,66 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ソースとプレビューの同期</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="SyncTeX; Sync; 同期; Commandクリック; Sync方式; PDFを検索; synctex.gz; projectfile; useConTeXtSyncParser">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
+<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
+<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
+<li><a href="advanced_pdfsync.htm" class="current">ソースとプレビューの同期</a></li>
+<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
+<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
+<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>ソースとプレビューの同期</h1>
+<p>ソースのウインドウで語をCommandキーを押しながらクリックすると、プレビューのウインドウが対応する箇所までスクロールし、そこに印を付けます。プレビューのウインドウで箇所をCommandキーを押しながらクリックすると、ソースファイルが（必要なら開いて）対応する行に移動し、その行に印が付きます。2つの印の色は、「設定」→「テーマ」→「SyncTeX」の「プレビュー」と「ソース」で設定します。</p>
 
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>Pdfsync</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="ソースとプレビューを相互に照応">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<h2>SyncTeX</h2>
+<p>TeXShopはSyncTeXで同期します。TeXをオプション<code>-synctex=1</code>付きで実行すると、PDFの隣に<code>Galois.synctex.gz</code>のようなファイルが書き出されます。このファイルには、ソースの各部分がページのどこに組まれたかが記録されています。TeXShopが設定するタイプセットのコマンド、エンジンのプロファイル、TeXShopに付属するエンジンは、すでにこのオプションを使っています。自作のエンジンでは、TeXの呼び出しに<code>-synctex=1</code>を加えてください（ハイフンは1つでも2つでもかまいません。どのエンジンもどちらも受け付けます）。</p>
+<p>synctexファイルにはソースファイルの完全なパスが入っています。プロジェクトのフォルダを移動したり、コピーしたり、ほかの人に送ったりしたあとは、書類をタイプセットし直すまで同期は働きません。</p>
+<p>SyncTeXは完全に正確ではありません。探している箇所が、印の少し前や後にあることもあります。</p>
 
-<body>	
+<h2>複数のファイルからなるプロジェクト</h2>
+<p>章のファイルが<code>% !TEX root</code>でルートファイルを指定しているプロジェクトでは（<a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>を参照）、章のファイルでCommandクリックすると、書類全体のプレビューの対応する箇所に移動し、プレビューでCommandクリックすると、クリックした箇所を含む章のファイルが開きます。「設定」→「タイプセット」→「ソースとプレビューの同期」の「Syncで開くファイルを、ルートファイルのウインドウのタブにする」がオンのときは、こうして開いたファイルは新しいウインドウではなく、ルートファイルのウインドウにタブとして加わります。</p>
 
-<div id="content_border">
+<h2>Sync方式</h2>
+<p>「設定」→「タイプセット」→「ソースとプレビューの同期」の「Sync方式」には、2つの選択肢があります。</p>
+<dl>
+<dt>SyncTeX（推奨）</dt><dd>上で説明したとおり、synctexファイルを使います。これが初期値です。</dd>
+<dt>PDFを検索</dt><dd>クリックした箇所の周りの文字列をPDFの中から探し、プレビューでクリックしたときはその周りの文字列をソースの中から探します。synctexファイルは要りませんが、数式やコマンドの多い文章など、タイプセットした文字列がソースと異なる箇所ではうまくいきません。プレビューの箇所がどのファイルにあるかは、ルートファイルの<code>\include</code>と<code>\input</code>のコマンドで指定されたファイルの中から探します。別の方法でファイルを読み込むプロジェクトでは、ルートファイルに次のような行でファイルを列挙してください。
+<pre>% !TEX projectfile = chapter2.tex
+% !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
+名前は、完全なパスか、ルートファイルからの相対パスで書きます。これらの行はルートファイルのどこにあってもかまいません。</dd>
+</dl>
 
-<p>
-シンクロナイゼーションはTexturesの重要な機能です──TexturesはClassic Mac用の商用TeXソフトでBlue Sky TeX Systems社の製品です。この機能があれば、執筆者はプレビューウインドウをクリックすることで、ソースウインドウ内の該当部分にすぐに移動でき、またソースウインドウをクリックしてプレビューウインドウへ移動できます。Mac OS X用ネイティブ・バージョンのTexturesが約束されてはいますが、今はまだリリースされていません。Texturesにおけるシンクロナイゼーションの実装は、ソースコード内の対応する箇所を正確に突き止めるその能力によって広く賞賛されています。
-</p>
-
-<p>
-この実装より後、多くのTeXシステムでも似たような機能が提供されていますが、これはTeXがdviファイルに補足情報を書き込むようにする追加のスタイルファイルを使っています。これらの似た方式のどれひとつとして（次に述べるTeXShopの方式も含めて）Texturesのものほど精確ではありません。
-</p>
-
-<p>
-TeXShopにおいて、シンクロナイゼーションを行なうには２種類の方法があります。デフォルトの方法は、Mac OS X 10.4の新機能であるPDFファイル内の文字列検索機能を利用します。この方法を利用するために特別なスタイルファイルを読み込む必要はありません。ソースウインドウ内の単語や語句を、コマンドキーを押しながらクリックしてみてください──プレビューウインドウが適切な位置までスクロールしてゆき、組版された当該文字列を赤で囲って表示します。同様に、プレビューウインドウ内で単語や語句をコマンド＋クリックしてみてください。該当するソースファイルが（必要であれば）開かれ、対応する文字列の位置までスクロールし、黄色でハイライト表示します。
-</p>
-
-<p>
-この方法はファイルをタイプセットするプログラムに依存しませんので、pdftex/pdflatex、TeX/LaTeX + Ghostscript、XeTeXや他のタイプセットプログラムでも利用できます。
-</p>
-
-<p>
-この機能を利用する上で、基本的な仕組みを知っておくと役に立ちます。ソースファイルのある箇所をクリックするとしましょう。TeXShopはクリックの位置を中心にして20字分の文字列を取得し、pdfファイル内の対応する文字列を検索します。もしこの文字列が正確に１回だけ見つかるようであれば、pdf内の文字列を赤で丸く囲むことでうまくいったことを示します。しかしよくあることですが、ソースの文字列には組版用のコマンドが含まれており、出力結果の文字列とは一致しません──これは数学の組版ではまずもってその通りです。なので検索がうまくゆかないようであれば、TeXShopは５文字分のバックアップを取り、新しく20字分の文字列を取得し、再試行します。この動作を必要に応じて20回くり返しますが、一度としてうまくゆかないようであれば、さらにまた20回、今度は逆に元々の文字列よりも前に遡って、この動作をくり返します。こうした検索がまるっきり功を奏さないようだと、TeXShopはお手上げです。
-</p>
-
-<p>
-ということは、明らかに、数式よりも文章をクリックする方がよいわけです。コテコテにマークアップしてある段落は、うまくシンクロナイズできないかもしれません。とはいえ、いろいろ試してみたところでは、検索はたいていうまくゆきますし、クリックするのにふさわしい位置を選ぼうとしてあまり考え込んだりしなくても大丈夫です。
-</p>
-
-<p>
-プレビューウインドウからソースウインドウへのシンクロナイゼーションも同じようにして機能しますが、もうちょっと複雑です。プロジェクトには、\includeや \inputといった方法で挿入された、いくつものソールファイルが含まれているかもしれません。TeXShopでは、\includeや \inputなどの命令文はすべてルートファイルに書き込まれていて、\include{this file}、\input{this file} ないしは \import{this file} のうちの１つを用いているものと想定することで、この複雑な状態を処理しています。最初の実装においては、先頭から60個のそうしたファイルをリスト化し、それらすべてに対して検索をかけ、ファイルのうち１つのみにおいて文字列が正確に１回だけ現われるのであれば、うまくいったことを表示します。当該の文字列がまだ開かれていないファイルの中で見つかれば、TeXShopがそのファイルを開きます。そして適切な位置までスクロールし、その語句を黄色でハイライト表示します。（将来的な実装において、60という数は引き上げられるかもしれません──もっとたくさんのファイルへの検索が必要であれば、そう書き送ってください。）
-</p>
-
-<p>
-ConTeXtでは、ファイルを挿入するのに異なる方法を用いるので、\includeや \inputといった記述に対して検索をかけても関連するConTeXtのファイルを見つけることはできません。そこでシンクロナイゼーション用に検索するファイルを手動で指示する方法があります──この方法はどのタイプセット方式でも機能しますが、ConTeXtでは必須です。ルートファイルの冒頭において、検索するファイルを次のような書式で記載します──
-</p>
-
-	<tt>
-		<dl>
-			<dd>%!TEX projectfile =
-		</dl>
-	</tt>
-
-<p>
-以下に例を挙げます──
-</p>
-
-	<tt>
-		<dl>
-			<dd>%!TEX projectfile = /Users/koch/MyDoc/chapter1.tex
-			<dd>%!TEX projectfile = chapter2.tex
-			<dd>%!TEX projectfile = ../chapter3.tex
-		</dl>
-	</tt>
-
-<p>
-以前のバージョンのTeXShopでは、別方式のシンクロナイゼーションを用いていました──これは2003年にJ&#x00E9;r&#x00F4;me LaurensさんとPiero D'Anconaさんによって考案されたものです。二人はpdflatex用にスタイルファイルを書きました──彼らのパッケージ（pdfsync.sty）は、出力結果のPDFとソースファイルとを相互に関連づけるのに必要な情報を、タイプセット中にpdftexが特別なファイルに書き出すようにするものです。LaurensさんとD'Anconaさんの取り組みは、特定のタイプセット操作でX座標とY座標を出力するpdftexの内部コマンドに依存しており、pdftexないしはpdflatex、あるいはConTeXtにおいてのみ動作します。
-</p>
-
-<p>
-TeXShopでは今でもまだこの方法を利用できます。「設定」ウインドウの「タイプセット」カテゴリの「同期」で、シンクロナイゼーション方式（Sync方式）を選択できます──「pdfsync.sty」が元々の方法で、新しい方法は「PDFを検索」です。「PDFを検索」を選択しつつも、それが失敗したときには「pdfsync.sty」に頼る、というのも可能です。
-</p>
-
-<p>
-「pdfsync.sty」方式を利用するには、pdfsync.styの最新バージョンと関連ファイルをインストールする必要があります。これらのファイルをインストールしたか確認するには、ヘルプの「TeXShopの設定はどうすればよいか？」の中にある「<a href="configure_correctinstall.htm">~/Library/TeXShopの新しい項目を入手する</a>」をお読みください。
-</p>
-
-<p>
-LaTeXでpdfsyncを使うには、次の１行をTeXソースコードのプリアンブル──\begin{document} 行よりも前の部分──に付け加えます：
-</p>
-
-	<tt>
-		<dl>
-			<dd>\usepackage{pdfsync}
-		</dl>
-	</tt>
-
-<p>
-このパッケージは「DVI経由」でタイプセットした場合は無視されますが、pdflatexでタイプセットを行なうと、.pdfsyncという拡張子を持つ追加ファイルを生成します。たとえば、ソースファイルの名前がmain.texだとすると、追加ファイルの名前はmain.pdfsyncとなります。この追加されたファイルには、pdfにおける位置とソースファイルにおける位置とを関連づけるのに必要な情報が書き込まれています。pdfsyncを用いたにしても、ほとんどのファイルではエラーなしでタイプセットされるはずですが、ごく少数のケースでは、このパッケージが余計なエラーをもたらすかもしれません。そうした危ういコードは、ペアになっているコマンド──\pdfsyncstopと \pdfsyncstartとの間に挟み込んでおけます。さらに精度を高めるために、コマンド \pdfsyncを使って特別にシンクロ・スポットを増やすこともできます。pdfsyncスタイルファイルは時おりドキュメント内の改行位置を変更してしまうことがあるので、pdfsyncを使ってタイプセットしていても、決定稿では使わずにタイプセットすることをひとまずはお勧めします。
-</p>
-
-<p>
-ひとたびpdfsyncを用いてファイルをタイプセットすれば、ちょうど上述の「PDFを検索」と同じようにシンクロナイゼーションが機能します。注意：もしpdfsync.styを読み込んでいても、TeXShopのシンクロナイゼーションの設定が「PDFを検索」になっていれば、拡張子が「.pdfsync」のファイルはたんに無視されます。
-</p>
-
-<p>
-警告：もしルートファイルが \includeを使って他のソースファイルを追加してはいるものの、これらのソースファイルの方からルートファイルに対して「%!TEX root」という１行ないしはルートファイル設定により相互参照的にリンクされていない場合、コマンド＋クリックすることでプレビューウインドウからソースウインドウへは移動できますが、ソースからプレビューへは戻れません。これは、それぞれのソースファイルの冒頭に「%!TEX root」コメントを書き加えることで容易に是正できます。
-</p>
-
-<p>
-上述したように、pdfsyncは \include{myfile} で読み込まれるファイルには機能します。\input{myfile} という構文が使われていればinputコマンドに対しても機能します ； ほかの構文「\input myfile」では機能しません。
-</p>
-
-<p>
-pdfsync.styというファイルは、LaTeXで利用されます ； 同様のファイルpdfsync.texとpdfsync4context.texはそれぞれTeXとConTeXtでのシンクロナイゼーション用となっています。
-</p>
-
-<p>
-シンクロナイゼーションは、mysource.pdfsyncにデータを書き込み、プレビューウインドウ内の特定のシンクロ・スポットに照応させることで機能しています。大まかに言えば、それぞれのデータ・エントリには以下のようなものが含まれます──
-</p>
-
-	<dl>
-		<dd>ポイントの置かれたプレビュー文書のページ番号
-		<dd>このページにおけるポイントの位置
-		<dd>この特定の出力を生成するソースファイルの名前
-		<dd>このソースファイル内の該当する行番号
-	</dl>
-
-<p>
-こうしたシンクロナイゼーション・ポイントをTeXShopで表示させる方法があります。プレビューウインドウのツールバーには「Sync」というチェックボックスがあります。デフォルトでは見えていません ； 「ウインドウ」メニューにある「ツールバーをカスタマイズ...」を使って選び取ってください。チェックボックスをチェックすると、シンクロナイゼーション・ポイントが見えるようになります。
-</p>
-
-<p>
-プレビューウインドウが表示された当初は、この項目にはチェックが入っていません。隠れた設定項目でこれを変更できます：
-</p>
-
-	<tt>
-		<dl>
-			<dd>defaults write TeXShop ShowSyncMarks YES
-		</dl>
-	</tt>
-
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title"> Pdfsync </div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
-			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
-			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
-			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
-			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
-			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
-			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
-			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
-			<li><a href="advanced_plist.htm">Plistファイル</a>
-			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-		</ul>
-	</div>
-	</body>
-
-</HTML>
+<h2>ConTeXt</h2>
+<p>ConTeXtでは、書類の設定に<code>\setupsynctex[state=start,method=min]</code>を加え、ルートファイルの先頭に<code>% !TEX useConTeXtSyncParser</code>の行を書きます。するとTeXShopはConTeXt独自の同期のコードを使います。<a href="advanced_context.htm">ConTeXtとMetaPost</a>を参照してください。</p>
+<p>ほかのエディタで開いているソースと同期するには、<a href="advanced_externaleditor.htm">外部エディタを使う</a>を参照してください。</p>
+</main>
+</body>
+</html>

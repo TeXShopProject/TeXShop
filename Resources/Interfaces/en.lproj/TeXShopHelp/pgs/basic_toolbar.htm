@@ -1,52 +1,59 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toolbar and AppleScript</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="toolbar; Customize Toolbar; Page Layout; Two-Page Arrangement; Magnification; annotation toolbar; FullPath; Show Full Path in Window Title; AppleScript">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
+<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
+<li><a href="basic_preview.htm">The Preview Window</a></li>
+<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
+<li><a href="basic_find.htm">Find and Replace</a></li>
+<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
+<li><a href="basic_spelling.htm">Checking Spelling</a></li>
+<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
+<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm" class="current">Toolbar and AppleScript</a></li>
+<li><a href="basic_graphics.htm">Including Graphics</a></li>
+<li><a href="basic_printing.htm">Printing</a></li>
+<li><a href="basic_preferences.htm">Changing Settings</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
+<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
+<li><a href="basic_websites.htm">Useful Web Sites</a></li>
+<li><a href="basic_license.htm">License</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Toolbar and AppleScript</h1>
+<h2>Changing the toolbar</h2>
+<p>The source window, the Preview window and the window that shows both have toolbars of their own. To change one, make the window active and choose Window › Customize Toolbar…, or Control-click the toolbar and choose Customize Toolbar… there. Drag items into the toolbar or out of it, or drag the default set to the toolbar to start again. Window › Hide Toolbar hides the toolbar of the active window.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Toolbar and AppleScript</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="toolbar; applescript support">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Items of the source window</h2>
+<p>Typeset, with the Program menu beside it, typesets the document with the program chosen there; there are also buttons for single programs such as BibTeX and Make Index. Templates and Macros insert text (see <a href="basic_templates.htm">Templates and Stationery</a> and <a href="basic_macros.htm">Macros</a>). Tags and Labels scroll the source to a section or a label. KeyBindings turns key bindings on or off for the document, and Split Source divides the window (Option-click to divide it side by side).</p>
+<p>FullPath shows the full path of the file in the title of the window instead of its name alone; click it again to show the name. The choice is kept for windows opened later.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>The selection and location of tools at the top of the TeX Source and PDF Preview windows can be modified using the menu item &quot;Customize Toolbar.&quot; This toolbar support is entirely the work of Anton Leuski. Thanks!</P>
-		<P>The Preview window can show Zoom to Content and Zoom to Content Width in its toolbar; add them with &quot;Customize Toolbar.&quot; They are also at the end of Preview &gt; Magnification, where keyboard shortcuts can be assigned to them in Settings. Zoom to Content fits the typeset part of the page in view, without the white margins, in the window. Zoom to Content Width makes the typeset part as wide as the window and shows its top at the top of the window, so a page number or footnote at the foot of the page does not make the text smaller. In two-page layouts both pages of the row are measured; with one page across, the next page is measured too, so that a document printed on both sides keeps its line ends on every page. A rotated page is measured as it is shown. Like the Magnification tool, the buttons switch the window to a fixed magnification.</P>
-		<P>Fit to Content Width, in Preview &gt; Magnification and in Settings, keeps the typeset part of all pages as wide as the window, like Fit to Window without the white margins: resizing the window changes the magnification to keep it so. These commands were suggested by Uwe Schmock.</P>
-		<p>TeXShop supports Applescript. This is also the work of Anton Leuski. </p>
-		<ul>
-			
-		</ul>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Toolbar and Applescript</div>
+<h2>Items of the Preview window</h2>
+<p>The Preview window has, among others, Previous Page and Next Page, Go to page, Back/Forward, Magnification, Mouse Mode, Search PDF, Drawer, Sync Marks, Split Preview and Appearance, which shows the pages light or dark. Click the word next to the magnification field to open the Magnification menu.</p>
+<p>Page Layout chooses Single Page, Two Pages, Continuous or Continuous Two Pages for the document. Two-Page Arrangement chooses, for the document while it is open, whether two pages run left to right or right to left and whether the first page is shown alone as a cover; Restore Document Settings in this menu returns to Settings and the magic comment lines of the document. Zoom to Content and Zoom to Content Width change the magnification once so that the typeset part of the page, without its white margins, fits the window or its width. See <a href="basic_preview.htm">The Preview Window</a>.</p>
+<p>Preview › Show Annotation Toolbar shows a second toolbar below the toolbar, with the tools for adding notes, highlights and shapes to the PDF. Click the close button at its right end, or choose Preview › Hide Annotation Toolbar, to remove it. Annotations are described in the TeXShop Manual (Help › TeXShop Manual).</p>
 
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_miscellaneous.htm">Miscellaneous </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>AppleScript</h2>
+<p>TeXShop can be controlled with AppleScript: scripts can typeset documents, run BibTeX and MakeIndex, and work with the text of the source. AppleScript macros in the Macros menu run such scripts; see <a href="macros_applescript.htm">AppleScript Macros</a>. The commands TeXShop understands are explained in Help › Older Documents › Notes on Applescript in TeXShop, and listed in the scripting dictionary of TeXShop, which Script Editor opens with File › Open Dictionary.</p>
+</main>
+</body>
+</html>

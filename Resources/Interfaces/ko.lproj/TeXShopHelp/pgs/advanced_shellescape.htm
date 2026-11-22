@@ -1,81 +1,62 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shell Escape 보호</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="shell escape; -shell-escape; --shell-escape; shell-escape 시 확인; 보안; % !TEX parameter">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm" class="current">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Shell Escape 보호</h1>
+<p>TeX는 조판하는 동안 다른 프로그램을 실행할 수 있습니다. TeX Live는 기본적으로 EPS 그림을 PDF로 변환하는 프로그램처럼 신뢰할 수 있는 몇몇 프로그램만 허용합니다. 다른 프로그램을 실행해야 하는 패키지는 <code>-shell-escape</code> 옵션(<code>--shell-escape</code>라고도 씀)을 요구합니다.</p>
+<p>이 옵션을 사용하면 문서가 어떤 명령이든 실행할 수 있습니다. 예를 들어 홈 폴더의 모든 파일을 지우는 명령도 실행할 수 있습니다. 이 옵션은 신뢰할 수 있는 문서에만 사용하고, 다른 사람에게서 받은 파일에는 사용하지 마십시오.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Shell Escape Protection</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="shell escape; graphic conversion; security">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>옵션 추가하기</h2>
+<ul>
+<li>설정 › 조판 › PDF 직접 생성의 LaTeX 명령이나 plain TeX 명령에 추가하면, PDF 직접 생성으로 조판하는 모든 문서에 적용됩니다.</li>
+<li>엔진 파일에 추가하면 그 엔진으로 조판하는 모든 문서에 적용됩니다. <a href="advanced_addengine.htm">조판 엔진 추가하기</a>를 참고하십시오.</li>
+<li>pdflatexmk 같은 latexmk 엔진으로 조판하는 문서 하나에만 적용하려면, 소스 첫머리에 <code>% !TEX parameter = -shell-escape</code> 줄을 넣습니다.</li>
+</ul>
 
-<BODY>
-	<div id="content_border">
-<P>
-In TeX Live since 2011, pdftex, pdflatex, and other TeX programs can call a small list of
-trusted programs during typesetting. For example, these programs are allowed to call Ghostscript
-to convert eps files to pdf files
-
-<p> It is possible to configure pdftex, pdflatex, and other programs so they can call arbitrary shell commands during
-typesetting. In that case, the flag "-shell-escape" must be added to the calling sequence, either
-in the &#51312;&#54032; category of TeXShop Settings or in particular engine scripts. However,
-this flag is a serious security risk because it allows arbitrary shell programs to run, including for
-example a short program to erase all files in the home directory. If the flag is set, a malicious
-web site could offer a TeX source file which erases these files when it is typeset.
-
-<p> Although we recommend against setting the flag, it may be required by a few unusual
-typesetting packages.  
-TeXShop provides a protection mechanism for this situation. A setting in the &quot;PDF &#51649;&#51217; &#49373;&#49457;&quot; (Direct PDF) group of the &#51312;&#54032; category is labeled &quot;shell-escape &#49884; &#54869;&#51064;&quot; (Confirm Shell Escape). This item is off when TeXShop is delivered.
-		It checks only the plain TeX and LaTeX commands in this group, which are used when a file is typeset
-		with TeX or LaTeX by the &quot;PDF &#51649;&#51217; &#49373;&#49457;&quot; method. Engine scripts (.engine files) are not checked, even if they
-		contain "-shell-escape."
-		If the item is on and the command used contains "-shell-escape," then the first time a file is typeset during
-		a TexShop session, a warning dialog will appear allowing you to turn shell-escape
-		off for that particular file. This dialog will not appear again during the session for that
-		particular file. Thus you can typeset your own files using "shell-escape" and typeset
-		files received in the mail without "shell-escape."
-</P>
-
-
-
-		<ul>
-			
-		</ul>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Shell Escape Protection</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
-
-
+<h2>shell-escape 시 확인</h2>
+<p>설정 › 조판 › PDF 직접 생성 › “shell-escape 시 확인”은 PDF 직접 생성 그룹의 명령을 감시하며, 기본적으로 꺼져 있습니다. 이 설정이 켜져 있고 그 그룹의 plain TeX 명령이나 LaTeX 명령에 <code>-shell-escape</code>나 <code>--shell-escape</code>가 들어 있으면, TeXShop은 문서를 연 뒤 처음으로 조판하기 전에 다음과 같이 묻습니다.</p>
+<ul>
+<li>“확인”을 누르면 옵션을 사용하여 조판합니다.</li>
+<li>“Shell Escape 생략”을 누르면 옵션 없이 조판합니다.</li>
+<li>“취소”를 누르면 조판하지 않습니다.</li>
+</ul>
+<p>“확인”이나 “Shell Escape 생략”을 선택하면 그 문서를 닫을 때까지 그 대답이 유지됩니다. 따라서 자신의 문서는 옵션을 사용하여, 다른 사람의 문서는 옵션 없이 조판할 수 있습니다. 엔진 파일은 <code>-shell-escape</code>가 들어 있어도 확인하지 않습니다.</p>
+</main>
+</body>
+</html>

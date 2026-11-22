@@ -1,84 +1,69 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XeLaTeXとLuaLaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="XeLaTeX; LuaLaTeX; XeTeX; LuaTeX; fontspec; システムのフォント; OpenType; Unicode; エンジンのプロファイル">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
+<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm" class="current">XeLaTeXとLuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
+<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
+<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
+<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
+<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>XeLaTeXとLuaLaTeX</h1>
+<p>XeLaTeXとLuaLaTeXは、UTF-8のソースをそのまま読み、TeX LiveのフォントのほかにMacにインストールされたOpenTypeフォントやTrueTypeフォントも使えるLaTeXです。Unicodeにある文字なら、フォントにその文字がある限り、どの文字体系でもソースに入力してタイプセットできます。どちらもTeX Liveに含まれていて、通常のLaTeXの書類も変更なしにタイプセットできます。</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-		<TITLE>XeTeX and XeLaTeX</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="bibtex; bibliography; citation">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>XeLaTeXやLuaLaTeXでタイプセットする</h2>
+<p>方法は3つあります。広く効くものから順に並べます。</p>
+<ul>
+<li><strong>エンジンのプロファイル</strong>　「設定」→「タイプセット」→「エンジンのプロファイル」で、XeLaTeXかLuaLaTeXを選びます。プロファイルは「PDF直接生成」のLaTeXとplain TeXのコマンドをxelatexとxetex、またはlualatexとluatexにするので、ツールバーの「LaTeX」や「タイプセット」→「LaTeX」でそのエンジンが使われます。確定する前に、プロファイルが設定する値がシートに一覧で表示されます。</li>
+<li><strong>エンジンファイル</strong>　「タイプセット」ボタンの横のポップアップメニューに、LuaLaTeXとXeLaTeXのエンジンがあります。新しい書類をどちらかでタイプセットするには、「設定」→「タイプセット」→「エンジン」の「新しい書類のタイプセット」で「エンジンファイル」を選び、「エンジンファイル」メニューでエンジンを選びます。このメニューでは、最初はLuaLaTeXが選ばれています。</li>
+<li><strong>マジックコメント</strong>　ソースの先頭に次のような行を書くと、ほかの設定にかかわらず、その書類のエンジンが決まります。
+<pre>% !TEX program = LuaLaTeX</pre></li>
+</ul>
+<p>日本語用のLuaLaTeXについては、<a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>を参照してください。</p>
 
-<BODY>
-	<div id="content_border">
-<p> Recently, Jonathan Kew introduced XeTeX and XeLaTeX. These programs can use
-Macintosh fonts directly within a TeX document. XeTeX and XeLaTeX require unicode source and
-thus can deal with any unicode character; for example, with them you can type Arabic or Hebrew in the source document
-and later see
-Arabic or Hebrew in the output. TeXShop's editor will correctly input these characters from
-right to left. XeTeX is part of TeX Live, so it is installed by MacTeX. For additional details, consult </p>
-<dl>
-			<dd><a href="http://scripts.sil.org/xetex">http://scripts.sil.org/xetex</a>
-		</dl>
+<h2>Macのフォントを使う</h2>
+<p>fontspecパッケージでは、Font Bookアプリケーションに表示される名前でフォントを選びます。たとえば次のようにします。</p>
+<pre>% !TEX program = XeLaTeX
+\documentclass{article}
+\usepackage{fontspec}
+\setmainfont{Palatino}
+\setsansfont{Helvetica Neue}
+\begin{document}
+Text in Palatino, \textsf{and in Helvetica Neue}.
+\end{document}</pre>
+<p>fontspecを使わないとき、またはフォントのコマンドがないときは、どちらのエンジンもLaTeXの標準のフォントであるLatin Modernを使います。polyglossiaやbabelなどのパッケージは、ほかの言語のハイフネーションや慣習を設定します。それらのドキュメントは「ヘルプ」→「パッケージのヘルプを表示...」で開けます。</p>
 
-<p> To understand how this works, here is a brief XeLaTeX source document, and the resulting
-output. The Arabic and Hebrew
-characters were obtained by accessing the International Panel in System Preferences, selecting the
-Input Menu tab, and checking Arabic and Hebrew; a small flag appeared on the menu bar and a user could
-switch keyboards by selecting an appropriate flag.</p>
-<IMG HEIGHT="356" WIDTH="328" border="0" SRC="../gfx/source.jpg">
-
-<IMG HEIGHT="155" WIDTH="349" border="0" SRC="../gfx/output.jpg">
-
-<p> TeXShop now supports XeTeX and XeLaTeX:</p>
-<dl>
-<li> XeTeX and XeLaTeX are available in the pull-down typesetting menu on the source window
-<li> A user can make XeTeX or XeLaTeX the default typesetting option in Settings
-<li> If one of the first twenty lines of the source has the form
-<dl>
-<dd> % !TEX encoding = UTF-8 Unicode
-</dl>
-then that source will be loaded and saved with UTF-8 Unicode encoding regardless of the default encoding
-setting in Settings
-<li> If one of the first twenty lines of the source has the form
-<dl>
-<dd> % !TEX TS-program = xetex or % !TEX TS-program = xelatex
-</dl>
-then the appropriate program will be used regardless of the typesetting option chosen in the menu
-</dl>
-
-
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">XeTeX and XeLaTeX</div>
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>ほかの文字体系を入力する</h2>
+<p>ギリシア文字、キリル文字、アラビア文字、ヘブライ文字などを入力するには、「システム設定」→「キーボード」でその入力ソースを追加し、メニューバーの入力メニューで切り替えます。TeXShopでは、アラビア語、ヘブライ語、ペルシア語の行を右寄せで表示できます。<a href="advanced_encoding.htm">エンコーディング</a>を参照してください。こうした書類は、新しい書類の初期のエンコーディングであるUTF-8で保存してください。</p>
+</main>
+</body>
+</html>

@@ -17,10 +17,9 @@ source = (root/'DocumentSources/Manual Source/Manual.tex').read_text(encoding='u
 pdfs = [(root/'DocumentSources/Manual Source/Manual.pdf').read_bytes(),
         (root/'Resources/Interfaces/Base.lproj/Manual.pdf').read_bytes()]
 
-commented = re.findall(r'^\s*%.*?\\label\{([^}]*)\}', source, flags=re.M)
-assert commented, 'The manual keeps commented-out sections with labels'
 if args.mutation == 'ref-to-commented-label':
-    source += '\nSee \\cref{%s}.\n' % commented[0]
+    # A section that is commented out, and a reference to it left behind.
+    source += '\n% \\section{Removed}\\label{RemovedSection}\nSee \\cref{RemovedSection}.\n'
 elif args.mutation == 'label-removed':
     # The label of the section on splitting windows, which other sections refer to.
     assert source.count('\\label{Splitting_Windows_Section}') == 1

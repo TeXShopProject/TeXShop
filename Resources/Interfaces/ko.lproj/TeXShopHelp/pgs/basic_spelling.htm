@@ -1,87 +1,82 @@
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
-<title>Checking Spelling</title>
-<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="spelling; continuous spell checking; latex-aware spell checking; dictionary" name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>맞춤법 검사</title>
+<meta name="description" content="맞춤법 검사; LaTeX 구문을 고려한 맞춤법 검사; 맞춤법 제외 규칙; 기존 방식; 사전; 맞춤법 및 문법 보기; % !TEX spellcheck">
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-
-<div id="content_border">
-<p>Cocoa programs automatically inherit spell checking technology by Apple. TeXShop supports continuous spell checking, which can be toggled on or off with a menu command. A setting selects the initial position of this toggle.</p>
-<p> The Apple spell checker does not understand LaTeX commands by itself and marks many such commands as misspelled. In the &#47582;&#52644;&#48277; &#44160;&#49324; category of TeXShop Settings, choose &#8220;LaTeX &#44396;&#47928;&#51012; &#44256;&#47140;&#54620; &#47582;&#52644;&#48277; &#44160;&#49324; &#49324;&#50857;(&#44428;&#51109;)&#8221;: TeXShop then checks the text and skips commands, mathematics, comments, and the arguments of references.</p>
-
-	<p> Use the Dictionary section of TeXShop Settings to select a default dictionary. If you usually write in English, select an English dictionary; if you usually write in French, select a French dictionary. Or select "&#50616;&#50612; &#51088;&#46041; &#44048;&#51648;" and an appropriate dictionary will automatically be selected depending on the text.
-
-	<p> The dictionary section of TeXShop Settings selects the default dictionary used when new files are opened in TeXShop, but does not change the dictionary used by files that are already open.
-
-	<p> The &#49324;&#51204; menu shows each language under its own name (for example, Deutsch or Fran&ccedil;ais), so choose the dictionary by the name of the language. The code the spell checker uses for that language, such as de or fr_CA, appears as the tool tip of the menu item.
-
-	<p> Once TeXShop dictionary settings are set up, users can open several source files in TeXShop.
-	Each will be assigned the Default Dictionary. But these dictionaries can be changed using the
-	"&#47582;&#52644;&#48277; &#48143; &#47928;&#48277;" menu item in the TeXShop &#54200;&#51665; menu. If desired, each file can use a separate dictionary. For instance, a user might be writing customer letters in English, French, German, and Japanese and could assign such dictionaries to the four source files. In that case, click randomly among the source files and notice that the "Spelling and Grammar" panel switches to the appropriate dictionary each time the corresponding source file becomes active.
-
-	<p> When files are closed, this association is lost, so users who write in multiple languages will need to reselect the appropriate dictionary when each file is opened. 
-
-	<p> However, it is possible to fix the dictionary used when a file is first opened with the magic comment
-	<dd>
-<dl> % !TEX spellcheck = de-DE
-	</dl></dd>
-<p> In this example, the magic states that a German dictionary should be used whenever this file is opened. The dictionary, however, can still be changed after the file opens by using "Spelling &amp; Grammar."
-	The next time the file is closed and opened again, it will use the German dictionary.	
-
-	<p> The line is
-recognized when the document is opened, so the first time it is added to a source file, the file must be saved and reopened before the line is recognized. In a project with a root document, each included source file must contain the line.
-
-
-<p> When using this command, Apple dictionaries are specified using either the ISO 639-1 or ISO 639-2 standards for determining language designations, and the ISO 3166-1 standard for regional designations. The regional designation is used to distinguish between a language as used in one part of the world and that same language in another part of the world. For instance, French is "fr" in ISO 639-1 and "fre" in ISO 639-2; French (France) has regional designation "FR" and
-French (Canadian) has regional designation "CA". So to select a French dictionary in Canada, "spellcheck = fr" will work, and "spellcheck = fr-CA" would be even better.
-Since these are ISO standards, similar commands will work on other platforms, although TeXShop only runs on the Mac. The language standards are described in 
-<dl>
-<dd><a href="http://www.loc.gov/standards/iso639-2/php/English_list.php">http://www.loc.gov/standards/iso639-2/php/English_list.php</a>
-</dd></dl>
-and the regional standards are at
-<dl>
-<dd><a href="https://www.iso.org/iso-3166-country-codes.html">https://www.iso.org/iso-3166-country-codes.html</a>
-</dd></dl>
-
-<p> Originally, TeXShop did nothing special for dictionaries and users just used "Spelling &amp; Grammar."
-Later a partial implementation of the above design was introduced. Finally, the full implementation was introduced in TeXShop 3.81. A very small number of users prefer the original design in which TeXShop just accepted the default behavior of "Spelling &amp; Grammar." If you are one of these users, you can switch back to the original behavior using the hidden default
-
-	<dl>
-<dd> defaults write TeXShop OriginalSpelling YES
-	</dd></dl>
-
-	</p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p><p><a href="basic_preferences.htm#settings-search">&#49444;&#51221; &#49324;&#50857; &#48143; &#44160;&#49353;</a></p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Checking Spelling</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>
-<li><a href="basic_spelling.htm">Checking Spelling</a>
-<li><a href="basic_latexpanel.htm">Latex Panel</a>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-<li><a href="basic_macros.htm">Macros</a>
-<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-<li><a href="basic_graphics.htm">Including Graphics</a>
-<li><a href="basic_printing.htm">Printing</a>
-<li><a href="basic_preferences.htm">Changing Settings</a>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-<li><a href="basic_edittricks.htm">Editing Tricks</a>
-<li><a href="basic_autocompletion.htm">Key Bindings</a>
-<li><a href="basic_commandcompletion.htm">Command Completion </a>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-<li><a href="basic_websites.htm">Useful Web Sites</a>
-<li><a href="basic_license.htm">License</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm" class="current">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>맞춤법 검사</h1>
 
+<p>TeXShop은 macOS의 맞춤법 검사기와 사전으로 맞춤법을 검사합니다. 처음부터 LaTeX 구문을 고려한 맞춤법 검사가 켜져 있습니다. 이 방식은 본문을 검사하고, TeX 명령, 수식, 주석, 그리고 <code>\label</code>, <code>\ref</code>, <code>\cite</code>, <code>\usepackage</code> 같은 명령의 인수와, 널리 쓰이는 패키지에서 키, 색상, 단위처럼 문장이 아닌 인수는 건너뜁니다. 문서가 <code>\newcommand</code>, <code>\def</code> 등으로 정의하는 명령도 읽으므로, 정의를 통해 <code>\ref</code>나 수식으로 전달되는 인수도 건너뜁니다. <code>\foreignlanguage</code> 등으로 다른 언어로 표시한 텍스트는 그 언어로 검사하지만, 입력하는 동안에는 밑줄이 그어지지 않습니다.</p>
 
+<h2>문서 검사</h2>
+
+<p>편집 › 맞춤법 및 문법 › 입력하는 동안 맞춤법 검사가 켜져 있으면, 입력하는 동안 철자가 틀린 단어에 밑줄이 그어집니다. 문서를 한 단어씩 확인하려면 편집 › 맞춤법 및 문법 › 맞춤법 및 문법 보기(<kbd>⌘:</kbd>)를 선택합니다. 패널에 삽입 위치 다음의 첫 번째 틀린 단어가 표시됩니다. 패널의 다음 찾기를 클릭하거나 지금 문서 검사(<kbd>⌘;</kbd>)를 선택하면 다음 단어로 이동합니다. 이때 Option 키를 누르고 있으면 마크업을 건너뛰지 않는 macOS의 검사가 사용됩니다.</p>
+
+<p>단어를 문서 전체에서 바꾸려면 패널의 “모두 변경할 대체 단어” 필드에 대체 단어를 입력하거나 제안된 단어를 선택한 후 모두 변경을 클릭합니다. 실행 취소 한 번으로 변경을 되돌릴 수 있습니다. 맞춤법 및 문법 하위 메뉴의 학습한 단어 삭제…는 이 문서의 단어 중 현재 언어로 학습된 단어를 나열하며, 선택한 단어를 사전에서 제거합니다. 같은 하위 메뉴의 맞춤법 자동 수정은 입력하는 동안 단어를 고칩니다. 이 기능은 처음에 꺼져 있으며, 명령까지 고쳐 버리는 TeX에서는 꺼 두는 것이 좋습니다.</p>
+
+<h2>설정 › 맞춤법 검사</h2>
+
+<p>맞춤법 검사 그룹의 “입력 중 맞춤법 검사”는 문서를 열 때 틀린 단어에 밑줄을 그을지를 정하며, “사전”은 아래에서 설명합니다. 방식 그룹에서는 TeX 소스를 검사하는 방법을 선택합니다.</p>
+<dl>
+<dt>“LaTeX 구문을 고려한 맞춤법 검사 사용(권장)”</dt>
+<dd>위에서 설명한 방식입니다. 같은 행 끝의 “LaTeX 제외 규칙 편집…”을 클릭하면 무엇을 건너뛸지 정하는 규칙이 열립니다.</dd>
+<dt>“기존 방식”</dt>
+<dd>macOS가 모든 것을 검사하며, 그 아래의 세 옵션으로 제외하는 것만 건너뜁니다. “LaTeX 명령 제외”, <code>\usepackage</code>처럼 특수한 단어를 받는 몇몇 명령의 파라미터를 건너뛰는 “파라미터 부분 제외”, 그리고 “주석문 제외”입니다. 이 옵션은 구문 하이라이트가 켜져 있을 때만 동작하며, 지금 문서 검사에는 적용되지 않습니다.</dd>
+</dl>
+<p>Sweave 파일처럼 TeX 소스가 아닌 파일은 항상 기존 방식으로 검사합니다.</p>
+
+<h2>제외 규칙</h2>
+
+<p>LaTeX 구문을 고려한 맞춤법 검사의 규칙은 ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt 파일에 있습니다. 설정의 “LaTeX 제외 규칙 편집…”이나 편집 › 맞춤법 및 문법 › 맞춤법 제외 항목 편집…으로 열면 TeXShop에서 열리며, 파일 첫머리에 형식이 설명되어 있습니다. 예를 들어 다음 행은 <code>\mycommand</code> 명령의 첫 번째 인수와 <code>proof</code> 환경의 내용을 건너뜁니다.</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>변경 내용은 다음에 맞춤법을 검사할 때 적용됩니다. 파일을 삭제하면 TeXShop을 다음에 시작할 때 기본 파일의 사본이 새로 만들어집니다. 맞춤법 검사에 대한 자세한 설명은 도움말 › 맞춤법 검사 도움말에 있습니다.</p>
+
+<h2>사전</h2>
+
+<p>설정 › 맞춤법 검사의 “사전”은 이후에 여는 문서의 사전을 선택합니다. 이미 열려 있는 문서는 원래 사전을 유지합니다. 메뉴에는 각 언어가 Deutsch나 Français처럼 그 언어 자체의 이름으로 표시되며, 도움말 태그에 de나 fr_CA 같은 코드가 표시됩니다. 언어 자동 감지를 선택하면 macOS가 텍스트에서 언어를 판단합니다.</p>
+
+<p>한 문서에만 다른 사전을 사용하려면 그 문서를 앞에 둔 상태에서 맞춤법 및 문법 패널 아래쪽의 팝업 메뉴에서 사전을 선택합니다. 열려 있는 각 문서는 각자의 사전을 유지하며, 문서를 전환하면 패널도 전환됩니다. 이 선택은 문서를 닫으면 유지되지 않습니다.</p>
+
+<p>문서를 열 때마다 같은 사전을 사용하게 하려면 처음 20행 안에 다음과 같은 행을 넣습니다.</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>값은 사전 메뉴의 도움말 태그에 표시되는 언어 코드입니다. 프랑스어는 <code>fr</code>, 캐나다 프랑스어는 <code>fr-CA</code>입니다. 이 행은 문서를 열 때 읽히므로, 행을 추가한 후에는 문서를 저장하고 닫은 다음 다시 여십시오. 장 파일이 있는 문서에서는 각 파일에 이 행을 넣으십시오.</p>
+
+<p>설정 윈도우에서 설정을 찾는 방법은 <a href="basic_preferences.htm#settings-search">설정 검색</a>을 참조하십시오.</p>
+</main>
 </body>
 </html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>윈도우와 탭</title>
+<meta name="copyright" content="Copyright (c) 2016 Richard Koch under the GNU FDL">
+<meta name="description" content="탭; 윈도우; 윈도우 대신 탭에서 열기; 편집/보기 윈도우 통합; 편집/보기 윈도우 분리; useTabs; useTabsWithFiles; tabbedFile; TabsAlsoForInputFiles">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm" class="current">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>윈도우와 탭</h1>
+<p>다른 macOS 앱처럼 TeXShop의 윈도우도 한 윈도우의 탭으로 모을 수 있습니다. 설정 › 일반의 “윈도우 대신 탭에서 열기”에서 언제 탭으로 모을지를 안 함, macOS의 탭 설정을 따르는 자동, 항상 중에서 선택합니다.</p>
+<p>항상을 선택하고 소스와 미리보기를 별도의 윈도우로 사용하면, 여는 문서마다 소스는 소스 윈도우의 탭이 되고 미리보기는 미리보기 윈도우의 탭이 됩니다. 콘솔과 로그도 같은 방식으로 모입니다. 한 윈도우에서 탭을 선택한 상태로 조판하거나 동기화하면 다른 윈도우의 대응하는 탭이 앞으로 옵니다. 소스와 미리보기를 한 윈도우에 표시하면(설정 › 일반의 “소스와 미리보기”를 “단일 창으로”로 설정) 탭 하나에 문서 하나가 통째로 들어갑니다. 윈도우 › 편집/보기 윈도우 통합과 윈도우 › 편집/보기 윈도우 분리는 활성 문서를 두 방식 사이에서 전환합니다.</p>
+<p>소스와 미리보기를 함께 표시하는 윈도우는 탭이 있든 없든 전체 화면에서 사용하기 좋습니다. 조판하는 동안 콘솔이 그 위에 떠서 표시됩니다.</p>
+
+<h2>프로젝트를 탭으로 열기</h2>
+<p>장마다 파일이 나뉜 책에서는 루트 파일이 장 파일들을 자신의 윈도우에 탭으로 열도록 TeXShop에 요청할 수 있습니다. 루트 파일의 처음 20행 안에 다음 행을 넣습니다.</p>
+<pre>% !TEX useTabs</pre>
+<p>루트 파일을 열면 그 파일의 <code>\include</code> 명령이 가리키는 파일들이 탭으로 열립니다. 같은 행에 괄호로 묶고 쉼표로 구분하여 탭의 짧은 이름을 쓸 수 있습니다. 두 쉼표 사이를 비워 두면 그 파일은 원래 이름을 사용합니다.</p>
+<pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
+<p><code>\input</code> 명령의 파일도 탭으로 열려면 터미널에서 다음 숨겨진 설정을 사용합니다.</p>
+<pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
+<p>파일을 직접 고르려면 <code>useTabsWithFiles</code>로 시작하고 탭마다 <code>tabbedFile</code> 행을 추가합니다. 모두 루트 파일의 처음 50행 안에 넣어야 합니다. 괄호 안에 탭 이름을 쓸 수 있습니다.</p>
+<pre>% !TEX useTabsWithFiles
+% !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
+% !TEX tabbedFile{Galois.log}
+% !TEX tabbedFile{~/Graphics/diagram.pdf}</pre>
+<p>경로는 루트 파일이 있는 폴더를 기준으로 하거나, <code>~</code>로 홈 폴더에서 시작하거나, 전체 경로로 씁니다. 이 탭에는 로그, PDF 파일, 그림도 표시할 수 있으므로, Finder에서 확장자가 가려져 있더라도 항상 확장자를 쓰십시오. 각 파일은 직접 열 때와 같은 방식으로 열리므로, 소스 파일을 열면 그 미리보기도 함께 열릴 수 있습니다.</p>
+<p>그 밖의 매직 코멘트는 도움말 › 매직 코멘트와 숨겨진 설정 (영문)을 참조하십시오.</p>
+</main>
+</body>
+</html>

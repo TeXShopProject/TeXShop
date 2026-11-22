@@ -1,99 +1,55 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE html>
+<html lang="de">
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
-  <title>Farbiger Text in TeX</title>
-  <meta name="copyright"
- content="Copyright (c) 2003 Richard Koch, Martin Kerz und Sebastian Siedentopf unter der GNU FDL">
-  <meta name="description"
- content="Frischen Sie Ihre Dokumente mit farbigem Text auf.">
-  <link href="../sty/screen.css" rel="stylesheet" media="all">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Farbiger Text</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="farbiger Text; xcolor; Farbe; textcolor; definecolor; dvipsnames; Farbe der Vorschauseiten; Helle Seiten">
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<div id="content_border">
-<p>Es war schon immer
-m&ouml;glich auch farbige TeX-Dokumente auszugeben. F&uuml;gen
-Sie einfach folgende Zeile zur Pr&auml;ambel Ihres Quelltextes
-hinzu:</p>
-<dl>
-  <dd><tt>\usepackage{color}</tt>
-  </dd>
-</dl>
-<p>F&uuml;gen Sie jetzt zum
-Beispiel folgende Zeile vor dem Setzen ein:</p>
-<dl>
-  <dd><tt>\color{blue}</tt>
-  </dd>
-</dl>
-<p>Um nur einen bestimmten Teil
-des Dokuments farbig zu gestalten f&uuml;gen Sie folgendes ein: </p>
-<dl>
-  <dd><tt>{\color{red}
-Das ist sehr wichtig!}</tt> </dd>
-</dl>
-<p>Um spezielle Farben zu
-erzeugen, benutzen Sie Befehle wie:</p>
-<dl>
-  <dd><tt>\definecolor{mycolor}{rgb}{0.2,
-0.7, 0.8}</tt></dd>
-</dl>
-Unter Umst&auml;nden sind dem Nutzer&nbsp;bereits vordefinierte
-Farben wie "BrickRed" bekannt. Diese benannten Farben werden
-automatisch f&uuml;r den dvips Treiber definiert. Um diese zu
-nutzen, ist folgender Befehl einzuf&uuml;gen:<br>
-<dl>
-  <dd><tt>\usepackage[dvipsnames,usenames]{color}</tt>&nbsp;</dd>
-</dl>
-<p>Farbiger Text kann auf dem
-Bildschirm schwer zu lesen sein. Die Farbe der Seiten in der Vorschau
-l&auml;sst sich in den Einstellungen unter &bdquo;Themen&ldquo; &auml;ndern: Die Farbe unter
-&bdquo;Helle Seiten&ldquo; in der Zeile &bdquo;Vorschau&ldquo; f&uuml;llt die Seiten, solange sie hell
-dargestellt werden. Jedes Thema hat seine eigene Farbe, so dass das Hellmodus-Thema
-und das Dunkelmodus-Thema verschiedene Farben verwenden k&ouml;nnen. Die Farbe wird
-nicht ausgedruckt und erscheint auch nicht, wenn ein Teil einer Seite kopiert wird.
-Seiten, die mit &bdquo;Erscheinungsbild&ldquo; in der Symbolleiste des Vorschau-Fensters
-dunkel dargestellt werden, werden nicht mit dieser Farbe gef&uuml;llt.</p>
-<p>Fr&uuml;here Versionen von TeXShop stellten diese Farbe mit den versteckten
-Einstellungen Pdfbackground_R, Pdfbackground_G und Pdfbackground_B ein.</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img
- src="../gfx/texshop-icon-small.png" border="0" height="40" width="40"></a></div>
-<div id="header_chapter">Erweitert</div>
-<div id="header_title">Farbiger
-Text in TeX</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<nav id="menu">
 <ul>
-  <li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</a></li>
-  <li><a href="advanced_addengine.htm">Zus&auml;tzliche
-Schriftsatz-Programme</a> </li>
-  <li><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a>
-  </li>
-  <li><a href="advanced_externaleditor.htm">Einen externen
-Editor verwenden</a></li>
-  <li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen
-und Drag-Drop aus dem Vorschau-Fenster</a></li>
-  <li><a href="advanced_root.htm">Die Hauptdatei des Projekts
-festlegen</a></li>
-  <li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-  <li><a href="advanced_unicode.htm">Unicode</a></li>
-  <li><a href="advanced_bibtex.htm">BibTeX</a></li>
-  <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-  <li><a href="advanced_otherfiles.htm">Andere Dateien mit
-TeXShop &ouml;ffnen</a></li>
-  <li><a href="advanced_mathematica.htm">Mathematica</a></li>
-  <li><a href="advanced_localization.htm">Lokalisierungen</a></li>
-  <li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung </a></li>
-  <li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
-  <li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-  <li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-  <li><a href="advanced_otherdistributions.htm">Zusammenarbeit
-mit anderen TeX Distributionen</a></li>
-  <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-  <li><a href="advanced_plist.htm">Plist Dateien</a></li>
-  <li><a href="advanced_menushortcuts.htm">Tastaturk&uuml;rzel
-neubelegen</a></li>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
+<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop öffnen</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
+<li><a href="advanced_coloredtext.htm" class="current">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
 </ul>
-</div>
+</nav>
+<main id="content">
+<h1>Farbiger Text</h1>
+<p>Das Paket xcolor färbt Text im gesetzten Dokument. Laden Sie es in der Präambel:</p>
+<pre>\usepackage{xcolor}</pre>
+<p>Danach schaltet <code>\color{blue}</code> bis zum Ende der aktuellen Gruppe oder Umgebung auf Blau um, und <code>\textcolor{red}{This is very important!}</code> färbt nur sein Argument. Eigene Farben definieren Sie zum Beispiel mit</p>
+<pre>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</pre>
+<p>Die Option <code>dvipsnames</code> fügt eine Liste benannter Farben hinzu, etwa BrickRed und ForestGreen:</p>
+<pre>\usepackage[dvipsnames]{xcolor}</pre>
+<p>Die Dokumentation von xcolor, die Sie mit Hilfe › Hilfe für Paket einblenden… öffnen, führt alle Farben und Optionen auf.</p>
+
+<h2>Die Farbe der Seiten im Vorschaufenster</h2>
+<p>Farbiger Text kann auf einer weißen Seite schwer lesbar sein. Die Seiten im Vorschaufenster können unter Einstellungen › Themen eine andere Farbe erhalten: In der Gruppe „Fenster“ füllt die Farbe unter „Helle Seiten“ in der Zeile „Vorschau“ die Seiten, solange sie hell angezeigt werden. Jedes Thema hat seine eigene Farbe, sodass Hellmodus-Thema und Dunkelmodus-Thema verschiedene Farben verwenden können.</p>
+<p>Die Farbe dient nur der Anzeige: Sie wird nicht gedruckt und erscheint nicht, wenn ein Teil einer Seite kopiert wird. Seiten, die mit dem Objekt „Erscheinungsbild“ in der Symbolleiste des Vorschaufensters dunkel angezeigt werden, werden nicht mit dieser Farbe gefüllt. Die Farbe des Textes selbst legt das Dokument fest, wie oben mit xcolor.</p>
+</main>
 </body>
 </html>

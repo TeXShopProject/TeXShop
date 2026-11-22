@@ -1,174 +1,101 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writing Scripts with Shell Commands</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; shell script; do shell script; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Macros Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminaries</a></li>
+<li><a href="macros_default.htm">Understanding Default Macros</a></li>
+<li><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
+<li><a href="macros_define.htm">Defining New Macros</a></li>
+<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
+<li><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
+<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
+<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
+<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
+<li><a href="macros_writingcommandscripts.htm" class="current">Writing Scripts with Shell Commands</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Writing Scripts with Shell Commands</h1>
+<p>This page uses the macro pdflatexc by Claus Gerhardt, in Macros › Claus Gerhardt Macros, to show how an AppleScript calls a shell script. The shell script itself is simple: it adds the folders of the TeX programs to the search path and runs pdflatex with <code>--shell-escape</code>. Your own scripts will probably do more, for instance run several programs in sequence; that is when these techniques become useful.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Writing Scripts with Shell Commands</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="applescript">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2 id="shell-script">The shell script</h2>
+<p>The shell script is ~/Library/TeXShop/bin/pdflatexc. It does not depend on TeXShop: if its folder is in your search path, typing <code>pdflatexc myfile.tex</code> in Terminal runs it. Here it is:</p>
+<pre>#!/bin/tcsh
+# pdflatexc
+# Claus Gerhardt
+#
+# Usage
+# pdflatexc filename.tex
 
-<BODY>
-	<div id="content_border">
-		<P>We will use the AppleScript "pdflatexc" by Claus Gerhardt to illustrate the principles involved in calling a Unix shell script from an Applescript.
-This particular shell script isn't very interesting; it adds the location of the TeX binary files to the $PATH variable and calls pdflatex to typeset.</P>
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
 
-	<P>The shell script itself is independent of
-TeXShop and can be run from the Terminal by typing "pdflatexc myfile.tex" provided the directory holding pdflatexc is in the search path for binaries. Here is that shell script:</p>
-<div id="source">
-#!/bin/tcsh
-<br># pdflatexc
-<br># Claus Gerhardt
-<br>#
-<br># Usage
-<br># pdflatexc filename.tex
-<p>
-set path= ($path /Library/TeX/texbin /usr/local/bin)</p>
-<p>
-pdflatex -shell-escape "$1"</p>
-</div>
-Of course you are likely to write a more complicated script which performs several operations
-in sequence. That is when these techniques become useful.
- </P>
+pdflatex --shell-escape "$1"</pre>
 
- <P>The AppleScript used to call this shell script is more interesting. Here it is:</p>
-<p>
-<div id="source">
-<br>--Applescript
-<br>-- Apply only to an already saved file.
-<br>-- Claus Gerhardt, Nov. 2003
+<h2 id="applescript">The AppleScript</h2>
+<p>The macro that calls this shell script is more interesting:</p>
+<pre>--Applescript
+-- Apply only to an already saved file.
+-- Claus Gerhardt, Nov. 2003
 
-<br>set scriptPath to (do shell script "dirname " & "~/Library/TeXShop/Scripts/ex")
-<br>set scriptPath to scriptPath & "/setname.scpt"
-<br>set scriptName to POSIX file scriptPath as alias
-<br>set scriptLiB to (load script scriptName)
-<br>tell scriptLib
-<br>set frontName to setname(#NAMEPATH#,#TEXPATH#)
-<br>end tell
-<p>
-<br>set fileName to  #TEXPATH#
-<br>set n to (number of characters of contents of fileName)
-<br>set fileNamequoted to quoted form of fileName
-<br>set baseName to do shell script "basename " & fileNamequoted
-<br>set m to (number of characters of contents of baseName)
-<br>set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
-<p>
-<br>set shellScript to "cd " & dirName & ";"
-<br>set shellScript to shellScript & "~/Library/TeXShop/bin/pdflatexc  " & baseName
-<br>do shell script shellScript
-<p>
-<br>tell document frontName
-<br>	refreshpdf
-<br>end tell
-</dl>
-</div>
-</P>
+set scriptPath to (do shell script "dirname " &amp; "~/Library/TeXShop/Scripts/ex")
+set scriptPath to scriptPath &amp; "/setname.scpt"
+set scriptName to POSIX file scriptPath as alias
+set scriptLiB to (load script scriptName)
+tell scriptLib
+set frontName to setname(#NAMEPATH#,#TEXPATH#)
+end tell
 
-<P>
-Ignoring the introductory comments, the first seven lines of this script  are a magic recipe 
-by Claus Gerhardt to save the source file and find the name of the document in question, setting
-"frontName" to this name. This recipe uses a compiled script named "setpath.scpt" in
-~/Library/TeXShop/Scripts to do all the hard work. Careful reading shows that these lines
-find the path ~/Library/TeXShop/Scripts/setname.scpt and call this script with parameters
-#NAMEPATH# and #TEXPATH#.
-</P>
- 
-<P>
-In many AppleScripts all of this could be accomplished in an easier way using
-the commands:</p>
-<div id="source">
-set frontName to #DOCUMENTNAME#
-<br> tell document frontName of application "TeXShop"
-<br> save
-<br> end tell
-</div>
-<p>
-However, Gerhardt's script has two advantages. First, his script can be
-called when the front document is a log file, say /Users/koch/Examples/myfile.log, that is,
-in a case when the front document is not the document which should receive later commands.
-Second, if the file has never been saved, Gerhardt's script returns an error when trying to
-save, while the
-"save" command would cause TeXShop to hang after it put up a save dialog (see the help document Writing Scripts with TeXShop Typesetting
-Commands for details.)
-</P>
+set fileName to  #TEXPATH#
+set n to (number of characters of contents of fileName)
+set fileNamequoted to quoted form of fileName
+set baseName to do shell script "basename " &amp; fileNamequoted
+set m to (number of characters of contents of baseName)
+set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
 
-<P>
-The next six lines of the script define the variables dirName and baseName. If the source
-file is "/Users/koch/This directory/Stuff/myfile.tex", dirName is " '/Users/koch/This directory/Stuff' ",
-including the single and double quotation marks, 
-and baseName is "myfile.tex." A lot of this work is required so spaces can occur in the
-names of folders. As always, tex does not allow spaces in the final file name.
-</P>
+set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName
+do shell script shellScript
 
-<P>
-The next three line call the shell script. The result is the same as typing "cd dirName; ~/Library/TeXShop/bin/pdflatexc baseName" in a Terminal, although, to be absolutely precise, dirName would have to be replaced by its unquoted form, i.e., if we use the example above, by '/Users/koch/This directory/Stuff' including the single quotes because of the space in the name of one directory.</P>
+tell document frontName of application "TeXShop"
+    refreshpdf
+end tell</pre>
+<p>After the comments, the first seven lines are a recipe by Claus Gerhardt to save the source file and find the name of its document, which is put in <code>frontName</code>. The work is done by the compiled script setname.scpt in ~/Library/TeXShop/Scripts: these lines find the path ~/Library/TeXShop/Scripts/setname.scpt, load the script and call it with #NAMEPATH# and #TEXPATH#.</p>
+<p>Often the same can be done more simply with</p>
+<pre>set frontName to #DOCUMENTNAME#
+tell document frontName of application "TeXShop"
+    save
+end tell</pre>
+<p>The recipe has two advantages. It also works when the front document is not the one that should receive the later commands, for instance a log file such as /Users/name/Examples/myfile.log. And if the file has never been saved, the recipe returns an error, while the <code>save</code> command would leave the script waiting behind a save dialog.</p>
+<p>The next six lines set the variables <code>dirName</code> and <code>baseName</code>. If the source file is /Users/name/My Papers/Stuff/myfile.tex, <code>dirName</code> is <code>'/Users/name/My Papers/Stuff'</code>, quoted for the shell because of the space in a folder name, and <code>baseName</code> is <code>myfile.tex</code>. Folder names may contain spaces this way; TeX does not allow them in the name of the file itself.</p>
+<p>The next three lines call the shell script. The result is the same as typing <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc myfile.tex</code> in Terminal. The final three lines update the Preview window.</p>
+<p>Several of these lines are complicated, but they can be copied unchanged into new scripts.</p>
 
-<P>
- Shell commands in AppleScript are issued in the form</p>
-<div id="source">
-do shell script "cmd input"
-</div>
-<p>If one wants to combine several shell scripts, it is better to write the command in an equivalent formy</p>
-<div id="source">
-do shell script "cmd " & "input"
-</div>
-<p>Notice the space behind cmd and the quotes. The ampersand is a binary concatenation operator, i.e.,</p>
-<div id="source">
-"cmd " & "input" = "cmd input"
-</div>
-<p>
-When the shell is called via an applescript, the default working directory is the root directory. The command</p>
-<div id="source">
-do shell script "cd " dirName
-</div><p>
-changes the directory to the directory specified in dirName; dirName is already quoted so that additional quotes are not needed. </p>
-<p>
-If one would like to keep the working directory and issue further commands, then these commands may not be stated in the form "do shell script", since then a new shell would be invoked. In the terminal one would separate consecutive commands by semicolons, in AppleScript one does it by concatenating ";", i.e.,</p>
-<div id="source">
-do shell script "cmd(1) " & "input(1)" & ";" & "cmd(2) " & "input(2)"
-</div><p>
-This is done in the above example: cmd(1) = cd, "input(1)" = dirName, cmd(2) = ~/Library/TeX/bin/pdflatexc - calling the shell script -, and "input(2)" = baseName.</p>
-<p>
-The lines</p>
-<div id="source">
-set shellScript to "cd " & dirName & ";"
-<br>set shellScript to shellScript & "~/Library/TeX/bin/pdflatexc  " & baseName
-</div><p>
-are simply a convenient way to concatenate this sequence of commands and input into one variable. </p>
-
-<P>
-The final three lines update the Preview window.
- </P>
-
-<P>
-To be sure, several of these lines are complicated, but these lines can be copied without
-change into new scripts.
- </P>
-
-	</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Macros Help</div>
-<div id="header_title">Writing Scripts with Shell Commands</div>
-
-	<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Preliminaries</a></li>
-			<LI><a href="macros_default.htm">Understanding Default Macros</a></li>
-			<LI><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
-			<LI><a href="macros_define.htm">Defining New Macros</a></li>
-			<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
-			<LI><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
-			<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
-			<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
-			<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
-			<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
-		</UL>
-	</div>
-
-
-
-
-	</BODY>
-
-</HTML>
+<h2 id="do-shell-script">Running shell commands from AppleScript</h2>
+<p>AppleScript runs a shell command in the form</p>
+<pre>do shell script "cmd input"</pre>
+<p>To build a command from parts, write it in the equivalent form</p>
+<pre>do shell script "cmd " &amp; "input"</pre>
+<p>Notice the space after <code>cmd</code>. The ampersand joins two strings:</p>
+<pre>"cmd " &amp; "input" = "cmd input"</pre>
+<p>A shell started by AppleScript begins in the root folder. The command</p>
+<pre>do shell script "cd " &amp; dirName</pre>
+<p>changes to the folder in <code>dirName</code>, which is already quoted, so no further quotes are needed.</p>
+<p>Each <code>do shell script</code> starts a new shell, so a later command would not be in that folder. To run further commands in the same folder, join them with semicolons into one command, as in Terminal:</p>
+<pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
+<p>The script above does this with cmd1 = <code>cd</code>, input1 = <code>dirName</code>, cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code> and input2 = <code>baseName</code>. The lines</p>
+<pre>set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName</pre>
+<p>are simply a convenient way to put this sequence into one variable.</p>
+</main>
+</body>
+</html>

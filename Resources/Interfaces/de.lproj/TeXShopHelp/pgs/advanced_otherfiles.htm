@@ -1,49 +1,61 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Andere Dateien mit TeXShop öffnen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="Dateitypen; Endungen; sty; cls; bib; log; aux; dtx; ins; Rnw; mp; md; dvi; ps; eps; pdf; OtherTeXExtensions; Dateityp">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr über TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Mehrere TeX-Distributionen nebeneinander</a></li>
+<li><a href="advanced_addengine.htm">Satz-Engines hinzufügen</a></li>
+<li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-Dateien entfernen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Schutz vor Shell Escape</a></li>
+<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
+<li><a href="advanced_experiments.htm">Testen</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a></li>
+<li><a href="advanced_otherfiles.htm" class="current">Andere Dateien mit TeXShop öffnen</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text</a></li>
+<li><a href="advanced_plist.htm">Dateien in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Andere Dateien mit TeXShop öffnen</h1>
+<p>TeXShop öffnet jede Textdatei, sodass Sie Log-Dateien, aux-Dateien und andere Dateien von TeX neben Ihren Dokumenten lesen können. Es öffnet auch PDF-Dateien und Bilder.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Andere Dateien mit TeXShop &ouml;ffnen</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Mit TeXShop k&ouml;nnen Sie auch andere Dateien &ouml;ffnen.">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">	
-		<P>TeXShop kann die meisten Dateien zum Bearbeiten &ouml;ffnen. Diese M&ouml;glichkeit wurde gegeben um den Benutzern zu erlauben TeX bezogene Dateien mit der Endung &bdquo;.log&ldquo;, &bdquo;.aux&ldquo; und so weiter zu &ouml;ffnen. Dateien mit den Endungen &bdquo;.jpg&ldquo;, &bdquo;.tif&ldquo;, &bdquo;.eps&ldquo; oder &bdquo;.pdf&ldquo; werden als Grafikdatei ge&ouml;ffnet.</P>
-		<p>Dar&uuml;ber hinaus kann man in TeXShop &bdquo;.dvi&ldquo; und &bdquo;.ps&ldquo;-Dateien &ouml;ffnen. In diesem Fall werden jene Dateien ins pdf-Format umgewandelt und angezeigt.</p>
-		<p>Es wird nicht empfohlen TeXShop als allgemeinen Editor zu benutzen. TeXShop kann Dateien in UniCode und anderen Formaten lesen, jedoch speichert es immer nur im 8-bit ASCII-Format, weil dies das Format ist, das tex und latex verstehen. Logischer Weise werden Informationen verloren gehen, wenn TeXShop dazu benutzt wird um Dateien zu bearbeiten, die nichts mit TeX zu tun haben.</p>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Erweitert</div>
-<div id="header_title">Andere Dateien mit TeXShop &ouml;ffnen</div>
+<h2>Dateien, die als TeX-Quelltext gelten</h2>
+<p>Dateien mit den folgenden Endungen und Dateien ohne Endung sind für TeXShop TeX-Quelltexte: Sie werden mit Syntaxhervorhebung angezeigt und können gesetzt werden.</p>
+<pre>asy  bbx  bib  cbx  clo  cls  ctx  def  dtx  fd  fdd  gabc  gtex
+htx  html  ins  lbx  lhs  ltx  lua  lytex  ly  md  mf  mp  ptx
+Rnw  sk  skt  Stex  sty  tex  typ  xml</pre>
+<p>Andere Textdateien, etwa <code>.log</code>-, <code>.aux</code>-, <code>.bst</code>-, <code>.engine</code>- oder <code>.txt</code>-Dateien, werden als reiner Text ohne Syntaxhervorhebung geöffnet.</p>
+<p>Damit TeXShop Dateien mit einer anderen Endung als TeX-Quelltexte behandelt, fügen Sie die Endung im Terminal mit einer versteckten Einstellung hinzu; zum Beispiel für ConTeXt-Dateien mit der Endung <code>mkiv</code>:</p>
+<pre>defaults write TeXShop OtherTeXExtensions -array-add "mkiv"</pre>
 
+<h2>PDF-Dateien und Bilder</h2>
+<p>PDF-Dateien und Bilder mit den Endungen <code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.tif</code>, <code>.tiff</code> und <code>.eps</code> öffnen sich in einem eigenen Fenster. DVI- und PostScript-Dateien (<code>.dvi</code>, <code>.ps</code>) werden in PDF umgewandelt und angezeigt.</p>
 
-	<div id="menu_border">
-		<UL>
-			<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</a></li>
-			<LI><a href="advanced_addengine.htm">Zus�tzliche Schriftsatz-Programme</a>
-			<LI><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a>
-			<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-			<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-			<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-			<li><a href="advanced_unicode.htm">Unicode</a></li>
-			<li><a href="advanced_bibtex.htm">BibTeX</a></li>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-			<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
-			<li><a href="advanced_mathematica.htm">Mathematica</a></li>
-			<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
-			<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung </a></li>
-			<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
-			<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-			<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-			<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-			<li><a href="advanced_plist.htm">Plist Dateien</a></li>
-			<li><a href="advanced_menushortcuts.htm">Tastaturk&uuml;rzel neubelegen</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2>Mit einer anderen Endung sichern</h2>
+<p>Eine Datei behält ihre Endung, wenn TeXShop sie sichert. Ein neues Dokument wird als <code>.tex</code>-Datei gesichert, sofern Sie im Sichern-Dialog im Menü „Dateityp“ keinen anderen Typ wählen, etwa sty, bib oder mp.</p>
+<p>TeXShop sichert eine Datei in der Kodierung, mit der sie geöffnet wurde. Es ist für TeX und verwandte Dateien gedacht; eine Datei in einem ungewöhnlichen Format kann sich verändern, wenn sie nach dem Bearbeiten in TeXShop gesichert wird. Siehe <a href="advanced_encoding.htm">Kodierungen</a>.</p>
+</main>
+</body>
+</html>

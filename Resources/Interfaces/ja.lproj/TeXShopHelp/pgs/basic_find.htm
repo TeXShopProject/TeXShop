@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>検索と置換</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="検索と置換; 詳細検索パネル; 検索パネル; 正規表現; すべて検索; すべてハイライト; すべて置き換え; 複数置換; Apple標準検索バー; OgreKit検索パネル">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm" class="current">検索と置換</a></li>
+<li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm">行列パネル</a></li>
+<li><a href="basic_macros.htm">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm">画像を入れる</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>検索と置換</h1>
+
+<p>検索のコマンドは「編集」メニューの「検索」サブメニューにあります。「検索…」（<kbd>⌘F</kbd>）、「検索と置換…」（<kbd>⌥⌘F</kbd>）、「次を検索」（<kbd>⌘G</kbd>）、「前を検索」（<kbd>⇧⌘G</kbd>）、「選択部分を検索に使用」（<kbd>⌘E</kbd>）、「選択部分へジャンプ」（<kbd>⌘J</kbd>）です。タイプセットした書類の中を検索するには、「<a href="basic_preview.htm#search">プレビューウインドウ</a>」を参照してください。</p>
+
+<h2>検索パネルを選ぶ</h2>
+
+<p>「設定」→「エディタ」→「検索パネル」で、「検索」で開くものを選びます。</p>
+<dl>
+<dt>「詳細検索パネル（推奨）」</dt>
+<dd>正規表現、すべての一致の一覧、複数置換を備えたパネルで、このページで説明します。最初はすべてのユーザがこれを使います。</dd>
+<dt>「Apple標準検索バー」</dt>
+<dd>SafariやXcodeと同じ、ソースの上端に出るmacOSの検索バーです。</dd>
+<dt>「Apple標準検索パネル」</dt>
+<dd>macOSの基本的な検索パネルです。</dd>
+<dt>「OgreKit検索パネル（レガシー）」</dt>
+<dd>園部勲氏によるOgreKitの検索パネルで、独自の正規表現を使います。これに切り替えたり、これから切り替えたりしたときは、TeXShopを再起動すると有効になります。</dd>
+</dl>
+
+<h2>詳細検索パネル</h2>
+
+<p>「検索…」でパネルを開くと検索欄が、「検索と置換…」で開くと置換欄が選択されます。欄の中では、Returnキーで次の一致を検索し、Tabキーでもう一方の欄に移ります。改行とタブを入れるには、Option＋ReturnとOption＋Tabを使います。欄の左のアイコンで最近使った文字列を選べます。検索欄の右端には、「12件中3件目」のように現在の一致の位置が表示されます。</p>
+
+<p>欄の下には「正規表現」「大文字と小文字を区別しない」「選択範囲内」があります。3つの点のボタンを押すと、その他のオプションが表示されます。末尾から先頭への折り返し、単語単位の検索、発音区別符号や全角と半角の違いの無視、正規表現のオプション、置換の書き方、「¥ を \ とみなす」などです。オプションは次に起動したときも保たれます。</p>
+
+<p>下端のボタンは「すべて検索」「すべて置き換え」「複数置換…」「置き換えて検索」と、前と次の一致へ移る矢印です。</p>
+<ul>
+<li>「すべて検索」は、すべての一致を行番号とともに一覧にします。行をクリックするとソースの一致が選択され、ダブルクリックするとソースウインドウも手前に来ます。「自動更新」がオンなら、一覧は編集に合わせて更新されます。「すべて検索」のメニューには、すべての一致に印を付ける「すべてハイライト」、すべての一致を選択する「すべてを選択」、印を消す「ハイライトを消す」もあります。</li>
+<li>「すべて置き換え」は、すべての一致を置き換えます。「選択範囲内」がオンのときは、選択範囲内の一致だけを置き換えます。1回の取り消しで、置き換え全体が元に戻ります。</li>
+<li>「置き換えて検索」は、選択している一致を置き換えてから次の一致を検索します。このボタンのメニューには、置き換えだけをする「置き換え」もあります。</li>
+</ul>
+
+<p>詳細検索パネルを使っているときは、「検索」サブメニューにもパネルのコマンドが加わり、パネルを閉じていても使えます。「すべて検索」（<kbd>⇧⌘F</kbd>）、「すべての一致を選択」、「選択部分を置換に使用」（<kbd>⇧⌘E</kbd>）、「置換」、「置換して次を検索」（<kbd>⌥⌘G</kbd>）、「すべて置換」、「すべてハイライト」（<kbd>⇧⌘H</kbd>）、「ハイライトを削除」（<kbd>⌃⇧⌘H</kbd>）です。これらのショートカットは「設定」→「キーボード」で変更できます。</p>
+
+<p>「すべて置き換え」「すべて検索」と複数置換はバックグラウンドで動き、終わるまで書類は編集できません。時間がかかるときは、書類のウインドウにシートが出て進み具合を示します。シートの「キャンセル」かEscapeキーで止めると、テキストは元のままになります。</p>
+
+<p>パネルでは、コンソール、ログ、「実験」のウインドウの中も検索できます。TeXの出力を表示するコンソール、ログ、「実験」のコンソールでは置換はできません。</p>
+
+<p>パネルは書類のウインドウの一つとして扱われるので、ソースをクリックするとそのウインドウの後ろに回り、「検索…」でまた手前に来ます。書類のウインドウより手前に置いておくには、「設定」→「エディタ」→「検索」で「詳細検索パネルを常に手前に表示」をオンにします。</p>
+
+<h2>正規表現</h2>
+
+<p>「正規表現」がオンのとき、検索文字列はmacOSの正規表現であるICUの書き方のパターンになります。ほとんどのパターンはほかのアプリケーションと同じように書けます。繰り返しの指定ではない波括弧は<code>\{</code>や<code>\}</code>と書く必要があるので、<code>\\section{</code>ではなく<code>\\section\{</code>で検索します。</p>
+
+<p>置換文字列では、<code>$0</code>が一致全体、<code>$1</code>、<code>$2</code>、…がグループ、<code>\$</code>がドル記号を表します。したがって、数式<code>$x$</code>は<code>\$x\$</code>と書きます。バックスラッシュは2つ重ねて書きます。<code>\\section</code>で<code>\section</code>になります。グループを<code>\1</code>、<code>\2</code>、…と書き、<code>$</code>を普通の文字とするOgreKitの書き方も、オプションで選べます。OgreKit検索パネルから移ってきたユーザは、最初はこの書き方になっています。</p>
+
+<p>「正規表現」の横の小さな「?」ボタンを押すと、パターンと置換の書き方、OgreKitとの違いの一覧が開きます。欄の中ではパターンの各部分がテーマの色で表示され、誤りは赤で、OgreKitとは読み方が異なる部分はオレンジで示されます。オプションの下の行にその説明が出ます。</p>
+
+<p>例を挙げます。</p>
+<ul>
+<li><code>\section{Intro}</code>を<code>\section*{Intro}</code>に変えるには、<code>\\section\{([^}]*)\}</code>を検索して<code>\\section*{$1}</code>に置換します。</li>
+<li>ASCIIでない文字をすべて探すには、<code>[^[:ascii:]]</code>を検索欄に入れて、「すべて検索」をクリックするか「すべてハイライト」を選びます。</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>複数置換</h2>
+
+<p>「検索」サブメニューの「複数置換を編集…」か、パネルの「複数置換…」ボタンで、「複数置換」ウインドウが開きます。このウインドウは、検索文字列と置換文字列の組み合わせ（規則）をまとめた組を保存し、組の規則を上から順に適用します。左に組の一覧が、右に選択した組の規則が表示されます。それぞれの規則には、検索文字列と置換文字列、正規表現を使うか（RE）と大文字と小文字を区別しないか（IC）の指定、説明があり、左のチェックボックスで規則を使わないようにできます。「+」と「−」のボタンで規則を追加・削除し、ドラッグで順序を変えます。規則の下にある3つの点のボタンには、組全体のオプションがあります。パターンが正しくないなど、使えない規則には警告の印が付き、適用されません。</p>
+
+<p>ウインドウの「すべて置き換え」は、規則をテキスト全体に、「選択範囲内」がオンのときは選択範囲に適用します。1回の取り消しで元に戻ります。「すべてハイライト」は、規則で見つかる部分に印を付けます。ウインドウでの変更はすぐに保存されます。「検索」サブメニューの中の「複数置換」サブメニューには組が並び、選んだ組を手前のソースのテキスト全体に適用します。</p>
+
+<p>それぞれの組は、~/Library/TeXShop/MultipleReplaceの中の1つのファイルで、CotEditorの置換定義と同じJSON形式です。組の一覧の下の「+」と「−」のボタンは、新しい組を作り、選択した組をゴミ箱に入れます。その横の3つの点のメニューで、組の複製、読み込み、書き出しができます。「読み込む…」では、CotEditorの置換定義や、1行に1つの規則を書いたタブ区切りのテキストも読み込めます。2つのサンプルの組は、「文字種一括変換」と同じように、Unicodeの文字とajmacrosパッケージのコマンドを相互に変換します。サンプルは、MultipleReplaceフォルダがまだないときにだけ作られます。</p>
+
+<h2>プロジェクトのすべてのファイルを検索する</h2>
+
+<p>ルートファイルとすべての章のファイルを一度に検索・置換するには、「<a href="basic_texrootsearch.htm">TeXソースの検索と置換</a>」を参照してください。</p>
+</main>
+</body>
+</html>

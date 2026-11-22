@@ -24,7 +24,7 @@ def strings(path):
 
 
 def apple_title(book):
-    raw = (book / 'TeXShop Help.html').read_bytes().decode('latin-1')
+    raw = (book / 'TeXShop Help.html').read_text(encoding='utf-8')
     match = re.search(r'<META\s+NAME="AppleTitle"\s+CONTENT="([^"]*)"', raw, re.I)
     return match.group(1) if match else None
 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ウインドウとタブ</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="タブ; ウインドウ; 新しいウインドウをタブで開く; ソースとプレビューを統合; ソースとプレビューを分離; useTabs; useTabsWithFiles; tabbedFile; TabsAlsoForInputFiles">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
+<li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm">コマンド補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm">行列パネル</a></li>
+<li><a href="basic_macros.htm">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm">画像を入れる</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm" class="current">ウインドウとタブ</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>ウインドウとタブ</h1>
+<p>TeXShopのウインドウは、ほかのmacOSのアプリケーションと同じように、ひとつのウインドウのタブにまとめられます。「設定」→「一般」の「新しいウインドウをタブで開く」で、どんなときにまとめるかを選びます。「しない」、macOSのタブの設定に従う「自動」、「すべて」のどれかです。</p>
+<p>「すべて」を選び、ソースとプレビューを別々のウインドウにしていると、開いた書類のソースはソースウインドウの、プレビューはプレビューウインドウのタブになります。コンソールとログも同じようにまとめられます。一方のウインドウでタブを選ぶと、タイプセットやSyncのときに、もう一方のウインドウでも対応するタブが手前に出ます。ソースとプレビューをひとつのウインドウに表示しているとき（「設定」→「一般」の「ソースとプレビュー」が「1つのウインドウに統合」のとき）は、ひとつのタブにひとつの書類全体が入ります。「ウインドウ」→「ソースとプレビューを統合」と「ウインドウ」→「ソースとプレビューを分離」で、作業中の書類をどちらの形にするか切り替えられます。</p>
+<p>ソースとプレビューを一緒に表示するウインドウは、タブの有無にかかわらず、フルスクリーンで使うと便利です。タイプセットするとき、コンソールはその上に浮かんで表示されます。</p>
+
+<h2>プロジェクトをタブで開く</h2>
+<p>章ごとにファイルを分けた本では、ルートファイルの指定で、章のファイルをそのウインドウのタブとして開けます。ルートファイルの最初の20行のうちに次の行を入れます。</p>
+<pre>% !TEX useTabs</pre>
+<p>ルートファイルを開くと、その<code>\include</code>コマンドで指定したファイルがタブとして開きます。同じ行に、タブの短い名前を丸括弧に入れてコンマで区切って続けることもできます。コンマの間を空けると、そのファイルは元の名前のままです。</p>
+<pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
+<p><code>\input</code>コマンドで読むファイルもタブで開くには、ターミナルで次の隠し設定を使います。</p>
+<pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
+<p>タブで開くファイルを自分で選ぶには、<code>useTabsWithFiles</code>の行で始め、タブごとに<code>tabbedFile</code>の行を加えます。これらはすべてルートファイルの最初の50行のうちに書きます。タブの名前は、丸括弧に入れて続けられます。</p>
+<pre>% !TEX useTabsWithFiles
+% !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
+% !TEX tabbedFile{Galois.log}
+% !TEX tabbedFile{~/Graphics/diagram.pdf}</pre>
+<p>パスは、ルートファイルのフォルダからの相対パスか、<code>~</code>で始まるホームフォルダからのパスか、フルパスで書きます。Finderで拡張子が隠れていても、拡張子は必ず書いてください。これらのタブには、ログ、PDFファイル、画像も表示できます。それぞれのファイルは自分で開いたときと同じように開くので、ソースファイルではプレビューも一緒に開くことがあります。</p>
+<p>ほかのマジックコメントについては、「ヘルプ」→「マジックコメントと隠し設定（英語）」を参照してください。</p>
+</main>
+</body>
+</html>

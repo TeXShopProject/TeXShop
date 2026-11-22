@@ -994,7 +994,6 @@ less
 lesson
 let
 letters
-letting
 level
 levels
 lf
@@ -1953,6 +1952,7 @@ we
 web
 well
 went
+what's
 when
 whenever
 which

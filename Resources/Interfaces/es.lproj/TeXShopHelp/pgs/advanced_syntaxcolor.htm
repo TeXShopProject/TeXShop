@@ -1,47 +1,67 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resaltado de sintaxis</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="resaltado de sintaxis; colores de sintaxis; colores; tema; expl3; entradas del índice; nota al pie; marcador; delimitadores; ancho completo; SyntaxColoringEnabled">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Más sobre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
+<li><a href="advanced_addengine.htm">Añadir motores de composición</a></li>
+<li><a href="advanced_formats.htm">Crear y usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX y LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificaciones</a></li>
+<li><a href="advanced_Japan.htm">Composición en japonés</a></li>
+<li><a href="advanced_root.htm">Establecer el archivo raíz de un proyecto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronización entre código y vista previa</a></li>
+<li><a href="advanced_removeaux.htm">Borrar archivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protección ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar un editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar y pegar, arrastrar y soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm" class="current">Resaltado de sintaxis</a></li>
+<li><a href="advanced_coloredtext.htm">Texto en color</a></li>
+<li><a href="advanced_plist.htm">Archivos de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizaciones</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Resaltado de sintaxis</h1>
+<p>La ventana de código muestra TeX en colores: los comentarios, las órdenes, las notas al pie, los marcadores <code>$</code> y <code>&amp;</code>, y los delimitadores <code>( )</code>, <code>{ }</code> y <code>[ ]</code> tienen cada uno su color. Código › Resaltado de sintaxis activa o desactiva el resaltado en el documento activo. Los documentos se abren con el resaltado activado; para abrirlos con él desactivado, use el ajuste oculto</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Resaltado de sintaxis</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="resaltado de sintaxis; colores para sintaxis; predeterminado; cambiar colores para sintaxis">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>Qué se resalta</h2>
+<ul>
+<li>Las órdenes son una barra invertida seguida de letras. Ajustes › Editor › Resaltado de sintaxis › «@ en nombres de comando» cuenta también <code>@</code> como letra, como en las órdenes internas de los paquetes.</li>
+<li>El texto de <code>\footnote</code>, <code>\footcite</code> y <code>\autocite</code> se muestra con el color «Nota al pie». El ajuste oculto <code>defaults write TeXShop SyntaxColorFootnote NO</code> colorea solo la orden.</li>
+<li>Código › Resaltar las entradas del índice muestra los argumentos de <code>\index</code> y <code>\esindex</code> con el color «Índice». Ajustes › Editor › Resaltado de sintaxis › «Resaltar las entradas del índice por omisión» lo activa al abrir los documentos.</li>
+<li>Código › Resaltar el código expl3 colorea además las funciones, variables y otras partes del código expl3, la capa de programación de LaTeX, para quienes escriben paquetes. «Resaltar el código expl3 por omisión», del mismo grupo, lo activa al abrir los documentos.</li>
+<li>«Realzar letras y símbolos de ancho completo», del mismo grupo, muestra con los colores «Ancho completo» las letras, dígitos y símbolos de ancho completo, que en un texto japonés se confunden fácilmente con caracteres ASCII.</li>
+</ul>
+<p>«Resaltar las entradas del índice» y «Resaltar el código expl3» se aplican al documento activo; cada ventana de código tiene su propia elección. Los archivos que no son fuentes TeX, como los archivos log, no se resaltan; consulte <a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a> para ver la lista de extensiones y cómo añadir una.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>Cuando el resaltado de sintaxis est&aacute; activado en la ventana de c&oacute;digo fuente, los comentarios, los comandos y los s&iacute;mbolos $, { y } se muestran con sus propios colores. Estos colores forman parte del tema. Se cambian en el grupo &laquo;Resaltado de sintaxis&raquo; de la categor&iacute;a Temas de la ventana de Ajustes. Cada tema tiene sus propios colores, de modo que el tema del modo claro y el del modo oscuro pueden usar colores distintos.</P>
-		<p>Las versiones anteriores de TeXShop usaban para estos colores ajustes ocultos como markerred, markergreen y markerblue. Ya no se usan.</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda avanzada</div><div id="header_title">Resaltado de sintaxis</div>
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adici&oacute;n de archivos de estilo y de macros personales a TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a>
-			<LI><a href="advanced_removeaux.htm">Borrado de archivos AUX</a>
-			<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar desde la ventana del PDF</a>
-			<li><a href="advanced_root.htm">Establecer un documento ra&iacute;z</a>
-			<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a>
-			<li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizaciones</a>
-			<li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a>
-			<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a>
-			<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a>
-			<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a>
-			<li><a href="advanced_context.htm">ConTeXt y MetaPost</a>
-			<li><a href="advanced_plist.htm">Archivos .plist</a>
-			<li><a href="advanced_menushortcuts.htm">Redefinici&oacute;n de atajos de teclado de men&uacute;s</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>Cambiar los colores</h2>
+<p>Los colores pertenecen al tema. Elíjalos en Ajustes › Temas:</p>
+<ul>
+<li>el grupo «Resaltado de sintaxis» tiene «Comentario», «Comando», «Nota al pie», «Marcador» e «Índice»;</li>
+<li>el grupo «Delimitadores» tiene los colores de <code>( )</code>, <code>{ }</code> y <code>[ ]</code>;</li>
+<li>el grupo «expl3» tiene function, __function, key, variable, __variable, argument y msg;</li>
+<li>el grupo «Resaltados» tiene, entre otros, los colores «Ancho completo»;</li>
+<li>el grupo «Sintaxis XML» tiene los colores para los archivos HTML y XML.</li>
+</ul>
+<p>Cada tema tiene sus propios colores, de modo que el tema de «Modo claro» y el de «Modo oscuro» pueden ser distintos.</p>
+</main>
+</body>
+</html>

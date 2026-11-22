@@ -1,64 +1,60 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>その他のファイルをTeXShopで開く</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="ファイルの種類; 拡張子; sty; cls; bib; log; aux; dtx; ins; Rnw; mp; md; dvi; ps; eps; pdf; OtherTeXExtensions; ファイル形式">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに詳しく</a></li>
+<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
+<li><a href="advanced_addengine.htm">タイプセットエンジンを追加する</a></li>
+<li><a href="advanced_formats.htm">TeXのフォーマットを作成して使う</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeXとLuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
+<li><a href="advanced_encoding.htm">エンコーディング</a></li>
+<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
+<li><a href="advanced_pdfsync.htm">ソースとプレビューの同期</a></li>
+<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">shell-escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使う</a></li>
+<li><a href="advanced_experiments.htm">実験</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストとドラッグ＆ドロップ</a></li>
+<li><a href="advanced_otherfiles.htm" class="current">その他のファイルをTeXShopで開く</a></li>
+<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
+<li><a href="advanced_coloredtext.htm">色付きの文字</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop内のファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>その他のファイルをTeXShopで開く</h1>
+<p>TeXShopはどんなテキストファイルでも開けるので、書類の隣にあるログファイル、auxファイルなどのTeXのファイルを読めます。PDFファイルや画像も開けます。</p>
 
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>その他のファイルをTeXShopで開く</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="TeXShopで開くことができるファイル・タイプの説明">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<h2>TeXのソースとして扱うファイル</h2>
+<p>次の拡張子を持つファイルと、拡張子のないファイルは、TeXShopではTeXのソースとして扱われます。シンタックスハイライト付きで表示され、タイプセットできます。</p>
+<pre>asy  bbx  bib  cbx  clo  cls  ctx  def  dtx  fd  fdd  gabc  gtex
+htx  html  ins  lbx  lhs  ltx  lua  lytex  ly  md  mf  mp  ptx
+Rnw  sk  skt  Stex  sty  tex  typ  xml</pre>
+<p><code>.log</code>、<code>.aux</code>、<code>.bst</code>、<code>.engine</code>、<code>.txt</code>などのその他のテキストファイルは、シンタックスハイライトなしのプレーンテキストとして開きます。</p>
+<p>ほかの拡張子のファイルもTeXのソースとして扱わせるには、ターミナルで隠し設定にその拡張子を加えます。たとえば、拡張子<code>mkiv</code>のConTeXtのファイルなら次のようにします。</p>
+<pre>defaults write TeXShop OtherTeXExtensions -array-add "mkiv"</pre>
 
-<body>	
+<h2>PDFファイルと画像</h2>
+<p>PDFファイルと、拡張子<code>.png</code>、<code>.jpg</code>、<code>.jpeg</code>、<code>.tif</code>、<code>.tiff</code>、<code>.eps</code>の画像は、専用のウインドウで開きます。DVIファイルとPostScriptファイル（<code>.dvi</code>、<code>.ps</code>）は、PDFに変換して表示します。</p>
 
-<div id="content_border">
-
-<p>
-TeXShopでは編集用にたいていのファイルを開くことができます。これにより「.log」や「.aux」などの拡張子が付いたTeX関連ファイルを読むことができます。「.jpg」 「.tif」 「.eps」あるいは「.pdf」などの拡張子が付いたファイルはグラフィック・ファイルとして開かれます。
-</p>
-
-<p>
-TeXShopはまた「.dvi」と「.ps」ファイルを開くこともできます。この場合、ファイルはpdfに変換され、pdfファイルが表示されます。
-</p>
-
-<p>
-TeXShopは「.ins」 「.dts」 「.sty」 「.cls」 「mf」 「.def」 「.fd」 「.ltx」 「.clo」それに「mp」形式のファイルを開いて処理することができます。テキストファイルならどのようなものでも開けます。
-</p>
-
-<p>
-TeXShopを一般的なエディタとして使おうというのは、よい考えではありません。TeXShopではUnicodeやその他の形式で書かれたファイルを読み込むことができますが、ファイルの保存は設定で選択した形式になります。したがって、TeXとはまるで関係のないファイルを編集するのにTeXShopを用いると、情報が失われる可能性があります。
-</p>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title">その他のファイルをTeXShopで開く</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
-			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
-			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
-			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
-			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
-			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
-			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
-			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
-			<li><a href="advanced_plist.htm">Plistファイル</a>
-			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-		</ul>
-	</div>
-	</body>
-
-</HTML>
+<h2>別の拡張子で保存する</h2>
+<p>TeXShopで保存しても、ファイルの拡張子は変わりません。新しい書類は、保存ダイアログのファイルの種類のメニューでsty、bib、mpなどの別の種類を選ばない限り、<code>.tex</code>ファイルとして保存されます。</p>
+<p>TeXShopは、ファイルを開いたときのエンコーディングで保存します。TeXShopはTeXとその関連ファイルのためのものなので、特殊な形式のファイルをTeXShopで編集して保存すると、内容が変わることがあります。<a href="advanced_encoding.htm">エンコーディング</a>を参照してください。</p>
+</main>
+</body>
+</html>

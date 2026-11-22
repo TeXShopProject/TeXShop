@@ -1,43 +1,49 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
-<title>Redefinición de atajos de teclado de menús</title>
-<meta content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU" name="copyright"/>
-<meta content="atajos de teclado; KeyEquivalents.plist" name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redefinir los atajos de teclado de los menÃºs</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="atajos de menÃº; atajos de teclado; Ajustes Teclado; Buscar por funciÃ³n; Buscar por tecla; Restaurar predeterminado; atajos de macros; KeyEquivalents.plist; funciones rÃ¡pidas de apps">
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-
-<div id="content_border">
-<p>Abre Ajustes y selecciona Teclado. Buscar por función encuentra nombres de comandos y rutas de menús. Buscar por tecla registra una pulsación y muestra los comandos y macros coincidentes con su prioridad de asignación. Escape, pulsar de nuevo el modo de búsqueda, cambiar de categoría o ventana y cerrar Ajustes finalizan la captura. Elige Mostrar en el editor de macros para editar una macro.</p>
-<p>Abre Ajustes y selecciona Teclado para editar los atajos de los menús. Selecciona un comando y haz clic en su atajo (o haz doble clic en el comando, o pulsa Retorno) y pulsa el nuevo atajo. Pulsa Escape para conservar el atajo anterior. Un atajo debe usar la tecla Comando o Control, o ser una tecla de función F1&#8211;F20. Si otro comando ya usa el atajo, TeXShop lo indica debajo de la lista y no lo cambia; pulsa otro atajo. Para eliminar un atajo, haz clic en «Eliminar atajo» (&#8854;) en el campo o pulsa Eliminar. La línea debajo de la lista muestra el atajo predeterminado del comando seleccionado; «Restaurar predeterminado» y «Restaurar todos&#8230;» restauran atajos. Los cambios se aplican de inmediato y se conservan al reiniciar TeXShop.</p>
-<p>Si otro comando de menú usa el atajo predeterminado, no se puede restaurar. Cambie primero el atajo del otro comando.</p>
-<p>Cuando la opción &#8220;Activar guardado automático y versiones&#8221; de &#8220;Documentos y guardado&#8221; está activada, macOS añade &#8220;Duplicar&#8221; y &#8220;Cerrar todo&#8221; al menú Archivo. Sus atajos se pueden cambiar como los de los demás comandos. &#8220;Guardar como...&#8221; conserva entonces el atajo que le asigna macOS y aparece atenuado en la lista; con el guardado automático desactivado, también se puede cambiar.</p>
-<p>Con la misma tecla y los mismos modificadores, los comandos del menú tienen prioridad sobre las macros, con sus atajos personalizados cuando los haya. Las macros pueden usar teclas liberadas mediante la personalización. Antes de asignar o restaurar a un comando una tecla usada por una macro, se pide confirmación. La macro sigue disponible en el menú, pero su atajo queda inactivo. El editor de macros marca los atajos inactivos e indica el comando y la tecla en conflicto. Al guardar solo se pregunta por teclas en conflicto nuevas o modificadas, incluidas las de macros importadas. Se puede volver a editar, guardar manteniendo las teclas inactivas o quitar las teclas en conflicto y guardar. Entre macros, la primera tiene prioridad. «Atajo no disponible» solo se aplica a conflictos entre comandos del menú. En la vista previa, Comando-F y Comando-G siguen los atajos de Buscar y Buscar siguiente, incluida su modificación o eliminación.</p>
-<p>Los atajos definidos en KeyEquivalents.plist (ver más abajo) siguen siendo los predeterminados. Los atajos de las macros se definen en el editor de macros, y las asignaciones de teclas que insertan texto, en su propio editor.</p>
-<p>Se pueden cambiar los atajos de teclado de los menús de TeXShop. Para hacerlo, lee los comentarios al comienzo del archivo «KeyEquivalents.plist» y efectúa los cambios apropiados. Estos cambios se hacen editando el archivo ~/Library/TeXShop/Menus/KeyEquivalents.plist con TeXShop. Asegúrate de editar y guardar el archivo con formato UTF-8 si usas caracteres Unicode.</p>
-<p>Al pulsar una fila de resultados, la captura de teclas sigue activa. Los resultados inactivos indican la asignación prioritaria y su tecla; las rutas de macros separan los grupos con delimitadores.</p>
-<p><a href="basic_preferences.htm#settings-search">Uso y búsqueda de ajustes</a></p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a></div>
-<div id="header_chapter">¿Cómo configuro TeXShop?</div><div id="header_title">Redefinición de atajos de teclado de menús</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Â¿CÃ³mo configuro TeXShop?</span></header>
+<nav id="menu">
 <ul>
-<li><a href="configure_preliminaries.htm">Preliminares</a>
-<li><a href="configure_correctinstall.htm">Obtener elementos nuevos de ~/Library/TeXShop</a>
-<li><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a>
-<li><a href="configure_convertgraphics.htm">Conversión automática de formatos gráficos</a>
-<li><a href="configure_defaults.htm">Ajustes predeterminados</a>
-<li><a href="configure_latextemplate.htm">Plantilla LaTeX predeterminada</a>
-<li><a href="configure_hidden.htm">Ajustes ocultos</a>
-<li><a href="configure_plist.htm">Archivos .plist</a>
-<li><a href="configure_panel.htm">Modificación del panel LaTeX</a>
-<li><a href="configure_autocompletion.htm">Modificación de la autocompleción</a>
-<li><a href="configure_menushortcuts.htm">Redefinición de atajos de teclado de menús</a>
-<li><a href="configure_macros.htm">Modificación del menú Macros</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
+<li><a href="configure_preliminaries.htm">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm">Cambios recomendados en los ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obtener nuevos elementos de la biblioteca</a></li>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
+<li><a href="configure_panel.htm">Modificar el panel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar las combinaciones de teclas</a></li>
+<li><a href="configure_menushortcuts.htm" class="current">Redefinir los atajos de teclado de los menÃºs</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Redefinir los atajos de teclado de los menÃºs</h1>
 
+<p>A cualquier comando de menÃº de TeXShop se le puede asignar el atajo que usted elija, o quitar su atajo, en Ajustes â€º Teclado. Los atajos de las macros se establecen en el editor de macros.</p>
 
+<h2 id="settings">Cambiar un atajo de menÃº</h2>
+<p>Elija TeXShop â€º Ajustesâ€¦ y seleccione Teclado. El grupo Â«Atajos de menÃºÂ» enumera los comandos de menÃº con sus atajos. Seleccione un comando y haga clic en su atajo (o haga doble clic en el comando, o pulse Retorno) y despuÃ©s pulse el atajo nuevo. Escape o Retorno conservan el anterior, y Tabulador pasa al siguiente. Un atajo debe usar la tecla Comando o Control, o ser una de las teclas de funciÃ³n F1â€“F20. Si otro comando ya usa el atajo, TeXShop lo indica bajo la lista y no cambia nada; pulse otro atajo. Para quitar un atajo, haga clic en Â«Eliminar atajoÂ» (âŠ–) en el campo o pulse la tecla de borrar.</p>
+<p>Los cambios tienen efecto de inmediato y se conservan al reiniciar TeXShop. La lÃ­nea bajo la lista muestra el atajo predeterminado del comando seleccionado. Â«Restaurar predeterminadoÂ» devuelve al comando seleccionado su atajo predeterminado, y Â«Restaurar todosâ€¦Â» hace lo mismo con todos los comandos. Si otro comando usa ahora el atajo predeterminado, Restaurar predeterminado no lo restaura; cambie primero el otro comando.</p>
+<p>Cuando Â«Activar guardado automÃ¡tico y versionesÂ» estÃ¡ activado en Ajustes â€º Documentos y guardado, macOS aÃ±ade Duplicar y Cerrar todo al menÃº Archivo; sus atajos se pueden cambiar como los de los demÃ¡s comandos. Guardar como... conserva entonces el atajo que le da macOS y aparece atenuado en la lista; con el guardado automÃ¡tico desactivado, tambiÃ©n se puede cambiar.</p>
+
+<h2 id="search">Encontrar un comando o una tecla</h2>
+<p>Â«Buscar por funciÃ³nÂ» encuentra un comando por su nombre o por la ruta de su menÃº. Â«Buscar por teclaÂ» encuentra quÃ© hace una tecla: pulse un atajo, y la lista muestra los comandos de menÃº y las macros que lo usan, cuÃ¡l de ellos tiene efecto y por quÃ© los demÃ¡s estÃ¡n inactivos. Al hacer clic en un resultado, la grabaciÃ³n sigue activa; un Escape sin modificadores, un nuevo clic en el modo de bÃºsqueda, elegir otra categorÃ­a, cambiar de ventana o cerrar Ajustes la terminan. Para una macro, elija Â«Mostrar en el editor de macrosÂ» para editarla. Un comando de menÃº encontrado con Â«Buscar ajustesÂ» abre Teclado con el comando en Â«Buscar por funciÃ³nÂ»; consulte <a href="basic_preferences.htm#settings-search">Buscar ajustes</a>.</p>
+
+<h2 id="macros">Atajos de las macros</h2>
+<p>Los atajos de las macros se establecen en la lista del editor de macros, como se describe en <a href="macros_define.htm">Definir macros nuevas</a>. Para la misma tecla y los mismos modificadores, un comando de menÃº tiene prioridad sobre una macro y, entre las macros, se la queda la primera que tiene la tecla. Asignar a un comando de menÃº un atajo que usa una macro pide confirmaciÃ³n; la macro sigue en el menÃº Macros, pero su atajo queda inactivo. El editor de macros marca los atajos inactivos y muestra quÃ© comando usa la tecla. Cuando guarda macros cuyos atajos nuevos usan comandos de menÃº, el editor de macros le permite volver a la ediciÃ³n, guardar con esos atajos inactivos, o eliminarlos y guardar.</p>
+<p>En la ventana de vista previa, Comando-F y Comando-G siguen a Buscar y a Buscar siguiente, incluidos los atajos que usted les asigne. Las combinaciones de teclas, que insertan texto al escribir un Ãºnico carÃ¡cter, se establecen en la Â«Lista de combinaciones de teclasÂ» de Ajustes â€º Teclado; consulte <a href="configure_autocompletion.htm">Modificar las combinaciones de teclas</a>.</p>
+
+<h2 id="legacy">MÃ©todos anteriores</h2>
+<p>Hay otras dos maneras de establecer atajos que siguen funcionando. Ajustes â€º Teclado es mÃ¡s sencillo y es lo recomendado.</p>
+<h3 id="keyequivalents">KeyEquivalents.plist</h3>
+<p>TeXShop lee el archivo ~/Library/TeXShop/Menus/KeyEquivalents.plist al abrirse. Los atajos establecidos allÃ­ pasan a ser los atajos predeterminados de Ajustes â€º Teclado, de modo que Restaurar predeterminado vuelve a ellos. Los comentarios del principio del archivo explican su formato; edÃ­telo con TeXShop, guÃ¡rdelo en UTF-8 y vuelva a abrir TeXShop.</p>
+<h3 id="app-shortcuts">Funciones rÃ¡pidas de apps de macOS</h3>
+<p>En Ajustes del Sistema de macOS, Teclado â€º Funciones rÃ¡pidas de tecladoâ€¦ â€º Funciones rÃ¡pidas de apps permite asignar un atajo a un comando de menÃº de TeXShop por su tÃ­tulo exacto, en el idioma de sus menÃºs. Un atajo asÃ­ deja de funcionar cuando TeXShop cambia el nombre del comando de menÃº, asÃ­ que establezca los atajos en Ajustes â€º Teclado.</p>
+</main>
 </body>
 </html>

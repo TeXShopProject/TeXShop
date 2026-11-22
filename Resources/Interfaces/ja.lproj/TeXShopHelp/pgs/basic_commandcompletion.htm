@@ -1,85 +1,70 @@
-<HTML>
-
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>コマンドの補完</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="TeXコマンドの省入力と補完辞書への用語の追加">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>コマンド補完</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="コマンド補完; Escapeキー; 呼び出すキー; マーク; 次のマークへ移動; ラベルと引用キーの補完">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
 <body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm">日本語の文書をタイプセットする</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveのインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopのインストール</a></li>
+<li><a href="basic_typesetting.htm">書類をタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_preview.htm">プレビューウインドウ</a></li>
+<li><a href="basic_edittricks.htm">編集のコツ</a></li>
+<li><a href="basic_find.htm">検索と置換</a></li>
+<li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルチェック</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">コマンド補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm">行列パネル</a></li>
+<li><a href="basic_macros.htm">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm">画像を入れる</a></li>
+<li><a href="basic_printing.htm">プリント</a></li>
+<li><a href="basic_preferences.htm">設定を変更する</a></li>
+<li><a href="basic_j_encoding.htm">日本語のエンコーディングと¥・\</a></li>
+<li><a href="basic_templates.htm">テンプレートとひな形</a></li>
+<li><a href="basic_miscellaneous.htm">ウインドウとタブ</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つWebサイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>コマンド補完</h1>
+<p>コマンドや環境の最初の数文字を入力してEscapeキーを押すと、TeXShopがコマンド補完ファイルから続きを補います。もう一度Escapeキーを押すと、同じ文字で始まるほかの候補に、ファイルの下から上の順に切り替わります。Shift＋Escapeで逆順になります。候補のひとつは入力したままのテキストです。たとえば<code>\begin{th</code>に続けてEscapeキーを押すと、<code>\begin{theorem}</code>などの環境が候補になります。</p>
 
-<div id="content_border">
+<p>補完では、語を補うだけでなく、もっと多くのことができます。<code>\begin{theorem}</code>の補完は<code>\end{theorem}</code>の行も書き、入力する場所にマーク（•）を置きます。最初のマークは選択されているので、入力するとマークが置き換わります。Escapeキーを何回か押すと、同じコマンドを引数の多い形で入れられることがよくあります。<code>\newc</code>から<code>\newcommand</code>を補うときがその例です。補完はバックスラッシュで始めなくてもかまいません。行頭や空白のあとでは、<code>sec</code>で<code>\sec</code>と同じ補完ができます。</p>
 
-<p>
-ソースエディタはコマンドの補完をサポートしています。単語の最初の数文字を打ち込み、エスケープ・キーを押してください。残りの文字が入力されます。もう一度エスケープ・キーを押すと、すべての補完可能な候補をくりかえし表示します。候補は補完辞書の下から上へ順に表示され、シフトキーを押しながらエスケープ・キーを押すと逆の順に表示されます。
-</p>
+<p>コマンド補完ファイルに該当するものがないときは、Escapeキーを押すとmacOSの単語補完が表示されます。</p>
 
-<p>
-補完を呼び出すキーは、「設定」→「キーボード」の「呼び出すキー」で、エスケープ・キーからタブ・キーに変えられます。「編集」→「実験...」のソースのパネルでも、ソースウインドウと同じキーを使います。
-</p>
+<h2>設定</h2>
 
-<!-- 
-<p>
-初めのうち補完の利便性は限定的なものでしょう──というのも、補完辞書がほとんどカラッポなので。辞書に単語を追加するには、単語を選択し、「ソース」メニューの「コマンド補完」から「用語を追加」を選びます。参考──このメニュー・コマンドはキー操作もできます。辞書全体を見たり編集したりするには、「設定」→「キーボード」で「コマンド補完ファイルを編集…」を押します。参考──補完は１語以上の複雑なものでもかまいませんし、補完したものの内側にカーソルを正確に配置することもできます。詳細についてはデフォルト・ファイルにあるサンプルを調べてみてください。
-</p>
- -->
+<p>「設定」→「キーボード」の「呼び出すキー」で、補完に使うキーをEscapeかTabから選びます。「編集」→「実験...」のソースの欄でも、ソースウインドウと同じキーを使います。</p>
 
-<p>
-初めのうちは、この補完機能はたいして便利でないかもしれません──というのも、補完辞書がほとんどカラッポだからです。辞書に単語を追加するには、単語を選択して「ソース」メニューの「コマンド補完リストに追加」を選んで下さい。このメニューコマンドはキー操作もできます。辞書全体を見たり編集したりするには、「設定」→「キーボード」で「コマンド補完ファイルを編集…」を押します。補完は１語以上の複雑なものでもかまいませんし、&del(補完したものの内側に)補完した文字列の途中にカーソルを配置することもできます。詳細についてはデフォルト・ファイルにあるサンプルを調べてみてください。
-</p>
+<p>コマンド補完ファイルに語を加えるには、その語を選択して「ソース」→「コマンド補完リストに追加」を選びます。ファイルを編集するには、「設定」→「キーボード」の「コマンド補完ファイルを編集…」をクリックします。新しい補完の書き方は、ファイルにある補完を見るのがいちばんの近道です。~/Library/TeXShop/CommandCompletionフォルダには、補完についての詳しい説明書もあります。</p>
 
-<!-- 
-<p>
-この機能はTeXShopの後々のバージョンで拡充されることでしょう。
-</p>
- -->
+<h2><a name="marks"></a>マーク</h2>
 
-<p>
-この機能はTeXShopの将来のバージョンで改良されるでしょう。
-</p>
+<p>マーク（•）は、あとで戻ってくる場所の目印です。メモ付きのマーク（•‹メモ›）には、そこに何を書くかも記せます。コマンド補完、マクロ、キーバインドにはマークを含められます。自分で入れるには、「編集」→「マーク」→「マークを挿入」（<kbd>⌘8</kbd>）と「メモ付きマークを挿入」（<kbd>⌃⌘8</kbd>）を使います。「メモ付きマークを挿入」は、•‹›を入れてカッコの間にカーソルを置くか、選択したテキストをメモにします。</p>
 
-<h3><a name="labels"></a>ラベルと引用キーの補完</h3>
-<p>「編集」→「ラベルと引用キーを補完」（F5）は、ラベルや引用キーを一覧から選んで補完します。\ref{、\pageref{、\eqref{、\autoref{に続けて（ラベルの最初の数文字を打ったあとでも）選ぶと、ファイル内で\labelに書いたラベルが一覧に出ます。\cite{などに続けて選ぶと、「設定」→「キーボード」の「ラベルと引用キーの補完」にある「BibDeskの引用キーも候補に出す」がオンのとき、BibDeskの引用キーが出ます。そのほかの場所では、macOSの単語の候補が出ます。多くのキーボードでは、fnキー（地球儀キー）を押しながらF5を押します。</p>
+<p>「次のマークへ移動」（<kbd>⌃⌘F</kbd>）と「前のマークへ移動」（<kbd>⌃⌘G</kbd>）は、次または前のマークをメモごと選択するので、入力するとそれが置き換わります。Optionキーを押しながら選ぶと「次のマークへ移動して削除」と「前のマークへ移動して削除」になり、•だけを削除してメモを選択します（<kbd>⌃⌥⌘F</kbd>、<kbd>⌃⌥⌘G</kbd>）。</p>
 
-<h3><a name="marks"></a>マーク</h3>
-<p>マーク（&#8226;）は、あとで戻ってくる場所の目印です。メモ付きマーク（&#8226;&#8249;メモ&#8250;）は、そこに何を書くかも示します。マークはコマンド補完、マクロ、キーバインドの中で使えるほか、「編集」→「マーク」の「マークを挿入」（&#8984;8）と「メモ付きマークを挿入」（&#8963;&#8984;8）で入れられます。「メモ付きマークを挿入」は &#8226;&#8249;&#8250; を入れて、括弧の間にカーソルを置きます。文字を選んでいれば、その文字がメモになります。</p>
-<p>「次のマークへ移動」（&#8963;&#8984;F）と「前のマークへ移動」（&#8963;&#8984;G）は、マークをメモごと選ぶので、そのまま入力すれば置き換わります。Optionキーを押すと「…して削除」になり、&#8226; だけを消してメモを選びます（&#8963;&#8997;&#8984;F、&#8963;&#8997;&#8984;G）。</p>
-<p>Optionキーを押しながら呼び出すキーを押すと次のマークへ、Controlキーを押しながら押すと前のマークへ移動します（呼び出すキーがエスケープ・キーならoption + escapeとcontrol + escape、タブ・キーならoption + tabとcontrol + tab）。ほかのユーティリティがこれらのキーを使っていて衝突するときは、「設定」→「キーボード」の「Option・Controlと呼び出すキーで、次・前のマークへ移動」をオフにしてください。</p>
-</div>
+<p>補完を呼び出すキーでもマークの間を移動できます。Escapeキーを使うときは、Option＋Escapeで次のマークへ、Control＋Escapeで前のマークへ移動します。Tabキーを使うときはOption＋TabとControl＋Tabです。ほかのアプリケーションがこれらのキーを使うときは、「設定」→「キーボード」の「Option・Controlと呼び出すキーで、次・前のマークへ移動」をオフにしてください。</p>
 
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">基本的なヘルプ</div>
-<div id="header_title">コマンドの補完</div>
+<h2><a name="labels"></a>ラベルと引用キーの補完</h2>
 
-		<div id="menu_border">
-		<ul>
-			<li><a href="basic_preliminaries.htm">まえがき</a>
-			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a>
-			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
-			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
-			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
-			<li><a href="basic_spelling.htm">スペルをチェックする</a>
-			<li><a href="basic_latexpanel.htm">Latexパネル</a>
-			<li><a href="basic_matrixpanel.htm">行列パネル</a>
-			<li><a href="basic_macros.htm">マクロ</a>
-			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
-			<li><a href="basic_graphics.htm">画像を入れる</a>
-			<li><a href="basic_printing.htm">印刷</a>
-			<li><a href="basic_preferences.htm">設定</a>
-			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
-			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
-			<li><a href="basic_edittricks.htm">編集上のコツ</a>
-			<li><a href="basic_autocompletion.htm">キーバインド</a>
-			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
-			<li><a href="basic_bugs.htm">バグレポートを送る</a>
-			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
-			<li><a href="basic_license.htm">使用許諾</a>
-		</ul>
-	</div>
+<p>「編集」→「ラベルと引用キーを補完」（<kbd>F5</kbd>）は、ラベルや引用キーを一覧から選んで補います。<code>\ref{</code>、<code>\pageref{</code>、<code>\eqref{</code>、<code>\autoref{</code>の直後か、そこにラベルの最初の数文字を入力したあとで選ぶと、ファイルの中で<code>\label</code>で定義したラベルが一覧になります。矢印キーで選んでReturnキーを押してください。<code>\cite{</code>などのあとでは、「設定」→「キーボード」の「BibDeskの引用キーも候補に出す」がオンなら、BibDeskの引用キーが一覧になります。それ以外の場所では、macOSの単語補完が表示されます。多くのキーボードでは、fnキー（地球儀キー）を押しながらF5キーを押します。</p>
+</main>
 </body>
-
-</HTML>
+</html>

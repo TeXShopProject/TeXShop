@@ -1,103 +1,71 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeX Live에 개인 파일 추가하기</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="개인 texmf 트리; ~/Library/texmf; TEXMFHOME; sty 파일 추가; 클래스 추가; bib 파일; bst 파일; kpsewhich">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm" class="current">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeX Live에 개인 파일 추가하기</h1>
+<p>TeX Live에 들어 있지 않은 스타일 파일, 클래스, 참고 문헌 데이터베이스 등은 개인 TeX 트리에 넣습니다. 개인 TeX 트리는 홈 폴더의 라이브러리 폴더 안에 있는 <code>texmf</code> 폴더, 즉 <code>~/Library/texmf</code>입니다. TeX Live의 모든 프로그램이 이 폴더의 파일을 찾으며, TeX Live 자체에 이름이 같은 파일이 있어도 이 폴더의 파일이 우선합니다. 파일을 추가한 뒤에 따로 등록할 필요는 없으며, 다음 조판부터 바로 사용됩니다.</p>
+<p>라이브러리 폴더는 Finder에서 가려져 있습니다. 이 폴더를 열려면 Finder에서 이동 › 폴더로 이동…을 선택하고 <code>~/Library</code>를 입력합니다. 그 안에 <code>texmf</code> 폴더가 아직 없으면 만듭니다.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Adding Personal Files to TeX Live</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="about TeXLive; add sty file">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>패키지를 추가하기 전에</h2>
+<p>CTAN에 있는 패키지는 대부분 이미 TeX Live에 들어 있으며, MacTeX는 그 전부를 설치합니다. TeX에 어떤 파일이 이미 있는지 알아보려면 TeXShop에서 파일 › 스타일 파일 열기...를 선택하고 <code>hyperref.sty</code>처럼 파일 이름을 입력합니다. 그러면 TeX가 사용할 파일이 열립니다. 개인 트리에는 TeX Live에 없는 패키지나, 따로 필요한 버전만 추가하십시오. 개인 트리의 파일이 우선하므로, TeX Live에 새 버전이 들어오면 개인 트리의 파일을 지우십시오. 그대로 두면 계속 이전 버전이 사용됩니다.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>
-Every TeX distribution expects to find personal additions (such as private style files or packages not part of the main distribution) in a local folder or directory.  The name of this folder is 'texmf' and it has a specific structure of sub-folders so that the TeX programs can find files correctly.</p>
-
-<p>On a Mac, the local texmf folder  is located in the Library folder  of your Home directory.  This is usually notated as "~/Library/texmf", where the "~" means "your home directory" (i.e. what you get when you click on the Home icon in a finder window.).</p>
-
-<h2>When should I put things in the local texmf ?</h2>
-
-Before putting anything into the local texmf folder, you should check that the relevant package isn't already part of TeXLive, and therefore included in the MacTeX distribution.  The easiest way to do this is to use the TeXLive utility.  This is especially true of packages on CTAN, most of which are included in TeXLive, and should already be available to you.
-
-If you know that a package is not available as part of TeXLive, then you should put it into your local texmf folder.
-
-<h2>What goes where?</h2>
-<p>
-The texmf folder contains a number of folders, and these folders themselves contain other folders.  For most users, the three top-level folders that are most important are the following:</p>
+<h2>파일을 넣는 위치</h2>
+<p><code>texmf</code> 안의 폴더는 TeX Live와 같은 구조를 따릅니다. 필요한 폴더를 만드십시오.</p>
 <table>
-<tr><th>Folder</th><th>What goes in it</th></tr> <tr><th>bibtex </th><td>This is where bib files and bst files go. It should contain at least the following folders: </td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>bst </td><td>Put bst files here.</td></tr> <tr><td>bib </td><td>Put bib files here.</td></tr> <tr><td>&nbsp;</td>
-</tr> <tr><th>tex </th><td>This is where new packages go. It should contain the following folders:</td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>latex </td><td>Put latex packages here.</td></tr> 
-<tr><td>plain </td><td>Put plain tex files here.</td></tr> 
-<tr><td>xelatex </td><td>Put xelatex specific packages here.</td></tr>
-<tr><td>xetex</td><td>Put plain xetex files here.</td></tr>
-<tr><td>context </td><td>Put context files here.</td></tr>
-<tr><td>generic </td><td>Put files that are usable with any TeX flavor here.</td></tr> 
-<tr><td>&nbsp;</td></tr> 
-<tr><th>doc </th><td>Put documentation files from packages installed in the tex folder  here.  Putting the documentation files here allows them to be found by the texdoc system (or the "Show Help for Package" function in the Help menu of TeXShop).</td></tr>
+<tr><th>폴더</th><th>내용</th></tr>
+<tr><td><code>tex/latex/</code></td><td>LaTeX 패키지와 클래스(.sty, .cls). 패키지마다 폴더를 따로 만듭니다</td></tr>
+<tr><td><code>tex/plain/</code></td><td>plain TeX용 파일</td></tr>
+<tr><td><code>tex/generic/</code></td><td>어느 포맷에서나 사용하는 파일</td></tr>
+<tr><td><code>bibtex/bib/</code></td><td>참고 문헌 데이터베이스(.bib)</td></tr>
+<tr><td><code>bibtex/bst/</code></td><td>참고 문헌 스타일(.bst)</td></tr>
+<tr><td><code>doc/</code></td><td>추가한 패키지의 문서. 도움말 › 패키지 도움말 보이기...가 이곳에서도 문서를 찾습니다</td></tr>
 </table>
-<p>Other top-level folders in include fonts, scripts, and source.  
-<P>
-<h2>Environment Variables</h2>
-On other Unix machines, tex is sometimes notified of the location
-of personal input files by setting the environment variables
-TEXINPUTS, BSTINPUTS, and BIBINPUTS. This is almost never necessary with TeX Live; instead put personal input files in appropriate subdirectories of ~/Library/texmf.</p>
+<p>예를 들어 직접 만든 매크로 패키지와 참고 문헌 데이터베이스는 다음 위치에 둡니다.</p>
+<pre>~/Library/texmf/tex/latex/mymacros/mymacros.sty
+~/Library/texmf/bibtex/bib/mybibliography.bib</pre>
+<p>이렇게 하면 문서를 어디에 저장하든 모든 문서에서 <code>\usepackage{mymacros}</code>와 <code>\bibliography{mybibliography}</code>를 사용할 수 있습니다.</p>
 
-Under very special circumstances, these environment variables can be set. 
-Mac OS X allows users to notify programs about  environment variables by creating a file in their home directory named ~/.MacOSX/environment.plist.
-These environment variables get picked up by all user shells and all Carbon and Cocoa programs, so caution should be used when creating the file. 
- </P>
-
-<P>
-Below is a sample environment.plist file sent me by Nathan Potter; thanks! 
-For further details, consult</p>
-<p> <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>.
-
- </P>
-<br>
-
-
-<center><img align=center src="environment.tiff" border=3></center>
-
-
-
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Adding Personal Sty and Macro Files to TeX Live</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live </a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>폴더 확인하기</h2>
+<p>TeX가 개인 트리로 사용하는 폴더를 확인하려면 터미널에서 다음과 같이 입력합니다.</p>
+<pre>kpsewhich -var-value TEXMFHOME</pre>
+<p>설치할 때 따로 설정하지 않았다면 Mac에서는 <code>~/Library/texmf</code>입니다. TeX가 어느 파일을 읽을지 확인하려면 예를 들어 <code>kpsewhich mymacros.sty</code>를 입력합니다.</p>
+<p>TeX Live 자체의 폴더에는 파일을 추가하지 마십시오. <a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a>를 참고하십시오.</p>
+</main>
+</body>
+</html>

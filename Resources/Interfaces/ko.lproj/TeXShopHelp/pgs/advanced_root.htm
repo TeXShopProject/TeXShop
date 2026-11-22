@@ -1,83 +1,79 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>프로젝트 루트 파일 설정</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="루트 파일; % !TEX root; 프로젝트; 장 파일; include; input; 편집/보기 윈도우 맞바꾸기; 프로젝트 루트 파일">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm" class="current">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>프로젝트 루트 파일 설정</h1>
+<p>큰 문서는 흔히 여러 파일로 나뉩니다. 프리앰블이 있는 루트 파일이 장마다 따로 된 파일을 포함하는 방식입니다. 예를 들어 루트 파일 <code>Main.tex</code>는 다음과 같을 수 있습니다.</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p><code>two.tex</code>를 편집할 때 TeXShop은 프리앰블이 없는 장 파일이 아니라 <code>Main.tex</code>를 조판해야 합니다. 이를 TeXShop에 알리려면 각 장 파일의 처음 20줄 안에 다음 줄을 넣습니다.</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>루트 파일 자체에는 이런 줄이 필요 없습니다. 루트 파일은 다음과 같이 지정할 수 있습니다.</p>
+<ul>
+<li>장 파일과 같은 폴더에 있으면 이름만 씁니다: <code>Main.tex</code></li>
+<li>장 파일의 폴더를 기준으로 한 상대 경로로 씁니다: <code>../Main.tex</code> 또는 <code>../../Main.tex</code></li>
+<li>전체 경로로 씁니다: <code>/Users/me/Book/Main.tex</code>. 이 경우 프로젝트를 옮기면 경로를 바꿔야 합니다.</li>
+</ul>
+<p>매크로 메뉴의 Root 매크로가 이 줄을 넣어 줍니다. 이 매크로는 루트 파일을 묻고, 상대 경로와 절대 경로 중 하나로 된 줄을 넣으며, 이미 있는 root 줄은 바꿉니다.</p>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Setting a Project Root File</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="root file; several smaller files; project">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>root 줄의 효과</h2>
+<ul>
+<li>장 파일에서 조판하면 루트 파일이 조판되고, 루트 파일의 미리보기 윈도우에 문서 전체가 표시됩니다. <code>% !TEX program</code> 줄처럼 조판에 관한 매직 코멘트는 루트 파일에 넣습니다.</li>
+<li>편집 › 오류 지점으로 이동은 오류가 있는 파일이 열려 있지 않으면 그 파일을 열고 해당 줄로 이동합니다.</li>
+<li>미리보기 윈도우에서 동기화하면 클릭한 곳이 들어 있는 장 파일이 열립니다. <a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a>를 참고하십시오.</li>
+<li>파일 › 부수파일 삭제는 루트 파일의 부수 파일을 삭제합니다. <a href="advanced_removeaux.htm">부수 파일 삭제</a>를 참고하십시오.</li>
+<li>장 파일에서 윈도우 › 편집/보기 윈도우 맞바꾸기(<kbd>⌘1</kbd>)를 선택하면 루트 파일의 미리보기 윈도우가 앞으로 옵니다. 미리보기 윈도우에서 다시 선택하면 원래 있던 소스 윈도우로 돌아가며, 소스 윈도우에서 오지 않았다면 루트 파일로 갑니다.</li>
+</ul>
 
-<BODY>
-	<div id="content_border">
-		<P>It is common to split large input files into several smaller files controlled by a root file. For instance, the root file of a book project might have the form</P>
-		<dl>
-			<dd><tt>\documentclass[11pt]{book}</tt>
-			<dd><tt>\includeonly{Chapter2/two}</tt>
-			<dd><tt>\textwidth = 6.5 in</tt>
-			<dd><tt>\textheight = 9 in</tt>
-			<dd><tt>\begin{document}</tt>
-			<dd><tt>\include{Chapter1/one}</tt>
-			<dd><tt>\include{Chapter2/two}</tt>
-			<dd><tt>\include{Chapter3/three}</tt>
-			<dd><tt>\end{document}</tt>
-		</dl>
-		<p>This root file contains formatting commands for the entire project, but the subject matter is contained in files one.tex, two.tex, and three.tex. The second line above tells TeX to typeset chapter two only, speeding up typesetting while chapter two is being written. When the book is complete, this line can be commented out and the entire book can be typeset a final time.</p>
-		<p>While chapter two is being written, it would be natural to open the file two.tex in TeXShop. But after changes are made to this input file, TeXShop should not typeset two.tex; instead it should typeset the root file. TeXShop can be told to do so as follows.  Indicate the root file in one of the first twenty lines of each chapter file by writing
-	<dl>
-	<dd> % !TEX root = ../Main.tex
-	</dl>
-	</p>
-	<p> Note that only the included chapter files need this command; the Root file itself requires no modification.</p>
-		<p>If the root file is in the same folder as the input file, it is enough to give its name, including the &quot;.tex&quot; extension. For instance, if the root file is named Main, you can enter Main.tex in the first source line or the dialog window.</p>
-		<p>If the root file is in a different directory, its name can be given relative to the location of the input file. In the above example, the various chapters are contained in subfolders within the folder containing the root file. In that case, you could enter ../Main.tex in the first source line or dialog window, showing the location of the root file relative to the chapter input file.</p>
-		<p>Finally, the name of the root can be given with an absolute name, as in /Users/me/Main.tex.</p>
-		<p>If the entire TeX source is contained in a single file, it is not necessary to set the root project name.</p>
-		<p> TeXShop has a Macro in the Macros menu which makes setting this "root line" almost automatic.</p>
-		
-		<p> Setting a project root is also important for synchronization. If input lines have a "% !TEX root = ..." line, then synchronizing from the Preview window to the Source window will open the appropriate source chapter file and bring make that source window active. </p>		
-		<p> If a root file is active, typing command-1 when a given source window is at the front will activate the corresponding preview window. Typing command-1 again will activate the source window. Since a preview window may correspond to several source windows, command-1 will activate the source window which previously activated the preview window, or the root source if no previous command-1 was entered.  
-		</p>
-		<ul>
-			
-		</ul>
-		
-<p> TeXShop had an alternate method of setting the root file, activated by the menu command "Set Project Root..." This method will continue to be supported in the future, but should not be used because the "% !TEX root = ..." method is more robust. Consequently, the "Set Project Root..." command has been removed from TeXShop menus. When the "Set Project Root.." command was used to indicate a root file, TeXShop remembered the name of the root file by writing the information to a file with the same name as the input file and the extension &quot;.texshop&quot;. For instance, if the input for chapter two was in two.tex, TeXShop wrote the name of the root in two.texshop in the same directory as two.tex.  If the file two.texshop was later thrown away, TeXShop would revert to typesetting two.tex rather than Main.tex. </p>
+<h2>장 파일 열기</h2>
+<p>root 줄이 있는 장 파일을 열면 TeXShop은 루트 파일과 그 미리보기 윈도우도 함께 엽니다. 이 동작은 설정 › 일반 › 프로젝트 루트 파일의 두 항목으로 조절합니다. “문서를 열 때 루트 파일 열기”는 이 동작을 켜거나 끄며, “루트 파일 창을 최소화”는 루트 파일의 소스 윈도우를 Dock으로 보냅니다. 장을 작업하는 동안에는 루트 파일을 편집할 일이 거의 없기 때문입니다.</p>
 
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Setting a Project Root File</div>
+<h2>프로젝트 전체에서 찾기 및 대치</h2>
+<p>프로젝트의 모든 파일을 한 번에 검색하려면 프로젝트 파일 중 하나에서 편집 › 찾기 › 같은 TEX root를 가진 TeX 소스에서 찾기…를 선택합니다. 루트 파일과, root 줄로 그 루트 파일을 지정한 파일을 검색합니다. <a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a>와 <a href="basic_find.htm">찾기 및 대치</a>를 참고하십시오.</p>
 
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>.texshop 파일로 지정한 루트 파일</h2>
+<p>장 파일 옆에 확장자가 <code>.texshop</code>인 파일(예: <code>two.tex</code>에 대한 <code>two.texshop</code>)이 있으면 이 파일로도 루트 파일을 지정할 수 있으며, TeXShop은 지금도 이 파일을 읽습니다. 이런 파일을 만드는 메뉴 명령은 없습니다. 소스와 함께 옮겨지는 <code>% !TEX root</code> 줄을 사용하십시오.</p>
+</main>
+</body>
+</html>

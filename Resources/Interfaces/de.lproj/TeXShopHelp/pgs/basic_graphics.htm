@@ -1,65 +1,62 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grafiken einbinden</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Grafiken einbinden; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; TIFF umwandeln">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
+<li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
+<li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
+<li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_macros.htm">Makros</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm" class="current">Grafiken einbinden</a></li>
+<li><a href="basic_printing.htm">Drucken</a></li>
+<li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
+<li><a href="basic_license.htm">Lizenz</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Grafiken einbinden</h1>
 
-	<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Grafik einf&uuml;gen</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="So f&uuml;gen Sie Grafiken in Ihr Dokument ein.">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">
-		<p>Die Programme pdftex und pdflatex k&ouml;nnen Grafikdateien in den Formaten pdf, jpg, png oder mps verwenden. Das native Grafikformat von Mac OS X ist pdf (portable document format); solche Dateien lassen sich in jeder Gr&ouml;&szlig;e gut drucken. Wahrscheinlich werden die meisten k&uuml;nftigen Grafikprogramme f&uuml;r den Mac pdf ausgeben.</p>
-		<p>Um Grafiken zu verwenden, f&uuml;gen Sie die folgende Zeile in die Pr&auml;ambel Ihrer Quelldatei ein:</p>
-		<dl>
-			<dd><tt>\usepackage{graphicx}</tt>
-		</dl>
-		<p>Wenn Sie eine Grafikdatei einf&uuml;gen wollen, beispielsweise &bdquo;f1.pdf&ldquo;, benutzen Sie den Befehl</p>
-		<dl>
-			<dd><tt>\includegraphics[width=2in]{f1}</tt>
-		</dl>
-		<p>Indem Sie die angegebene Breite in diesem Befehl &auml;ndern, k&ouml;nnen Sie die Gr&ouml;&szlig;e der Grafik beim Setzen anpassen. Probieren Sie aus, welche Gr&ouml;&szlig;e Ihnen zusagt.</p>
-		<p>Sollten Sie schon fr&uuml;her TeX benutzt haben, liegen Ihre Grafiken vielleicht im eps-Format vor. Diese Dateien m&uuml;ssen in das pdf-Format umgewandelt werden, bevor sie mit pdftex und pdflatex gesetzt werden. Ab TeX Live 2011 geschieht das automatisch, sofern die Quelldatei das Paket graphicx l&auml;dt.</p>
-		<p>Einzelne eps-Dateien k&ouml;nnen Sie in das pdf-Format umwandeln, indem Sie sie in TeXShop &ouml;ffnen. Dabei wird die eps-Datei automatisch in pdf umgewandelt; die pdf-Datei wird auf die Festplatte geschrieben, und die eps-Datei bleibt erhalten. Anschlie&szlig;end wird die pdf-Datei ge&ouml;ffnet.</p>
-		<p>Die Autoren von pdflatex und die Autoren des Grafikpakets graphicx haben es einfach gemacht, Grafikdateien in ein LaTeX-Dokument einzuf&uuml;gen, das mit pdflatex gesetzt wird &ndash; selbst wenn das Dokument sp&auml;ter mit Standard-LaTeX gesetzt und f&uuml;r die Weitergabe an andere in eine dvi-Datei umgewandelt wird. Das kann vorkommen, wenn Sie Quelldateien mit einem Kollegen austauschen, der gew&ouml;hnliches LaTeX benutzt und eps-Grafiken statt pdf-Grafiken braucht. Wenn Sie eine Grafik einf&uuml;gen wollen, beispielsweise &bdquo;f1.pdf&ldquo;, benutzen Sie den folgenden Befehl und lassen dabei die Endung &bdquo;.pdf&ldquo; bzw. &bdquo;.eps&ldquo; weg:</p>
-		<dl>
-			<dd><tt>\includegraphics[width=2in]{f1}</tt>
-		</dl>
-		<p>Dieser Befehl l&auml;sst TeX die Datei &bdquo;f1.pdf&ldquo; einlesen, wenn der Text mit pdflatex gesetzt wird, aber die Datei &bdquo;f1.eps&ldquo;, wenn der Text mit latex gesetzt wird.</p>
-		<p>Sie k&ouml;nnen auch tif- und tiff-Grafiken verwenden. Daf&uuml;r hat TeXShop den Men&uuml;befehl &bdquo;TIFF umwandeln&ldquo;, der die Dateien in png-Dateien umwandelt, die pdftex und pdflatex verstehen. Der Befehl ist verf&uuml;gbar, wenn das Quelltextfenster aktiv ist. Wenn Sie ihn w&auml;hlen, erscheint ein &Ouml;ffnen-Dialog, der alle Dateien im Ordner der Quelldatei anzeigt. Nur tif- und tiff-Dateien sind ausw&auml;hlbar, alle anderen sind ausgegraut. W&auml;hlen Sie eine oder mehrere Dateien und klicken Sie auf &bdquo;Konvertieren&ldquo;. Alle gew&auml;hlten Dateien werden in png-Dateien umgewandelt; die tiff-Dateien bleiben unver&auml;ndert.</p>
-		<p>Wenn Sie einige &auml;ltere Dateien mit eps-Grafiken haben oder in TeX das PostScript-Paket pstricks benutzen, k&ouml;nnen Sie statt mit pdflatex &bdquo;&Uuml;ber DVI&ldquo; setzen. Einzelheiten finden Sie im Abschnitt &bdquo;<a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a>&ldquo; der TeXShop-Hilfe. In diesem Modus m&uuml;ssen eps-Dateien nicht in das pdf-Format umgewandelt werden. F&uuml;r neue Projekte mit vielen eps-Dateien ist dieser Modus jedoch keine gute Wahl, weil die eps-Grafiken bei jedem Setzen implizit in pdf umgewandelt werden m&uuml;ssen; bei komplizierten Grafiken verlangsamt das das Setzen enorm. Im Modus &bdquo;&Uuml;ber DVI&ldquo; findet die Umwandlung von PostScript in pdf n&auml;mlich ganz am Ende des Setzens statt, nachdem die Grafiken in das vollst&auml;ndige Dokument eingebettet wurden.</p>
-</div>
+<p>Beim direkten Setzen nach PDF bindet LaTeX Grafiken in den Formaten PDF, PNG und JPEG ein. PDF hält Strichzeichnungen und Text in jeder Größe scharf; verwenden Sie es daher für Diagramme und Plots. PNG und JPEG eignen sich für Bildschirmfotos und Fotografien.</p>
+<p>Laden Sie das Paket graphicx in der Präambel:</p>
+<pre>\usepackage{graphicx}</pre>
+<p>und binden Sie eine Grafik dort ein, wo sie erscheinen soll:</p>
+<pre>\includegraphics[width=0.8\textwidth]{diagram}</pre>
+<p>Die Endung kann wegfallen; LaTeX sucht dann nach <code>diagram.pdf</code>, <code>diagram.png</code>, <code>diagram.jpg</code> und den anderen Formaten, die es kennt. Ändern Sie die Breite, um die Größe der Grafik zu ändern. Legen Sie Grafikdateien in den Ordner des Dokuments oder geben Sie einen Pfad relativ dazu an, etwa <code>figures/diagram</code>.</p>
 
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Grundlagen</div>
-<div id="header_title">Grafik einf&uuml;gen</div>
+<h2>EPS-Dateien</h2>
+<p>TeX Live wandelt EPS-Grafiken beim Setzen mit epstopdf automatisch in PDF um, sofern das Dokument graphicx lädt. Die umgewandelte Datei <code>diagram-eps-converted-to.pdf</code> wird neben die EPS-Datei geschrieben und von da an verwendet.</p>
+<p>Auch eine in TeXShop geöffnete EPS-Datei wird umgewandelt: TeXShop schreibt eine gleichnamige PDF-Datei daneben und zeigt sie an.</p>
 
+<h2>TIFF-Dateien</h2>
+<p>LaTeX kann keine TIFF-Dateien einbinden. Wählen Sie Ablage › TIFF umwandeln, während ein Quelltextfenster aktiv ist: Ein Dialog zeigt den Ordner des Dokuments, in dem sich nur TIFF-Dateien auswählen lassen. Wählen Sie eine oder mehrere aus und klicken Sie auf „Konvertieren“. Jede wird in eine gleichnamige PNG-Datei im selben Ordner umgewandelt; die TIFF-Dateien bleiben erhalten.</p>
 
-	<div id="menu_border">
-		<UL>
-			<LI><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-			<LI><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-			<LI><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
-			<LI><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-			<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-			<li><a href="basic_spelling.htm">Rechtschreibpr&uuml;fung</a></li>
-			<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-			<li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
-			<li><a href="basic_macros.htm">Makros</a></li>
-			<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-			<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
-			<li><a href="basic_printing.htm">Drucken</a></li>
-			<li><a href="basic_preferences.htm">Einstellungen &auml;ndern</a></li>
-			<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-			<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
-			<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-			<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
-			<li><a href="basic_bugs.htm">Fehlerbericht &uuml;bermitteln</a></li>
-			<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
-			<li><a href="basic_license.htm">Lizenz</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+<h2>Setzen über DVI</h2>
+<p>Dokumente mit PostScript-Code, etwa mit dem Paket pstricks, werden mit der Methode „Über DVI“ gesetzt, die standardmäßig dvips aufruft. Grafiken werden dann im EPS-Format eingebunden; PDF-, PNG- und JPEG-Dateien lassen sich nicht verwenden. Siehe <a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a>.</p>
+</main>
+</body>
+</html>

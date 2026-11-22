@@ -1,73 +1,109 @@
-h6 {
-	margin-top: 1ex;
-	margin-bottom: 3ex;
-	font-family: "Lucida Grande", Helvetica, Arial;
-	font-size: 12px;
-	font-weight: normal;
+:root {
+	color-scheme: light dark;
+	--text: #1d1d1f;
+	--secondary: #6e6e73;
+	--background: #ffffff;
+	--line: #d2d2d7;
+	--link: #1d1d1f;
+	--accent: #0066cc;
 }
 
-#right {
-	font-weight: bold;
-	height: auto;
-	font-size: 12pt;
-	border-color: gray;
-	left: 28ex;
-	border-left-style: solid;
-	padding-left: 2ex;
-	border-width: thin;
-	text-align: left;
-	font-family: "Lucida Grande", Helvetica, Arial;
-	width: 27ex;
-	top: 0px;
-	position: absolute;
+@media (prefers-color-scheme: dark) {
+	:root {
+		--text: #f5f5f7;
+		--secondary: #a1a1a6;
+		--background: #1e1e1e;
+		--line: #424245;
+		--link: #f5f5f7;
+		--accent: #4da3ff;
+	}
 }
 
-a {
-	text-decoration: none;
-	color: #4c4c4c;
-}
-
-:hover {
-	text-decoration: underline;
-}
-
-#middle {
+html, body {
 	height: 100%;
-	position: absolute;
-	left: 48%;
-	top: 0pt;
-	width: 2%;
+	margin: 0;
 }
 
-#left {
-	border-right-color: gray;
-	font-family: "Lucida Grande", Helvetica, Arial;
-	top: 0pt;
-	font-size: 18pt;
-	height: 100%;
-	font-weight: bold;
-	position: absolute;
-	width: 18ex;
-	background-position: center;
-	left: 0px;
-	border-width: thin;
+body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: system-ui, -apple-system, sans-serif;
+	color: var(--text);
+	background: var(--background);
 }
 
 #frame {
-	color: #4c4c4c;
-	font-family: "Lucida Grande", Helvetica, Arial;
-	top: 15%;
-	font-size: 18pt;
-	height: 80%;
-	font-weight: bold;
-	position: absolute;
-	margin-left: -18ex;
-	width: 36ex;
-	left: 50%;
+	display: flex;
+	align-items: center;
+	gap: 40px;
+	padding: 32px;
+}
+
+#left {
 	text-align: center;
+	min-width: 200px;
 }
 
-p {
-	margin: 1ex;
+#left img {
+	display: block;
+	margin: 0 auto 12px;
+	width: 120px;
+	height: 120px;
 }
 
+#left h1 {
+	font-size: 26px;
+	font-weight: 700;
+	margin: 0 0 6px;
+}
+
+#left .site a {
+	font-size: 13px;
+	color: var(--accent);
+	text-decoration: none;
+}
+
+#right {
+	border-left: 1px solid var(--line);
+	padding-left: 40px;
+}
+
+#right ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#right li {
+	margin: 0 0 12px;
+	font-size: 17px;
+	font-weight: 600;
+}
+
+#right li small {
+	font-size: 12px;
+	font-weight: 400;
+	color: var(--secondary);
+}
+
+#right a {
+	color: var(--link);
+	text-decoration: none;
+}
+
+#right a:hover {
+	color: var(--accent);
+	text-decoration: underline;
+}
+
+#right .group {
+	margin-top: 22px;
+	padding-top: 16px;
+	border-top: 1px solid var(--line);
+}
+
+#right .group li {
+	font-size: 14px;
+	font-weight: 400;
+}

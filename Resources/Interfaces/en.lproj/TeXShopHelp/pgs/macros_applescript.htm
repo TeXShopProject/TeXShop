@@ -1,59 +1,48 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppleScript Macros</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macros; AppleScript; --AppleScript; --AppleScript direct; ScriptRunner; View pdf with Preview">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Macros Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminaries</a></li>
+<li><a href="macros_default.htm">Understanding Default Macros</a></li>
+<li><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
+<li><a href="macros_define.htm">Defining New Macros</a></li>
+<li><a href="macros_applescript.htm" class="current">AppleScript Macros</a></li>
+<li><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
+<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
+<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
+<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
+<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>AppleScript Macros</h1>
+<p>A macro whose contents begin with</p>
+<pre>--AppleScript</pre>
+<p>or</p>
+<pre>--AppleScript direct</pre>
+<p>runs as an AppleScript when it is chosen; the case of the letters does not matter. For example, Macros › Applescript › View pdf with Preview opens the PDF of the active document in Preview, once the PDF has been typeset. Its contents are</p>
+<pre>--AppleScript direct
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>AppleScript Macros</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="macros; applescript">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+tell application "Preview"
+  activate
+  open POSIX file #PDFPATH#
+end tell</pre>
+<p>Before the script runs, TeXShop replaces #PDFPATH# with the path of the PDF; <a href="macros_defapplescript.htm">Defining AppleScript Macros</a> lists all such strings. “View pdf with Adobe Acrobat Reader DC” in the same submenu does the same with Adobe Acrobat.</p>
 
-<BODY>
-	<div id="content_border">
-		<P>If a macro begins with the string</P>
-		<div id="source">
-			--AppleScript
-		</div>
-or
-		<div id="source">
-			--AppleScript direct
-		</div>
-		<p>then the resulting applescript code will run when the Macro is chosen. For example, consider the macro titled &quot;View pdf with Acrobat.&quot; Choosing this macro when the source file is active (and the pdf file has been created) will start Adobe Acrobat Reader and open the output pdf file in that program. The corresponding applescript code reads</p>
-		<div id="source">
-			--AppleScript direct <br>
-			tell application &quot;Acrobat Reader 5.0&quot;<br>
-			<br>
-				<dd>activate</dd>
-				<dd>open POSIX file #PDFPATH#</dd>
-			<br>
-			end tell
-		</div>
-<p> Commands beginning with "--AppleScript direct" are run directly by TeXShop. During the time this applescript is running, TeXShop's event loop is not active. Consequently, the script cannot call TeXShop to perform an
-action which might require user input. For example, it cannot ask TeXShop to run LaTeX, because if the
-LaTeX file has an error, the console will appear and wait for user input, but such input would not be recognized.</p>
-<p> Commands beginning with "--AppleScript" are run by a small auxiliary program in the TeXShop application bundle. Such commands can ask TeXShop to perform actions which might require user input, because in that
-case the auxiliary program will temporarily halt but TeXShop will remain active.</p>
-<p> Thus the syntax "--AppleScript direct" is appropriate for routine macros, but "--AppleScript" may be needed for fancy ones.</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Macros Help</div>
-<div id="header_title">AppleScript Macros</div>
-
-	<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Preliminaries</a></li>
-			<LI><a href="macros_default.htm">Understanding Default Macros</a></li>
-			<LI><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
-			<LI><a href="macros_define.htm">Defining New Macros</a></li>
-			<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
-			<LI><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
-			<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
-			<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
-			<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
-			<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
-		</UL>
-	</div
-	</BODY>
-
-</HTML>
+<h2 id="direct">--AppleScript direct and --AppleScript</h2>
+<p>A script beginning with <code>--AppleScript direct</code> is run by TeXShop itself. While it runs, TeXShop does not respond to anything else, so the script cannot ask TeXShop to do something that might need your input. For example, it cannot ask TeXShop to run LaTeX: if the file had an error, the console would wait for your input, which TeXShop could not receive.</p>
+<p>A script beginning with <code>--AppleScript</code> is run by ScriptRunner, a small program inside TeXShop. Such a script can ask TeXShop to do things that might need your input, because ScriptRunner waits while TeXShop stays active.</p>
+<p>So <code>--AppleScript direct</code> suits simple macros, while <code>--AppleScript</code> is needed for scripts that typeset or otherwise work with TeXShop.</p>
+</main>
+</body>
+</html>

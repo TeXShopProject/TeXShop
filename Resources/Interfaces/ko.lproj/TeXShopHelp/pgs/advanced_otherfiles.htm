@@ -1,75 +1,61 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeXShop으로 다른 파일 열기</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="파일 유형; 확장자; sty; cls; bib; log; aux; dtx; ins; Rnw; mp; md; dvi; ps; eps; pdf; OtherTeXExtensions">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
+<li><a href="advanced_moretetex.htm">TeX Live 자세히 알아보기</a></li>
+<li><a href="advanced_otherdistributions.htm">다른 TeX 배포판과 함께 사용하기</a></li>
+<li><a href="advanced_addengine.htm">조판 엔진 추가하기</a></li>
+<li><a href="advanced_formats.htm">TeX 포맷 만들고 사용하기</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX와 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt와 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">인코딩</a></li>
+<li><a href="advanced_Japan.htm">일본어 조판</a></li>
+<li><a href="advanced_root.htm">프로젝트 루트 파일 설정</a></li>
+<li><a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a></li>
+<li><a href="advanced_removeaux.htm">부수 파일 삭제</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
+<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_experiments.htm">실험</a></li>
+<li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
+<li><a href="advanced_otherfiles.htm" class="current">TeXShop으로 다른 파일 열기</a></li>
+<li><a href="advanced_syntaxcolor.htm">구문 하이라이트</a></li>
+<li><a href="advanced_coloredtext.htm">텍스트 색상</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop의 파일</a></li>
+<li><a href="advanced_localization.htm">현지화</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeXShop으로 다른 파일 열기</h1>
+<p>TeXShop은 어떤 텍스트 파일이든 열 수 있으므로, 문서 옆에 생기는 로그 파일, aux 파일 등 TeX의 다른 파일도 읽을 수 있습니다. PDF 파일과 그림도 열 수 있습니다.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Opening Other Files with TeXShop</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="log; aux; jpg; tif; tiff; eps; pdf; dvi; ps; ins; dts; sty; cls; mf; def; fd; ltx; clo; mp">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>TeX 소스로 취급하는 파일</h2>
+<p>다음 확장자를 가진 파일과 확장자가 없는 파일은 TeXShop에서 TeX 소스로 취급합니다. 이런 파일은 구문 하이라이트로 표시되며 조판할 수 있습니다.</p>
+<pre>asy  bbx  bib  cbx  clo  cls  ctx  def  dtx  fd  fdd  gabc  gtex
+htx  html  ins  lbx  lhs  ltx  lua  lytex  ly  md  mf  mp  ptx
+Rnw  sk  skt  Stex  sty  tex  typ  xml</pre>
+<p><code>.log</code>, <code>.aux</code>, <code>.bst</code>, <code>.engine</code>, <code>.txt</code> 파일 같은 그 밖의 텍스트 파일은 구문 하이라이트 없이 일반 텍스트로 열립니다.</p>
+<p>다른 확장자를 가진 파일도 TeX 소스로 취급하게 하려면 터미널에서 숨겨진 설정으로 확장자를 추가합니다. 예를 들어 확장자가 <code>mkiv</code>인 ConTeXt 파일이라면 다음과 같이 입력합니다.</p>
+<pre>defaults write TeXShop OtherTeXExtensions -array-add "mkiv"</pre>
 
-<BODY>
-	<div id="content_border">
-<h1>What kind of files can TeXShop open?</h1>
-<P>TeXShop can open most files for editing. This facility has been provided so users can read TeX-related files with extensions &quot;.log&quot;, &quot;.aux&quot;, etc.</p>
-<h2>Recognized text file types</h2>
-	<p>TeXShop can open &quot;.ins&quot;, &quot;.dts&quot;, &quot;.sty&quot;, &quot;.cls&quot;, &quot;mf&quot;, &quot;.def&quot;, &quot;.fd&quot;, &quot;.fdd&quot;, &quot;.ltx&quot;, &quot;.clo&quot;, &quot;.ctx&quot;, &quot;.bst&quot;, &quot;.bib&quot;, &quot;.engine&quot;, &quot;.htx&quot;, &quot;.sk&quot;, &quot;dtx&quot;, &quot;.drv&quot;, &quot;.dn&quot;, &quot;.abc&quot;, &quot;.ly&quot;, &quot;.texi&quot;, &quot;.Rnw&quot;, &quot;.asy&quot;, &quot;.akt&quot;, 
-	&quot;.bbx&quot;, &quot;.cbx&quot;, &quot;.lbx&quot;, 
-	and &quot;mp&quot; files for processing.</p> 
-	<p>It can also open any text file.</p>	 
-<h2>Non-text files</h2>		
-		Files with extensions &quot;.jpg&quot;, &quot;.tif&quot;, &quot;.eps&quot;, or &quot;.pdf&quot; are opened as graphic files.</P>
-		<p>TeXShop can also open &quot;.dvi&quot; and &quot;.ps&quot; files. In these cases, it converts the file to pdf and displays this pdf file.</p>
-<h2>Other file types</h2>
-<p>It is not a good idea to use TeXShop as a general editor. TeXShop can read files written in UniCode and other formats, but it saves files in the format chosen in Settings. Consequently, information may be lost if TeXShop is used to edit files which really aren't related to TeX.  </p>
+<h2>PDF 파일과 그림</h2>
+<p>PDF 파일과, 확장자가 <code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.tif</code>, <code>.tiff</code>, <code>.eps</code>인 그림은 별도의 윈도우에서 열립니다. DVI 파일과 PostScript 파일(<code>.dvi</code>, <code>.ps</code>)은 PDF로 변환하여 표시합니다.</p>
 
-<p> If TeXShop opens a file with an unusual extension, and later saves the file, the saved file will have the same  extension. Thus if TeXShop opens, edits, and saves an "akt" file, the saved file will still have extension "akt."</p>
-
-<p> When TeXShop creates a new file, the saved file will have extension ".tex" unless special action is taken. Your computer's preference settings may have been set to hide extensions in the Finder; in that case you may not see the extension, but it is there. It is not possible to change the extension by adding it explicitly to the file name. For instance, in some circumstances saving a file "MyFile.htx" will actually create "MyFile.htx.tex." This can be particularly tricky if your computer hides extensions.</p>
-
-<p>But the TeXShop "Save Panel" includes a drop down menu named "File Format". Choose a format in this menu to initially save a new file with a nonstandard extension.</p>
-<h2>Adding to the list of file types</h2>
-<p>There is a hidden setting to add file extensions to the list of files that TeXShop recognizes as source files which can be typeset and syntax colored.  This is useful when you want to use syntax highlighting when editing TeX files with non-standard extensions. For example,</p>
-		<dl>
-			<dd>defaults write TeXShop OtherTeXExtensions -array-add "lbx"
-		</dl>
-<p>tells TeXShop to syntax color biblatex 'lbx' files.<p>
-
-
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Advanced Help</div><div id="header_title">Opening Other Files with TeXShop</div>
-
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adding Personal Sty and Macro Files to TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Additional Typesetting Engines</a>
-			<li><a href="advanced_encoding.htm">Encodings</a>
-			<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a>
-			<LI><a href="advanced_removeaux.htm">Removing AUX Files</a>
-			<li><a href="advanced_experiments.htm">Experiments</a>
-			<li><a href="advanced_externaleditor.htm">Using an External Editor</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop from the Preview Window </a>
-			<li><a href="advanced_root.htm">Setting a Project Root File</a>
-			<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Making and Using New TeX Formats</a>
-			<li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizations</a>
-			<li><a href="advanced_syntaxcolor.htm">Syntax Highlighting </a>
-			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
-			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
-			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
-			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist Files</a>
-			<li><a href="advanced_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>다른 확장자로 저장하기</h2>
+<p>TeXShop은 파일을 저장할 때 원래 확장자를 유지합니다. 새 문서는 저장 대화상자의 파일 유형 메뉴에서 sty, bib, mp 같은 다른 유형을 선택하지 않으면 <code>.tex</code> 파일로 저장됩니다.</p>
+<p>TeXShop은 파일을 열었을 때의 인코딩으로 저장합니다. TeXShop은 TeX와 관련 파일을 위한 프로그램이므로, 특수한 형식의 파일은 TeXShop에서 편집한 뒤 저장하면 내용이 바뀔 수 있습니다. <a href="advanced_encoding.htm">인코딩</a>을 참고하십시오.</p>
+</main>
+</body>
+</html>

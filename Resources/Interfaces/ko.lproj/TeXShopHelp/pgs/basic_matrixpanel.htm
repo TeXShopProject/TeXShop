@@ -1,52 +1,63 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>행렬 패널</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="행렬 패널; 행렬; array; tabular; 표; 구분 기호; 단위행렬; 스프레드시트; matrixpanel_1.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
+<li><a href="basic_installtetex.htm">TeX Live 설치</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop 설치</a></li>
+<li><a href="basic_typesetting.htm">문서 조판</a></li>
+<li><a href="basic_alternatetypeset.htm">대체 조판 방식</a></li>
+<li><a href="basic_preview.htm">미리보기 윈도우</a></li>
+<li><a href="basic_edittricks.htm">편집 요령</a></li>
+<li><a href="basic_find.htm">찾기 및 대치</a></li>
+<li><a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a></li>
+<li><a href="basic_spelling.htm">맞춤법 검사</a></li>
+<li><a href="basic_autocompletion.htm">키 바인딩</a></li>
+<li><a href="basic_commandcompletion.htm">명령어 완성</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 패널</a></li>
+<li><a href="basic_matrixpanel.htm" class="current">행렬 패널</a></li>
+<li><a href="basic_macros.htm">매크로</a></li>
+<li><a href="basic_toolbar.htm">도구 막대와 AppleScript</a></li>
+<li><a href="basic_graphics.htm">그림 넣기</a></li>
+<li><a href="basic_printing.htm">프린트</a></li>
+<li><a href="basic_preferences.htm">설정 변경</a></li>
+<li><a href="basic_templates.htm">템플릿과 스테이셔너리</a></li>
+<li><a href="basic_miscellaneous.htm">윈도우와 탭</a></li>
+<li><a href="basic_bugs.htm">버그 보고</a></li>
+<li><a href="basic_websites.htm">유용한 웹 사이트</a></li>
+<li><a href="basic_license.htm">라이선스</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>행렬 패널</h1>
+<p>윈도우 › 행렬 패널...을 선택하면 행렬과 표를 대신 작성해 주는 패널이 열립니다. 패널의 표에 성분을 채우고 결과의 모양을 선택한 다음, 소스의 삽입 위치에 삽입합니다.</p>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Matrix Panel</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="matrix panel">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<h2>행렬이나 표 만들기</h2>
+<ol>
+<li>행:과 열:에 크기를 입력합니다. 각각 999까지 입력할 수 있습니다.</li>
+<li>환경에서 수식 안의 행렬(<code>array</code> 환경)이면 matrix를, 텍스트 표이면 tabular를 선택합니다. tabular에서 “table 환경으로 삽입”을 켜면 표가 캡션과 레이블이 있는 <code>table</code> 플로트 안에 들어갑니다.</li>
+<li>행렬이면 왼쪽과 오른쪽 구분 기호를 선택합니다. 마침표를 선택하면 그쪽에 구분 기호가 붙지 않으며, 마지막 버튼은 옆의 필드에 입력한 구분 기호를 사용합니다.</li>
+<li>행렬 그림이 있는 두 버튼은 성분 바깥에 테두리를 두르고, 성분 사이에 선을 긋습니다.</li>
+<li>성분을 채웁니다. 지우기는 모든 성분을 비우고, 단위행렬과 영행렬은 단위 행렬이나 0으로 채웁니다.</li>
+<li>삽입을 클릭하거나 <kbd>⌘Return</kbd>을 누릅니다.</li>
+</ol>
 
-<BODY>
-	<div id="content_border">
-		<P>The Windows menu contains an item &quot;Matrix Panel...&quot. Choosing this item will open a panel allowing easy creation of matrices. Only a small space is provided for each matrix entry, but larger items can be edited elsewhere and pasted into the matrix. This wonderful panel is the work of Jonas Zimmermann, who can be reached at <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a>.</P>
-<p> In TeXShop 1.35, the Matrix Panel can also create tables. This panel can be configured using the
-file "matrixpanel_1.plist" in ~/Library/TeXShop/MatrixPanel. The structure of this file was revised
-in 1.35; an old "matrixpanel.plist" file may remain from TeXShop 1.34.</p>
-<p>The table works like a spreadsheet. Click a cell to choose it, drag or Shift-click to choose several, and type to replace the value; double-click, press F2 or press Control-U to edit it. Return moves down, Tab moves right and the arrow keys move in any direction; Delete empties the cells chosen. Copy and Paste exchange cells with spreadsheet applications. Drag the number of a row to move the row, and press Command-Return to insert the matrix. A matrix can have up to 999 rows and columns; the cells outside the matrix keep their values, shown in gray.</p> 
-		<ul>
-			
-		</ul>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Matrix Panel</div>
+<h2>표에서 작업하기</h2>
+<p>표는 스프레드시트처럼 동작합니다. 셀을 클릭하여 선택하고, 드래그하거나 Shift-클릭하여 여러 셀을 선택하며, 입력하면 값이 바뀝니다. 값을 편집하려면 이중 클릭하거나 F2 또는 Control-U를 누릅니다. Return 키는 아래로, Tab 키는 오른쪽으로 이동하고, 화살표 키는 각 방향으로 이동합니다. Delete 키는 선택한 셀을 비웁니다. 복사하기와 붙여넣기로 스프레드시트 응용 프로그램과 셀을 주고받을 수 있습니다. 행 번호를 드래그하면 행이 이동합니다. 패널이 활성화되어 있는 동안 실행 취소와 실행 복귀는 표에 적용됩니다.</p>
+<p>행렬을 작게 하면 바깥으로 밀려난 셀은 값을 유지한 채 회색으로 표시되며, 다시 크게 하면 돌아옵니다. 표를 더 많이 보려면 패널을 크게 하십시오.</p>
 
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+<h2>삽입되는 코드 사용자화</h2>
+<p>패널이 성분 주위에 쓰는 코드는 <code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code>에 있습니다. 환경의 시작과 끝, 구분 기호, 성분 사이와 행 사이의 구분자, 테두리와 격자의 선, 그리고 각 열의 정렬을 정하는 문자 <code>c</code>입니다. 예를 들어 <code>c</code>를 <code>r</code>로 바꾸면 열이 오른쪽으로 정렬됩니다. 파일 안 문자열의 개수와 순서는 그대로 두고, 변경한 후에는 TeXShop을 다시 시작하십시오. <a href="advanced_plist.htm">~/Library/TeXShop의 파일</a>을 참조하십시오.</p>
+</main>
+</body>
+</html>

@@ -1,60 +1,69 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Befehlsvervollständigung</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Befehlsvervollständigung; Escape-Taste; Auslösetaste; Marken; nächste Marke; Labels und Zitierschlüssel">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Einführung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installieren</a></li>
+<li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a></li>
+<li><a href="basic_preview.htm">Das Vorschaufenster</a></li>
+<li><a href="basic_edittricks.htm">Tipps zur Bearbeitung</a></li>
+<li><a href="basic_find.htm">Suchen und Ersetzen</a></li>
+<li><a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a></li>
+<li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
+<li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">Befehlsvervollständigung</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_macros.htm">Makros</a></li>
+<li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
+<li><a href="basic_printing.htm">Drucken</a></li>
+<li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
+<li><a href="basic_templates.htm">Vorlagen</a></li>
+<li><a href="basic_miscellaneous.htm">Fenster und Tabs</a></li>
+<li><a href="basic_bugs.htm">Fehler melden</a></li>
+<li><a href="basic_websites.htm">Nützliche Websites</a></li>
+<li><a href="basic_license.htm">Lizenz</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Befehlsvervollständigung</h1>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Vervollst&auml;ndigung von Befehlen</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Durch die Vervollst&auml;ndigung von Befehlen k&ouml;nnen Sie mit Hilfe der Escape-Taste schnell den gew&uuml;schten Befehl finden.">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">	
-		<P>Der Quelltexteditor unterst&uuml;tzt nun das Vervollst&auml;ndigen von Befehlen. Wenn Sie die ersten Buchstaben eines Befehls eingegeben haben und danach die Escape-Taste dr&uuml;cken, werden die fehlenden Buchstaben automatisch erg&auml;nzt. Durch mehrmaliges dr&uuml;cken der Escape-Taste k&ouml;nnen Sie die verschiedenen M&ouml;glichkeiten ausw&auml;hlen, vom Ende der Vervollst&auml;ndigungsdatei zum Anfang hin; mit Umschalt-Escape in umgekehrter Reihenfolge.</p>
+<p>Tippen Sie die ersten Buchstaben eines Befehls oder einer Umgebung und drücken Sie die Escape-Taste: TeXShop vervollständigt sie aus seiner Vervollständigungsdatei. Drücken Sie erneut Escape, um die weiteren Vervollständigungen mit denselben Anfangsbuchstaben durchzugehen, vom Ende der Datei zum Anfang hin; Umschalt-Escape geht in die andere Richtung. Eine davon ist der Text, den Sie getippt haben. So bietet zum Beispiel <code>\begin{th</code> gefolgt von Escape <code>\begin{theorem}</code> und andere Umgebungen an.</p>
 
-<P>Die Taste, die die Vervollst&#228;ndigung ausl&#246;st, l&#228;sst sich unter Einstellungen &#8594; Tastatur mit &#8222;Ausl&#246;setaste&#8220; von Escape auf Tab umstellen. Die Quelltext-Palette von Bearbeiten &#8250; &#8222;Testen...&#8220; verwendet dieselbe Taste wie das Quelltextfenster.</p>
+<p>Eine Vervollständigung kann mehr, als das Wort zu beenden. Die Vervollständigung von <code>\begin{theorem}</code> schreibt auch die Zeile <code>\end{theorem}</code> und setzt Marken (•) an die Stellen, an denen Sie tippen werden: Die erste Marke ist ausgewählt, sodass Ihre Eingabe sie ersetzt. Mehrmaliges Drücken von Escape ergibt oft denselben Befehl mit mehr Argumenten, wie <code>\newc</code> für <code>\newcommand</code>. Eine Vervollständigung muss nicht mit einem Backslash beginnen: Am Zeilenanfang oder nach einem Leerzeichen ergibt <code>sec</code> dasselbe wie <code>\sec</code>.</p>
 
-<P>Zu Anfang wird diese Funktion nicht sehr hilfreich sein, da das Befehlsw&ouml;rterbuch och leer ist. Um ein Wort hinzuzuf&uuml;gen, w&auml;hlen Sie es aus und dann &bdquo;Zur Liste der Befehlsvervollst&auml;ndigung hinzuf&uuml;gen&ldquo; im Men&uuml; &bdquo;Quelltext&ldquo;. Dies kann auch durch einen Shortcut geschehen. Zum Anzeigen und Bearbeiten des W�rterbuchs �ffnen Sie Einstellungen &#8594; Tastatur und w�hlen &#8222;Befehlsvervollst�ndigung bearbeiten&#8230;&#8220;. Beachten Sie, dass die Erg&auml;nzung auch komplizierter Befehle m&ouml;glich ist und auch der Cursor an einer bestimmten Stelle positioniert werden kann. F&uuml;r ein Beispiel kann die Standarddatei herangezogen werden.</p>
+<p>Hat die Vervollständigungsdatei nichts für den Text, zeigt Escape stattdessen die Wortvervollständigungen von macOS.</p>
 
-<P>Diese Funktion wird in sp&auml;teren Versionen von TeXShop weiter ausgebaut.</p>
-<h3><a name="labels"></a>Vervollst&#228;ndigung von Labels und Zitierschl&#252;sseln</h3>
-<p>Bearbeiten &#8250; &#8222;Label oder Zitierschl&#252;ssel vervollst&#228;ndigen&#8220; (F5) vervollst&#228;ndigt ein Label oder einen Zitierschl&#252;ssel aus einer Liste. Direkt nach \ref{, \pageref{, \eqref{ oder \autoref{ oder nach den ersten Buchstaben eines Labels zeigt die Liste die mit \label definierten Labels der Datei. Nach \cite{ und &#228;hnlichen Befehlen zeigt sie Zitierschl&#252;ssel aus BibDesk, wenn unter Einstellungen &#8594; Tastatur &#8222;Auch Zitierschl&#252;ssel aus BibDesk anbieten&#8220; eingeschaltet ist. An anderen Stellen zeigt sie die Wortvorschl&#228;ge von macOS. Auf vielen Tastaturen halten Sie dabei die fn-Taste (Globustaste) gedr&#252;ckt, w&#228;hrend Sie F5 dr&#252;cken.</p>
-	<h3><a name="marks"></a>Marken</h3>
-<p>Eine Marke (&#8226;) kennzeichnet eine Stelle, zu der Sie sp�ter zur�ckkehren; eine Marke mit Notiz (&#8226;&#8249;Notiz&#8250;) sagt au�erdem, was dort hingeh�rt. Befehlserg�nzungen, Makros und Tastenbelegungen k�nnen Marken enthalten, und mit Bearbeiten &#8250; Marken &#8250; &#8222;Marke einf�gen&#8220; (&#8984;8) und &#8222;Marke mit Notiz einf�gen&#8220; (&#8963;&#8984;8) f�gen Sie sie selbst ein. &#8222;Marke mit Notiz einf�gen&#8220; setzt &#8226;&#8249;&#8250; mit der Einf�gemarke zwischen den Klammern oder macht den ausgew�hlten Text zur Notiz.</p>
-<p>&#8222;n�chste Marke&#8220; (&#8963;&#8984;F) und &#8222;vorhergehende Marke&#8220; (&#8963;&#8984;G) w�hlen die n�chste oder vorhergehende Marke samt Notiz aus; Tippen ersetzt sie. Mit gedr�ckter Wahltaste wird nur das &#8226; gel�scht und die Notiz ausgew�hlt (&#8963;&#8997;&#8984;F, &#8963;&#8997;&#8984;G).</p>
-<p>Mit gedr&#252;ckter Wahltaste und der Ausl&#246;setaste springen Sie zur n&#228;chsten Marke, mit gedr&#252;ckter Control-Taste und der Ausl&#246;setaste zur vorhergehenden (Wahl-Escape und Control-Escape, oder Wahl-Tab und Control-Tab, wenn Tab die Vervollst&#228;ndigung ausl&#246;st). Wenn ein anderes Programm diese Tasten verwendet, schalten Sie unter Einstellungen &#8594; Tastatur &#8222;Mit Wahl- oder Control-Taste und der Ausl&#246;setaste zur n&#228;chsten oder vorherigen Marke springen&#8220; aus.</p>
-</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Grundlagen</div>
-<div id="header_title">Vervollst&auml;ndigung von Befehlen</div>
+<h2>Einstellungen</h2>
 
+<p>Unter Einstellungen › Tastatur legt „Auslösetaste“ fest, ob Escape oder Tabulator die Vervollständigung auslöst. Die Quelltextpalette von Bearbeiten › Testen... verwendet dieselbe Taste wie das Quelltextfenster.</p>
 
-	<div id="menu_border">
-		<UL>
-			<LI><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
-			<LI><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
-			<LI><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
-			<LI><a href="basic_typesetting.htm">Dokumente setzen</a></li>
-			<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
-			<li><a href="basic_spelling.htm">Rechtschreibpr&uuml;fung</a></li>
-			<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-			<li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
-			<li><a href="basic_macros.htm">Makros</a></li>
-			<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
-			<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
-			<li><a href="basic_printing.htm">Drucken</a></li>
-			<li><a href="basic_preferences.htm">Einstellungen &auml;ndern</a></li>
-			<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
-			<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
-			<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
-			<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
-			<li><a href="basic_bugs.htm">Fehlerbericht &uuml;bermitteln</a></li>
-			<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
-			<li><a href="basic_license.htm">Lizenz</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+<p>Um ein Wort zur Vervollständigungsdatei hinzuzufügen, wählen Sie es aus und wählen Quelltext › Zur Liste der Befehlsvervollständigung hinzufügen. Um die Datei zu bearbeiten, klicken Sie unter Einstellungen › Tastatur auf „Befehlsvervollständigung bearbeiten…“. Am besten lernen Sie, wie neue Vervollständigungen geschrieben werden, indem Sie die vorhandenen studieren; der Ordner ~/Library/TeXShop/CommandCompletion enthält außerdem ein ausführliches Dokument darüber.</p>
 
-</HTML>
+<h2><a name="marks"></a>Marken</h2>
+
+<p>Eine Marke (•) ist eine Stelle, zu der Sie zurückkehren wollen; eine Marke mit Notiz (•‹Notiz›) sagt außerdem, was dorthin gehört. Befehlsvervollständigungen, Makros und Tastenbelegungen können Marken enthalten, und Sie können sie selbst mit Bearbeiten › Marken › Marke einfügen (<kbd>⌘8</kbd>) und „Marke mit Notiz einfügen“ (<kbd>⌃⌘8</kbd>) einfügen. „Marke mit Notiz einfügen“ fügt •‹› mit der Einfügemarke zwischen den spitzen Klammern ein oder macht den ausgewählten Text zur Notiz.</p>
+
+<p>„nächste Marke“ (<kbd>⌃⌘F</kbd>) und „vorhergehende Marke“ (<kbd>⌃⌘G</kbd>) wählen die nächste oder vorherige Marke samt ihrer Notiz aus, sodass Ihre Eingabe sie ersetzt. Halten Sie die Wahltaste gedrückt, um nur das • zu löschen und stattdessen die Notiz auszuwählen (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+
+<p>Auch die Auslösetaste springt zwischen Marken: Ist Escape die Auslösetaste, geht Wahltaste-Escape zur nächsten Marke und Control-Escape zur vorherigen; bei Tabulator sind es Wahltaste-Tabulator und Control-Tabulator. Braucht ein anderes Programm diese Tasten, schalten Sie „Mit Wahl- oder Control-Taste und der Auslösetaste zur nächsten oder vorherigen Marke springen“ unter Einstellungen › Tastatur aus.</p>
+
+<h2><a name="labels"></a>Vervollständigung von Labels und Zitierschlüsseln</h2>
+
+<p>Bearbeiten › Label oder Zitierschlüssel vervollständigen (<kbd>F5</kbd>) vervollständigt ein Label oder einen Zitierschlüssel aus einer Liste. Wählen Sie den Befehl direkt nach <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> oder <code>\autoref{</code> oder nach den dort getippten ersten Buchstaben eines Labels, und die Liste zeigt die mit <code>\label</code> in der Datei definierten Labels; wählen Sie eines mit den Pfeiltasten aus und drücken Sie den Zeilenschalter. Nach <code>\cite{</code> und ähnlichen Befehlen zeigt die Liste Zitierschlüssel aus BibDesk, wenn „Auch Zitierschlüssel aus BibDesk anbieten“ unter Einstellungen › Tastatur eingeschaltet ist. An anderen Stellen zeigt sie die Wortvervollständigungen von macOS. Auf vielen Tastaturen halten Sie beim Drücken von F5 die Taste „fn“ (Globus-Taste) gedrückt.</p>
+</main>
+</body>
+</html>
