@@ -1477,6 +1477,12 @@
                                     <action selector="displayCommentLines:" target="675" id="jCX-zk-6Bx"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Confusiones entre utilidades de TeXShop (en inglés)" id="x6a-4v-624" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="675" id="exT-LR-5pz"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="689">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1610,12 +1616,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="675" id="917"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Confusiones entre utilidades de TeXShop (en inglés)" id="x6a-4v-624" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="675" id="exT-LR-5pz"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Tipografías recientes para TeX (en inglés)" id="SNC-uf-G9g" identifier="TSShortcut.displayRecentTeXFonts:.0">

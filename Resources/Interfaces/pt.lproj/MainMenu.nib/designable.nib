@@ -1475,6 +1475,12 @@
                                     <action selector="displayCommentLines:" target="671" id="Hbi-0z-ma8"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Características do TeXShop (em inglês)" id="TYX-2p-V5Z" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="671" id="qLv-HC-5ko"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="685">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1608,12 +1614,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="671" id="894"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Características do TeXShop (em inglês)" id="TYX-2p-V5Z" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="671" id="qLv-HC-5ko"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Fontes TeX Recentes (em inglês)" id="UnP-C3-CgX" identifier="TSShortcut.displayRecentTeXFonts:.0">

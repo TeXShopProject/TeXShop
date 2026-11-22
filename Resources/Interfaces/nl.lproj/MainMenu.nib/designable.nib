@@ -1473,6 +1473,12 @@
                                     <action selector="displayCommentLines:" target="692" id="GfM-KV-9Gl"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Verwarrende TeXShop-functies (Engels)" id="Rpb-9Y-Kn7" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="692" id="lqy-xb-PUS"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="700">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1606,12 +1612,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="692" id="955"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Verwarrende TeXShop-functies (Engels)" id="Rpb-9Y-Kn7" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="692" id="lqy-xb-PUS"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Recente TeX-lettertypen (Engels)" id="ty4-lF-3jg" identifier="TSShortcut.displayRecentTeXFonts:.0">

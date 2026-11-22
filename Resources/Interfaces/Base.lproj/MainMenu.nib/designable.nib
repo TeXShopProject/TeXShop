@@ -1470,6 +1470,12 @@
                                     <action selector="displayCommentLines:" target="705" id="zIM-aJ-xxD"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="TeXShop Feature Confusion" id="XZO-tS-xix" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="705" id="qEm-UL-DCt"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="714">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1603,12 +1609,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="705" id="1063"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="TeXShop Feature Confusion" id="XZO-tS-xix" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="705" id="qEm-UL-DCt"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Recent TeX Fonts" id="eoL-hy-XaH" identifier="TSShortcut.displayRecentTeXFonts:.0">

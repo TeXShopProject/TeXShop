@@ -1473,6 +1473,12 @@
                                     <action selector="displayCommentLines:" target="671" id="NUG-jA-DdW"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Confusões entre funcionalidades do TeXShop (em inglês)" id="flI-nA-zhJ" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="671" id="Tds-cJ-p5w"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="685">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1606,12 +1612,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="671" id="894"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Confusões entre funcionalidades do TeXShop (em inglês)" id="flI-nA-zhJ" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="671" id="Tds-cJ-p5w"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Tipos de letra TeX recentes (em inglês)" id="fYL-Fo-jRf" identifier="TSShortcut.displayRecentTeXFonts:.0">

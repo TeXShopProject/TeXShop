@@ -1476,6 +1476,12 @@
                                     <action selector="displayCommentLines:" target="705" id="H62-yO-JaR"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="TeXShop功能答疑（英文）" id="2RH-ib-DJ5" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="705" id="fnI-bz-Egx"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="714">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1609,12 +1615,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="705" id="1060"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="TeXShop功能答疑（英文）" id="2RH-ib-DJ5" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="705" id="fnI-bz-Egx"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="近年的TeX字体（英文）" id="MOP-CJ-Rvn" identifier="TSShortcut.displayRecentTeXFonts:.0">

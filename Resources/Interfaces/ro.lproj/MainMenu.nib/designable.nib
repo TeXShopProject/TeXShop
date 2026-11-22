@@ -1473,6 +1473,12 @@
                                     <action selector="displayCommentLines:" target="690" id="dkw-7h-AFN"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Confuzii privind funcțiile TeXShop (în engleză)" id="qFC-td-O9D" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="690" id="qrE-Fc-RtY"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="704">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1606,12 +1612,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="690" id="914"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Confuzii privind funcțiile TeXShop (în engleză)" id="qFC-td-O9D" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="690" id="qrE-Fc-RtY"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Fonturi TeX recente (în engleză)" id="fus-dG-kXk" identifier="TSShortcut.displayRecentTeXFonts:.0">

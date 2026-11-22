@@ -16,8 +16,8 @@ import sys
 root = Path(__file__).resolve().parents[1]
 TOP = ['displayThisRelease', 'displayChanges', '-', 'displayTeXLiveDocumentation', 'displayHelpForPackage', '-',
        'displayGettingStartedTeXShop', 'displayManual', '-', 'displayHTMLHelp', 'showHelp', 'displayFileEncoding',
-       'displayCommentLines', '-', 'SHORT', 'OLDER']
-OLDER = ['displayTipsandTricks', 'displayTeXShopConfusion', 'displayRecentTeXFonts', 'displayNotesonApplescript', '-',
+       'displayCommentLines', 'displayTeXShopConfusion', '-', 'SHORT', 'OLDER']
+OLDER = ['displayTipsandTricks', 'displayRecentTeXFonts', 'displayNotesonApplescript', '-',
          'displayGettingStartedXeTeX', 'displayGettingStartedLatex']
 # George Grätzer's Short Course: the course, all symbol tables, then each table of the math and the text symbols in
 # the order of the book (Appendix B, Appendix C).

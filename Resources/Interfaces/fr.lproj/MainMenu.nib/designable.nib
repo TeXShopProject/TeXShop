@@ -1475,6 +1475,12 @@
                                     <action selector="displayCommentLines:" target="675" id="nHA-jg-pqD"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Raccourcis clavier et autres" id="My4-to-r24" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="675" id="0fI-Or-DRs"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="689">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1608,12 +1614,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="675" id="919"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Raccourcis clavier et autres" id="My4-to-r24" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="675" id="0fI-Or-DRs"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Polices TeX récentes (en anglais)" id="Shk-jx-mwP" identifier="TSShortcut.displayRecentTeXFonts:.0">

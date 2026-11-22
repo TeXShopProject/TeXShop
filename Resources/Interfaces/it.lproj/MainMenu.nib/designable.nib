@@ -1473,6 +1473,12 @@
                                     <action selector="displayCommentLines:" target="672" id="w2Y-9c-SVw"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Chiarimenti sulle funzioni di TeXShop (in inglese)" id="fzW-k2-w4Q" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayTeXShopConfusion:" target="672" id="2yB-qO-gWf"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="686">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1606,12 +1612,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="displayTipsandTricks:" target="672" id="896"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Chiarimenti sulle funzioni di TeXShop (in inglese)" id="fzW-k2-w4Q" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="displayTeXShopConfusion:" target="672" id="2yB-qO-gWf"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Font TeX recenti (in inglese)" id="ZeJ-zj-3dt" identifier="TSShortcut.displayRecentTeXFonts:.0">
