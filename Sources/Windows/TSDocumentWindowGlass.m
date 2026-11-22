@@ -47,19 +47,18 @@ static CGFloat TSHiddenTopBand(NSWindow *window)
 
 @end
 
-// The height of the title bar of a window, without the toolbar and the bars under it.
-static CGFloat TSTitleBarHeight(NSWindow *window)
-{
-    NSRect content = NSMakeRect(0, 0, 100, 100);
-    NSWindowStyleMask style = window.styleMask & ~NSWindowStyleMaskFullSizeContentView;
-    return MAX(0, NSHeight([NSWindow frameRectForContentRect:content styleMask:style]) - NSHeight(content));
-}
+// On macOS 26 and later the top corners of a document window, with a title bar and an
+// Expanded toolbar or with the toolbar hidden, have a radius of 16 points (measured on macOS 26
+// and 27; macOS 27 reports the same through -[NSView effectiveCornerRadii]). They are
+// continuous curves that reach the straight side 1.5 times the radius below the top.
+static const CGFloat TSWindowCornerHeight = 24;
 
-// A drawer at the side of a window starts right below the title bar, beside the toolbar and a
-// bar under it, such as the annotation toolbar, so that a long outline has room (#67). AppKit
-// puts it there in a window whose content stays below the toolbar (measured on macOS 15 and
-// 26), and at the top of the window, beside the title bar, in a window whose content runs
-// under the toolbar. It does not go higher than the area below the toolbar, as in full screen.
+// A drawer at the side of a window whose content runs under the toolbar starts right where
+// the rounding of the window's top corner ends, beside the title bar and the toolbar, so that a
+// long outline has room (#67). AppKit would put it at the top of the window, beside the rounded
+// corner. It does not go higher than the area below the toolbar, as in full screen, where the
+// window has no rounded corners. In a window whose content stays below the toolbar AppKit puts
+// the drawer right below the title bar.
 static void TSPlaceDrawer(NSDrawer *drawer, NSWindow *window)
 {
     NSNumber *base = objc_getAssociatedObject(drawer, TSDrawerBaseOffsetKey);
@@ -69,7 +68,7 @@ static void TSPlaceDrawer(NSDrawer *drawer, NSWindow *window)
     }
     NSRectEdge edge = drawer.edge == 0 ? drawer.preferredEdge : drawer.edge;
     BOOL side = edge == NSMinXEdge || edge == NSMaxXEdge;
-    CGFloat offset = base.doubleValue + (side ? MIN(TSTitleBarHeight(window), TSHiddenTopBand(window)) : 0);
+    CGFloat offset = base.doubleValue + (side ? MIN(TSWindowCornerHeight, TSHiddenTopBand(window)) : 0);
     if (drawer.leadingOffset != offset)
         drawer.leadingOffset = offset;
 }
@@ -121,6 +120,11 @@ void TSDocumentWindowPrepare(NSWindow *window)
     dispatch_once(&once, ^{
         [NSNotificationCenter.defaultCenter addObserverForName:NSDrawerWillOpenNotification object:nil queue:nil
                                                     usingBlock:^(NSNotification *notification) { TSDrawerWillOpen(notification); }];
+        // A drawer left open while the window goes into or out of full screen keeps its place
+        // otherwise: out of full screen it would stay at the top, beside the rounded corner (#67).
+        for (NSNotificationName name in @[NSWindowDidEnterFullScreenNotification, NSWindowDidExitFullScreenNotification])
+            [NSNotificationCenter.defaultCenter addObserverForName:name object:nil queue:nil
+                                                        usingBlock:^(NSNotification *notification) { TSDocumentWindowPlaceDrawers(notification.object); }];
     });
     if (TSDocumentWindowsUseFullSizeContent() && !(window.styleMask & NSWindowStyleMaskFullSizeContentView)) {
         // AppKit keeps the content size and makes the window lower by the height of the title
