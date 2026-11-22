@@ -9,6 +9,7 @@
 #import "HelpDocuments.h"
 #import "TSLibraryRepair.h"
 #import "TSDialogButtonLayout.h"
+#import "TSTexdocReport.h"
 #import "TSDocumentController.h"
 #import "globals.h"
 #import "TSDocument.h"
@@ -18,6 +19,7 @@
 @interface HelpDocuments (Private)
 
 - (void)mirrorPath:(NSString *)srcPath toPath:(NSString *)dstPath;
+- (void)showTexdocAlert:(NSArray<NSString *> *)texts;
 
 @end
 
@@ -260,9 +262,12 @@
 	}
 	
 	binPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
-	if ([binPath length] == 0)
+	enginePath = [binPath stringByAppendingPathComponent:@"texdoc"];
+	// No folder set, or no texdoc that can run in it (no TeX installed, another folder set).
+	if (binPath.length == 0 || ![[NSFileManager defaultManager] isExecutableFileAtPath:enginePath]) {
+		[self showTexdocAlert:TSTexdocMissingTexts(binPath)];
 		return;
-	enginePath = [binPath stringByAppendingString:@"/texdoc"];
+	}
 
 	// get copy of environment and add the preferences paths
 	env = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
@@ -271,44 +276,49 @@
 	// or another one on the PATH looks for texdoc's library in its own tree and fails.
 	path = [[binPath stringByAppendingString:@":"] stringByAppendingString:path];
  	[env setObject: path forKey: @"PATH"];
-	
-	
+
 	displayPackageHelpTask = [[NSTask alloc] init];
 	[displayPackageHelpTask setExecutableURL:[NSURL fileURLWithPath:enginePath]];
 	args = [NSMutableArray array];
 	[args addObject: packageString];
 	[displayPackageHelpTask setArguments:args];
 	[displayPackageHelpTask setEnvironment:env];
-	// texdoc ends with a nonzero status when it finds no documentation (a misspelt name, a TeX Live installed
-	// without documentation) or cannot run; say so instead of doing nothing. A task replaced by a later request,
-	// or stopped here, says nothing.
+	// texdoc ends with status 3 when it finds no documentation (a misspelt name, a TeX installed without its
+	// documentation) and with another status when it cannot run; say which, and for the first, which TeX
+	// installation and folders texdoc searched. A task replaced by a later request, or stopped here, says nothing.
 	NSPipe *errors = [NSPipe pipe];
 	[displayPackageHelpTask setStandardError:errors];
 	NSTask *task = displayPackageHelpTask;
+	NSDictionary *environment = [env copy];
 	task.terminationHandler = ^(NSTask *finished) {
 		NSData *data = [[errors fileHandleForReading] readDataToEndOfFile];
 		int status = finished.terminationStatus;
 		BOOL exited = finished.terminationReason == NSTaskTerminationReasonExit;
+		NSString *installation = nil;
+		NSArray<NSString *> *folders = nil;
+		if (exited && status == TSTexdocNothingFound)
+			TSTexdocSearch(binPath, environment, &installation, &folders);
+		NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		NSArray<NSString *> *texts = TSTexdocFailureTexts(status, exited, packageString, enginePath, output, installation, folders);
 		dispatch_async(dispatch_get_main_queue(), ^{
-			if (self->displayPackageHelpTask != task || !exited || status == 0)
-				return;
-			NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-			NSAlert *alert = [[NSAlert alloc] init];
-			alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"No documentation was found for “%@”.", @"Help > Show Help for Package: texdoc found nothing"), packageString];
-			// texdoc's own words: where else to look (texdoc.org, CTAN), or why it could not run.
-			alert.informativeText = [output stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] ?: @"";
-			[alert runModal];
+			if (self->displayPackageHelpTask == task && texts != nil)
+				[self showTexdocAlert:texts];
 		});
 	};
-	// No texdoc there, or one that cannot be started (no TeX installed, another folder set): -launch would raise.
-	if (![displayPackageHelpTask launchAndReturnError:NULL]) {
+	NSError *launchError = nil;
+	if (![displayPackageHelpTask launchAndReturnError:&launchError]) {
 		displayPackageHelpTask = nil;
-		NSBeep();
-		NSAlert *alert = [[NSAlert alloc] init];
-		alert.messageText = NSLocalizedString(@"Error", @"Error");
-		alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"%@ does not exist.", @"%@ does not exist."), enginePath];
-		[alert runModal];
+		[self showTexdocAlert:@[[NSString stringWithFormat:NSLocalizedString(@"texdoc could not show the documentation for “%@”.", @"Help > Show Help for Package: texdoc failed"), packageString],
+		                        [NSString stringWithFormat:@"%@\n\n%@", enginePath, launchError.localizedDescription ?: @""]]];
 	}
+}
+
+- (void)showTexdocAlert:(NSArray<NSString *> *)texts
+{
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = texts[0];
+	alert.informativeText = texts[1];
+	[alert runModal];
 }
 
 - (IBAction)displayStyleFile:sender

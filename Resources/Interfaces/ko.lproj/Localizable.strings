@@ -452,3 +452,24 @@
 
 /* Help > Show Help for Package: texdoc found nothing */
 "No documentation was found for “%@”." = "‘%@’에 대한 설명서를 찾을 수 없습니다.";
+
+/* The Settings window, as the first step of a path to a setting */
+"Settings" = "설정";
+
+/* Help > Show Help for Package: followed by the folders texdoc searched */
+"texdoc of the TeX installation in %@ looked in:" = "%@에 있는 TeX의 texdoc이 찾아본 폴더:";
+
+/* Help > Show Help for Package: %@ is the path of the setting */
+"Another TeX installation on this Mac may have it. The installation that TeXShop uses is set in %@." = "이 Mac의 다른 TeX에는 있을 수 있습니다. TeXShop이 사용하는 TeX는 %@에서 정합니다.";
+
+/* Help > Show Help for Package: no texdoc */
+"texdoc was not found." = "texdoc을 찾을 수 없습니다.";
+
+/* Help > Show Help for Package: the folder of the TeX engines and the path of the setting */
+"There is no texdoc in %@, the folder set in %@." = "%2$@에 지정한 폴더 %1$@에 texdoc이 없습니다.";
+
+/* Help > Show Help for Package: texdoc failed */
+"texdoc could not show the documentation for “%@”." = "texdoc이 ‘%@’의 설명서를 표시하지 못했습니다.";
+
+/* Help > Show Help for Package: the path of texdoc and its exit status */
+"%@ ended with status %d." = "%@이(가) 상태 %d(으)로 종료되었습니다.";
