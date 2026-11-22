@@ -38,6 +38,8 @@ MUTATIONS = {
     'mark-missing': ('Resources/Interfaces/ja.lproj/MainMenu.nib/designable.nib', 'title="更新履歴（英語）"', 'title="更新履歴"'),
     # French marks its own Tips and Tricks as English.
     'mark-on-own': ('Resources/Interfaces/fr.lproj/MainMenu.nib/designable.nib', 'title="Trucs et astuces pour TeXShop"', 'title="Trucs et astuces pour TeXShop (en anglais)"'),
+    # The English menu marks a document as English.
+    'mark-in-english': ('Resources/Interfaces/Base.lproj/MainMenu.nib/designable.nib', 'title="TeXShop Manual"', 'title="TeXShop Manual (English)"'),
     # The menu is not the application's Help menu.
     'not-help-menu': ('Resources/Interfaces/de.lproj/MainMenu.nib/designable.nib', 'systemMenu="help" ', ''),
 }
@@ -90,6 +92,8 @@ def run(overrides):
         for selector, title in titles.items():
             check('\n' not in title and title == title.strip(), f'{lang}: {selector} title {title!r} has stray space')
             if lang == 'Base':
+                # The English menu opens documents in its own language: no item carries a mark.
+                check(not any(title.endswith(m) for m in set(MARK.values()) | {' (English)'}), f'Base: {selector} has a language mark: {title!r}')
                 continue
             marked = title.endswith(MARK[lang])
             wanted = selector in ENGLISH_ONLY and selector not in OWN.get(lang, set())
