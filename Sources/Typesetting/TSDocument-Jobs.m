@@ -422,7 +422,6 @@ for(NSString *key in enu)
     
 - (void) autosaveFinished: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo
 {
-    if(showFullPath) [textWindow performSelector:@selector(refreshTitle) withObject:nil afterDelay:0.2]; // added by Terada
 }
 
     
