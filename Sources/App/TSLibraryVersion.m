@@ -13,7 +13,8 @@ NSString *TSLibraryVersionInFolder(NSString *folder)
     return version.length ? version : nil;
 }
 
-// Display versions in order: 5.59 < 5.60 beta-10 (or 5.60b10) < 5.60 < 5.60.1 < 6.00 beta-1 < 6.00 beta-2 < 6.00.
+// Display versions in order: 5.59 < 5.60 beta-10 (or 5.60b10) < 5.60 < 5.60.1 < 6.00 beta-1 < 6.00 beta-2 < 6.00 RC1
+// (or 6.00rc1) < 6.00 RC2 < 6.00.
 // The first two parts are a decimal number, as the earlier .Version files were read (5.6 is 5.60).
 // Returns NO when the version has another form.
 static BOOL TSLibraryVersionParts(NSString *version, double *number, NSArray<NSNumber *> **parts)
@@ -21,7 +22,7 @@ static BOOL TSLibraryVersionParts(NSString *version, double *number, NSArray<NSN
     static NSRegularExpression *form;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        form = [NSRegularExpression regularExpressionWithPattern:@"^(\\d+(?:\\.\\d+)?)((?:\\.\\d+){0,3})(?:(?: beta-|b)(\\d+)((?:\\.\\d+){0,3}))?$" options:0 error:NULL];
+        form = [NSRegularExpression regularExpressionWithPattern:@"^(\\d+(?:\\.\\d+)?)((?:\\.\\d+){0,3})(?:( beta-|b| RC|rc)(\\d+)((?:\\.\\d+){0,3}))?$" options:0 error:NULL];
     });
     NSTextCheckingResult *match = [form firstMatchInString:version options:0 range:NSMakeRange(0, version.length)];
     if (!match)
@@ -39,10 +40,12 @@ static BOOL TSLibraryVersionParts(NSString *version, double *number, NSArray<NSN
     };
     *number = group(1).doubleValue;
     add(group(2));
-    BOOL beta = group(3).length > 0;
-    [list addObject:@(beta ? 0 : 1)];                        // a beta comes before its release
-    [list addObject:@(beta ? group(3).integerValue : 0)];
-    add(group(4));
+    NSString *kind = group(3);
+    BOOL prerelease = kind.length > 0;
+    BOOL beta = [kind isEqualToString:@" beta-"] || [kind isEqualToString:@"b"];
+    [list addObject:@(beta ? 0 : prerelease ? 1 : 2)];      // betas, then release candidates, then the release
+    [list addObject:@(prerelease ? group(4).integerValue : 0)];
+    add(group(5));
     *parts = list;
     return YES;
 }

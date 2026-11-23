@@ -76,9 +76,15 @@ class PrereleaseTest(unittest.TestCase):
                          ('v.6.00-beta.1', 'TeXShop-6.00-beta-1.zip'))
         self.assertEqual(release.prerelease_identity({'CFBundleShortVersionString': '5.60 beta-11', 'CFBundleVersion': '1400'}),
                          ('v.5.60-beta.11', 'TeXShop-5.60-beta-11.zip'))
-        for short in ['6.00', '6.00b1', '6.00 beta', 'beta-1']:
-            with self.assertRaisesRegex(ValueError, 'Expected a beta'):
+        for short in ['6.00', '6.00b1', '6.00 beta', 'beta-1', '6.00 RC', '6.00 RC0', '6.00 rc1', '6.00 RC-1', '6.00rc1']:
+            with self.assertRaisesRegex(ValueError, 'Expected a beta or a release candidate'):
                 release.prerelease_identity({'CFBundleShortVersionString': short, 'CFBundleVersion': '1512'})
+
+    def test_identity_of_a_release_candidate(self):
+        self.assertEqual(release.prerelease_identity({'CFBundleShortVersionString': '6.00 RC1', 'CFBundleVersion': '2420'}),
+                         ('v.6.00-rc.1', 'TeXShop-6.00-RC1.zip'))
+        self.assertEqual(release.prerelease_identity({'CFBundleShortVersionString': '6.00 RC12', 'CFBundleVersion': '2500'}),
+                         ('v.6.00-rc.12', 'TeXShop-6.00-RC12.zip'))
 
     def test_build_number_is_digits_only(self):
         self.assertEqual(release.build_number({'CFBundleVersion': '1512'}), '1512')
@@ -110,6 +116,19 @@ class PrereleaseTest(unittest.TestCase):
         self.item(channel, '5.59', False)
         release.retire_prereleases(channel, '5.60', False)
         self.assertEqual(self.shorts(channel), ['5.61 beta-1', '5.59'])
+
+    def test_a_release_candidate_replaces_a_beta_and_a_release_retires_it(self):
+        channel = ET.Element('channel')
+        self.item(channel, '6.00 beta-9', True)
+        self.item(channel, '5.59', False)
+        release.retire_prereleases(channel, '6.00 RC1', True)
+        self.assertEqual(self.shorts(channel), ['5.59'])
+        channel = ET.Element('channel')
+        self.item(channel, '6.01 beta-1', True)
+        self.item(channel, '6.00 RC2', True)
+        self.item(channel, '5.59', False)
+        release.retire_prereleases(channel, '6.00', False)
+        self.assertEqual(self.shorts(channel), ['6.01 beta-1', '5.59'])
 
     def test_prerelease_item_carries_the_channel_and_notes(self):
         item = ET.Element('item')

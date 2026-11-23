@@ -62,11 +62,16 @@ def is_prerelease_item(item):
 
 
 def prerelease_identity(info):
-    """Return the release tag and archive name of a beta such as 6.00 beta-1, from its display version."""
-    beta = re.fullmatch(r'(\d+(?:\.\d+)+) beta-(\d+)', info['CFBundleShortVersionString'])
-    if not beta:
-        raise ValueError('Expected a beta version such as 6.00 beta-1')
-    return f'v.{beta[1]}-beta.{beta[2]}', f'TeXShop-{beta[1]}-beta-{beta[2]}.zip'
+    """Return the release tag and archive name of a beta such as 6.00 beta-1 or a release candidate such as
+    6.00 RC1, from its display version."""
+    version = info['CFBundleShortVersionString']
+    beta = re.fullmatch(r'(\d+(?:\.\d+)+) beta-(\d+)', version)
+    if beta:
+        return f'v.{beta[1]}-beta.{beta[2]}', f'TeXShop-{beta[1]}-beta-{beta[2]}.zip'
+    candidate = re.fullmatch(r'(\d+(?:\.\d+)+) RC([1-9]\d*)', version)
+    if candidate:
+        return f'v.{candidate[1]}-rc.{candidate[2]}', f'TeXShop-{candidate[1]}-RC{candidate[2]}.zip'
+    raise ValueError('Expected a beta or a release candidate such as 6.00 beta-1 or 6.00 RC1')
 
 
 def build_number(info):
@@ -86,10 +91,10 @@ def check_newer_than_feed(build, channel):
 
 
 def retire_prereleases(channel, version, prerelease):
-    """Only the newest beta stays in the feed, and a release retires its own betas."""
+    """Only the newest prerelease stays in the feed, and a release retires its own betas and release candidates."""
     for item in channel.findall('item'):
         short = item.findtext(f'{{{SPARKLE}}}shortVersionString') or ''
-        if is_prerelease_item(item) and (prerelease or short.startswith(f'{version} beta-')):
+        if is_prerelease_item(item) and (prerelease or short.startswith((f'{version} beta-', f'{version} RC'))):
             channel.remove(item)
 
 
@@ -111,7 +116,7 @@ def main():
     parser.add_argument('--replace-existing', action='store_true',
                         help='Replace the existing item for this build version in the staged feed')
     parser.add_argument('--prerelease', type=Path, metavar='NOTES',
-                        help='Prepare a beta for the prerelease channel, with these Markdown notes')
+                        help='Prepare a beta or a release candidate for the prerelease channel, with these Markdown notes')
     args = parser.parse_args()
     app = args.app.resolve()
     info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
