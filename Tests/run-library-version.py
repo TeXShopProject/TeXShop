@@ -16,9 +16,15 @@ MUTATIONS = {
     # Any other version of the same number copies, an earlier beta too.
     'unordered': ('                return a > l;', '                return YES;'),
     # A beta is taken for later than its release.
-    'beta-after-release': ('[list addObject:@(beta ? 0 : 1)];', '[list addObject:@(beta ? 2 : 1)];'),
-    # Betas are compared as text, so beta-10 comes before beta-9.
-    'beta-as-text': ('[list addObject:@(beta ? group(3).integerValue : 0)];', '[list addObject:@(beta ? (NSInteger)group(3).UTF8String[0] : 0)];'),
+    'beta-after-release': ('[list addObject:@(beta ? 0 : prerelease ? 1 : 2)];', '[list addObject:@(beta ? 3 : prerelease ? 1 : 2)];'),
+    # A release candidate is taken for a beta, so a beta can copy over it.
+    'rc-as-beta': ('[list addObject:@(beta ? 0 : prerelease ? 1 : 2)];', '[list addObject:@(prerelease ? 0 : 2)];'),
+    # A release candidate is taken for later than its release.
+    'rc-after-release': ('[list addObject:@(beta ? 0 : prerelease ? 1 : 2)];', '[list addObject:@(beta ? 0 : prerelease ? 3 : 2)];'),
+    # Release candidates are not read, so 6.00 RC1 is another form of 6.00 that copies over a later RC.
+    'rc-unread': ('( beta-|b| RC|rc)', '( beta-|b)'),
+    # Betas and release candidates are compared as text, so beta-10 comes before beta-9.
+    'beta-as-text': ('[list addObject:@(prerelease ? group(4).integerValue : 0)];', '[list addObject:@(prerelease ? (NSInteger)group(4).UTF8String[0] : 0)];'),
     # An unknown form of the same number never copies.
     'unknown-never': ('    return ![libraryVersion isEqualToString:applicationVersion];', '    return NO;'),
     # Every launch copies.

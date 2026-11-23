@@ -86,12 +86,26 @@ int main(int argc, const char *argv[])
         Check(TSLibraryNeedsUpdating(@"5.60 beta-9", @"5.60 beta-10"), @"Betas are ordered by number, not text");
         Check(TSLibraryNeedsUpdating(@"5.60b10", @"5.60 beta-11"), @"5.60b10 is the same kind of version as 5.60 beta-10");
         Check(!TSLibraryNeedsUpdating(@"5.6", @"5.60"), @"5.6 is 5.60");
+        // Release candidates come after the betas and before the release.
+        Check(TSLibraryNeedsUpdating(@"6.00 beta-9", @"6.00 RC1"), @"6.00 RC1 is later than 6.00 beta-9");
+        Check(TSLibraryNeedsUpdating(@"6.00 beta-12", @"6.00 RC1"), @"6.00 RC1 is later than any beta");
+        Check(!TSLibraryNeedsUpdating(@"6.00 RC1", @"6.00 beta-9"), @"A beta does not copy over a release candidate");
+        Check(TSLibraryNeedsUpdating(@"6.00 RC1", @"6.00 RC2"), @"6.00 RC2 is later than 6.00 RC1");
+        Check(TSLibraryNeedsUpdating(@"6.00 RC9", @"6.00 RC10"), @"Release candidates are ordered by number, not text");
+        Check(TSLibraryNeedsUpdating(@"6.00 RC2", @"6.00"), @"The release is later than its release candidates");
+        Check(!TSLibraryNeedsUpdating(@"6.00", @"6.00 RC2"), @"A release candidate does not copy over its release");
+        Check(!TSLibraryNeedsUpdating(@"6.00 RC1", @"6.00 RC1"), @"6.00 RC1 again copies nothing");
+        Check(TSLibraryNeedsUpdating(@"6.00 RC1", @"6.00.1"), @"6.00.1 is later than 6.00 RC1");
         // TetsuTeXShop versions.
         Check(!TSLibraryNeedsUpdating(@"5.60b10.1", @"5.60b10.1"), @"5.60b10.1 again copies nothing");
         Check(TSLibraryNeedsUpdating(@"5.60b10.1", @"5.60b11.1"), @"5.60b11.1 is later than 5.60b10.1");
         Check(TSLibraryNeedsUpdating(@"5.60b10.1", @"5.60b10.2"), @"5.60b10.2 is later than 5.60b10.1");
         Check(TSLibraryNeedsUpdating(@"5.58.1", @"5.58.2"), @"5.58.2 is later than 5.58.1");
         Check(TSLibraryNeedsUpdating(@"5.60b10.1", @"6.00b1.1"), @"6.00b1.1 is later than 5.60b10.1");
+        Check(TSLibraryNeedsUpdating(@"6.00b9.1", @"6.00rc1.1"), @"6.00rc1.1 is later than 6.00b9.1");
+        Check(TSLibraryNeedsUpdating(@"6.00rc1.1", @"6.00rc1.2"), @"6.00rc1.2 is later than 6.00rc1.1");
+        Check(!TSLibraryNeedsUpdating(@"6.00rc1.1", @"6.00b9.1"), @"6.00b9.1 does not copy over 6.00rc1.1");
+        Check(TSLibraryNeedsUpdating(@"6.00rc1.1", @"6.00.1"), @"6.00.1 is later than 6.00rc1.1");
         // Another form of the same number copies once.
         Check(TSLibraryNeedsUpdating(@"6.00 rc-1", @"6.00"), @"An unknown form of the same number copies");
         Check(!TSLibraryNeedsUpdating(@"6.00 rc-1", @"6.00 rc-1"), @"... but not again");
