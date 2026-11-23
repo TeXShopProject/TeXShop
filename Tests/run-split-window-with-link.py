@@ -16,7 +16,7 @@ import subprocess
 import sys
 import tempfile
 from source_tree import include_args
-from production_fragments import closing_brace, verify_embedded
+from production_fragments import closing_brace, method, verify_embedded
 
 MUTATIONS = {
     'no-item': ('view', '            [theMenu insertItem: linkItem atIndex: 2];\n', ''),
@@ -136,6 +136,10 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property BOOL firstTime, windowIsSplit, horizontal;
 @property PDFView *activeView, *myPDFKitView, *myPDFKitView2;
 @property NSSplitView *pdfKitSplitView;
+@property (strong) NSArray<NSLayoutConstraint *> *splitViewPlacement;
+@property NSEdgeInsets splitViewOutsets;
+- (void) placeSplitViewForToolbar;
+- (void) releaseSplitViewPlacement;
 @property (strong) TSPreviewSplitDivider *previewSplitDivider;
 - (void)mainSplitPdfKitWindow;
 - (void)splitPdfKitWindow:(id)sender;
@@ -249,6 +253,7 @@ VIEWMETHODS
     [(MyPDFKitView *)self.myPDFKitView2 keepPinnedLinkPreviewInView];
 }
 WINDOWMETHODS
+PLACEMENTMETHODS
 @end
 
 static void settle(NSWindow *w) {
@@ -700,6 +705,11 @@ int main(int argc, char **argv) { @autoreleasepool {
 }}
 '''
 program = program.replace('VIEWMETHODS', view_text).replace('WINDOWMETHODS', window_text)
+# The split view starts below the toolbar while the parts are side by side (production methods).
+placement = method(window_source, '- (void) placeSplitViewForToolbar') + '\n\n' + method(window_source, '- (void) releaseSplitViewPlacement')
+fragments += [('complete method: placeSplitViewForToolbar', window_source, method(window_source, '- (void) placeSplitViewForToolbar')),
+              ('complete method: releaseSplitViewPlacement', window_source, method(window_source, '- (void) releaseSplitViewPlacement'))]
+program = program.replace('PLACEMENTMETHODS', placement)
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory() as temp:

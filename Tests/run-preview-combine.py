@@ -13,7 +13,7 @@ program = r'''
 #import <Cocoa/Cocoa.h>
 @interface Node : NSObject
 @property NSString *string;
-@property NSInteger state, showCount, removeCount;
+@property NSInteger state, showCount, removeCount, releaseCount, releaseBeforeRemove;
 @property NSRect frame;
 @property id parentWindow, window, child;
 @property Node *pdfKitSplitView;
@@ -26,8 +26,11 @@ program = r'''
 - (void)showWindow:(id)sender;
 - (void)orderOut:(id)sender;
 - (void)setFrameFromString:(NSString *)value;
+- (void)releaseSplitViewPlacement;
 @end
 @implementation Node
+// The Preview window hands its split view back before the split view moves (counted on the window).
+- (void)releaseSplitViewPlacement { self.releaseCount++; if (self.pdfKitSplitView.removeCount == 0) self.releaseBeforeRemove++; }
 - (NSRect)bounds { return NSMakeRect(0,0,500,600); }
 - (void)addSubview:(id)view { self.child=view; }
 - (void)removeFromSuperview { self.removeCount++; }
@@ -101,6 +104,7 @@ int main(int argc, char **argv) { @autoreleasepool {
   Node *destination=side.boolValue?d->leftView:d->rightView;
   check(destination.child==d.pdfKitWindow.pdfKitSplitView,@"PDF is moved into the visible combined window");
   check(d.dividerRestores==1,@"The divider goes to its remembered place before the combined window is shown");
+  check(d.pdfKitWindow.releaseCount==1 && d.pdfKitWindow.releaseBeforeRemove==1,@"The Preview window hands its split view back before it moves");
   [d doMove:nil];check(d.splitController.showCount==1,@"Already combined is a no-op");
  }
  for(NSNumber *kind in @[@0,@1,@2,@3]) {

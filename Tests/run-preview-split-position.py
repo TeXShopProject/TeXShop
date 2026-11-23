@@ -11,7 +11,7 @@ import subprocess
 import sys
 import tempfile
 from source_tree import include_args
-from production_fragments import closing_brace, verify_embedded
+from production_fragments import closing_brace, method, verify_embedded
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['band-counted', 'heights-with-band', 'first-not-restored', 'switch-not-swapped', 'shift-not-same',
@@ -183,6 +183,10 @@ VIEWMETHODS
 @property BOOL firstTime, windowIsSplit, horizontal;
 @property PDFView *activeView, *myPDFKitView, *myPDFKitView2;
 @property NSSplitView *pdfKitSplitView;
+@property (strong) NSArray<NSLayoutConstraint *> *splitViewPlacement;
+@property NSEdgeInsets splitViewOutsets;
+- (void) placeSplitViewForToolbar;
+- (void) releaseSplitViewPlacement;
 DIVIDERPROPERTY
 - (void)mainSplitPdfKitWindow;
 - (void)splitPdfKitWindow:(id)sender;
@@ -191,6 +195,7 @@ DIVIDERPROPERTY
 @implementation TestWindow
 - (void)keepPinnedLinkPreviewsInView { popupKeeps++; }
 SPLITMETHOD
+PLACEMENTMETHODS
 SWITCHMETHOD
 PARTSMETHOD
 SPLITTERMETHOD
@@ -560,6 +565,11 @@ program = (program.replace('DIVIDERIMPORT', '#import "TSPreviewSplitDivider.h"' 
            .replace('DIVIDERPROPERTY', '@property (strong) TSPreviewSplitDivider *previewSplitDivider;' if uses_divider else '')
            .replace('VIEWMETHODS', '\n'.join(view_methods))
            .replace('SPLITTERMETHOD', splitter).replace('SPLITMETHOD', place + '\n' + split).replace('SWITCHMETHOD', switch).replace('PARTSMETHOD', parts))
+# The split view starts below the toolbar while the parts are side by side (production methods).
+placement = method(window_source, '- (void) placeSplitViewForToolbar') + '\n\n' + method(window_source, '- (void) releaseSplitViewPlacement')
+fragments += [('complete method: placeSplitViewForToolbar', window_source, method(window_source, '- (void) placeSplitViewForToolbar')),
+              ('complete method: releaseSplitViewPlacement', window_source, method(window_source, '- (void) releaseSplitViewPlacement'))]
+program = program.replace('PLACEMENTMETHODS', placement)
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory() as temp:
