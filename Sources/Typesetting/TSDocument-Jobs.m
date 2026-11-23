@@ -1457,8 +1457,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 		[outputWindow makeFirstResponder: texCommand];
 		
 		
-		[outputWindow setTitle: [[[imagePath lastPathComponent] stringByDeletingPathExtension]
-			stringByAppendingString:@" console"]];
+		[self showConsoleTitleForPath: imagePath];
 		if ([SUD boolForKey:ConsoleBehaviorKey]) {
 			if (![outputWindow isVisible])
 				[outputWindow orderBack: self];
@@ -2362,8 +2361,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                     }
                     if (! useFullSplitWindow) {
                         [self.pdfKitWindow setRepresentedFilename: imagePath];
-                        //[pdfKitWindow setTitle: [imagePath lastPathComponent]]; // removed by Terada
-                        [self.pdfKitWindow setTitle: [[[self fileTitleName] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"]]; // removed by Terada
+                        [self showPreviewTitleForPath: imagePath];
                         [self fillLogWindowIfVisible];
                         
                         front = [SUD boolForKey: BringPdfFrontOnTypesetKey];
@@ -2585,8 +2583,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 					}
                     if (! useFullSplitWindow) {
                         [self.pdfKitWindow setRepresentedFilename: imagePath];
-                        //[pdfKitWindow setTitle: [imagePath lastPathComponent]]; // removed by Terada
-                        [self.pdfKitWindow setTitle: [[[self fileTitleName] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"]]; // removed by Terada
+                        [self showPreviewTitleForPath: imagePath];
                         [self fillLogWindowIfVisible];
                         front = [SUD boolForKey: BringPdfFrontOnTypesetKey];
                         if ((front) || (! [self.pdfKitWindow isVisible]))

@@ -37,6 +37,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSDocument.h"
+#import "TSWindowTitles.h"
 #import "TSThemeSystemColor.h"
 #import "TSSourceMagicComments.h"
 #import "TSDialogButtonLayout.h"
@@ -1685,7 +1686,7 @@ if (! skipTextWindow) {
 				self.pdfLastModDate = [myAttributes objectForKey:NSFileModificationDate] ;
 			}
 
-			[self.pdfKitWindow setTitle: [[[self fileURL] path] lastPathComponent]];
+			[self showPreviewTitleForPath: [[self fileURL] path]];
 			// [pdfWindow setRepresentedFilename: [self fileName]]; //mitsu July4;
 			// supposed to allow command click of window title to lead to file, but doesn't
 			self.documentType = isPDF;
@@ -1733,7 +1734,7 @@ if (! skipTextWindow) {
 					[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
 				[self.myPDFKitView2 showForSecond];
 				[self.pdfKitWindow setRepresentedFilename: imagePath];
-				[self.pdfKitWindow setTitle: [imagePath lastPathComponent]];
+				[self showPreviewTitleForPath: imagePath];
 				[self.pdfKitWindow makeKeyAndOrderFront: self];
 				[self fillLogWindowIfVisible];
 
@@ -1881,14 +1882,13 @@ if (! skipTextWindow) {
 		[self.myPDFKitView2 showForSecond];
 		
 		[self.pdfKitWindow setRepresentedFilename: imagePath];
-		//[self.pdfKitWindow setTitle: [imagePath lastPathComponent]]; // removed by Terada
-		[self.pdfKitWindow setTitle: [[[self fileTitleName] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"]]; // added by Terada
+		[self showPreviewTitleForPath: imagePath];
 		[self fillLogWindowIfVisible];
         
  	} else if (_externalEditor) {
 
 		PDFfromKit = YES;
-		[self.pdfKitWindow setTitle: [imagePath lastPathComponent]];
+		[self showPreviewTitleForPath: imagePath];
 		[self.pdfKitWindow makeKeyAndOrderFront: self];
 
 
@@ -7949,7 +7949,7 @@ if (! useFullSplitWindow) {
         else if (!self.useConTeXtSyncParser) [self allocateSyncScanner];
     }
     [self.pdfKitWindow setRepresentedFilename:path];
-    [self.pdfKitWindow setTitle:path.lastPathComponent];
+    [self showPreviewTitleForPath:path];
     [self fillLogWindowIfVisible];
     if (!immediate && _externalEditor && ([SUD boolForKey:BringPdfFrontOnAutomaticUpdateKey] || !self.pdfKitWindow.isVisible)) {
         [NSApp activateIgnoringOtherApps:YES];
@@ -7985,7 +7985,7 @@ if (! useFullSplitWindow) {
 				[self.myPDFKitView2 reShowForSecond];
 			}
 			[self.pdfKitWindow setRepresentedFilename: pdfPath];
-			[self.pdfKitWindow setTitle: [pdfPath lastPathComponent]];
+			[self showPreviewTitleForPath: pdfPath];
 				[self fillLogWindowIfVisible];
 			if ((front) || (![self.pdfKitWindow isVisible])) {
 				[[NSApplication sharedApplication] activateIgnoringOtherApps: YES];
@@ -8382,16 +8382,43 @@ if (! useFullSplitWindow) {
 	[self fixShowFullPathButton];
 	[SUD setBool:showFullPath forKey:ShowFullPathEnabledKey];
 	[self.standardController synchronizeWindowTitleWithDocumentName];
-	[self.pdfKitWindow becomeMainWindow];
-	[self.pdfKitWindow makeKeyWindow];
-	[textWindow becomeMainWindow];
-	[textWindow makeKeyWindow];
+	[self refreshPreviewTitle];
+	[self refreshConsoleTitle];
 }
 
 
 - (BOOL) showsFullPath
 {
 	return showFullPath;
+}
+
+// The Preview window and the console keep the path they show, so that their titles can follow
+// Show Full Path at once, whenever and however they were named (TSWindowTitles.h).
+- (void) showPreviewTitleForPath: (NSString *)path
+{
+	self.previewTitlePath = path;
+	[self refreshPreviewTitle];
+}
+
+- (void) refreshPreviewTitle
+{
+	NSString *path = self.previewTitlePath;
+	if (path == nil && [self fileURL] != nil)
+		path = [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension: @"pdf"];
+	if (path != nil && self.pdfKitWindow != nil)
+		[self.pdfKitWindow setTitle: TSPreviewWindowTitle(path, showFullPath)];
+}
+
+- (void) showConsoleTitleForPath: (NSString *)path
+{
+	self.consoleTitlePath = path;
+	[self refreshConsoleTitle];
+}
+
+- (void) refreshConsoleTitle
+{
+	if (self.consoleTitlePath != nil && outputWindow != nil)
+		[outputWindow setTitle: TSConsoleWindowTitle(self.consoleTitlePath, showFullPath)];
 }
 
 // added by Terada (- (NSString*) fileTitleName)

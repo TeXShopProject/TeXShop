@@ -537,6 +537,8 @@ enum RootCommand
 @property (retain)  IBOutlet    MyPDFKitView				*myPDFKitView;
 @property (retain)  IBOutlet    MyPDFKitView				*myPDFKitView2;
 @property (retain)  IBOutlet    TSPreviewWindow				*pdfKitWindow;
+@property (copy)    NSString                    *previewTitlePath;
+@property (copy)    NSString                    *consoleTitlePath;
 @property (weak)    NSWindow                    *consoleReturnWindow;
 
 @property (retain)   MySelection         *mSelection;
@@ -723,6 +725,10 @@ enum RootCommand
 - (void) fixShowFullPathButton; // added by Terada
 - (NSString*) fileTitleName; // added by Terada
 - (BOOL) showsFullPath;
+- (void) showPreviewTitleForPath: (NSString *)path;
+- (void) showConsoleTitleForPath: (NSString *)path;
+- (void) refreshPreviewTitle;
+- (void) refreshConsoleTitle;
 // - (void) openStyleFile: (id)sender; // added by Terada
 - (void) setAutoCompleting:(BOOL)flag; // added by Terada
 - (IBAction) showCharacterInfo:(id)sender; // added by Terada

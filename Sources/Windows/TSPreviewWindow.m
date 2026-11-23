@@ -289,7 +289,7 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 - (void) becomeMainWindow
 {
    self.willClose = NO;
-	if([self.myDocument fileURL] != nil ) [self setTitle:[[[self.myDocument fileTitleName] stringByDeletingPathExtension] stringByAppendingString: @".pdf"]]; // added by Terada
+	[self.myDocument refreshPreviewTitle];
 	[super becomeMainWindow];
 
 	[self.myDocument fixMacroMenuForWindowChange];

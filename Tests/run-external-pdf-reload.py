@@ -103,8 +103,10 @@ static void RunInline(dispatch_block_t block) { block(); }
 - (void)refreshPDFWindow:(NSTimer*)timer;
 - (void)checkExternalPDF:(BOOL)immediate;
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime;
+- (void)showPreviewTitleForPath:(NSString *)path;
 @end
 @implementation TSDocument
+- (void)showPreviewTitleForPath:(NSString *)path {}
 - (void)allocateSyncScanner {}
 - (void)allocateSyncScannerOld {}
 - (void)fillLogWindowIfVisible {}
