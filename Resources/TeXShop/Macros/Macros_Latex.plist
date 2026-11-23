@@ -2467,9 +2467,9 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 set backupTexName to baseName &amp; "_Mac.tex"
 
-set shellScript to  "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "cp  " &amp; quoted form of texName &amp;" " &amp; quoted form of backupTexName &amp;";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/flip -m " &amp; quoted form of backupTexName
+set shellScript to  "cd " &amp; dirName &amp; " &amp;&amp; "
+set shellScript to shellScript &amp; "cp " &amp; quoted form of ("./" &amp; texName) &amp; " " &amp; quoted form of ("./" &amp; backupTexName) &amp; " &amp;&amp; "
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/flip -m " &amp; quoted form of ("./" &amp; backupTexName)
 do shell script shellScript
 
 
@@ -2494,9 +2494,9 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 set backupTexName to baseName &amp; "_Unix.tex"
 
-set shellScript to  "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "cp  " &amp; quoted form of texName &amp;" " &amp; quoted form of backupTexName &amp;";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/flip -u " &amp; quoted form of backupTexName
+set shellScript to  "cd " &amp; dirName &amp; " &amp;&amp; "
+set shellScript to shellScript &amp; "cp " &amp; quoted form of ("./" &amp; texName) &amp; " " &amp; quoted form of ("./" &amp; backupTexName) &amp; " &amp;&amp; "
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/flip -u " &amp; quoted form of ("./" &amp; backupTexName)
 do shell script shellScript
 </string>
 					<key>key</key>
@@ -2519,9 +2519,9 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 set backupTexName to baseName &amp; "_Windows.tex"
 
-set shellScript to  "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "cp  " &amp; quoted form of texName &amp;" " &amp; quoted form of backupTexName &amp;";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/flip -d " &amp; quoted form of backupTexName
+set shellScript to  "cd " &amp; dirName &amp; " &amp;&amp; "
+set shellScript to shellScript &amp; "cp " &amp; quoted form of ("./" &amp; texName) &amp; " " &amp; quoted form of ("./" &amp; backupTexName) &amp; " &amp;&amp; "
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/flip -d " &amp; quoted form of ("./" &amp; backupTexName)
 do shell script shellScript
 </string>
 					<key>key</key>
