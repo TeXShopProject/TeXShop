@@ -1044,7 +1044,7 @@ withDarkColors = NO;
 	else if ( doPreview && ! _hasReadSource)
 		return YES;
 	else if 
-		(([fileExtension isEqualToString: @"pdf"]) ||
+		(([[fileExtension lowercaseString] isEqualToString: @"pdf"]) ||
 		([fileExtension isEqualToString: @"jpeg"]) ||
 		([fileExtension isEqualToString: @"jpg"]) ||
 		([fileExtension isEqualToString: @"JPG"]) ||
@@ -1678,7 +1678,8 @@ if (! skipTextWindow) {
 		imageFound = NO;
 		imagePath = [[self fileURL] path];
 
-		if ([fileExtension isEqualToString: @"pdf"]) {
+		// A PDF whose extension is written in capitals (.PDF) is a PDF too.
+		if ([[fileExtension lowercaseString] isEqualToString: @"pdf"]) {
 			imageFound = YES;
 
 			if ([[NSFileManager defaultManager] fileExistsAtPath: imagePath]) {
@@ -4212,7 +4213,7 @@ if ( ! skipTextWindow) {
     NSWindow *activeTextWindow;
     
     // strangely, the "setFrameFromString" below causes a long delay is the file type is "pdf" but not for "tiff" or other types!
-    if (! [[[[self fileURL] path] pathExtension] isEqualToString: @"pdf"])
+    if (! [[[[[self fileURL] path] pathExtension] lowercaseString] isEqualToString: @"pdf"])
         switch ([SUD integerForKey:DocumentWindowPosModeKey])
         {
             case DocumentWindowPosSave:

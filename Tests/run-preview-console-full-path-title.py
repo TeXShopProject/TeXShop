@@ -48,6 +48,8 @@ MUTATIONS = {
                                  'NSString *path = self.previewTitlePath;'),
     # Reading a PDF opened by itself again goes to the PDF beside it with a lower-case extension (third audit).
     'refresh-reads-lower-case-pdf': (DOCUMENT, '\tif ([self documentIsPDF])\n\t\tpdfPath = [[self fileURL] path];\n\telse\n\t\tpdfPath =', '\tpdfPath ='),
+    # A PDF whose extension is in capitals is not shown when it is opened (fourth audit).
+    'capital-pdf-not-opened': (DOCUMENT, '\t\tif ([[fileExtension lowercaseString] isEqualToString: @"pdf"]) {\n', '\t\tif ([fileExtension isEqualToString: @"pdf"]) {\n'),
     # Experiment takes the name the source window shows and strips it again (second audit, 2).
     'experiment-strips-shown-name': (SCRAP, 'title = [(showFullPath ? [url path] : [url lastPathComponent]) stringByDeletingPathExtension];',
                                      'title = [[textWindow title] stringByDeletingPathExtension];'),
@@ -118,6 +120,9 @@ check(code(document).count('[self showPreviewTitleForPath:') >= 6 and '[self sho
 body = method(document, '- (void)refreshPDFAndBringFront:(BOOL)front')
 check('if ([self documentIsPDF])\n\t\tpdfPath = [[self fileURL] path];' in body,
       'a PDF opened by itself is read again from the document\'s own file')
+check(code(document).count('[[fileExtension lowercaseString] isEqualToString: @"pdf"]') == 2
+      and '[fileExtension isEqualToString: @"pdf"]' not in code(document),
+      'a PDF whose extension is in capitals is read and shown when it is opened')
 body = method(document, '- (void)setFileURL:(NSURL *)url')
 check('[self refreshPreviewTitle];' in body, 'a move of the document names a PDF opened by itself again')
 check('[self refreshExperimentTitles];' in code(scrap).replace(method(scrap, '- (void) refreshExperimentTitles'), ''),
