@@ -2469,7 +2469,7 @@ set backupTexName to baseName &amp; "_Mac.tex"
 
 set shellScript to  "cd " &amp; dirName &amp; ";"
 set shellScript to shellScript &amp; "cp  " &amp; quoted form of texName &amp;" " &amp; quoted form of backupTexName &amp;";"
-set shellScript to shellScript &amp; "/bin/tcsh -c '~/Library/TeXShop/bin/flip -m  " &amp; quoted form of backupTexName &amp; "'"
+set shellScript to shellScript &amp; "/bin/tcsh -c " &amp; quoted form of ("~/Library/TeXShop/bin/flip -m " &amp; quoted form of backupTexName)
 do shell script shellScript
 
 
@@ -2496,7 +2496,7 @@ set backupTexName to baseName &amp; "_Unix.tex"
 
 set shellScript to  "cd " &amp; dirName &amp; ";"
 set shellScript to shellScript &amp; "cp  " &amp; quoted form of texName &amp;" " &amp; quoted form of backupTexName &amp;";"
-set shellScript to shellScript &amp; "/bin/tcsh -c '~/Library/TeXShop/bin/flip -u  " &amp; quoted form of backupTexName &amp; "'"
+set shellScript to shellScript &amp; "/bin/tcsh -c " &amp; quoted form of ("~/Library/TeXShop/bin/flip -u " &amp; quoted form of backupTexName)
 do shell script shellScript
 </string>
 					<key>key</key>
@@ -2521,7 +2521,7 @@ set backupTexName to baseName &amp; "_Windows.tex"
 
 set shellScript to  "cd " &amp; dirName &amp; ";"
 set shellScript to shellScript &amp; "cp  " &amp; quoted form of texName &amp;" " &amp; quoted form of backupTexName &amp;";"
-set shellScript to shellScript &amp; "/bin/tcsh -c '~/Library/TeXShop/bin/flip -d  " &amp; quoted form of backupTexName &amp; "'"
+set shellScript to shellScript &amp; "/bin/tcsh -c " &amp; quoted form of ("~/Library/TeXShop/bin/flip -d " &amp; quoted form of backupTexName)
 do shell script shellScript
 </string>
 					<key>key</key>

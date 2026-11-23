@@ -147,10 +147,11 @@
 <li>The help in all five languages is rewritten for TeXShop 6.00, with a new look that follows dark mode, and the Korean help is now in Korean. The manual is revised for 6.00.</li>
 <li>The help in Japanese and two other languages is about TeX Live instead of older TeX systems, and languages without help show the English help.</li>
 <li>Show Help for Package tells when the program it runs is missing, fails or finds no documentation, and in which TeX folder it looked.</li>
-<li>The default commands and the profiles write -file-line-error and -synctex=1 as each engine does, and TeXShop also warns before typesetting when the command has -shell-escape written that way.</li>
+<li>The default commands and the profiles write -file-line-error and -synctex=1 in the form each engine uses, and TeXShop also warns before typesetting when the command has -shell-escape written in either form.</li>
 <li>Help → TeX Live Documentation opens in every language, in English where there is no version in that language, and links to the current documents on the web instead of files that only MacTeX has.</li>
 <li>Users of earlier versions also get the html engine that Help → HTML Commands needs, and that page no longer points to the removed demo movies.</li>
 <li>The bundled ConTeXt macro that opened an old web page opens the TeX Live home page instead.</li>
+<li>Bundled macros that run shell commands, such as Bibliography, work with names of files and folders that have a space. The macros already in <code>~/Library/TeXShop/Macros</code> are not changed.</li>
 <li>Add help for LaTeX-aware spell checking.</li>
 <li>The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.</li>
 <li>Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.</li>
