@@ -33,9 +33,11 @@ MUTATIONS = {
     # A window whose content does not run under the toolbar gets the placement too.
     'any-window': ('place', ' && (self.styleMask & NSWindowStyleMaskFullSizeContentView) &&\n', ' &&\n'),
     # The split view keeps the size it had below the toolbar after unsplitting.
-    'frame-not-given-back': ('release', '    if (split.superview == self.contentView) {', '    if (NO) {'),
+    'frame-not-given-back': ('release', '    [self fitSplitViewToContent];\n', ''),
     # The split view gets the content view's bounds back, without its 2 points below the bottom edge.
-    'outsets-lost': ('release', '        NSEdgeInsets outsets = self.splitViewOutsets;', '        NSEdgeInsets outsets = NSEdgeInsetsMake(0, 0, 0, 0);'),
+    'outsets-lost': ('release', '    NSEdgeInsets outsets = self.splitViewOutsets;\n    split.frame', '    NSEdgeInsets outsets = NSEdgeInsetsMake(0, 0, 0, 0);\n    split.frame'),
+    # Back from the combined window, the split view keeps the content view's bounds.
+    'roundtrip-bounds': ('document', '            [self.pdfKitWindow fitSplitViewToContent];\n', '            [self.pdfKitWindow.pdfKitSplitView setFrame: [[self.pdfKitWindow contentView] bounds]];\n'),
     # Below the toolbar the split view ends at the bottom edge of the window.
     'bottom-outset-lost': ('place', 'constraintEqualToAnchor: content.bottomAnchor constant: outsets.bottom]', 'constraintEqualToAnchor: content.bottomAnchor]'),
     # A split view in another window is placed against the Preview window's content view.
@@ -47,7 +49,7 @@ MUTATIONS = {
     # Moving into the combined window keeps the constraints of the Preview window.
     'move-not-released': ('document', '            [self.pdfKitWindow releaseSplitViewPlacement];\n', ''),
     # Moving back leaves the parts side by side under the toolbar.
-    'back-not-placed': ('document', '            [self.pdfKitWindow placeSplitViewForToolbar];\n', ''),
+    'back-not-placed': ('document', '            [self.pdfKitWindow fitSplitViewToContent];\n            [self.pdfKitWindow placeSplitViewForToolbar];\n', '            [self.pdfKitWindow fitSplitViewToContent];\n'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -59,12 +61,13 @@ def read(name):
 window_source = read('TSPreviewWindow.m')
 document_source = read('TSDocument.m')
 place = method(window_source, '- (void) placeSplitViewForToolbar')
-release = method(window_source, '- (void) releaseSplitViewPlacement')
+release = '\n\n'.join(method(window_source, m) for m in ('- (void) takeSplitViewOutsets', '- (void) fitSplitViewToContent', '- (void) releaseSplitViewPlacement'))
 main = method(window_source, '- (void) mainSplitPdfKitWindow\n{\n    NSSize        theSize, newSize1, newSize2;\n    NSRect        theFrame, theFrame1, theFrame2;\n    BOOL ')
 move = method(document_source, '- (void) doMove: (id)sender')
 separate = method(document_source, '- (void) doSeparateWindows: (id)sender')
-fragments = [('complete method: placeSplitViewForToolbar', window_source, place),
-             ('complete method: releaseSplitViewPlacement', window_source, release)]
+fragments = [('complete method: placeSplitViewForToolbar', window_source, place)] + [
+             ('complete method: ' + m[9:], window_source, method(window_source, m))
+             for m in ('- (void) takeSplitViewOutsets', '- (void) fitSplitViewToContent', '- (void) releaseSplitViewPlacement')]
 
 # The call sites, checked in the production source.
 split_site = ('         [self.pdfKitSplitView adjustSubviews];\n'
@@ -75,8 +78,9 @@ unsplit_site = ('        [self.myPDFKitView2 removeFromSuperview];\n'
                 '        [self placeSplitViewForToolbar];\n')
 move_site = ('            [self.pdfKitWindow releaseSplitViewPlacement];\n'
              '            [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];\n')
-back_site = ('            [self.pdfKitWindow.pdfKitSplitView setFrame: [[self.pdfKitWindow contentView] bounds]];\n'
-             '            // Parts side by side start below the toolbar of the Preview window again.\n'
+back_site = ('            // The frame it had in the Preview window, 2 points below the bottom edge included;\n'
+             '            // parts side by side start below the toolbar again.\n'
+             '            [self.pdfKitWindow fitSplitViewToContent];\n'
              '            [self.pdfKitWindow placeSplitViewForToolbar];\n')
 
 if args.mutation:
@@ -98,7 +102,7 @@ def site(text, fragment, label):
 site(main, split_site, 'splitting places the split view after the second part is added')
 site(main, unsplit_site, 'unsplitting places the split view after the second part is removed')
 site(move, move_site, 'moving into the combined window hands the split view back before it leaves')
-site(separate, back_site, 'moving back places the split view again')
+site(separate, back_site, 'moving back gives the split view its frame and places it again')
 # Splitting places the split view before the second part gets its pages and magnification.
 if not site_failures:
     assert main.index(split_site) < main.index('[self.myPDFKitView2 setDocument:[self.myPDFKitView document]];')
@@ -133,8 +137,10 @@ static BandToolbar *toolbarDelegate;
 @property (weak) NSSplitView *pdfKitSplitView;
 @property (strong) NSArray<NSLayoutConstraint *> *splitViewPlacement;
 @property NSEdgeInsets splitViewOutsets;
+@property BOOL splitViewOutsetsTaken;
 - (void) placeSplitViewForToolbar;
 - (void) releaseSplitViewPlacement;
+- (void) fitSplitViewToContent;
 @end
 @implementation PreviewWindow
 PLACE
@@ -303,11 +309,24 @@ static void CheckFullSize(void) {
           NSEqualRects(split.frame, combined.contentView.bounds), @"in another window the split view keeps the frame that window gives it");
     [split removeFromSuperview];
     [content addSubview:split];
-    split.frame = content.bounds;
+    BACKSTEP
     [window placeSplitViewForToolbar];
     Settle(window);
     Check(window.splitViewPlacement != nil && Near(NSMaxY(split.frame), BandBottom(window)), @"back in the Preview window the parts start below the toolbar again");
+    BelowBand(window, split, @"back from the combined window");
     Unsplit(window, split, second);
+    Check(AsInNib(window, split), [NSString stringWithFormat:@"after the combined window, unsplitting gives the split view its frame back, 2 points below (%@)", NSStringFromRect(split.frame)]);
+    // Unsplit into the combined window and back: the frame of the nib again.
+    [window releaseSplitViewPlacement];
+    [split removeFromSuperview];
+    [combined.contentView addSubview:split];
+    split.frame = combined.contentView.bounds;
+    [split removeFromSuperview];
+    [content addSubview:split];
+    BACKSTEP
+    [window placeSplitViewForToolbar];
+    Settle(window);
+    Check(window.splitViewPlacement == nil && AsInNib(window, split), [NSString stringWithFormat:@"one part back from the combined window has the frame of the nib (%@)", NSStringFromRect(split.frame)]);
     [combined close];
     [window close];
 }
@@ -333,7 +352,12 @@ int main(int argc, char **argv) { @autoreleasepool {
     return 0;
 }}
 '''
-program = program.replace('PLACE', place).replace('RELEASE', release)
+back_start = separate.index('            [[self.pdfKitWindow contentView] addSubview: self.pdfKitWindow.pdfKitSplitView];\n')
+back_end = separate.find('            [self.pdfKitWindow placeSplitViewForToolbar];\n', back_start)
+back_lines = separate[back_start:back_end if back_end >= 0 else separate.index('            [self.pdfKitWindow orderFront:self];\n', back_start)]
+back_step = '\n'.join(l.strip() for l in back_lines.splitlines()[1:] if l.strip() and not l.strip().startswith('//'))
+back_step = back_step.replace('self.pdfKitWindow.pdfKitSplitView', 'split').replace('[self.pdfKitWindow contentView]', 'content').replace('self.pdfKitWindow', 'window')
+program = program.replace('PLACE', place).replace('RELEASE', release).replace('BACKSTEP', back_step or '/* nothing */')
 program = program.replace('SITES', '\n    '.join('Check(NO, @"%s");' % failure for failure in site_failures)
                           + ''.join('\n    Check(YES, @"%s");' % label for label in
                                     ['the production call sites are in place'] if not site_failures))

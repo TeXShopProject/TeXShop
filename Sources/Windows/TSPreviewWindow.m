@@ -1602,8 +1602,37 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 // the toolbar. A single part, and parts one above the other, still run under the toolbar,
 // as the source window's parts do under its band. The split view follows the band when it
 // changes height, as when the annotation toolbar is shown or in full screen.
+// How far the split view reaches beyond the content view (in the nib, 2 points below its bottom
+// edge), taken once, while the split view still has the frame of the nib in this window: before
+// it is first placed below the toolbar or moves into the combined window. It keeps reaching so
+// far at the sides and the bottom below the toolbar, and all around when it gets its frame back,
+// also after the combined window.
+- (void) takeSplitViewOutsets
+{
+    NSSplitView *split = self.pdfKitSplitView;
+    NSView *content = self.contentView;
+    if (self.splitViewOutsetsTaken || self.splitViewPlacement != nil || split == nil || split.superview != content)
+        return;
+    NSRect frame = split.frame, bounds = content.bounds;
+    self.splitViewOutsets = NSEdgeInsetsMake(NSMaxY(frame) - NSMaxY(bounds), NSMinX(bounds) - NSMinX(frame),
+                                             NSMinY(bounds) - NSMinY(frame), NSMaxX(frame) - NSMaxX(bounds));
+    self.splitViewOutsetsTaken = YES;
+}
+
+- (void) fitSplitViewToContent
+{
+    NSSplitView *split = self.pdfKitSplitView;
+    if (split.superview != self.contentView || self.splitViewPlacement != nil)
+        return;
+    NSRect bounds = self.contentView.bounds;
+    NSEdgeInsets outsets = self.splitViewOutsets;
+    split.frame = NSMakeRect(NSMinX(bounds) - outsets.left, NSMinY(bounds) - outsets.bottom,
+                             NSWidth(bounds) + outsets.left + outsets.right, NSHeight(bounds) + outsets.top + outsets.bottom);
+}
+
 - (void) placeSplitViewForToolbar
 {
+    [self takeSplitViewOutsets];
     NSSplitView *split = self.pdfKitSplitView;
     NSView *content = self.contentView;
     BOOL below = split != nil && split.superview == content && (self.styleMask & NSWindowStyleMaskFullSizeContentView) &&
@@ -1614,12 +1643,6 @@ static void TSPreviewPlacePartByFrame(NSView *part)
     }
     if (self.splitViewPlacement != nil)
         return;
-    // How far the frame reaches beyond the content view (in the Preview window 2 points below
-    // its bottom edge): it keeps reaching so far at the sides and the bottom, and all around
-    // when it gets its frame back.
-    NSRect frame = split.frame, bounds = content.bounds;
-    self.splitViewOutsets = NSEdgeInsetsMake(NSMaxY(frame) - NSMaxY(bounds), NSMinX(bounds) - NSMinX(frame),
-                                             NSMinY(bounds) - NSMinY(frame), NSMaxX(frame) - NSMaxX(bounds));
     split.translatesAutoresizingMaskIntoConstraints = NO;
     // Below the band; at the sides and the bottom as before.
     NSEdgeInsets outsets = self.splitViewOutsets;
@@ -1634,18 +1657,13 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 
 - (void) releaseSplitViewPlacement
 {
+    [self takeSplitViewOutsets];
     if (self.splitViewPlacement == nil)
         return;
     [NSLayoutConstraint deactivateConstraints: self.splitViewPlacement];
     self.splitViewPlacement = nil;
-    NSSplitView *split = self.pdfKitSplitView;
-    split.translatesAutoresizingMaskIntoConstraints = YES;
-    if (split.superview == self.contentView) {
-        NSRect bounds = self.contentView.bounds;
-        NSEdgeInsets outsets = self.splitViewOutsets;
-        split.frame = NSMakeRect(NSMinX(bounds) - outsets.left, NSMinY(bounds) - outsets.bottom,
-                                 NSWidth(bounds) + outsets.left + outsets.right, NSHeight(bounds) + outsets.top + outsets.bottom);
-    }
+    self.pdfKitSplitView.translatesAutoresizingMaskIntoConstraints = YES;
+    [self fitSplitViewToContent];
 }
 
 - (void) splitPdfKitWindow: (id)sender

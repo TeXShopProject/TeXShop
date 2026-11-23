@@ -53,7 +53,8 @@
 @property (weak)      NSSplitView    *pdfKitSplitView;
 @property (strong)    TSPreviewSplitDivider *previewSplitDivider; // keeps the top of each part when the divider is dragged
 @property (strong)    NSArray<NSLayoutConstraint *> *splitViewPlacement; // the split view below the toolbar, while its parts are side by side
-@property               NSEdgeInsets    splitViewOutsets;   // how far its frame reached beyond the content view before
+@property               NSEdgeInsets    splitViewOutsets;   // how far its frame reaches beyond the content view, as in the nib
+@property               BOOL            splitViewOutsetsTaken;
 @property (weak)      TSDocument      *myDocument;
 @property               double          mytimestamp;
 @property               BOOL            horizontal;
@@ -135,6 +136,8 @@
 - (void) placeSplitViewForToolbar;
 // Hands the split view back to its frame, before it moves to another window.
 - (void) releaseSplitViewPlacement;
+// Gives the split view the frame of the content view with the outsets of the nib, when it comes back.
+- (void) fitSplitViewToContent;
 - (void)toggleLinkPopups: (id)sender;
 - (void)toggleApplicationMenu: (id)sender;
 - (void)switchSplitViews: (id)sender;
