@@ -77,6 +77,7 @@ static void check(BOOL ok, NSString *message) {
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)error { return [@"\\relax\n" dataUsingEncoding:NSUTF8StringEncoding]; }
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)error { return YES; }
 - (NSString *)fileType { return @"public.plain-text"; }
+- (void)refreshExperimentTitles {}
 @end
 static void waitFor(BOOL *done) {
     NSDate *limit = [NSDate dateWithTimeIntervalSinceNow:10];
@@ -166,6 +167,7 @@ STUB_DOCUMENT = r'''
 @interface TSDocument : NSDocument
 @property BOOL showsFullPath;
 @property (retain) TSWindowController *standardController;
+- (void)refreshExperimentTitles;
 @end
 '''
 
