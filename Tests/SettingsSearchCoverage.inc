@@ -156,6 +156,19 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
    if([hit.category isEqual:@"typesetting"] && [hit.targetIdentifier isEqual:@"row.catalog.typesetting.9.0"] && [hit.title isEqual:otfTitle])found=YES;
   Check(found,[NSString stringWithFormat:@"Former otf name finds the renamed setting: %@ (%@)",query,otfLanguage]);searchChecks++;
  }
+ // The former name of the Key Bindings group, where a language renamed it, still finds both rows of the group:
+ // the switch and the list of key bindings.
+ {
+  NSString *former=[resources localizedStringForKey:@"group.bindings.former" value:@"" table:@"SettingsCategories"];
+  if(former.length && ![former isEqual:@"group.bindings.former"]){
+   BOOL row0=NO,row1=NO;
+   for(TSSettingsSearchResult *hit in [index resultsForQuery:former]){
+    if([hit.targetIdentifier isEqual:@"row.catalog.keyboard.0.0"])row0=YES;
+    if([hit.targetIdentifier isEqual:@"row.catalog.keyboard.0.1"])row1=YES;
+   }
+   Check(row0&&row1,[NSString stringWithFormat:@"Former Key Bindings name finds the switch and the list: %@ (%@)",former,otfLanguage]);searchChecks++;
+  }
+ }
  // The system color switches of the cursor and the selection share their title: each has one result, named after
  // its color, that leads to it, whether the title, a part of it or the whole name is searched.
  {

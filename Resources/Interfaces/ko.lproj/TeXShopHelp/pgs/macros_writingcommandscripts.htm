@@ -45,7 +45,6 @@ pdflatex --shell-escape "$1"</pre>
 <p>이 셸 스크립트를 호출하는 매크로가 더 흥미롭습니다.</p>
 <pre>--Applescript
 -- Apply only to an already saved file.
--- Claus Gerhardt, Nov. 2003
 
 set scriptPath to (do shell script "dirname " &amp; "~/Library/TeXShop/Scripts/ex")
 set scriptPath to scriptPath &amp; "/setname.scpt"
@@ -63,7 +62,7 @@ set m to (number of characters of contents of baseName)
 set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName
 do shell script shellScript
 
 tell document frontName of application "TeXShop"
@@ -76,8 +75,8 @@ tell document frontName of application "TeXShop"
     save
 end tell</pre>
 <p>그래도 이 방법에는 두 가지 장점이 있습니다. 맨 앞에 있는 문서가 뒤의 명령을 받아야 할 문서가 아닐 때, 예를 들어 /Users/name/Examples/myfile.log 같은 로그 파일일 때도 작동합니다. 또 파일을 한 번도 저장하지 않았으면 이 방법은 오류를 돌려주지만, <code>save</code> 명령은 스크립트를 저장 대화상자 뒤에서 기다리게 만듭니다.</p>
-<p>그다음 여섯 줄은 변수 <code>dirName</code>과 <code>baseName</code>을 설정합니다. 소스 파일이 /Users/name/My Papers/Stuff/myfile.tex이면 <code>dirName</code>은 <code>'/Users/name/My Papers/Stuff'</code>가 되는데, 폴더 이름에 공백이 있으므로 셸을 위해 따옴표로 묶은 것입니다. <code>baseName</code>은 <code>myfile.tex</code>입니다. 이렇게 하면 폴더 이름에는 공백이 있어도 되지만, TeX는 파일 이름 자체에는 공백을 허용하지 않습니다.</p>
-<p>그다음 세 줄은 셸 스크립트를 호출합니다. 결과는 터미널에서 <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc myfile.tex</code>를 입력한 것과 같습니다. 마지막 세 줄은 미리보기 윈도우를 갱신합니다.</p>
+<p>그다음 여섯 줄은 변수 <code>dirName</code>과 <code>baseName</code>을 설정합니다. 소스 파일이 /Users/name/My Papers/Stuff/myfile.tex이면 <code>dirName</code>은 <code>'/Users/name/My Papers/Stuff'</code>가 되는데, 폴더 이름에 공백이 있으므로 셸을 위해 따옴표로 묶은 것입니다. <code>baseName</code>은 <code>myfile.tex</code>입니다. 파일 이름도 셸 스크립트에 넘길 때 같은 방식으로 따옴표로 묶으므로, 폴더 이름과 파일 이름 모두 공백이 있어도 됩니다.</p>
+<p>그다음 세 줄은 셸 스크립트를 호출합니다. 결과는 터미널에서 <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code>를 입력한 것과 같습니다. 마지막 세 줄은 미리보기 윈도우를 갱신합니다.</p>
 <p>이 중 몇몇 줄은 복잡하지만, 새 스크립트에 그대로 복사하여 사용할 수 있습니다.</p>
 
 <h2 id="do-shell-script">AppleScript에서 셸 명령 실행하기</h2>
@@ -94,7 +93,7 @@ end tell</pre>
 <pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
 <p>위의 스크립트는 cmd1 = <code>cd</code>, input1 = <code>dirName</code>, cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code>, input2 = <code>baseName</code>으로 이렇게 합니다. 다음 두 줄은</p>
 <pre>set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName</pre>
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName</pre>
 <p>이 일련의 명령을 하나의 변수에 담는 편리한 방법일 뿐입니다.</p>
 </main>
 </body>

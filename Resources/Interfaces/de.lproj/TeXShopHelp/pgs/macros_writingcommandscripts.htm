@@ -45,7 +45,6 @@ pdflatex --shell-escape "$1"</pre>
 <p>Das Makro, das dieses Shell-Skript aufruft, ist interessanter:</p>
 <pre>--Applescript
 -- Apply only to an already saved file.
--- Claus Gerhardt, Nov. 2003
 
 set scriptPath to (do shell script "dirname " &amp; "~/Library/TeXShop/Scripts/ex")
 set scriptPath to scriptPath &amp; "/setname.scpt"
@@ -63,7 +62,7 @@ set m to (number of characters of contents of baseName)
 set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName
 do shell script shellScript
 
 tell document frontName of application "TeXShop"
@@ -76,8 +75,8 @@ tell document frontName of application "TeXShop"
     save
 end tell</pre>
 <p>Das Rezept hat zwei Vorteile. Es funktioniert auch, wenn das vorderste Dokument nicht dasjenige ist, das die späteren Befehle erhalten soll, etwa eine Log-Datei wie /Users/name/Examples/myfile.log. Und wurde die Datei noch nie gesichert, gibt das Rezept einen Fehler zurück, während der Befehl <code>save</code> das Skript hinter einem Sichern-Dialog warten ließe.</p>
-<p>Die nächsten sechs Zeilen setzen die Variablen <code>dirName</code> und <code>baseName</code>. Ist die Quelltextdatei /Users/name/My Papers/Stuff/myfile.tex, so ist <code>dirName</code> gleich <code>'/Users/name/My Papers/Stuff'</code>, wegen des Leerzeichens in einem Ordnernamen für die Shell in Anführungszeichen gesetzt, und <code>baseName</code> ist <code>myfile.tex</code>. Ordnernamen dürfen auf diese Weise Leerzeichen enthalten; im Namen der Datei selbst erlaubt TeX sie nicht.</p>
-<p>Die nächsten drei Zeilen rufen das Shell-Skript auf. Das Ergebnis ist dasselbe wie die Eingabe von <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc myfile.tex</code> im Terminal. Die letzten drei Zeilen aktualisieren das Vorschaufenster.</p>
+<p>Die nächsten sechs Zeilen setzen die Variablen <code>dirName</code> und <code>baseName</code>. Ist die Quelltextdatei /Users/name/My Papers/Stuff/myfile.tex, so ist <code>dirName</code> gleich <code>'/Users/name/My Papers/Stuff'</code>, wegen des Leerzeichens in einem Ordnernamen für die Shell in Anführungszeichen gesetzt, und <code>baseName</code> ist <code>myfile.tex</code>. Der Dateiname wird ebenso in Anführungszeichen gesetzt, wenn er an das Shell-Skript übergeben wird, sodass beide Leerzeichen enthalten dürfen.</p>
+<p>Die nächsten drei Zeilen rufen das Shell-Skript auf. Das Ergebnis ist dasselbe wie die Eingabe von <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code> im Terminal. Die letzten drei Zeilen aktualisieren das Vorschaufenster.</p>
 <p>Einige dieser Zeilen sind kompliziert, lassen sich aber unverändert in neue Skripte kopieren.</p>
 
 <h2 id="do-shell-script">Shell-Befehle aus AppleScript ausführen</h2>
@@ -94,7 +93,7 @@ end tell</pre>
 <pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
 <p>Das Skript oben tut dies mit cmd1 = <code>cd</code>, input1 = <code>dirName</code>, cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code> und input2 = <code>baseName</code>. Die Zeilen</p>
 <pre>set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName</pre>
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName</pre>
 <p>sind nur ein bequemer Weg, diese Folge in einer Variablen abzulegen.</p>
 </main>
 </body>

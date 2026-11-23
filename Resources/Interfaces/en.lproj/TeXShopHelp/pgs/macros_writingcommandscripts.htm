@@ -45,7 +45,6 @@ pdflatex --shell-escape "$1"</pre>
 <p>The macro that calls this shell script is more interesting:</p>
 <pre>--Applescript
 -- Apply only to an already saved file.
--- Claus Gerhardt, Nov. 2003
 
 set scriptPath to (do shell script "dirname " &amp; "~/Library/TeXShop/Scripts/ex")
 set scriptPath to scriptPath &amp; "/setname.scpt"
@@ -63,7 +62,7 @@ set m to (number of characters of contents of baseName)
 set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName
 do shell script shellScript
 
 tell document frontName of application "TeXShop"
@@ -76,8 +75,8 @@ tell document frontName of application "TeXShop"
     save
 end tell</pre>
 <p>The recipe has two advantages. It also works when the front document is not the one that should receive the later commands, for instance a log file such as /Users/name/Examples/myfile.log. And if the file has never been saved, the recipe returns an error, while the <code>save</code> command would leave the script waiting behind a save dialog.</p>
-<p>The next six lines set the variables <code>dirName</code> and <code>baseName</code>. If the source file is /Users/name/My Papers/Stuff/myfile.tex, <code>dirName</code> is <code>'/Users/name/My Papers/Stuff'</code>, quoted for the shell because of the space in a folder name, and <code>baseName</code> is <code>myfile.tex</code>. Folder names may contain spaces this way; TeX does not allow them in the name of the file itself.</p>
-<p>The next three lines call the shell script. The result is the same as typing <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc myfile.tex</code> in Terminal. The final three lines update the Preview window.</p>
+<p>The next six lines set the variables <code>dirName</code> and <code>baseName</code>. If the source file is /Users/name/My Papers/Stuff/myfile.tex, <code>dirName</code> is <code>'/Users/name/My Papers/Stuff'</code>, quoted for the shell because of the space in a folder name, and <code>baseName</code> is <code>myfile.tex</code>. The file name is quoted the same way when it is passed to the shell script, so both may contain spaces.</p>
+<p>The next three lines call the shell script. The result is the same as typing <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code> in Terminal. The final three lines update the Preview window.</p>
 <p>Several of these lines are complicated, but they can be copied unchanged into new scripts.</p>
 
 <h2 id="do-shell-script">Running shell commands from AppleScript</h2>
@@ -94,7 +93,7 @@ end tell</pre>
 <pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
 <p>The script above does this with cmd1 = <code>cd</code>, input1 = <code>dirName</code>, cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code> and input2 = <code>baseName</code>. The lines</p>
 <pre>set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName</pre>
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName</pre>
 <p>are simply a convenient way to put this sequence into one variable.</p>
 </main>
 </body>

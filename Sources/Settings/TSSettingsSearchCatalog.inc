@@ -286,6 +286,7 @@ add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.0", @"SettingsCategorie
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.0", @"SettingsCategories", @"group.bindings.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.0", @"SettingsCategories", @"catalog.keyboard.0.0.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"SettingsCategories", @"catalog.keyboard.0.1.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"SettingsCategories", @"group.bindings.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"heading.group.completion", @"SettingsCategories", @"group.completion.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.note", TSSettingsSearchWeightDescription);

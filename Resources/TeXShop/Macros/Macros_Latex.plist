@@ -2468,8 +2468,8 @@ set texName to baseName &amp; ".tex"
 set backupTexName to baseName &amp; "_Mac.tex"
 
 set shellScript to  "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "cp  " &amp; texName &amp;" " &amp; backupTexName &amp;";"
-set shellScript to shellScript &amp; "/bin/tcsh -c '~/Library/TeXShop/bin/flip -m  " &amp; backupTexName &amp; "'"
+set shellScript to shellScript &amp; "cp  " &amp; quoted form of texName &amp;" " &amp; quoted form of backupTexName &amp;";"
+set shellScript to shellScript &amp; "/bin/tcsh -c '~/Library/TeXShop/bin/flip -m  " &amp; quoted form of backupTexName &amp; "'"
 do shell script shellScript
 
 
@@ -2495,8 +2495,8 @@ set texName to baseName &amp; ".tex"
 set backupTexName to baseName &amp; "_Unix.tex"
 
 set shellScript to  "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "cp  " &amp; texName &amp;" " &amp; backupTexName &amp;";"
-set shellScript to shellScript &amp; "/bin/tcsh -c '~/Library/TeXShop/bin/flip -u  " &amp; backupTexName &amp; "'"
+set shellScript to shellScript &amp; "cp  " &amp; quoted form of texName &amp;" " &amp; quoted form of backupTexName &amp;";"
+set shellScript to shellScript &amp; "/bin/tcsh -c '~/Library/TeXShop/bin/flip -u  " &amp; quoted form of backupTexName &amp; "'"
 do shell script shellScript
 </string>
 					<key>key</key>
@@ -2520,8 +2520,8 @@ set texName to baseName &amp; ".tex"
 set backupTexName to baseName &amp; "_Windows.tex"
 
 set shellScript to  "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "cp  " &amp; texName &amp;" " &amp; backupTexName &amp;";"
-set shellScript to shellScript &amp; "/bin/tcsh -c '~/Library/TeXShop/bin/flip -d  " &amp; backupTexName &amp; "'"
+set shellScript to shellScript &amp; "cp  " &amp; quoted form of texName &amp;" " &amp; quoted form of backupTexName &amp;";"
+set shellScript to shellScript &amp; "/bin/tcsh -c '~/Library/TeXShop/bin/flip -d  " &amp; quoted form of backupTexName &amp; "'"
 do shell script shellScript
 </string>
 					<key>key</key>
@@ -3024,15 +3024,15 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/bibtexc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/bibtexc  " &amp; quoted form of baseName
 do shell script shellScript
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 
@@ -3084,20 +3084,20 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/bibtexc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/bibtexc  " &amp; quoted form of baseName
 do shell script shellScript
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 
@@ -3157,7 +3157,7 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/mpostc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/mpostc  " &amp; quoted form of baseName
 do shell script shellScript
 
 set fileLog to fileName &amp; ".log"
@@ -3174,7 +3174,7 @@ end tell
 
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 
@@ -3211,11 +3211,11 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/mpostc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/mpostc  " &amp; quoted form of baseName
 do shell script shellScript
 
 set fileLog to fileName &amp; ".log"
@@ -3232,7 +3232,7 @@ end tell
 
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 
@@ -3277,7 +3277,7 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/htlatexc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/htlatexc  " &amp; quoted form of baseName
 do shell script shellScript
 
 set theHTML to #HTMLPATH#
@@ -3316,7 +3316,7 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/htlatexr  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/htlatexr  " &amp; quoted form of baseName
 do shell script shellScript
 
 set theHTML to #HTMLPATH#
@@ -3362,7 +3362,7 @@ set m to (number of characters of contents of baseName)
 set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/altpdflatexc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/altpdflatexc  " &amp; quoted form of baseName
 do shell script shellScript
 
 tell document frontName of application "TeXShop"
@@ -3396,7 +3396,7 @@ set m to (number of characters of contents of baseName)
 set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName
 do shell script shellScript
 
 tell document frontName of application "TeXShop"
@@ -3520,15 +3520,15 @@ set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as stri
 set texName to baseName &amp; ".tex"
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/makeindexk  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/makeindexk  " &amp; quoted form of baseName
 do shell script shellScript
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/mpostc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/mpostc  " &amp; quoted form of baseName
 do shell script shellScript
 
 set fileLog to fileName &amp; ".log"
@@ -3544,7 +3544,7 @@ refreshtext
 end tell
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; texName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of texName
 do shell script shellScript
 
 tell document frontName of application "TeXShop"

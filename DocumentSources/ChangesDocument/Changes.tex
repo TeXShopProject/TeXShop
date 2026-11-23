@@ -132,7 +132,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item \textbf{Critical fix:} Stop now ends TeX; before, TeX kept running.
 \item Fix problems with the console and typesetting: console output can be copied while TeX runs, broken characters in console output and logs are shown correctly, Command-1 returns to the file typeset with \texttt{\% !TEX root}, stopping no longer hangs when a typesetting tool cannot start, TeXShop tells you when the root file cannot be found, and the tools for pictures, MetaPost and texloganalyser work when the TeX or Ghostscript folder has a space in its path.
 \item Typesetting is stopped when its document is closed or when you quit TeXShop, and it no longer starts when the save before it fails, when you cancel that save, or when you stop it during that save.
-\item Trash Aux \& Typeset moves only the auxiliary files of the document to the Trash; holding Option for its shortcut no longer makes it trash those of the whole folder.
+\item With the default settings, Trash Aux \& Typeset moves only the auxiliary files of the document to the Trash; holding Option for its shortcut no longer makes it trash those of the whole folder, which a hidden setting listed in Comment Lines and Hidden Settings still does.
 \end{itemize}
 
 \subsection{Fixes: preview}
@@ -177,6 +177,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Remove Skype from the manual. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/11}{\#11}).
 \item The manual has the same version number as the TeXShop release it is written for, starting with 6.00. Suggested by Bruno Voisin.
 \item The contact information in the credits points to the current maintainer. Reported by \href{https://github.com/ralphrmartin}{Ralph Martin} (\href{https://github.com/TeXShopProject/TeXShop/issues/13}{\#13}).
+\item Links in the credits open the current web pages of the projects they name.
 \item About TeXShop opens the TeXShop web site from a link at the top of its credits. Suggested by \href{https://github.com/zenitani}{Seiji Zenitani} (\href{https://github.com/TeXShopProject/TeXShop/issues/69}{\#69}).
 \item The Help menu shows the current documents at the top and the older ones in its Older Documents submenu. The Short Course has a submenu of its own, which also opens each of its lists of symbols. Items that open a document in English tell so in every language, and the item that copied the Short Course files of an older version is removed.
 \item First Steps with TeXShop, About This Release, File Encoding, the document on key bindings, macros and completion, and the manual describe TeXShop 6.00, and the older documents tell when they were written.

@@ -1225,7 +1225,7 @@ SyncTeX takes you from a place in the source to the corresponding place in the t
 \end{itemize}
 \mnu{Sync} at the top of the contextual menu of the source and of the Preview window does the same for the place you clicked. The colors of the two marks are set in \mnu{Settings}\To\mnu{Themes}\To\mnu{SyncTeX}, under \mnu{Preview} and \mnu{Source}.
 
-SyncTeX is a part of the \TeX\ engines by J\'er\^ome Laurens. When \TeX\ is run with the option \verb|-synctex=1|, it writes a file such as \verb|Galois.synctex.gz| beside the PDF file, which records where each piece of the source ended up on the page; TeXShop reads it with Laurens's parser. The commands that TeXShop sets up, the engine profiles and the engines that come with TeXShop use this option. In an engine of your own, add \verb|-synctex=1| to the call of \TeX\ (with one or two hyphens; every engine accepts both).
+SyncTeX is a part of the \TeX\ engines by J\'er\^ome Laurens. When \TeX\ is run with the option \verb|-synctex=1|, it writes a file such as \verb|Galois.synctex.gz| beside the PDF file, which records where each piece of the source ended up on the page; TeXShop reads it with Laurens's parser. The commands that TeXShop sets up, the engine profiles and the engines in \path{~/Library/TeXShop/Engines} use this option; some of the optional engines in the Inactive folder do not. In an engine of your own, add \verb|-synctex=1| to the call of \TeX\ (with one or two hyphens; every engine accepts both).
 
 SyncTeX is very useful, but not exact: the place you are looking for may be a little before or after the mark.
 
@@ -1432,7 +1432,7 @@ The lines that set the program, its parameter, the BibTeX program and the root f
 \section{Typesetting}
 
 \begin{description}
-\item[\texttt{\% !TEX program = }{\em name}] Sets the program that typesets this file, overriding every other way of choosing it. Upper and lower case do not matter in the name. \texttt{pdflatex} and \texttt{pdftex} run the \LaTeX\ and plain \TeX\ commands of the Direct PDF group of the Typesetting category of Settings; \texttt{latex} and \texttt{tex} run those of the Via DVI group; \texttt{personallatex} and \texttt{personaltex} those of the Personal Script group. Any other name is the name of an engine as it appears in the menu beside the Typeset button, such as \texttt{xelatex}, \texttt{lualatex} or \texttt{pdflatexmk}. The older form \verb|% !TEX TS-program =| is also accepted. For example:
+\item[\texttt{\% !TEX program = }{\em name}] Sets the program that typesets this file, overriding the choice in the toolbar and in Settings; \mnu{Typeset}\To\mnu{plain TeX} and \mnu{Typeset}\To\mnu{LaTeX} ignore it. Upper and lower case do not matter in the name. \texttt{pdflatex} and \texttt{pdftex} run the \LaTeX\ and plain \TeX\ commands of the Direct PDF group of the Typesetting category of Settings; \texttt{latex} and \texttt{tex} run those of the Via DVI group; \texttt{personallatex} and \texttt{personaltex} those of the Personal Script group. Any other name is the name of an engine as it appears in the menu beside the Typeset button, such as \texttt{xelatex}, \texttt{lualatex} or \texttt{pdflatexmk}. The older form \verb|% !TEX TS-program =| is also accepted. For example:
 \begin{verbatim}
 % !TEX program = lualatex
 \end{verbatim}
@@ -2142,11 +2142,10 @@ The shell script is \path{~/Library/TeXShop/bin/pdflatexc}. It does not depend o
 \end{verbatim}
 
 The macro that calls this shell script is more interesting:
-{\footnotesize
+{\scriptsize
 \begin{verbatim}
 --Applescript
 -- Apply only to an already saved file.
--- Claus Gerhardt, Nov. 2003
 
 set scriptPath to (do shell script "dirname " & "~/Library/TeXShop/Scripts/ex")
 set scriptPath to scriptPath & "/setname.scpt"
@@ -2164,7 +2163,7 @@ set m to (number of characters of contents of baseName)
 set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
 
 set shellScript to "cd " & dirName & ";"
-set shellScript to shellScript & "~/Library/TeXShop/bin/pdflatexc  " & baseName
+set shellScript to shellScript & "~/Library/TeXShop/bin/pdflatexc  " & quoted form of baseName
 do shell script shellScript
 
 tell document frontName of application "TeXShop"
@@ -2182,12 +2181,12 @@ After the comments, the first seven lines save the source file and find the name
 \end{verbatim}
 The longer recipe has two advantages. It also works when the front document is not the one that should receive the later commands, for instance a log file. And if the file has never been saved, it returns an error, while the \texttt{save} command would leave the script waiting behind a save dialog.
 
-The next six lines set the variables \texttt{dirName} and \texttt{baseName}. If the source file is \nolinkurl{/Users/name/My Papers/Stuff/myfile.tex}, \texttt{dirName} is \verb|'/Users/name/My Papers/Stuff'|, quoted for the shell because of the space in a folder name, and \texttt{baseName} is \texttt{myfile.tex}. Folder names may contain spaces this way; \TeX\ does not allow them in the name of the file itself.
+The next six lines set the variables \texttt{dirName} and \texttt{baseName}. If the source file is \nolinkurl{/Users/name/My Papers/Stuff/myfile.tex}, \texttt{dirName} is \verb|'/Users/name/My Papers/Stuff'|, quoted for the shell because of the space in a folder name, and \texttt{baseName} is \texttt{myfile.tex}. The file name is quoted the same way when it is passed to the shell script, so both may contain spaces.
 
 The next three lines call the shell script. The result is the same as typing
 {\small
 \begin{verbatim}
-  cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc myfile.tex
+  cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'
 \end{verbatim}
 }
 in Terminal. The final three lines update the Preview window. Several of these lines are complicated, but they can be copied unchanged into new scripts.
