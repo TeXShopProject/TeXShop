@@ -1602,23 +1602,9 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 // the toolbar. A single part, and parts one above the other, still run under the toolbar,
 // as the source window's parts do under its band. The split view follows the band when it
 // changes height, as when the annotation toolbar is shown or in full screen.
-// How far the split view reaches beyond the content view (in the nib, 2 points below its bottom
-// edge), taken once, while the split view still has the frame of the nib in this window: before
-// it is first placed below the toolbar or moves into the combined window. It keeps reaching so
-// far at the sides and the bottom below the toolbar, and all around when it gets its frame back,
-// also after the combined window.
-- (void) takeSplitViewOutsets
-{
-    NSSplitView *split = self.pdfKitSplitView;
-    NSView *content = self.contentView;
-    if (self.splitViewOutsetsTaken || self.splitViewPlacement != nil || split == nil || split.superview != content)
-        return;
-    NSRect frame = split.frame, bounds = content.bounds;
-    self.splitViewOutsets = NSEdgeInsetsMake(NSMaxY(frame) - NSMaxY(bounds), NSMinX(bounds) - NSMinX(frame),
-                                             NSMinY(bounds) - NSMinY(frame), NSMaxX(frame) - NSMaxX(bounds));
-    self.splitViewOutsetsTaken = YES;
-}
-
+// The frame the split view gets back when its parts stop being side by side: the content view's
+// bounds with the outsets it had before they went side by side (in the nib, 2 points below the
+// bottom edge).
 - (void) fitSplitViewToContent
 {
     NSSplitView *split = self.pdfKitSplitView;
@@ -1632,17 +1618,29 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 
 - (void) placeSplitViewForToolbar
 {
-    [self takeSplitViewOutsets];
     NSSplitView *split = self.pdfKitSplitView;
     NSView *content = self.contentView;
-    BOOL below = split != nil && split.superview == content && (self.styleMask & NSWindowStyleMaskFullSizeContentView) &&
-        self.windowIsSplit && split.isVertical;
+    BOOL here = split != nil && split.superview == content;
+    BOOL below = here && (self.styleMask & NSWindowStyleMaskFullSizeContentView) && self.windowIsSplit && split.isVertical;
     if (! below) {
         [self releaseSplitViewPlacement];
+        // In this window with one part, or parts one above the other: the next split side by side
+        // starts from the frame the split view then has, as in RC1.
+        if (here)
+            self.splitViewOutsetsTaken = NO;
         return;
     }
     if (self.splitViewPlacement != nil)
         return;
+    // How far the frame reaches beyond the content view when the parts first go side by side. A
+    // move into the combined window and back with the parts side by side keeps it, so they keep
+    // reaching so far at the sides and the bottom, and get that frame back when unsplit.
+    if (! self.splitViewOutsetsTaken) {
+        NSRect frame = split.frame, bounds = content.bounds;
+        self.splitViewOutsets = NSEdgeInsetsMake(NSMaxY(frame) - NSMaxY(bounds), NSMinX(bounds) - NSMinX(frame),
+                                                 NSMinY(bounds) - NSMinY(frame), NSMaxX(frame) - NSMaxX(bounds));
+        self.splitViewOutsetsTaken = YES;
+    }
     split.translatesAutoresizingMaskIntoConstraints = NO;
     // Below the band; at the sides and the bottom as before.
     NSEdgeInsets outsets = self.splitViewOutsets;
@@ -1657,7 +1655,6 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 
 - (void) releaseSplitViewPlacement
 {
-    [self takeSplitViewOutsets];
     if (self.splitViewPlacement == nil)
         return;
     [NSLayoutConstraint deactivateConstraints: self.splitViewPlacement];

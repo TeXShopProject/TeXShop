@@ -708,7 +708,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 '''
 program = program.replace('VIEWMETHODS', view_text).replace('WINDOWMETHODS', window_text)
 # The split view starts below the toolbar while the parts are side by side (production methods).
-placement_methods = ('- (void) takeSplitViewOutsets', '- (void) fitSplitViewToContent', '- (void) placeSplitViewForToolbar', '- (void) releaseSplitViewPlacement')
+placement_methods = ('- (void) fitSplitViewToContent', '- (void) placeSplitViewForToolbar', '- (void) releaseSplitViewPlacement')
 placement = '\n\n'.join(method(window_source, m) for m in placement_methods)
 fragments += [('complete method: ' + m[9:], window_source, method(window_source, m)) for m in placement_methods]
 program = program.replace('PLACEMENTMETHODS', placement)

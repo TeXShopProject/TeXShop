@@ -29,19 +29,22 @@ MUTATIONS = {
     'side-under-toolbar': ('place', '[split.topAnchor constraintEqualToAnchor: content.safeAreaLayoutGuide.topAnchor]',
                            '[split.topAnchor constraintEqualToAnchor: content.topAnchor]'),
     # Parts one above the other also start below the toolbar.
-    'stacked-below': ('place', '        self.windowIsSplit && split.isVertical;', '        self.windowIsSplit;'),
+    'stacked-below': ('place', ' && self.windowIsSplit && split.isVertical;', ' && self.windowIsSplit;'),
     # A window whose content does not run under the toolbar gets the placement too.
-    'any-window': ('place', ' && (self.styleMask & NSWindowStyleMaskFullSizeContentView) &&\n', ' &&\n'),
+    'any-window': ('place', ' && (self.styleMask & NSWindowStyleMaskFullSizeContentView) && self.windowIsSplit', ' && self.windowIsSplit'),
     # The split view keeps the size it had below the toolbar after unsplitting.
     'frame-not-given-back': ('release', '    [self fitSplitViewToContent];\n', ''),
     # The split view gets the content view's bounds back, without its 2 points below the bottom edge.
     'outsets-lost': ('release', '    NSEdgeInsets outsets = self.splitViewOutsets;\n    split.frame', '    NSEdgeInsets outsets = NSEdgeInsetsMake(0, 0, 0, 0);\n    split.frame'),
     # Back from the combined window, the split view keeps the content view's bounds.
-    'roundtrip-bounds': ('document', '            [self.pdfKitWindow fitSplitViewToContent];\n', '            [self.pdfKitWindow.pdfKitSplitView setFrame: [[self.pdfKitWindow contentView] bounds]];\n'),
+    # Back from the combined window, the parts side by side take the bounds they were given as their frame: 0 points below.
+    'outsets-taken-again': ('place', '    if (! self.splitViewOutsetsTaken) {', '    if (YES) {'),
+    # The outsets of an earlier split side by side are used after one part came back with the bounds.
+    'outsets-kept': ('place', '        if (here)\n            self.splitViewOutsetsTaken = NO;\n', ''),
     # Below the toolbar the split view ends at the bottom edge of the window.
     'bottom-outset-lost': ('place', 'constraintEqualToAnchor: content.bottomAnchor constant: outsets.bottom]', 'constraintEqualToAnchor: content.bottomAnchor]'),
     # A split view in another window is placed against the Preview window's content view.
-    'other-window': ('place', 'split != nil && split.superview == content && ', 'split != nil && '),
+    'other-window': ('place', 'BOOL here = split != nil && split.superview == content;', 'BOOL here = split != nil;'),
     # Splitting leaves the split view where it is.
     'split-not-placed': ('main', '        // Side by side, the parts start below the toolbar before they are given their pages.\n        [self placeSplitViewForToolbar];\n', ''),
     # Unsplitting leaves the split view below the toolbar.
@@ -49,7 +52,7 @@ MUTATIONS = {
     # Moving into the combined window keeps the constraints of the Preview window.
     'move-not-released': ('document', '            [self.pdfKitWindow releaseSplitViewPlacement];\n', ''),
     # Moving back leaves the parts side by side under the toolbar.
-    'back-not-placed': ('document', '            [self.pdfKitWindow fitSplitViewToContent];\n            [self.pdfKitWindow placeSplitViewForToolbar];\n', '            [self.pdfKitWindow fitSplitViewToContent];\n'),
+    'back-not-placed': ('document', '            // Parts side by side start below the toolbar of the Preview window again.\n            [self.pdfKitWindow placeSplitViewForToolbar];\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -61,13 +64,13 @@ def read(name):
 window_source = read('TSPreviewWindow.m')
 document_source = read('TSDocument.m')
 place = method(window_source, '- (void) placeSplitViewForToolbar')
-release = '\n\n'.join(method(window_source, m) for m in ('- (void) takeSplitViewOutsets', '- (void) fitSplitViewToContent', '- (void) releaseSplitViewPlacement'))
+release = '\n\n'.join(method(window_source, m) for m in ('- (void) fitSplitViewToContent', '- (void) releaseSplitViewPlacement'))
 main = method(window_source, '- (void) mainSplitPdfKitWindow\n{\n    NSSize        theSize, newSize1, newSize2;\n    NSRect        theFrame, theFrame1, theFrame2;\n    BOOL ')
 move = method(document_source, '- (void) doMove: (id)sender')
 separate = method(document_source, '- (void) doSeparateWindows: (id)sender')
 fragments = [('complete method: placeSplitViewForToolbar', window_source, place)] + [
              ('complete method: ' + m[9:], window_source, method(window_source, m))
-             for m in ('- (void) takeSplitViewOutsets', '- (void) fitSplitViewToContent', '- (void) releaseSplitViewPlacement')]
+             for m in ('- (void) fitSplitViewToContent', '- (void) releaseSplitViewPlacement')]
 
 # The call sites, checked in the production source.
 split_site = ('         [self.pdfKitSplitView adjustSubviews];\n'
@@ -78,9 +81,8 @@ unsplit_site = ('        [self.myPDFKitView2 removeFromSuperview];\n'
                 '        [self placeSplitViewForToolbar];\n')
 move_site = ('            [self.pdfKitWindow releaseSplitViewPlacement];\n'
              '            [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];\n')
-back_site = ('            // The frame it had in the Preview window, 2 points below the bottom edge included;\n'
-             '            // parts side by side start below the toolbar again.\n'
-             '            [self.pdfKitWindow fitSplitViewToContent];\n'
+back_site = ('            [self.pdfKitWindow.pdfKitSplitView setFrame: [[self.pdfKitWindow contentView] bounds]];\n'
+             '            // Parts side by side start below the toolbar of the Preview window again.\n'
              '            [self.pdfKitWindow placeSplitViewForToolbar];\n')
 
 if args.mutation:
@@ -102,7 +104,7 @@ def site(text, fragment, label):
 site(main, split_site, 'splitting places the split view after the second part is added')
 site(main, unsplit_site, 'unsplitting places the split view after the second part is removed')
 site(move, move_site, 'moving into the combined window hands the split view back before it leaves')
-site(separate, back_site, 'moving back gives the split view its frame and places it again')
+site(separate, back_site, 'moving back gives the split view the bounds, as in RC1, and places it again')
 # Splitting places the split view before the second part gets its pages and magnification.
 if not site_failures:
     assert main.index(split_site) < main.index('[self.myPDFKitView2 setDocument:[self.myPDFKitView document]];')
@@ -326,7 +328,12 @@ static void CheckFullSize(void) {
     BACKSTEP
     [window placeSplitViewForToolbar];
     Settle(window);
-    Check(window.splitViewPlacement == nil && AsInNib(window, split), [NSString stringWithFormat:@"one part back from the combined window has the frame of the nib (%@)", NSStringFromRect(split.frame)]);
+    Check(window.splitViewPlacement == nil && NSEqualRects(split.frame, content.bounds), [NSString stringWithFormat:@"one part back from the combined window has the bounds, as in RC1 (%@)", NSStringFromRect(split.frame)]);
+    // Side by side from there, and unsplit: the frame it had before, the bounds.
+    Split(window, split, second, YES);
+    Check(Near(NSMaxY(split.frame), BandBottom(window)) && Near(NSMinY(split.frame), 0), [NSString stringWithFormat:@"side by side after one part came back, the split view starts below the band and ends at the bottom edge (%@)", NSStringFromRect(split.frame)]);
+    Unsplit(window, split, second);
+    Check(NSEqualRects(split.frame, content.bounds), [NSString stringWithFormat:@"unsplit again, the split view has the bounds it had before (%@)", NSStringFromRect(split.frame)]);
     [combined close];
     [window close];
 }
@@ -338,6 +345,27 @@ static void CheckNotFullSize(void) {
     Check(window.splitViewPlacement == nil && AsInNib(window, split), @"without content under the toolbar, parts side by side stay as they were");
     Unsplit(window, split, second);
     Check(AsInNib(window, split), @"without content under the toolbar, unsplitting leaves the split view as it was");
+    // Into the combined window and back, split side by side, one above the other, or not: the bounds, as in RC1.
+    NSWindow *combined = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 500, 400) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+    combined.releasedWhenClosed = NO;
+    NSView *content = window.contentView;
+    for (int state = 0; state < 3; state++) {
+        if (state > 0) Split(window, split, second, state == 1);
+        [window releaseSplitViewPlacement];
+        [split removeFromSuperview];
+        [combined.contentView addSubview:split];
+        split.frame = combined.contentView.bounds;
+        [split removeFromSuperview];
+        [content addSubview:split];
+        BACKSTEP
+        [window placeSplitViewForToolbar];
+        Settle(window);
+        Check(window.splitViewPlacement == nil && NSEqualRects(split.frame, content.bounds),
+              [NSString stringWithFormat:@"without content under the toolbar, back from the combined window (%d) as in RC1 (%@)", state, NSStringFromRect(split.frame)]);
+        if (state > 0) Unsplit(window, split, second);
+        split.frame = NSMakeRect(0, -2, NSWidth(content.bounds), NSHeight(content.bounds) + 2);
+    }
+    [combined close];
     [window close];
 }
 

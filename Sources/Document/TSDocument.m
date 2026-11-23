@@ -11930,9 +11930,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             [self.sourceStatusBar placeBelowView: splitView];
             [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];
             [[self.pdfKitWindow contentView] addSubview: self.pdfKitWindow.pdfKitSplitView];
-            // The frame it had in the Preview window, 2 points below the bottom edge included;
-            // parts side by side start below the toolbar again.
-            [self.pdfKitWindow fitSplitViewToContent];
+            [self.pdfKitWindow.pdfKitSplitView setFrame: [[self.pdfKitWindow contentView] bounds]];
+            // Parts side by side start below the toolbar of the Preview window again.
             [self.pdfKitWindow placeSplitViewForToolbar];
             [self.pdfKitWindow orderFront:self];
             [textWindow makeKeyAndOrderFront:self];
