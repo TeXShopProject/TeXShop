@@ -52,6 +52,8 @@
 @property (retain)      PDFView        *myPDFKitView2;
 @property (weak)      NSSplitView    *pdfKitSplitView;
 @property (strong)    TSPreviewSplitDivider *previewSplitDivider; // keeps the top of each part when the divider is dragged
+@property (strong)    NSArray<NSLayoutConstraint *> *splitViewPlacement; // the split view below the toolbar, while its parts are side by side
+@property               NSEdgeInsets    splitViewOutsets;   // how far its frame reached beyond the content view before
 @property (weak)      TSDocument      *myDocument;
 @property               double          mytimestamp;
 @property               BOOL            horizontal;
@@ -128,6 +130,11 @@
 - (void)saveSelectionToFile: (id)sender; // mitsu 1.29 (O)
 #endif
 - (void) splitPdfKitWindow: (id)sender; 
+// In a window whose content runs under the toolbar, parts side by side start below it.
+// Called after the window was split or unsplit, and when the split view comes back to it.
+- (void) placeSplitViewForToolbar;
+// Hands the split view back to its frame, before it moves to another window.
+- (void) releaseSplitViewPlacement;
 - (void)toggleLinkPopups: (id)sender;
 - (void)toggleApplicationMenu: (id)sender;
 - (void)switchSplitViews: (id)sender;

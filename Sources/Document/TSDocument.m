@@ -11865,6 +11865,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                 [splitView setFrame: [leftView bounds]];
                 }
             [self.sourceStatusBar placeBelowView: splitView];
+            // In the combined window the split view takes the frame of its side again.
+            [self.pdfKitWindow releaseSplitViewPlacement];
             [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];
             if (interchange) {
                 [leftView addSubview: self.pdfKitWindow.pdfKitSplitView];
@@ -11929,6 +11931,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];
             [[self.pdfKitWindow contentView] addSubview: self.pdfKitWindow.pdfKitSplitView];
             [self.pdfKitWindow.pdfKitSplitView setFrame: [[self.pdfKitWindow contentView] bounds]];
+            // Parts side by side start below the toolbar of the Preview window again.
+            [self.pdfKitWindow placeSplitViewForToolbar];
             [self.pdfKitWindow orderFront:self];
             [textWindow makeKeyAndOrderFront:self];
             [fullSplitWindow orderOut:self];
