@@ -24,7 +24,7 @@
 "preview.summary" = "Affichage et commandes de l’aperçu PDF.";
 "typesetting.summary" = "Profils du moteur, composition, synchronisation et chemins des outils.";
 "console.summary" = "La console affichant les messages de composition.";
-"keyboard.summary" = "Raccourcis clavier, complétion et raccourcis des menus.";
+"keyboard.summary" = "Raccourcis de saisie, complétion et raccourcis des menus.";
 "updates.summary" = "Recherche automatique et mises à jour du logiciel.";
 
 /* Approved catalog presentation */
@@ -49,6 +49,7 @@
 "group.general.3.title" = "Fichier racine du projet";
 "catalog.general.3.0.title" = "Ouvrir le fichier racine à l’ouverture d’un document";
 "catalog.general.3.1.title" = "Miniaturiser la fenêtre-maître ouverte";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "Avancé";
 "group.general.6.title" = "Icône du Dock pendant l’exécution";
 "catalog.general.5.0.title" = "Les réglages absents de cette fenêtre sont décrits dans l’aide « Commentaires spéciaux et réglages cachés ».";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "Ne pas vérifier les commentaires";
 "group.appearance.0.title" = "Thèmes";
 "catalog.appearance.0.0.title" = "Thème pour Mode clair";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "Thème pour Mode sombre";
 "group.appearance.1.title" = "Modifier le thème";
 "theme.list.add" = "Nouveau thème";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "Lorsque vous copiez, faites glisser ou enregistrez une sélection de l’aperçu sous forme d’image, le noir devient la couleur du texte et le blanc celle du fond. Ces deux couleurs se règlent dans « Coloriage des images copiées » du thème actuel. Les copies PDF et EPS ne sont pas modifiées.";
 "catalog.preview.4.2.title" = "Proéminence du premier plan";
 "catalog.preview.4.2.note" = "Les valeurs élevées accentuent le texte lors de la copie d’images matricielles.";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL personnelle";
 "catalog.preview.5.0.note" = "La page que la fenêtre HTML ouvre en premier. Saisissez une adresse web ou le chemin d’un fichier.";
@@ -303,9 +306,11 @@
 "group.console.1.title" = "Actions";
 "catalog.console.1.0.title" = "Afficher la console";
 "catalog.console.1.1.title" = "Redimensionnement de la console";
-"group.bindings.title" = "Raccourcis clavier";
+"group.bindings.title" = "Raccourcis de saisie";
+"group.bindings.former" = "Raccourcis clavier";
 "catalog.keyboard.0.0.title" = "Utiliser les raccourcis de saisie (valeur initiale des nouveaux documents)";
 "catalog.keyboard.0.0.note" = "Remplace un caractère saisi par un texte défini, par exemple { par {}.";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "Liste des raccourcis de saisie";
 "group.completion.title" = "Complétion des commandes";
 "catalog.keyboard.1.0.title" = "Touche de déclenchement";

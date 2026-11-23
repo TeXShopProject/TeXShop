@@ -24,7 +24,7 @@
 "preview.summary" = "Visualización y controles de la vista previa de PDF.";
 "typesetting.summary" = "Perfiles del motor, composición, sincronización y rutas de herramientas.";
 "console.summary" = "La consola que muestra la salida de la composición.";
-"keyboard.summary" = "Asignaciones de teclas, autocompletado y atajos de menús.";
+"keyboard.summary" = "Combinaciones de teclas, autocompletado y atajos de menús.";
 "updates.summary" = "Comprobación automática y actualizaciones del programa.";
 
 /* Approved catalog presentation */
@@ -49,6 +49,7 @@
 "group.general.3.title" = "Archivo raíz del proyecto";
 "catalog.general.3.0.title" = "Abrir el archivo raíz al abrir un documento";
 "catalog.general.3.1.title" = "Miniaturizar la ventana raíz abierta";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "Avanzado";
 "group.general.6.title" = "Icono del Dock durante la ejecución";
 "catalog.general.5.0.title" = "Los ajustes que no aparecen aquí se describen en la ayuda «Líneas mágicas y ajustes ocultos».";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "No comprobar comentarios";
 "group.appearance.0.title" = "Temas";
 "catalog.appearance.0.0.title" = "Modo claro";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "Modo oscuro";
 "group.appearance.1.title" = "Editar tema";
 "theme.list.add" = "Nuevo tema";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "Al copiar, arrastrar o guardar como imagen una selección de la vista previa, el negro se sustituye por el color del texto y el blanco por el color de fondo. Ambos colores se definen en «Correspondencia de color de imágenes copiadas» del tema actual. Las copias PDF y EPS no se modifican.";
 "catalog.preview.4.2.title" = "Prominencia primer plano:";
 "catalog.preview.4.2.note" = "Los valores más altos resaltan el texto al copiar imágenes de mapa de bits.";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL base";
 "catalog.preview.5.0.note" = "La página que abre primero la ventana HTML. Escriba una dirección web o la ruta de un archivo.";
@@ -303,9 +306,11 @@
 "group.console.1.title" = "Acciones";
 "catalog.console.1.0.title" = "Mostrar consola";
 "catalog.console.1.1.title" = "Cambio de tamaño";
-"group.bindings.title" = "Autocompleción";
+"group.bindings.title" = "Combinaciones de teclas";
+"group.bindings.former" = "Autocompleción";
 "catalog.keyboard.0.0.title" = "Usar combinaciones de teclas (valor inicial para documentos nuevos)";
 "catalog.keyboard.0.0.note" = "Sustituye un carácter escrito por un texto fijo, por ejemplo { por {}.";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "Lista de combinaciones de teclas";
 "group.completion.title" = "Autocompletado de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de activación";
@@ -317,7 +322,7 @@
 "catalog.keyboard.3.0.note" = "Tras \\ref{ y órdenes similares, «Completar etiqueta o clave de cita» ofrece las etiquetas del archivo. Si está activado, tras \\cite{ y órdenes similares también ofrece claves de cita de BibDesk.";
 "group.shortcuts.title" = "Atajos de menú";
 "group.updates.0.title" = "Comprobación automática";
-"catalog.updates.0.0.title" = "Búsqueda automática de actualizaciones:";
+"catalog.updates.0.0.title" = "Búsqueda automática de actualizaciones";
 "catalog.updates.0.1.title" = "Intervalo de comprobación";
 "group.updates.1.title" = "Actualizaciones incluidas";
 "catalog.updates.1.0.title" = "Actualizar a versiones preliminares cuando estén disponibles";

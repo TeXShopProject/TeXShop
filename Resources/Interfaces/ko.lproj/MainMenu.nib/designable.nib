@@ -44,7 +44,7 @@
                                     <action selector="displayGPLLicense:" target="259" id="Qht-23-TcD"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="~/라이브러리/TeXshop 폴더열기" id="3sm-Lp-vzH" identifier="TSShortcut.GotoLibraryTeXShop:.0">
+                            <menuItem title="~/라이브러리/TeXShop 폴더 열기" id="3sm-Lp-vzH" identifier="TSShortcut.GotoLibraryTeXShop:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="GotoLibraryTeXShop:" target="-1" id="Q6A-R2-qkJ"/>

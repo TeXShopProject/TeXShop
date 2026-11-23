@@ -2073,7 +2073,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
         (modifiers == NSAlternateKeyMask)
         )
    {
-        [self trashAUXFiles:self];
+        [self trashAUXFilesAggressively:NO];
        
    }
 

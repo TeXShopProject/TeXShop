@@ -49,6 +49,7 @@
 "group.general.3.title" = "Fișierul principal al proiectului";
 "catalog.general.3.0.title" = "Deschide fișierul principal la deschiderea unui document";
 "catalog.general.3.1.title" = "Minimizează fereastra principală deschisă";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "Avansat";
 "group.general.6.title" = "Pictograma din Dock în timpul rulării";
 "catalog.general.5.0.title" = "Setările care nu apar aici sunt descrise în documentul de ajutor „Linii de comentarii și configurări ascunse”.";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "Omite comentariile";
 "group.appearance.0.title" = "Teme";
 "catalog.appearance.0.0.title" = "Tema modului luminos";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "Tema modului întunecat";
 "group.appearance.1.title" = "Editează tema";
 "theme.list.add" = "Temă nouă";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "Când copiați, trageți sau salvați ca imagine o selecție din previzualizare, negrul devine culoarea textului, iar albul culoarea fundalului. Ambele culori se setează în „Culori pentru imaginile copiate” din tema curentă. Copiile PDF și EPS nu sunt modificate.";
 "catalog.preview.4.2.title" = "Proeminența Planului din Față";
 "catalog.preview.4.2.note" = "Valorile mai mari accentuează textul la copierea imaginilor raster.";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL inițial";
 "catalog.preview.5.0.note" = "Pagina pe care fereastra HTML o deschide prima. Introduceți o adresă web sau calea unui fișier.";
@@ -303,9 +306,11 @@
 "group.console.1.title" = "Acțiuni";
 "catalog.console.1.0.title" = "Arată consola";
 "catalog.console.1.1.title" = "Redimensionarea consolei";
-"group.bindings.title" = "Completare Automată";
+"group.bindings.title" = "Asocieri de taste";
+"group.bindings.former" = "Completare Automată";
 "catalog.keyboard.0.0.title" = "Folosește asocieri de taste (implicit pentru documentele noi)";
 "catalog.keyboard.0.0.note" = "Înlocuiește un caracter tastat cu un text stabilit, de exemplu { cu {}.";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "Lista asocierilor de taste";
 "group.completion.title" = "Completarea comenzilor";
 "catalog.keyboard.1.0.title" = "Tastă de activare";

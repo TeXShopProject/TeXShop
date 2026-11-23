@@ -49,6 +49,7 @@
 "group.general.3.title" = "프로젝트 루트 파일";
 "catalog.general.3.0.title" = "문서를 열 때 루트 파일 열기";
 "catalog.general.3.1.title" = "루트 파일 창을 최소화";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "고급";
 "group.general.6.title" = "실행 중인 Dock 아이콘";
 "catalog.general.5.0.title" = "여기에 표시되지 않는 설정은 도움말 ‘매직 코멘트와 숨겨진 설정’에서 설명합니다.";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "주석문 제외";
 "group.appearance.0.title" = "테마";
 "catalog.appearance.0.0.title" = "밝은 테마";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "어두운 테마";
 "group.appearance.1.title" = "테마 편집";
 "theme.list.add" = "새로운 테마";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "미리보기에서 선택한 영역을 이미지로 복사, 드래그 또는 저장할 때 검은색을 텍스트 색으로, 흰색을 배경색으로 바꿉니다. 두 색은 사용 중인 테마의 ‘이미지 복사 시 칼러 맵’에서 설정합니다. PDF와 EPS에는 적용되지 않습니다.";
 "catalog.preview.4.2.title" = "전경색 농도";
 "catalog.preview.4.2.note" = "비트맵 이미지를 복사할 때 값이 클수록 텍스트가 강조됩니다.";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "홈 URL";
 "catalog.preview.5.0.note" = "HTML 창을 열 때 처음 표시할 페이지입니다. 웹 주소나 파일 경로를 입력합니다.";
@@ -304,8 +307,10 @@
 "catalog.console.1.0.title" = "콘솔 표시";
 "catalog.console.1.1.title" = "콘솔창 리사이즈";
 "group.bindings.title" = "키 바인딩";
+"group.bindings.former" = "";
 "catalog.keyboard.0.0.title" = "키 바인딩 사용(새 문서의 기본값)";
 "catalog.keyboard.0.0.note" = "{를 입력하면 {}가 되듯이, 입력한 한 문자를 정해진 문자열로 바꿉니다.";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "키 바인딩 목록";
 "group.completion.title" = "명령어 완성";
 "catalog.keyboard.1.0.title" = "호출 키";

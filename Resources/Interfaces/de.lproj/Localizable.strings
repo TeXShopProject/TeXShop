@@ -33,7 +33,7 @@
 "Do you want to save macros?" = "Sollen die Makros gesichert werden?";
 "Save Spot" = "Sicherungsgrenze";
 "Template" = "Vorlage";
-"AutoComplete" = "Autovervollständigung";  //Should be translation of "Key Bindings", even in English
+"AutoComplete" = "Tastenbelegungen";  //Should be translation of "Key Bindings", even in English
 "Page Number" = "Seitenzahl";
 "Page Number Panel" = "Seitenzahl Palette";
 "Magnification Panel" = "Vergrößerungspalette";
@@ -44,7 +44,7 @@
 "Magnification" = "Vergrößerung";// mitsu 1.29b
 "Copy Format" = "Kopierformat"; //"Bildkopie Format";// mitsu 1.29b
 "ToolbarItems" = "Werkzeugleistenelemente";
-"Autocompletion" = "Autovervollständigung";
+"Autocompletion" = "Eingabe über Tastenbelegung";
 "Completion" = "Vervollständigung";
 "Info: %@" = "Info: %@";
 "%@\n\nCharacters: %d" = "%@\n\nZeichen: %d";
@@ -357,7 +357,7 @@
 "%@ (Not Found)" = "%@ (nicht gefunden)";
 "%1$@ (%2$@)" = "%1$@ (%2$@)";
 "None" = "Keine";
-"Typeset with Alternate Engine" = "Setzen mit Alternate Engine";
+"Typeset with Alternate Engine" = "Setzen mit alternativer Engine";
 "In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@." = "Im Menü „%1$@“ erscheint dieser Befehl anstelle von „%2$@“, solange Sie %3$@ gedrückt halten.";
 "This item is in the %@ menu." = "Dieser Befehl steht im Menü „%@“.";
 "Key: %@" = "Taste: %@";

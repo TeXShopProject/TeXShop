@@ -69,6 +69,33 @@ int main(int argc,char **argv){@autoreleasepool{
   Apply(main,@{@"Source":@{@"Highlight Index Entries":@[@"i",@NO,@YES]}});
   Check([index.keyEquivalent isEqual:@"i"],@"the title reaches Highlight Index Entries");
  }
+ // Titles corrected in 6.00 still reach their items: Key Bindings under its former names (with the Toggle On/Off
+ // child of 5.58 and on its own), and the misspelled, untranslated or misspaced titles of four other items.
+ {
+  NSArray *bindings=@[@"Autovervollständigung",@"Autocompleción",@"Raccourcis clavier",@"Autocompletamento",@"Auto Completion",@"Auto Completar",@"Completare automată",@"自动更正"];
+  for(NSString *former in bindings){
+   NSMenu *main=[NSMenu new];NSMenuItem *source=Item(main,@"Source");source.submenu=[NSMenu new];
+   NSMenuItem *toggle=Item(source.submenu,@"Tastenbelegungen");toggle.identifier=@"TSShortcut.changeAutoComplete:.0";
+   NSMenuItem *other=Item(source.submenu,@"Other");
+   Apply(main,@{@"Source":@{former:@{@"Ein/Aus":@[@"k",@NO,@YES]}}});
+   Check([toggle.keyEquivalent isEqual:@"k"] && [other.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"the former title %@ with Toggle On/Off reaches Key Bindings",former]);
+   toggle.keyEquivalent=@"";
+   Apply(main,@{@"Source":@{former:@[@"j",@NO,@YES]}});
+   Check([toggle.keyEquivalent isEqual:@"j"],[NSString stringWithFormat:@"the former title %@ reaches Key Bindings",former]);
+  }
+  NSArray *others=@[@[@"TIFF (unkmprimiert)",@"TIFF (unkomprimiert)",@"TSShortcut.changeImageCopyType:.1"],
+                    @[@"Setzen mit Alternate Engine",@"Setzen mit alternativer Engine",@"TSShortcut.doAlternateTypeset:.-2"],
+                    @[@"Panel matrices...",@"Panel de matrices...",@"TSShortcut.displayMatrixPanel:.0"],
+                    @[@"~/라이브러리/TeXshop 폴더열기",@"~/라이브러리/TeXShop 폴더 열기",@"TSShortcut.GotoLibraryTeXShop:.0"]];
+  for(NSArray *entry in others){
+   NSMenu *main=[NSMenu new];NSMenuItem *menu=Item(main,@"Menu");menu.submenu=[NSMenu new];
+   Item(menu.submenu,@"Before");
+   NSMenuItem *item=Item(menu.submenu,entry[1]);item.identifier=entry[2];
+   Apply(main,@{@"Menu":@{entry[0]:@[@"u",@NO,@YES]}});
+   Check([item.keyEquivalent isEqual:@"u"],[NSString stringWithFormat:@"the former title %@ reaches %@",entry[0],entry[1]]);
+  }
+  printf("PASS: %lu former Key Bindings titles and %lu other titles corrected in 6.00 reach their items\n",(unsigned long)bindings.count,(unsigned long)others.count);
+ }
  // Help › TeX Live Documentation in Japanese was written without the space before 6.00.
  {
   NSMenu *main=[NSMenu new];NSMenuItem *help=Item(main,@"ヘルプ");help.submenu=[NSMenu new];

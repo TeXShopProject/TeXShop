@@ -49,6 +49,7 @@
 "group.general.3.title" = "プロジェクトのルートファイル";
 "catalog.general.3.0.title" = "ファイルを開いたときにルートファイルも開く";
 "catalog.general.3.1.title" = "開いたルートファイルを最小化する";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "詳細";
 "group.general.6.title" = "起動中のDockアイコン";
 "catalog.general.5.0.title" = "設定画面にない隠し設定は、ヘルプの「マジックコメントと隠し設定」で説明しています。";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "コメントを対象外にする";
 "group.appearance.0.title" = "テーマ";
 "catalog.appearance.0.0.title" = "ライトモード時のテーマ";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "ダークモード時のテーマ";
 "group.appearance.1.title" = "テーマの編集";
 "theme.list.add" = "新規テーマ";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "プレビューで選んだ範囲を画像としてコピー・ドラッグ・保存するとき、黒を文字の色に、白を背景の色に置き換えます。2つの色は、使用中のテーマの「画像コピー時のカラーマップ」で設定します。PDFとEPSには適用されません。";
 "catalog.preview.4.2.title" = "文字色の強め具合";
 "catalog.preview.4.2.note" = "ビットマップ画像をコピーするときの文字の濃さです。大きな値ほど文字が強調されます。";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "ホームURL";
 "catalog.preview.5.0.note" = "HTMLウインドウを表示したときに最初に開くページです。Webのアドレスか、ファイルのパスを入れます。";
@@ -304,8 +307,10 @@
 "catalog.console.1.0.title" = "コンソールを表示する";
 "catalog.console.1.1.title" = "コンソールのリサイズ";
 "group.bindings.title" = "キーバインド";
+"group.bindings.former" = "";
 "catalog.keyboard.0.0.title" = "キーバインドを使う（新しい書類の初期値）";
 "catalog.keyboard.0.0.note" = "{ を入力すると {} になるように、1文字の入力を決まった文字列に置き換えます。";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "キーバインドの一覧";
 "group.completion.title" = "コマンド補完";
 "catalog.keyboard.1.0.title" = "呼び出すキー";

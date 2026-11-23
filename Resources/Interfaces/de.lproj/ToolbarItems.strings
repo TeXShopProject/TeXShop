@@ -89,9 +89,9 @@ tiLabelProgramEE			= "Programm";
 tiPaletteLabelProgramEE			= "Programm";
 tiToolTipProgramEE			= "Schriftsatzprogramm auswählen";
 
-tiLabelAutoComplete			= "Autovervollständigung";
-tiPaletteLabelAutoComplete		= "Autovervollständigung";
-tiToolTipAutoComplete			= "Autovervollständigung umschalten";
+tiLabelAutoComplete			= "Tastenbelegungen";
+tiPaletteLabelAutoComplete		= "Tastenbelegungen";
+tiToolTipAutoComplete			= "Tastenbelegungen ein-/ausschalten";
 
 tiLabelSplit				= "Geteilter Quelltext";
 tiPaletteLabelSplit			= "Geteilter Quelltext";
@@ -186,7 +186,7 @@ tiToolTipShowFullPath			= "Zeige gesamten Pfad im Kopf des Fensters";
 
 tiLabelProgramSplit				= "Setzmethode";
 tiPaletteLabelProgramSplit		= "Setzmethode";
-tiToolTipProgramSplit			= "Schriftsatzprogramm auswählenv";
+tiToolTipProgramSplit			= "Schriftsatzprogramm auswählen";
 
 tiLabelMacrosSplit				= "Makros";
 tiPaletteLabelMacrosSplit		= "Makros";
@@ -204,9 +204,9 @@ tiLabelMagnificationSplit		= "Vergrößerung";
 tiPaletteLabelMagnificationSplit   = "Vergrößerung";
 tiToolTipMagnificationSplit     = "Stelle Seitenvergrößerung ein";
 
-tiLabelAutoCompleteSplit		= "Autovervollständigung";
-tiPaletteLabelAutoCompleteSplit   = "Autovervollständigung";
-tiToolTipAutoCompleteSplit     = "Autovervollständigung umschalten";
+tiLabelAutoCompleteSplit		= "Tastenbelegungen";
+tiPaletteLabelAutoCompleteSplit   = "Tastenbelegungen";
+tiToolTipAutoCompleteSplit     = "Tastenbelegungen ein-/ausschalten";
 
 tiLabelTemplatesSplit            =  "Vorlagen";
 tiPaletteLabelTemplatesSplit            =  "Vorlagen";

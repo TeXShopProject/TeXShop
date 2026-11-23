@@ -93,9 +93,9 @@ tiLabelProgramEE			= "Programme";
 tiPaletteLabelProgramEE			= "Programme";
 tiToolTipProgramEE			= "Choisir le programme de composition";
 
-tiLabelAutoComplete			= "Raccourcis clavier";
-tiPaletteLabelAutoComplete	= "Raccourcis clavier";
-tiToolTipAutoComplete		= "Activer/Désactiver les raccourcis";
+tiLabelAutoComplete			= "Raccourcis de saisie";
+tiPaletteLabelAutoComplete	= "Raccourcis de saisie";
+tiToolTipAutoComplete		= "Activer/Désactiver les raccourcis de saisie";
 
 tiLabelSplit				= "Fenêtre divisée";
 tiPaletteLabelSplit			= "Fenêtre divisée";
@@ -214,9 +214,9 @@ tiLabelMagnificationSplit		= "Agrandissement";
 tiPaletteLabelMagnificationSplit   = "Agrandissement";
 tiToolTipMagnificationSplit     = "Régler l’agrandissement de la page";
 
-tiLabelAutoCompleteSplit		= "Raccourcis clavier";
-tiPaletteLabelAutoCompleteSplit   = "Raccourcis clavier";
-tiToolTipAutoCompleteSplit     = "Activer/Désactiver les raccourcis";
+tiLabelAutoCompleteSplit		= "Raccourcis de saisie";
+tiPaletteLabelAutoCompleteSplit   = "Raccourcis de saisie";
+tiToolTipAutoCompleteSplit     = "Activer/Désactiver les raccourcis de saisie";
 
 tiLabelTemplatesSplit            = "Modèle";
 tiPaletteLabelTemplatesSplit            = "Modèle";

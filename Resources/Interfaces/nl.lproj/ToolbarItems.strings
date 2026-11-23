@@ -89,9 +89,9 @@ tiLabelProgramEE			= "Programma";
 tiPaletteLabelProgramEE			= "Programma";
 tiToolTipProgramEE			= "Kies een zet-programma";
 
-tiLabelAutoComplete			= "Automatisch aanvullen";
-tiPaletteLabelAutoComplete		= "Automatisch aanvullen";
-tiToolTipAutoComplete			= "Zet automatisch aanvullen aan/uit";
+tiLabelAutoComplete			= "Toetsbindingen";
+tiPaletteLabelAutoComplete		= "Toetsbindingen";
+tiToolTipAutoComplete			= "Zet toetsbindingen aan/uit";
 
 tiLabelSplit				= "Splits venster";
 tiPaletteLabelSplit			= "Splits venster";
@@ -205,9 +205,9 @@ tiLabelMagnificationSplit		= "Vergroting";
 tiPaletteLabelMagnificationSplit   = "Vergroting";
 tiToolTipMagnificationSplit     = "Stel vergroting in";
 
-tiLabelAutoCompleteSplit		= "Automatisch aanvullen";
-tiPaletteLabelAutoCompleteSplit   = "Automatisch aanvullen";
-tiToolTipAutoCompleteSplit     = "Zet automatisch aanvullen aan/uit";
+tiLabelAutoCompleteSplit		= "Toetsbindingen";
+tiPaletteLabelAutoCompleteSplit   = "Toetsbindingen";
+tiToolTipAutoCompleteSplit     = "Zet toetsbindingen aan/uit";
 
 tiLabelTemplatesSplit            = "Sjablonen";
 tiPaletteLabelTemplatesSplit            = "Sjablonen";

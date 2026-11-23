@@ -89,9 +89,9 @@ tiLabelProgramEE			= "Programare";
 tiPaletteLabelProgramEE			= "Programare";
 tiToolTipProgramEE			= "Alegeți programul de tehnoredactare";
 
-tiLabelAutoComplete			= "Completare Automată";
-tiPaletteLabelAutoComplete		= "Completare Automată";
-tiToolTipAutoComplete			= "Comutați completarea automată";
+tiLabelAutoComplete			= "Asocieri de taste";
+tiPaletteLabelAutoComplete		= "Asocieri de taste";
+tiToolTipAutoComplete			= "Comutați asocierile de taste";
 
 tiLabelSplit				= "Scindează Fereastra";
 tiPaletteLabelSplit			= "Scindează Fereastra";
@@ -205,9 +205,9 @@ tiLabelMagnificationSplit		= "Mărire";
 tiPaletteLabelMagnificationSplit   = "Mărire";
 tiToolTipMagnificationSplit     = "Stabiliți mărirea paginii";
 
-tiLabelAutoCompleteSplit		= "Completare Automată";
-tiPaletteLabelAutoCompleteSplit   = "Completare Automată";
-tiToolTipAutoCompleteSplit     = "Comutați completarea automată";
+tiLabelAutoCompleteSplit		= "Asocieri de taste";
+tiPaletteLabelAutoCompleteSplit   = "Asocieri de taste";
+tiToolTipAutoCompleteSplit     = "Comutați asocierile de taste";
 
 tiLabelTemplatesSplit            = "Modele";
 tiPaletteLabelTemplatesSplit            = "Modele";

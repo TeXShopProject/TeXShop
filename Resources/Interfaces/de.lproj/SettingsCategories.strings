@@ -24,7 +24,7 @@
 "preview.summary" = "Anzeige und Bedienung der PDF-Vorschau.";
 "typesetting.summary" = "Engine-Profile, Satzbefehle, Synchronisierung und Werkzeugpfade.";
 "console.summary" = "Die Konsole mit den Ausgaben des Schriftsatzes.";
-"keyboard.summary" = "Tastenbelegung, Vervollständigung und Menükurzbefehle.";
+"keyboard.summary" = "Tastenbelegungen, Vervollständigung und Menükurzbefehle.";
 "updates.summary" = "Automatische Suche und Softwareaktualisierungen.";
 
 /* Approved catalog presentation */
@@ -48,7 +48,8 @@
 "catalog.general.2.3.button" = "Aktuelle Position merken";
 "group.general.3.title" = "Projekt-Hauptdatei";
 "catalog.general.3.0.title" = "Beim Öffnen eines Dokuments auch die Hauptdatei öffnen";
-"catalog.general.3.1.title" = "Das geöffnete Stammfenster verkleinern";
+"catalog.general.3.1.title" = "Fenster der geöffneten Hauptdatei im Dock ablegen";
+"catalog.general.3.1.former" = "Das geöffnete Stammfenster verkleinern";
 "group.general.5.title" = "Erweitert";
 "group.general.6.title" = "Dock-Symbol während der Laufzeit";
 "catalog.general.5.0.title" = "Nicht hier angezeigte Einstellungen sind im Hilfedokument „Kommentarzeilen und versteckte Einstellungen“ beschrieben.";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "Kommentare nicht überprüfen";
 "group.appearance.0.title" = "Themen";
 "catalog.appearance.0.0.title" = "Hellmodus-Thema";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "Dunkelmodus-Thema";
 "group.appearance.1.title" = "Thema bearbeiten";
 "theme.list.add" = "Neues Thema";
@@ -249,8 +251,9 @@
 "catalog.preview.4.0.title" = "Bild-Kopierformat";
 "catalog.preview.4.1.title" = "Farbmapping";
 "catalog.preview.4.1.note" = "Beim Kopieren, Ziehen oder Sichern einer Auswahl aus der Vorschau als Bild wird Schwarz durch die Textfarbe und Weiß durch die Hintergrundfarbe ersetzt. Beide Farben werden im aktuellen Thema unter „Farbmapping für Bildkopien“ festgelegt. PDF- und EPS-Kopien werden nicht verändert.";
-"catalog.preview.4.2.title" = "Parameter";
+"catalog.preview.4.2.title" = "Vordergrundbetonung";
 "catalog.preview.4.2.note" = "Höhere Werte betonen den Text beim Kopieren von Rasterbildern.";
+"catalog.preview.4.2.former" = "Parameter";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "Standard URL-Adresse";
 "catalog.preview.5.0.note" = "Die Seite, die das HTML-Fenster zuerst öffnet. Geben Sie eine Webadresse oder den Pfad einer Datei ein.";
@@ -263,9 +266,9 @@
 "catalog.typesetting.0.1.note" = "Wird verwendet, wenn oben „Engine-Datei“ gewählt ist.";
 "catalog.typesetting.0.1.button" = "Engine-Liste bearbeiten…";
 "catalog.typesetting.0.2.title" = "Satzmethode";
-"catalog.typesetting.0.3.title" = "Alternativer Engine";
+"catalog.typesetting.0.3.title" = "Alternative Engine";
 "catalog.typesetting.0.3.note" = "Die Engine für das Setzen mit der alternativen Engine.";
-"catalog.typesetting.0.3.info" = "Über „Setzen mit Alternate Engine“";
+"catalog.typesetting.0.3.info" = "Über „Setzen mit alternativer Engine“";
 "group.typesetting.1.title" = "Nach dem Textsatz";
 "catalog.typesetting.1.0.title" = "Nach dem Setzen";
 "group.typesetting.2.title" = "Synchronisierung von Quelltext und Vorschau";
@@ -303,9 +306,11 @@
 "group.console.1.title" = "Aktionen";
 "catalog.console.1.0.title" = "Konsole anzeigen";
 "catalog.console.1.1.title" = "Größenänderung der Konsole";
-"group.bindings.title" = "Automat. Vervollständigung";
+"group.bindings.title" = "Tastenbelegungen";
+"group.bindings.former" = "Automat. Vervollständigung";
 "catalog.keyboard.0.0.title" = "Tastenbelegungen verwenden (Vorgabe für neue Dokumente)";
 "catalog.keyboard.0.0.note" = "Ersetzt ein eingegebenes Zeichen durch einen festgelegten Text, z. B. { durch {}.";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "Liste der Tastenbelegungen";
 "group.completion.title" = "Befehlsvervollständigung";
 "catalog.keyboard.1.0.title" = "Auslösetaste";
