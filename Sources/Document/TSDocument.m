@@ -1696,7 +1696,7 @@ if (! skipTextWindow) {
 				 ([fileExtension isEqualToString: @"JPG"])) {
 			imageFound = YES;
 			self.texRep = [NSBitmapImageRep imageRepWithContentsOfFile: imagePath];
-			[self showImageTitleForPath: [[self fileURL] path]];
+			[pdfWindow setTitle: [[[self fileURL] path] lastPathComponent]];
 			// [pdfWindow setRepresentedFilename: [self fileName]]; //mitsu July4
 			self.documentType = isJPG;
 			[previousButton setEnabled:NO];
@@ -1706,7 +1706,7 @@ if (! skipTextWindow) {
 				 ([fileExtension isEqualToString: @"tif"])) {
 			imageFound = YES;
 			self.texRep = [NSBitmapImageRep imageRepWithContentsOfFile: imagePath];
-			[self showImageTitleForPath: [[self fileURL] path]];
+			[pdfWindow setTitle: [[[self fileURL] path] lastPathComponent]];
 			// [pdfWindow setRepresentedFilename: [self fileName]]; //mitsu July4
 			self.documentType = isTIFF;
 			[previousButton setEnabled:NO];
@@ -8396,33 +8396,33 @@ if (! useFullSplitWindow) {
 
 // The Preview window and the console keep the path they show, so that their titles can follow
 // Show Full Path at once, whenever and however they were named (TSWindowTitles.h).
-// A PDF or picture opened by itself is the document's own file, so its title follows a move or
-// a rename of the document; a PDF typeset from a source keeps the path it was read from.
 - (void) showPreviewTitleForPath: (NSString *)path
 {
 	self.previewTitlePath = path;
-	self.previewShowsDocumentFile = path != nil && [path isEqualToString: [[self fileURL] path]];
 	[self refreshPreviewTitle];
 }
 
-// The older image window shows pictures and the PDF converted into a temporary folder.
+// The older image window shows a PDF converted into a temporary folder from a PostScript or
+// DVI file; it is named after the PDF beside that file.
 - (void) showImageTitleForPath: (NSString *)path
 {
 	self.imageTitlePath = path;
-	self.imageShowsDocumentFile = path != nil && [path isEqualToString: [[self fileURL] path]];
 	[self refreshPreviewTitle];
 }
 
+// A PDF opened by itself is the document's own file, so its title is the document's file, also
+// after a move or a rename; a PDF typeset or converted from a source keeps the path it was read from.
 - (void) refreshPreviewTitle
 {
-	NSString *path = self.previewShowsDocumentFile && [self fileURL] != nil ? [[self fileURL] path] : self.previewTitlePath;
-	if (path == nil && [self fileURL] != nil)
-		path = [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension: @"pdf"];
+	NSURL *url = [self fileURL];
+	BOOL documentIsPDF = !fileIsTex && url != nil && [[[url pathExtension] lowercaseString] isEqualToString: @"pdf"];
+	NSString *path = documentIsPDF ? [url path] : self.previewTitlePath;
+	if (path == nil && url != nil)
+		path = [[[url path] stringByDeletingPathExtension] stringByAppendingPathExtension: @"pdf"];
 	if (path != nil && self.pdfKitWindow != nil)
 		[self.pdfKitWindow setTitle: TSPreviewWindowTitle(path, showFullPath)];
-	NSString *imagePath = self.imageShowsDocumentFile && [self fileURL] != nil ? [[self fileURL] path] : self.imageTitlePath;
-	if (imagePath != nil && pdfWindow != nil)
-		[pdfWindow setTitle: TSPreviewWindowTitle(imagePath, showFullPath)];
+	if (self.imageTitlePath != nil && pdfWindow != nil)
+		[pdfWindow setTitle: TSPreviewWindowTitle(self.imageTitlePath, showFullPath)];
 }
 
 - (void) showConsoleTitleForPath: (NSString *)path

@@ -184,11 +184,17 @@ static NSString *TSExperimentEngine(NSString *program, NSInteger menuEngine, NSA
 }
 
 
-// The Experiment panels are named after the source window, so they follow Show Full Path;
-// the Experiment console is named after them once it has run.
+// The Experiment panels are named after the source file without its extension, by its full path
+// while Show Full Path is on; an untitled document keeps its name. The Experiment console is
+// named after them once it has run.
 - (void) refreshExperimentTitles
 {
-    NSString *title = [textWindow title] ? [[textWindow title] stringByDeletingPathExtension] : @"Experiment";
+    NSURL *url = [self fileURL];
+    NSString *title;
+    if (url != nil)
+        title = [(showFullPath ? [url path] : [url lastPathComponent]) stringByDeletingPathExtension];
+    else
+        title = [self displayName] ?: @"Experiment";
     [scrapWindow setTitle: title];
     [scrapPDFWindow setTitle: title];
     [self.experimentConsole renameForSourceTitle: title];

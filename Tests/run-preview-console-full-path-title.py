@@ -3,12 +3,12 @@
 Show Full Path at once.
 
 Every way of naming the Preview window (opening, typesetting, also in the single window, reading a
-PDF changed outside TeXShop), the older image window (pictures, PDFs converted into a temporary
-folder), the console and the Experiment panels goes through the document, which keeps the path
-shown. Turning Show Full Path renames them all at once, a later update does not bring the file
-name back, and a PDF or picture opened by itself follows a move of the document. The test compiles
-the real TSWindowController and the methods of TSDocument that name these windows into a small
-stand-in, with windows kept off screen and settings kept in memory."""
+PDF changed outside TeXShop), the older image window for PDFs converted into a temporary folder,
+the console and the Experiment panels goes through the document, which keeps the path shown.
+Turning Show Full Path renames them all at once, a later update does not bring the file name back,
+and a PDF opened by itself is named after the document's own file, also after moves. Pictures
+opened by themselves keep the file name, as before. The test compiles the real TSWindowController
+and the methods of TSDocument that name these windows into a small stand-in, with windows kept off screen and settings kept in memory."""
 from pathlib import Path
 import argparse
 import re
@@ -44,15 +44,18 @@ MUTATIONS = {
     'single-window-keeps-old-path': (JOBS, '                    [self showPreviewTitleForPath: imagePath];\n                    if (! useFullSplitWindow) {\n',
                                      '                    if (! useFullSplitWindow) {\n                    [self showPreviewTitleForPath: imagePath];\n'),
     # A PDF opened by itself keeps its old path after a move (first audit, 2).
-    'moved-pdf-keeps-old-path': (DOCUMENT, 'NSString *path = self.previewShowsDocumentFile && [self fileURL] != nil ? [[self fileURL] path] : self.previewTitlePath;',
+    'moved-pdf-keeps-old-path': (DOCUMENT, 'NSString *path = documentIsPDF ? [url path] : self.previewTitlePath;',
                                  'NSString *path = self.previewTitlePath;'),
+    # Experiment takes the name the source window shows and strips it again (second audit, 2).
+    'experiment-strips-shown-name': (SCRAP, 'title = [(showFullPath ? [url path] : [url lastPathComponent]) stringByDeletingPathExtension];',
+                                     'title = [[textWindow title] stringByDeletingPathExtension];'),
     # The Experiment panels are not named again with the source window (first audit, 3).
     'experiment-not-renamed': (CONTROLLER, '        [(TSDocument *)document refreshExperimentTitles];\n', '        ;\n'),
     # The Experiment console keeps its first name (first audit, 3).
     'experiment-console-not-renamed': (SCRAP, '    [self.experimentConsole renameForSourceTitle: title];\n', ''),
     # A converted PDF in the older image window shows the file name (first audit, 4).
-    'image-window-file-name-only': (DOCUMENT, '\t\t[pdfWindow setTitle: TSPreviewWindowTitle(imagePath, showFullPath)];\n',
-                                    '\t\t[pdfWindow setTitle: imagePath.lastPathComponent];\n'),
+    'image-window-file-name-only': (DOCUMENT, '\t\t[pdfWindow setTitle: TSPreviewWindowTitle(self.imageTitlePath, showFullPath)];\n',
+                                    '\t\t[pdfWindow setTitle: self.imageTitlePath.lastPathComponent];\n'),
 }
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -92,8 +95,10 @@ for path in sorted((root / 'Sources').rglob('*.m')):
     text = sources.get(rel, path.read_text())
     for signature in naming.get(rel, ()):
         text = text.replace(method(text, signature), '')
+    # Pictures opened by themselves keep the file name, as before (second audit, 3).
     found += [f'{rel}: {line.strip()}' for line in code(text).splitlines()
-              if re.search(r'\b(pdfKitWindow|outputWindow|pdfWindow|scrapWindow|scrapPDFWindow)\s+setTitle', line)]
+              if re.search(r'\b(pdfKitWindow|outputWindow|pdfWindow|scrapWindow|scrapPDFWindow)\s+setTitle', line)
+              and line.strip() != '[pdfWindow setTitle: [[[self fileURL] path] lastPathComponent]];']
 check(not found, f'a window is named outside the document: {found[:1]}')
 body = method(sources[PREVIEW], '- (void) becomeMainWindow')
 check('[self.myDocument refreshPreviewTitle]' in body and 'setTitle' not in body,
@@ -105,8 +110,9 @@ check(typeset.count('[self showPreviewTitleForPath: imagePath];') == 1 and '[sel
 start = typeset.index('[self showPreviewTitleForPath: imagePath];')
 check(typeset.index('if (! useFullSplitWindow)', start - 200) > start,
       'typesetting names the Preview window also in the single window')
-check(code(document).count('[self showPreviewTitleForPath:') >= 6 and code(document).count('[self showImageTitleForPath:') == 2,
-      'opening and updating name the Preview and image windows through the document')
+check(code(document).count('[self showPreviewTitleForPath:') >= 6 and '[self showImageTitleForPath:' not in code(document)
+      and code(document).count('[pdfWindow setTitle: [[[self fileURL] path] lastPathComponent]];') == 2,
+      'opening and updating name the Preview window through the document; pictures keep the file name')
 body = method(document, '- (void)setFileURL:(NSURL *)url')
 check('[self refreshPreviewTitle];' in body, 'a move of the document names a PDF opened by itself again')
 check('[self refreshExperimentTitles];' in code(scrap).replace(method(scrap, '- (void) refreshExperimentTitles'), ''),
@@ -126,7 +132,7 @@ STUB_DOCUMENT = r'''
 @end
 @interface TSDocument : NSDocument {
 @public
-    BOOL showFullPath;
+    BOOL showFullPath, fileIsTex;
     NSWindow *outputWindow, *pdfWindow, *textWindow;
     NSPanel *scrapWindow, *scrapPDFWindow;
 }
@@ -134,7 +140,6 @@ STUB_DOCUMENT = r'''
 @property (strong) TSWindowController *standardController;
 @property (strong) TestConsole *experimentConsole;
 @property (copy) NSString *previewTitlePath, *consoleTitlePath, *imageTitlePath;
-@property BOOL previewShowsDocumentFile, imageShowsDocumentFile;
 - (BOOL) showsFullPath;
 - (void) showPreviewTitleForPath: (NSString *)path;
 - (void) showImageTitleForPath: (NSString *)path;
@@ -254,23 +259,42 @@ int main(int argc, char **argv) {
         check([document->scrapWindow.title isEqualToString:@"renamed"], @"switch off: the Experiment panels show the file name at once");
         check([document.experimentConsole.sourceTitle isEqualToString:@"renamed"], @"switch off: the Experiment console is named again at once");
 
-        // A PDF opened by itself follows a move of the document.
+        // A PDF opened by itself is named after the document's own file, also when an update reads it
+        // under another case of its extension, and after moves (second audit, 1).
         TSDocument *alone = [[TSDocument alloc] init];
-        alone.fileURL = [NSURL fileURLWithPath:@"/Users/someone/Standalone.pdf"];
+        alone.fileURL = [NSURL fileURLWithPath:@"/Users/someone/Mixed.PDF"];
         alone.pdfKitWindow = offscreen();
         alone->showFullPath = YES;
-        [alone showPreviewTitleForPath:@"/Users/someone/Standalone.pdf"];
-        alone.fileURL = [NSURL fileURLWithPath:@"/Users/someone/moved/Moved.pdf"];
+        [alone showPreviewTitleForPath:@"/Users/someone/Mixed.pdf"];
+        check([alone.pdfKitWindow.title isEqualToString:@"/Users/someone/Mixed.PDF"], @"a PDF opened by itself: the document's own file");
+        alone.fileURL = [NSURL fileURLWithPath:@"/Users/someone/moved/Second.pdf"];
         [alone refreshPreviewTitle];
-        check([alone.pdfKitWindow.title isEqualToString:@"/Users/someone/moved/Moved.pdf"], @"a PDF opened by itself follows a move");
-        TSDocument *picture = [[TSDocument alloc] init];
-        picture.fileURL = [NSURL fileURLWithPath:@"/Users/someone/a.png"];
-        picture->pdfWindow = offscreen();
-        picture->showFullPath = YES;
-        [picture showImageTitleForPath:@"/Users/someone/a.png"];
-        picture.fileURL = [NSURL fileURLWithPath:@"/Users/someone/b.png"];
-        [picture refreshPreviewTitle];
-        check([picture->pdfWindow.title isEqualToString:@"/Users/someone/b.png"], @"a picture opened by itself follows a move");
+        check([alone.pdfKitWindow.title isEqualToString:@"/Users/someone/moved/Second.pdf"], @"a PDF opened by itself follows a move after an update");
+        [alone showPreviewTitleForPath:@"/Users/someone/moved/Second.pdf"];
+        alone.fileURL = [NSURL fileURLWithPath:@"/Users/someone/Third.pdf"];
+        [alone refreshPreviewTitle];
+        check([alone.pdfKitWindow.title isEqualToString:@"/Users/someone/Third.pdf"], @"a PDF opened by itself follows a second move");
+
+        // Experiment keeps every dot of the file name but the extension, and an untitled document's name (second audit, 2).
+        TSDocument *chapter = [[TSDocument alloc] init];
+        chapter.fileURL = [NSURL fileURLWithPath:@"/Users/someone/book/chapter.01.tex"];
+        chapter->fileIsTex = YES;
+        chapter->scrapWindow = panel();
+        // The source window as AppKit names it when the extension is hidden.
+        chapter->textWindow = offscreen();
+        chapter->textWindow.title = @"chapter.01";
+        chapter.experimentConsole = [TestConsole new];
+        chapter.experimentConsole.sourceTitle = @"old";
+        [chapter refreshExperimentTitles];
+        check([chapter->scrapWindow.title isEqualToString:@"chapter.01"] && [chapter.experimentConsole.sourceTitle isEqualToString:@"chapter.01"],
+              @"Experiment: the file name without its extension");
+        chapter->showFullPath = YES;
+        [chapter refreshExperimentTitles];
+        check([chapter->scrapWindow.title isEqualToString:@"/Users/someone/book/chapter.01"], @"Experiment: the full path without the extension");
+        TSDocument *untitled = [[TSDocument alloc] init];
+        untitled->scrapWindow = panel();
+        [untitled refreshExperimentTitles];
+        check([untitled->scrapWindow.title isEqualToString:untitled.displayName], @"Experiment of an untitled document: its name");
 
         // A console never used for typesetting, and an Experiment console that never ran, keep their titles.
         TSDocument *fresh = [[TSDocument alloc] init];
