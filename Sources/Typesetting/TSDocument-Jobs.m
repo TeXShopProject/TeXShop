@@ -2359,9 +2359,10 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                         [self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
                         [self.myPDFKitView2 reShowForSecond];
                     }
+                    // The Preview window is named after the new PDF also while it is hidden in the single window.
+                    [self showPreviewTitleForPath: imagePath];
                     if (! useFullSplitWindow) {
                         [self.pdfKitWindow setRepresentedFilename: imagePath];
-                        [self showPreviewTitleForPath: imagePath];
                         [self fillLogWindowIfVisible];
                         
                         front = [SUD boolForKey: BringPdfFrontOnTypesetKey];
@@ -2443,7 +2444,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                     self.texRep = [NSPDFImageRep imageRepWithContentsOfFile: alternatePath] ;
                     [[NSFileManager defaultManager] removeItemAtPath: alternatePath error:NULL];
                     if (self.texRep) {
-                        [pdfWindow setTitle: [imagePath lastPathComponent]];
+                        [self showImageTitleForPath: imagePath];
                         [pdfView setImageRep: self.texRep];
                         [pdfView setNeedsDisplay:YES];
                         [pdfWindow makeKeyAndOrderFront: self];
@@ -2583,7 +2584,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 					}
                     if (! useFullSplitWindow) {
                         [self.pdfKitWindow setRepresentedFilename: imagePath];
-                        [self showPreviewTitleForPath: imagePath];
+                        //[pdfKitWindow setTitle: [imagePath lastPathComponent]]; // removed by Terada
+                        [self.pdfKitWindow setTitle: [[[self fileTitleName] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"]]; // removed by Terada
                         [self fillLogWindowIfVisible];
                         front = [SUD boolForKey: BringPdfFrontOnTypesetKey];
                         if ((front) || (! [self.pdfKitWindow isVisible]))

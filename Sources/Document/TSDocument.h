@@ -539,6 +539,8 @@ enum RootCommand
 @property (retain)  IBOutlet    TSPreviewWindow				*pdfKitWindow;
 @property (copy)    NSString                    *previewTitlePath;
 @property (copy)    NSString                    *consoleTitlePath;
+@property (copy)    NSString                    *imageTitlePath;
+@property           BOOL                        previewShowsDocumentFile, imageShowsDocumentFile;
 @property (weak)    NSWindow                    *consoleReturnWindow;
 
 @property (retain)   MySelection         *mSelection;
@@ -729,6 +731,8 @@ enum RootCommand
 - (void) showConsoleTitleForPath: (NSString *)path;
 - (void) refreshPreviewTitle;
 - (void) refreshConsoleTitle;
+- (void) showImageTitleForPath: (NSString *)path;
+- (void) refreshExperimentTitles;
 // - (void) openStyleFile: (id)sender; // added by Terada
 - (void) setAutoCompleting:(BOOL)flag; // added by Terada
 - (IBAction) showCharacterInfo:(id)sender; // added by Terada

@@ -141,7 +141,6 @@ static NSString *TSExperimentEngine(NSString *program, NSInteger menuEngine, NSA
 - (void) tryScrap:(id)sender
 {
     BOOL        spellExists;
-    NSString    *newTitle;
     
     if ([self getFilePath] == nil)
         return;
@@ -175,18 +174,24 @@ static NSString *TSExperimentEngine(NSString *program, NSInteger menuEngine, NSA
         [scrapTextView setAutomaticSpellingCorrectionEnabled:[SUD boolForKey:AutomaticSpellingCorrectionEnabledKey]];
         }
     
-    if ([textWindow title])
-        newTitle = [[textWindow title] stringByDeletingPathExtension];
-    else
-        newTitle = @"Experiment";
-    [scrapWindow setTitle: newTitle];
-    [scrapPDFWindow setTitle: newTitle];
+    [self refreshExperimentTitles];
     [scrapWindow setHidesOnDeactivate:YES];
     [scrapWindow makeKeyAndOrderFront:sender];
     [self observeExperimentSource];
     // The font, wrapping, invisible characters, line numbers and colors of the
     // document's source
     [self syncExperimentSourceDisplay];
+}
+
+
+// The Experiment panels are named after the source window, so they follow Show Full Path;
+// the Experiment console is named after them once it has run.
+- (void) refreshExperimentTitles
+{
+    NSString *title = [textWindow title] ? [[textWindow title] stringByDeletingPathExtension] : @"Experiment";
+    [scrapWindow setTitle: title];
+    [scrapPDFWindow setTitle: title];
+    [self.experimentConsole renameForSourceTitle: title];
 }
 
 

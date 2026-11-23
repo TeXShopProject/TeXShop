@@ -173,6 +173,7 @@ HELPERS
 + (BOOL)autosavesInPlace { return NO; }
 + (NSArray *)writableTypes { return @[@"public.plain-text"]; }
 - (void)watchFile:(NSString *)path {}
+- (void)refreshPreviewTitle {}
 - (void)cancelWatchFile {}
 - (void)readPreviewArrangementFromData:(NSData *)data {}
 - (NSInteger)lineEndingNoticeForText:(NSString *)text URL:(NSURL *)url { return 0; }

@@ -67,6 +67,7 @@ static BOOL TSExperimentIsPrompt(NSString *line)
 @property (nonatomic, strong) NSTextField *commandField;
 @property (nonatomic, strong) NSButton *stopButton;
 @property (nonatomic, strong) TSConsoleOutputReturn *outputReturn;
+@property (nonatomic, copy) NSString *sourceTitle;
 @property (nonatomic, strong) NSURL *directory;
 @property (nonatomic, strong) NSData *carry;
 @property (nonatomic) NSStringEncoding encoding;
@@ -271,6 +272,14 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     self.directory = nil;
 }
 
+- (void)renameForSourceTitle:(NSString *)title
+{
+    if (self.sourceTitle == nil || !self.isWindowLoaded || title == nil)
+        return;
+    self.sourceTitle = title;
+    self.window.title = [NSString stringWithFormat:NSLocalizedString(@"%@ — Experiment Console", @"Experiment console title"), title];
+}
+
 - (void)startExecutable:(NSString *)path arguments:(NSArray<NSString *> *)arguments
            environment:(NSDictionary<NSString *,NSString *> *)environment
              directory:(NSURL *)directory encoding:(NSStringEncoding)encoding title:(NSString *)title
@@ -281,6 +290,7 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     self.encoding = encoding;
     self.carry = nil;
     self.redOutput = NO;
+    self.sourceTitle = title;
     self.window.title = [NSString stringWithFormat:NSLocalizedString(@"%@ — Experiment Console", @"Experiment console title"), title];
     self.outputText.string = @"";
     self.engineLine = @"";

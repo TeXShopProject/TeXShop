@@ -208,6 +208,7 @@ BOOL g_canRegisterCommandCompletion;
 @implementation TSDocument
 - (BOOL)isBeingReplacedIn { return NO; }
 - (void)takeOwnTextFileKindOfURL:(NSURL *)url {}
+- (void)refreshPreviewTitle {}
 + (BOOL)autosavesInPlace { return YES; }
 + (BOOL)preservesVersions { return NO; }
 + (NSArray *)readableTypes { return @[@"public.plain-text"]; }
