@@ -731,6 +731,7 @@ enum RootCommand
 - (void) refreshPreviewTitle;
 - (void) refreshConsoleTitle;
 - (void) showImageTitleForPath: (NSString *)path;
+- (BOOL) documentIsPDF;
 // - (void) openStyleFile: (id)sender; // added by Terada
 - (void) setAutoCompleting:(BOOL)flag; // added by Terada
 - (IBAction) showCharacterInfo:(id)sender; // added by Terada

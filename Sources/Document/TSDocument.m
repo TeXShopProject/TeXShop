@@ -7967,7 +7967,12 @@ if (! useFullSplitWindow) {
 	NSPDFImageRep	*tempRep;
 	NSString		*pdfPath;
 	
-	pdfPath = [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
+	// A PDF opened by itself is read again from the document's own file, whatever the case of its
+	// extension; a source is shown by the PDF beside it.
+	if ([self documentIsPDF])
+		pdfPath = [[self fileURL] path];
+	else
+		pdfPath = [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
 
 	if ([[NSFileManager defaultManager] fileExistsAtPath: pdfPath]) {
 		tempRep = [NSPDFImageRep imageRepWithContentsOfFile: pdfPath];
@@ -8410,13 +8415,19 @@ if (! useFullSplitWindow) {
 	[self refreshPreviewTitle];
 }
 
+// A document that is a PDF opened by itself, not a source or a PostScript or DVI file.
+- (BOOL) documentIsPDF
+{
+	NSURL *url = [self fileURL];
+	return !fileIsTex && url != nil && [[[url pathExtension] lowercaseString] isEqualToString: @"pdf"];
+}
+
 // A PDF opened by itself is the document's own file, so its title is the document's file, also
 // after a move or a rename; a PDF typeset or converted from a source keeps the path it was read from.
 - (void) refreshPreviewTitle
 {
 	NSURL *url = [self fileURL];
-	BOOL documentIsPDF = !fileIsTex && url != nil && [[[url pathExtension] lowercaseString] isEqualToString: @"pdf"];
-	NSString *path = documentIsPDF ? [url path] : self.previewTitlePath;
+	NSString *path = [self documentIsPDF] ? [url path] : self.previewTitlePath;
 	if (path == nil && url != nil)
 		path = [[[url path] stringByDeletingPathExtension] stringByAppendingPathExtension: @"pdf"];
 	if (path != nil && self.pdfKitWindow != nil)

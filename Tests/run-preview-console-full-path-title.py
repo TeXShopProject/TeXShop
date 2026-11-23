@@ -44,8 +44,10 @@ MUTATIONS = {
     'single-window-keeps-old-path': (JOBS, '                    [self showPreviewTitleForPath: imagePath];\n                    if (! useFullSplitWindow) {\n',
                                      '                    if (! useFullSplitWindow) {\n                    [self showPreviewTitleForPath: imagePath];\n'),
     # A PDF opened by itself keeps its old path after a move (first audit, 2).
-    'moved-pdf-keeps-old-path': (DOCUMENT, 'NSString *path = documentIsPDF ? [url path] : self.previewTitlePath;',
+    'moved-pdf-keeps-old-path': (DOCUMENT, 'NSString *path = [self documentIsPDF] ? [url path] : self.previewTitlePath;',
                                  'NSString *path = self.previewTitlePath;'),
+    # Reading a PDF opened by itself again goes to the PDF beside it with a lower-case extension (third audit).
+    'refresh-reads-lower-case-pdf': (DOCUMENT, '\tif ([self documentIsPDF])\n\t\tpdfPath = [[self fileURL] path];\n\telse\n\t\tpdfPath =', '\tpdfPath ='),
     # Experiment takes the name the source window shows and strips it again (second audit, 2).
     'experiment-strips-shown-name': (SCRAP, 'title = [(showFullPath ? [url path] : [url lastPathComponent]) stringByDeletingPathExtension];',
                                      'title = [[textWindow title] stringByDeletingPathExtension];'),
@@ -113,6 +115,9 @@ check(typeset.index('if (! useFullSplitWindow)', start - 200) > start,
 check(code(document).count('[self showPreviewTitleForPath:') >= 6 and '[self showImageTitleForPath:' not in code(document)
       and code(document).count('[pdfWindow setTitle: [[[self fileURL] path] lastPathComponent]];') == 2,
       'opening and updating name the Preview window through the document; pictures keep the file name')
+body = method(document, '- (void)refreshPDFAndBringFront:(BOOL)front')
+check('if ([self documentIsPDF])\n\t\tpdfPath = [[self fileURL] path];' in body,
+      'a PDF opened by itself is read again from the document\'s own file')
 body = method(document, '- (void)setFileURL:(NSURL *)url')
 check('[self refreshPreviewTitle];' in body, 'a move of the document names a PDF opened by itself again')
 check('[self refreshExperimentTitles];' in code(scrap).replace(method(scrap, '- (void) refreshExperimentTitles'), ''),
@@ -148,6 +153,7 @@ STUB_DOCUMENT = r'''
 - (void) refreshConsoleTitle;
 - (void) refreshExperimentTitles;
 - (void) changeShowFullPath: sender;
+- (BOOL) documentIsPDF;
 @end
 '''
 
@@ -314,7 +320,7 @@ int main(int argc, char **argv) {
 '''
 
 methods = ''.join(method(document, signature) for signature in (
-    '- (void) changeShowFullPath: sender', '- (void) showPreviewTitleForPath:', '- (void) showImageTitleForPath:',
+    '- (BOOL) documentIsPDF', '- (void) changeShowFullPath: sender', '- (void) showPreviewTitleForPath:', '- (void) showImageTitleForPath:',
     '- (void) refreshPreviewTitle', '- (void) showConsoleTitleForPath:', '- (void) refreshConsoleTitle'))
 methods += method(scrap, '- (void) refreshExperimentTitles')
 
