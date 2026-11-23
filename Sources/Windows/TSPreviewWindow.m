@@ -1484,6 +1484,8 @@ static void TSPreviewPlacePartByFrame(NSView *part)
         
         [self.pdfKitSplitView addSubview: self.myPDFKitView2];
          [self.pdfKitSplitView adjustSubviews];
+        // Side by side, the parts start below the toolbar before they are given their pages.
+        [self placeSplitViewForToolbar];
         // In a window whose content runs under the toolbar, the parts share the area that can
         // be seen: the band under the toolbar is not counted, as when their heights were saved.
         if (self.horizontal && TSDocumentWindowHiddenTop(self.pdfKitSplitView) > 0) {
@@ -1544,6 +1546,8 @@ static void TSPreviewPlacePartByFrame(NSView *part)
         // it would float over pages its link is not on (#52).
         [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: NULL];
         [self.myPDFKitView2 removeFromSuperview];
+        // The part that stays runs under the toolbar again.
+        [self placeSplitViewForToolbar];
         theFrame = [self.myPDFKitView frame];
         theSize.width = theFrame.size.width;
         theSize.height = self.frame.size.height;
@@ -1591,6 +1595,73 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 
 
 
+
+// In a window whose content runs under the title bar and the toolbar (macOS 26 and later),
+// parts side by side start below the toolbar. Running under it, each part brings its own
+// band under the toolbar, AppKit blurs only one of them, and the divider runs up through
+// the toolbar. A single part, and parts one above the other, still run under the toolbar,
+// as the source window's parts do under its band. The split view follows the band when it
+// changes height, as when the annotation toolbar is shown or in full screen.
+// The frame the split view gets back when its parts stop being side by side: the content view's
+// bounds with the outsets it had before they went side by side (in the nib, 2 points below the
+// bottom edge).
+- (void) fitSplitViewToContent
+{
+    NSSplitView *split = self.pdfKitSplitView;
+    if (split.superview != self.contentView || self.splitViewPlacement != nil)
+        return;
+    NSRect bounds = self.contentView.bounds;
+    NSEdgeInsets outsets = self.splitViewOutsets;
+    split.frame = NSMakeRect(NSMinX(bounds) - outsets.left, NSMinY(bounds) - outsets.bottom,
+                             NSWidth(bounds) + outsets.left + outsets.right, NSHeight(bounds) + outsets.top + outsets.bottom);
+}
+
+- (void) placeSplitViewForToolbar
+{
+    NSSplitView *split = self.pdfKitSplitView;
+    NSView *content = self.contentView;
+    BOOL here = split != nil && split.superview == content;
+    BOOL below = here && (self.styleMask & NSWindowStyleMaskFullSizeContentView) && self.windowIsSplit && split.isVertical;
+    if (! below) {
+        [self releaseSplitViewPlacement];
+        // In this window with one part, or parts one above the other: the next split side by side
+        // starts from the frame the split view then has, as in RC1.
+        if (here)
+            self.splitViewOutsetsTaken = NO;
+        return;
+    }
+    if (self.splitViewPlacement != nil)
+        return;
+    // How far the frame reaches beyond the content view when the parts first go side by side. A
+    // move into the combined window and back with the parts side by side keeps it, so they keep
+    // reaching so far at the sides and the bottom, and get that frame back when unsplit.
+    if (! self.splitViewOutsetsTaken) {
+        NSRect frame = split.frame, bounds = content.bounds;
+        self.splitViewOutsets = NSEdgeInsetsMake(NSMaxY(frame) - NSMaxY(bounds), NSMinX(bounds) - NSMinX(frame),
+                                                 NSMinY(bounds) - NSMinY(frame), NSMaxX(frame) - NSMaxX(bounds));
+        self.splitViewOutsetsTaken = YES;
+    }
+    split.translatesAutoresizingMaskIntoConstraints = NO;
+    // Below the band; at the sides and the bottom as before.
+    NSEdgeInsets outsets = self.splitViewOutsets;
+    self.splitViewPlacement = @[
+        [split.topAnchor constraintEqualToAnchor: content.safeAreaLayoutGuide.topAnchor],
+        [split.leadingAnchor constraintEqualToAnchor: content.leadingAnchor constant: -outsets.left],
+        [split.trailingAnchor constraintEqualToAnchor: content.trailingAnchor constant: outsets.right],
+        [split.bottomAnchor constraintEqualToAnchor: content.bottomAnchor constant: outsets.bottom]];
+    [NSLayoutConstraint activateConstraints: self.splitViewPlacement];
+    [content layoutSubtreeIfNeeded];
+}
+
+- (void) releaseSplitViewPlacement
+{
+    if (self.splitViewPlacement == nil)
+        return;
+    [NSLayoutConstraint deactivateConstraints: self.splitViewPlacement];
+    self.splitViewPlacement = nil;
+    self.pdfKitSplitView.translatesAutoresizingMaskIntoConstraints = YES;
+    [self fitSplitViewToContent];
+}
 
 - (void) splitPdfKitWindow: (id)sender
 {

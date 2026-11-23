@@ -40,7 +40,7 @@ import subprocess
 import sys
 import tempfile
 from source_tree import include_args
-from production_fragments import closing_brace, verify_embedded
+from production_fragments import closing_brace, method, verify_embedded
 
 MUTATIONS = {
     # The parts keep the placement PDFKit left them with.
@@ -181,6 +181,12 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property PDFView *myPDFKitView, *myPDFKitView2;
 - (void)showActivePart;
 @property NSSplitView *pdfKitSplitView;
+@property (strong) NSArray<NSLayoutConstraint *> *splitViewPlacement;
+@property NSEdgeInsets splitViewOutsets;
+@property BOOL splitViewOutsetsTaken;
+- (void) placeSplitViewForToolbar;
+- (void) releaseSplitViewPlacement;
+- (void) fitSplitViewToContent;
 @property (strong) TSPreviewSplitDivider *previewSplitDivider;
 - (void)mainSplitPdfKitWindow;
 - (void)splitPdfKitWindow:(id)sender;
@@ -232,6 +238,7 @@ LINECLASS
 - (void)keepPinnedLinkPreviewsInView {}
 LINEMETHODS
 WINDOWMETHODS
+PLACEMENTMETHODS
 @end
 
 // The window's content runs under its toolbar, as the Preview window's on macOS 26 and later.
@@ -447,6 +454,11 @@ int main(int argc, char **argv) { @autoreleasepool {
 '''
 program = (program.replace('VIEWMETHODS', '\n'.join(view_methods)).replace('WINDOWMETHODS', '\n'.join(window_parts))
            .replace('LINECLASS', line_class).replace('LINEMETHODS', line_methods).replace('EARLYBRANCH', early))
+# The split view starts below the toolbar while the parts are side by side (production methods).
+placement_methods = ('- (void) fitSplitViewToContent', '- (void) placeSplitViewForToolbar', '- (void) releaseSplitViewPlacement')
+placement = '\n\n'.join(method(window_source, m) for m in placement_methods)
+fragments += [('complete method: ' + m[9:], window_source, method(window_source, m)) for m in placement_methods]
+program = program.replace('PLACEMENTMETHODS', placement)
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory() as temp:
