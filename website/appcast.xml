@@ -3,17 +3,17 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 --><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <item>
-      <title>TeXShop 6.00 beta-9</title>
-      <pubDate>Mon, 23 Nov 2026 01:15:36 +0000</pubDate>
-      <sparkle:version>2416</sparkle:version>
-      <sparkle:shortVersionString>6.00 beta-9</sparkle:shortVersionString>
+      <title>TeXShop 6.00 RC1</title>
+      <pubDate>Mon, 23 Nov 2026 01:54:35 +0000</pubDate>
+      <sparkle:version>2424</sparkle:version>
+      <sparkle:shortVersionString>6.00 RC1</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
       <sparkle:channel>prerelease</sparkle:channel>
-      <description xml:lang="en" sparkle:format="markdown">This is the ninth **beta** of TeXShop 6.00, for testing. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
+      <description xml:lang="en" sparkle:format="markdown">This is the first **release candidate** of TeXShop 6.00, for testing before the release. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
 
 ## Installation
 
-If you use 6.00 beta 1 to beta 8 with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this beta through its automatic updates. Otherwise download `TeXShop-6.00-beta-9.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59 or an earlier beta), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
+If you use a 6.00 beta with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this release candidate through its automatic updates. Otherwise download `TeXShop-6.00-RC1.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59 or an earlier beta), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
 
 ## Changes since Beta 8
 
@@ -198,8 +198,8 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Update the bundled latexmk to 4.89, provided by Herbert Schulz.
 - TeXShop can be built from an extracted source archive again ([#4](https://github.com/TeXShopProject/TeXShop/issues/4)).
 - Remove files and code that TeXShop did not use from the application and its source.</description>
-      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-beta.9</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-beta.9/TeXShop-6.00-beta-9.zip" length="67540719" type="application/octet-stream" sparkle:edSignature="g2lXU+Ib7j6G+TqLy9dUBtaD1AEDjABmeLHM7K3t9O0zqBYJAO6JLaoj8j4yYrzAWYW5K4e2NFhYS5OLUr6fBA=="></enclosure>
+      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-rc.1</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-rc.1/TeXShop-6.00-RC1.zip" length="67540846" type="application/octet-stream" sparkle:edSignature="egm533UPmJ7eEsj2Y0F9rERy/IkcgpFL+sGN4qdqIWtnhdGvBHFipAlelTryCQUz7KDEniFkgL59acLuz+oVAQ=="></enclosure>
     </item>
     <item>
       <title>TeXShop 5.59</title>
@@ -215,6 +215,6 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
     <language>en</language>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: aQtE38r4LodF4ZQ6CUgq2Z1QlCyWCBoixJG7mGdlAql+wdz73BDLMissEUK4bsAXH2nF+aE4nMFXIwosMOjhCQ==
-length: 32413
+edSignature: ih1UCnW8Fkvx08ODFCK+Q3VoiGq2OwjdUi7vUkm0TjCd8Bn1GlVKMnNrjhdkZKHLHF84VBEe077Z7slhqAuKBg==
+length: 32432
 -->
