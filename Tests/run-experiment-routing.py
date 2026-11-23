@@ -13,7 +13,7 @@ from source_tree import source_file
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("root", nargs="?", type=Path, default=Path(__file__).resolve().parents[1])
-parser.add_argument("--mutation", choices=["visible-route", "late-route", "abort-route", "self-target"])
+parser.add_argument("--mutation", choices=["visible-route", "late-route", "abort-route", "self-target", "aggressive-trash"])
 args = parser.parse_args()
 
 
@@ -42,6 +42,9 @@ elif args.mutation == "late-route":
     typeset = typeset.replace(marker, marker + "\n" + block, 1)
 elif args.mutation == "abort-route":
     abort = abort.replace("if ([self experimentHasKeyWindow])", "if (NO)", 1)
+elif args.mutation == "aggressive-trash":
+    assert "[self trashAUXFilesAggressively:NO];" in typeset
+    typeset = typeset.replace("[self trashAUXFilesAggressively:NO];", "[self trashAUXFilesAggressively:YES];", 1)
 elif args.mutation == "self-target":
     assert "target != self.window &&" in toggle
     toggle = toggle.replace("target != self.window &&", "", 1)
@@ -52,6 +55,13 @@ program = r'''
 #define TSAppendConsoleOutput(view, text, color) [(view) replaceCharactersInRange:[(view) selectedRange] withString:(text)]
 @interface Sender : NSObject
 - (NSInteger)tag;
+@end
+// The Trash Aux & Typeset menu item.
+@interface TrashSender : NSObject
+- (NSInteger)tag;
+@end
+@implementation TrashSender
+- (NSInteger)tag { return -2; }
 @end
 @class Window;
 static Window *routingKeyWindow;
@@ -141,10 +151,11 @@ TOGGLE
 @property (strong) id inputPipe;
 @property (strong) NSFileHandle *readHandle;
 @property NSUInteger regularJobs, experimentJobs, cancellations, annotationSaves, auxiliaryRemovals;
+@property BOOL aggressiveRemoval;
 - (BOOL)experimentHasKeyWindow;
 - (void)typesetScrap:(id)sender;
 - (void)callSaveAnnotations;
-- (void)trashAUXFiles:(id)sender;
+- (void)trashAUXFilesAggressively:(BOOL)aggressive;
 - (void)doJob:(NSInteger)engine withError:(BOOL)error runContinuously:(BOOL)continuous;
 - (void)killRunningTasks;
 - (void)doTypeset:(id)sender;
@@ -153,7 +164,7 @@ TOGGLE
 @implementation Document
 - (void)typesetScrap:(id)sender { self.experimentJobs++; }
 - (void)callSaveAnnotations { self.annotationSaves++; }
-- (void)trashAUXFiles:(id)sender { self.auxiliaryRemovals++; }
+- (void)trashAUXFilesAggressively:(BOOL)aggressive { self.auxiliaryRemovals++; self.aggressiveRemoval = aggressive; }
 - (void)doJob:(NSInteger)engine withError:(BOOL)error runContinuously:(BOOL)continuous { self.regularJobs++; }
 - (void)killRunningTasks { self.cancellations++; }
 ROUTE
@@ -201,6 +212,11 @@ int main(void) { @autoreleasepool {
         Check(!d->doAbort && !d->taskDone && d->outputText.edits == 0 && d.inputPipe == normalInput,
               @"Experiment abort preserves ordinary console and completion state");
     }
+    // Trash Aux & Typeset (the sender's tag -2) trashes the files of the document alone.
+    Document *t = D(); routingKeyWindow = W(@"normal source");
+    [t doTypeset:[TrashSender new]];
+    Check(t.auxiliaryRemovals == 1 && !t.aggressiveRemoval && t.regularJobs == 1,
+          @"Trash Aux & Typeset trashes the files of the document, then typesets");
     Document *d = D(); routingKeyWindow = W(@"normal source");
     [d abort:@"stop"];
     Check(d.cancellations == 1 && d.experimentConsole.aborts == 0, @"normal abort leaves Experiment running");

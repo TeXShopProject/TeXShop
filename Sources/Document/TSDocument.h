@@ -537,6 +537,9 @@ enum RootCommand
 @property (retain)  IBOutlet    MyPDFKitView				*myPDFKitView;
 @property (retain)  IBOutlet    MyPDFKitView				*myPDFKitView2;
 @property (retain)  IBOutlet    TSPreviewWindow				*pdfKitWindow;
+@property (copy)    NSString                    *previewTitlePath;
+@property (copy)    NSString                    *consoleTitlePath;
+@property (copy)    NSString                    *imageTitlePath;
 @property (weak)    NSWindow                    *consoleReturnWindow;
 
 @property (retain)   MySelection         *mSelection;
@@ -723,6 +726,12 @@ enum RootCommand
 - (void) fixShowFullPathButton; // added by Terada
 - (NSString*) fileTitleName; // added by Terada
 - (BOOL) showsFullPath;
+- (void) showPreviewTitleForPath: (NSString *)path;
+- (void) showConsoleTitleForPath: (NSString *)path;
+- (void) refreshPreviewTitle;
+- (void) refreshConsoleTitle;
+- (void) showImageTitleForPath: (NSString *)path;
+- (BOOL) documentIsPDF;
 // - (void) openStyleFile: (id)sender; // added by Terada
 - (void) setAutoCompleting:(BOOL)flag; // added by Terada
 - (IBAction) showCharacterInfo:(id)sender; // added by Terada
@@ -1102,6 +1111,7 @@ enum RootCommand
 
 @interface TSDocument (Scrap)
 - (void) tryScrap:(id)sender;
+- (void) refreshExperimentTitles;
 - (IBAction) typesetScrap:(id)sender;
 // - (void)checkScrapTaskStatus:(NSNotification *)notification;
 

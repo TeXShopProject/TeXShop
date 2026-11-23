@@ -141,7 +141,6 @@ static NSString *TSExperimentEngine(NSString *program, NSInteger menuEngine, NSA
 - (void) tryScrap:(id)sender
 {
     BOOL        spellExists;
-    NSString    *newTitle;
     
     if ([self getFilePath] == nil)
         return;
@@ -175,18 +174,30 @@ static NSString *TSExperimentEngine(NSString *program, NSInteger menuEngine, NSA
         [scrapTextView setAutomaticSpellingCorrectionEnabled:[SUD boolForKey:AutomaticSpellingCorrectionEnabledKey]];
         }
     
-    if ([textWindow title])
-        newTitle = [[textWindow title] stringByDeletingPathExtension];
-    else
-        newTitle = @"Experiment";
-    [scrapWindow setTitle: newTitle];
-    [scrapPDFWindow setTitle: newTitle];
+    [self refreshExperimentTitles];
     [scrapWindow setHidesOnDeactivate:YES];
     [scrapWindow makeKeyAndOrderFront:sender];
     [self observeExperimentSource];
     // The font, wrapping, invisible characters, line numbers and colors of the
     // document's source
     [self syncExperimentSourceDisplay];
+}
+
+
+// The Experiment panels are named after the source file without its extension, by its full path
+// while Show Full Path is on; an untitled document keeps its name. The Experiment console is
+// named after them once it has run.
+- (void) refreshExperimentTitles
+{
+    NSURL *url = [self fileURL];
+    NSString *title;
+    if (url != nil)
+        title = [(showFullPath ? [url path] : [url lastPathComponent]) stringByDeletingPathExtension];
+    else
+        title = [self displayName] ?: @"Experiment";
+    [scrapWindow setTitle: title];
+    [scrapPDFWindow setTitle: title];
+    [self.experimentConsole renameForSourceTitle: title];
 }
 
 

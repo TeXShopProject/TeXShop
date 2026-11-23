@@ -11,6 +11,8 @@
              directory:(NSURL *)directory encoding:(NSStringEncoding)encoding title:(NSString *)title
             completion:(void (^)(NSURL *pdfURL))completion;
 - (void)toggleFromWindow:(NSWindow *)origin;
+/// Names the console after title once it has run.
+- (void)renameForSourceTitle:(NSString *)title;
 - (void)abort:(id)sender;
 - (void)invalidate;
 @end

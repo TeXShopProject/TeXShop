@@ -55,6 +55,15 @@
     return [super windowTitleForDocumentDisplayName:displayName];
 }
 
+// The Experiment panels are named after the source window, so they are named again with it.
+- (void)synchronizeWindowTitleWithDocumentName
+{
+    [super synchronizeWindowTitleWithDocumentName];
+    NSDocument *document = self.document;
+    if ([document isKindOfClass:[TSDocument class]] && ((TSDocument *)document).standardController == self)
+        [(TSDocument *)document refreshExperimentTitles];
+}
+
 
 
 @end
