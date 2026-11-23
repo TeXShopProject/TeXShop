@@ -33,7 +33,7 @@
 "Do you want to save macros?" = "Você quer salvar macros?";
 "Save Spot" = "Salvar ponto";
 "Template" = "Modelo";
-"AutoComplete" = "AutoCompletar";  //Should be translation of "Key Bindings", even in English
+"AutoComplete" = "Associações de teclas";  //Should be translation of "Key Bindings", even in English
 "Page Number" = "Número da página";
 "Page Number Panel" = "Painel de número de página";
 "Magnification Panel" = "Painel de zoom";
@@ -44,7 +44,7 @@
 "Magnification" = "Ampliação";// mitsu 1.29b
 "Copy Format" = "Copiar formato";// mitsu 1.29b
 "ToolbarItems" = "ItemsBarraDeFerramentas";
-"Autocompletion" = "Autocompletar";
+"Autocompletion" = "Entrada por associação de teclas";
 "Completion" = "Completar";
 "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Caminho: %@\nTamanho do arquivo: %d bytes\nData de criação: %@\nData de modificação: %@";
 "Info: %@" = "Informações: %@";

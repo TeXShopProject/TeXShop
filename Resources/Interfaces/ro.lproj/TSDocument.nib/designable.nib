@@ -786,7 +786,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="440">
                     <rect key="frame" x="254" y="194" width="158" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Completare Automată" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
+                    <buttonCell key="cell" type="check" title="Asocieri de taste" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -797,7 +797,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JUT-BD-9AL">
                     <rect key="frame" x="122" y="13" width="158" height="19"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Completare Automată" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="dsK-Os-1he">
+                    <buttonCell key="cell" type="check" title="Asocieri de taste" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="dsK-Os-1he">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>

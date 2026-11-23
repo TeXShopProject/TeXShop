@@ -9,7 +9,7 @@
 "Set Project Root..." = "Documento principal...";
 "LaTeX Panel..." = "Panel LaTeX...";		/*% Name of "LaTeX Panel..." menu */
 "Close LaTeX Panel" = "Cerrar panel LaTeX";	/*% This name will replace the previous name when the panel is open; not in IB */
-"Matrix Panel..." = "Panel matrices...";
+"Matrix Panel..." = "Panel de matrices...";
 "Close Matrix Panel" = "Cerrar panel matrices";
 "Open for Preview..." = "Abrir para previsualizar...";
 "Open for Editing..." = "Abrir para editar...";
@@ -33,7 +33,7 @@
 "Do you want to save macros?" = "¿Quieres guardar las macros?";
 "Save Spot" = "Guardar posición";
 "Template" = "Plantilla";
-"AutoComplete" = "Autocompleción";  //Should be translation of "Key Bindings", even in English
+"AutoComplete" = "Combinaciones de teclas";  //Should be translation of "Key Bindings", even in English
 "Page Number" = "Número de página";
 "Page Number Panel" = "Panel de número de página";
 "Magnification Panel" = "Panel de aumento";
@@ -43,7 +43,7 @@
 "Magnification" = "Aumento";// mitsu 1.29b	/*% Name of "Magnification" menu */
 "Copy Format" = "Copiar con formato";// mitsu 1.29b		/*% Name of "Copy Format" menu */
 "ToolbarItems" = "Herramientas";
-"Autocompletion" = "Autocompleción";
+"Autocompletion" = "Entrada mediante combinación de teclas";
 "Completion" = "Compleción";				/*% Items immediately below not crucial! */
 "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Ruta: %@\nTamaño de archivo: %d bytes\nFecha de creación: %@\nFecha de modificación: %@";
 "Info: %@" = "Información: %@";
@@ -67,7 +67,7 @@
 "Newline Removal" = "Eliminar fin de línea";
 "Help" = "Ayuda";
 "Sync" = "Sincronizar";
-"ShowFullPath" = "Mostar ruta completa";
+"ShowFullPath" = "Mostrar ruta completa";
 "Close Current Environment" = "Cerrar el entorno actual"; // Terada
 "Your current setting of %@ will be replaced. OK?" = "Se reemplazará tu ajuste actual de %@. ¿De acuerdo?"; // Terada
 "Convert" = "Convertir";

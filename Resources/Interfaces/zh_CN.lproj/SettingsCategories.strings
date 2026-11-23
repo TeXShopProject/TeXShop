@@ -49,9 +49,10 @@
 "group.general.3.title" = "项目主文件";
 "catalog.general.3.0.title" = "打开文档时打开主文件";
 "catalog.general.3.1.title" = "最小化打开的根窗口";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "高级";
 "group.general.6.title" = "运行时的Dock图标";
-"catalog.general.5.0.title" = "此处未显示的设置在帮助文档“魔术行; 隐藏设置”中说明。";
+"catalog.general.5.0.title" = "此处未显示的设置在帮助文档“魔术行和隐藏设置”中说明。";
 "catalog.general.5.1.title" = "打开魔术行与隐藏设置手册…";
 "group.encoding.title" = "编码";
 "catalog.documents.0.0.title" = "新文档的编码";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "不检查注释";
 "group.appearance.0.title" = "主题";
 "catalog.appearance.0.0.title" = "浅色主题";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "深色主题";
 "group.appearance.1.title" = "编辑主题";
 "theme.list.add" = "新建主题";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "将预览中的选区作为图像复制、拖移或保存时，黑色替换为文字颜色，白色替换为背景颜色。这两种颜色在当前主题的“复制图像时的颜色映射”中设置。PDF和EPS不受影响。";
 "catalog.preview.4.2.title" = "前景色突出:";
 "catalog.preview.4.2.note" = "复制位图图像时，数值越大，文字越突出。";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "主页URL";
 "catalog.preview.5.0.note" = "打开HTML窗口时首先显示的页面。输入网址或文件路径。";
@@ -304,8 +307,10 @@
 "catalog.console.1.0.title" = "显示控制台";
 "catalog.console.1.1.title" = "控制台窗口调整";
 "group.bindings.title" = "按键绑定";
+"group.bindings.former" = "";
 "catalog.keyboard.0.0.title" = "使用按键绑定（新文档的默认值）";
 "catalog.keyboard.0.0.note" = "将输入的单个字符替换为设定的文本，例如将 { 替换为 {}。";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "按键绑定列表";
 "group.completion.title" = "命令补全";
 "catalog.keyboard.1.0.title" = "触发按键";

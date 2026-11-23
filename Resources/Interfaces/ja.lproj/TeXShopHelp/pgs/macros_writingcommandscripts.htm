@@ -45,7 +45,6 @@ pdflatex --shell-escape "$1"</pre>
 <p>このシェルスクリプトを呼び出すマクロの方が、興味深い内容です。</p>
 <pre>--Applescript
 -- Apply only to an already saved file.
--- Claus Gerhardt, Nov. 2003
 
 set scriptPath to (do shell script "dirname " &amp; "~/Library/TeXShop/Scripts/ex")
 set scriptPath to scriptPath &amp; "/setname.scpt"
@@ -63,7 +62,7 @@ set m to (number of characters of contents of baseName)
 set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
 
 set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName
 do shell script shellScript
 
 tell document frontName of application "TeXShop"
@@ -76,8 +75,8 @@ tell document frontName of application "TeXShop"
     save
 end tell</pre>
 <p>この手順には2つの利点があります。1つは、手前の書類が、後のコマンドを受け取るべき書類ではないとき、たとえば/Users/name/Examples/myfile.logのようなログファイルのときにも働くことです。もう1つは、ファイルを一度も保存していないとき、この手順ならエラーを返しますが、<code>save</code>コマンドでは保存ダイアログの後ろでスクリプトが待ったままになることです。</p>
-<p>続く6行は、変数<code>dirName</code>と<code>baseName</code>を設定します。ソースファイルが/Users/name/My Papers/Stuff/myfile.texなら、<code>dirName</code>は<code>'/Users/name/My Papers/Stuff'</code>です。フォルダの名前に空白があるので、シェル用にクォートしてあります。<code>baseName</code>は<code>myfile.tex</code>です。このようにすれば、フォルダの名前には空白があってもかまいません。ファイル自体の名前には、TeXが空白を許しません。</p>
-<p>次の3行で、シェルスクリプトを呼び出します。結果は、ターミナルで<code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc myfile.tex</code>と入力したのと同じです。最後の3行で、プレビューのウインドウを更新します。</p>
+<p>続く6行は、変数<code>dirName</code>と<code>baseName</code>を設定します。ソースファイルが/Users/name/My Papers/Stuff/myfile.texなら、<code>dirName</code>は<code>'/Users/name/My Papers/Stuff'</code>です。フォルダの名前に空白があるので、シェル用にクォートしてあります。<code>baseName</code>は<code>myfile.tex</code>です。ファイル名もシェルスクリプトに渡すときに同じようにクォートするので、フォルダの名前にもファイルの名前にも空白があってかまいません。</p>
+<p>次の3行で、シェルスクリプトを呼び出します。結果は、ターミナルで<code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code>と入力したのと同じです。最後の3行で、プレビューのウインドウを更新します。</p>
 <p>いくつかの行は複雑ですが、新しいスクリプトにはそのままコピーして使えます。</p>
 
 <h2 id="do-shell-script">AppleScriptからシェルコマンドを実行する</h2>
@@ -94,7 +93,7 @@ end tell</pre>
 <pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
 <p>上のスクリプトでは、cmd1 = <code>cd</code>、input1 = <code>dirName</code>、cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code>、input2 = <code>baseName</code>として、これを行っています。次の2行は、</p>
 <pre>set shellScript to "cd " &amp; dirName &amp; ";"
-set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; baseName</pre>
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName</pre>
 <p>この一連のコマンドを1つの変数に入れるための便利な書き方にすぎません。</p>
 </main>
 </body>

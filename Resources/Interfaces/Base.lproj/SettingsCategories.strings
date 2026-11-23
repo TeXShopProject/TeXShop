@@ -49,6 +49,7 @@
 "group.general.3.title" = "Project Root File";
 "catalog.general.3.0.title" = "Open the root file when opening a document";
 "catalog.general.3.1.title" = "Miniaturize the opened root window";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "Advanced";
 "group.general.6.title" = "Dock Icon While Running";
 "catalog.general.5.0.title" = "Settings not shown here are described in the help document “Comment Lines and Hidden Settings”.";
@@ -146,7 +147,8 @@
 "catalog.spelling.1.4.title" = "Do not check selected parameters";
 "catalog.spelling.1.5.title" = "Do not check comments";
 "group.appearance.0.title" = "Themes";
-"catalog.appearance.0.0.title" = "Lite Mode Theme";
+"catalog.appearance.0.0.title" = "Light Mode Theme";
+"catalog.appearance.0.0.former" = "Lite Mode Theme";
 "catalog.appearance.0.1.title" = "Dark Mode Theme";
 "group.appearance.1.title" = "Edit Theme";
 "theme.list.add" = "New Theme";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "When you copy, drag or save a selection from the preview as an image, black becomes the text color and white the background color. Both colors are set in Color Mapping for Copied Images in the current theme. PDF and EPS copies are not changed.";
 "catalog.preview.4.2.title" = "Foreground Prominence:";
 "catalog.preview.4.2.note" = "Higher values emphasize text when copying raster images.";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "Home URL";
 "catalog.preview.5.0.note" = "The page that the HTML window opens first. Enter a web address or the path of a file.";
@@ -304,8 +307,10 @@
 "catalog.console.1.0.title" = "Show console";
 "catalog.console.1.1.title" = "Console Resize";
 "group.bindings.title" = "Key Bindings";
+"group.bindings.former" = "";
 "catalog.keyboard.0.0.title" = "Use key bindings (default for new documents)";
 "catalog.keyboard.0.0.note" = "Replaces a typed character with a set text, such as { with {}.";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "Key Binding List";
 "group.completion.title" = "Command Completion";
 "catalog.keyboard.1.0.title" = "Completion trigger";

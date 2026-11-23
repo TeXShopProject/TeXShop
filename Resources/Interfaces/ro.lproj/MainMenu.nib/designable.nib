@@ -724,7 +724,7 @@
                             <menuItem isSeparatorItem="YES" id="543">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Completare automată" id="938" identifier="TSShortcut.changeAutoComplete:.0">
+                            <menuItem title="Asocieri de taste" id="938" identifier="TSShortcut.changeAutoComplete:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changeAutoComplete:" target="-1" id="940"/>

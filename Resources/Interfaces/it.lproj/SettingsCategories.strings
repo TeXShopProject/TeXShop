@@ -49,6 +49,7 @@
 "group.general.3.title" = "File principale del progetto";
 "catalog.general.3.0.title" = "Aprire il file principale quando si apre un documento";
 "catalog.general.3.1.title" = "Riduci la finestra principale all'apertura";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "Avanzate";
 "group.general.6.title" = "Icona del Dock durante l’esecuzione";
 "catalog.general.5.0.title" = "Le impostazioni non presenti qui sono descritte nella guida «Linee di commento e impostazioni nascoste».";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "Non controllare i commenti";
 "group.appearance.0.title" = "Temi";
 "catalog.appearance.0.0.title" = "A sfondo chiaro";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "A sfondo scuro";
 "group.appearance.1.title" = "Modifica tema";
 "theme.list.add" = "Nuovo tema";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "Quando copi, trascini o salvi come immagine una selezione dell’anteprima, il nero diventa il colore del testo e il bianco quello dello sfondo. I due colori si impostano in «Mappatura dei colori delle immagini copiate» del tema in uso. Le copie PDF ed EPS non vengono modificate.";
 "catalog.preview.4.2.title" = "Risalto del primo piano:";
 "catalog.preview.4.2.note" = "Valori più alti accentuano il testo quando si copiano immagini raster.";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL personale";
 "catalog.preview.5.0.note" = "La pagina che la finestra HTML apre per prima. Inserisci un indirizzo web o il percorso di un file.";
@@ -303,9 +306,11 @@
 "group.console.1.title" = "Azioni";
 "catalog.console.1.0.title" = "Mostrare la console";
 "catalog.console.1.1.title" = "Ridimensionamento console";
-"group.bindings.title" = "Autocompletamento";
-"catalog.keyboard.0.0.title" = "Usare le combinazioni di tasti (valore iniziale per i nuovi documenti)";
+"group.bindings.title" = "Associazioni dei tasti";
+"group.bindings.former" = "Autocompletamento";
+"catalog.keyboard.0.0.title" = "Usare le associazioni dei tasti (valore iniziale per i nuovi documenti)";
 "catalog.keyboard.0.0.note" = "Sostituisce un carattere digitato con un testo prestabilito, ad esempio { con {}.";
+"catalog.keyboard.0.0.former" = "Usare le combinazioni di tasti (valore iniziale per i nuovi documenti)";
 "catalog.keyboard.0.1.title" = "Elenco delle associazioni dei tasti";
 "group.completion.title" = "Completamento dei comandi";
 "catalog.keyboard.1.0.title" = "Tasto di attivazione";

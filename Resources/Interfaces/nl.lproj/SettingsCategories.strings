@@ -49,6 +49,7 @@
 "group.general.3.title" = "Hoofdbestand van project";
 "catalog.general.3.0.title" = "Hoofdbestand openen bij het openen van een document";
 "catalog.general.3.1.title" = "Geopend hoofddocument minimaliseren";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "Geavanceerd";
 "group.general.6.title" = "Dock-symbool tijdens gebruik";
 "catalog.general.5.0.title" = "Instellingen die hier niet staan, worden beschreven in het helpdocument ‘Commentaarregels en verborgen instellingen’.";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "Commentaar overslaan";
 "group.appearance.0.title" = "Thema’s";
 "catalog.appearance.0.0.title" = "Thema voor lichte modus";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "Thema voor donkere modus";
 "group.appearance.1.title" = "Thema bewerken";
 "theme.list.add" = "Nieuw thema";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "Als u een selectie uit de voorvertoning als afbeelding kopieert, sleept of bewaart, wordt zwart vervangen door de tekstkleur en wit door de achtergrondkleur. Beide kleuren stelt u in onder ‘Kleuren vervangen bij afbeeldingen kopiëren’ in het huidige thema. PDF- en EPS-kopieën worden niet gewijzigd.";
 "catalog.preview.4.2.title" = "Nadruk op voorgrond:";
 "catalog.preview.4.2.note" = "Hogere waarden benadrukken tekst bij het kopiëren van rasterafbeeldingen.";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "Start-URL";
 "catalog.preview.5.0.note" = "De pagina die het HTML-venster als eerste opent. Voer een webadres of het pad van een bestand in.";
@@ -303,9 +306,11 @@
 "group.console.1.title" = "Acties";
 "catalog.console.1.0.title" = "Console tonen";
 "catalog.console.1.1.title" = "Vergroten/verkleinen console";
-"group.bindings.title" = "Automatisch aanvullen";
+"group.bindings.title" = "Toetsbindingen";
+"group.bindings.former" = "Automatisch aanvullen";
 "catalog.keyboard.0.0.title" = "Toetsbindingen gebruiken (standaard voor nieuwe documenten)";
 "catalog.keyboard.0.0.note" = "Vervangt een getypt teken door een vaste tekst, zoals { door {}.";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "Lijst met toetsbindingen";
 "group.completion.title" = "Commandoaanvulling";
 "catalog.keyboard.1.0.title" = "Activeringstoets";

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Satz-Engines hinzufügen</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Engine; Engine-Datei; .engine; Ordner Engines; % !TEX program; % !TEX parameter; Alternate Engine; Inactive; Shell-Skript">
+<meta name="description" content="Engine; Engine-Datei; .engine; Ordner Engines; % !TEX program; % !TEX parameter; alternative Engine; Alternate Engine; Inactive; Shell-Skript">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -46,8 +46,8 @@
 <p>Um neue Dokumente mit einer Engine zu setzen, wählen Sie unter Einstellungen › Satz › Engine › Neue Dokumente setzen mit „Engine-Datei“ und darunter im Menü „Engine-Datei“ die Engine. „Engine-Liste bearbeiten…“ öffnet den Ordner „Engines“ im Finder; das Menü „Engine-Datei“ folgt dem Ordner, wenn Sie Dateien hinzufügen, entfernen oder umbenennen. Ist die gewählte Engine-Datei nicht mehr im Ordner, zeigt das Menü sie als nicht gefunden an, und Dokumente werden mit LaTeX gesetzt.</p>
 <p>Um ein Dokument an eine Engine zu binden, schreiben Sie eine Zeile wie diese in eine seiner ersten zwanzig Zeilen:</p>
 <pre>% !TEX program = XeLaTeX</pre>
-<p>Der Name ist der Name der Engine-Datei ohne <code>.engine</code>; <code>tex</code> und <code>latex</code> setzen plain TeX und LaTeX „Über DVI“, <code>pdftex</code> und <code>pdflatex</code> setzen sie „PDF direkt“. Die Zeile hat Vorrang vor der Symbolleiste, vor den Einstellungen und vor „Setzen mit Alternate Engine“. Die Form <code>% !TEX TS-program =</code> wird genauso gelesen. Schreiben Sie die Zeile genau wie gezeigt, mit je einem Leerzeichen vor und nach dem Gleichheitszeichen; das Makro „Program“ im Menü „Makros“ listet die Engines auf und fügt die Zeile für Sie ein. In einem Projekt mit Hauptdatei braucht nur die Hauptdatei die Zeile.</p>
-<p>Setzen › Setzen mit Alternate Engine (<kbd>⌃⌥⌘T</kbd>) setzt einmal mit der Engine unter Einstellungen › Satz › Engine › Alternativer Engine, als Vorgabe pdflatexmk, ohne die Symbolleiste zu ändern. Das eignet sich für Dokumente, die meist in einem schnellen Durchlauf gesetzt werden und gelegentlich vollständig mit latexmk.</p>
+<p>Der Name ist der Name der Engine-Datei ohne <code>.engine</code>; <code>tex</code> und <code>latex</code> setzen plain TeX und LaTeX „Über DVI“, <code>pdftex</code> und <code>pdflatex</code> setzen sie „PDF direkt“. Die Zeile hat Vorrang vor der Symbolleiste, vor den Einstellungen und vor „Setzen mit alternativer Engine“. Die Form <code>% !TEX TS-program =</code> wird genauso gelesen. Schreiben Sie die Zeile genau wie gezeigt, mit je einem Leerzeichen vor und nach dem Gleichheitszeichen; das Makro „Program“ im Menü „Makros“ listet die Engines auf und fügt die Zeile für Sie ein. In einem Projekt mit Hauptdatei braucht nur die Hauptdatei die Zeile.</p>
+<p>Setzen › Setzen mit alternativer Engine (<kbd>⌃⌥⌘T</kbd>) setzt einmal mit der Engine unter Einstellungen › Satz › Engine › Alternative Engine, als Vorgabe pdflatexmk, ohne die Symbolleiste zu ändern. Das eignet sich für Dokumente, die meist in einem schnellen Durchlauf gesetzt werden und gelegentlich vollständig mit latexmk.</p>
 
 <h2>Eine Engine schreiben</h2>
 <p>Am einfachsten erstellen Sie eine Engine, indem Sie im Finder eine Engine im Ordner „Engines“ duplizieren, die Kopie umbenennen und sie zum Bearbeiten in TeXShop öffnen. Eine Engine-Datei muss die Endung <code>.engine</code> haben und ausführbar sein; ein Duplikat behält diese Berechtigung. Danach geöffnete Dokumente führen die neue Engine in ihrer Symbolleiste auf. Hier ist XeLaTeX.engine:</p>

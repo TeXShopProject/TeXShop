@@ -780,9 +780,9 @@ DQ
                     </connections>
                 </matrix>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="440">
-                    <rect key="frame" x="254" y="196" width="118" height="18"/>
+                    <rect key="frame" x="254" y="196" width="161" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="AutoCompletar" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
+                    <buttonCell key="cell" type="check" title="Associações de teclas" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -791,9 +791,9 @@ DQ
                     </connections>
                 </button>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3pb-qx-IGT">
-                    <rect key="frame" x="168" y="22" width="118" height="18"/>
+                    <rect key="frame" x="168" y="22" width="161" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="AutoCompletar" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="qh5-Aa-Mxa">
+                    <buttonCell key="cell" type="check" title="Associações de teclas" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="qh5-Aa-Mxa">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>

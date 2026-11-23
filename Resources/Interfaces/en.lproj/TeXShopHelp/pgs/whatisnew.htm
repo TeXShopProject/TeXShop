@@ -109,6 +109,7 @@
 <li><strong>Critical fix:</strong> Stop now ends TeX; before, TeX kept running.</li>
 <li>Fix problems with the console and typesetting: console output can be copied while TeX runs, broken characters in console output and logs are shown correctly, Command-1 returns to the file typeset with <code>% !TEX root</code>, stopping no longer hangs when a typesetting tool cannot start, TeXShop tells you when the root file cannot be found, and the tools for pictures, MetaPost and texloganalyser work when the TeX or Ghostscript folder has a space in its path.</li>
 <li>Typesetting is stopped when its document is closed or when you quit TeXShop, and it no longer starts when the save before it fails, when you cancel that save, or when you stop it during that save.</li>
+<li>With the default settings, Trash Aux &amp; Typeset moves only the auxiliary files of the document to the Trash; holding Option for its shortcut no longer makes it trash those of the whole folder, which a hidden setting listed in Comment Lines and Hidden Settings still does.</li>
 </ul>
 <h4>Fixes: preview</h4>
 <ul>
@@ -135,7 +136,7 @@
 <li>Fix the highlight of brackets: it no longer ends too early when you type one after another, it stays when you scroll, resize the window or change themes, and brackets typed with a Japanese input method get the highlight only once confirmed.</li>
 <li>Undo now works after you insert a mark or remove one, and by default, Windows or other line endings in text you paste are changed to LF.</li>
 <li>Fix a crash when a setting or file that TeXShop reads is missing or damaged, such as a font that was removed or a damaged macros file, or when you sync from a page without SyncTeX information. The Previous Page and Next Page buttons of an image window turn its pages.</li>
-<li>Fix text that was cut off or drawn over other text, buttons and menus that did not work, and texts left in English, in some languages.</li>
+<li>Fix text that was cut off or drawn over other text, buttons and menus that did not work, texts left in English, and wrong names and words, in some languages.</li>
 </ul>
 <h4>Manual, help and bundled tools</h4>
 <ul>
@@ -145,15 +146,18 @@
 <li>Remove Skype from the manual. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/11">#11</a>).</li>
 <li>The manual has the same version number as the TeXShop release it is written for, starting with 6.00. Suggested by Bruno Voisin.</li>
 <li>The contact information in the credits points to the current maintainer. Reported by <a href="https://github.com/ralphrmartin">Ralph Martin</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/13">#13</a>).</li>
+<li>Links in the credits open the current web pages of the projects they name.</li>
 <li>About TeXShop opens the TeXShop web site from a link at the top of its credits. Suggested by <a href="https://github.com/zenitani">Seiji Zenitani</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/69">#69</a>).</li>
 <li>The Help menu shows the current documents at the top and the older ones in its Older Documents submenu. The Short Course has a submenu of its own, which also opens each of its lists of symbols. Items that open a document in English tell so in every language, and the item that copied the Short Course files of an older version is removed.</li>
 <li>First Steps with TeXShop, About This Release, File Encoding, the document on key bindings, macros and completion, and the manual describe TeXShop 6.00, and the older documents tell when they were written.</li>
+<li>The help in all five languages is rewritten for TeXShop 6.00, with a new look that follows dark mode, and the Korean help is now in Korean. The manual is revised for 6.00.</li>
 <li>The help in Japanese and two other languages is about TeX Live instead of older TeX systems, and languages without help show the English help.</li>
 <li>Show Help for Package tells when the program it runs is missing, fails or finds no documentation, and in which TeX folder it looked.</li>
-<li>The default commands and the profiles write -file-line-error and -synctex=1 as each engine does, and TeXShop also warns before typesetting when the command has -shell-escape written that way.</li>
+<li>The default commands and the profiles write -file-line-error and -synctex=1 in the form each engine uses, and TeXShop also warns before typesetting when the command has -shell-escape written in either form.</li>
 <li>Help → TeX Live Documentation opens in every language, in English where there is no version in that language, and links to the current documents on the web instead of files that only MacTeX has.</li>
 <li>Users of earlier versions also get the html engine that Help → HTML Commands needs, and that page no longer points to the removed demo movies.</li>
 <li>The bundled ConTeXt macro that opened an old web page opens the TeX Live home page instead.</li>
+<li>Bundled macros that run shell commands, such as Bibliography, work with names of files and folders that have a space. The macros already in <code>~/Library/TeXShop/Macros</code> are not changed.</li>
 <li>Add help for LaTeX-aware spell checking.</li>
 <li>The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.</li>
 <li>Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.</li>
