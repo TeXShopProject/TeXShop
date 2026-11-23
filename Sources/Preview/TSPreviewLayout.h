@@ -152,6 +152,65 @@ static inline NSImage *TSPreviewLayoutImage(NSInteger style) {
     return image;
 }
 
+// The icons of the Two-Page Arrangement menu show what each choice displays, with the other
+// choice as it is now: a spread is a pair of pages with numbers, and the cover is page 1 alone in
+// the middle above the next spread, as PDFKit shows it. Left to right and right to left show the
+// first spread that has two pages: [1|2] and [2|1], or [2|3] and [3|2] while the first page is a
+// cover. The cover shows [2|3] or [3|2] below it, by the direction. In the 22 x 20 frame of the
+// Page Layout icons, so the rows of both menus have the same height.
+static inline void TSPreviewDrawPages(NSRect frame, NSArray<NSString *> *numbers, CGFloat lineWidth, CGFloat fontSize) {
+    NSRect outline = NSInsetRect(frame, lineWidth / 2, lineWidth / 2);
+    CGFloat radius = numbers.count == 2 ? 1.8 : 1.3;
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:outline xRadius:radius yRadius:radius];
+    path.lineWidth = lineWidth;
+    [path stroke];
+    CGFloat width = NSWidth(frame) / numbers.count;
+    if (numbers.count == 2) {
+        NSBezierPath *spine = [NSBezierPath bezierPath];
+        [spine moveToPoint:NSMakePoint(NSMidX(frame), NSMinY(outline))];
+        [spine lineToPoint:NSMakePoint(NSMidX(frame), NSMaxY(outline))];
+        spine.lineWidth = lineWidth;
+        [spine stroke];
+    }
+    NSDictionary *attributes = @{NSFontAttributeName: [NSFont systemFontOfSize:fontSize weight:NSFontWeightSemibold],
+                                 NSForegroundColorAttributeName: NSColor.blackColor};
+    for (NSUInteger i = 0; i < numbers.count; i++) {
+        NSAttributedString *number = [[NSAttributedString alloc] initWithString:numbers[i] attributes:attributes];
+        NSSize size = number.size;
+        [number drawAtPoint:NSMakePoint(NSMinX(frame) + width * (i + 0.5) - size.width / 2,
+                                        NSMidY(frame) - size.height / 2 + 0.2)];
+    }
+}
+
+// The image for the arrangement choice with `tag` (1 left to right, 2 right to left, 3 cover);
+// nil for Restore Document Settings.
+static inline NSImage *TSPreviewArrangementImage(NSInteger tag, BOOL rightToLeft, BOOL cover) {
+    if (tag < 1 || tag > 3) return nil;
+    static NSMutableDictionary<NSString *, NSImage *> *images;
+    if (!images) images = [NSMutableDictionary dictionary];
+    NSArray<NSString *> *spread = tag == 1 ? (cover ? @[@"2", @"3"] : @[@"1", @"2"])
+                                : tag == 2 ? (cover ? @[@"3", @"2"] : @[@"2", @"1"])
+                                : (rightToLeft ? @[@"3", @"2"] : @[@"2", @"3"]);
+    NSString *key = [NSString stringWithFormat:@"%ld %@", (long)tag, [spread componentsJoinedByString:@"|"]];
+    NSImage *image = images[key];
+    if (image) return image;
+    image = [NSImage imageWithSize:NSMakeSize(22, 20) flipped:NO drawingHandler:^BOOL(NSRect rect) {
+        [NSColor.blackColor setStroke];
+        if (tag == 3) {
+            // Page 1 alone above the next spread; both rows are half the height.
+            CGFloat gap = 1.4, pageWidth = 8.5, pageHeight = (NSHeight(rect) - gap - 1) / 2;
+            CGFloat bottom = (NSHeight(rect) - (2 * pageHeight + gap)) / 2;
+            TSPreviewDrawPages(NSMakeRect(NSMidX(rect) - pageWidth / 2, bottom + pageHeight + gap, pageWidth, pageHeight), @[@"1"], 1.0, 6.5);
+            TSPreviewDrawPages(NSMakeRect(NSMidX(rect) - pageWidth, bottom, 2 * pageWidth, pageHeight), spread, 1.0, 6.5);
+        } else
+            TSPreviewDrawPages(NSMakeRect(NSMidX(rect) - 9.5, (NSHeight(rect) - 13) / 2, 19, 13), spread, 1.2, 8.5);
+        return YES;
+    }];
+    image.template = YES;
+    images[key] = image;
+    return image;
+}
+
 static inline NSMenuToolbarItem *TSPreviewLayoutItem(id target, NSString *identifier) {
     BOOL layout = [identifier isEqual:TSPreviewLayoutToolbarID];
     NSString *label = TSPreviewLayoutText(layout ? @"Page Layout" : @"Two-Page Arrangement");
@@ -173,13 +232,13 @@ static inline NSMenuToolbarItem *TSPreviewLayoutItem(id target, NSString *identi
             action:NSSelectorFromString(layout ? @"changePreviewLayout:" : @"changePreviewArrangement:") keyEquivalent:@""];
         choice.target = target;
         choice.tag = tag;
-        if (layout) {
-            choice.image = TSPreviewLayoutImage(tag);
-            // From macOS 27 AppKit usually hides the images of menu items; these show which icon is which format.
+        choice.image = layout ? TSPreviewLayoutImage(tag) : TSPreviewArrangementImage(tag, NO, NO);
+        // From macOS 27 AppKit usually hides the images of menu items; these show what each choice displays.
 #if defined(MAC_OS_VERSION_27_0)   // SDKs before 27 do not have the setting
+        if (choice.image) {
             if (@available(macOS 27.0, *)) choice.preferredImageVisibility = NSMenuItemImageVisibilityVisible;
-#endif
         }
+#endif
         [menu addItem:choice];
     }
     item.menu = menu;
