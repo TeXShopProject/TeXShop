@@ -598,6 +598,11 @@ else
     else if (item.tag == 2) selected = self.previewDisplaysRTL;
     else if (item.tag == 3) selected = self.previewDisplaysAsBook;
     item.state = selected ? NSControlStateValueOn : NSControlStateValueOff;
+    // The icons of the arrangement choices follow the other choice (TSPreviewArrangementImage).
+    if (item.action == @selector(changePreviewArrangement:)) {
+        NSImage *image = TSPreviewArrangementImage(item.tag, self.previewDisplaysRTL, self.previewDisplaysAsBook);
+        if (item.image != image) item.image = image;
+    }
     if (item.action == @selector(changePreviewArrangement:) && item.tag == 4)
         return view.document != nil && (self.previewBookOverride != nil || self.previewDirectionOverride != nil);
     return view.document != nil;
