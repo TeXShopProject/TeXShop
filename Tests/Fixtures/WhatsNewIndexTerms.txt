@@ -291,6 +291,7 @@ button
 buttons
 by
 byte
+bytes
 c
 call
 called
@@ -302,7 +303,6 @@ cancel
 cancels
 capabilities
 car
-carefully
 case
 cases
 categories
@@ -335,7 +335,6 @@ citations
 citecolor
 citing
 claims
-cleaned
 click
 clicked
 clicking
@@ -394,7 +393,6 @@ confirmed
 consequently
 conservative
 consider
-considered
 console
 constant
 constants
@@ -430,6 +428,7 @@ corresponding
 corresponds
 count
 country
+counts
 couple
 course
 cover
@@ -547,7 +546,6 @@ down
 downarrow
 drag
 dragged
-drastic
 draw
 drawer
 drawer's
@@ -1548,6 +1546,7 @@ saves
 saving
 saw
 say
+scalars
 scale
 scheme
 schmock
@@ -1798,7 +1797,6 @@ thickness
 thin
 thing
 think
-thinking
 third
 this
 thomas
@@ -1878,6 +1876,7 @@ undo
 unexpected
 unfortunately
 unicode
+units
 unix
 unless
 unreported
@@ -1957,6 +1956,7 @@ when
 whenever
 which
 while
+whitespace
 whole
 width
 window
