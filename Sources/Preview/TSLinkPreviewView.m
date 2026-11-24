@@ -465,9 +465,24 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         [indices addObject:@(index)];
     }
     [coder encodeObject:indices forKey:[prefix stringByAppendingString:@"Pages"]];
-    [coder encodeRect:_source forKey:[prefix stringByAppendingString:@"Source"]];
+    // The part in view, from the corner of the linked page, which keeps it also when the next
+    // page is gone or the pages change size.
+    [coder encodeRect:NSOffsetRect(_source, -NSMinX(_pageRects[0]), -NSMinY(_pageRects[0]))
+               forKey:[prefix stringByAppendingString:@"SourceOnPage"]];
     if (self.pageLabel)
         [coder encodeObject:self.pageLabel forKey:[prefix stringByAppendingString:@"Label"]];
+}
+
+// The part in view moved, and if needed made smaller keeping its proportions, to lie within an
+// image of `size`: the popup then shows its text and figures as before, never stretched.
+static NSRect TSLinkPreviewFitSource(NSRect source, NSSize size)
+{
+    if (!(NSWidth(source) > 0 && NSHeight(source) > 0 && size.width > 0 && size.height > 0)) return NSZeroRect;
+    CGFloat scale = MIN(1, MIN(size.width / NSWidth(source), size.height / NSHeight(source)));
+    NSSize part = NSMakeSize(NSWidth(source) * scale, NSHeight(source) * scale);
+    CGFloat x = MIN(MAX(NSMinX(source), 0), size.width - part.width);
+    CGFloat y = MIN(MAX(NSMinY(source), 0), size.height - part.height);
+    return NSMakeRect(x, y, part.width, part.height);
 }
 
 + (TSLinkPreviewView *)linkPreviewWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
@@ -480,11 +495,20 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     NSMutableArray<PDFPage *> *pages = [NSMutableArray array];
     NSSize sizes[TSLinkPreviewMaximumPages];
     for (id index in indices) {
-        if (![index isKindOfClass:[NSNumber class]] || [index integerValue] < 0 || (NSUInteger)[index integerValue] >= document.pageCount)
-            return nil;
+        BOOL there = [index isKindOfClass:[NSNumber class]] && [index integerValue] >= 0
+            && (NSUInteger)[index integerValue] < document.pageCount;
+        // Without the linked page there is nothing to show; without the next one, the linked
+        // page is shown alone, as when a popup first appears at the end of the PDF.
+        if (!there) {
+            if (pages.count == 0) return nil;
+            break;
+        }
         PDFPage *page = [document pageAtIndex:[index integerValue]];
         CGAffineTransform transform;
-        if (!TSLinkPreviewPageGeometry(page, &sizes[pages.count], &transform)) return nil;
+        if (!TSLinkPreviewPageGeometry(page, &sizes[pages.count], &transform)) {
+            if (pages.count == 0) return nil;
+            break;
+        }
         [pages addObject:page];
     }
     // Drawn as when the popup first appeared: the linked page, or it above the next one.
@@ -499,14 +523,27 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         rects[0] = NSMakeRect(0, 0, size.width, size.height);
         image = TSLinkPreviewImage(pages[0], size);
     }
-    // The pages may have changed size since; the part in view stays within them.
-    NSRect source = NSIntersectionRect([coder decodeRectForKey:[prefix stringByAppendingString:@"Source"]],
-                                       NSMakeRect(0, 0, size.width, size.height));
+    NSRect onPage = [coder decodeRectForKey:[prefix stringByAppendingString:@"SourceOnPage"]];
+    NSRect source = TSLinkPreviewFitSource(NSOffsetRect(onPage, NSMinX(rects[0]), NSMinY(rects[0])), size);
     if (!image || NSIsEmptyRect(source)) return nil;
     TSLinkPreviewView *preview = [[self alloc] initWithFrame:frame image:image source:source pageSize:size
                                                        pages:pages pageRects:rects];
     preview.pageLabel = [coder decodeObjectOfClass:[NSString class] forKey:[prefix stringByAppendingString:@"Label"]];
     return preview;
+}
+
+- (PDFPage *)awayPlaceOnPage:(NSRect *)rect
+{
+    if (!_awayFromPlace || !_placePage) return nil;
+    if (rect) *rect = _placeOnPage;
+    return _placePage;
+}
+
+- (void)setAwayPlaceOnPage:(PDFPage *)page rect:(NSRect)rect
+{
+    _placePage = page;
+    _placeOnPage = rect;
+    _awayFromPlace = page != nil;
 }
 
 - (BOOL)returnToPlaceIfAway

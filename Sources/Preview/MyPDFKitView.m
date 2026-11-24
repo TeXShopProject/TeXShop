@@ -143,8 +143,8 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     // The place and pinned popup restored on the next launch, put back once the window is laid out (#71).
     TSPreviewPanePlace restoringPlace;
     TSLinkPreviewView *restoringPopup;
-    PDFPage *restoringPopupPage;
-    NSRect restoringPopupOnPage;
+    PDFPage *restoringPopupPage, *restoringPopupHome;
+    NSRect restoringPopupOnPage, restoringPopupHomeOnPage;
 }
 
 + (void)initialize
@@ -411,6 +411,14 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
             [coder encodeInteger:(NSInteger)[[self document] indexForPage:page] forKey:TSPreviewStateKey(prefix, @"PopupPage")];
             [coder encodeRect:[self convertRect:frame toPage:page] forKey:TSPreviewStateKey(prefix, @"PopupOnPage")];
             [pinnedLinkPreview encodeContentWithCoder:coder prefix:TSPreviewStateKey(prefix, @"Popup")];
+            // Away from its place, it keeps the place it goes back to (#35).
+            NSRect home;
+            PDFPage *homePage = [pinnedLinkPreview awayPlaceOnPage:&home];
+            NSUInteger homeIndex = homePage ? [[self document] indexForPage:homePage] : NSNotFound;
+            if (homeIndex != NSNotFound) {
+                [coder encodeInteger:(NSInteger)homeIndex forKey:TSPreviewStateKey(prefix, @"PopupHomePage")];
+                [coder encodeRect:home forKey:TSPreviewStateKey(prefix, @"PopupHomeOnPage")];
+            }
         }
     }
     // The other view of Switch Views, with its own display and popup (#60).
@@ -430,6 +438,7 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
 {
     restoringPlace = (TSPreviewPanePlace){0};
     restoringPopup = nil;
+    restoringPopupHome = nil;
     NSUInteger pageCount = [[self document] pageCount];
     if (!pageCount || ![coder containsValueForKey:TSPreviewStateKey(prefix, @"PageStyle")]) return NO;
     NSInteger style = [coder decodeIntegerForKey:TSPreviewStateKey(prefix, @"PageStyle")];
@@ -470,6 +479,14 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
             restoringPopup = [TSLinkPreviewView linkPreviewWithCoder:coder prefix:popup document:[self document] frame:NSZeroRect];
             restoringPopupPage = [[self document] pageAtIndex:index];
             restoringPopupOnPage = [coder decodeRectForKey:TSPreviewStateKey(prefix, @"PopupOnPage")];
+            restoringPopupHome = nil;
+            if ([coder containsValueForKey:TSPreviewStateKey(prefix, @"PopupHomePage")]) {
+                NSInteger home = [coder decodeIntegerForKey:TSPreviewStateKey(prefix, @"PopupHomePage")];
+                if (home >= 0 && (NSUInteger)home < pageCount) {
+                    restoringPopupHome = [[self document] pageAtIndex:home];
+                    restoringPopupHomeOnPage = [coder decodeRectForKey:TSPreviewStateKey(prefix, @"PopupHomeOnPage")];
+                }
+            }
         }
     }
 
@@ -514,8 +531,10 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
         TSPreviewPaneRestore(self, place);
     if (popup && popupPage.document == [self document]) {
         NSRect frame = [self convertRect:[self convertRect:restoringPopupOnPage fromPage:popupPage] toView:nil];
-        [self placePinnedLinkPreview:popup windowFrame:frame];
+        if ([self placePinnedLinkPreview:popup windowFrame:frame] && restoringPopupHome.document == [self document])
+            [popup setAwayPlaceOnPage:restoringPopupHome rect:restoringPopupHomeOnPage];
     }
+    restoringPopupHome = nil;
 }
 
 // The rotation the user gave the pages, kept with the first part, which turns them (#71).
