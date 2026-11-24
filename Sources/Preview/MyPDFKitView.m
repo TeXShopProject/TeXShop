@@ -304,7 +304,8 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     __weak MyPDFKitView *weakSelf = self;
     PDFDisplayBox box = self.displayBox;
     NSUInteger token = TSContentWidthTakeToken(self);
-    // The annotation walk of a long PDF stays off one long turn of the main thread (#62).
+    // The workers read each page's annotations and draw it. A rejected annotation comes
+    // back as PDFKit, and the main thread does not walk the pages first (#62).
     TSContentWidthScan scan = TSContentWidthPrepareFast(document, box, 0.008);
     if (scan == TSContentWidthScanPending) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

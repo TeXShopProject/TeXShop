@@ -1,9 +1,12 @@
 // Fit to Content Width (#62). PDFKit draws on the main thread, a few pages at a time.
-// An unencrypted document opened from its private clone, with no drawing annotation, is drawn
-// by up to four Core Graphics workers instead. The workers never touch PDFKit objects.
+// An unencrypted document opened from its private clone is drawn by up to four Core Graphics
+// workers. Each worker reads that page's /Annots before drawing it. A popup, or any other
+// annotation the allowlist does not ignore, drops the whole job and PDFKit measures the
+// document instead. The workers never touch PDFKit objects.
 #import "TSContentWidth.h"
 #import "TSExternalPDFReload.h"
 #import <stdatomic.h>
+#import <string.h>
 
 // The preview view implements this. The header is not imported here.
 @protocol TSContentWidthMeasuring <NSObject>
@@ -154,30 +157,69 @@ TSContentInkStatus TSContentInkMeasureCG(CGPDFPageRef page, PDFDisplayBox box, C
     return status;
 }
 
-// PDFAnnotation.type is "Link"; the PDFAnnotationSubtype constants are "/Link".
-static BOOL TSContentWidthTypeIs(PDFAnnotation *annotation, NSString *subtype)
+// The same allowlist as the old PDFKit walk, read from the page dictionary so a worker can
+// decide without PDFKit. A popup can draw when it opens, so it is never ignored. PDFKit's
+// shouldDisplay stays YES for the Invisible and Hidden flags; only NoView matched it, and
+// treating the others as hidden would skip ink PDFKit still draws. A missing key, or a value
+// that is not the type the allowlist reads, is not ignored.
+static BOOL TSContentWidthCGAnnotationIgnored(CGPDFDictionaryRef annotation)
 {
-    NSString *type = annotation.type, *name = subtype;
-    if ([type hasPrefix:@"/"]) type = [type substringFromIndex:1];
-    if ([name hasPrefix:@"/"]) name = [name substringFromIndex:1];
-    return type.length && [type isEqualToString:name];
+    const char *name = NULL;
+    BOOL named = CGPDFDictionaryGetName(annotation, "Subtype", &name) && name;
+    if (named && name[0] == '/') name++;
+    if (named && strcmp(name, "Popup") == 0) return NO;
+    CGPDFInteger flags = 0;
+    if (CGPDFDictionaryGetInteger(annotation, "F", &flags) && (flags & 32)) return YES;
+    if (!named || strcmp(name, "Link") != 0) return NO;
+    CGPDFObjectRef appearance = NULL;
+    if (CGPDFDictionaryGetObject(annotation, "AP", &appearance)) return NO;
+    double width = 0;
+    BOOL saw = NO;
+    CGPDFObjectRef borderObject = NULL;
+    if (CGPDFDictionaryGetObject(annotation, "Border", &borderObject)) {
+        CGPDFArrayRef border = NULL;
+        if (!CGPDFObjectGetValue(borderObject, kCGPDFObjectTypeArray, &border) || CGPDFArrayGetCount(border) < 3)
+            return NO;
+        CGPDFReal value = 0;
+        if (!CGPDFArrayGetNumber(border, 2, &value)) return NO;
+        width = value;
+        saw = YES;
+    }
+    CGPDFObjectRef styleObject = NULL;
+    if (CGPDFDictionaryGetObject(annotation, "BS", &styleObject)) {
+        CGPDFDictionaryRef style = NULL;
+        if (!CGPDFObjectGetValue(styleObject, kCGPDFObjectTypeDictionary, &style)) return NO;
+        CGPDFObjectRef widthObject = NULL;
+        if (!CGPDFDictionaryGetObject(style, "W", &widthObject)) return NO;
+        CGPDFReal real = 0;
+        CGPDFInteger integer = 0;
+        double value = 0;
+        if (CGPDFObjectGetValue(widthObject, kCGPDFObjectTypeReal, &real)) value = real;
+        else if (CGPDFObjectGetValue(widthObject, kCGPDFObjectTypeInteger, &integer)) value = (double)integer;
+        else return NO;
+        width = saw ? MAX(width, value) : value;
+        saw = YES;
+    }
+    // A missing border is width 0, which is what PDFKit returns for a nil PDFBorder.
+    return !saw || width <= 0;
 }
 
-static BOOL TSContentWidthAnnotationIgnored(PDFAnnotation *annotation)
+static BOOL TSContentWidthCGPageAllows(CGPDFPageRef page)
 {
-    // A popup can draw when it opens. It stays on the PDFKit measurement even if it is hidden now.
-    if (TSContentWidthTypeIs(annotation, PDFAnnotationSubtypePopup)) return NO;
-    if (!annotation.shouldDisplay) return YES;
-    if (!TSContentWidthTypeIs(annotation, PDFAnnotationSubtypeLink)) return NO;
-    // An appearance stream can draw ink that Core Graphics will not draw for the annotation.
-    if (annotation.hasAppearanceStream || annotation.annotationKeyValues[PDFAnnotationKeyAppearanceDictionary]) return NO;
-    CGFloat width = annotation.border ? annotation.border.lineWidth : 0;
-    id style = annotation.annotationKeyValues[PDFAnnotationKeyBorderStyle];
-    if ([style isKindOfClass:[NSDictionary class]]) {
-        id line = ((NSDictionary *)style)[@"W"];
-        if ([line respondsToSelector:@selector(doubleValue)]) width = MAX(width, [line doubleValue]);
+    if (!page) return NO;
+    CGPDFDictionaryRef dict = CGPDFPageGetDictionary(page);
+    if (!dict) return NO;
+    CGPDFObjectRef object = NULL;
+    if (!CGPDFDictionaryGetObject(dict, "Annots", &object)) return YES;
+    CGPDFArrayRef annotations = NULL;
+    if (!CGPDFObjectGetValue(object, kCGPDFObjectTypeArray, &annotations) || !annotations) return NO;
+    size_t count = CGPDFArrayGetCount(annotations);
+    for (size_t index = 0; index < count; index++) {
+        CGPDFDictionaryRef annotation = NULL;
+        if (!CGPDFArrayGetDictionary(annotations, index, &annotation) || !annotation) return NO;
+        if (!TSContentWidthCGAnnotationIgnored(annotation)) return NO;
     }
-    return width <= 0;
+    return YES;
 }
 
 static BOOL TSContentWidthFastPathDocument(PDFDocument *document, PDFDisplayBox box)
@@ -187,70 +229,19 @@ static BOOL TSContentWidthFastPathDocument(PDFDocument *document, PDFDisplayBox 
     return TSExternalPDFCloneURL(document) != nil;
 }
 
-// The walk is the slow part on a long PDF. A slice stops before the next page is opened
-// and again between annotations. A page with no annotations never reaches the inner check,
-// and opening every such page in one turn held the main thread for seconds (#62). One page
-// of links can take longer than the slice by itself, so the inner check stays. A direct
-// caller that does not slice gets one long walk, and the result is kept for this generation.
-static TSContentWidthScan TSContentWidthAdvanceAnnotationScan(PDFDocument *document, NSTimeInterval seconds)
-{
-    NSMutableDictionary *state = TSContentWidthState(document);
-    NSInteger decision = [state[@"noteDecision"] integerValue];
-    if (decision == TSContentWidthScanAllow || decision == TSContentWidthScanDeny)
-        return (TSContentWidthScan)decision;
-    NSUInteger index = [state[@"noteIndex"] unsignedIntegerValue];
-    NSUInteger annotationIndex = [state[@"noteAnnot"] unsignedIntegerValue];
-    NSDate *end = [NSDate dateWithTimeIntervalSinceNow:MAX(seconds, 0)];
-    BOOL allow = YES;
-    TSContentWidthSuppressNotes = YES;
-    @try {
-        for (; index < document.pageCount; index++) {
-            if (end.timeIntervalSinceNow < 0) {
-                state[@"noteIndex"] = @(index);
-                state[@"noteAnnot"] = @(annotationIndex);
-                return TSContentWidthScanPending;
-            }
-            PDFPage *page = [document pageAtIndex:index];
-            NSArray<PDFAnnotation *> *annotations = page.annotations;
-            NSUInteger count = annotations.count;
-            for (; annotationIndex < count; annotationIndex++) {
-                if (end.timeIntervalSinceNow < 0) {
-                    state[@"noteIndex"] = @(index);
-                    state[@"noteAnnot"] = @(annotationIndex);
-                    return TSContentWidthScanPending;
-                }
-                if (!TSContentWidthAnnotationIgnored(annotations[annotationIndex])) {
-                    allow = NO;
-                    break;
-                }
-            }
-            if (!allow) break;
-            annotationIndex = 0;
-        }
-    } @finally {
-        TSContentWidthSuppressNotes = NO;
-    }
-    [state removeObjectForKey:@"noteIndex"];
-    [state removeObjectForKey:@"noteAnnot"];
-    state[@"noteDecision"] = @(allow ? TSContentWidthScanAllow : TSContentWidthScanDeny);
-    return allow ? TSContentWidthScanAllow : TSContentWidthScanDeny;
-}
-
 TSContentWidthScan TSContentWidthPrepareFast(PDFDocument *document, PDFDisplayBox box, NSTimeInterval seconds)
 {
+    (void)seconds;
     if (!TSContentWidthFastPathDocument(document, box)) return TSContentWidthScanDeny;
-    return TSContentWidthAdvanceAnnotationScan(document, seconds);
-}
-
-static BOOL TSContentWidthAnnotationsAllow(PDFDocument *document)
-{
-    return TSContentWidthAdvanceAnnotationScan(document, 3600) == TSContentWidthScanAllow;
+    // Workers read /Annots. A document they have already rejected stays on PDFKit.
+    NSInteger decision = [TSContentWidthState(document)[@"noteDecision"] integerValue];
+    if (decision == TSContentWidthScanDeny) return TSContentWidthScanDeny;
+    return TSContentWidthScanAllow;
 }
 
 static BOOL TSContentWidthFastPathAllowed(PDFDocument *document, PDFDisplayBox box)
 {
-    if (!TSContentWidthFastPathDocument(document, box)) return NO;
-    return TSContentWidthAnnotationsAllow(document);
+    return TSContentWidthPrepareFast(document, box, 0) == TSContentWidthScanAllow;
 }
 
 #pragma mark Jobs
@@ -265,7 +256,7 @@ typedef struct {
 
 @interface TSContentWidthJob : NSObject {
 @public
-    _Atomic int cancelled, failed, ineligible, finished;
+    _Atomic int cancelled, failed, ineligible, finished, notesDenied;
     TSContentWidthSlot *slots;
 }
 @property (strong) PDFDocument *document;
@@ -412,7 +403,12 @@ static void TSContentWidthFinish(TSContentWidthJob *job)
             job.document.pageCount != job.pageCount;
         if (stale)
             result = TSContentWidthResultRetry;
-        else if (atomic_load(&job->failed) || atomic_load(&job->ineligible)) {
+        else if (atomic_load(&job->notesDenied)) {
+            // Slots already drawn stay in this job. PDFKit measures the document instead.
+            // This is not a draw failure, so a later generation can try the workers again.
+            TSContentWidthState(job.document)[@"noteDecision"] = @(TSContentWidthScanDeny);
+            result = TSContentWidthResultPDFKit;
+        } else if (atomic_load(&job->failed) || atomic_load(&job->ineligible)) {
             TSContentWidthMarkCGFailed(job.document, job.box);
             result = TSContentWidthResultPDFKit;
         } else {
@@ -455,10 +451,20 @@ static void TSContentWidthRunWorker(TSContentWidthJob *job, NSUInteger start)
         return;
     }
     for (NSUInteger index = start; index < job.pageCount; index += (NSUInteger)job.workers) {
-        if (atomic_load(&job->cancelled)) break;
+        if (atomic_load(&job->cancelled) || atomic_load(&job->notesDenied)) break;
         CGPDFPageRef page = CGPDFDocumentGetPage(document, index + 1);
+        if (!page) {
+            atomic_store(&job->failed, 1);
+            break;
+        }
+        // Check this page before drawing it. A later denial discards every slot, including
+        // pages this worker has already drawn.
+        if (!TSContentWidthCGPageAllows(page)) {
+            atomic_store(&job->notesDenied, 1);
+            break;
+        }
         NSRect ink = NSZeroRect;
-        TSContentInkStatus status = page ? TSContentInkMeasureCG(page, job.box, 1.0, &ink) : TSContentInkFailed;
+        TSContentInkStatus status = TSContentInkMeasureCG(page, job.box, 1.0, &ink);
         if (status == TSContentInkFailed) {
             atomic_store(&job->failed, 1);
             break;

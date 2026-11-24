@@ -183,18 +183,20 @@ void TSContentWidthNoteDrawingDiverged(PDFDocument *document);
 // drawn; the store for the box is then empty.
 BOOL TSContentWidthMeasureSlice(PDFDocument *document, PDFDisplayBox box, NSTimeInterval seconds, BOOL *failed);
 
-// Whether the annotation walk may still use the background measurement.
+// Whether a background measurement may start. The workers accept or reject annotations.
 typedef NS_ENUM(NSInteger, TSContentWidthScan) {
-    TSContentWidthScanPending = 0, // call again; the walk used the time it was given
+    TSContentWidthScanPending = 0, // retained; the annotation decision is no longer sliced here
     TSContentWidthScanAllow = 1,
     TSContentWidthScanDeny = 2,    // use PDFKit, including a document that cannot use the background
 };
 
-// Walks annotations for at most `seconds` when this document can be measured off the main
-// thread. An encrypted document, a locked one, and one that was not opened from its clone
-// are Deny without a walk. The decision stays with this measurement generation.
+// Allow when this document may start a background measurement. The workers read /Annots and
+// reject the job if any annotation is not one the allowlist ignores. An encrypted document,
+// a locked one, one that was not opened from its clone, and one whose workers already
+// rejected an annotation are Deny without waiting. `seconds` is unused.
 TSContentWidthScan TSContentWidthPrepareFast(PDFDocument *document, PDFDisplayBox box, NSTimeInterval seconds);
 
 // Starts a background measurement when this document may use one. NO means the caller measures
-// with PDFKit. done runs on the main thread. A decision from TSContentWidthPrepareFast is reused.
+// with PDFKit. done runs on the main thread. A document the workers have already rejected is
+// not started again.
 BOOL TSContentWidthScheduleFast(PDFView *view, void (^done)(TSContentWidthResult result));
