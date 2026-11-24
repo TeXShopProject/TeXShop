@@ -27,10 +27,15 @@ TSShortcutBinding *TSBinding(NSString *key, NSEventModifierFlags flags) {
     return [[TSShortcutBinding alloc] initWithKey:key modifiers:flags];
 }
 // The Globe (fn) key, which TSBinding leaves out, as key search compares it: with a character key only,
-// as for Enter Full Screen's 🌐︎F. Arrows, the function keys, Forward Delete and Enter carry the flag of their own.
+// as for Enter Full Screen's 🌐︎F. Keys that are not characters carry the flag of their own: Return, Enter, Tab,
+// Escape and Delete (control characters), and AppKit's function keys, the arrows, F1–F35, Forward Delete,
+// Home, End and the Page keys, in the range OpenStep reserves for them, U+F700–U+F8FF. Any other character,
+// a fullwidth comma (U+FF0C) or an ideographic comma (U+3001) as much as B, is a character key.
+static BOOL TSIsFunctionKeyCharacter(unichar c) { return c >= NSUpArrowFunctionKey && c <= 0xf8ff; }
 NSEventModifierFlags TSGlobeModifier(NSString *key, NSEventModifierFlags flags) {
     unichar c = key.length ? [key characterAtIndex:0] : 0;
-    return (flags & NSEventModifierFlagFunction) && c >= 0x20 && c != 0x7f && c < 0xf700 ? NSEventModifierFlagFunction : 0;
+    BOOL character = c >= 0x20 && c != 0x7f && !TSIsFunctionKeyCharacter(c);
+    return (flags & NSEventModifierFlagFunction) && character ? NSEventModifierFlagFunction : 0;
 }
 NSEventModifierFlags TSEventGlobeModifier(NSEvent *event) {
     return TSGlobeModifier(TSShortcutCharacterForEvent(event), event.modifierFlags);

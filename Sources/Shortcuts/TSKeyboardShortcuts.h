@@ -23,8 +23,9 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
     if (flags & NSEventModifierFlagCommand) [text appendString:@"⌘"];
     unichar c = [key characterAtIndex:0];
     // The Globe (fn) key, which only menu items macOS provides can have (Enter Full Screen), as AppKit shows it
-    // since macOS 27. Arrows and the function keys carry the flag of their own.
-    if ((flags & NSEventModifierFlagFunction) && c < 0xf700) [text appendString:@"\U0001F310︎"];
+    // since macOS 27. Arrows and the function keys (AppKit's U+F700–U+F8FF) carry the flag of their own; a
+    // fullwidth comma (U+FF0C) is a character as B is.
+    if ((flags & NSEventModifierFlagFunction) && (c < NSUpArrowFunctionKey || c > 0xf8ff)) [text appendString:@"\U0001F310︎"];
     NSDictionary *symbols = @{@(NSLeftArrowFunctionKey):@"←", @(NSRightArrowFunctionKey):@"→", @(NSUpArrowFunctionKey):@"↑", @(NSDownArrowFunctionKey):@"↓", @13:@"↩", @9:@"⇥", @27:@"⎋", @32:@"␣", @127:@"⌫", @(NSDeleteFunctionKey):@"⌦"};
     if (c >= NSF1FunctionKey && c <= NSF20FunctionKey) [text appendFormat:@"F%u", c - NSF1FunctionKey + 1];
     else [text appendString:symbols[@(c)] ?: key.uppercaseString];

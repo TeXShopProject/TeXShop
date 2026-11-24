@@ -491,6 +491,8 @@ static void CheckRecording(TSMacroEditor *owner) {
     SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended();
     // Return and Enter end it as Escape does; neither saves. Return in the list then renames, it does not record.
     for(NSString *c in @[@"\r",@"\x03"]) { Click(owner,row,@"Key",NO); REQUIRE(recording(macro)); SendKey(owner,window,KeyIn(window,c,[c isEqual:@"\r"]?36:76,0)); ended(); REQUIRE([macro.key isEqual:@"M+ShiftKey"]); }
+    // Enter with fn (fn-Return on a laptop) ends it too: Enter is not a character key, so it is not refused for fn.
+    Click(owner,row,@"Key",NO); REQUIRE(recording(macro)); SendKey(owner,window,KeyIn(window,@"\x03",36,NSEventModifierFlagFunction)); ended(); REQUIRE([macro.key isEqual:@"M+ShiftKey"] && !owner.recordingError);
     SendKey(owner,window,KeyIn(window,@"\r",36,0)); REQUIRE(Renaming(window,rows) && !owner.recordingItem); SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); REQUIRE(!Renaming(window,rows));
     // Keys of menu commands reach the recording, not the menus or Save, and are refused: the key in the field, the
     // triangle after it, the reason below the contents with the triangle before it; the recording goes on.
@@ -520,6 +522,17 @@ static void CheckRecording(TSMacroEditor *owner) {
     SendKey(owner,window,Typed(window,@"\x02",@"b",11,NSEventModifierFlagControl|NSEventModifierFlagCommand|NSEventModifierFlagFunction));
     if(![owner.shortcutStatus.stringValue isEqual:globeRefusal]) fprintf(stderr,"GLOBE shown %s, message %s, key %s\n",recorder.shortcut.UTF8String,owner.shortcutStatus.stringValue.UTF8String,macro.key.UTF8String);
     REQUIRE(recording(macro) && [recorder.shortcut isEqual:@"⌃⌘\U0001F310\uFE0EB"] && !cell.warning.hidden && [owner.recordingError isEqual:globeRefusal] && [owner.shortcutStatus.stringValue isEqual:globeRefusal] && [macro.key isEqual:@"M+ShiftKey"]);
+    // Characters beyond ASCII with fn as well, wherever they are in Unicode: the fullwidth comma of Cangjie's key 43
+    // (U+FF0C, above U+F700), the ideographic comma of Japanese layouts (U+3001) and a Latin letter (ö).
+    NSString *globeCharacters[]={@"\uFF0C",@"\u3001",@"\u00F6"}; unsigned short globeCodes[]={43,43,41};
+    for(size_t i=0;i<3;i++) {
+        SendKey(owner,window,Typed(window,globeCharacters[i],globeCharacters[i],globeCodes[i],NSEventModifierFlagControl|NSEventModifierFlagCommand|NSEventModifierFlagFunction));
+        printf("fn+ctrl+cmd+U+%04X: old=M+ShiftKey saved=%s recording=%d shown=%s warning=%s\n",[globeCharacters[i] characterAtIndex:0],macro.key.UTF8String,recording(macro),recorder.shortcut.UTF8String,owner.recordingError ? owner.recordingError.UTF8String : "(null)");
+        REQUIRE(recording(macro) && [recorder.shortcut hasPrefix:@"⌃⌘\U0001F310\uFE0E"] && !cell.warning.hidden && [owner.recordingError isEqual:globeRefusal] && [owner.shortcutStatus.stringValue isEqual:globeRefusal] && [macro.key isEqual:@"M+ShiftKey"]);
+    }
+    // Command-Enter with fn is refused as Command-Enter is, as a key that cannot be one, not for fn.
+    SendKey(owner,window,KeyIn(window,@"\x03",36,NSEventModifierFlagCommand|NSEventModifierFlagFunction));
+    REQUIRE(recording(macro) && [owner.shortcutStatus.stringValue isEqual:unusable] && [macro.key isEqual:@"M+ShiftKey"]);
     // The next key that can be one becomes the shortcut and ends the recording: no triangle, no message.
     int before=reflections; [owner setValue:@NO forKey:@"dataTouched"];
     SendKey(owner,window,KeyIn(window,@"j",38,NSEventModifierFlagCommand)); ended();
@@ -538,6 +551,8 @@ static void CheckRecording(TSMacroEditor *owner) {
         // An arrow and a function key as the keyboard sends them, with the fn flag of their own.
         {@"\uF700",@"\uF700",126,NSEventModifierFlagCommand|NSEventModifierFlagFunction|NSEventModifierFlagNumericPad,@"\uF700",@"⌘↑"},
         {@"\uF708",@"\uF708",96,NSEventModifierFlagFunction,@"\uF708+NoCommandKey",@"F5"},
+        // Forward Delete (fn-Delete on a laptop) with the fn flag of its own.
+        {@"\uF728",@"\uF728",117,NSEventModifierFlagCommand|NSEventModifierFlagFunction,@"\uF728",@"⌘⌦"},
     };
     for(size_t i=0;i<sizeof cases/sizeof *cases;i++) {
         Click(owner,row,@"Key",NO); REQUIRE(recording(macro));
