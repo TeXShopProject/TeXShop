@@ -397,6 +397,26 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
     [coder encodeDouble:scale forKey:TSPreviewStateKey(prefix, @"Scale")];
 }
 
+// The place a popup away from its place goes back to (#35).
+static void TSPreviewEncodePopupHome(NSCoder *coder, NSString *prefix, TSLinkPreviewView *popup, PDFDocument *document)
+{
+    NSRect home;
+    PDFPage *page = [popup awayPlaceOnPage:&home];
+    NSUInteger index = page ? [document indexForPage:page] : NSNotFound;
+    if (index == NSNotFound) return;
+    [coder encodeInteger:(NSInteger)index forKey:TSPreviewStateKey(prefix, @"PopupHomePage")];
+    [coder encodeRect:home forKey:TSPreviewStateKey(prefix, @"PopupHomeOnPage")];
+}
+
+static PDFPage *TSPreviewDecodePopupHome(NSCoder *coder, NSString *prefix, PDFDocument *document, NSRect *rect)
+{
+    if (![coder containsValueForKey:TSPreviewStateKey(prefix, @"PopupHomePage")]) return nil;
+    NSInteger index = [coder decodeIntegerForKey:TSPreviewStateKey(prefix, @"PopupHomePage")];
+    if (index < 0 || (NSUInteger)index >= document.pageCount) return nil;
+    *rect = [coder decodeRectForKey:TSPreviewStateKey(prefix, @"PopupHomeOnPage")];
+    return [document pageAtIndex:index];
+}
+
 - (void)encodePreviewStateWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
 {
     if (![[self document] pageCount]) return;
@@ -412,13 +432,7 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
             [coder encodeRect:[self convertRect:frame toPage:page] forKey:TSPreviewStateKey(prefix, @"PopupOnPage")];
             [pinnedLinkPreview encodeContentWithCoder:coder prefix:TSPreviewStateKey(prefix, @"Popup")];
             // Away from its place, it keeps the place it goes back to (#35).
-            NSRect home;
-            PDFPage *homePage = [pinnedLinkPreview awayPlaceOnPage:&home];
-            NSUInteger homeIndex = homePage ? [[self document] indexForPage:homePage] : NSNotFound;
-            if (homeIndex != NSNotFound) {
-                [coder encodeInteger:(NSInteger)homeIndex forKey:TSPreviewStateKey(prefix, @"PopupHomePage")];
-                [coder encodeRect:home forKey:TSPreviewStateKey(prefix, @"PopupHomeOnPage")];
-            }
+            TSPreviewEncodePopupHome(coder, prefix, pinnedLinkPreview, [self document]);
         }
     }
     // The other view of Switch Views, with its own display and popup (#60).
@@ -430,6 +444,7 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
         if (otherViewPinnedLinkPreview) {
             [coder encodeRect:otherViewPinnedLinkPreviewFrame forKey:TSPreviewStateKey(other, @"PopupFrame")];
             [otherViewPinnedLinkPreview encodeContentWithCoder:coder prefix:TSPreviewStateKey(other, @"Popup")];
+            TSPreviewEncodePopupHome(coder, other, otherViewPinnedLinkPreview, [self document]);
         }
     }
 }
@@ -471,22 +486,20 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
     [self scaleChanged:nil];
     restoringPlace = TSPreviewDecodePlace(coder, prefix, pageCount);
 
-    // The pinned popup, placed once the place is restored.
+    // The pinned popup, placed once the place is restored: where it is, or, when the page it was
+    // brought to is gone, at the place on its own page it goes back to (#35).
     NSString *popup = TSPreviewStateKey(prefix, @"Popup");
     if ([coder containsValueForKey:TSPreviewStateKey(prefix, @"PopupPage")]) {
         NSInteger index = [coder decodeIntegerForKey:TSPreviewStateKey(prefix, @"PopupPage")];
-        if (index >= 0 && (NSUInteger)index < pageCount) {
+        PDFPage *current = (index >= 0 && (NSUInteger)index < pageCount) ? [[self document] pageAtIndex:index] : nil;
+        NSRect homeRect = NSZeroRect;
+        PDFPage *home = TSPreviewDecodePopupHome(coder, prefix, [self document], &homeRect);
+        if (current || home) {
             restoringPopup = [TSLinkPreviewView linkPreviewWithCoder:coder prefix:popup document:[self document] frame:NSZeroRect];
-            restoringPopupPage = [[self document] pageAtIndex:index];
+            restoringPopupPage = current;
             restoringPopupOnPage = [coder decodeRectForKey:TSPreviewStateKey(prefix, @"PopupOnPage")];
-            restoringPopupHome = nil;
-            if ([coder containsValueForKey:TSPreviewStateKey(prefix, @"PopupHomePage")]) {
-                NSInteger home = [coder decodeIntegerForKey:TSPreviewStateKey(prefix, @"PopupHomePage")];
-                if (home >= 0 && (NSUInteger)home < pageCount) {
-                    restoringPopupHome = [[self document] pageAtIndex:home];
-                    restoringPopupHomeOnPage = [coder decodeRectForKey:TSPreviewStateKey(prefix, @"PopupHomeOnPage")];
-                }
-            }
+            restoringPopupHome = home;
+            restoringPopupHomeOnPage = homeRect;
         }
     }
 
@@ -507,6 +520,10 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
         otherViewPinnedLinkPreview = [TSLinkPreviewView linkPreviewWithCoder:coder prefix:TSPreviewStateKey(other, @"Popup")
                                                                     document:[self document] frame:NSZeroRect];
         otherViewPinnedLinkPreviewFrame = [coder decodeRectForKey:TSPreviewStateKey(other, @"PopupFrame")];
+        NSRect otherHome = NSZeroRect;
+        PDFPage *otherHomePage = TSPreviewDecodePopupHome(coder, other, [self document], &otherHome);
+        if (otherHomePage)
+            [otherViewPinnedLinkPreview setAwayPlaceOnPage:otherHomePage rect:otherHome];
         self.oldUsed = YES;
         // As after the first Switch Views: a new PDF closes the popup of the other view.
         [[NSNotificationCenter defaultCenter] removeObserver:self name:PDFViewDocumentChangedNotification object:self];
@@ -529,12 +546,32 @@ static void TSPreviewEncodeDisplay(NSCoder *coder, NSString *prefix, NSInteger s
         [self fitContentWidth];
     if (place.valid && place.pageIndex < [[self document] pageCount])
         TSPreviewPaneRestore(self, place);
+    PDFPage *home = restoringPopupHome.document == [self document] ? restoringPopupHome : nil;
+    restoringPopupHome = nil;
     if (popup && popupPage.document == [self document]) {
         NSRect frame = [self convertRect:[self convertRect:restoringPopupOnPage fromPage:popupPage] toView:nil];
-        if ([self placePinnedLinkPreview:popup windowFrame:frame] && restoringPopupHome.document == [self document])
-            [popup setAwayPlaceOnPage:restoringPopupHome rect:restoringPopupHomeOnPage];
+        if ([self placePinnedLinkPreview:popup windowFrame:frame] && home)
+            [popup setAwayPlaceOnPage:home rect:restoringPopupHomeOnPage];
+    } else if (popup && home) {
+        // The page it was brought to is gone: it goes to its own place, or, while its page is not
+        // shown, is kept in view away from it, as before.
+        PDFDisplayMode mode = self.displayMode;
+        BOOL shown = mode == kPDFDisplaySinglePageContinuous || mode == kPDFDisplayTwoUpContinuous
+            || [self.visiblePages containsObject:home];
+        NSRect frame;
+        if (shown)
+            frame = [self convertRect:[self convertRect:restoringPopupHomeOnPage fromPage:home] toView:nil];
+        else {
+            NSRect visible = [self convertRect:self.bounds toView:nil];
+            CGFloat scale = self.scaleFactor;
+            frame = NSMakeRect(NSMinX(visible), NSMaxY(visible) - NSHeight(restoringPopupHomeOnPage) * scale,
+                               NSWidth(restoringPopupHomeOnPage) * scale, NSHeight(restoringPopupHomeOnPage) * scale);
+        }
+        if ([self placePinnedLinkPreview:popup windowFrame:frame] && !shown) {
+            [popup setAwayPlaceOnPage:home rect:restoringPopupHomeOnPage];
+            [popup keepInView];
+        }
     }
-    restoringPopupHome = nil;
 }
 
 // The rotation the user gave the pages, kept with the first part, which turns them (#71).

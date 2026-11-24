@@ -473,15 +473,15 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         [coder encodeObject:self.pageLabel forKey:[prefix stringByAppendingString:@"Label"]];
 }
 
-// The part in view moved, and if needed made smaller keeping its proportions, to lie within an
-// image of `size`: the popup then shows its text and figures as before, never stretched.
-static NSRect TSLinkPreviewFitSource(NSRect source, NSSize size)
+// The part in view moved, and if needed made smaller keeping its proportions, to lie within
+// `bounds`: the popup then shows its text and figures as before, never stretched.
+static NSRect TSLinkPreviewFitSource(NSRect source, NSRect bounds)
 {
-    if (!(NSWidth(source) > 0 && NSHeight(source) > 0 && size.width > 0 && size.height > 0)) return NSZeroRect;
-    CGFloat scale = MIN(1, MIN(size.width / NSWidth(source), size.height / NSHeight(source)));
+    if (!(NSWidth(source) > 0 && NSHeight(source) > 0 && NSWidth(bounds) > 0 && NSHeight(bounds) > 0)) return NSZeroRect;
+    CGFloat scale = MIN(1, MIN(NSWidth(bounds) / NSWidth(source), NSHeight(bounds) / NSHeight(source)));
     NSSize part = NSMakeSize(NSWidth(source) * scale, NSHeight(source) * scale);
-    CGFloat x = MIN(MAX(NSMinX(source), 0), size.width - part.width);
-    CGFloat y = MIN(MAX(NSMinY(source), 0), size.height - part.height);
+    CGFloat x = MIN(MAX(NSMinX(source), NSMinX(bounds)), NSMaxX(bounds) - part.width);
+    CGFloat y = MIN(MAX(NSMinY(source), NSMinY(bounds)), NSMaxY(bounds) - part.height);
     return NSMakeRect(x, y, part.width, part.height);
 }
 
@@ -524,7 +524,10 @@ static NSRect TSLinkPreviewFitSource(NSRect source, NSSize size)
         image = TSLinkPreviewImage(pages[0], size);
     }
     NSRect onPage = [coder decodeRectForKey:[prefix stringByAppendingString:@"SourceOnPage"]];
-    NSRect source = TSLinkPreviewFitSource(NSOffsetRect(onPage, NSMinX(rects[0]), NSMinY(rects[0])), size);
+    // Across the width of the linked page itself, which in the strip may be narrower than the next
+    // one and lie between gray margins; down the whole strip, which goes on with the next page.
+    NSRect bounds = NSMakeRect(NSMinX(rects[0]), 0, NSWidth(rects[0]), size.height);
+    NSRect source = TSLinkPreviewFitSource(NSOffsetRect(onPage, NSMinX(rects[0]), NSMinY(rects[0])), bounds);
     if (!image || NSIsEmptyRect(source)) return nil;
     TSLinkPreviewView *preview = [[self alloc] initWithFrame:frame image:image source:source pageSize:size
                                                        pages:pages pageRects:rects];

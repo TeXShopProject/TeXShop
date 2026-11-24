@@ -48,9 +48,16 @@ MUTATIONS = {
         '    if (autoScales)\n        [self setAutoScales:YES];\n    else if (scale > 0) {\n        [self setAutoScales:NO];\n        [self setMagnification:scale];\n    }\n'),
     'popup-lost': ('view', '    if (popup && popupPage.document == [self document]) {', '    if (NO) {'),
     # The second audit: a popup away from its place no longer went back to it.
-    'away-place-lost': ('view', '            if (homeIndex != NSNotFound) {', '            if (NO) {'),
+    'away-place-lost': ('view', '    [coder encodeInteger:(NSInteger)index forKey:TSPreviewStateKey(prefix, @"PopupHomePage")];\n', ''),
+    # The third audit: with the page it was brought to gone, an away popup was lost.
+    'host-gone-loses-popup': ('view', '        if (current || home) {', '        if (current) {'),
+    # The third audit: the other view's popup away from its place forgot it.
+    'other-home-lost': ('view', '            [otherViewPinnedLinkPreview setAwayPlaceOnPage:otherHomePage rect:otherHome];', '            ;'),
+    # The third audit: a narrower linked page above a wider next one showed the gray margin.
+    'strip-margin': ('popup', '    NSRect bounds = NSMakeRect(NSMinX(rects[0]), 0, NSWidth(rects[0]), size.height);',
+                     '    NSRect bounds = NSMakeRect(0, 0, size.width, size.height);'),
     # The second audit: pages of another size stretched the popup or lost it; a missing next page lost it.
-    'source-cut': ('popup', '    NSRect source = TSLinkPreviewFitSource(NSOffsetRect(onPage, NSMinX(rects[0]), NSMinY(rects[0])), size);',
+    'source-cut': ('popup', '    NSRect source = TSLinkPreviewFitSource(NSOffsetRect(onPage, NSMinX(rects[0]), NSMinY(rects[0])), bounds);',
                    '    NSRect source = NSIntersectionRect(NSOffsetRect(onPage, NSMinX(rects[0]), NSMinY(rects[0])), NSMakeRect(0, 0, size.width, size.height));'),
     'next-page-required': ('popup', '        if (!there) {\n            if (pages.count == 0) return nil;\n            break;\n        }', '        if (!there) return nil;'),
     'other-view-lost': ('view', '    if ([coder containsValueForKey:TSPreviewStateKey(other, @"PageStyle")]) {', '    if (NO) {'),
@@ -212,6 +219,17 @@ static void check(BOOL ok, NSString *message) {
 static BOOL near(CGFloat a, CGFloat b, CGFloat d) { return fabs(a - b) <= d; }
 static void pump(void) {
     for (int i = 0; i < 5; i++) [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+}
+// Pages of the given widths, 792 points high.
+static PDFDocument *pagesOfWidths(NSArray<NSNumber *> *widths) {
+    PDFDocument *document = [[PDFDocument alloc] init];
+    for (NSUInteger i = 0; i < widths.count; i++) {
+        NSSize size = NSMakeSize(widths[i].doubleValue, 792);
+        NSImage *image = [[NSImage alloc] initWithSize:size];
+        [image lockFocus]; [NSColor.whiteColor setFill]; NSRectFill(NSMakeRect(0, 0, size.width, size.height)); [image unlockFocus];
+        [document insertPage:[[PDFPage alloc] initWithImage:image] atIndex:i];
+    }
+    return [[PDFDocument alloc] initWithData:document.dataRepresentation];
 }
 static PDFDocument *book(NSInteger pages) {
     PDFDocument *document = [[PDFDocument alloc] init];
@@ -550,6 +568,73 @@ int main(void) { @autoreleasepool {
         check(fitted && NSEqualRects(fitted.source, onLinked),
               [NSString stringWithFormat:@"the part in view stays at its place on the linked page (%@, not %@)",
                NSStringFromRect(fitted.source), NSStringFromRect(onLinked)]);
+    }
+    {   // The page an away popup was brought to is gone: it goes to its own place, or stays away from it
+        // while its page is not shown (third audit).
+        for (NSNumber *continuous in @[@NO, @YES]) {
+            TestWindow *before = preview(pdf);
+            MyPDFKitView *one = (MyPDFKitView *)before.myPDFKitView;
+            one->pageStyle = continuous.boolValue ? PDF_MULTI_PAGE_STYLE : PDF_SINGLE_PAGE_STYLE; [one setupPageStyle];
+            scrollTo(one, 5, 600);
+            NSRect frame = [one convertRect:one.bounds toView:nil];
+            TSLinkPreviewView *popup = pin(one, 2, NSMakeRect(NSMinX(frame) + 50, NSMinY(frame) + 60, 170, 90), NSMakeRect(30, 900, 300, 160));
+            NSRect home = NSMakeRect(72, 500, 170, 90);
+            [popup setAwayPlaceOnPage:[pdf pageAtIndex:1] rect:home];
+            NSData *state = archive(^(NSKeyedArchiver *a) { [before encodePreviewStateWithCoder:a]; });
+            PDFDocument *shorter = book(4);
+            TestWindow *after = preview(shorter);
+            MyPDFKitView *a1 = (MyPDFKitView *)after.myPDFKitView;
+            [after restorePreviewStateWithCoder:unarchiver(state)]; pump();
+            TSLinkPreviewView *back = a1->pinnedLinkPreview;
+            NSString *name = continuous.boolValue ? @"MultiPage" : @"Single Page";
+            check(back && [a1 hasPinnedLinkPreview], [name stringByAppendingString:@": with the page it was brought to gone, the popup comes back"]);
+            if (continuous.boolValue) {
+                NSRect onPage = [a1 convertRect:[a1 convertRect:back.frame fromView:back.superview] toPage:[shorter pageAtIndex:1]];
+                check(near(NSMinX(onPage), 72, 1) && near(NSMinY(onPage), 500, 1) && [back awayPlaceOnPage:NULL] == nil,
+                      [NSString stringWithFormat:@"MultiPage: it is at its own place (%@)", NSStringFromRect(onPage)]);
+            } else {
+                NSRect kept = NSZeroRect;
+                check([back awayPlaceOnPage:&kept] == [shorter pageAtIndex:1] && NSEqualRects(kept, home),
+                      @"Single Page: it stays away from its place, which it keeps");
+                scrollTo(a1, 1, 700);
+                check([back returnToPlaceIfAway], @"Single Page: going to its page brings it back to its place");
+            }
+        }
+    }
+
+    {   // A narrower linked page above a wider next one: the part in view stays on the linked page, not in
+        // the gray margin beside it (third audit).
+        TestWindow *before = preview(pdf);
+        MyPDFKitView *one = (MyPDFKitView *)before.myPDFKitView;
+        TSLinkPreviewView *popup = pin(one, 1, NSMakeRect(100, 120, 170, 100), NSMakeRect(245, 900, 170, 100));
+        NSData *content = archive(^(NSKeyedArchiver *a) { [popup encodeContentWithCoder:a prefix:@"C"]; });
+        PDFDocument *mixed = pagesOfWidths(@[@612, @300, @800, @612]);
+        TSLinkPreviewView *fitted = [TSLinkPreviewView linkPreviewWithCoder:unarchiver(content) prefix:@"C" document:mixed frame:NSMakeRect(0, 0, 170, 100)];
+        NSRect first, second;
+        TSLinkPreviewStrip(NSMakeSize(300, 792), NSMakeSize(800, 792), &first, &second);
+        check(fitted && NSMinX(fitted.source) >= NSMinX(first) - 0.5 && NSMaxX(fitted.source) <= NSMaxX(first) + 0.5
+              && near(NSWidth(fitted.source), 170, 0.5),
+              [NSString stringWithFormat:@"the part in view lies on the linked page (%@ within %@)", NSStringFromRect(fitted.source), NSStringFromRect(first)]);
+    }
+
+    {   // The other view's popup away from its place keeps it too (third audit).
+        TestWindow *before = preview(pdf);
+        MyPDFKitView *one = (MyPDFKitView *)before.myPDFKitView;
+        TSLinkPreviewView *other = pin(one, 4, NSMakeRect(130, 140, 160, 100), NSMakeRect(20, 800, 320, 200));
+        [other setAwayPlaceOnPage:[pdf pageAtIndex:2] rect:NSMakeRect(15, 450, 160, 100)];
+        [other removeFromSuperview]; one->pinnedLinkPreview = nil;
+        one.oldUsed = YES;
+        one->otherViewPlace = (TSPreviewPanePlace){YES, 5, NSMakePoint(12, 345)};
+        one->otherViewPageStyle = PDF_SINGLE_PAGE_STYLE; one->otherViewFirstPageStyle = PDF_FIRST_LEFT;
+        one->otherViewResizeOption = NEW_PDF_FIT_TO_NONE; one->otherViewScale = 1.0;
+        one->otherViewPinnedLinkPreview = other; one->otherViewPinnedLinkPreviewFrame = NSMakeRect(30, -200, 160, 100);
+        NSData *state = archive(^(NSKeyedArchiver *a) { [before encodePreviewStateWithCoder:a]; });
+        TestWindow *after = preview(pdf);
+        MyPDFKitView *a1 = (MyPDFKitView *)after.myPDFKitView;
+        [after restorePreviewStateWithCoder:unarchiver(state)]; pump();
+        NSRect kept = NSZeroRect;
+        check(a1->otherViewPinnedLinkPreview && [a1->otherViewPinnedLinkPreview awayPlaceOnPage:&kept] == [pdf pageAtIndex:2]
+              && NSEqualRects(kept, NSMakeRect(15, 450, 160, 100)), @"the other view's popup keeps the place it goes back to");
     }
     puts("PASS: the Preview comes back as it was: split and divider, display format, magnification, place and popup of each part, the other view of Switch Views, rotation, the Two-Page Arrangement chosen and its frame");
 } return 0; }
