@@ -8476,8 +8476,11 @@ if (! useFullSplitWindow) {
 	NSString *path = [self documentIsPDF] ? [url path] : self.previewTitlePath;
 	if (path == nil && url != nil)
 		path = [[[url path] stringByDeletingPathExtension] stringByAppendingPathExtension: @"pdf"];
-	if (path != nil && self.pdfKitWindow != nil)
+	if (path != nil && self.pdfKitWindow != nil) {
+		// タイトルと親パスメニューが、移動後や単一ウィンドウでの更新後も同じ PDF を指す。
+		[self.pdfKitWindow setRepresentedURL:[NSURL fileURLWithPath:path]];
 		[self.pdfKitWindow setTitle: TSPreviewWindowTitle(path, showFullPath)];
+	}
 	if (self.imageTitlePath != nil && pdfWindow != nil)
 		[pdfWindow setTitle: TSPreviewWindowTitle(self.imageTitlePath, showFullPath)];
 }
