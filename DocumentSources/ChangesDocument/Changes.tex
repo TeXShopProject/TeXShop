@@ -108,6 +108,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item \textbf{Syntax highlighting:} the switch is no longer in Settings; to open documents without syntax highlighting, use the hidden setting listed in Comment Lines and Hidden Settings. The Source menu items are now Syntax Highlighting and Highlight expl3 Code.
 \item \textbf{Index highlighting:} the Color Index item of the source toolbar is now Highlight Index Entries in the Source menu.
 \item \textbf{Settings profiles:} settings profiles are replaced by engine profiles in Settings \(\rightarrow\) Typesetting. Choose a profile to set up typesetting for that TeX engine in one step.
+\item TeXShop offers LuaLaTeX (Japanese) when Japanese is the first preferred language of macOS, and pdfLaTeX otherwise.
 \item \textbf{Themes:} colors are saved as soon as they change, and the themes to edit are chosen in their list.
 \item \textbf{Typesetting settings:} Default Command is now Typeset New Documents With, and Command to use is now Engine File.
 \item \textbf{Arrow keys in the preview:} in single-page and two-page layouts, the Up and Down Arrow keys scroll within the page instead of turning it. Suggested by \href{https://github.com/svb-bit}{svb-bit} (\href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}).
@@ -201,6 +202,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Paste Spreadsheet Cells works with any characters in the cells, such as Japanese.
 \item Set Root File… works with any characters in the path of the root file.
 \item Run LaTeX, dvips and ps2pdf works with TeX Live and Ghostscript, and shows a message when a step fails.
+\item Extract Pages from PDF… works with TeX Live 2026. The UserUnit of each page stays, and content is placed by the page box when the crop box goes past the media box.
 \item TeXShop no longer comes with the inactive engines and other files that need programs TeX Live and macOS do not provide, such as jing.jar; files already in \texttt{\textasciitilde{}/Library/TeXShop} stay.
 \item Add help for LaTeX-aware spell checking.
 \item The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.

@@ -86,6 +86,7 @@
 <li><strong>Syntax highlighting:</strong> the switch is no longer in Settings; to open documents without syntax highlighting, use the hidden setting listed in Comment Lines and Hidden Settings. The Source menu items are now Syntax Highlighting and Highlight expl3 Code.</li>
 <li><strong>Index highlighting:</strong> the Color Index item of the source toolbar is now Highlight Index Entries in the Source menu.</li>
 <li><strong>Settings profiles:</strong> settings profiles are replaced by engine profiles in Settings → Typesetting. Choose a profile to set up typesetting for that TeX engine in one step.</li>
+<li>TeXShop offers LuaLaTeX (Japanese) when Japanese is the first preferred language of macOS, and pdfLaTeX otherwise.</li>
 <li><strong>Themes:</strong> colors are saved as soon as they change, and the themes to edit are chosen in their list.</li>
 <li><strong>Typesetting settings:</strong> Default Command is now Typeset New Documents With, and Command to use is now Engine File.</li>
 <li><strong>Arrow keys in the preview:</strong> in single-page and two-page layouts, the Up and Down Arrow keys scroll within the page instead of turning it. Suggested by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
@@ -169,6 +170,7 @@
 <li>Paste Spreadsheet Cells works with any characters in the cells, such as Japanese.</li>
 <li>Set Root File… works with any characters in the path of the root file.</li>
 <li>Run LaTeX, dvips and ps2pdf works with TeX Live and Ghostscript, and shows a message when a step fails.</li>
+<li>Extract Pages from PDF… works with TeX Live 2026. The UserUnit of each page stays, and content is placed by the page box when the crop box goes past the media box.</li>
 <li>TeXShop no longer comes with the inactive engines and other files that need programs TeX Live and macOS do not provide, such as jing.jar; files already in <code>~/Library/TeXShop</code> stay.</li>
 <li>Add help for LaTeX-aware spell checking.</li>
 <li>The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.</li>
