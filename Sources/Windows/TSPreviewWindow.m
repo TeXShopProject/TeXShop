@@ -44,6 +44,7 @@
 #import "globals.h"
 #import "TSPreviewSplitDivider.h"
 #import "TSToolbarController.h"
+#import "TSPreviewTitlePathMenu.h"
 
 #define ADJUST 7
 #define ADJUST1 47
@@ -565,6 +566,12 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 		[super sendEvent: theEvent];
 		return;
 	}
+
+    NSEvent *titleEvent = TSPreviewTitlePathMenuEvent(self, theEvent);
+    if (titleEvent) {
+        [super sendEvent:titleEvent];
+        return;
+    }
     
 
 

@@ -231,6 +231,7 @@ int main(int argc, char **argv) {
         [document showImageTitleForPath:pdf];
         document.experimentConsole.sourceTitle = document->scrapWindow.title;
         check([document.pdfKitWindow.title isEqualToString:@"sample.pdf"], @"switch off: the Preview window shows the file name");
+        check([document.pdfKitWindow.representedURL.path isEqualToString:pdf], @"the path menu represents the PDF, not the source");
         check([document->outputWindow.title isEqualToString:@"sample console"], @"switch off: the console shows the file name");
         check([document->pdfWindow.title isEqualToString:@"sample.pdf"], @"switch off: the image window shows the file name");
         check([document->scrapWindow.title isEqualToString:@"sample"] && [document->scrapPDFWindow.title isEqualToString:@"sample"],
@@ -263,6 +264,7 @@ int main(int argc, char **argv) {
         document.fileURL = [NSURL fileURLWithPath:@"/Users/someone/b/renamed.tex"];
         [document refreshPreviewTitle];
         check([document.pdfKitWindow.title isEqualToString:other], @"the title is the path of the PDF shown");
+        check([document.pdfKitWindow.representedURL.path isEqualToString:other], @"the path menu follows the displayed PDF after the source moves");
 
         // Turning the switch off renames all at once.
         [document changeShowFullPath:nil];
@@ -282,6 +284,7 @@ int main(int argc, char **argv) {
         alone.fileURL = [NSURL fileURLWithPath:@"/Users/someone/moved/Second.pdf"];
         [alone refreshPreviewTitle];
         check([alone.pdfKitWindow.title isEqualToString:@"/Users/someone/moved/Second.pdf"], @"a PDF opened by itself follows a move after an update");
+        check([alone.pdfKitWindow.representedURL.path isEqualToString:@"/Users/someone/moved/Second.pdf"], @"the path menu follows the PDF move too");
         [alone showPreviewTitleForPath:@"/Users/someone/moved/Second.pdf"];
         alone.fileURL = [NSURL fileURLWithPath:@"/Users/someone/Third.pdf"];
         [alone refreshPreviewTitle];
