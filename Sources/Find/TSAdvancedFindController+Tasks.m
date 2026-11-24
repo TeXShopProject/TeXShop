@@ -5,29 +5,112 @@
 
 #define TSLocalized TSAdvancedFindLocalized
 
-/// The clip-view origin of every text view showing `storage`. A split source has two, and both are scrolled by the
-/// layout manager when the shared text changes.
-static NSMapTable<NSClipView *, NSValue *> *TSScrollOrigins(NSTextStorage *storage)
+/// The line at the top of a text view, in that view's text: which character, and how far its line sits from the top of
+/// the viewport. A split source has two. The clip origin is not enough: the replacement changes the text view's
+/// height, so the same origin shows other lines, or nothing when the text becomes shorter than that origin (#72).
+typedef struct {
+    NSUInteger character;
+    CGFloat pin;
+    CGFloat clipX;
+} TSScrollAnchor;
+
+static TSScrollAnchor TSAnchorForView(NSTextView *view)
 {
-    NSMapTable *origins = [NSMapTable weakToStrongObjectsMapTable];
-    for (NSLayoutManager *layout in storage.layoutManagers) {
-        for (NSTextContainer *container in layout.textContainers) {
-            NSClipView *clip = container.textView.enclosingScrollView.contentView;
-            if (clip)
-                [origins setObject:[NSValue valueWithPoint:clip.bounds.origin] forKey:clip];
-        }
-    }
-    return origins;
+    TSScrollAnchor anchor = {NSNotFound, 0, 0};
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    if (clip)
+        anchor.clipX = clip.bounds.origin.x;
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0 || layout.numberOfGlyphs == 0)
+        return anchor;
+    NSRect visible = view.visibleRect;
+    NSPoint inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x,
+                                      NSMinY(visible) + 1 - view.textContainerOrigin.y);
+    NSUInteger glyph = [layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (glyph >= layout.numberOfGlyphs)
+        glyph = layout.numberOfGlyphs - 1;
+    NSRect fragment = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+    anchor.character = [layout characterIndexForGlyphAtIndex:glyph];
+    anchor.pin = fragment.origin.y + view.textContainerOrigin.y - NSMinY(visible);
+    return anchor;
 }
 
-static void TSRestoreScrollOrigins(NSMapTable<NSClipView *, NSValue *> *origins)
+static NSValue *TSAnchorValue(TSScrollAnchor anchor)
 {
-    for (NSClipView *clip in origins) {
-        NSValue *value = [origins objectForKey:clip];
-        NSScrollView *scroll = clip.enclosingScrollView;
-        if (!value || !scroll)
+    return [NSValue valueWithBytes:&anchor objCType:@encode(TSScrollAnchor)];
+}
+
+static TSScrollAnchor TSAnchorFromValue(NSValue *value)
+{
+    TSScrollAnchor anchor = {NSNotFound, 0, 0};
+    if (value)
+        [value getValue:&anchor size:sizeof anchor];
+    return anchor;
+}
+
+static NSMapTable<NSTextView *, NSValue *> *TSAnchors(NSTextStorage *storage)
+{
+    NSMapTable *anchors = [NSMapTable weakToStrongObjectsMapTable];
+    for (NSLayoutManager *layout in storage.layoutManagers) {
+        for (NSTextContainer *container in layout.textContainers) {
+            NSTextView *view = container.textView;
+            if (view)
+                [anchors setObject:TSAnchorValue(TSAnchorForView(view)) forKey:view];
+        }
+    }
+    return anchors;
+}
+
+/// The same lines, in the text after `result`.
+static NSMapTable<NSTextView *, NSValue *> *TSAnchorsFollowingEdits(NSMapTable<NSTextView *, NSValue *> *anchors, TSRegexReplaceAllResult *result)
+{
+    NSMapTable *mapped = [NSMapTable weakToStrongObjectsMapTable];
+    for (NSTextView *view in anchors) {
+        TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
+        if (anchor.character != NSNotFound)
+            anchor.character = [result locationByFollowingEdits:anchor.character];
+        [mapped setObject:TSAnchorValue(anchor) forKey:view];
+    }
+    return mapped;
+}
+
+/// Puts each view's line back where it was. The distance above the viewport is only an estimate until the text up
+/// to the anchor is laid out, and that estimate moves the line after the replacement (#72). A line the shorter text
+/// no longer reaches is brought into view instead of leaving the viewport below the text.
+static void TSApplyAnchors(NSMapTable<NSTextView *, NSValue *> *anchors)
+{
+    for (NSTextView *view in anchors) {
+        NSScrollView *scroll = view.enclosingScrollView;
+        NSClipView *clip = scroll.contentView;
+        if (!clip)
             continue;
-        [clip scrollToPoint:value.pointValue];
+        TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
+        NSLayoutManager *layout = view.layoutManager;
+        NSTextContainer *container = view.textContainer;
+        CGFloat y = view.frame.origin.y;
+        if (anchor.character != NSNotFound && layout && container && view.string.length > 0) {
+            NSUInteger character = MIN(anchor.character, view.string.length - 1);
+            [layout ensureLayoutForCharacterRange:NSMakeRange(0, character + 1)];
+            NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:character];
+            if (layout.numberOfGlyphs > 0) {
+                if (glyph >= layout.numberOfGlyphs)
+                    glyph = layout.numberOfGlyphs - 1;
+                NSRect fragment = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+                CGFloat lineTop = fragment.origin.y + view.textContainerOrigin.y;
+                y = clip.bounds.origin.y + (lineTop - anchor.pin - NSMinY(view.visibleRect));
+            }
+        }
+        NSRect frame = view.frame;
+        CGFloat minY = frame.origin.y;
+        CGFloat maxY = NSMaxY(frame) - clip.bounds.size.height;
+        if (maxY < minY)
+            maxY = minY;
+        if (y < minY)
+            y = minY;
+        else if (y > maxY)
+            y = maxY;
+        [clip scrollToPoint:NSMakePoint(anchor.clipX, y)];
         [scroll reflectScrolledClipView:clip];
     }
 }
@@ -94,6 +177,39 @@ static void TSApplySelections(NSMapTable<NSTextView *, NSArray<NSValue *> *> *se
     }
 }
 
+/// One undo step's worth of places. Registered inside the text change's group. Undoing puts `before` back, and that
+/// registers the redo of `after`, which registers this again, so a later undo keeps doing it (#72). The text change
+/// itself is still in the group: the place is put back on the next pass, once that change has been undone or redone.
+static void TSRegisterPlaceUndo(NSUndoManager *undo, NSTextView *view,
+                                NSMapTable<NSTextView *, NSArray<NSValue *> *> *beforeSelections,
+                                NSMapTable<NSTextView *, NSValue *> *beforeAnchors,
+                                NSMapTable<NSTextView *, NSArray<NSValue *> *> *afterSelections,
+                                NSMapTable<NSTextView *, NSValue *> *afterAnchors)
+{
+    if (!undo)
+        return;
+    [undo registerUndoWithTarget:view handler:^(NSTextView *current) {
+        NSUndoManager *manager = current.undoManager;
+        [manager registerUndoWithTarget:current handler:^(NSTextView *again) {
+            TSRegisterPlaceUndo(again.undoManager, again, beforeSelections, beforeAnchors, afterSelections, afterAnchors);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSUndoManager *redo = again.undoManager;
+                [redo disableUndoRegistration];
+                TSApplySelections(afterSelections);
+                TSApplyAnchors(afterAnchors);
+                [redo enableUndoRegistration];
+            });
+        }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSUndoManager *back = current.undoManager;
+            [back disableUndoRegistration];
+            TSApplySelections(beforeSelections);
+            TSApplyAnchors(beforeAnchors);
+            [back enableUndoRegistration];
+        });
+    }];
+}
+
 @implementation TSAdvancedFindController (Tasks)
 
 /// Replace All, undone at once.
@@ -124,54 +240,27 @@ static void TSApplySelections(NSMapTable<NSTextView *, NSArray<NSValue *> *> *se
             return;
         }
         // Rewriting a scope makes NSLayoutManager resize the text view and scroll a stale range into view, so the
-        // text jumps (#72). Remember where every view of this text was, and the carets: the replacement contains
+        // text jumps (#72). Remember the line at the top of every view, and the carets: the replacement contains
         // them, and the text view would otherwise leave them at the end of the new text.
         NSTextStorage *storage = textView.textStorage;
-        NSMapTable *origins = storage ? TSScrollOrigins(storage) : [NSMapTable weakToStrongObjectsMapTable];
+        NSMapTable *previousAnchors = storage ? TSAnchors(storage) : [NSMapTable weakToStrongObjectsMapTable];
+        NSMapTable *keptAnchors = TSAnchorsFollowingEdits(previousAnchors, result);
         NSMapTable *previous = storage ? TSSelections(storage) : [NSMapTable weakToStrongObjectsMapTable];
         NSMapTable *kept = TSSelectionsAfterReplace(previous, result, textView);
-        NSUndoManager *undo = textView.undoManager;
-        NSInteger levelBefore = undo.groupingLevel;
-        __block BOOL committed = NO;
-        BOOL registered = NO;
-        if (undo && result.replacements.count > 0) {
-            // Registered before the text change, so on undo it runs after the text is back and can repair the jump
-            // that undoing the change causes too (#72). Redo runs first, while the old text is still showing, so it
-            // waits until the text has been put back.
-            registered = YES;
-            [undo registerUndoWithTarget:textView handler:^(NSTextView *view) {
-                if (!committed)
-                    return;
-                NSUndoManager *manager = view.undoManager;
-                [manager disableUndoRegistration];
-                TSApplySelections(previous);
-                TSRestoreScrollOrigins(origins);
-                [manager enableUndoRegistration];
-                [manager registerUndoWithTarget:view handler:^(NSTextView *again) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSUndoManager *redo = again.undoManager;
-                        [redo disableUndoRegistration];
-                        TSApplySelections(kept);
-                        TSRestoreScrollOrigins(origins);
-                        [redo enableUndoRegistration];
-                    });
-                }];
-            }];
-        }
         BOOL applied = [self applyReplacements:result.replacements toTextView:textView selectedRanges:nil
                                     actionName:TSLocalized(@"AdvancedFind.ReplaceAllAction", @"Replace All")];
-        if (!applied) {
-            // The registration above is the whole group. Drop it, or Undo would offer a step that changes nothing.
-            if (registered && undo.groupingLevel > levelBefore)
-                [undo endUndoGrouping];
-            if (registered && levelBefore == 0 && undo.canUndo)
-                [undo undo];
-            return;
+        if (!applied)
+            return; // Nothing was registered, so a refused change leaves the redo stack as it was (#72).
+        NSUndoManager *undo = textView.undoManager;
+        if (undo && result.replacements.count > 0) {
+            // Inside the group the text change opened, so it is the same undo step. It runs before the text is put
+            // back; the line and the carets are put back on the next pass, and the redo does the same the other way,
+            // including the undo after that redo (#72).
+            TSRegisterPlaceUndo(undo, textView, previous, previousAnchors, kept, keptAnchors);
         }
-        committed = YES;
         [undo disableUndoRegistration];
         TSApplySelections(kept);
-        TSRestoreScrollOrigins(origins);
+        TSApplyAnchors(keptAnchors);
         [undo enableUndoRegistration];
         NSString *replaced = TSLocalized(@"AdvancedFind.Replaced", @"%lu replaced");
         [self report:[NSString stringWithFormat:replaced, (unsigned long)result.numberOfMatches] isError:NO];

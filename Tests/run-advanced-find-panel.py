@@ -60,7 +60,7 @@ MUTATIONS = {
         'NSString *findString = lineEnding ? TSRegexStringByReplacingLineEndings(self.settings.findString, lineEnding) : self.settings.findString;',
         'NSString *findString = self.settings.findString;'),
     'Replace All leaves the text where it jumped': ('TSAdvancedFindController+Tasks.m',
-        '        [clip scrollToPoint:value.pointValue];\n', ''),
+        '        [clip scrollToPoint:NSMakePoint(anchor.clipX, y)];\n', ''),
 }
 
 
