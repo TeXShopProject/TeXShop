@@ -39,8 +39,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
         path=f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
         cases.append((path,{'en':b'numeric field','ja':'数値欄'.encode(),'de':b'Zahlenfeld','es':b'campo num','ko':'숫자 입력 필드'.encode()}[lang],b'REMOVED'))
     # Reverting the new commit semantics must fail independently of field presence.
-    # Release notes keep only the number field; the commit rule is documented in the manual and help.
-    cases.append(('DocumentSources/Manual Source/Manual.tex',b'Typed and pasted',b'CHANGED'))
+    # Release notes and the manual keep only the number field; the commit rule is documented in the help.
     for lang,old,encoding in [('en','typed and pasted','utf-8'),('ja','打鍵と貼り付け','utf-8'),('de','getippten und eingefügten','utf-8'),('es','escrito y el pegado','utf-8')]:
         cases.append((f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm',old.encode(encoding),b'CHANGED'))
     cases.append(('Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm','직접 입력한'.encode(),b'CHANGED'))
