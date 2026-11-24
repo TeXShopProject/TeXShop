@@ -28,7 +28,6 @@
 - (IBAction)displayStyleFile:sender;
 - (IBAction)displayFileEncoding:sender;
 - (IBAction)displayTipsandTricks:sender;
-- (IBAction)displayTeXShopConfusion:sender;
 - (IBAction)displayNotesonApplescript:sender;
 - (IBAction)displayRecentTeXFonts:sender;
 - (IBAction)displayGPLLicense:sender;
