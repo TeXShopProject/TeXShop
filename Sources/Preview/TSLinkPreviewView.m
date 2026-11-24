@@ -580,10 +580,15 @@ static NSRect TSLinkPreviewFitSource(NSRect source, NSRect bounds)
     }
     CGFloat height = NSHeight(source);
     source = TSLinkPreviewFitSource(source, bounds);
-    // Made smaller to fit a narrower page, the part keeps the gap where it was within it, so that
-    // the text on both sides of the gap is still in view.
-    if (acrossGap && height > 0 && !NSIsEmptyRect(source)) {
-        CGFloat y = NSMaxY(rects[1]) + fromGap * NSHeight(source) / height;
+    // Made smaller to fit a narrower page, the part keeps the gap within it, so that the text on
+    // both sides of the gap is still in view. The gap keeps its height; what is left of the part is
+    // shared between the next page below the gap and the linked page above it as before.
+    if (acrossGap && height > 0 && !NSIsEmptyRect(source) && NSHeight(source) < height) {
+        CGFloat top = NSMaxY(rects[1]), gapHeight = NSMinY(rects[0]) - top;
+        CGFloat below = MAX(0, -fromGap), above = MAX(0, height + fromGap - gapHeight);
+        CGFloat room = NSHeight(source) - gapHeight;
+        CGFloat y = (below + above > 0 && room > 0) ? top - room * below / (below + above)
+                                                    : top + fromGap * NSHeight(source) / height;
         source.origin.y = MIN(MAX(y, NSMinY(bounds)), NSMaxY(bounds) - NSHeight(source));
     }
     if (!image || NSIsEmptyRect(source)) return nil;

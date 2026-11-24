@@ -63,7 +63,11 @@ MUTATIONS = {
     # A part across the gap kept from the bottom of its page left the gap when the next page got lower.
     'gap-ignored': ('popup', '            acrossGap = YES;\n            fromGap = [coder decodeDoubleForKey:gap];\n            source.origin.y = NSMaxY(rects[1]) + fromGap;\n', '            fromGap = 0;\n'),
     # The sixth audit: made smaller, a part across the gap left it.
-    'gap-not-scaled': ('popup', '        CGFloat y = NSMaxY(rects[1]) + fromGap * NSHeight(source) / height;', '        CGFloat y = NSMaxY(rects[1]) + fromGap;'),
+    'gap-not-scaled': ('popup', '        CGFloat y = (below + above > 0 && room > 0) ? top - room * below / (below + above)\n                                                    : top + fromGap * NSHeight(source) / height;',
+                       '        CGFloat y = top + fromGap;'),
+    # The seventh audit: shrunk with its distance from the gap, a thin side fell into the gap.
+    'gap-height-shrunk': ('popup', '        CGFloat y = (below + above > 0 && room > 0) ? top - room * below / (below + above)\n                                                    : top + fromGap * NSHeight(source) / height;',
+                          '        CGFloat y = top + fromGap * NSHeight(source) / height;'),
     'strip-height': ('popup', '        bounds = rects[anchor];\n', '        bounds = NSMakeRect(NSMinX(rects[anchor]), 0, NSWidth(rects[anchor]), size.height);\n'),
     # The fourth audit: away from a page turned a quarter, the popup came back upright.
     'away-turn-ignored': ('view', '            if (((home.rotation % 180) + 180) % 180 == 90)', '            if (NO)'),
@@ -716,8 +720,25 @@ int main(void) { @autoreleasepool {
         TSLinkPreviewStrip(NSMakeSize(300, 792), NSMakeSize(300, 792), &first, &second);
         check(fitted && NSWidth(fitted.source) <= 300.5 && near(NSWidth(fitted.source) / NSHeight(fitted.source), 4, 0.01)
               && NSMinY(fitted.source) < NSMaxY(second) - 1 && NSMaxY(fitted.source) > NSMinY(first) + 1
-              && near((NSMaxY(second) - NSMinY(fitted.source)) / NSHeight(fitted.source), 0.82, 0.01),
+              && near((NSMaxY(second) - NSMinY(fitted.source)) / (NSMaxY(fitted.source) - NSMinY(first)), 82.0 / 12, 0.05),
               [NSString stringWithFormat:@"made smaller, a part across the gap still shows both sides in the same share (%@)", NSStringFromRect(fitted.source)]);
+    }
+
+    {   // Just across the gap: 88 points of the next page, the gap and 6 points of the linked page. Made much
+        // smaller for a narrow next page, both sides stay in view, in the same share (seventh audit).
+        PDFDocument *twoWide = pagesOfWidths(@[@612, @612, @612, @612]);
+        TestWindow *before = preview(twoWide);
+        MyPDFKitView *one = (MyPDFKitView *)before.myPDFKitView;
+        TSLinkPreviewView *thin = pin(one, 1, NSMakeRect(100, 120, 250, 50), NSMakeRect(50, 704, 500, 100));
+        NSData *content = archive(^(NSKeyedArchiver *a) { [thin encodeContentWithCoder:a prefix:@"C"]; });
+        PDFDocument *narrowNext = pagesOfWidths(@[@612, @612, @200, @612]);
+        TSLinkPreviewView *fitted = [TSLinkPreviewView linkPreviewWithCoder:unarchiver(content) prefix:@"C" document:narrowNext frame:NSMakeRect(0, 0, 250, 50)];
+        NSRect first, second;
+        TSLinkPreviewStrip(NSMakeSize(612, 792), NSMakeSize(200, 792), &first, &second);
+        CGFloat next = NSMaxY(second) - NSMinY(fitted.source), linked = NSMaxY(fitted.source) - NSMinY(first);
+        check(fitted && near(NSHeight(fitted.source), 40, 0.5) && next > 1 && linked > 1 && near(next / linked, 88.0 / 6, 0.2),
+              [NSString stringWithFormat:@"just across the gap, made smaller: both sides stay in view (%@: %.1f below, %.1f above)",
+               NSStringFromRect(fitted.source), next, linked]);
     }
 
     {   // Away from its place on a page turned a quarter, with the page it was brought to gone, the popup
