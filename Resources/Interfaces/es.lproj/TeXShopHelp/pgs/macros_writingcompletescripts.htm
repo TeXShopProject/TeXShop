@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scripts con los comandos de composición de TeXShop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; secuencia de órdenes de composición">
+<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; secuencia de comandos de composición">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda para macros</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda para macros</span></header>
 <nav id="menu">
 <ul>
 <li><a href="macros_preliminaries.htm">Preliminares</a></li>
@@ -79,8 +79,8 @@ tell document frontName of application "TeXShop"
 
 end tell</pre>
 <p>La primera línea convierte esto en una macro AppleScript que ejecuta ScriptRunner, de modo que puede pedir a TeXShop que componga (consulte <a href="macros_applescript.htm">Macros AppleScript</a>). Las líneas siguientes comprueban #FILEPATH#, la ruta completa del archivo fuente. Es una cadena vacía cuando el documento aún no se ha guardado; en ese caso, el script le pide que lo guarde y se detiene.</p>
-<p>A continuación, el script se refiere al documento mediante #DOCUMENTNAME#. TeXShop guarda el documento por sí mismo cuando empieza una orden de composición, así que el script no necesita guardarlo.</p>
-<p>Las órdenes restantes ejecutan latexinteractive, bibtex, latex y latex. Una orden de composición devuelve el control al script de inmediato, antes de que termine la composición, así que después de cada orden un bucle <code>repeat</code> espera hasta que <code>taskdone</code> indica que el trabajo ha terminado. La línea <code>delay 2</code> hace que el script haga una pausa entre comprobaciones en lugar de preguntar continuamente y ralentizar el ordenador. Las órdenes se enumeran en <a href="macros_defapplescript.htm">Definir macros AppleScript</a>.</p>
+<p>A continuación, el script se refiere al documento mediante #DOCUMENTNAME#. TeXShop guarda el documento por sí mismo cuando empieza un comando de composición, así que el script no necesita guardarlo.</p>
+<p>Los comandos restantes ejecutan latexinteractive, bibtex, latex y latex. Un comando de composición devuelve el control al script de inmediato, antes de que termine la composición, así que después de cada comando un bucle <code>repeat</code> espera hasta que <code>taskdone</code> indica que el trabajo ha terminado. La línea <code>delay 2</code> hace que el script haga una pausa entre comprobaciones en lugar de preguntar continuamente y ralentizar el ordenador. Los comandos se enumeran en <a href="macros_defapplescript.htm">Definir macros AppleScript</a>.</p>
 </main>
 </body>
 </html>

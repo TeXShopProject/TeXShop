@@ -50,7 +50,7 @@
 
 <h2>Einstellungen › Rechtschreibung</h2>
 
-<p>In der Gruppe „Rechtschreibprüfung bei Eingabe“ legt „Rechtschreibung während der Eingabe prüfen“ fest, ob falsch geschriebene Wörter in einem Dokument beim Öffnen unterstrichen werden; „Wörterbuch“ ist weiter unten beschrieben. Die Gruppe „Methode“ legt fest, wie TeX-Quelltext geprüft wird:</p>
+<p>In der Gruppe „Rechtschreibprüfung bei Eingabe“ legt „Rechtschreibung während der Eingabe prüfen“ fest, ob falsch geschriebene Wörter in einem Dokument beim Öffnen unterstrichen werden, und „AutoKorrektur“, ob Bearbeiten › Rechtschreibung und Grammatik › Rechtschreibung automatisch korrigieren in einem Dokument beim Öffnen eingeschaltet ist; „Wörterbuch“ ist weiter unten beschrieben. Die Gruppe „Methode“ legt fest, wie TeX-Quelltext geprüft wird:</p>
 <dl>
 <dt>„LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)“</dt>
 <dd>Die oben beschriebene Methode. „LaTeX-Ausschlussregeln bearbeiten…“ am Ende ihrer Zeile öffnet die Regeln, die festlegen, was übersprungen wird.</dd>
@@ -68,13 +68,13 @@ skip-body  proof</pre>
 
 <h2>Wörterbücher</h2>
 
-<p>„Wörterbuch“ unter Einstellungen › Rechtschreibung legt das Wörterbuch für Dokumente fest, die von da an geöffnet werden; bereits geöffnete Dokumente behalten ihres. Das Menü zeigt jede Sprache unter ihrem eigenen Namen, etwa Deutsch oder Français, mit ihrem Code, etwa de oder fr_CA, als Hilfetext. Mit „Automatische Spracherkennung“ wählt macOS die Sprache anhand des Texts.</p>
+<p>„Wörterbuch“ unter Einstellungen › Rechtschreibung legt das Wörterbuch der Dokumente fest. Eine neue Wahl gilt auch für geöffnete Dokumente, außer für solche, deren Wörterbuch mit einer Zeile <code>% !TEX spellcheck</code> oder im Fenster „Rechtschreibung und Grammatik“ gewählt wurde. Das Menü zeigt jede Sprache unter ihrem eigenen Namen, etwa Deutsch oder Français, mit ihrem Code, etwa de oder fr_CA, als Hilfetext. Mit „Automatische Spracherkennung“ wählt macOS die Sprache anhand des Texts.</p>
 
 <p>Um für ein einzelnes Dokument ein anderes Wörterbuch zu verwenden, wählen Sie es im Einblendmenü unten im Fenster „Rechtschreibung und Grammatik“, während dieses Dokument vorn ist. Jedes geöffnete Dokument behält sein eigenes Wörterbuch, und das Fenster wechselt mit, wenn Sie das Dokument wechseln. Die Wahl geht beim Schließen des Dokuments verloren.</p>
 
 <p>Um einem Dokument bei jedem Öffnen sein Wörterbuch zu geben, schreiben Sie eine Zeile wie diese in seine ersten 20 Zeilen:</p>
 <pre>% !TEX spellcheck = de-DE</pre>
-<p>Der Wert ist ein Sprachcode wie in den Hilfetexten des Menüs „Wörterbuch“: <code>fr</code> für Französisch oder <code>fr-CA</code> für das Französisch Kanadas. Die Zeile wird beim Öffnen des Dokuments gelesen; sichern, schließen und öffnen Sie das Dokument also erneut, nachdem Sie sie hinzugefügt haben. In einem Dokument mit Kapiteldateien schreiben Sie die Zeile in jede Datei.</p>
+<p>Der Wert ist ein Sprachcode wie in den Hilfetexten des Menüs „Wörterbuch“: <code>fr</code> für Französisch oder <code>fr_CA</code> für das Französisch Kanadas; er kann auch mit Bindestrich geschrieben werden, als <code>fr-CA</code>. Die Zeile wird beim Öffnen des Dokuments gelesen; sichern, schließen und öffnen Sie das Dokument also erneut, nachdem Sie sie hinzugefügt haben. In einem Dokument mit Kapiteldateien schreiben Sie die Zeile in jede Datei.</p>
 
 <p>Wie Sie Einstellungen im Fenster „Einstellungen“ finden, steht unter <a href="basic_preferences.htm#settings-search">Einstellungen suchen</a>.</p>
 </main>

@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
@@ -46,8 +46,8 @@
 <p>Para componer los documentos nuevos con un motor, elija «Archivo de motor» en Ajustes › Composición › Motor › Componer documentos nuevos con, y elija el motor en el menú «Archivo de motor» que hay debajo. «Editar la lista de motores…» abre la carpeta Engines en el Finder; el menú «Archivo de motor» sigue a la carpeta a medida que añade, elimina o renombra archivos. Si el archivo de motor elegido ya no está en la carpeta, el menú lo muestra como no encontrado y los documentos se componen con LaTeX.</p>
 <p>Para asociar un documento a un motor, escriba una línea como esta en una de sus veinte primeras líneas:</p>
 <pre>% !TEX program = XeLaTeX</pre>
-<p>El nombre es el del archivo de motor sin <code>.engine</code>; <code>tex</code> y <code>latex</code> componen plain TeX y LaTeX vía DVI, y <code>pdftex</code> y <code>pdflatex</code> los componen en PDF directo. La línea tiene prioridad sobre la barra de herramientas, sobre los ajustes y sobre «Componer con motor alternativo». La forma <code>% !TEX TS-program =</code> se lee igual. Escriba la línea exactamente como se muestra, con un espacio a cada lado del signo igual; la macro Program del menú Macros muestra los motores e inserta la línea por usted. En un proyecto con archivo raíz, solo el archivo raíz necesita la línea.</p>
-<p>Componer › Componer con motor alternativo (<kbd>⌃⌥⌘T</kbd>) compone una vez con el motor indicado en Ajustes › Composición › Motor › Motor alternativo, pdflatexmk por omisión, sin cambiar la barra de herramientas. Es útil para documentos que normalmente se componen en una sola pasada rápida y de vez en cuando por completo, con latexmk.</p>
+<p>El nombre es el del archivo de motor sin <code>.engine</code>; <code>tex</code> y <code>latex</code> componen plain TeX y LaTeX vía DVI, y <code>pdftex</code> y <code>pdflatex</code> los componen en PDF directo. La línea tiene prioridad sobre la barra de herramientas, sobre los ajustes y sobre «Componer con motor alternativo». La forma <code>% !TEX TS-program =</code> se lee igual. Escriba la línea exactamente como se muestra, con un espacio a cada lado del signo igual; la macro Program del menú Macros inserta la línea por usted, con una lista de nombres de motores entre los que elegir. En un proyecto con archivo raíz, solo el archivo raíz necesita la línea.</p>
+<p>Componer › Componer con motor alternativo (<kbd>⌃⌥⌘T</kbd>) compone una vez con el motor indicado en Ajustes › Composición › Motor › Motor alternativo, pdflatexmk por omisión, sin cambiar la barra de herramientas. En el menú Componer, esta opción aparece en lugar de «Componer» mientras se mantienen pulsadas las teclas Control y Opción. Es útil para documentos que normalmente se componen en una sola pasada rápida y de vez en cuando por completo, con latexmk.</p>
 
 <h2>Escribir un motor</h2>
 <p>La forma más sencilla de crear un motor es duplicar uno de la carpeta Engines en el Finder, renombrar la copia y abrirla en TeXShop para editarla. Un archivo de motor debe tener la extensión <code>.engine</code> y permiso de ejecución, que la copia conserva. Los documentos que se abran después muestran el nuevo motor en su barra de herramientas. Este es XeLaTeX.engine:</p>
@@ -80,7 +80,7 @@ lualatex -file-line-error -synctex=1 "$1"</pre>
 
 <h2>La carpeta Inactive</h2>
 <p>La subcarpeta <code>Engines/Inactive</code> contiene motores para flujos de trabajo especiales, a menudo con documentación y ejemplos, por ejemplo para latexmk, ConTeXt, Sage, PreTeXt, pythontex y Typst. Para usar uno, muévalo desde su carpeta a la propia carpeta Engines. Cuando se actualiza TeXShop, la carpeta Inactive se sustituye por la versión actual, mientras que los archivos situados directamente en la carpeta Engines nunca se tocan, de modo que los motores que haya editado se conservan.</p>
-<p>Para saber más sobre los motores, consulte los capítulos sobre motores de composición en Ayuda › Manual de TeXShop (en inglés).</p>
+<p>Para saber más sobre los motores, consulte el capítulo «Engines and latexmk» en Ayuda › Manual de TeXShop (en inglés).</p>
 </main>
 </body>
 </html>

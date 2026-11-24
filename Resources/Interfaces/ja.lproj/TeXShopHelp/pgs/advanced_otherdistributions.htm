@@ -41,7 +41,7 @@
 <p>1台のMacに、複数のTeXをインストールしておくことができます。MacTeXやBasicTeXでインストールした各年のTeX Live、TeX Live自身のインストーラでインストールしたTeX Live、HomebrewやMacPortsのTeXなどです。TeXShopは、「設定」→「タイプセット」→「パス」の「TeXエンジン」欄にあるTeXと、その下の「Ghostscript」欄にあるGhostscriptを使います。</p>
 
 <h2>パスの自動検出</h2>
-<p>この2つの欄は、TeXShopに入力させることができます。TeXShopを初めて使うとき、および「設定」→「タイプセット」の「パス」で「パスの自動検出…」を押したとき、TeXShopはTeXとGhostscriptをよくある場所から探します。<code>/etc/paths</code>と<code>/etc/paths.d</code>に書かれたフォルダ、<code>/Library/TeX/texbin</code>、<code>/usr/local/texlive</code>と<code>/Applications/TeXLive</code>にあるTeX Liveのフォルダ、Homebrew・MacPorts・Finkのフォルダです。プログラムが実行できることを確かめたうえで、見つけたインストールをバージョンとともに新しい順に一覧にします。最も新しいものが選ばれていますが、TeXとGhostscriptで別々にほかのものを選べます。パスが変わるのは「OK」を押したときだけです。ほかの場所にあるインストールは、欄に直接入力できます。</p>
+<p>この2つの欄は、TeXShopに入力させることができます。TeXShopを初めて使うとき、および「設定」→「タイプセット」の「パス」で「パスの自動検出…」を押したとき、TeXShopはTeXとGhostscriptをよくある場所から探します。<code>/etc/paths</code>と<code>/etc/paths.d</code>に書かれたフォルダとTeXShopの<code>PATH</code>にあるフォルダ、<code>/Library/TeX/texbin</code>、<code>/usr/local/texlive</code>・<code>/opt/texlive</code>・<code>/Applications/TeXLive</code>にあるTeX Liveのフォルダ、UpTeX.appとpTeX.appのTeXのフォルダ、<code>/usr/local/teTeX/bin</code>、Homebrew・MacPorts・Finkのフォルダです。プログラムが実行できることを確かめたうえで、見つけたインストールをバージョンとともに新しい順に一覧にします。最も新しいものが選ばれていますが、TeXとGhostscriptで別々にほかのものを選べます。パスが変わるのは「OK」を押したときだけです。ほかの場所にあるインストールは、欄に直接入力できます。</p>
 <p>「パスの自動検出…」で変わるのは「TeXエンジン」と「Ghostscript」だけです。自分でフォルダを指定しているエンジンファイルや、「第二のTeXエンジン」欄はそのままです。</p>
 
 <h2>MacTeXを使わないTeX Live</h2>

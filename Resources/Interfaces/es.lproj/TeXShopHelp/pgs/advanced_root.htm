@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
@@ -70,10 +70,10 @@
 <p>Cuando se abre un archivo de capítulo con línea raíz, TeXShop abre también el archivo raíz y su ventana de vista previa. Dos opciones de Ajustes › General › Archivo raíz del proyecto controlan esto: «Abrir el archivo raíz al abrir un documento» lo activa o desactiva, y «Miniaturizar la ventana raíz abierta» envía al Dock la ventana de código del archivo raíz, ya que rara vez se edita mientras se trabaja en un capítulo.</p>
 
 <h2>Buscar y reemplazar en todo el proyecto</h2>
-<p>Para buscar a la vez en todos los archivos de un proyecto, elija Edición › Buscar › Buscar en fuentes TeX con la misma TEX root… en uno de sus archivos. Busca en el archivo raíz y en los archivos que lo indican en una línea raíz. Consulte <a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a> y <a href="basic_find.htm">Buscar y reemplazar</a>.</p>
+<p>Para buscar a la vez en todos los archivos de un proyecto, elija Edición › Buscar › Buscar en fuentes TeX con la misma TEX root… en uno de sus archivos de capítulo, o Buscar en fuentes TeX con este archivo como TEX root… en el archivo raíz. Busca en el archivo raíz y en los archivos <code>.tex</code> de su carpeta y de las inferiores que lo indican en una línea raíz entre sus primeras 20 líneas. Consulte <a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a> y <a href="basic_find.htm">Buscar y reemplazar</a>.</p>
 
 <h2>Archivos raíz indicados en archivos .texshop</h2>
-<p>Un archivo con la extensión <code>.texshop</code> junto a un archivo de capítulo, como <code>two.texshop</code> para <code>two.tex</code>, también puede indicar el archivo raíz, y TeXShop sigue leyéndolo. Ninguna orden de menú crea estos archivos; use una línea <code>% !TEX root</code>, que viaja con el archivo fuente.</p>
+<p>Un archivo con la extensión <code>.texshop</code> junto a un archivo de capítulo, como <code>two.texshop</code> para <code>two.tex</code>, también puede indicar el archivo raíz, y TeXShop sigue leyéndolo. Ningún comando de menú crea estos archivos; use una línea <code>% !TEX root</code>, que viaja con el archivo fuente.</p>
 </main>
 </body>
 </html>

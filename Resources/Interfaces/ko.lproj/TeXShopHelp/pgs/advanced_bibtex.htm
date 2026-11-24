@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 도움말"></a><span class="chapter">고급 도움말</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
@@ -59,8 +59,8 @@
 <li>조판 › BibTeX(<kbd>⇧⌘B</kbd>)를 선택하거나, 조판 버튼 옆의 팝업 메뉴에서 BibTeX를 선택하고 조판 버튼을 누릅니다.</li>
 <li>두 번 더 조판합니다. 첫 번째 조판에서 참고 문헌 목록이 추가되고, 두 번째 조판에서 인용이 채워집니다.</li>
 </ol>
-<p>latexmk로 조판하면, 예를 들어 pdflatexmk 엔진이나 “latexmk 사용”으로 설정한 프로파일로 조판하면 BibTeX와 추가 조판이 자동으로 실행됩니다.</p>
-<p>TeXShop에서 새 데이터베이스를 만들려면 저장 대화상자의 파일 유형 메뉴에서 bib 유형을 선택하여 파일의 확장자가 <code>.bib</code>가 되게 합니다. 데이터베이스는 모든 문서에서 찾을 수 있는 개인 TeX 트리에 둘 수도 있습니다. <a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a>를 참고하십시오.</p>
+<p>pdflatexmk 엔진이나 “latexmk 사용”으로 설정한 프로파일처럼 latexmk로 조판하면 BibTeX와 추가 조판이 자동으로 실행됩니다.</p>
+<p>TeXShop에서 새 데이터베이스를 만들려면 저장 대화상자의 파일 포맷 메뉴에서 bib 유형을 선택하여 파일의 확장자가 <code>.bib</code>가 되게 합니다. 데이터베이스는 모든 문서에서 찾을 수 있는 개인 TeX 트리에 둘 수도 있습니다. <a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a>를 참조하십시오.</p>
 
 <h2>프로그램 선택하기</h2>
 <p>조판 › BibTeX는 설정 › 조판 › 관련 도구 › BibTeX 엔진에 있는 명령을 실행하며, 기본값은 <code>bibtex</code>입니다. 다른 프로그램을 사용하려면 필요한 옵션과 함께 이곳에 입력합니다. 예를 들어 biblatex 패키지를 사용하는 문서에는 <code>biber</code>를 입력합니다. 엔진 프로파일이 이 필드를 설정합니다. pLaTeX + dvipdfmx는 <code>pbibtex</code>로, upLaTeX + dvipdfmx와 LuaLaTeX(일본어)는 <code>upbibtex</code>로, 나머지 프로파일은 <code>bibtex</code>로 설정합니다.</p>

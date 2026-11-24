@@ -59,7 +59,7 @@
 <li>さらに2回タイプセットします。1回目で参考文献リストが加わり、2回目で引用の番号が埋まります。</li>
 </ol>
 <p>pdflatexmkのエンジンや、「latexmkを使う」に設定したプロファイルなど、latexmkでタイプセットするときは、BibTeXと追加のタイプセットが自動的に実行されます。</p>
-<p>TeXShopで新しいデータベースを作るには、保存ダイアログのファイルの種類のメニューでbibを選び、ファイルに拡張子<code>.bib</code>が付くようにします。データベースは個人用のTeXツリーに置くこともでき、そうすればどの書類からも見つかります。<a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a>を参照してください。</p>
+<p>TeXShopで新しいデータベースを作るには、保存ダイアログの「ファイルフォーマット」のメニューでbibを選び、ファイルに拡張子<code>.bib</code>が付くようにします。データベースは個人用のTeXツリーに置くこともでき、そうすればどの書類からも見つかります。<a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a>を参照してください。</p>
 
 <h2>プログラムを選ぶ</h2>
 <p>「タイプセット」→「BibTeX」は、「設定」→「タイプセット」→「周辺ツール」の「BibTeXエンジン」にあるコマンドを実行します。初期値は<code>bibtex</code>です。ここには、必要なオプションを付けて別のプログラムを入力できます。たとえばbiblatexパッケージを使う書類では<code>biber</code>にします。エンジンのプロファイルはこの欄を設定します。pLaTeX + dvipdfmxでは<code>pbibtex</code>、upLaTeX + dvipdfmxとLuaLaTeX（日本語）では<code>upbibtex</code>、ほかのプロファイルでは<code>bibtex</code>になります。</p>

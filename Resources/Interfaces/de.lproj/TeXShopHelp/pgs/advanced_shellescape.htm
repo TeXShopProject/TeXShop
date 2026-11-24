@@ -48,6 +48,7 @@
 <li>In einer Engine-Datei, für jedes Dokument, das mit dieser Engine gesetzt wird; siehe <a href="advanced_addengine.htm">Satz-Engines hinzufügen</a>.</li>
 <li>Für ein einzelnes Dokument, das mit einer der latexmk-Engines wie pdflatexmk gesetzt wird, mit der Zeile <code>% !TEX parameter = -shell-escape</code> am Anfang des Quelltexts.</li>
 </ul>
+<p>Eine Engine hat die Option bereits: sepdflatexmk, das mit TeXShop kommt und von Anfang an im Ordner Engines liegt, setzt immer mit <code>--shell-escape</code>. Es genügt, sie in der Symbolleiste des Quelltextfensters oder mit einer Zeile <code>% !TEX program = sepdflatexmk</code> zu wählen; verwenden Sie sie daher nur für Dokumente, denen Sie vertrauen.</p>
 
 <h2>Bei Shell-Escape nachfragen</h2>
 <p>Einstellungen › Satz › PDF direkt › „Bei Shell-Escape nachfragen“, als Vorgabe ausgeschaltet, schützt die Befehle der Gruppe „PDF direkt“. Ist die Einstellung eingeschaltet und enthält der Befehl für plain TeX oder LaTeX dort <code>-shell-escape</code> oder <code>--shell-escape</code>, fragt TeXShop nach, bevor es ein Dokument nach dem Öffnen zum ersten Mal setzt:</p>
@@ -56,7 +57,7 @@
 <li>„Shell Escape nicht benutzen“ setzt ohne sie.</li>
 <li>„Abbrechen“ setzt nicht.</li>
 </ul>
-<p>Haben Sie „OK“ oder „Shell Escape nicht benutzen“ gewählt, gilt die Antwort für dieses Dokument, bis es geschlossen wird; so können Sie Ihre eigenen Dokumente mit der Option setzen und Dokumente von anderen ohne sie. Engine-Dateien werden nicht geprüft, auch wenn sie <code>-shell-escape</code> enthalten.</p>
+<p>Haben Sie „OK“ oder „Shell Escape nicht benutzen“ gewählt, gilt die Antwort für dieses Dokument, bis es geschlossen wird; so können Sie Ihre eigenen Dokumente mit der Option setzen und Dokumente von anderen ohne sie. Engine-Dateien werden nicht geprüft, auch wenn sie <code>-shell-escape</code> enthalten; sepdflatexmk setzt also ohne Nachfrage mit der Option.</p>
 </main>
 </body>
 </html>

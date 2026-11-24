@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda para macros</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda para macros</span></header>
 <nav id="menu">
 <ul>
 <li><a href="macros_preliminaries.htm">Preliminares</a></li>
@@ -26,10 +26,10 @@
 </nav>
 <main id="content">
 <h1>Macros AppleScript predefinidas</h1>
-<p>TeXShop incluye una colección de macros AppleScript de Will Robertson, Claus Gerhardt y otros autores. Algunas ejecutan una serie de órdenes de composición una tras otra. Copiándolas y modificándolas, puede crear scripts para su propio trabajo. Esta página describe algunas de ellas, con los nombres que tienen en el menú Macros.</p>
+<p>TeXShop incluye una colección de macros AppleScript de Will Robertson, Claus Gerhardt y otros autores. Algunas ejecutan una serie de comandos de composición una tras otra. Copiándolas y modificándolas, puede crear scripts para su propio trabajo. Esta página describe algunas de ellas, con los nombres que tienen en el menú Macros.</p>
 
 <h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
-<p>Estas macros son de Will Robertson. En el submenú Column macros, New tabular y New array insertan un entorno tabular o array con el número de filas y columnas que indique, y Add column y Delete column modifican las filas que seleccione. Insert reference busca órdenes <code>\label{…}</code> en el archivo actual y le permite elegir una etiqueta de una lista; inserta la etiqueta dentro de <code>\ref{…}</code>, una orden que puede cambiar en el script. Si hay texto seleccionado, solo se muestran las etiquetas que lo contienen. Open quickly… muestra los archivos .tex, .sty y .pdf de la carpeta del archivo fuente actual y abre los que elija.</p>
+<p>Estas macros son de Will Robertson. En el submenú Column macros, New tabular y New array insertan un entorno tabular o array con el número de filas y columnas que indique, y Add column y Delete column modifican las filas que seleccione. Insert reference busca comandos <code>\label{…}</code> en el archivo actual y le permite elegir una etiqueta de una lista; inserta la etiqueta dentro de <code>\ref{…}</code>, un comando que puede cambiar en el script. Si hay texto seleccionado, solo se muestran las etiquetas que lo contienen. Open quickly… muestra los archivos .tex, .sty y .pdf de la carpeta del archivo fuente actual y abre los que elija.</p>
 
 <h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
 <p>Esta macro, de Alan Munn, pega celdas de una hoja de cálculo en su archivo fuente LaTeX como una tabla. Seleccione un rango de celdas en Excel o en otra aplicación de hojas de cálculo y cópielas. Después elija Macros › Paste Spreadsheet Cells y elija un estilo de tabla:</p>
@@ -48,7 +48,7 @@
 <p>Un documento con bibliografía necesita varias composiciones: LaTeX escribe el archivo .aux, BibTeX lo usa para escribir los archivos .bbl y .blg, LaTeX vuelve a ejecutarse para añadir la bibliografía, y una vez más para actualizar las referencias a ella. La macro Bibliography ejecuta LaTeX, BibTeX, LaTeX y LaTeX una tras otra. <a href="macros_writingcompletescripts.htm">Scripts con los comandos de composición de TeXShop</a> explica cómo funciona.</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
-<p>Las macros de este submenú llaman a scripts de shell del mismo nombre situados en ~/Library/TeXShop/bin. Funcionan con un archivo guardado. <a href="macros_writingcommandscripts.htm">Scripts con comandos de shell</a> explica pdflatexc como ejemplo.</p>
+<p>La mayoría de las macros de este submenú llaman a scripts de shell del mismo nombre situados en ~/Library/TeXShop/bin; bibtexcpl, mpostcpl y latex-makeindex-mpost llaman a varios de ellos sucesivamente, y openpdf abre el PDF del documento. Funcionan con un archivo guardado. <a href="macros_writingcommandscripts.htm">Scripts con comandos de shell</a> explica pdflatexc como ejemplo.</p>
 <h3>htlatexc, htlatexr</h3>
 <p>TeX4ht convierte un documento LaTeX en una página web: una página HTML y archivos de imagen. htlatexc ejecuta htlatex sobre el documento y abre en Safari el archivo HTML resultante. No hace falta cargar el paquete tex4ht en el documento; htlatex lo carga. htlatexr ejecuta htlatex con la opción <code>-r</code>, que vuelve a crear las imágenes aunque ya existan.</p>
 <h3>pdfselectc</h3>

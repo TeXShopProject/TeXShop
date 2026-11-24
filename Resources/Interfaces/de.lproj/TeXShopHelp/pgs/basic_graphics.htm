@@ -50,13 +50,13 @@
 
 <h2>EPS-Dateien</h2>
 <p>TeX Live wandelt EPS-Grafiken beim Setzen mit epstopdf automatisch in PDF um, sofern das Dokument graphicx lädt. Die umgewandelte Datei <code>diagram-eps-converted-to.pdf</code> wird neben die EPS-Datei geschrieben und von da an verwendet.</p>
-<p>Auch eine in TeXShop geöffnete EPS-Datei wird umgewandelt: TeXShop schreibt eine gleichnamige PDF-Datei daneben und zeigt sie an.</p>
+<p>Auch eine in TeXShop geöffnete EPS-Datei wird umgewandelt: TeXShop schreibt eine gleichnamige PDF-Datei daneben, oder in einen temporären Ordner, wenn sich in den Ordner der EPS-Datei nicht schreiben lässt, und zeigt sie an.</p>
 
 <h2>TIFF-Dateien</h2>
 <p>LaTeX kann keine TIFF-Dateien einbinden. Wählen Sie Ablage › TIFF umwandeln, während ein Quelltextfenster aktiv ist: Ein Dialog zeigt den Ordner des Dokuments, in dem sich nur TIFF-Dateien auswählen lassen. Wählen Sie eine oder mehrere aus und klicken Sie auf „Konvertieren“. Jede wird in eine gleichnamige PNG-Datei im selben Ordner umgewandelt; die TIFF-Dateien bleiben erhalten.</p>
 
 <h2>Setzen über DVI</h2>
-<p>Dokumente mit PostScript-Code, etwa mit dem Paket pstricks, werden mit der Methode „Über DVI“ gesetzt, die standardmäßig dvips aufruft. Grafiken werden dann im EPS-Format eingebunden; PDF-, PNG- und JPEG-Dateien lassen sich nicht verwenden. Siehe <a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a>.</p>
+<p>Dokumente mit PostScript-Code, etwa mit dem Paket pstricks, werden mit der Methode „Über DVI“ gesetzt, die standardmäßig dvips aufruft. Grafiken werden dann im EPS-Format eingebunden; PDF-, PNG- und JPEG-Dateien lassen sich nicht verwenden. Die Engine-Profile, deren Namen auf „+ dvipdfmx“ enden, setzen ebenfalls „Über DVI“, rufen aber dvipdfmx statt dvips auf; mit <code>\usepackage[dvipdfmx]{graphicx}</code> lassen sich dort PDF-, PNG- und JPEG-Dateien verwenden. Siehe <a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a>.</p>
 </main>
 </body>
 </html>

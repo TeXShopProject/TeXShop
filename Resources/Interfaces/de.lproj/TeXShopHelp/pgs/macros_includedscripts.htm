@@ -48,7 +48,7 @@
 <p>Ein Dokument mit Literaturverzeichnis braucht mehrere Läufe: LaTeX schreibt die .aux-Datei, BibTeX schreibt daraus die .bbl- und .blg-Dateien, LaTeX läuft erneut, um das Literaturverzeichnis aufzunehmen, und noch einmal, um die Verweise darauf zu aktualisieren. Das Makro Bibliography führt LaTeX, BibTeX, LaTeX und LaTeX nacheinander aus. <a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a> erklärt, wie es funktioniert.</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
-<p>Die Makros dieses Untermenüs rufen gleichnamige Shell-Skripte in ~/Library/TeXShop/bin auf. Sie arbeiten mit einer gesicherten Datei. <a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a> erklärt pdflatexc als Beispiel.</p>
+<p>Die meisten Makros dieses Untermenüs rufen gleichnamige Shell-Skripte in ~/Library/TeXShop/bin auf; bibtexcpl, mpostcpl und latex-makeindex-mpost rufen mehrere davon nacheinander auf, und openpdf öffnet das PDF des Dokuments. Sie arbeiten mit einer gesicherten Datei. <a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a> erklärt pdflatexc als Beispiel.</p>
 <h3>htlatexc, htlatexr</h3>
 <p>TeX4ht wandelt ein LaTeX-Dokument in eine Webseite um: eine HTML-Seite und Bilddateien. htlatexc führt htlatex für das Dokument aus und öffnet die entstandene HTML-Datei in Safari. Das Paket tex4ht muss im Dokument nicht geladen werden; htlatex lädt es. htlatexr führt htlatex mit der Option <code>-r</code> aus, die die Bilder neu erstellt, auch wenn sie schon vorhanden sind.</p>
 <h3>pdfselectc</h3>

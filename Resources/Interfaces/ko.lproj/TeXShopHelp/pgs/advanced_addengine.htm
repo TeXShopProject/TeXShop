@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 도움말"></a><span class="chapter">고급 도움말</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
@@ -46,8 +46,8 @@
 <p>새 문서를 어떤 엔진으로 조판하려면 설정 › 조판 › 엔진 › 새 문서 조판에서 “엔진 파일”을 선택하고, 그 아래의 엔진 파일 메뉴에서 엔진을 고릅니다. “엔진 목록 편집…”을 누르면 Finder에서 Engines 폴더가 열립니다. 이 폴더에서 파일을 추가하거나 삭제하거나 이름을 바꾸면 엔진 파일 메뉴에 그대로 반영됩니다. 선택한 엔진 파일이 폴더에 더 이상 없으면 메뉴에 “(찾을 수 없음)”이 붙어 표시되고, 문서는 LaTeX로 조판됩니다.</p>
 <p>문서를 특정 엔진으로 조판하게 하려면 문서의 처음 20줄 안에 다음과 같은 줄을 넣습니다.</p>
 <pre>% !TEX program = XeLaTeX</pre>
-<p>이름은 엔진 파일의 이름에서 <code>.engine</code>을 뺀 것입니다. <code>tex</code>와 <code>latex</code>는 plain TeX와 LaTeX를 DVI 경유로, <code>pdftex</code>와 <code>pdflatex</code>는 PDF 직접 생성으로 조판합니다. 이 줄은 도구 막대, 설정, 조판 › 대체 엔진으로 조판보다 우선합니다. <code>% !TEX TS-program =</code> 형식도 같은 뜻으로 읽습니다. 이 줄은 위에 보인 그대로, 등호 양쪽에 공백을 하나씩 두고 쓰십시오. 매크로 메뉴의 Program 매크로는 엔진 목록을 보여 주고 이 줄을 대신 넣어 줍니다. 루트 파일이 있는 프로젝트에서는 루트 파일에만 이 줄이 있으면 됩니다.</p>
-<p>조판 › 대체 엔진으로 조판(<kbd>⌃⌥⌘T</kbd>)은 도구 막대의 선택을 바꾸지 않고, 설정 › 조판 › 엔진 › 대체 엔진에 지정된 엔진(기본값은 pdflatexmk)으로 한 번 조판합니다. 평소에는 빠르게 한 번만 조판하고, 가끔 latexmk로 완전하게 조판하는 문서에 알맞습니다.</p>
+<p>이름은 엔진 파일의 이름에서 <code>.engine</code>을 뺀 것입니다. <code>tex</code>와 <code>latex</code>는 plain TeX와 LaTeX를 DVI 경유로, <code>pdftex</code>와 <code>pdflatex</code>는 PDF 직접 생성으로 조판합니다. 이 줄은 도구 막대, 설정, 조판 › 대체 엔진으로 조판보다 우선합니다. <code>% !TEX TS-program =</code> 형식도 같은 뜻으로 읽습니다. 이 줄은 위에 보인 그대로, 등호 양쪽에 공백을 하나씩 두고 쓰십시오. 매크로 메뉴의 Program 매크로는 목록에서 엔진 이름을 고르게 하여 이 줄을 대신 넣어 줍니다. 루트 파일이 있는 프로젝트에서는 루트 파일에만 이 줄이 있으면 됩니다.</p>
+<p>조판 › 대체 엔진으로 조판(<kbd>⌃⌥⌘T</kbd>)은 도구 막대의 선택을 바꾸지 않고, 설정 › 조판 › 엔진 › 대체 엔진에 지정된 엔진(기본값은 pdflatexmk)으로 한 번 조판합니다. 조판 메뉴에서는 Control 키와 Option 키를 누르고 있는 동안 조판하기 대신 이 항목이 나타납니다. 평소에는 빠르게 한 번만 조판하고, 가끔 latexmk로 완전하게 조판하는 문서에 알맞습니다.</p>
 
 <h2>엔진 만들기</h2>
 <p>엔진을 만드는 가장 쉬운 방법은 Finder에서 Engines 폴더의 엔진 하나를 복제하고, 사본의 이름을 바꾼 다음, TeXShop에서 열어 편집하는 것입니다. 엔진 파일은 확장자가 <code>.engine</code>이어야 하고 실행 권한이 있어야 하는데, 복제한 파일은 실행 권한을 그대로 유지합니다. 그 뒤에 여는 문서에서는 도구 막대에 새 엔진이 나타납니다. 다음은 XeLaTeX.engine입니다.</p>
@@ -80,7 +80,7 @@ lualatex -file-line-error -synctex=1 "$1"</pre>
 
 <h2>Inactive 폴더</h2>
 <p>하위 폴더 <code>Engines/Inactive</code>에는 latexmk, ConTeXt, Sage, PreTeXt, pythontex, Typst 등 특수한 작업을 위한 엔진이 들어 있으며, 설명서와 예제가 함께 있는 경우가 많습니다. 엔진을 사용하려면 그 폴더에서 Engines 폴더로 옮깁니다. TeXShop이 업데이트되면 Inactive 폴더는 최신 버전으로 교체되지만, Engines 폴더에 바로 들어 있는 파일은 건드리지 않으므로 직접 편집한 엔진은 그대로 남습니다.</p>
-<p>엔진에 대한 자세한 내용은 도움말 › TeXShop 설명서 (영문)에서 조판 엔진에 관한 장을 참고하십시오.</p>
+<p>엔진에 대한 자세한 내용은 도움말 › TeXShop 설명서 (영문)의 “Engines and latexmk” 장을 참조하십시오.</p>
 </main>
 </body>
 </html>

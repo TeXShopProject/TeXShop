@@ -48,7 +48,7 @@
 <p>参考文献リストのある書類には、何回かの実行が必要です。LaTeXが.auxファイルを書き出し、BibTeXがそれを使って.bblファイルと.blgファイルを書き出し、LaTeXをもう一度実行して参考文献リストを加え、さらにもう一度実行してリストへの参照を更新します。「Bibliography」マクロは、LaTeX、BibTeX、LaTeX、LaTeXを順に実行します。その仕組みは<a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>で説明しています。</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
-<p>このサブメニューのマクロは、~/Library/TeXShop/binにある同じ名前のシェルスクリプトを呼び出します。保存したファイルに対して働きます。例としてpdflatexcを<a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>で説明しています。</p>
+<p>このサブメニューのマクロの多くは、~/Library/TeXShop/binにある同じ名前のシェルスクリプトを呼び出します。bibtexcpl、mpostcpl、latex-makeindex-mpostはそのうちのいくつかを順に呼び出し、openpdfは書類のPDFを開きます。保存したファイルに対して働きます。例としてpdflatexcを<a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>で説明しています。</p>
 <h3>htlatexc、htlatexr</h3>
 <p>TeX4htは、LaTeXの書類をWebページ（HTMLのページと画像ファイル）に変換します。htlatexcは書類にhtlatexを実行し、できたHTMLファイルをSafariで開きます。書類でtex4htパッケージを読み込む必要はありません。htlatexが読み込みます。htlatexrは、htlatexをオプション<code>-r</code>付きで実行します。このオプションを付けると、画像がすでにあっても作り直します。</p>
 <h3>pdfselectc</h3>

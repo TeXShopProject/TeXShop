@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
@@ -42,7 +42,7 @@
 <p>En un mismo Mac pueden convivir varias instalaciones de TeX: años de TeX Live instalados por MacTeX o BasicTeX, un TeX Live instalado con su propio instalador, o TeX de Homebrew o MacPorts. TeXShop usa la que figura en el campo «Motores TeX» de Ajustes › Composición › Rutas, y Ghostscript desde el campo «Ghostscript» que hay debajo.</p>
 
 <h2>Detectar rutas</h2>
-<p>TeXShop puede rellenar ambos campos por usted. La primera vez que se usa TeXShop, y cada vez que pulsa «Detectar rutas…» en el grupo «Rutas» de Ajustes › Composición, busca TeX y Ghostscript en los lugares habituales: las carpetas indicadas en <code>/etc/paths</code> y <code>/etc/paths.d</code>, <code>/Library/TeX/texbin</code>, las carpetas de TeX Live en <code>/usr/local/texlive</code> y <code>/Applications/TeXLive</code>, y las carpetas de Homebrew, MacPorts y Fink. Comprueba que los programas se ejecutan y muestra las instalaciones que encuentra con sus versiones, de la más reciente a la más antigua. Queda seleccionada la más reciente, pero puede elegir otra, por separado para TeX y para Ghostscript. Las rutas solo cambian cuando pulsa «Aceptar». Una instalación situada en otro lugar se puede seguir escribiendo a mano en los campos.</p>
+<p>TeXShop puede rellenar ambos campos por usted. La primera vez que se usa TeXShop, y cada vez que pulsa «Detectar rutas…» en el grupo «Rutas» de Ajustes › Composición, busca TeX y Ghostscript en los lugares habituales: las carpetas indicadas en <code>/etc/paths</code> y <code>/etc/paths.d</code> y en el <code>PATH</code> de TeXShop, <code>/Library/TeX/texbin</code>, las carpetas de TeX Live en <code>/usr/local/texlive</code>, <code>/opt/texlive</code> y <code>/Applications/TeXLive</code>, las carpetas TeX de UpTeX.app y pTeX.app, <code>/usr/local/teTeX/bin</code>, y las carpetas de Homebrew, MacPorts y Fink. Comprueba que los programas se ejecutan y muestra las instalaciones que encuentra con sus versiones, de la más reciente a la más antigua. Queda seleccionada la más reciente, pero puede elegir otra, por separado para TeX y para Ghostscript. Las rutas solo cambian cuando pulsa «Aceptar». Una instalación situada en otro lugar se puede seguir escribiendo a mano en los campos.</p>
 <p>«Detectar rutas…» solo cambia «Motores TeX» y «Ghostscript». Los archivos de motor que indican sus propias carpetas y el campo «Segundos motores TeX» no cambian.</p>
 
 <h2>TeX Live sin MacTeX</h2>

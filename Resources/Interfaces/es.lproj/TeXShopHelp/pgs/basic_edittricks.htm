@@ -58,7 +58,7 @@
 
 <h2>Escribir menos</h2>
 
-<p>Código › Cerrar el entorno actual (<kbd>⌃⌘C</kbd>) añade la línea <code>\end</code> del entorno que sigue abierto, por ejemplo <code>\end{itemize}</code> después de una lista. El autocompletado de comandos termina los comandos y entornos que ha empezado a escribir; consulte <a href="basic_commandcompletion.htm">Autocompletado de comandos</a>. Las combinaciones de teclas sustituyen un carácter escrito por un texto; consulte <a href="basic_autocompletion.htm">Combinaciones de teclas</a>. El panel LaTeX, el panel matrices y el menú Macros insertan fragmentos de texto más largos.</p>
+<p>Código › Cerrar el entorno actual (<kbd>⌃⌘C</kbd>) añade la línea <code>\end</code> del entorno que sigue abierto, por ejemplo <code>\end{itemize}</code> después de una lista. El autocompletado de comandos termina los comandos y entornos que ha empezado a escribir; consulte <a href="basic_commandcompletion.htm">Autocompletado de comandos</a>. Las combinaciones de teclas sustituyen un carácter escrito por un texto; consulte <a href="basic_autocompletion.htm">Combinaciones de teclas</a>. El panel LaTeX, el panel de matrices y el menú Macros insertan fragmentos de texto más largos.</p>
 
 <h2>Soltar archivos sobre el código fuente</h2>
 
@@ -76,7 +76,7 @@
 
 <p>Aquí <var>ruta</var> es la ruta del archivo desde la carpeta del archivo fuente, y <var>nombre</var> es el nombre del archivo sin su extensión. Un alias soltado se sustituye por el archivo que representa, que TeX no podría encontrar por sí mismo. Un archivo cuya ruta contiene un espacio no se inserta; TeXShop muestra un aviso en su lugar.</p>
 
-<p>Para insertar otra cosa para un tipo de archivo, abra el editor de macros (Macros › Abrir editor de macros...) y añada un submenú llamado <code>Drag &amp; Drop</code>. En él, añada un elemento con el nombre de la extensión, como <code>.pdf</code>, cuyo contenido sea el texto que se va a insertar, por ejemplo <code>\includegraphics[#INS#]{%r}</code>; un elemento llamado <code>.*</code> se usa para todas las extensiones que no tienen un elemento propio. El contenido puede usar estas abreviaturas:</p>
+<p>Para insertar otra cosa para un tipo de archivo, abra el editor de macros (Macros › Abrir editor de macros...) y añada un submenú llamado <code>Drag &amp; Drop</code>. En él, añada un elemento con el nombre de la extensión, como <code>.pdf</code>, cuyo contenido sea el texto que se va a insertar, por ejemplo <code>\includegraphics[#INS#]{%r}</code>; un elemento llamado <code>.*</code> se usa para todas las demás extensiones, las que no tienen un elemento propio ni están en la tabla anterior. El contenido puede usar estas abreviaturas:</p>
 
 <dl>
 <dt><code>%F</code></dt><dd>la ruta completa del archivo soltado</dd>
@@ -104,7 +104,7 @@
 
 <h2>Archivos de copia de seguridad</h2>
 
-<p>Cuando «Activar guardado automático y versiones» está desactivado en Ajustes › Documentos y guardado, active allí «Conservar el archivo anterior como “nombre~”» para conservar la versión anterior de un archivo cada vez que se guarda. La copia de seguridad tiene el nombre del archivo seguido de una virgulilla (~).</p>
+<p>Cuando «Activar guardado automático y versiones» está desactivado en Ajustes › Documentos y guardado, active allí «Conservar el archivo anterior como “nombre~”» para conservar la versión anterior de un archivo cada vez que se guarda. La copia de seguridad lleva una virgulilla (~) tras el nombre del archivo, antes de la extensión: la copia de paper.tex es paper~.tex.</p>
 
 <p>La búsqueda y el reemplazo, con expresiones regulares y con Reemplazo múltiple, se describen en <a href="basic_find.htm">Buscar y reemplazar</a>.</p>
 </main>

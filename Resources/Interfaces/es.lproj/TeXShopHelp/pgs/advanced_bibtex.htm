@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
@@ -60,10 +60,10 @@
 <li>Componga dos veces más: la primera composición añade la bibliografía y la segunda completa las citas.</li>
 </ol>
 <p>Componer con latexmk, por ejemplo con el motor pdflatexmk o con un perfil configurado «Con latexmk», ejecuta BibTeX y las pasadas adicionales por sí solo.</p>
-<p>Para crear una base de datos nueva en TeXShop, elija el tipo bib en el menú «Formato» del diálogo Guardar, para que el archivo reciba la extensión <code>.bib</code>. Una base de datos también puede estar en su árbol TeX personal, donde la encuentran todos los documentos; consulte <a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a>.</p>
+<p>Para crear una base de datos nueva en TeXShop, elija el tipo bib en el menú «Formato del archivo» del diálogo Guardar, para que el archivo reciba la extensión <code>.bib</code>. Una base de datos también puede estar en su árbol TeX personal, donde la encuentran todos los documentos; consulte <a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a>.</p>
 
 <h2>Elegir el programa</h2>
-<p>Componer › BibTeX ejecuta la orden de Ajustes › Composición › Herramientas relacionadas › Motor BibTeX, <code>bibtex</code> por omisión. Escriba ahí otro programa con las opciones que necesite, por ejemplo <code>biber</code> para documentos que usan el paquete biblatex. Los perfiles del motor establecen este campo: <code>pbibtex</code> para pLaTeX + dvipdfmx, <code>upbibtex</code> para upLaTeX + dvipdfmx y LuaLaTeX (japonés), y <code>bibtex</code> para los demás perfiles.</p>
+<p>Componer › BibTeX ejecuta el comando de Ajustes › Composición › Herramientas relacionadas › Motor BibTeX, <code>bibtex</code> por omisión. Escriba ahí otro programa con las opciones que necesite, por ejemplo <code>biber</code> para documentos que usan el paquete biblatex. Los perfiles del motor establecen este campo: <code>pbibtex</code> para pLaTeX + dvipdfmx, <code>upbibtex</code> para upLaTeX + dvipdfmx y LuaLaTeX (japonés), y <code>bibtex</code> para los demás perfiles.</p>
 <p>Para elegir el programa de un documento, escriba una línea como esta en una de sus veinte primeras líneas:</p>
 <pre>% !BIB program = biber</pre>
 <p>La línea tiene prioridad sobre el ajuste. La forma <code>% !BIB TS-program =</code> se lee igual.</p>

@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
@@ -52,10 +52,10 @@
 <p>Los perfiles japoneses también establecen UTF-8 como codificación de los documentos nuevos, ajustan el diccionario ortográfico a la detección automática del idioma y activan «Convertir automáticamente UTF-8-MAC a UTF-8». pLaTeX + dvipdfmx activa además «Convertir a \UTF / \CID del paquete otf», y todos los demás perfiles lo desactivan. Antes de confirmar, una hoja muestra los valores que establece el perfil.</p>
 
 <h2>Caracteres fuera de JIS X 0208 con pLaTeX</h2>
-<p>pTeX lee código fuente en UTF-8, pero internamente solo conoce los caracteres de JIS X 0208, de modo que los demás caracteres, como 鷗 en 森鷗外, se pierden. El paquete otf los imprime con órdenes como <code>\UTF{9DD7}</code>. El ajuste «Convertir a \UTF / \CID del paquete otf» del grupo «pLaTeX japonés» de Ajustes › Composición permite escribir estos caracteres tal cual:</p>
+<p>pTeX lee código fuente en UTF-8, pero internamente solo conoce los caracteres de JIS X 0208, de modo que los demás caracteres, como 鷗 en 森鷗外, se pierden. El paquete otf los imprime con comandos como <code>\UTF{9DD7}</code>. El ajuste «Convertir a \UTF / \CID del paquete otf» del grupo «pLaTeX japonés» de Ajustes › Composición permite escribir estos caracteres tal cual:</p>
 <ul>
-<li>Al guardar el documento, cada carácter fuera de JIS X 0208 se escribe como <code>\UTF{XXXX}</code>, y una variante de glifo elegida en el editor como <code>\CID{número}</code>. Si una de estas órdenes termina una línea, se añade <code>%</code> detrás para que no aparezca un espacio en el resultado.</li>
-<li>Al abrir un documento, estas órdenes se convierten de nuevo en los caracteres, tanto si el ajuste está activado como si no, de modo que la ventana de código muestra siempre los propios caracteres.</li>
+<li>Al guardar el documento, cada carácter fuera de JIS X 0208 se escribe como <code>\UTF{XXXX}</code>, y una variante de glifo elegida en el editor como <code>\CID{número}</code>. Si uno de estos comandos termina una línea, se añade <code>%</code> detrás para que no aparezca un espacio en el resultado.</li>
+<li>Al abrir un documento, estos comandos se convierten de nuevo en los caracteres, tanto si el ajuste está activado como si no, de modo que la ventana de código muestra siempre los propios caracteres.</li>
 </ul>
 <p>El documento necesita <code>\usepackage{otf}</code>. Por ejemplo, la ventana de código muestra</p>
 <pre>\documentclass{jsarticle}
@@ -64,20 +64,20 @@
 森鷗外 was a famous novelist in Japan.
 \end{document}</pre>
 <p>mientras que el archivo contiene <code>森\UTF{9DD7}外</code>. upLaTeX y LuaLaTeX manejan Unicode directamente y no necesitan ninguna conversión.</p>
-<p>Para convertir a mano una parte del texto, selecciónela y use Edición › Conversión de tipo de carácter › Caracteres Unicode → \UTF / \CID, o \UTF / \CID → Caracteres Unicode. El mismo submenú convierte entre hiragana y katakana, entre dígitos y letras de ancho completo y de medio ancho, entre caracteres como los números en círculo y las órdenes del paquete ajmacros, y las comillas tipográficas en comillas de TeX. Si no hay nada seleccionado, TeXShop pregunta si debe convertir todo el documento; todas las conversiones se pueden deshacer.</p>
+<p>Para convertir a mano una parte del texto, selecciónela y use Edición › Conversión de tipo de carácter › Caracteres Unicode → \UTF / \CID, o \UTF / \CID → Caracteres Unicode. El mismo submenú convierte entre hiragana y katakana, entre dígitos y letras de ancho completo y de medio ancho, entre caracteres como los números en círculo y los comandos del paquete ajmacros, y las comillas tipográficas en comillas de TeX. Si no hay nada seleccionado, TeXShop pregunta si debe convertir todo el documento; todas las conversiones se pueden deshacer.</p>
 
 <h2>Caracteres compuestos y descompuestos</h2>
-<p>Algunos caracteres japoneses tienen dos formas en Unicode. が puede ser un único carácter (U+304C), o か (U+304B) seguido de la marca combinable de sonoridad (U+3099). Ambas formas se ven igual, pero TeX las trata como distintas, de modo que una orden definida con una forma no se encuentra cuando se usa con la otra:</p>
+<p>Algunos caracteres japoneses tienen dos formas en Unicode. が puede ser un único carácter (U+304C), o か (U+304B) seguido de la marca combinable de sonoridad (U+3099). Ambas formas se ven igual, pero TeX las trata como distintas, de modo que un comando definido con una forma no se encuentra cuando se usa con la otra:</p>
 <pre>\def\が{GA}
 \が   % Undefined control sequence if this が is decomposed</pre>
 <p>El texto descompuesto suele proceder de nombres de archivo, que los discos HFS+ almacenan en forma descompuesta; esta forma se llama UTF-8-MAC. Cuando Ajustes › Documentos y guardado › Guardar documentos › «Convertir automáticamente UTF-8-MAC a UTF-8» está activado, TeXShop combina estos caracteres en caracteres únicos al guardar un documento. Deja sin cambios los ideogramas de compatibilidad CJK y otros caracteres que la composición estándar (NFC) sustituiría por caracteres distintos; esta forma se llama Modified NFC.</p>
 <p>El submenú Edición › Normalización Unicode convierte una selección, o todo el documento, a NFC, Modified NFC, NFD, Modified NFD, NFKC o NFKD, y después muestra el panel «Información caracteres» con el resultado, ya que el texto normalizado suele verse igual que antes.</p>
 
 <h2>El signo del yen y la barra invertida</h2>
-<p>En los teclados japoneses, la tecla situada en el lugar de la barra invertida escribe el signo del yen ¥, mientras que las órdenes de TeX empiezan con la barra invertida \.</p>
+<p>En los teclados japoneses, la tecla situada en el lugar de la barra invertida escribe el signo del yen ¥, mientras que los comandos de TeX empiezan con la barra invertida \.</p>
 <ul>
 <li>Con UTF-8, la codificación que establecen los perfiles japoneses, ¥ y \ son caracteres distintos y ambos se conservan. Active Código › Combinaciones de teclas para el documento: la lista de combinaciones de teclas que incluye TeXShop convierte un ¥ escrito en \ y, como su columna «Pegar» está marcada, también el ¥ del texto pegado en el archivo fuente. Consulte <a href="basic_autocompletion.htm">Combinaciones de teclas</a>.</li>
-<li>Cuando la codificación de los documentos nuevos es una de las codificaciones japonesas, TeXShop convierte entre ¥ y \ al escribir y al pegar. Con Japonés (Mac OS, ShiftJIS ¥) y Japonés (Shift JIS X0213), la ventana de código muestra el carácter de orden de TeX como ¥; con las demás codificaciones japonesas, lo muestra como \.</li>
+<li>Cuando la codificación de los documentos nuevos es una de las codificaciones japonesas, TeXShop convierte entre ¥ y \ al escribir y al pegar. Con Japonés (Mac OS, ShiftJIS ¥) y Japonés (Shift JIS X0213), la ventana de código muestra el carácter de comando de TeX como ¥; con las demás codificaciones japonesas, lo muestra como \.</li>
 <li>Al guardar un archivo en una codificación japonesa, la barra invertida y la tilde se escriben siempre como los bytes 0x5C y 0x7E, que es lo que TeX espera.</li>
 </ul>
 

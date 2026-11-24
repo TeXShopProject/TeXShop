@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
@@ -40,7 +40,7 @@
 <main id="content">
 <h1>ConTeXt y MetaPost</h1>
 <h2>ConTeXt</h2>
-<p>ConTeXt es un paquete de macros de Hans Hagen, una alternativa a LaTeX con sus propias órdenes y una fuerte orientación al diseño tipográfico. TeX Live incluye ConTeXt, y ConTeXt Garden distribuye una versión, actualizada a menudo, que se instala en su carpeta de inicio.</p>
+<p>ConTeXt es un paquete de macros de Hans Hagen, una alternativa a LaTeX con sus propios comandos y una fuerte orientación al diseño tipográfico. TeX Live incluye ConTeXt, y ConTeXt Garden distribuye una versión, actualizada a menudo, que se instala en su carpeta de inicio.</p>
 <p>Los motores para ConTeXt están en <code>~/Library/TeXShop/Engines/Inactive/ConTeXt</code>, junto con la guía <code>Setting-Up-ConTeXt.pdf</code> y documentos de ejemplo:</p>
 <table>
 <tr><th>Motor</th><th>Compone con</th></tr>
@@ -53,12 +53,12 @@
 % !TEX useConTeXtSyncParser</pre>
 <p>Para ConTeXt-CG, escriba la carpeta de los programas de la instalación de ConTeXt Garden en el campo «Segundos motores TeX» de Ajustes › Composición › Rutas, y añada la línea <code>% !TEX useAlternatePath</code>, que hace que TeXShop pase esa carpeta al motor en lugar de la de TeX Live.</p>
 <p>Para la sincronización entre código y vista previa, añada <code>\setupsynctex[state=start,method=min]</code> a la configuración del documento; la línea <code>% !TEX useConTeXtSyncParser</code> hace que TeXShop use el código de sincronización propio de ConTeXt. El capítulo sobre ConTeXt de Ayuda › Manual de TeXShop (en inglés) describe en detalle la instalación de la versión de ConTeXt Garden y cada motor.</p>
-<p>Para que el menú Marcas muestre órdenes de sección de ConTeXt como <code>\title</code> y <code>\subject</code>, active el ajuste oculto ConTeXtTags; consulte <a href="configure_hidden.htm">Ajustes ocultos</a>.</p>
+<p>Para que el menú Marcas muestre comandos de sección de ConTeXt como <code>\title</code> y <code>\subject</code>, active el ajuste oculto ConTeXtTags; consulte <a href="configure_hidden.htm">Ajustes ocultos</a>.</p>
 
 <h2>MetaPost</h2>
-<p>MetaPost, de John Hobby, dibuja ilustraciones a partir de una descripción en un lenguaje de programación derivado de METAFONT de Knuth. Su manual forma parte de TeX Live: elija Ayuda › Mostrar ayuda del paquete… y escriba <code>metapost</code>.</p>
-<p>Componer › MetaPost (<kbd>⇧⌘M</kbd>), o MetaPost en el menú desplegable junto al botón «Componer», ejecuta MetaPost sobre el documento activo, un archivo con la extensión <code>.mp</code>. Ejecuta la orden de Ajustes › Composición › Herramientas relacionadas › MetaPost, <code>mpost</code> por omisión. Los perfiles del motor establecen este campo: <code>pmpost</code> para pLaTeX + dvipdfmx y <code>upmpost</code> para upLaTeX + dvipdfmx, que componen texto japonés en las etiquetas, y <code>mpost</code> para los demás perfiles. LuaLaTeX no puede incluir figuras cuyas etiquetas en japonés hayan compuesto pmpost o upmpost; con LuaLaTeX, dibuje esas figuras dentro del documento con el paquete luamplib.</p>
-<p>Para guardar un archivo nuevo como archivo de MetaPost, elija el tipo mp en el menú «Formato» del diálogo Guardar.</p>
+<p>MetaPost, de John Hobby, dibuja ilustraciones a partir de una descripción en un lenguaje de programación derivado de METAFONT de Knuth. Su manual forma parte de TeX Live: elija Ayuda › Mostrar ayuda del paquete... y escriba <code>metapost</code>.</p>
+<p>Componer › MetaPost (<kbd>⇧⌘M</kbd>), o MetaPost en el menú desplegable junto al botón «Componer», ejecuta MetaPost sobre el archivo que tiene el nombre del documento activo y la extensión <code>.mp</code>: sobre el propio documento si es un archivo <code>.mp</code> y, si no, sobre el archivo <code>.mp</code> situado junto a él, como el que escribe el paquete mfpic para un documento <code>.tex</code>. Ejecuta el comando de Ajustes › Composición › Herramientas relacionadas › MetaPost, <code>mpost</code> por omisión. Los perfiles del motor establecen este campo: <code>pmpost</code> para pLaTeX + dvipdfmx y <code>upmpost</code> para upLaTeX + dvipdfmx, que componen texto japonés en las etiquetas, y <code>mpost</code> para los demás perfiles. LuaLaTeX no puede incluir figuras cuyas etiquetas en japonés hayan compuesto pmpost o upmpost; con LuaLaTeX, dibuje esas figuras dentro del documento con el paquete luamplib.</p>
+<p>Para guardar un archivo nuevo como archivo de MetaPost, elija el tipo mp en el menú «Formato del archivo» del diálogo Guardar.</p>
 <p>Los motores nv-metapost y nv-metafun, de Nicola Vitacolonna, facilitan el trabajo con MetaPost y MetaFun y muestran las figuras de un archivo en la ventana de vista previa. Están en <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>; el archivo <code>README.pdf</code> y la carpeta <code>examples</code>, un nivel más arriba en <code>MetaPostEngines-1.4.7</code>, explican cómo instalarlos y usarlos y contienen archivos de ejemplo. Por ejemplo, un archivo que empiece con</p>
 <pre>% !TEX program = nv-metafun
 beginfig(1);

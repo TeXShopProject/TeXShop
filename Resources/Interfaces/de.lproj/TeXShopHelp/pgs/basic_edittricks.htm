@@ -47,11 +47,11 @@
 
 <h2>Kommentare und Einrückung</h2>
 
-<p>Quelltext › Kommentar (<kbd>⌘{</kbd>) setzt % an den Anfang der ausgewählten Zeilen, und Quelltext › Kein Kommentar (<kbd>⌘}</kbd>) entfernt es. Quelltext › Einrückung erhöhen und Quelltext › Einrückung reduzieren rücken die ausgewählten Zeilen nach rechts oder links, um einen Tabulator, wenn „Tabs für Einzugmenü verwenden“ unter Einstellungen › Editor › Absatzstil eingeschaltet ist, sonst um so viele Leerzeichen, wie „Tab-Größe“ angibt. Eine neue Zeile beginnt mit denselben Tabulatoren und Leerzeichen wie die Zeile davor; drücken Sie die Rückschritttaste, um sie zu entfernen.</p>
+<p>Quelltext › Kommentar (<kbd>⌘3</kbd>) setzt % an den Anfang der ausgewählten Zeilen, und Quelltext › Kein Kommentar (<kbd>⌘4</kbd>) entfernt es. Quelltext › Einrückung erhöhen und Quelltext › Einrückung reduzieren rücken die ausgewählten Zeilen nach rechts oder links, um einen Tabulator, wenn „Tabs für Einzugmenü verwenden“ unter Einstellungen › Editor › Absatzstil eingeschaltet ist, sonst um so viele Leerzeichen, wie „Tab-Größe“ angibt. Eine neue Zeile beginnt mit denselben Tabulatoren und Leerzeichen wie die Zeile davor; drücken Sie die Rückschritttaste, um sie zu entfernen.</p>
 
 <h2>Im Quelltext navigieren</h2>
 
-<p>Das Menü „Markierungen“ in der Symbolleiste listet die Kapitel, Abschnitte und anderen Gliederungsteile des Dokuments auf; wählen Sie einen aus, um dorthin zu gehen. Eine Zeile, die mit <code>%:</code> beginnt, fügt den Rest der Zeile als eigene Markierung zum Menü hinzu. Die Einstellung „Markierungen“ im Menü anzeigen unter Einstellungen › Editor › Darstellung zeigt dasselbe Menü in der Menüleiste. Das Objekt „Labels“ der Symbolleiste listet die Labels des Dokuments auf. Bearbeiten › Gehe zu Zeile... (<kbd>⌘L</kbd>) springt zu einer Zeile mit ihrer Nummer.</p>
+<p>Das Menü „Markierungen“ in der Symbolleiste listet die Kapitel, Abschnitte und anderen Gliederungsteile des Dokuments auf; wählen Sie einen aus, um dorthin zu gehen. Eine Zeile, die mit <code>%:</code> beginnt, fügt den Rest der Zeile als eigene Markierung zum Menü hinzu. Die Einstellung »„Markierungen“ im Menü anzeigen« unter Einstellungen › Editor › Darstellung zeigt dasselbe Menü in der Menüleiste. Das Objekt „Labels“ der Symbolleiste listet die Labels des Dokuments auf. Bearbeiten › Gehe zu Zeile... (<kbd>⌘L</kbd>) springt zu einer Zeile mit ihrer Nummer.</p>
 
 <p>Fenster › Geteiltes Fenster (<kbd>⌃2</kbd>) oder das Objekt „Geteilter Quelltext“ der Symbolleiste teilt das Quelltextfenster in zwei Teile, die denselben Text zeigen; so können Sie einen Teil des Dokuments lesen, während Sie an einem anderen schreiben. Halten Sie die Wahltaste gedrückt, um es nebeneinander zu teilen. Was Sie in einem Teil tippen, erscheint auch im anderen.</p>
 
@@ -75,7 +75,7 @@
 
 <p>Dabei ist <var>Pfad</var> der Pfad der Datei vom Ordner der Quelltextdatei aus und <var>Name</var> der Dateiname ohne Endung. Ein abgelegtes Alias wird durch die Datei ersetzt, für die es steht, da TeX sie selbst nicht finden könnte. Eine Datei, deren Pfad ein Leerzeichen enthält, wird nicht eingefügt; TeXShop zeigt stattdessen eine Warnung.</p>
 
-<p>Um für eine Dateiart etwas anderes einzufügen, öffnen Sie den Makro-Editor (Makros › Makro-Editor öffnen...) und fügen ein Untermenü namens <code>Drag &amp; Drop</code> hinzu. Fügen Sie darin einen Eintrag hinzu, der nach der Endung benannt ist, etwa <code>.pdf</code>, und dessen Inhalt der einzufügende Text ist, zum Beispiel <code>\includegraphics[#INS#]{%r}</code>; ein Eintrag namens <code>.*</code> gilt für jede Endung ohne eigenen Eintrag. Im Inhalt können Sie diese Abkürzungen verwenden:</p>
+<p>Um für eine Dateiart etwas anderes einzufügen, öffnen Sie den Makro-Editor (Makros › Makro-Editor öffnen...) und fügen ein Untermenü namens <code>Drag &amp; Drop</code> hinzu. Fügen Sie darin einen Eintrag hinzu, der nach der Endung benannt ist, etwa <code>.pdf</code>, und dessen Inhalt der einzufügende Text ist, zum Beispiel <code>\includegraphics[#INS#]{%r}</code>; ein Eintrag namens <code>.*</code> gilt für jede andere Endung, also eine, die keinen eigenen Eintrag hat und nicht in der Tabelle oben steht. Im Inhalt können Sie diese Abkürzungen verwenden:</p>
 
 <dl>
 <dt><code>%F</code></dt><dd>der vollständige Pfad der abgelegten Datei</dd>
@@ -103,7 +103,7 @@
 
 <h2>Sicherungsdateien</h2>
 
-<p>Ist „Automatisch sichern und Versionen aktivieren“ unter Einstellungen › Dokumente und Sichern ausgeschaltet, schalten Sie dort „Beim Sichern die vorherige Datei als „Name~“ behalten“ ein, um bei jedem Sichern die vorherige Fassung einer Datei zu behalten. Die Sicherungsdatei hat den Namen der Datei, gefolgt von einer Tilde.</p>
+<p>Ist „Automatisch sichern und Versionen aktivieren“ unter Einstellungen › Dokumente und Sichern ausgeschaltet, schalten Sie dort »Beim Sichern die vorherige Datei als „Name~“ behalten« ein, um bei jedem Sichern die vorherige Fassung einer Datei zu behalten. Die Sicherungsdatei hat eine Tilde nach dem Namen der Datei, vor der Endung: Die Sicherungsdatei von paper.tex heißt paper~.tex.</p>
 
 <p>Suchen und Ersetzen mit regulären Ausdrücken und „Mehrfach ersetzen“ beschreibt <a href="basic_find.htm">Suchen und Ersetzen</a>.</p>
 </main>
