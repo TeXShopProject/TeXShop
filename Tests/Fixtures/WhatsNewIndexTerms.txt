@@ -23,6 +23,7 @@
 2023
 2024
 2025
+2026
 209
 21
 213
@@ -230,7 +231,6 @@ backslash
 backward
 bad
 band
-bands
 bar
 bars
 based
@@ -452,6 +452,7 @@ cried
 criteria
 critic
 critical
+crop
 crucial
 ctan
 curiously
@@ -776,7 +777,6 @@ gradually
 graphs
 grateful
 gratzer
-gray
 green
 group
 groups
@@ -986,7 +986,6 @@ learns
 leave
 lectures
 left
-leftarrow
 legacy
 lemmas
 length
@@ -994,7 +993,6 @@ lesson
 let
 letters
 level
-levels
 lf
 library
 light
@@ -1095,6 +1093,7 @@ may
 me
 meantime
 meanwhile
+media
 memory
 mentioned
 menu
@@ -1349,6 +1348,7 @@ preface
 prefer
 preference
 preferences
+preferred
 preliminary
 present
 preserve
@@ -1700,7 +1700,6 @@ struggle
 students
 stupid
 style
-sub
 subfolder
 subfolders
 submenu
@@ -1906,6 +1905,7 @@ usepackage
 user
 user's
 users
+userunit
 uses
 using
 usr

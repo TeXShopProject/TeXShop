@@ -915,7 +915,7 @@ A sheet then lists, under \mnu{Values to Set}, the values the profile sets and m
 
 The menu shows the profile all of whose values are set now, or \mnu{Custom} as soon as any of these values is changed, in Settings or elsewhere. To return to the values of a profile, choose it again, even when the menu shows it.
 
-When TeXShop starts for the first time, it asks for the paths to \TeX\ and Ghostscript (see \cref{sec:typesetting-paths}) and then for an engine profile. It suggests upLaTeX + dvipdfmx when Japanese is the first preferred language of macOS, and pdfLaTeX otherwise.
+When TeXShop starts for the first time, it asks for the paths to \TeX\ and Ghostscript (see \cref{sec:typesetting-paths}) and then for an engine profile. It suggests LuaLaTeX (Japanese) when Japanese is the first preferred language of macOS, and pdfLaTeX otherwise.
 
 \subsection{What a Profile Sets}
 
@@ -996,7 +996,7 @@ in one of its first twenty lines. The form \verb|% !TEX TS-program =| is read th
 \end{tabular}
 \end{center}
 
-Do not give an engine file one of these names. \Cref{sec:typesetting-with-engine} says more about the line and the \mnu{Program} macro that writes it.
+Do not give an engine file one of these names. \Cref{sec:typesetting-with-engine} says more about the line and the \mnu{Set Typesetting Program…} macro that writes it.
 
 \section{Direct PDF and Via DVI}\label{sec:direct-pdf-via-dvi}
 
@@ -1152,7 +1152,7 @@ To tie a document to an engine, put a line like this in one of its first twenty 
 \end{verbatim}
 \cmdkey-T then always typesets the document with that engine. The name is the name of the engine file without \verb|.engine|; case does not matter. The names of the built-in programs, such as \verb|pdflatex| and \verb|tex|, are listed in \cref{sec:choosing-program}. The line takes precedence over the toolbar, the settings and \mnu{Typeset with Alternate Engine}. The older form \verb|% !TEX TS-program =| is read the same way. In a project with a root file, only the root file needs the line (\cref{chap:projects}).
 
-Write the line exactly as shown, with one space on each side of the equals sign. The \mnu{Program} macro in the \mnu{Macros} menu writes a program line for you: it lists the built-in programs and the engines, and puts a line in the older form, such as \verb|% !TEX TS-program = xelatex|, at the top of the document for the one you choose. It replaces an earlier \verb|% !TEX TS-program| line, but not a \verb|% !TEX program| line; delete such a line yourself, so that the document has only one program line.
+Write the line exactly as shown, with one space on each side of the equals sign. The \mnu{Set Typesetting Program…} macro in the \mnu{Macros} menu writes a program line for you: it lists the built-in programs and the engines, and puts a line in the older form, such as \verb|% !TEX TS-program = xelatex|, at the top of the document for the one you choose. It replaces an earlier \verb|% !TEX TS-program| line, but not a \verb|% !TEX program| line; delete such a line yourself, so that the document has only one program line.
 
 \section{latexmk}\label{sec:latexmk}
 
@@ -1179,7 +1179,7 @@ latexmk takes longer than a single run. One way to work is to typeset with a fas
 
 \section{The Inactive Folder}\label{sec:inactive-folder}
 
-The subfolder \mnu{Inactive} of the Engines folder contains engines for special workflows, such as latexmk, ConTeXt, Sage, PreTeXt, pythontex and Typst, often with documentation and sample documents. Engines in this folder are not listed in the toolbar. To use one, move or copy it from its folder to the Engines folder itself.
+The subfolder \mnu{Inactive} of the Engines folder contains engines for special workflows, such as latexmk, ConTeXt, Sage, PreTeXt and Typst, often with documentation and sample documents. Engines in this folder are not listed in the toolbar. To use one, move or copy it from its folder to the Engines folder itself.
 
 When TeXShop is updated, it writes the current versions of its files into the Inactive folder, replacing the earlier ones, but it never changes the files directly in the Engines folder. So edit engines only after moving them to the Engines folder.
 
@@ -1287,7 +1287,7 @@ The root file itself has no such line. The name of the root file can be given
 \end{itemize}
 Write the line exactly as shown, with one space on each side of the equals sign.
 
-The \mnu{Root} macro in the \mnu{Macros} menu writes the line: it asks for the root file in a file dialog, then offers a relative or an absolute line, and inserts it at the top of the document, replacing an earlier root line.
+The \mnu{Set Root File…} macro in the \mnu{Macros} menu writes the line: it asks for the root file in a file dialog, then offers a relative or an absolute line, and inserts it at the top of the document, replacing an earlier root line.
 
 \section{What the Root Line Does}
 
@@ -1472,7 +1472,7 @@ A magic comment line among the first 20 lines of a source file fixes the encodin
 \begin{verbatim}
 % !TEX encoding = UTF-8 Unicode
 \end{verbatim}
-Write the line exactly in this form: \verb|% !TEX|, one space on each side of the equals sign, and the name of the encoding exactly as in the left column of \cref{tab:Encodings}, including capitalization. The easy way is \mnu{Macros}\To\mnu{Encoding}: it lists the encodings and writes the line at the top of the source, replacing an earlier one. The names that TeXworks uses, such as \texttt{UTF-8}, \texttt{ISO 8859-1} or \texttt{Shift-JIS}, are also understood.
+Write the line exactly in this form: \verb|% !TEX|, one space on each side of the equals sign, and the name of the encoding exactly as in the left column of \cref{tab:Encodings}, including capitalization. The easy way is \mnu{Macros}\To\mnu{Set Encoding…}: it lists the encodings and writes the line at the top of the source, replacing an earlier one. The names that TeXworks uses, such as \texttt{UTF-8}, \texttt{ISO 8859-1} or \texttt{Shift-JIS}, are also understood.
 
 If the line names an encoding that TeXShop does not know, TeXShop says so and reads the file as UTF-8. If the line names UTF-8 but the file is not valid UTF-8, TeXShop reports it and opens the file in ISO Latin 9, which can read any file; saving it without changing the line writes the same bytes back, so nothing is lost. To open a file without applying its encoding line, hold down \optkey\ while it opens.
 
@@ -1566,7 +1566,7 @@ A magic comment line is a \TeX\ comment that TeXShop reads to set something for 
 \begin{itemize}
 \item A magic line must be among the first 20 lines of the source file. The exceptions are \verb|% !TEX projectfile| and \verb|% !TEX tabbedFile|, described below.
 \item Write the line exactly as shown in this chapter, at the beginning of a line. Capitalization matters, and so do the spaces: one after \verb|%|, and one on each side of an equals sign. The lines for program, parameter, encoding, root, spellcheck and projectfile, and \verb|% !BIB program|, are also accepted without the space after \verb|%|, as in \verb|%!TEX root =|.
-\item The \mnu{Macros} menu writes the most common lines for you: \mnu{Program} lists the built-in programs and the engines, \mnu{Encoding} the encodings, and \mnu{Root} asks for the root file; each writes its line at the top of the source, replacing an earlier one. \mnu{Program} writes the older form \verb|% !TEX TS-program =| and replaces only a line of that form, so delete a \verb|% !TEX program| line yourself. Further lines are in \mnu{Macros}\To\mnu{Special Comments}.
+\item The \mnu{Macros} menu writes the most common lines for you: \mnu{Set Typesetting Program…} lists the built-in programs and the engines, \mnu{Set Encoding…} the encodings, and \mnu{Set Root File…} asks for the root file; each writes its line at the top of the source, replacing an earlier one. \mnu{Set Typesetting Program…} writes the older form \verb|% !TEX TS-program =| and replaces only a line of that form, so delete a \verb|% !TEX program| line yourself. Further lines are in \mnu{Macros}\To\mnu{Special Comments}.
 \end{itemize}
 
 The lines that set the program, its parameter, the BibTeX program and the root file are read each time the document is typeset. The encoding line is read when the document is opened and when it is saved. The other lines are read when the document is opened; after changing one of them, close the document and open it again. \verb|% !TEX numberingCorrection| is also read at each typesetting and by \mnu{Source}\To\mnu{Rescan Magic Comments}.
@@ -1574,7 +1574,7 @@ The lines that set the program, its parameter, the BibTeX program and the root f
 \section{Typesetting}
 
 \begin{description}
-\item[\texttt{\% !TEX program = }{\em name}] Sets the program that typesets this file, overriding the choice in the toolbar and in Settings; \mnu{Typeset}\To\mnu{plain TeX} and \mnu{Typeset}\To\mnu{LaTeX} ignore it. Upper and lower case do not matter in the name. \texttt{pdflatex} and \texttt{pdftex} run the \LaTeX\ and plain \TeX\ commands of the Direct PDF group of the Typesetting category of Settings; \texttt{latex} and \texttt{tex} run those of the Via DVI group; \texttt{personallatex} and \texttt{personaltex} those of the Personal Script group. Any other name is the name of an engine as it appears in the menu beside the Typeset button, such as \texttt{xelatex}, \texttt{lualatex} or \texttt{pdflatexmk}. The older form \verb|% !TEX TS-program =|, which \mnu{Macros}\To\mnu{Program} writes, is also accepted. For example:
+\item[\texttt{\% !TEX program = }{\em name}] Sets the program that typesets this file, overriding the choice in the toolbar and in Settings; \mnu{Typeset}\To\mnu{plain TeX} and \mnu{Typeset}\To\mnu{LaTeX} ignore it. Upper and lower case do not matter in the name. \texttt{pdflatex} and \texttt{pdftex} run the \LaTeX\ and plain \TeX\ commands of the Direct PDF group of the Typesetting category of Settings; \texttt{latex} and \texttt{tex} run those of the Via DVI group; \texttt{personallatex} and \texttt{personaltex} those of the Personal Script group. Any other name is the name of an engine as it appears in the menu beside the Typeset button, such as \texttt{xelatex}, \texttt{lualatex} or \texttt{pdflatexmk}. The older form \verb|% !TEX TS-program =|, which \mnu{Macros}\To\mnu{Set Typesetting Program…} writes, is also accepted. For example:
 \begin{verbatim}
 % !TEX program = lualatex
 \end{verbatim}
@@ -1603,7 +1603,7 @@ The lines that set the program, its parameter, the BibTeX program and the root f
 The last four lines override \mnu{Show first page alone as cover} and \mnu{Page direction} in the Preview category of Settings for this document.
 
 \begin{description}
-\item[\texttt{\% !TEX numberingCorrection = }{\em n} \texttt{+ current - desired}] Makes the page number box of the toolbar show the page numbers printed in the document, when automatic correction does not work for it. Replace {\em n} by the number of pages before page~1; only the number counts, and the rest of the line is a reminder. If the box later shows page 78 where the document shows 72, the new number is {\em n} + 78 $-$ 72. \mnu{Macros}\To\mnu{Numbering} inserts the line. See \cref{sec:page-number-box}.
+\item[\texttt{\% !TEX numberingCorrection = }{\em n} \texttt{+ current - desired}] Makes the page number box of the toolbar show the page numbers printed in the document, when automatic correction does not work for it. Replace {\em n} by the number of pages before page~1; only the number counts, and the rest of the line is a reminder. If the box later shows page 78 where the document shows 72, the new number is {\em n} + 78 $-$ 72. \mnu{Macros}\To\mnu{Page Number Correction} inserts the line. See \cref{sec:page-number-box}.
 \end{description}
 
 \section{Synchronization}
@@ -1756,7 +1756,7 @@ A completion can do more than finish the word. The completion of \verb|\begin{th
 \selmark\\
 \textbackslash end\{theorem\}•
 \end{quote}
-When the theorem is written, \mnu{Edit}\To\mnu{Marks}\To\mnu{Next Mark} (\ctlkey-\cmdkey-{]}), or \optkey-\esckey, selects the next mark, here the one after \verb|\end{theorem}|, so that you can go on typing; see \cref{MarksSection}.
+When the theorem is written, \mnu{Edit}\To\mnu{Marks}\To\mnu{Next Mark} (\ctlkey-\cmdkey-F), or \optkey-\esckey, selects the next mark, here the one after \verb|\end{theorem}|, so that you can go on typing; see \cref{MarksSection}.
 
 Pressing \esckey\ several times often gives the same command with more arguments. Typing \verb|\newc| on a new line and pressing \esckey\ gives the first line below; further presses of \esckey\ give the others in turn, each with the first mark selected:
 \begin{quote}\ttfamily
@@ -1822,8 +1822,8 @@ A mark (•) is a place to come back to; a mark with a note (•‹note›) also
 \begin{description}
 \item[Insert Mark] (\cmdkey-8) inserts a mark.
 \item[Insert Mark with Note] (\ctlkey-\cmdkey-8) inserts •‹› with the insertion point between the brackets, or turns the selected text into the note.
-\item[Next Mark] (\ctlkey-\cmdkey-{]}) and \textbf{Previous Mark} (\ctlkey-\cmdkey-{[}) select the next or the previous mark together with its note, so that typing replaces it.
-\item[Next Mark (Del)] and \textbf{Previous Mark (Del)}, shown while the Option key is held down (\ctlkey-\optkey-\cmdkey-{]} and \ctlkey-\optkey-\cmdkey-{[}), delete the • and select the note instead.
+\item[Next Mark] (\ctlkey-\cmdkey-F) and \textbf{Previous Mark} (\ctlkey-\cmdkey-G) select the next or the previous mark together with its note, so that typing replaces it.
+\item[Next Mark (Del)] and \textbf{Previous Mark (Del)}, shown while the Option key is held down (\ctlkey-\optkey-\cmdkey-F and \ctlkey-\optkey-\cmdkey-G), delete the • and select the note instead.
 \item[How to Use Marks\ldots] opens the help page about marks.
 \end{description}
 
@@ -2253,7 +2253,7 @@ Macros are listed in the \mnu{Macros} menu and in the \mnu{Macros} pop-up menu o
 
 The best way to understand the macros that come with TeXShop is to look at them in the Macro Editor (\mnu{Macros}\To\mnu{Open Macro Editor\ldots}): select a macro in the list, and its contents appear beside it. Among them:
 \begin{description}
-\item[Program, Encoding, Root] write a magic comment line at the top of the source, replacing a similar line that is already there. \mnu{Program} lists the engines and writes, for example, \verb|% !TEX TS-program = xelatex|, the older form of the program line, which TeXShop reads in the same way (\cref{MagicCommentsChapter}); it replaces a \verb|TS-program| line but not a \verb|% !TEX program| line, so delete such a line yourself. \mnu{Encoding} chooses an encoding and \mnu{Root} the root file of a project. Magic comment lines are particular about spaces and capitalization, and these macros take care of that. \mnu{Root (Short Version)}, \mnu{Numbering} and the \mnu{Special Comments} submenu insert other magic comment lines as text.
+\item[Set Typesetting Program…, Set Encoding…, Set Root File…] write a magic comment line at the top of the source, replacing a similar line that is already there. \mnu{Set Typesetting Program…} lists the engines and writes, for example, \verb|% !TEX TS-program = xelatex|, the older form of the program line, which TeXShop reads in the same way (\cref{MagicCommentsChapter}); it replaces a \verb|TS-program| line but not a \verb|% !TEX program| line, so delete such a line yourself. \mnu{Set Encoding…} chooses an encoding and \mnu{Set Root File…} the root file of a project. Magic comment lines are particular about spaces and capitalization, and these macros take care of that. \mnu{Root File Line}, \mnu{Page Number Correction} and the \mnu{Special Comments} submenu insert other magic comment lines as text.
 \item[Insert Begin/End] Type the name of an environment, such as \texttt{theorem}, select it and choose this macro. The word is replaced with
 \begin{verbatim}
      \begin{theorem}
@@ -2265,8 +2265,8 @@ and the insertion point is placed on the line between. \mnu{Close Begin/End} add
 \item[Open quickly\ldots] lists the \texttt{.tex}, \texttt{.sty} and \texttt{.pdf} files in the folder of the current source file and opens the ones you choose.
 \item[Column macros] \mnu{New tabular} and \mnu{New array} insert a \texttt{tabular} or \texttt{array} environment with the numbers of rows and columns you enter, and \mnu{Add column} and \mnu{Delete column} change the rows you select.
 \item[Paste Spreadsheet Cells] pastes cells copied from Excel or another spreadsheet application into the source as a table. It asks for a table style: \texttt{cells} converts the copied text to table cells only; \texttt{simple} puts a simple \texttt{tabular} environment around them; \texttt{booktabs} takes the first line as a header and places \verb|\toprule|, \verb|\midrule| and \verb|\bottomrule| in a \texttt{tabular} environment; \texttt{longtable} takes the first line as a header and puts the cells in a \texttt{longtable} environment with its header lines. The macro replaces the contents of the clipboard with the \LaTeX\ text, so to paste the same cells in another style, copy them again in the spreadsheet first.
-\item[Applescript] This submenu opens the PDF of the document in Preview or Adobe Acrobat, shows the source and PDF files in the Finder, opens the home pages of TeXShop and MacTeX, and opens a file of the \TeX\ Live tree by its name (\mnu{View TeX Live file}). \mnu{Convert to MAC}, \mnu{Convert to Unix} and \mnu{Convert to Windows} write a copy of the saved source with the line endings of very old Macintosh files (a carriage return), of macOS and Unix (a line feed) or of Windows (a carriage return and a line feed); for \texttt{MyFile.tex} the copy is \texttt{MyFile\_Mac.tex}, \texttt{MyFile\_Unix.tex} or \texttt{MyFile\_Windows.tex}. TeXShop itself reads all three kinds of line endings; the copies are for other editors that cannot. \mnu{Bibliography} runs \LaTeX, Bib\TeX, \LaTeX\ and \LaTeX\ one after another (\cref{TypesettingScriptSection}).
-\item[Claus Gerhardt Macros] These macros run shell scripts in \path{~/Library/TeXShop/bin}, most of them of the same names, and work on a saved file. \mnu{htlatexc} runs \cmd{htlatex} to make a web page of the document and opens it in Safari; \mnu{htlatexr} does the same with the option \texttt{-r}, which makes the images again even when they exist. \mnu{pdfselectc} makes PDF files with selected pages of the document's PDF: it asks how many files to make and then for the pages of each, such as \texttt{5:8} for pages 5 to 8. \mnu{mpostc} runs MetaPost and then pdf\LaTeX; \mnu{mpostcpl} runs pdf\LaTeX, MetaPost and pdf\LaTeX\ again; \mnu{latex-makeindex-mpost} runs pdf\LaTeX, MakeIndex, MetaPost and pdf\LaTeX. \mnu{pdflatexc} is explained in \cref{ShellScriptSection}.
+\item[Applescript] This submenu opens the PDF of the document in Preview or Adobe Acrobat, shows the source and PDF files in the Finder, opens the home pages of TeXShop and MacTeX, and opens a file of the \TeX\ Live tree by its name (\mnu{View TeX Live file}). \mnu{Save Copy with Classic Mac Line Endings}, \mnu{Save Copy with Unix Line Endings} and \mnu{Save Copy with Windows Line Endings} write a copy of the saved source with the line endings of very old Macintosh files (a carriage return), of macOS and Unix (a line feed) or of Windows (a carriage return and a line feed); for \texttt{MyFile.tex} the copy is \texttt{MyFile\_Mac.tex}, \texttt{MyFile\_Unix.tex} or \texttt{MyFile\_Windows.tex}. TeXShop itself reads all three kinds of line endings; the copies are for other editors that cannot. \mnu{Run LaTeX, BibTeX, Then LaTeX Twice} runs \LaTeX, Bib\TeX, \LaTeX\ and \LaTeX\ one after another (\cref{TypesettingScriptSection}).
+\item[Claus Gerhardt Macros] These macros run shell scripts in \path{~/Library/TeXShop/bin} and work on a saved file. The names in the menu say what each macro does; the script files keep shorter names, such as \texttt{pdflatexc} and \texttt{pdfselectc}. \mnu{Make HTML with TeX4ht} runs \cmd{htlatex} to make a web page of the document and opens it in Safari; \mnu{Make HTML with TeX4ht, Remaking Images} does the same with the option \texttt{-r}, which makes the images again even when they exist. \mnu{Extract Pages from PDF…} makes PDF files with selected pages of the document's PDF: it asks how many files to make and then for the pages of each, such as \texttt{5:8} for pages 5 to 8. \mnu{Run MetaPost, Then pdfLaTeX} runs MetaPost and then pdf\LaTeX; \mnu{Run pdfLaTeX, MetaPost, Then pdfLaTeX} runs pdf\LaTeX, MetaPost and pdf\LaTeX\ again; \mnu{Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX} runs pdf\LaTeX, MakeIndex, MetaPost and pdf\LaTeX. \mnu{Run pdfLaTeX with Shell Escape} is explained in \cref{ShellScriptSection}.
 \end{description}
 The other macros, from \mnu{Headings} to \mnu{Figures}, are text macros that insert document headings, sectioning commands, mathematical environments, text styles, lists, footnotes and similar \LaTeX\ constructions.
 
@@ -2399,7 +2399,7 @@ A typesetting command returns at once, before typesetting is finished; use \text
        goto line 37
      end tell
 \end{verbatim}
-A script can also read and change the text and the selection of a document and search in it; the macros \mnu{Program} and \mnu{Insert Begin/End} are examples.
+A script can also read and change the text and the selection of a document and search in it; the macros \mnu{Set Typesetting Program…} and \mnu{Insert Begin/End} are examples.
 
 \subsection{Dialogs}
 
@@ -2418,7 +2418,7 @@ A dialog can have at most three buttons. The command \texttt{activate} is needed
 
 \section{Example: A Sequence of Typesetting Commands}\label{TypesettingScriptSection}
 
-A document with a bibliography needs a sequence of typesetting runs: \LaTeX\ writes the \texttt{.aux} file, Bib\TeX\ uses it to write the \texttt{.bbl} and \texttt{.blg} files, \LaTeX\ runs again to add the bibliography to the document, and once more to update the references to it. Your projects may need similar sequences, and an AppleScript macro can run them for you. The macro \mnu{Macros}\To\mnu{Applescript}\To\mnu{Bibliography} shows how:
+A document with a bibliography needs a sequence of typesetting runs: \LaTeX\ writes the \texttt{.aux} file, Bib\TeX\ uses it to write the \texttt{.bbl} and \texttt{.blg} files, \LaTeX\ runs again to add the bibliography to the document, and once more to update the references to it. Your projects may need similar sequences, and an AppleScript macro can run them for you. The macro \mnu{Macros}\To\mnu{Applescript}\To\mnu{Run LaTeX, BibTeX, Then LaTeX Twice} shows how:
 {\small
 \begin{verbatim}
   --Applescript
@@ -2480,7 +2480,7 @@ The remaining commands run \texttt{latexinteractive}, \texttt{bibtex}, \texttt{l
 
 \section{Example: Calling a Shell Script}\label{ShellScriptSection}
 
-The macro \mnu{pdflatexc}, in \mnu{Macros}\To\mnu{Claus Gerhardt Macros}, shows how an AppleScript calls a shell script. The shell script itself is simple: it adds the folders of the \TeX\ programs to the search path and runs \cmd{pdflatex} with \texttt{--shell-escape}. Your own scripts will probably do more, for instance run several programs in sequence; that is when these techniques become useful.
+The macro \mnu{Run pdfLaTeX with Shell Escape}, in \mnu{Macros}\To\mnu{Claus Gerhardt Macros}, shows how an AppleScript calls a shell script. The shell script itself is simple: it adds the folders of the \TeX\ programs to the search path and runs \cmd{pdflatex} with \texttt{--shell-escape}. Your own scripts will probably do more, for instance run several programs in sequence; that is when these techniques become useful.
 
 The shell script is \path{~/Library/TeXShop/bin/pdflatexc}. It does not depend on TeXShop: if its folder is in your search path, typing \texttt{pdflatexc myfile.tex} in Terminal runs it. Here it is:
 \begin{verbatim}
@@ -3162,7 +3162,7 @@ given to them in the \mnu{Keyboard} category of Settings (\cref{KeyboardChapter}
 
 \section{Full Screen}\label{PreviewFullScreenSection}
 
-\mnu{Window}\To\mnu{Enter Full Screen}, or the green button at the top left of the window, shows the Preview on the
+\mnu{Window}\To\mnu{Enter Full Screen} (Globe-F), or the green button at the top left of the window, shows the Preview on the
 whole screen. The window is unsplit and uses the magnification and display format last used in full screen; the first
 time, these are Fit to Window and Double Page. Change them in full screen as you like, and TeXShop uses them the next
 time. Leaving full screen brings back the earlier ones. To keep the split, the magnification and the display format of
@@ -3359,7 +3359,7 @@ source file that comes without its PDF file.
 divider between the source and the Preview can be dragged; every combined window opens with the divider where you
 left it last. To choose where combined windows open, arrange one and choose \mnu{Source}\To\mnu{Save Source Position}.
 
-A combined window works well in full screen: click its green button or choose \mnu{Window}\To\mnu{Enter Full Screen},
+A combined window works well in full screen: click its green button or choose \mnu{Window}\To\mnu{Enter Full Screen} (Globe-F),
 and the whole screen shows the source and the Preview. When you typeset, the console floats over the window; close it
 when you are done with it.
 
@@ -3779,7 +3779,7 @@ If you plan to use the mouse pointer, increase the pointer size in the Accessibi
 For the presentation of slides (case \ref{PWT_PDF_Slides}):
 \begin{itemize}
 \item
-Full screen works best. With the Preview window in front, click the green button at the top left of the window or choose \mnu{Window}\To\mnu{Enter Full Screen}. In full screen the window uses the display format and magnification you last used in full screen, Double Page with Fit to Window the first time (\cref{PreviewFullScreenSection}). So choose \mnu{Preview}\To\mnu{Display Format}\To\mnu{Single Page} and \mnu{Preview}\To\mnu{Magnification}\To\mnu{Fit to Window} in full screen; the menu bar appears when you move the pointer to the top of the screen. TeXShop uses these choices again the next time you enter full screen.
+Full screen works best. With the Preview window in front, click the green button at the top left of the window or choose \mnu{Window}\To\mnu{Enter Full Screen} (Globe-F). In full screen the window uses the display format and magnification you last used in full screen, Double Page with Fit to Window the first time (\cref{PreviewFullScreenSection}). So choose \mnu{Preview}\To\mnu{Display Format}\To\mnu{Single Page} and \mnu{Preview}\To\mnu{Magnification}\To\mnu{Fit to Window} in full screen; the menu bar appears when you move the pointer to the top of the screen. TeXShop uses these choices again the next time you enter full screen.
 
 Alternatively, turn on \mnu{Keep magnification, display format and split when entering full screen} in the \mnu{Display and Navigation} group of the \mnu{Preview} category of Settings. Then full screen keeps the display format and magnification of the window: choose Single Page and Fit to Window before entering it. The magic line \verb|% !TEX pdfSinglePage| at the top of the source opens the document in Single Page display format (\cref{MagicCommentsChapter}).
 \item
@@ -3996,7 +3996,7 @@ A personal mark is a comment of the form
 \begin{verbatim}
      <!--!mytext-->
 \end{verbatim}
-which appears as \cmd{main: mytext} in the Tags menu. The macro \mnu{PreText Personal Mark} inserts such a comment, \verb|<!--! xxxx -->|; replace \cmd{xxxx} with your text.
+which appears as \cmd{main: mytext} in the Tags menu. The macro \mnu{PreTeXt Tag Comment} inserts such a comment, \verb|<!--! xxxx -->|; replace \cmd{xxxx} with your text.
 
 \subsection{Selecting and Closing Tags}
 
