@@ -70,7 +70,10 @@ MUTATIONS = {
     'unsplit-content-width-at-other-scale': ('view', '        else {\n            // Also Fit to Content Width', '        else if (otherViewResizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)\n            [self setAutoScales:NO];\n        else {\n            // Also Fit to Content Width'),
     'unsplit-content-width-place-before-fit': ('view', '            [self fitContentWidth];\n            TSPreviewPaneRestore(self, otherViewPlace);\n', '            [self fitContentWidth];\n'),
     'unsplit-popup-pinned-while-off-lost': ('view', '        if (otherViewPinnedLinkPreview)\n', '        if (otherViewPinnedLinkPreview && !self.skipLinks)\n'),
-    'unsplit-popup-after-close': ('view', '            [weakSelf closeOtherViewPinnedLinkPreview];\n', ''),
+    # Up to 6.00 RC2 closing the window closed the popup of the other view as well (#70).
+    'unsplit-popup-closed-with-window': ('view', '    // shows the window again as it was closed (#70).\n',
+        '    [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowWillCloseNotification object:self.window queue:nil\n'
+        '        usingBlock:^(NSNotification *notification) { [self closeOtherViewPinnedLinkPreview]; }];\n'),
     'actual-size-lost': ('view', '\t\t\t\t\t\t\t\t\t// Setting the magnification made it fixed; Actual Size stays chosen.\n\t\t\t\t\t\t\t\t\tresizeOption = NEW_PDF_ACTUAL_SIZE;\n', ''),
     'outline-kept-on-other-page': ('view', '[[self document] indexForPage: oldPage] == newlySelectedPageIndex)', '[[self document] indexForPage: oldPage] <= newPageIndex)'),
 }
@@ -238,7 +241,6 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     CGFloat otherViewScale;
     PDFSelection *otherViewSelection;
     TSLinkPreviewView *otherViewPinnedLinkPreview;
-    id otherViewWindowObserver;
     NSRect otherViewPinnedLinkPreviewFrame;
 }
 @property NSArray *sourceFiles;
@@ -1124,12 +1126,13 @@ int main(int argc, char **argv) { @autoreleasepool {
         [p.window switchViews]; settle(p.window);
         check(v.preview == whileOff && v.hasPinnedLinkPreview, describe(name, @"a popup pinned while Link Popups is off comes back"));
         v.skipLinks = NO;
-        // Closing the Preview window closes the popup of the other view too.
+        // Closing the Preview window keeps the popup of the other view, so that Command-1 shows the
+        // window again as it was closed (#70); a new PDF still closes it, as checked above.
         [p.window switchViews]; settle(p.window);
         check(whileOff.superview == nil, describe(name, @"fixture: the other view keeps the popup before closing"));
         [p.window close];
         [v switchToOtherView];
-        check(!v.hasPinnedLinkPreview && whileOff.superview == nil, describe(name, @"after closing the Preview window the popup of the other view does not come back"));
+        check(v.preview == whileOff && v.hasPinnedLinkPreview, describe(name, @"after closing the Preview window the popup of the other view comes back"));
         [p.window close];
     }
     // Under the toolbar, a popup hidden under it in the top part stays at its place on its page:

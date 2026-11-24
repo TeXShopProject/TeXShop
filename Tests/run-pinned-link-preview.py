@@ -29,7 +29,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'link-closes-pin', 'outline-closes-pin', 'back-closes-pin', 'forward-closes-pin', 'page-number-closes-pin',
                                            'last-page-closes-pin', 'sync-closes-pin', 'zoom-kills-pin', 'zoom-moves-into-view', 'next-page-kills-pin',
                                            'empty-outline-kills-pin', 'stuck-back-kills-pin', 'stuck-single-page-kills-pin', 'single-page-first-kills-pin', 'move-not-restored', 'away-forgets-place', 'replaced-pin-moved', 'repin-not-taken', 'page-turn-stays-away', 'page-turn-forgets-place',
-                                           'copy-at-window-place', 'copy-kept-in-view'])
+                                           'copy-at-window-place', 'copy-kept-in-view', 'close-kills-pin', 'close-keeps-hover'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -70,6 +70,11 @@ view_mutations = {
     # #66: the copy goes to the same place in the window instead of on its page, or is brought into view.
     'copy-at-window-place': ('    NSRect here = [self convertRect:[self convertRect:onPage fromPage:page] toView:nil];',
                              '    NSRect here = [source.superview convertRect:source.frame toView:nil];'),
+    # The behavior up to 6.00 RC2: closing the Preview closed the pinned popup as well (#70).
+    'close-kills-pin': ('    [self killTransientLinkPreview];\n}\n- (void)viewWillMoveToWindow:',
+                        '    [self doKillPopup];\n}\n- (void)viewWillMoveToWindow:'),
+    'close-keeps-hover': ('    [self killTransientLinkPreview];\n}\n- (void)viewWillMoveToWindow:',
+                          '    ;\n}\n- (void)viewWillMoveToWindow:'),
     'copy-kept-in-view': ('    [self placePinnedLinkPreview:[source copyWithFrame:source.frame] windowFrame:here];',
                           '    [self attachPinnedLinkPreview:[source copyWithFrame:source.frame] windowFrame:here];'),
     'popup-under-toolbar': ('    if (TSDocumentWindowPointIsUnderToolbar(self.window, [self.window convertPointFromScreen: currentPoint]))',
@@ -2179,8 +2184,14 @@ int main(void) { @autoreleasepool {
     show(view,NSEventModifierFlagOption);
     [NSNotificationCenter.defaultCenter postNotificationName:NSWindowWillCloseNotification object:otherWindow];
     check(view.preview != nil, @"other window closing has no effect");
+    // A closed Preview keeps its pinned popup, so that Command-1 shows it again as it was (#70).
     [NSNotificationCenter.defaultCenter postNotificationName:NSWindowWillCloseNotification object:window];
-    check(!view.preview && !handlers.count, @"owner close cleans overlay and monitor");
+    check(view.globalLongTerm && view.preview.superview == view.documentView && handlers.count == 1,
+          @"owner close keeps the pinned popup and its monitor");
+    [view doKillPopup];
+    show(view,0);
+    [NSNotificationCenter.defaultCenter postNotificationName:NSWindowWillCloseNotification object:window];
+    check(!view.preview && !view.handlingLink && !handlers.count, @"owner close cleans a hovering popup and its monitor");
     show(view,NSEventModifierFlagOption);
     view.document = doc;
     check(!view.preview && !handlers.count, @"PDF reload clears popup and monitor");
@@ -2334,7 +2345,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'tooltip-ignores-control':'with link popups off, Control leaves out the tool tip',
                     'tooltip-back-under-popup':'a popup shown with Control keeps the tool tip away',
                     'copy-at-window-place':'split copy: the same place on the same page',
-                    'copy-kept-in-view':'split copy: the same place on the same page'}[args.mutation]
+                    'copy-kept-in-view':'split copy: the same place on the same page',
+                    'close-kills-pin':'owner close keeps the pinned popup', 'close-keeps-hover':'owner close cleans a hovering popup'}[args.mutation]
         if isinstance(expected, str): expected = (expected,)
         assert result.returncode == 1 and any(message in result.stderr for message in expected), result.stderr
         print('PASS: detected mutation ' + args.mutation)
