@@ -242,6 +242,9 @@ static NSString *TSUnitRowName(TSCharacterUnit unit)
     NSImageView *caution = [NSImageView imageViewWithImage:[NSImage imageWithSystemSymbolName:@"exclamationmark.triangle" accessibilityDescription:nil] ?: [NSImage new]];
     caution.contentTintColor = NSColor.systemOrangeColor;
     self.warningLabel = TSLabel(@"", small, NSColor.secondaryLabelColor);
+    // Up to three lines, wrapped at the width below.
+    self.warningLabel.cell.wraps = YES;
+    self.warningLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.warningLabel.maximumNumberOfLines = 3;
     self.warningLabel.preferredMaxLayoutWidth = 120;
     self.warningView = [NSStackView stackViewWithViews:@[caution, self.warningLabel]];
@@ -269,6 +272,8 @@ static NSString *TSUnitRowName(TSCharacterUnit unit)
     content.edgeInsets = NSEdgeInsetsMake(14, 16, 14, 16);
     [top.widthAnchor constraintEqualToAnchor:content.widthAnchor constant:-32].active = YES;
     [self.optionsView.widthAnchor constraintEqualToAnchor:content.widthAnchor constant:-32].active = YES;
+    // The stack view does not keep these within its insets: the popover grows to hold them.
+    [self.tableView.widthAnchor constraintLessThanOrEqualToAnchor:content.widthAnchor constant:-32].active = YES;
     [self.optionsGrid.widthAnchor constraintLessThanOrEqualToAnchor:content.widthAnchor constant:-32].active = YES;
     [content.widthAnchor constraintGreaterThanOrEqualToConstant:250].active = YES;
     self.view = content;

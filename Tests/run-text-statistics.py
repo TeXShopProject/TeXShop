@@ -661,6 +661,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     [doc showStatistics:nil];
     Check(WaitFor(^BOOL{ return !content.counting; }, 20) && [content.warning isEqual:L(@"detex was not found.")] && [[content.rows[0] componentsSeparatedByString:@"|"][1] length] > 0
           && [[content.rows[0] componentsSeparatedByString:@"|"][2] length] == 0, [@"detex missing: a warning in place of the Text column" stringByAppendingString:tag]);
+    NSTextField *warningLabel = [content valueForKey:@"warningLabel"];
+    [content.view layoutSubtreeIfNeeded];
+    NSRect warningFrame = [warningLabel convertRect:warningLabel.bounds toView:content.view];
+    Check(NSMaxX(warningFrame) <= NSWidth(content.view.bounds) - 12 && warningLabel.cell.wraps,
+          [NSString stringWithFormat:@"the warning wraps and keeps the margin of the popover (%@ in %@)%@", NSStringFromRect(warningFrame), NSStringFromRect(content.view.bounds), tag]);
     DrawWithPopover(doc, [lang stringByAppendingString:@"-04-detex-missing"], nil);
     popover.detex = ^NSURL *{ return detex; };
 
