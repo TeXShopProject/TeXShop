@@ -73,8 +73,10 @@ put_back_dvi() {
 # folder itself if it is empty; nothing else is deleted.
 latex_ran=
 made=
+pdf_tmp=
 clean_up() {
     [ -n "$made" ] || put_back_dvi
+    [ -z "$pdf_tmp" ] || /bin/rm -f "$pdf_tmp"
     /bin/rm -f "$work/$name.ps" "$work/$name.pdf" "$work/dvips.err" "$work/ps2pdf.err"
     /bin/rmdir "$work" 2>/dev/null
 }
@@ -100,9 +102,13 @@ echo "### ps2pdf $name.ps $name.pdf"
 ps2pdf "$work/$name.ps" "$work/$name.pdf" >"$work/ps2pdf.err" 2>&1 && [ -s "$work/$name.pdf" ] ||
     fail "ps2pdf could not make $name.pdf: $(tail -n 5 "$work/ps2pdf.err")"
 
-# The PDF is put in place at once, so that a viewer never sees half of it.
-/bin/cp "$work/$name.pdf" "$n.pdf.$$" && /bin/mv -f "$n.pdf.$$" "$n.pdf" ||
-    { /bin/rm -f "$n.pdf.$$"; fail "cannot write $name.pdf"; }
+# The PDF is put in place at once, so that a viewer never sees half of it. The file it is copied
+# to first is made new beside the PDF by mktemp, so that no file of the user's is written over.
+pdf_tmp=$(/usr/bin/mktemp "./.$name.pdf.XXXXXX") || fail "cannot write $name.pdf"
+# mktemp makes the file readable by its owner only; the PDF gets the permissions of any new file.
+/bin/chmod "$(printf '%o' $((0666 & ~0$(umask))))" "$pdf_tmp" || fail "cannot write $name.pdf"
+/bin/cp "$work/$name.pdf" "$pdf_tmp" && /bin/mv -f "$pdf_tmp" "$n.pdf" || fail "cannot write $name.pdf"
+pdf_tmp=
 # The new DVI file stays; the earlier one is no longer needed.
 made=1
 /bin/rm -f "$work/earlier.dvi"

@@ -45,6 +45,12 @@ Hello, \textbf{world} and $x^2 + \sqrt{y}$.
 PARTIAL = (r'\documentclass{article}\begin{document}PARTIAL PAGE\newpage' + '\n'
            r'\input{no-such-file}\end{document}' + '\n')
 MUTATIONS = {
+    # The copy before the PDF is put in place goes to a fixed name of the PDF and a number,
+    # which writes over a file of the user's of that name.
+    'fixed-temporary-name': [('pdf_tmp=$(/usr/bin/mktemp "./.$name.pdf.XXXXXX") || fail "cannot write $name.pdf"\n',
+                              'pdf_tmp="$n.pdf.4242"\n')],
+    # The copy keeps the owner-only permissions of mktemp.
+    'owner-only-pdf': [('/bin/chmod "$(printf \'%o\' $((0666 & ~0$(umask))))" "$pdf_tmp" || fail "cannot write $name.pdf"\n', '')],
     # dvips takes the DVI file the earlier run left (the bug found in the third audit)
     'stale-dvi': [('if [ -f "$n.dvi" ]; then\n'
                    '    /bin/mv -f "$n.dvi" "$work/earlier.dvi" || fail "cannot move the earlier $name.dvi aside"\n'
@@ -155,6 +161,17 @@ def script_checks(script, top):
     check(not list(folder.glob('a b.pdf.*')), 'no partial PDF is left')
     check(not any(tmp.iterdir()), f'nothing is left in TMPDIR: {list(tmp.iterdir())}')
     check(dvi.exists(), 'the good run leaves a b.dvi beside the document (the reruns below need it)')
+    check(pdf.exists() and (pdf.stat().st_mode & 0o777) == 0o644, f'a b.pdf has the permissions of a new file: {oct(pdf.stat().st_mode & 0o777) if pdf.exists() else None}')
+    check(not list(folder.glob('.a b.pdf.*')), 'no temporary copy of the PDF is left beside it')
+    # A file of the user's whose name looks like the old temporary copy (the PDF's name and a
+    # number) is never written over or removed by a run.
+    bystander = folder / 'a b.pdf.4242'
+    bystander.write_text('keep me')
+    rerun = run_macro_command(script, folder, tex, tmp)
+    check(rerun.returncode == 0, f'a second good run works: {rerun.stderr[-300:]}')
+    check(bystander.exists() and bystander.read_text() == 'keep me', 'a b.pdf.4242 of the user is left as it was')
+    bystander.unlink(missing_ok=True)
+    check(not list(folder.glob('.a b.pdf.*')), 'no temporary copy is left after the second run')
     good_pdf = pdf.read_bytes() if pdf.exists() else b''
     good_dvi = dvi.read_bytes() if dvi.exists() else b''
 
