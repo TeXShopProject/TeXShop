@@ -3560,8 +3560,11 @@ else {
             *folder = file.isFileURL ? file.URLByDeletingLastPathComponent : nil;
             *encoding = document->_encoding;
         }];
-        // Bytes are counted as TeXShop writes the text, in the encodings of its list.
+        // Bytes are counted as TeXShop writes the text, in the encodings of its list, composed as it is saved
+        // when UTF-8-MAC is converted to UTF-8.
         self.textStatistics.textForEncoding = ^NSString *(NSString *text, NSStringEncoding encoding) {
+            if ([SUD boolForKey:AutomaticUTF8MACtoUTF8ConversionKey])
+                text = [text normalizedStringWithModifiedNFC];
             return [[TSEncodingSupport sharedInstance] textForSaving:text encoding:encoding];
         };
         self.textStatistics.contentController.addEncodings = ^(NSMenu *menu) {

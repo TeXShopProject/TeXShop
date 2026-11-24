@@ -56,7 +56,7 @@ from production_fragments import method, verify_embedded
 DETEX = next((p for p in ('/Applications/TeXLive/2026/bin/universal-darwin/detex', '/Library/TeX/texbin/detex') if Path(p).exists()), None)
 MUTATIONS = {
     # A second count leaves the first detex running.
-    'previous-not-stopped': ('TSTextStatistics.m', '    [self stop];\n    BOOL selection = NO;\n', '    BOOL selection = NO;\n'),
+    'previous-not-stopped': ('TSTextStatistics.m', '    [self stop];\n    options = [options copy];\n    BOOL selection = NO;\n', '    options = [options copy];\n    BOOL selection = NO;\n'),
     # Stopping waits for the end of detex's output, which a process detex left may hold open.
     'waits-for-pipe-end': ('TSTextStatistics.m', '                    if (!dispatch_source_testcancel(reader)) {\n', '                    while (!dispatch_source_testcancel(reader)) usleep(10000);\n                    if (!dispatch_source_testcancel(reader)) {\n'),
     # The temporary file stays.
@@ -75,8 +75,14 @@ MUTATIONS = {
     # The encoding is kept from the last time instead of the document's.
     'encoding-not-documents': ('TSTextStatisticsPopover.m', '        options.encoding = encoding;\n        self.contentController.options = options;\n',
                                '        options.encoding = self.contentController.options.encoding;\n        self.contentController.options = options;\n'),
-    # CR LF is two line endings: a run of one CR LF loses its LF.
-    'crlf-two-endings': ('TSTextStatistics.m', "NSUInteger width = c == '\\r' && i + 1 < length", "NSUInteger width = 0 && i + 1 < length"),
+    # A run of white space keeps its first character instead of becoming one space, as CotEditor counts it.
+    'run-keeps-first': ('TSTextStatistics.m', '[result appendString:inRun == 1 ? [string substringWithRange:first] : @" "];\n            inRun = 0;',
+                        '[result appendString:[string substringWithRange:first]];\n            inRun = 0;'),
+    # Normalizing goes on to the end after the count was stopped.
+    'normalize-ignores-stop': ('TSTextStatistics.m', '        if (cancel && cancel())\n            return string;\n        NSUInteger end = MIN(start + size, length);', '        NSUInteger end = MIN(start + size, length);'),
+    # Each popover keeps the shown or hidden options of its own last use.
+    'shows-per-document': ('TSTextStatisticsPopover.m', '    BOOL shows = [NSUserDefaults.standardUserDefaults boolForKey:TSShowsOptionsKey];\n    self.optionsButton.state',
+                           '    BOOL shows = self.isViewLoaded && self.optionsButton ? self.optionsButton.state == NSControlStateValueOn : [NSUserDefaults.standardUserDefaults boolForKey:TSShowsOptionsKey];\n    self.optionsButton.state'),
     # The pictures (--images) take the content as shown once: the dark pictures lose their secondary labels.
     'picture-shown-once': ('PROGRAM', '        real.delegate = nil;\n        [real close];\n        real.contentViewController = nil; real.contentViewController = content;\n        real.appearance = appearance;\n        ((void (*)(id, SEL, NSRect, NSView *, NSRectEdge))originalShow)(real, @selector(showRelativeToRect:ofView:preferredEdge:), shownRect, shownView, shownEdge);\n        real.delegate = (id<NSPopoverDelegate>)doc.textStatistics;\n', ''),
 }
@@ -98,7 +104,7 @@ for lang in ['Base', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'r
     items = [i for i in tree.iter('menuItem') if i.find("connections/action[@selector='showStatistics:']") is not None]
     if len(items) != 1 or items[0].get('identifier') != 'TSShortcut.showStatistics:.0':
         fail(f'{lang}: Edit > Statistics… stays with its shortcut identifier')
-names = ('TSStatusBarCounting.m', 'TSSourceStatusBar.m', 'TSTextStatistics.m', 'TSTextStatisticsPopover.m', 'TSDocument.m', 'TSDocumentWindowGlass.m')
+names = ('TSStatusBarCounting.m', 'TSSourceStatusBar.m', 'TSTextStatistics.m', 'TSTextStatisticsPopover.m', 'TSDocument.m', 'TSDocumentWindowGlass.m', 'NSString-Extras.m')
 text = {n: source_file(root, n).read_text(encoding='utf-8', errors='surrogateescape') for n in names}
 document = text['TSDocument.m']
 header = source_file(root, 'TSDocument.h').read_text(encoding='utf-8', errors='surrogateescape')
@@ -165,6 +171,9 @@ static NSString *Where(NSRect content, NSRect anchor) {
 }
 
 // TeXShop's encodings, as TSDocument gives them to the popover: three of them, and the text as it is written.
+#import "NSString-Extras.h"
+#define SUD [NSUserDefaults standardUserDefaults]
+static NSString *AutomaticUTF8MACtoUTF8ConversionKey = @"AutomaticUTF8MACtoUTF8Conversion";
 static NSUInteger savingCalls;
 @interface TSEncodingSupport : NSObject
 + (instancetype)sharedInstance;
@@ -534,8 +543,16 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(Count(spaced, nil) == TSStatusBarCharacterCount(spaced, NSMakeRange(0, spaced.length), nil), [@"options: the default counts as the status bar" stringByAppendingString:tag]);
     Check(Count(@"a\r\nb", ^(TSCharacterCountOptions *o) { o.treatsConsecutiveWhitespaceAsOne = YES; o.unit = TSCharacterUnitUTF16; }) == 4,
           [@"options: a run of one CR LF keeps both units" stringByAppendingString:tag]);
-    Check(Count(@"x\u3000 y", ^(TSCharacterCountOptions *o) { o.treatsConsecutiveWhitespaceAsOne = YES; o.unit = TSCharacterUnitByte; }) == 5,
-          [@"options: a run counts as its first character (U+3000, three bytes of UTF-8)" stringByAppendingString:tag]);
+    Check(Count(@"x\u3000 y", ^(TSCharacterCountOptions *o) { o.treatsConsecutiveWhitespaceAsOne = YES; o.unit = TSCharacterUnitByte; }) == 3
+          && Count(@"x\u3000y", ^(TSCharacterCountOptions *o) { o.treatsConsecutiveWhitespaceAsOne = YES; o.unit = TSCharacterUnitByte; }) == 5
+          && Count(@"\r\n ", ^(TSCharacterCountOptions *o) { o.treatsConsecutiveWhitespaceAsOne = YES; o.unit = TSCharacterUnitUnicodeScalar; }) == 1,
+          [@"options: a run of two or more becomes one space, as CotEditor counts it; one U+3000 stays" stringByAppendingString:tag]);
+    // CotEditor 7.1.3 (String+AdvancedCounting.swift): \R, then [\t\p{Zs}], a whole character at a time by its first code point.
+    Check(Count(@"A\vB", ^(TSCharacterCountOptions *o) { o.ignoresLineEndings = YES; }) == 2 && Count(@"A\fB", ^(TSCharacterCountOptions *o) { o.ignoresLineEndings = YES; }) == 2
+          && Count(@"A\vB", ^(TSCharacterCountOptions *o) { o.ignoresWhitespace = YES; }) == 3
+          && Count(@" \u0301", ^(TSCharacterCountOptions *o) { o.ignoresWhitespace = YES; o.unit = TSCharacterUnitByte; }) == 0
+          && Count([NSString stringWithFormat:@"a%Cb%Cc", (unichar)0x2028, (unichar)0x85], ^(TSCharacterCountOptions *o) { o.ignoresLineEndings = YES; }) == 3,
+          [@"options: VT and FF are line endings, and a space with a combining mark goes as one character, as in CotEditor" stringByAppendingString:tag]);
     NSString *joined = @"e\u0301\U0001F468\u200D\U0001F469\u200D\U0001F467";
     struct { const char *name; TSUnicodeNormalization n; TSCharacterUnit unit; NSUInteger want; } forms[] = {
         {"grapheme clusters", TSUnicodeNormalizationNone, TSCharacterUnitGraphemeCluster, 2},
@@ -551,6 +568,36 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(Count(@"\uFF71\u2460\uFB01", nil) == 3 && Count(@"\uFF71\u2460\uFB01", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKC; }) == 4
           && Count(@"\uFF71\u2460\uFB01", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKD; }) == 4,
           [@"options: NFKC and NFKD map half-width kana, circled digits and ligatures" stringByAppendingString:tag]);
+    Check(Count(@"\u0345\u0301", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKCCaseFold; o.unit = TSCharacterUnitUnicodeScalar; }) == 1
+          && Count(@"\U00016D68", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKCCaseFold; o.unit = TSCharacterUnitUnicodeScalar; }) == 1,
+          [@"options: NFKC Case-Fold is ICU's (U+0345 U+0301 is U+03AF)" stringByAppendingString:tag]);
+    Check(Count(@"\u0958\u0344", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationModifiedNFC; o.unit = TSCharacterUnitUnicodeScalar; })
+          == [[@"\u0958\u0344" normalizedStringWithModifiedNFC] length]
+          && Count(@"\u0958\u0344", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationModifiedNFC; o.unit = TSCharacterUnitUnicodeScalar; }) == 2
+          && Count(@"\u0958", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFC; o.unit = TSCharacterUnitUnicodeScalar; }) == 2,
+          [@"options: Modified NFC as Edit > Unicode Normalization makes it (U+0958 and U+0344 stay)" stringByAppendingString:tag]);
+    // Long texts are normalized a piece at a time: the same as all at once, and a stop is seen between pieces.
+    NSMutableString *longText = [NSMutableString string];
+    for (int i = 0; i < 30000; i++) [longText appendString:@"e\u0301 \uFF71\u304B\u3099\u212B\u0958 Stra\u00DFe "];
+    for (NSNumber *form in @[@(TSUnicodeNormalizationNFC), @(TSUnicodeNormalizationNFKCCaseFold), @(TSUnicodeNormalizationModifiedNFC), @(TSUnicodeNormalizationModifiedNFD)]) {
+        NSString *piece = @"e\u0301 \uFF71\u304B\u3099\u212B\u0958 Stra\u00DFe ";
+        NSUInteger one = Count(piece, ^(TSCharacterCountOptions *o) { o.normalization = form.integerValue; o.unit = TSCharacterUnitUTF16; });
+        NSUInteger all = Count(longText, ^(TSCharacterCountOptions *o) { o.normalization = form.integerValue; o.unit = TSCharacterUnitUTF16; });
+        Check(all == one * 30000, [NSString stringWithFormat:@"options: a long text normalized in pieces (form %@): %lu, expected %lu%@", form, all, one * 30000, tag]);
+    }
+    NSMutableString *huge = [NSMutableString string];
+    for (int i = 0; i < 2600000; i++) [huge appendString:@"\u1E9E\u0130\uFB03"];
+    TSCharacterCountOptions *folding = Plain(); folding.normalization = TSUnicodeNormalizationModifiedNFD;  // about half a second to normalize
+    __block BOOL stopNow = NO;
+    __block CFAbsoluteTime stoppedAt = 0, endedAt = 0;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        TSCharacterCountWithOptions(huge, folding, ^BOOL{ return stopNow; });
+        endedAt = CFAbsoluteTimeGetCurrent();
+    });
+    Spin(0.02);
+    stoppedAt = CFAbsoluteTimeGetCurrent(); stopNow = YES;
+    Check(WaitFor(^BOOL{ return endedAt > 0; }, 5) && endedAt - stoppedAt < 0.1,
+          [NSString stringWithFormat:@"options: a stopped Modified NFD of 7,800,000 characters ends at once (%.3f s)%@", endedAt - stoppedAt, tag]);
     Check(Count(@"\u00DF\u00DF\u00AD", nil) == 3 && Count(@"\u00DF\u00DF\u00AD", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKC; }) == 3
           && Count(@"\u00DF\u00DF\u00AD", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKCCaseFold; }) == 4,
           [@"options: NFKC Case-Fold folds ß to ss and drops the soft hyphen" stringByAppendingString:tag]);
@@ -676,6 +723,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(content.optionsButton.state == NSControlStateValueOff && content.optionsView.hiddenOrHasHiddenAncestor && content.optionsButton.contentTintColor == nil
           && [content.optionsButton.toolTip isEqual:L(@"Character Count Options")] && [content.optionsButton.accessibilityLabel isEqual:L(@"Character Count Options")],
           [@"popover options: hidden at first, behind a plain button with its name" stringByAppendingString:tag]);
+    // Bytes as TeXShop saves the text: composed when UTF-8-MAC is converted to UTF-8 (TSDocument's block).
+    [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"AutomaticUTF8MACtoUTF8Conversion"];
+    NSString *savedText = popover.textForEncoding ? popover.textForEncoding(@"e\u0301", NSUTF8StringEncoding) : nil;
+    [NSUserDefaults.standardUserDefaults setBool:NO forKey:@"AutomaticUTF8MACtoUTF8Conversion"];
+    NSString *plainText = popover.textForEncoding ? popover.textForEncoding(@"e\u0301", NSUTF8StringEncoding) : nil;
+    Check([savedText isEqual:@"\u00E9"] && [plainText isEqual:@"e\u0301"],
+          [NSString stringWithFormat:@"popover options: bytes of the text as it is saved, composed when UTF-8-MAC is converted (%lu, %lu)%@", savedText.length, plainText.length, tag]);
     [content.optionsButton performClick:nil];
     Check(!content.optionsView.hiddenOrHasHiddenAncestor && [NSUserDefaults.standardUserDefaults boolForKey:@"StatisticsShowsCharacterCountOptions"]
           && content.encodingPopUp.hiddenOrHasHiddenAncestor && content.consecutiveWhitespaceBox.enabled,
@@ -729,6 +783,16 @@ int main(int argc, char **argv) { @autoreleasepool {
           && content.encodingPopUp.selectedTag == (NSInteger)NSJapaneseEUCStringEncoding,
           [NSString stringWithFormat:@"popover options: opened again, the options stay and the encoding is the document's (%ld)%@", (long)content.encodingPopUp.selectedTag, tag]);
     doc->_encoding = NSUTF8StringEncoding;
+    // Hidden or shown in another document: this one follows when it opens again.
+    for (NSNumber *other in @[@NO, @YES]) {
+        [popover close];
+        [NSUserDefaults.standardUserDefaults setBool:other.boolValue forKey:@"StatisticsShowsCharacterCountOptions"];
+        [doc showStatistics:nil];
+        WaitFor(^BOOL{ return !content.counting; }, 20);
+        Check(content.optionsView.hiddenOrHasHiddenAncestor == !other.boolValue && (content.optionsButton.state == NSControlStateValueOn) == other.boolValue,
+              [NSString stringWithFormat:@"popover options: %@ in another document, %@ here when opened again%@", other.boolValue ? @"shown" : @"hidden",
+               content.optionsView.hiddenOrHasHiddenAncestor ? @"hidden" : @"shown", tag]);
+    }
     [content.optionsButton performClick:nil];
     Check(content.optionsView.hiddenOrHasHiddenAncestor && [content.optionsButton.contentTintColor isEqual:NSColor.controlAccentColor]
           && ![NSUserDefaults.standardUserDefaults boolForKey:@"StatisticsShowsCharacterCountOptions"],
@@ -844,7 +908,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-text-statistics-') as tmp:
     # A detex that leaves a process holding its output open: stopped while it runs, and ending by itself.
     (bin_ / 'holding').write_text(f'#!/bin/sh\necho $$ > {pid}\n( exec sleep 8 ) &\nsleep 30\ncat "$1"\n'); (bin_ / 'holding').chmod(0o755)
     (bin_ / 'leaving').write_text('#!/bin/sh\n( exec sleep 8 ) &\ncat "$1"\n'); (bin_ / 'leaving').chmod(0o755)
-    for name in ('TSStatusBarCounting.m', 'TSSourceStatusBar.m', 'TSTextStatistics.m', 'TSTextStatisticsPopover.m', 'TSDocumentWindowGlass.m'):
+    for name in ('TSStatusBarCounting.m', 'TSSourceStatusBar.m', 'TSTextStatistics.m', 'TSTextStatisticsPopover.m', 'TSDocumentWindowGlass.m', 'NSString-Extras.m'):
         (tmp / name).write_text(text[name], encoding='utf-8', errors='surrogateescape')
     program = (PROGRAM.replace('@@SHOW@@', fragments['show']).replace('@@FROM@@', fragments['from'])
                .replace('@@RECT@@', fragments['rect']))
@@ -856,7 +920,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-text-statistics-') as tmp:
     (tmp / 'probe.m').write_text(program, encoding='utf-8')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', '-licucore', '-I', str(tmp), *include_args(root), '-I', str(root / 'Tests'),
                     str(tmp / 'probe.m'), *(str(tmp / n) for n in ('TSStatusBarCounting.m', 'TSSourceStatusBar.m', 'TSTextStatistics.m',
-                    'TSTextStatisticsPopover.m', 'TSDocumentWindowGlass.m')), '-o', str(tmp / 'probe')], check=True)
+                    'TSTextStatisticsPopover.m', 'TSDocumentWindowGlass.m', 'NSString-Extras.m')), '-o', str(tmp / 'probe')], check=True)
     if args.images:
         args.images.mkdir(parents=True, exist_ok=True)
     for lang in ('Base', 'ja'):

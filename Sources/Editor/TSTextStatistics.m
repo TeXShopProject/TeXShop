@@ -9,6 +9,7 @@
 #import <signal.h>
 #import <unistd.h>
 #import <unicode/uchar.h>
+#import "NSString-Extras.h"
 
 #pragma mark Counting with options
 
@@ -86,128 +87,159 @@ static NSArray<NSString *> *TSUnitNames(void)
 
 @end
 
-static inline BOOL TSIsLineEnding(unichar c)
+// ICU's normalizers, which libicucore exports without a header in the SDK.
+typedef struct UNormalizer2 UNormalizer2;
+const UNormalizer2 *unorm2_getNFCInstance(UErrorCode *error);
+const UNormalizer2 *unorm2_getNFDInstance(UErrorCode *error);
+const UNormalizer2 *unorm2_getNFKCInstance(UErrorCode *error);
+const UNormalizer2 *unorm2_getNFKDInstance(UErrorCode *error);
+const UNormalizer2 *unorm2_getNFKCCasefoldInstance(UErrorCode *error);
+int32_t unorm2_normalize(const UNormalizer2 *normalizer, const UChar *source, int32_t length, UChar *destination, int32_t capacity, UErrorCode *error);
+UBool unorm2_hasBoundaryBefore(const UNormalizer2 *normalizer, UChar32 c);
+
+// The way CotEditor's Advanced Character Count leaves out and joins characters, a whole character (grapheme cluster)
+// at a time, by its first code point: line endings (\R: LF, VT, FF, CR, CR LF, NEL, LS, PS), whitespace ([\t\p{Zs}]),
+// and runs of two or more white space characters (\s: White_Space), each run becoming one space.
+static UChar32 TSFirstCodePoint(NSString *string, NSUInteger location, NSUInteger end)
 {
-    return c == '\n' || c == '\r' || c == 0x85 || c == 0x2028 || c == 0x2029;
+    unichar c = [string characterAtIndex:location];
+    if (CFStringIsSurrogateHighCharacter(c) && location + 1 < end) {
+        unichar d = [string characterAtIndex:location + 1];
+        if (CFStringIsSurrogateLowCharacter(d))
+            return (UChar32)CFStringGetLongCharacterForSurrogatePair(c, d);
+    }
+    return c;
 }
 
-// Tab, VT, FF and the space separators (Zs), which are all in the BMP.
-static inline BOOL TSIsWhitespace(unichar c)
+static inline BOOL TSIsLineEnding(UChar32 c)
 {
-    return c == '\t' || c == 0x0B || c == 0x0C || c == ' ' || (c > 0x7F && u_charType(c) == U_SPACE_SEPARATOR);
+    return (c >= 0x0A && c <= 0x0D) || c == 0x85 || c == 0x2028 || c == 0x2029;
 }
 
-// The text without the line endings and whitespace that are not counted, a run of the rest taken as its first one.
 static NSString *TSFilteredText(NSString *string, TSCharacterCountOptions *options, TSStatusBarCancel cancel)
 {
-    BOOL lineEndings = options.ignoresLineEndings, whitespace = options.ignoresWhitespace, runs = options.treatsConsecutiveWhitespaceAsOne;
+    BOOL lineEndings = options.ignoresLineEndings, whitespace = options.ignoresWhitespace;
+    BOOL runs = options.treatsConsecutiveWhitespaceAsOne && !(lineEndings && whitespace);
     if (!lineEndings && !whitespace && !runs)
         return string;
-    NSUInteger length = string.length;
-    CFStringInlineBuffer buffer;
-    CFStringInitInlineBuffer((__bridge CFStringRef)string, &buffer, CFRangeMake(0, (CFIndex)length));
+    NSUInteger length = string.length, check = 1 << 16;
     NSMutableString *result = [NSMutableString stringWithCapacity:length];
-    unichar kept[4096];
-    NSUInteger count = 0, check = 1 << 16;
-    BOOL inRun = NO;
+    // The text kept since `kept`, appended in one piece when something is left out or a run ends.
+    __block NSUInteger kept = 0;
+    void (^flush)(NSUInteger) = ^(NSUInteger upTo) {
+        if (upTo > kept)
+            [result appendString:[string substringWithRange:NSMakeRange(kept, upTo - kept)]];
+    };
+    // A run of white space characters: its first character, and how many.
+    NSRange first = NSMakeRange(0, 0);
+    NSUInteger inRun = 0;
     for (NSUInteger i = 0; i < length; ) {
         if (i >= check) {
             if (cancel && cancel())
                 return string;
             check = i + (1 << 16);
         }
-        unichar c = CFStringGetCharacterFromInlineBuffer(&buffer, (CFIndex)i);
-        BOOL ending = TSIsLineEnding(c), space = !ending && TSIsWhitespace(c);
-        // CR LF is one line ending.
-        NSUInteger width = c == '\r' && i + 1 < length && CFStringGetCharacterFromInlineBuffer(&buffer, (CFIndex)(i + 1)) == '\n' ? 2 : 1;
-        BOOL skip = (ending && lineEndings) || (space && whitespace);
-        if (!skip && (ending || space) && runs) {
-            // A character left out does not end the run.
-            skip = inRun;
-            inRun = YES;
-        } else if (!skip) {
-            inRun = NO;
-        }
-        if (!skip) {
-            if (count + width > sizeof kept / sizeof kept[0]) {
-                CFStringAppendCharacters((__bridge CFMutableStringRef)result, kept, (CFIndex)count);
-                count = 0;
+        NSUInteger next = TSStatusBarCharacterEnd(string, i, length);
+        UChar32 c = TSFirstCodePoint(string, i, next);
+        if ((lineEndings && TSIsLineEnding(c)) || (whitespace && (c == '\t' || u_charType(c) == U_SPACE_SEPARATOR))) {
+            // Left out; it does not end a run.
+            if (!inRun)
+                flush(i);
+            kept = next;
+        } else if (runs && u_isUWhiteSpace(c)) {
+            if (inRun++ == 0) {
+                flush(i);
+                first = NSMakeRange(i, next - i);
             }
-            for (NSUInteger j = 0; j < width; j++)
-                kept[count++] = CFStringGetCharacterFromInlineBuffer(&buffer, (CFIndex)(i + j));
+            kept = next;
+        } else if (inRun) {
+            [result appendString:inRun == 1 ? [string substringWithRange:first] : @" "];
+            inRun = 0;
+            kept = i;
         }
-        i += width;
+        i = next;
     }
-    CFStringAppendCharacters((__bridge CFMutableStringRef)result, kept, (CFIndex)count);
+    if (inRun)
+        [result appendString:inRun == 1 ? [string substringWithRange:first] : @" "];
+    else
+        flush(length);
     return result;
 }
 
-// The canonical mapping of the parts of the text outside the ranges that HFS+ leaves as they are.
-static NSString *TSModifiedNormalization(NSString *string, BOOL composed)
+// The text normalized a piece at a time, cut where the normalizer starts afresh, so that a count can stop between pieces.
+static NSString *TSNormalizedPieces(NSString *string, const UNormalizer2 *boundaries, NSString *(^normalize)(NSString *piece), TSStatusBarCancel cancel)
 {
-    static NSRegularExpression *outside;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        outside = [NSRegularExpression regularExpressionWithPattern:@"[^\\x{2000}-\\x{2FFF}\\x{F900}-\\x{FAFF}\\x{2F800}-\\x{2FAFF}]+" options:0 error:NULL];
-    });
-    NSMutableString *result = [NSMutableString stringWithCapacity:string.length];
-    __block NSUInteger done = 0;
-    [outside enumerateMatchesInString:string options:0 range:NSMakeRange(0, string.length)
-                           usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
-        NSRange range = match.range;
-        [result appendString:[string substringWithRange:NSMakeRange(done, range.location - done)]];
-        NSString *part = [string substringWithRange:range];
-        [result appendString:composed ? part.precomposedStringWithCanonicalMapping : part.decomposedStringWithCanonicalMapping];
-        done = NSMaxRange(range);
-    }];
-    [result appendString:[string substringFromIndex:done]];
+    const NSUInteger size = 1 << 16;
+    NSUInteger length = string.length;
+    if (length <= size || !boundaries)
+        return normalize(string);
+    NSMutableString *result = [NSMutableString stringWithCapacity:length];
+    for (NSUInteger start = 0; start < length; ) {
+        if (cancel && cancel())
+            return string;
+        NSUInteger end = MIN(start + size, length);
+        // Back to a character before which nothing joins.
+        while (end < length && end > start + 1) {
+            unichar c = [string characterAtIndex:end];
+            if (!CFStringIsSurrogateLowCharacter(c) && unorm2_hasBoundaryBefore(boundaries, TSFirstCodePoint(string, end, length)))
+                break;
+            end--;
+        }
+        if (end == start + 1 && end < length)
+            end = MIN(start + size, length);  // no boundary: a longer piece
+        while (end < length && (CFStringIsSurrogateLowCharacter([string characterAtIndex:end])
+                                || !unorm2_hasBoundaryBefore(boundaries, TSFirstCodePoint(string, end, length))))
+            end++;
+        [result appendString:normalize([string substringWithRange:NSMakeRange(start, end - start)])];
+        start = end;
+    }
     return result;
 }
 
-// NFKC_Casefold: NFKC of the case folding of NFKC, without the default ignorable code points, until it does not change.
-static NSString *TSNFKCCaseFold(NSString *string)
+static NSString *TSICUNormalized(NSString *string, const UNormalizer2 *normalizer)
 {
-    NSString *current = string.precomposedStringWithCompatibilityMapping;
-    for (NSUInteger pass = 0; pass < 3; pass++) {
-        NSMutableString *folded = [current mutableCopy];
-        CFStringFold((__bridge CFMutableStringRef)folded, kCFCompareCaseInsensitive, NULL);
-        NSMutableString *kept = [NSMutableString stringWithCapacity:folded.length];
-        [folded enumerateSubstringsInRange:NSMakeRange(0, folded.length) options:NSStringEnumerationByComposedCharacterSequences | NSStringEnumerationSubstringNotRequired
-                                usingBlock:^(NSString *substring, NSRange range, NSRange enclosing, BOOL *stop) {
-            for (NSUInteger i = range.location; i < NSMaxRange(range); ) {
-                UChar32 c = [folded characterAtIndex:i];
-                NSUInteger units = 1;
-                if (CFStringIsSurrogateHighCharacter((UniChar)c) && i + 1 < NSMaxRange(range)
-                    && CFStringIsSurrogateLowCharacter([folded characterAtIndex:i + 1])) {
-                    c = (UChar32)CFStringGetLongCharacterForSurrogatePair((UniChar)c, [folded characterAtIndex:i + 1]);
-                    units = 2;
-                }
-                if (!u_hasBinaryProperty(c, UCHAR_DEFAULT_IGNORABLE_CODE_POINT))
-                    [kept appendString:[folded substringWithRange:NSMakeRange(i, units)]];
-                i += units;
-            }
-        }];
-        NSString *next = kept.precomposedStringWithCompatibilityMapping;
-        if ([next isEqualToString:current])
-            break;
-        current = next;
+    NSUInteger length = string.length;
+    if (!normalizer || length == 0 || length > INT32_MAX / 4)
+        return string;
+    UChar *source = malloc(length * sizeof(UChar));
+    [string getCharacters:source range:NSMakeRange(0, length)];
+    int32_t capacity = (int32_t)length * 3 + 16;
+    UChar *destination = malloc((size_t)capacity * sizeof(UChar));
+    UErrorCode error = U_ZERO_ERROR;
+    int32_t written = unorm2_normalize(normalizer, source, (int32_t)length, destination, capacity, &error);
+    if (error == U_BUFFER_OVERFLOW_ERROR) {
+        free(destination);
+        capacity = written;
+        destination = malloc((size_t)capacity * sizeof(UChar));
+        error = U_ZERO_ERROR;
+        written = unorm2_normalize(normalizer, source, (int32_t)length, destination, capacity, &error);
     }
-    return current;
+    NSString *result = U_SUCCESS(error) ? [NSString stringWithCharacters:destination length:(NSUInteger)written] : string;
+    free(source);
+    free(destination);
+    return result;
 }
 
-static NSString *TSNormalizedText(NSString *string, TSUnicodeNormalization normalization)
+static NSString *TSNormalizedText(NSString *string, TSUnicodeNormalization normalization, TSStatusBarCancel cancel)
 {
+    UErrorCode error = U_ZERO_ERROR;
+    const UNormalizer2 *normalizer = NULL;
     switch (normalization) {
         case TSUnicodeNormalizationNone: return string;
-        case TSUnicodeNormalizationNFC: return string.precomposedStringWithCanonicalMapping;
-        case TSUnicodeNormalizationNFD: return string.decomposedStringWithCanonicalMapping;
-        case TSUnicodeNormalizationNFKC: return string.precomposedStringWithCompatibilityMapping;
-        case TSUnicodeNormalizationNFKD: return string.decomposedStringWithCompatibilityMapping;
-        case TSUnicodeNormalizationNFKCCaseFold: return TSNFKCCaseFold(string);
-        case TSUnicodeNormalizationModifiedNFC: return TSModifiedNormalization(string, YES);
-        case TSUnicodeNormalizationModifiedNFD: return TSModifiedNormalization(string, NO);
+        case TSUnicodeNormalizationNFC: case TSUnicodeNormalizationModifiedNFC: normalizer = unorm2_getNFCInstance(&error); break;
+        case TSUnicodeNormalizationNFD: case TSUnicodeNormalizationModifiedNFD: normalizer = unorm2_getNFDInstance(&error); break;
+        case TSUnicodeNormalizationNFKC: normalizer = unorm2_getNFKCInstance(&error); break;
+        case TSUnicodeNormalizationNFKD: normalizer = unorm2_getNFKDInstance(&error); break;
+        case TSUnicodeNormalizationNFKCCaseFold: normalizer = unorm2_getNFKCCasefoldInstance(&error); break;
     }
-    return string;
+    if (U_FAILURE(error))
+        normalizer = NULL;
+    // Modified NFC and NFD as Edit > Unicode Normalization makes them.
+    if (normalization == TSUnicodeNormalizationModifiedNFC)
+        return TSNormalizedPieces(string, normalizer, ^NSString *(NSString *piece) { return [piece normalizedStringWithModifiedNFC]; }, cancel);
+    if (normalization == TSUnicodeNormalizationModifiedNFD)
+        return TSNormalizedPieces(string, normalizer, ^NSString *(NSString *piece) { return [piece normalizedStringWithModifiedNFD]; }, cancel);
+    return TSNormalizedPieces(string, normalizer, ^NSString *(NSString *piece) { return TSICUNormalized(piece, normalizer); }, cancel);
 }
 
 // The code points of the text: a surrogate pair is one, a lone surrogate stands for itself.
@@ -239,7 +271,7 @@ NSUInteger TSCharacterCountWithOptions(NSString *string, TSCharacterCountOptions
     NSString *text = TSFilteredText(string, options, cancel);
     if (cancel && cancel())
         return NSNotFound;
-    text = TSNormalizedText(text, options.normalization);
+    text = TSNormalizedText(text, options.normalization, cancel);
     if (cancel && cancel())
         return NSNotFound;
     NSUInteger count = 0;

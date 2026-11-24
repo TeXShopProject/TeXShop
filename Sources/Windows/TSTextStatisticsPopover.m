@@ -277,17 +277,12 @@ static NSString *TSUnitRowName(TSCharacterUnit unit)
     [self.optionsGrid.widthAnchor constraintLessThanOrEqualToAnchor:content.widthAnchor constant:-32].active = YES;
     [content.widthAnchor constraintGreaterThanOrEqualToConstant:250].active = YES;
     self.view = content;
-    BOOL shows = [NSUserDefaults.standardUserDefaults boolForKey:TSShowsOptionsKey];
-    self.optionsButton.state = shows ? NSControlStateValueOn : NSControlStateValueOff;
-    self.optionsView.hidden = !shows;
     [self updateOptions];
 }
 
 - (void)toggleOptions:(id)sender
 {
-    BOOL shows = self.optionsButton.state == NSControlStateValueOn;
-    [NSUserDefaults.standardUserDefaults setBool:shows forKey:TSShowsOptionsKey];
-    self.optionsView.hidden = !shows;
+    [NSUserDefaults.standardUserDefaults setBool:self.optionsButton.state == NSControlStateValueOn forKey:TSShowsOptionsKey];
     [self updateOptions];
 }
 
@@ -301,6 +296,10 @@ static NSString *TSUnitRowName(TSCharacterUnit unit)
 - (void)updateOptions
 {
     [self view];
+    // Shown or hidden as last chosen, in any document.
+    BOOL shows = [NSUserDefaults.standardUserDefaults boolForKey:TSShowsOptionsKey];
+    self.optionsButton.state = shows ? NSControlStateValueOn : NSControlStateValueOff;
+    self.optionsView.hidden = !shows;
     TSCharacterCountOptions *options = self.options;
     self.ignoreLineEndingsBox.state = options.ignoresLineEndings ? NSControlStateValueOn : NSControlStateValueOff;
     self.ignoreWhitespaceBox.state = options.ignoresWhitespace ? NSControlStateValueOn : NSControlStateValueOff;
@@ -311,8 +310,9 @@ static NSString *TSUnitRowName(TSCharacterUnit unit)
     [self.unitPopUp selectItemWithTag:options.unit];
     if ([self.encodingPopUp indexOfItemWithTag:(NSInteger)options.encoding] < 0) {
         [self.encodingPopUp removeAllItems];
-        if (self.addEncodings)
-            self.addEncodings(self.encodingPopUp.menu);
+        NSMenu *menu = self.encodingPopUp.menu;
+        if (self.addEncodings && menu)
+            self.addEncodings(menu);
         if ([self.encodingPopUp indexOfItemWithTag:(NSInteger)options.encoding] < 0) {
             NSString *title = [NSString localizedNameOfStringEncoding:options.encoding];
             NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:title.length ? title : @"?" action:NULL keyEquivalent:@""];
