@@ -37,40 +37,40 @@ int main(void) {
                 window.title = name;
                 [window layoutIfNeeded];
                 NSTextField *title = titleField(window.contentView.superview, name);
-                check(title != nil, @"AppKit の実際のタイトル文字を取得できる");
+                check(title != nil, @"the actual AppKit title field is available");
                 NSEvent *original = click(window, title, NSEventModifierFlagCommand, NSEventTypeLeftMouseDown);
                 NSEvent *forward = TSPreviewTitlePathMenuEvent(window, original);
-                check(forward != nil, @"ファイル名とフルパスのどちらでも転送される");
+                check(forward != nil, @"both file-name and full-path titles forward the click");
                 NSButton *icon = [window standardWindowButton:NSWindowDocumentIconButton];
                 NSRect iconRect = [icon convertRect:icon.bounds toView:nil];
-                check(NSPointInRect(forward.locationInWindow, iconRect), @"転送先は標準書類アイコン");
+                check(NSPointInRect(forward.locationInWindow, iconRect), @"the click is forwarded to the standard document icon");
                 check(forward.modifierFlags == original.modifierFlags && forward.windowNumber == original.windowNumber
                     && forward.timestamp == original.timestamp && forward.eventNumber == original.eventNumber,
-                    @"イベントの修飾キーと識別情報を維持する");
+                    @"event modifiers and identifying information are preserved");
                 check(TSPreviewTitlePathMenuEvent(window, click(window, title, 0, NSEventTypeLeftMouseDown)) == nil,
-                    @"通常のタイトルクリックは変更しない");
+                    @"ordinary title clicks are unchanged");
                 check(TSPreviewTitlePathMenuEvent(window, click(window, title, NSEventModifierFlagCommand, NSEventTypeLeftMouseUp)) == nil,
-                    @"マウスを離すイベントは変更しない");
+                    @"mouse-up events are unchanged");
                 check(TSPreviewTitlePathMenuEvent(window, click(window, icon, NSEventModifierFlagCommand, NSEventTypeLeftMouseDown)) == nil,
-                    @"書類アイコン自体は既存の処理に任せる");
+                    @"clicks on the document icon use the existing handling");
                 title.editable = YES;
-                check(TSPreviewTitlePathMenuEvent(window, original) == nil, @"編集可能な欄を転送しない");
+                check(TSPreviewTitlePathMenuEvent(window, original) == nil, @"clicks in editable fields are not forwarded");
                 title.editable = NO;
                 NSTextField *body = [NSTextField labelWithString:name];
                 body.frame = NSMakeRect(10, 100, 800, 30);
                 [window.contentView addSubview:body];
                 check(TSPreviewTitlePathMenuEvent(window, click(window, body, NSEventModifierFlagCommand, NSEventTypeLeftMouseDown)) == nil,
-                    @"タイトルと同じ内容の本文ラベルを転送しない");
+                    @"a content label matching the title is not forwarded");
                 [body removeFromSuperview];
             }
             NSURL *url = window.representedURL;
             NSTextField *title = titleField(window.contentView.superview, window.title);
             NSEvent *original = click(window, title, NSEventModifierFlagCommand, NSEventTypeLeftMouseDown);
             window.representedURL = nil;
-            check(TSPreviewTitlePathMenuEvent(window, original) == nil, @"ファイル未指定ならメニューを要求しない");
+            check(TSPreviewTitlePathMenuEvent(window, original) == nil, @"no menu is requested without a represented file");
             window.representedURL = url;
             window.titleVisibility = NSWindowTitleHidden;
-            check(TSPreviewTitlePathMenuEvent(window, original) == nil, @"非表示のタイトルは転送しない");
+            check(TSPreviewTitlePathMenuEvent(window, original) == nil, @"clicks on a hidden title are not forwarded");
         }
         printf("PASS: %lu preview title path menu checks\n", (unsigned long)checks);
     }
