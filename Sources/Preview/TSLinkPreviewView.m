@@ -558,6 +558,8 @@ static NSRect TSLinkPreviewFitSource(NSRect source, NSRect bounds)
         same = [coder containsValueForKey:key] && NSEqualSizes([coder decodeSizeForKey:key], rects[i].size);
     }
     NSRect bounds;
+    BOOL acrossGap = NO;
+    CGFloat fromGap = 0;
     if (same)
         // The same pages: the part in view is the one shown before, wherever it was scrolled to.
         bounds = NSMakeRect(0, 0, size.width, size.height);
@@ -570,10 +572,20 @@ static NSRect TSLinkPreviewFitSource(NSRect source, NSRect bounds)
         // still straddling the gap.
         bounds = NSMakeRect(NSMinX(rects[anchor]), 0, NSWidth(rects[anchor]), size.height);
         NSString *gap = [prefix stringByAppendingString:@"SourceFromGap"];
-        if (pages.count == 2 && [coder containsValueForKey:gap])
-            source.origin.y = NSMaxY(rects[1]) + [coder decodeDoubleForKey:gap];
+        if (pages.count == 2 && [coder containsValueForKey:gap]) {
+            acrossGap = YES;
+            fromGap = [coder decodeDoubleForKey:gap];
+            source.origin.y = NSMaxY(rects[1]) + fromGap;
+        }
     }
+    CGFloat height = NSHeight(source);
     source = TSLinkPreviewFitSource(source, bounds);
+    // Made smaller to fit a narrower page, the part keeps the gap where it was within it, so that
+    // the text on both sides of the gap is still in view.
+    if (acrossGap && height > 0 && !NSIsEmptyRect(source)) {
+        CGFloat y = NSMaxY(rects[1]) + fromGap * NSHeight(source) / height;
+        source.origin.y = MIN(MAX(y, NSMinY(bounds)), NSMaxY(bounds) - NSHeight(source));
+    }
     if (!image || NSIsEmptyRect(source)) return nil;
     TSLinkPreviewView *preview = [[self alloc] initWithFrame:frame image:image source:source pageSize:size
                                                        pages:pages pageRects:rects];

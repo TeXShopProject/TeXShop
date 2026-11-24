@@ -61,7 +61,9 @@ MUTATIONS = {
     'image-size-only': ('popup', '        same = [coder containsValueForKey:key] && NSEqualSizes([coder decodeSizeForKey:key], rects[i].size);', '        same = YES;'),
     # The fifth audit: a part within a lower next page went on onto the linked page.
     # A part across the gap kept from the bottom of its page left the gap when the next page got lower.
-    'gap-ignored': ('popup', '            source.origin.y = NSMaxY(rects[1]) + [coder decodeDoubleForKey:gap];', '            ;'),
+    'gap-ignored': ('popup', '            acrossGap = YES;\n            fromGap = [coder decodeDoubleForKey:gap];\n            source.origin.y = NSMaxY(rects[1]) + fromGap;\n', '            fromGap = 0;\n'),
+    # The sixth audit: made smaller, a part across the gap left it.
+    'gap-not-scaled': ('popup', '        CGFloat y = NSMaxY(rects[1]) + fromGap * NSHeight(source) / height;', '        CGFloat y = NSMaxY(rects[1]) + fromGap;'),
     'strip-height': ('popup', '        bounds = rects[anchor];\n', '        bounds = NSMakeRect(NSMinX(rects[anchor]), 0, NSWidth(rects[anchor]), size.height);\n'),
     # The fourth audit: away from a page turned a quarter, the popup came back upright.
     'away-turn-ignored': ('view', '            if (((home.rotation % 180) + 180) % 180 == 90)', '            if (NO)'),
@@ -699,6 +701,23 @@ int main(void) { @autoreleasepool {
         check(fitted && near(NSHeight(fitted.source), 100, 0.5) && near(NSMinY(fitted.source), NSMaxY(second) - 52, 0.5)
               && NSMaxY(fitted.source) > NSMinY(first),
               [NSString stringWithFormat:@"a part across the gap stays across it (%@)", NSStringFromRect(fitted.source)]);
+    }
+
+    {   // A part across the gap, made smaller for narrower pages, still shows both sides of the gap (sixth audit).
+        PDFDocument *twoWide = pagesOfWidths(@[@612, @612, @612, @612]);
+        TestWindow *before = preview(twoWide);
+        MyPDFKitView *one = (MyPDFKitView *)before.myPDFKitView;
+        // 82 points of the next page, the gap of 6 and 12 points of the linked page.
+        TSLinkPreviewView *across = pin(one, 1, NSMakeRect(100, 120, 200, 50), NSMakeRect(100, 710, 400, 100));
+        NSData *content = archive(^(NSKeyedArchiver *a) { [across encodeContentWithCoder:a prefix:@"C"]; });
+        PDFDocument *narrow = pagesOfWidths(@[@612, @300, @300, @612]);
+        TSLinkPreviewView *fitted = [TSLinkPreviewView linkPreviewWithCoder:unarchiver(content) prefix:@"C" document:narrow frame:NSMakeRect(0, 0, 200, 50)];
+        NSRect first, second;
+        TSLinkPreviewStrip(NSMakeSize(300, 792), NSMakeSize(300, 792), &first, &second);
+        check(fitted && NSWidth(fitted.source) <= 300.5 && near(NSWidth(fitted.source) / NSHeight(fitted.source), 4, 0.01)
+              && NSMinY(fitted.source) < NSMaxY(second) - 1 && NSMaxY(fitted.source) > NSMinY(first) + 1
+              && near((NSMaxY(second) - NSMinY(fitted.source)) / NSHeight(fitted.source), 0.82, 0.01),
+              [NSString stringWithFormat:@"made smaller, a part across the gap still shows both sides in the same share (%@)", NSStringFromRect(fitted.source)]);
     }
 
     {   // Away from its place on a page turned a quarter, with the page it was brought to gone, the popup
