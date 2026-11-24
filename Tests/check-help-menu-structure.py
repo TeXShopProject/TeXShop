@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """The Help menu has the same structure in every language.
 
-In 6.00 the current documents stay at the top of the Help menu, and the older ones (written for earlier
-versions by Herbert Schulz, Michael Sharpe and Richard Koch, and George Grätzer's Short Course) are in an
-Older Documents submenu. Short Course Supplements --> Desktop, which copied the files of the 4th edition
+In 6.00 the Help menu starts with TeXShop Help (named as Apple names an application's help in each
+language), the manual and First Steps, then the guides to TeXShop features, the TeX documentation with George
+Grätzer's Short Course, the notes of the release, and an Older Documents submenu with the documents written for
+earlier versions by Herbert Schulz, Michael Sharpe and Richard Koch. Spell checking and the differences between
+key bindings, macros and command completion are pages of TeXShop Help, not items of their own. Short Course Supplements --> Desktop, which copied the files of the 4th edition
 next to the 5th edition of the Short Course, is gone with its files. Items that open a document only in
 English say so in every language, in the same words for every item of a language. The menu is the
 application's Help menu (systemMenu="help"), so macOS adds its search field. Reads the nibs and sources only.
@@ -14,9 +16,16 @@ import subprocess
 import sys
 
 root = Path(__file__).resolve().parents[1]
-TOP = ['displayThisRelease', 'displayChanges', '-', 'displayTeXLiveDocumentation', 'displayHelpForPackage', '-',
-       'displayGettingStartedTeXShop', 'displayManual', '-', 'displayHTMLHelp', 'showHelp', 'displayFileEncoding',
-       'displayCommentLines', 'displayTeXShopConfusion', '-', 'SHORT', 'OLDER']
+TOP = ['showHelp', 'displayManual', 'displayGettingStartedTeXShop', '-', 'displayCommentLines', 'displayFileEncoding',
+       'displayHTMLHelp', '-', 'displayHelpForPackage', 'displayTeXLiveDocumentation', 'SHORT', '-', 'displayThisRelease',
+       'displayChanges', '-', 'OLDER']
+# TeXShop Help as Apple names an application's help in each language, and the Older Documents submenu.
+HELP = {'Base': 'TeXShop Help', 'ja': 'TeXShopヘルプ', 'de': 'TeXShop-Hilfe', 'es': 'Ayuda de TeXShop', 'fr': 'Aide TeXShop',
+        'it': 'Aiuto di TeXShop', 'ko': 'TeXShop 도움말', 'nl': 'TeXShop Help', 'pt': 'Ajuda do TeXShop', 'pt-PT': 'Ajuda do TeXShop',
+        'ro': 'Ajutor TeXShop', 'zh_CN': 'TeXShop帮助'}
+OLDER_TITLE = {'Base': 'Older Documents', 'ja': '過去の資料', 'de': 'Ältere Dokumente', 'es': 'Documentos antiguos',
+               'fr': 'Documents plus anciens', 'it': 'Documenti meno recenti', 'ko': '지난 자료', 'nl': 'Oudere documenten',
+               'pt': 'Documentos antigos', 'pt-PT': 'Documentos antigos', 'ro': 'Documente mai vechi', 'zh_CN': '早期文档'}
 OLDER = ['displayTipsandTricks', 'displayRecentTeXFonts', 'displayNotesonApplescript', '-',
          'displayGettingStartedXeTeX', 'displayGettingStartedLatex']
 # George Grätzer's Short Course: the course, all symbol tables, then each table of the math and the text symbols in
@@ -29,12 +38,12 @@ MARK = {'de': ' (Englisch)', 'ja': '（英語）', 'ko': ' (영문)', 'es': ' (e
         'it': ' (in inglese)', 'nl': ' (Engels)', 'pt': ' (em inglês)', 'pt-PT': ' (em inglês)',
         'ro': ' (în engleză)', 'zh_CN': '（英文）'}
 ENGLISH_ONLY = {'displayThisRelease', 'displayChanges', 'displayTeXLiveDocumentation', 'displayGettingStartedTeXShop',
-                'displayManual', 'displayHTMLHelp', 'displayFileEncoding', 'displayTipsandTricks', 'displayTeXShopConfusion',
+                'displayManual', 'displayHTMLHelp', 'displayFileEncoding', 'displayTipsandTricks',
                 'displayCommentLines', 'displayRecentTeXFonts', 'displayNotesonApplescript', 'displayGettingStartedXeTeX',
                 'displayGettingStartedLatex'}
 # Documents a language has in its own words (TeX Live Documentation of pt-PT falls back to pt).
 OWN = {'es': {'displayTeXLiveDocumentation'}, 'pt': {'displayTeXLiveDocumentation'}, 'pt-PT': {'displayTeXLiveDocumentation'},
-       'fr': {'displayTeXLiveDocumentation', 'displayFileEncoding', 'displayTipsandTricks', 'displayTeXShopConfusion'}}
+       'fr': {'displayTeXLiveDocumentation', 'displayFileEncoding', 'displayTipsandTricks'}}
 MUTATIONS = {
     # The supplements item comes back in Base.
     'supplements': ('Resources/Interfaces/Base.lproj/MainMenu.nib/designable.nib',
@@ -50,6 +59,14 @@ MUTATIONS = {
     'table-missing': ('Resources/Interfaces/ja.lproj/MainMenu.nib/designable.nib', '<action selector="displayArrows:"', '<action selector="displayArrowz:"'),
     # The Short Course submenu loses its mark.
     'short-unmarked': ('Resources/Interfaces/de.lproj/MainMenu.nib/designable.nib', 'title="George Grätzers Kurzkurs (Englisch)" id="GrC-Mn-Itm"', 'title="George Grätzers Kurzkurs" id="GrC-Mn-Itm"'),
+    # TeXShop Help keeps its former name.
+    'help-panel-name': ('Resources/Interfaces/ja.lproj/MainMenu.nib/designable.nib', 'title="TeXShopヘルプ"', 'title="TeXShopヘルプパネル..."'),
+    # Older Documents keeps its former Japanese name.
+    'older-name': ('Resources/Interfaces/ja.lproj/MainMenu.nib/designable.nib', 'title="過去の資料" id="HlO-Dc-Mnu"', 'title="以前の資料" id="HlO-Dc-Mnu"'),
+    # The release notes come first again.
+    'release-first': ('Resources/Interfaces/Base.lproj/MainMenu.nib/designable.nib', '<action selector="showHelp:"', '<action selector="displayThisRelease:"'),
+    # Spell Checking Help comes back as an item of its own.
+    'spell-help-item': ('Sources/Editor/TSSpellSupport.m', '+ (void)installMenuItems\n{', '+ (void)installMenuItems\n{\n    // showSpellCheckingHelp:'),
     # The menu is not the application's Help menu.
     'not-help-menu': ('Resources/Interfaces/de.lproj/MainMenu.nib/designable.nib', 'systemMenu="help" ', ''),
 }
@@ -65,7 +82,7 @@ def check(ok, message):
 def help_menu(text):
     """{'TOP', 'OLDER', 'SHORT'}: items as selectors or '-' ('OLDER'/'SHORT' for the submenus), {selector: title},
     {'OLDER'/'SHORT': submenu title}, and the attributes of the Help menu."""
-    a = text.index('<action selector="displayThisRelease:"')
+    a = text.index('systemMenu="help"')
     start = text.rfind('<menu key="submenu"', 0, a)
     head = text[start:text.index('>', start)]
     end = text.index('</menu>\n                </menuItem>\n            </items>', a)
@@ -108,6 +125,8 @@ def run(overrides):
         check((submenus.get('SHORT') or '').endswith(mark) if mark else not any(submenus.get('SHORT', '').endswith(m) for m in set(MARK.values()) | {' (English)'}),
               f"{lang}: the Short Course submenu {'is' if mark else 'is not'} marked: {submenus.get('SHORT')!r}")
         check('systemMenu="help"' in head, f'{lang}: the Help menu is the application Help menu')
+        check(titles.get('showHelp', ('',))[0] == HELP[lang], f"{lang}: TeXShop Help is named {titles.get('showHelp', ('',))[0]!r}")
+        check(submenus.get('OLDER') == OLDER_TITLE[lang], f"{lang}: Older Documents is named {submenus.get('OLDER')!r}")
         check('supplementsToDesktop' not in text, f'{lang}: Short Course Supplements is gone')
         for selector, (title, place) in titles.items():
             if place == 'SHORT':
@@ -125,6 +144,12 @@ def run(overrides):
             others = [m for l, m in MARK.items() if m != MARK[lang] and title.endswith(m)]
             check(not others, f'{lang}: {selector} has the mark of another language: {title!r}')
     sources = (root / 'Sources/App/HelpDocuments.m').read_text() + (root / 'Sources/App/HelpDocuments.h').read_text()
+    spell = overrides.get('Sources/Editor/TSSpellSupport.m') or (root / 'Sources/Editor/TSSpellSupport.m').read_text()
+    check('showSpellCheckingHelp' not in spell and 'SpellCheckingHelp' not in spell, 'spell checking has no Help menu item or window of its own')
+    check(not list((root / 'Resources/TeXShop/SpellCheck').glob('SpellCheckingHelp*.html')), 'the separate spell checking help pages are removed')
+    check('displayTeXShopConfusion' not in sources, 'HelpDocuments has no displayTeXShopConfusion:')
+    check(not list((root / 'Resources/Interfaces').glob('*.lproj/TeXShop Feature Confusion.pdf')), 'TeXShop Feature Confusion is removed')
+    check('Feature Confusion' not in (root / 'TeXShop.xcodeproj/project.pbxproj').read_text(), 'the project no longer copies TeXShop Feature Confusion')
     check('supplementsToDesktop' not in sources, 'HelpDocuments has no supplementsToDesktop:')
     check(not (root / 'Resources/Course Supplements').exists(), 'the 4th edition supplements are removed')
     check('Course Supplements' not in (root / 'TeXShop.xcodeproj/project.pbxproj').read_text(), 'the project no longer copies the supplements')
@@ -152,7 +177,7 @@ def main():
         for f in failures:
             print('FAIL:', f)
         sys.exit(1)
-    print('PASS: 12 Help menus: current documents at the top, older ones in Older Documents, no supplements, English marks, Help menu of the application')
+    print('PASS: 12 Help menus: TeXShop Help first, then the TeXShop documents, the TeX documentation, the release notes and Older Documents; English marks; no separate spell checking or feature confusion items; Help menu of the application')
 
 
 if __name__ == '__main__':

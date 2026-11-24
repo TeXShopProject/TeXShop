@@ -1410,37 +1410,9 @@
                 <menuItem title="Ajutor" id="136">
                     <menu key="submenu" title="Ajutor" systemMenu="help" id="137">
                         <items>
-                            <menuItem title="Despre această versiune (în engleză)" id="848" identifier="TSShortcut.displayThisRelease:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Ajutor TeXShop" keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
                                 <connections>
-                                    <action selector="displayThisRelease:" target="690" id="850"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Modificări (în engleză)" id="yjq-1z-voZ" identifier="TSShortcut.displayChanges:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayChanges:" target="690" id="yLf-XP-D7Y"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="ERI-3k-CFx">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Documentația TeX Live (în engleză)" id="cqC-tt-rt6" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTeXLiveDocumentation:" target="690" id="AKl-ph-kR7"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Afișează ajutorul pentru pachet..." keyEquivalent="i" id="818" identifier="TSShortcut.displayHelpForPackage:.0">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="displayHelpForPackage:" target="690" id="819"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="849"/>
-                            <menuItem title="Primii pași cu TeXShop (în engleză)" id="682" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedTeXShop:" target="690" id="694"/>
+                                    <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Manualul TeXShop (în engleză)" id="IaU-hn-TM6" identifier="TSShortcut.displayManual:.0">
@@ -1449,16 +1421,18 @@
                                     <action selector="displayManual:" target="690" id="g5s-hX-tA1"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="kzS-ig-cpu"/>
-                            <menuItem title="Comenzi HTML (în engleză)" id="c8z-2W-phS" identifier="TSShortcut.displayHTMLHelp:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Primii pași cu TeXShop (în engleză)" id="682" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
-                                    <action selector="displayHTMLHelp:" target="690" id="VlR-dK-ttJ"/>
+                                    <action selector="displayGettingStartedTeXShop:" target="690" id="694"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Ajutor pentru TeXShop..." keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
+                            <menuItem isSeparatorItem="YES" id="ERI-3k-CFx">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Linii de comentarii și configurări ascunse (în engleză)" id="Ojz-or-SBx" identifier="TSShortcut.displayCommentLines:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="showHelp:" target="-1" id="144"/>
+                                    <action selector="displayCommentLines:" target="690" id="dkw-7h-AFN"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Codificarea fișierelor și TeXShop (în engleză)" id="3Rr-oG-Snr" identifier="TSShortcut.displayFileEncoding:.0">
@@ -1467,20 +1441,24 @@
                                     <action selector="displayFileEncoding:" target="690" id="e3E-5P-1qc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Linii de comentarii și configurări ascunse (în engleză)" id="Ojz-or-SBx" identifier="TSShortcut.displayCommentLines:.0">
+                            <menuItem title="Comenzi HTML (în engleză)" id="c8z-2W-phS" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayCommentLines:" target="690" id="dkw-7h-AFN"/>
+                                    <action selector="displayHTMLHelp:" target="690" id="VlR-dK-ttJ"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Confuzii privind funcțiile TeXShop (în engleză)" id="qFC-td-O9D" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                            <menuItem isSeparatorItem="YES" id="849"/>
+                            <menuItem title="Afișează ajutorul pentru pachet..." keyEquivalent="i" id="818" identifier="TSShortcut.displayHelpForPackage:.0">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="displayHelpForPackage:" target="690" id="819"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Documentația TeX Live (în engleză)" id="cqC-tt-rt6" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayTeXShopConfusion:" target="690" id="qrE-Fc-RtY"/>
+                                    <action selector="displayTeXLiveDocumentation:" target="690" id="AKl-ph-kR7"/>
                                 </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="704">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Cursul scurt al lui George Grätzer (în engleză)" id="GrC-Mn-Itm">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1602,6 +1580,22 @@
                                         </menuItem>
                                     </items>
                                 </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="kzS-ig-cpu"/>
+                            <menuItem title="Despre această versiune (în engleză)" id="848" identifier="TSShortcut.displayThisRelease:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayThisRelease:" target="690" id="850"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Modificări (în engleză)" id="yjq-1z-voZ" identifier="TSShortcut.displayChanges:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayChanges:" target="690" id="yLf-XP-D7Y"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="704">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Documente mai vechi" id="HlO-Dc-Mnu">
                                 <modifierMask key="keyEquivalentModifierMask"/>

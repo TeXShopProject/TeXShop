@@ -1414,37 +1414,9 @@
                 <menuItem title="Ayuda" id="136">
                     <menu key="submenu" title="Ayuda" systemMenu="help" id="137">
                         <items>
-                            <menuItem title="Acerca de esta versión (en inglés)" id="850" identifier="TSShortcut.displayThisRelease:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Ayuda de TeXShop" keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
                                 <connections>
-                                    <action selector="displayThisRelease:" target="675" id="852"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Cambios (en inglés)" id="n28-3V-WVH" identifier="TSShortcut.displayChanges:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayChanges:" target="675" id="VOu-KP-xcK"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="KFe-m9-BbD">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Documentación de TeX Live" id="p2Q-sV-rgs" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTeXLiveDocumentation:" target="675" id="Acm-kf-d4O"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Mostrar ayuda del paquete..." keyEquivalent="i" id="821" identifier="TSShortcut.displayHelpForPackage:.0">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="displayHelpForPackage:" target="675" id="822"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="851"/>
-                            <menuItem title="Primeros pasos con TeXShop (en inglés)" id="667" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedTeXShop:" target="675" id="679"/>
+                                    <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Manual de TeXShop (en inglés)" id="1ug-ef-g9Z" identifier="TSShortcut.displayManual:.0">
@@ -1453,16 +1425,18 @@
                                     <action selector="displayManual:" target="675" id="hPH-CB-gA9"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="CRr-ZP-bMc"/>
-                            <menuItem title="Comandos HTML (en inglés)" id="TE0-03-SBm" identifier="TSShortcut.displayHTMLHelp:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Primeros pasos con TeXShop (en inglés)" id="667" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
-                                    <action selector="displayHTMLHelp:" target="675" id="hIS-UC-pXU"/>
+                                    <action selector="displayGettingStartedTeXShop:" target="675" id="679"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Panel de ayuda de TeXShop..." keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
+                            <menuItem isSeparatorItem="YES" id="KFe-m9-BbD">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Líneas mágicas y ajustes ocultos (en inglés)" id="4ow-mg-Xv9" identifier="TSShortcut.displayCommentLines:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="showHelp:" target="-1" id="144"/>
+                                    <action selector="displayCommentLines:" target="675" id="jCX-zk-6Bx"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Codificaciones de archivos y TeXShop (en inglés)" id="HJa-jq-ihb" identifier="TSShortcut.displayFileEncoding:.0">
@@ -1471,20 +1445,24 @@
                                     <action selector="displayFileEncoding:" target="675" id="GD9-nw-MLD"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Líneas mágicas y ajustes ocultos (en inglés)" id="4ow-mg-Xv9" identifier="TSShortcut.displayCommentLines:.0">
+                            <menuItem title="Comandos HTML (en inglés)" id="TE0-03-SBm" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayCommentLines:" target="675" id="jCX-zk-6Bx"/>
+                                    <action selector="displayHTMLHelp:" target="675" id="hIS-UC-pXU"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Confusiones entre utilidades de TeXShop (en inglés)" id="x6a-4v-624" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                            <menuItem isSeparatorItem="YES" id="851"/>
+                            <menuItem title="Mostrar ayuda del paquete..." keyEquivalent="i" id="821" identifier="TSShortcut.displayHelpForPackage:.0">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="displayHelpForPackage:" target="675" id="822"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Documentación de TeX Live" id="p2Q-sV-rgs" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayTeXShopConfusion:" target="675" id="exT-LR-5pz"/>
+                                    <action selector="displayTeXLiveDocumentation:" target="675" id="Acm-kf-d4O"/>
                                 </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="689">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Curso corto de George Grätzer (en inglés)" id="GrC-Mn-Itm">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1607,9 +1585,25 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Documentos anteriores" id="HlO-Dc-Mnu">
+                            <menuItem isSeparatorItem="YES" id="CRr-ZP-bMc"/>
+                            <menuItem title="Acerca de esta versión (en inglés)" id="850" identifier="TSShortcut.displayThisRelease:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Documentos anteriores" id="HlO-Dc-Sub">
+                                <connections>
+                                    <action selector="displayThisRelease:" target="675" id="852"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Cambios (en inglés)" id="n28-3V-WVH" identifier="TSShortcut.displayChanges:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayChanges:" target="675" id="VOu-KP-xcK"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="689">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Documentos antiguos" id="HlO-Dc-Mnu">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Documentos antiguos" id="HlO-Dc-Sub">
                                     <items>
                                         <menuItem title="Consejos y trucos en TeXShop (en inglés)" id="916" identifier="TSShortcut.displayTipsandTricks:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>

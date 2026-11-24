@@ -104,7 +104,7 @@ int main(int argc,char **argv){@autoreleasepool{
   Check([doc.keyEquivalent isEqual:@"t"],@"the former Japanese title reaches TeX Live Documentation");
  }
  // Help: 6.00 moved the older documents into the Older Documents submenu, removed Short Course Supplements --> Desktop,
- // marks the English-only documents in every language and corrected some titles; Spell Checking Help is added at launch.
+ // marks the English-only documents in every language and corrected some titles; 6.00 beta also added Spell Checking Help at launch.
  // Positions and titles saved before still reach the same items.
  {
   NSMenu *main=[NSMenu new];NSMenuItem *helpTop=Item(main,@"Help");helpTop.submenu=[NSMenu new];NSMenu *help=helpTop.submenu;
@@ -400,7 +400,9 @@ int main(int argc,char **argv){@autoreleasepool{
     for(NSMenuItem *i in all)i.keyEquivalent=@"";
     Apply(main,@{help.title:@{title:@[@"9",@YES,@YES]}});
     NSMenuItem *target=withAction(selector);
-    Check([target.keyEquivalent isEqual:@"9"],[NSString stringWithFormat:@"%@: the name %@ reaches %@",language,title,selector]);
+    // TeXShop Feature Confusion is no longer an item (its comparison is a page of TeXShop Help): its names reach nothing.
+    if(target)Check([target.keyEquivalent isEqual:@"9"],[NSString stringWithFormat:@"%@: the name %@ reaches %@",language,title,selector]);
+    else Check([selector isEqual:@"displayTeXShopConfusion:"],[NSString stringWithFormat:@"%@: %@ is in the Help menu",language,selector]);
     for(NSMenuItem *i in all)if(i!=target)Check([i.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"%@: the name %@ reaches only %@, not %@",language,title,selector,i.title]);
     names++;
    }
@@ -409,11 +411,13 @@ int main(int argc,char **argv){@autoreleasepool{
    for(NSMenuItem *i in all)i.keyEquivalent=@"";
    Apply(main,@{help.title:@{course.parentItem.title:@{course.title:@[@"7",@YES,@YES]}}});
    Check([course.keyEquivalent isEqual:@"7"]&&course.parentItem.keyEquivalent.length==0,[language stringByAppendingString:@": the course is named through its submenu"]);
-   // Older Documents of TetsuTeXShop 6.00b9.1: each document by its name and its position there.
+   // Older Documents of TetsuTeXShop 6.00b9.1: each document by its name and its position there. The submenu is named by
+   // its current name (Older Documents was renamed in some languages, such as Japanese, after 6.00 RC2).
    NSDictionary *older=edits[language][@"older"];
+   NSString *olderTitle=withAction(@"displayTipsandTricks:").parentItem.title;
    for(NSArray *entry in older[@"items"])for(id key in @[[entry[0] stringValue],entry[1]]){
     for(NSMenuItem *i in all)i.keyEquivalent=@"";
-    Apply(main,@{help.title:@{older[@"title"]:@{key:@[@"9",@YES,@YES]}}});
+    Apply(main,@{help.title:@{olderTitle:@{key:@[@"9",@YES,@YES]}}});
     NSMenuItem *target=withAction(entry[2]);
     for(NSMenuItem *i in all)Check([i.keyEquivalent isEqual:i==target?@"9":@""],[NSString stringWithFormat:@"%@: Older Documents › %@ reaches %@ only (%@ has %@)",language,key,entry[2],i.title,i.keyEquivalent]);
     olderChecks++;

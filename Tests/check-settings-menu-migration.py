@@ -6,7 +6,9 @@ root=Path(__file__).resolve().parents[1]
 removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
 # Window > Fullscreen (Old Method) left the menu in 6.00; Enter Full Screen is the macOS item. Help > Short Course
 # Supplements --> Desktop left too: it copied the samples of the 4th edition next to the 5th edition of the Short Course.
-retired={'fullscreen:','supplementsToDesktop:'}
+# Help > TeXShop Feature Confusion left as well: its comparison of key bindings, macros and command completion is a section
+# of the Command Completion page of TeXShop Help.
+retired={'fullscreen:','supplementsToDesktop:','displayTeXShopConfusion:'}
 # Commands added to the Edit menu later (Copy with Style in 6.00 beta 8), and Source > Show Status Bar and
 # Source > Highlight Index Entries (6.00), and the symbol tables of George Grätzer's Short Course, which joined its
 # Help submenu in 6.00; they are outside the fixed contract.

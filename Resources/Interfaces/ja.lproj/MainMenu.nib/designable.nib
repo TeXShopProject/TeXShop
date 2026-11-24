@@ -1412,37 +1412,9 @@
                 <menuItem title="ヘルプ" id="136">
                     <menu key="submenu" title="ヘルプ" systemMenu="help" id="137">
                         <items>
-                            <menuItem title="このリリースについて（英語）" id="848" identifier="TSShortcut.displayThisRelease:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="TeXShopヘルプ" keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
                                 <connections>
-                                    <action selector="displayThisRelease:" target="690" id="850"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="更新履歴（英語）" id="VyZ-Mf-nep" identifier="TSShortcut.displayChanges:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayChanges:" target="690" id="lvn-pF-N49"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="bIK-Md-xsk">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="TeX Liveドキュメント（英語）" id="8YC-Wr-7Pb" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTeXLiveDocumentation:" target="690" id="7Ue-Ba-Bsk"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="パッケージのヘルプを表示..." keyEquivalent="i" id="818" identifier="TSShortcut.displayHelpForPackage:.0">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="displayHelpForPackage:" target="690" id="819"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="849"/>
-                            <menuItem title="TeXShop入門（英語）" id="682" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedTeXShop:" target="690" id="694"/>
+                                    <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="TeXShopマニュアル（英語）" id="b5r-ty-w98" identifier="TSShortcut.displayManual:.0">
@@ -1451,16 +1423,18 @@
                                     <action selector="displayManual:" target="690" id="3ej-8V-htg"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="DiS-jx-0ug"/>
-                            <menuItem title="HTMLコマンド（英語）" id="PzI-ik-u8r" identifier="TSShortcut.displayHTMLHelp:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="TeXShop入門（英語）" id="682" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
-                                    <action selector="displayHTMLHelp:" target="690" id="SF9-kB-uN1"/>
+                                    <action selector="displayGettingStartedTeXShop:" target="690" id="694"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShopヘルプパネル..." keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
+                            <menuItem isSeparatorItem="YES" id="bIK-Md-xsk">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="マジックコメントと隠し設定（英語）" id="tRI-xD-Rf1" identifier="TSShortcut.displayCommentLines:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="showHelp:" target="-1" id="144"/>
+                                    <action selector="displayCommentLines:" target="690" id="j9N-BE-7YM"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="ファイルエンコーディングの解説（英語）" id="GuV-oL-UCe" identifier="TSShortcut.displayFileEncoding:.0">
@@ -1469,20 +1443,24 @@
                                     <action selector="displayFileEncoding:" target="690" id="OaD-xa-cXF"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="マジックコメントと隠し設定（英語）" id="tRI-xD-Rf1" identifier="TSShortcut.displayCommentLines:.0">
+                            <menuItem title="HTMLコマンド（英語）" id="PzI-ik-u8r" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayCommentLines:" target="690" id="j9N-BE-7YM"/>
+                                    <action selector="displayHTMLHelp:" target="690" id="SF9-kB-uN1"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShopの様々な補完機能の解説（英語）" id="f2W-Pd-rBL" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                            <menuItem isSeparatorItem="YES" id="849"/>
+                            <menuItem title="パッケージのヘルプを表示..." keyEquivalent="i" id="818" identifier="TSShortcut.displayHelpForPackage:.0">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="displayHelpForPackage:" target="690" id="819"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="TeX Liveドキュメント（英語）" id="8YC-Wr-7Pb" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayTeXShopConfusion:" target="690" id="GlT-Bd-pji"/>
+                                    <action selector="displayTeXLiveDocumentation:" target="690" id="7Ue-Ba-Bsk"/>
                                 </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="704">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="George Grätzerによるショートコース（英語）" id="GrC-Mn-Itm">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1605,9 +1583,25 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="以前の資料" id="HlO-Dc-Mnu">
+                            <menuItem isSeparatorItem="YES" id="DiS-jx-0ug"/>
+                            <menuItem title="このリリースについて（英語）" id="848" identifier="TSShortcut.displayThisRelease:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="以前の資料" id="HlO-Dc-Sub">
+                                <connections>
+                                    <action selector="displayThisRelease:" target="690" id="850"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="更新履歴（英語）" id="VyZ-Mf-nep" identifier="TSShortcut.displayChanges:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayChanges:" target="690" id="lvn-pF-N49"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="704">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="過去の資料" id="HlO-Dc-Mnu">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="過去の資料" id="HlO-Dc-Sub">
                                     <items>
                                         <menuItem title="TeXShopのヒントと技巧（英語）" id="920" identifier="TSShortcut.displayTipsandTricks:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>

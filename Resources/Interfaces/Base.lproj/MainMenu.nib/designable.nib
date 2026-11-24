@@ -1407,37 +1407,9 @@
                 <menuItem title="Help" id="136">
                     <menu key="submenu" title="Help" systemMenu="help" id="137">
                         <items>
-                            <menuItem title="About This Release" id="893" identifier="TSShortcut.displayThisRelease:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="TeXShop Help" keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
                                 <connections>
-                                    <action selector="displayThisRelease:" target="705" id="894"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Changes" id="OFR-cc-OL5" identifier="TSShortcut.displayChanges:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayChanges:" target="705" id="c0T-9y-IjI"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="892">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="TeX Live Documentation" id="RIk-Yq-Fjv" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTeXLiveDocumentation:" target="705" id="EXx-yQ-mzz"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Show Help for Package..." keyEquivalent="i" id="850" identifier="TSShortcut.displayHelpForPackage:.0">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="displayHelpForPackage:" target="705" id="853"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="yHb-bv-k2o"/>
-                            <menuItem title="First Steps with TeXShop" id="698" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedTeXShop:" target="705" id="710"/>
+                                    <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="TeXShop Manual" id="OB1-NJ-gVv" identifier="TSShortcut.displayManual:.0">
@@ -1446,16 +1418,18 @@
                                     <action selector="displayManual:" target="705" id="MLY-qP-3fF"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="WnW-m6-osG"/>
-                            <menuItem title="HTML Commands" id="QN1-HT-4EI" identifier="TSShortcut.displayHTMLHelp:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="First Steps with TeXShop" id="698" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
-                                    <action selector="displayHTMLHelp:" target="705" id="gQ3-Ha-zTX"/>
+                                    <action selector="displayGettingStartedTeXShop:" target="705" id="710"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Help Panel..." keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
+                            <menuItem isSeparatorItem="YES" id="892">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Comment Lines and Hidden Settings" id="A3v-6c-2F4" identifier="TSShortcut.displayCommentLines:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="showHelp:" target="-1" id="144"/>
+                                    <action selector="displayCommentLines:" target="705" id="zIM-aJ-xxD"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="File Encoding and TeXShop" id="sH7-I6-exC" identifier="TSShortcut.displayFileEncoding:.0">
@@ -1464,20 +1438,24 @@
                                     <action selector="displayFileEncoding:" target="705" id="ekW-SV-yNw"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Comment Lines and Hidden Settings" id="A3v-6c-2F4" identifier="TSShortcut.displayCommentLines:.0">
+                            <menuItem title="HTML Commands" id="QN1-HT-4EI" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayCommentLines:" target="705" id="zIM-aJ-xxD"/>
+                                    <action selector="displayHTMLHelp:" target="705" id="gQ3-Ha-zTX"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Feature Confusion" id="XZO-tS-xix" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                            <menuItem isSeparatorItem="YES" id="yHb-bv-k2o"/>
+                            <menuItem title="Show Help for Package..." keyEquivalent="i" id="850" identifier="TSShortcut.displayHelpForPackage:.0">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="displayHelpForPackage:" target="705" id="853"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="TeX Live Documentation" id="RIk-Yq-Fjv" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayTeXShopConfusion:" target="705" id="qEm-UL-DCt"/>
+                                    <action selector="displayTeXLiveDocumentation:" target="705" id="EXx-yQ-mzz"/>
                                 </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="714">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="George Grätzer's Short Course" id="GrC-Mn-Itm">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1599,6 +1577,22 @@
                                         </menuItem>
                                     </items>
                                 </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="WnW-m6-osG"/>
+                            <menuItem title="About This Release" id="893" identifier="TSShortcut.displayThisRelease:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayThisRelease:" target="705" id="894"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Changes" id="OFR-cc-OL5" identifier="TSShortcut.displayChanges:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayChanges:" target="705" id="c0T-9y-IjI"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="714">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Older Documents" id="HlO-Dc-Mnu">
                                 <modifierMask key="keyEquivalentModifierMask"/>
