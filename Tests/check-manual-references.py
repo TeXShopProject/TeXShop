@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the cross-references of the TeXShop manual and its two copies of Manual.pdf.
 
-Every \\ref, \\cref and \\Cref outside comments and verbatim text in Manual.tex names a
+Every \\ref, \\cref and \\Cref outside comments, verbatim text and \\verb in Manual.tex names a
 \\label that is also outside them, so a section that is commented out leaves no
 reference to it behind. The Manual.pdf next to the source and the one in
 Resources/Interfaces/Base.lproj are the same file. Nothing is typeset.
@@ -30,7 +30,9 @@ elif args.mutation == 'copies-differ':
 def uncommented(text):
     return '\n'.join(re.split(r'(?<!\\)%', line, maxsplit=1)[0] for line in text.split('\n'))
 
-text = re.sub(r'\\begin\{verbatim\}.*?\\end\{verbatim\}', '', uncommented(source), flags=re.S)
+# \verb|...| is text too: "after \verb|\ref{| and similar commands" names no label.
+text = re.sub(r'\\verb\*?([^a-zA-Z\s*]).*?\1', '', source)
+text = re.sub(r'\\begin\{verbatim\}.*?\\end\{verbatim\}', '', uncommented(text), flags=re.S)
 labels = set(re.findall(r'\\label\{([^}]*)\}', text))
 refs = [name.strip() for group in re.findall(r'\\(?:ref|cref|Cref|pageref)\{([^}]*)\}', text) for name in group.split(',')]
 failures = []
