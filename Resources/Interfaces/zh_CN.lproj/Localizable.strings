@@ -74,7 +74,7 @@
     "failed to copy selection." = "无法拷贝选中的区域。";
     "failed to save selection to the file." = "无法将选中的区域保存至文件。";
     "<a character consisting of %d code points>" = "<由%d个码位组成的字符>";
-    "%d characters, %d words, %d lines" = "%d个字符, %d个单词, 共 %d行";
+    "%1$@ characters, %2$@ words, %3$@ lines" = "%1$@个字符, %2$@个单词, 共 %3$@行";
     "Emoji Style" = "Emoji样式";
     "Text Style" = "文本样式";
     "Character Info" = "字符信息";

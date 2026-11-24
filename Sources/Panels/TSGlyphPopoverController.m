@@ -355,8 +355,8 @@ static NSString *StringOfCodePoint(UTF32Char c)
 
 /// The locale for the counts and the plural forms: the current one, except when TeXShop runs in a localization
 /// for a region of its own, such as Portuguese of Portugal, and the region chosen in System Settings is another.
-/// Then the localization's region gives the plural forms ("0 palavras", not the Brazilian "0 palavra"), and its
-/// way of writing numbers, since one locale gives both.
+/// Then the localization's region gives the plural forms ("0 palavras", not the Brazilian "0 palavra"). The counts
+/// are written by the status bar's formatter, in the current locale.
 static NSLocale *CountsLocale(void)
 {
     NSLocale *current = NSLocale.currentLocale;
@@ -677,8 +677,14 @@ static TSGlyphPopoverGlyphView *GlyphView(NSString *text, CGFloat size, NSColor 
 - (NSView *)multipleCharactersView
 {
     NSString *character = self.character;
-    NSString *counts = [[NSString alloc] initWithFormat:NSLocalizedString(@"%d characters, %d words, %d lines", @"Character Info: the characters, words and lines of the selection, counted as the status bar counts them") locale:CountsLocale(),
-                        (int)self.counts.selectedCharacters, (int)self.counts.selectedWords, (int)self.counts.selectedLines];
+    // The numbers as the status bar writes them (%1$@ to %3$@), and the same numbers for the plural forms
+    // (%4$#@…@ to %6$#@…@ in Localizable.stringsdict), which the locale of the language chooses.
+    // The format names only the first three in languages without plural forms, so it is not a literal here.
+    TSStatusBarCounts c = self.counts;
+    NSString *countsFormat = NSLocalizedString(@"%1$@ characters, %2$@ words, %3$@ lines", @"Character Info: the characters, words and lines of the selection, counted and written as the status bar does");
+    NSString *counts = [[NSString alloc] initWithFormat:countsFormat locale:CountsLocale(),
+                        TSStatusBarFormattedNumber(c.selectedCharacters), TSStatusBarFormattedNumber(c.selectedWords), TSStatusBarFormattedNumber(c.selectedLines),
+                        (int)c.selectedCharacters, (int)c.selectedWords, (int)c.selectedLines];
     NSTextField *countsField = Label(counts, [NSFont systemFontOfSize:NSFont.systemFontSize], NSColor.labelColor, kMultiWidth, YES, @"counts");
 
     NSMutableArray<NSString *> *list = [NSMutableArray array];

@@ -401,27 +401,30 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
 
         // Several characters: the counts and the code points; a long selection scrolls.
-        NSString *letters = LocalizedStrings[@"%d characters, %d words, %d lines"] ?: @"%d characters, %d words, %d lines";
+        NSString *lettersFormat = LocalizedStrings[@"%1$@ characters, %2$@ words, %3$@ lines"] ?: @"%1$@ characters, %2$@ words, %3$@ lines";
+        NSString *(^Counts)(NSUInteger, NSUInteger, NSUInteger) = ^(NSUInteger c, NSUInteger w, NSUInteger l) {
+            return [NSString stringWithFormat:lettersFormat, TSStatusBarFormattedNumber(c), TSStatusBarFormattedNumber(w), TSStatusBarFormattedNumber(l), (int)c, (int)w, (int)l];
+        };
         // The numbers the status bar shows for a selection (TSStatusBarCount, as TSSourceStatusBar calls it),
         // and, for the plain cases, the numbers themselves: "あああ" is one word, not none.
         NSString *(^statusBar)(NSString *, NSRange) = ^(NSString *text, NSRange range) {
             TSStatusBarCounts counts = TSStatusBarCountsUnknown();
             TSStatusBarCount(text, @[[NSValue valueWithRange:range]], YES, YES, &counts, nil);
-            return [NSString stringWithFormat:letters, (int)counts.selectedCharacters, (int)counts.selectedWords, (int)counts.selectedLines];
+            return Counts(counts.selectedCharacters, counts.selectedWords, counts.selectedLines);
         };
         NSString *(^whole)(NSString *) = ^(NSString *text) { return statusBar(text, NSMakeRange(0, text.length)); };
         NSString *kana = @"\u3042\u3042\u3042", *mixed = @"TeX \U0001F600\n\u845B\U000E0100", *crlf = @"a\r\nb";
         NSString *japaneseText = @"\u543E\u8F29\u306F\u732B\u3067\u3042\u308B\u3002", *englishText = @"The quick brown fox.";
         NSString *emoji = @"\U0001F600\U0001F44D\U0001F3FD \U0001F1EF\U0001F1F5", *combining = @"e\u0301te\u0301", *lines = @"one\ntwo\n\nthree\n";
         struct { NSString *name, *text, *counts, *codePoints; } several[] = {
-            {@"kana", kana, [NSString stringWithFormat:letters, 3, 1, 1], @"U+3042  U+3042  U+3042"},
-            {@"mixed", mixed, [NSString stringWithFormat:letters, 7, 3, 2], @"U+0054  U+0065  U+0058  U+0020  U+1F600 (U+D83D U+DE00)  U+000A  U+845B  U+E0100 (U+DB40 U+DD00)"},
-            {@"crlf", crlf, [NSString stringWithFormat:letters, 3, 2, 2], @"U+0061  U+000D  U+000A  U+0062"},
+            {@"kana", kana, Counts(3, 1, 1), @"U+3042  U+3042  U+3042"},
+            {@"mixed", mixed, Counts(7, 3, 2), @"U+0054  U+0065  U+0058  U+0020  U+1F600 (U+D83D U+DE00)  U+000A  U+845B  U+E0100 (U+DB40 U+DD00)"},
+            {@"crlf", crlf, Counts(3, 2, 2), @"U+0061  U+000D  U+000A  U+0062"},
             {@"japanese", japaneseText, whole(japaneseText), nil},
-            {@"english", englishText, [NSString stringWithFormat:letters, 20, 4, 1], nil},
+            {@"english", englishText, Counts(20, 4, 1), nil},
             {@"emoji", emoji, whole(emoji), nil},
-            {@"combining", combining, [NSString stringWithFormat:letters, 3, 1, 1], nil},
-            {@"lines", lines, [NSString stringWithFormat:letters, 15, 3, 4], nil},
+            {@"combining", combining, Counts(3, 1, 1), nil},
+            {@"lines", lines, Counts(15, 3, 4), nil},
         };
         for (size_t i = 0; i < sizeof several / sizeof several[0]; i++) {
             NSString *where = [NSString stringWithFormat:@"%@ several %@", language, several[i].name];
@@ -484,13 +487,13 @@ int main(int argc, char **argv) { @autoreleasepool {
             TSGlyphPopoverController *controller = [[TSGlyphPopoverController alloc] initWithText:shown ranges:selected];
             TSStatusBarCounts counts = TSStatusBarCountsUnknown();
             TSStatusBarCount(shown, selected, YES, YES, &counts, nil);
-            Expect(controller.view, where, @"counts", [NSString stringWithFormat:letters, (int)counts.selectedCharacters, (int)counts.selectedWords, (int)counts.selectedLines]);
+            Expect(controller.view, where, @"counts", Counts(counts.selectedCharacters, counts.selectedWords, counts.selectedLines));
             NSMutableString *every = [NSMutableString string];
             for (NSValue *value in selected) [every appendString:[shown substringWithRange:value.rangeValue]];
             TSGlyphPopoverController *together = [[TSGlyphPopoverController alloc] initWithCharacter:every];
             Expect(controller.view, where, @"codePoints", Text(together.view, @"codePoints"));
         }
-        if (![Text([[TSGlyphPopoverController alloc] initWithText:shown ranges:selections2[0]].view, @"counts") isEqualToString:[NSString stringWithFormat:letters, 8, 2, 2]])
+        if (![Text([[TSGlyphPopoverController alloc] initWithText:shown ranges:selections2[0]].view, @"counts") isEqualToString:Counts(8, 2, 2)])
             Fail([language stringByAppendingString:@" two ranges are not counted as 8 characters, 2 words and 2 lines"]);
         // CR LF is one character, as in the status bar and in CotEditor.
         TSGlyphPopoverController *crlfController = [[TSGlyphPopoverController alloc] initWithCharacter:@"\r\n"];

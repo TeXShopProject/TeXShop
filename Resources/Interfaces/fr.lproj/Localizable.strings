@@ -77,7 +77,7 @@
 "failed to copy selection." = "échec de la copie de la sélection.";
 "failed to save selection to the file." = "échec de la sauvegarde de la sélection dans le fichier.";
 "<a character consisting of %d code points>" = "<un caractère composé de %d points de code>";
-"%d characters, %d words, %d lines" = "%d caractères, %d mots, %d lignes";
+"%1$@ characters, %2$@ words, %3$@ lines" = "%1$@ caractères, %2$@ mots, %3$@ lignes";
 "Emoji Style" = "Style des émoticones";
 "Text Style" = "Style du texte";
 "Character Info" = "Information caractère";

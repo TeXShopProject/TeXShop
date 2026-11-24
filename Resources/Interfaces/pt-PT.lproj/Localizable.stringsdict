@@ -2,10 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>%d characters, %d words, %d lines</key>
+	<key>%1$@ characters, %2$@ words, %3$@ lines</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%1$#@c@, %2$#@w@, %3$#@l@</string>
+		<string>%1$@ %4$#@c@, %2$@ %5$#@w@, %3$@ %6$#@l@</string>
 		<key>c</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
@@ -13,11 +13,11 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>many</key>
-			<string>%1$d caracteres</string>
+			<string>caracteres</string>
 			<key>one</key>
-			<string>%1$d carácter</string>
+			<string>carácter</string>
 			<key>other</key>
-			<string>%1$d caracteres</string>
+			<string>caracteres</string>
 		</dict>
 		<key>l</key>
 		<dict>
@@ -26,11 +26,11 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>many</key>
-			<string>%3$d linhas</string>
+			<string>linhas</string>
 			<key>one</key>
-			<string>%3$d linha</string>
+			<string>linha</string>
 			<key>other</key>
-			<string>%3$d linhas</string>
+			<string>linhas</string>
 		</dict>
 		<key>w</key>
 		<dict>
@@ -39,11 +39,11 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>many</key>
-			<string>%2$d palavras</string>
+			<string>palavras</string>
 			<key>one</key>
-			<string>%2$d palavra</string>
+			<string>palavra</string>
 			<key>other</key>
-			<string>%2$d palavras</string>
+			<string>palavras</string>
 		</dict>
 	</dict>
 	<key>&lt;a character consisting of %d code points&gt;</key>

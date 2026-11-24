@@ -77,7 +77,7 @@
 "failed to copy selection." = "選択範囲をコピーできませんでした。";
 "failed to save selection to the file." = "選択範囲をファイルに保存できませんでした。";
 "<a character consisting of %d code points>" = "<%d個のコードポイントからなる文字>";
-"%d characters, %d words, %d lines" = "%d文字，%d単語，%d行";
+"%1$@ characters, %2$@ words, %3$@ lines" = "%1$@文字，%2$@単語，%3$@行";
 "Emoji Style" = "絵文字スタイル";
 "Text Style" = "テキストスタイル";
 "Character Info" = "文字情報";

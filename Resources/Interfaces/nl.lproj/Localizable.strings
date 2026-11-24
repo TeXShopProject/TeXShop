@@ -74,7 +74,7 @@
 "failed to copy selection." = "kopiëren van selectie mislukt.";
 "failed to save selection to the file." = "bewaren van selectie in bestand mislukt.";
 "<a character consisting of %d code points>" = "<een teken bestaande uit %d codepunten>";
-"%d characters, %d words, %d lines" = "%d tekens, %d woorden, %d regels";
+"%1$@ characters, %2$@ words, %3$@ lines" = "%1$@ tekens, %2$@ woorden, %3$@ regels";
 "Emoji Style" = "Emojistijl";
 "Text Style" = "Tekststijl";
 "Character Info" = "Tekeninfo";
