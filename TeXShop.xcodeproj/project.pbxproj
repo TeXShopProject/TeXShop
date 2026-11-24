@@ -283,6 +283,7 @@
 		40D67168210A5F9C0021D69C /* TSDocument-Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D67167210A5F9C0021D69C /* TSDocument-Color.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40DD04301C23893C00422219 /* File Encoding.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40DD042E1C23893C00422219 /* File Encoding.pdf */; };
 		AE9500010000000000000001 /* TSExternalPDFSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9500010000000000000002 /* TSExternalPDFSnapshot.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		AE9500020000000000000001 /* TSContentWidth.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9500020000000000000002 /* TSContentWidth.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		AE9600010000000000000001 /* TSPDFPrinting.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9600010000000000000002 /* TSPDFPrinting.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40DE48221FDC4C04003E1D9A /* HideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DE48201FDC4C04003E1D9A /* HideView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40DE48231FDC4C04003E1D9A /* HideView.h in Headers */ = {isa = PBXBuildFile; fileRef = 40DE48211FDC4C04003E1D9A /* HideView.h */; };
@@ -1046,6 +1047,7 @@
 		40D9E36F1A0443A4002015DF /* ko */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		40D9E3701A0443A4002015DF /* ko */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ko; path = ko.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		AE9500010000000000000002 /* TSExternalPDFSnapshot.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSExternalPDFSnapshot.m; sourceTree = "<group>"; };
+		AE9500020000000000000002 /* TSContentWidth.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSContentWidth.m; sourceTree = "<group>"; };
 		AE9600010000000000000002 /* TSPDFPrinting.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPDFPrinting.m; sourceTree = "<group>"; };
 		AE9600010000000000000003 /* TSPDFPrinting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPDFPrinting.h; sourceTree = "<group>"; };
 		40DE48201FDC4C04003E1D9A /* HideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HideView.m; sourceTree = "<group>"; };
@@ -1468,6 +1470,7 @@
 				409F89D01960A6A200D6F7AD /* ScrapPDFKitView.m */,
 				40067E5F288F16CA00756801 /* TSDocument-HTML.m */,
 				AE9500010000000000000002 /* TSExternalPDFSnapshot.m */,
+				AE9500020000000000000002 /* TSContentWidth.m */,
 				C7BA375FEE983C563088CB86 /* TSLinkPreviewView.h */,
 				FA13866BF3622A550CEA0B84 /* TSLinkPreviewView.m */,
 				D410E1A3A9A8C208EF679455 /* TSOutlineExpansion.h */,
@@ -2443,6 +2446,7 @@
 				40A56E1F11E67546002BEED6 /* TSStationery.m in Sources */,
 				346FA9FE1309961900DAA25D /* TSLayoutManager.m in Sources */,
 				AE9500010000000000000001 /* TSExternalPDFSnapshot.m in Sources */,
+				AE9500020000000000000001 /* TSContentWidth.m in Sources */,
 				AE9600010000000000000001 /* TSPDFPrinting.m in Sources */,
 				40DE48221FDC4C04003E1D9A /* HideView.m in Sources */,
 				4076227622075CE200FB6C80 /* MyPDFKitView-ExternalEditor.m in Sources */,

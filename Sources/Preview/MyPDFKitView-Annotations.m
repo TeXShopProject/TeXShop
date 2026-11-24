@@ -48,6 +48,7 @@
 #define ARROWMOD 0  // later #undef ARROWMOD
 
 #import "MyPDFKitView.h"
+#import "TSContentWidth.h"
 #import "globals.h"
 
 @implementation MyPDFKitView (Annotations)
@@ -1490,6 +1491,7 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
                 [NSValue valueWithPoint: NSMakePoint(bounds.size.width, 0.0)],
                 NULL]];
     }
+    TSContentWidthNoteAnnotationChange(_activeAnnotation.page.document);
 }
 
 // --------------------------------------------------------------------------------------------------------- setEditMode
@@ -2066,6 +2068,7 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     {
         newFont = [sender convertFont: [_activeAnnotation font]];
         [_activeAnnotation setFont: newFont];
+        TSContentWidthNoteAnnotationChange(_activeAnnotation.page.document);
     }
     
     
@@ -2115,7 +2118,8 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     }
     else
         [_activeAnnotation setColor: theColor];
-        
+    TSContentWidthNoteAnnotationChange(_activeAnnotation.page.document);
+
     // Lazy.
     [self setNeedsDisplay: YES];
 }

@@ -2,6 +2,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 #import <objc/runtime.h>
+#import "TSContentWidth.h"
 
 // Zoom to Content and Zoom to Content Width, in the Preview window and the Experiment preview,
 // and Fit to Content Width, a magnification of the Preview window that follows the window.
@@ -13,7 +14,8 @@
 // its row is taken too. With one page across, the page after it (or, at the end, the page
 // before it) gives the width as well: pages printed on both sides often have their text further
 // left or right on every other page, and the next page should not lose its line ends.
-// Fit to Content Width takes the content of all pages, measured a few at a time.
+// Fit to Content Width takes the content of all pages, measured away from the main
+// thread when the document allows it and a few at a time otherwise, then fitted once.
 
 // Margin around the content, in page units.
 static const CGFloat TSContentZoomMargin = 8;
@@ -115,6 +117,19 @@ static inline BOOL TSContentMeasurePages(PDFDocument *document, PDFDisplayBox bo
         if (!NSIsEmptyRect(ink))
             ink = NSIntersectionRect(NSInsetRect(ink, -TSContentZoomMargin, -TSContentZoomMargin), [page boundsForBox:box]);
         [store setObject:[NSValue valueWithRect:ink] forKey:page];
+    }
+    return YES;
+}
+
+// Every page, into the resolution-1.0 store, on the caller's thread. A blank page stores an
+// empty rect. Tests use this; the preview measures in slices or on the background workers.
+static inline BOOL TSContentWidthMeasureAll(PDFDocument *document, PDFDisplayBox box)
+{
+    if (!document || document.isLocked || document.pageCount == 0) return NO;
+    for (NSUInteger index = 0; index < document.pageCount; index++) {
+        PDFPage *page = [document pageAtIndex:index];
+        if (!page) return NO;
+        TSContentWidthStoreRaw(document, box, page, TSContentInkBoundsAt(page, box, 1.0));
     }
     return YES;
 }
@@ -336,28 +351,53 @@ static inline NSArray<NSArray<PDFPage *> *> *TSContentGroups(PDFView *view)
     return groups;
 }
 
-// The content of the pages that are known, and of the page or row in view, which is measured
-// now if needed. Only the width of the result counts when the group is not the one in view.
+// The resolution-1.0 content of pages, with the margin, in view coordinates. Pages that are
+// not in that store are left out. Zoom to Content keeps using TSContentRectInView.
+static inline NSRect TSContentFitRectInView(PDFView *view, NSArray<PDFPage *> *pages)
+{
+    NSRect content = NSZeroRect;
+    PDFDisplayBox box = view.displayBox;
+    for (PDFPage *page in pages) {
+        BOOL known = NO;
+        NSRect ink = TSContentWidthRawInk(view.document, box, page, &known);
+        if (!known || NSIsEmptyRect(ink)) continue;
+        ink = NSIntersectionRect(NSInsetRect(ink, -TSContentZoomMargin, -TSContentZoomMargin), [page boundsForBox:box]);
+        if (NSIsEmptyRect(ink)) continue;
+        NSRect rect = [view convertRect:ink fromPage:page];
+        content = NSIsEmptyRect(content) ? rect : NSUnionRect(content, rect);
+    }
+    return content;
+}
+
+static inline NSRect TSContentRawRectInView(PDFView *view, NSArray<PDFPage *> *pages)
+{
+    NSRect content = NSZeroRect;
+    PDFDisplayBox box = view.displayBox;
+    for (PDFPage *page in pages) {
+        BOOL known = NO;
+        NSRect ink = TSContentWidthRawInk(view.document, box, page, &known);
+        if (!known || NSIsEmptyRect(ink)) continue;
+        NSRect rect = [view convertRect:ink fromPage:page];
+        content = NSIsEmptyRect(content) ? rect : NSUnionRect(content, rect);
+    }
+    return content;
+}
+
+// No group until every page is in the resolution-1.0 store. A partial union moves the
+// left and right edges more than once (#62).
 static inline NSArray<NSArray<PDFPage *> *> *TSContentKnownGroups(PDFView *view)
 {
-    NSMapTable *store = TSContentInkStore(view.document, view.displayBox);
-    NSSet *current = [NSSet setWithArray:TSContentAcross(view, TSContentMiddlePage(view))];
-    NSMutableArray *known = [NSMutableArray array];
-    for (NSArray<PDFPage *> *group in TSContentGroups(view)) {
-        NSMutableArray *pages = [NSMutableArray array];
-        for (PDFPage *page in group)
-            if ([store objectForKey:page] || [current containsObject:page]) [pages addObject:page];
-        if (pages.count) [known addObject:pages];
-    }
-    return known;
+    if (!TSContentWidthIsComplete(view.document, view.displayBox)) return @[];
+    return TSContentGroups(view);
 }
 
 // Puts the content of the page or row in view in the middle, sideways (one page or one row at
-// a time).
+// a time). An unfinished store does not move the view: the current row can be known while
+// later pages are not (#62).
 static inline void TSContentCentreRow(PDFView *view)
 {
-    if (TSContentContinuous(view)) return;
-    NSRect shown = TSContentRectInView(view, TSContentRow(view, TSContentMiddlePage(view)));
+    if (TSContentContinuous(view) || !TSContentWidthIsComplete(view.document, view.displayBox)) return;
+    NSRect shown = TSContentFitRectInView(view, TSContentRow(view, TSContentMiddlePage(view)));
     if (NSIsEmptyRect(shown)) return;
     TSContentScrollTo(view, shown, NO, NO);
 }
@@ -400,7 +440,7 @@ static inline void TSContentRestoreTop(PDFView *view, TSContentTop top)
 static inline void TSContentPlaceSidewaysIn(PDFView *view, NSArray<NSArray<PDFPage *> *> *groups)
 {
     if (TSContentContinuous(view)) {
-        NSRect all = TSContentRectInView(view, groups.firstObject ?: @[]);
+        NSRect all = TSContentFitRectInView(view, groups.firstObject ?: @[]);
         if (!NSIsEmptyRect(all)) TSContentScrollTo(view, all, NO, NO);
     } else
         TSContentCentreRow(view);
@@ -423,7 +463,7 @@ static inline BOOL TSContentFitWidthKeeping(PDFView *view, TSContentTop top, CGF
     NSArray<NSArray<PDFPage *> *> *groups = TSContentKnownGroups(view);
     CGFloat (^widest)(void) = ^CGFloat{
         CGFloat width = 0;
-        for (NSArray<PDFPage *> *group in groups) width = MAX(width, NSWidth(TSContentRectInView(view, group)));
+        for (NSArray<PDFPage *> *group in groups) width = MAX(width, NSWidth(TSContentFitRectInView(view, group)));
         return width;
     };
     if (widest() <= 0) return NO;
@@ -437,6 +477,62 @@ static inline BOOL TSContentFitWidthKeeping(PDFView *view, TSContentTop top, CGF
 static inline BOOL TSContentFitWidth(PDFView *view, CGFloat (^setScale)(CGFloat scale))
 {
     return TSContentFitWidthKeeping(view, TSContentTopOf(view), setScale);
+}
+
+// Whether finishing a measurement should move this view. A window resize does not ask:
+// it fits from the stored rects whenever they are complete.
+// The left and right edges are compared in screen points. One point of the page, and one
+// point of the clip view, are not that unit (#62). A blank row does not skip the decision:
+// the widest row still sets the magnification. Raw ink, before the margin, forces a fit
+// when it crosses the visible edge by a fraction of a screen point. A symmetric change of
+// the width is the same test, not a second one: each edge has to move by more than a point.
+static inline BOOL TSContentWidthShouldRefit(PDFView *view)
+{
+    PDFDocument *document = view.document;
+    PDFDisplayBox box = view.displayBox;
+    if (!TSContentWidthIsComplete(document, box)) return NO;
+    NSClipView *clip = view.documentView.enclosingScrollView.contentView;
+    NSRect visible = TSContentVisibleArea(view);
+    if (!clip || NSWidth(visible) <= 0 || NSWidth(clip.frame) <= 0 || NSWidth(clip.bounds) <= 0) return NO;
+    NSArray<NSArray<PDFPage *> *> *groups = TSContentGroups(view);
+    CGFloat widest = 0;
+    NSRect placed = NSZeroRect, raw = NSZeroRect, widestRect = NSZeroRect;
+    if (TSContentContinuous(view)) {
+        NSMutableArray<PDFPage *> *all = [NSMutableArray array];
+        for (NSArray<PDFPage *> *group in groups) [all addObjectsFromArray:group];
+        placed = TSContentFitRectInView(view, all);
+        raw = TSContentRawRectInView(view, all);
+        widestRect = placed;
+    } else {
+        for (NSArray<PDFPage *> *group in groups) {
+            NSRect fit = TSContentFitRectInView(view, group);
+            CGFloat width = NSWidth([clip convertRect:fit fromView:view]);
+            if (width > widest) {
+                widest = width;
+                widestRect = fit;
+            }
+        }
+        NSArray<PDFPage *> *row = TSContentRow(view, TSContentMiddlePage(view));
+        placed = TSContentFitRectInView(view, row);
+        raw = TSContentRawRectInView(view, row);
+        // The row in view may be blank. The magnification still follows the widest row.
+        if (NSIsEmptyRect(placed)) placed = widestRect;
+    }
+    if (NSIsEmptyRect(placed)) return NO;
+    NSRect placedClip = [clip convertRect:placed fromView:view];
+    if (TSContentContinuous(view)) widest = NSWidth(placedClip);
+    if (widest <= 0) return NO;
+    CGFloat toScreen = NSWidth(clip.frame) / NSWidth(clip.bounds);
+    CGFloat targetWidth = NSWidth(placedClip) * NSWidth(visible) / widest;
+    CGFloat targetLeft = NSMidX(visible) - targetWidth / 2.0;
+    CGFloat delta = MAX(fabs(targetLeft - NSMinX(placedClip)), fabs(targetLeft + targetWidth - NSMaxX(placedClip)));
+    BOOL rawClipped = NO;
+    if (!NSIsEmptyRect(raw)) {
+        NSRect rawClip = [clip convertRect:raw fromView:view];
+        rawClipped = (NSMinX(visible) - NSMinX(rawClip)) * toScreen > 0.05 ||
+            (NSMaxX(rawClip) - NSMaxX(visible)) * toScreen > 0.05;
+    }
+    return delta * toScreen > 1.0 || rawClipped;
 }
 
 // Names and symbols of the two buttons, in both previews.
