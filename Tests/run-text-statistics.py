@@ -76,10 +76,12 @@ MUTATIONS = {
     'encoding-not-documents': ('TSTextStatisticsPopover.m', '        options.encoding = encoding;\n        self.contentController.options = options;\n',
                                '        options.encoding = self.contentController.options.encoding;\n        self.contentController.options = options;\n'),
     # A run of white space keeps its first character instead of becoming one space, as CotEditor counts it.
-    'run-keeps-first': ('TSTextStatistics.m', '[result appendString:inRun == 1 ? [string substringWithRange:first] : @" "];\n            inRun = 0;',
-                        '[result appendString:[string substringWithRange:first]];\n            inRun = 0;'),
+    'run-keeps-first': ('TSTextStatistics.m', '                [result appendString:@" "];\n                kept = i;',
+                        '                [result appendString:[string substringWithRange:NSMakeRange(run, TSStatusBarCharacterEnd(string, run, length) - run)]];\n                kept = i;'),
     # Normalizing goes on to the end after the count was stopped.
     'normalize-ignores-stop': ('TSTextStatistics.m', '        if (cancel && cancel())\n            return string;\n        NSUInteger end = MIN(start + size, length);', '        NSUInteger end = MIN(start + size, length);'),
+    # Bytes composed for saving in one go, which a stop cannot end.
+    'compose-ignores-stop': ('TSTextStatistics.m', 'text = TSNormalizedText(text, TSUnicodeNormalizationModifiedNFC, cancel);', 'text = [text normalizedStringWithModifiedNFC];'),
     # Each popover keeps the shown or hidden options of its own last use.
     'shows-per-document': ('TSTextStatisticsPopover.m', '    BOOL shows = [NSUserDefaults.standardUserDefaults boolForKey:TSShowsOptionsKey];\n    self.optionsButton.state',
                            '    BOOL shows = self.isViewLoaded && self.optionsButton ? self.optionsButton.state == NSControlStateValueOn : [NSUserDefaults.standardUserDefaults boolForKey:TSShowsOptionsKey];\n    self.optionsButton.state'),
@@ -553,6 +555,12 @@ int main(int argc, char **argv) { @autoreleasepool {
           && Count(@" \u0301", ^(TSCharacterCountOptions *o) { o.ignoresWhitespace = YES; o.unit = TSCharacterUnitByte; }) == 0
           && Count([NSString stringWithFormat:@"a%Cb%Cc", (unichar)0x2028, (unichar)0x85], ^(TSCharacterCountOptions *o) { o.ignoresLineEndings = YES; }) == 3,
           [@"options: VT and FF are line endings, and a space with a combining mark goes as one character, as in CotEditor" stringByAppendingString:tag]);
+    // Each step takes the characters of what the step before left: CR and LF around a space become one CR LF, and a
+    // combining mark after a line ending joins the space before it.
+    Check(Count(@"\r \n", ^(TSCharacterCountOptions *o) { o.ignoresWhitespace = YES; o.treatsConsecutiveWhitespaceAsOne = YES; o.unit = TSCharacterUnitUTF16; }) == 2
+          && Count(@" \n\u0301", ^(TSCharacterCountOptions *o) { o.ignoresWhitespace = YES; o.ignoresLineEndings = YES; o.unit = TSCharacterUnitUTF16; }) == 0
+          && Count(@"\r \n", ^(TSCharacterCountOptions *o) { o.ignoresWhitespace = YES; o.treatsConsecutiveWhitespaceAsOne = YES; }) == 1,
+          [@"options: each step counts the characters that the step before left, as CotEditor's replacements do" stringByAppendingString:tag]);
     NSString *joined = @"e\u0301\U0001F468\u200D\U0001F469\u200D\U0001F467";
     struct { const char *name; TSUnicodeNormalization n; TSCharacterUnit unit; NSUInteger want; } forms[] = {
         {"grapheme clusters", TSUnicodeNormalizationNone, TSCharacterUnitGraphemeCluster, 2},
@@ -598,6 +606,22 @@ int main(int argc, char **argv) { @autoreleasepool {
     stoppedAt = CFAbsoluteTimeGetCurrent(); stopNow = YES;
     Check(WaitFor(^BOOL{ return endedAt > 0; }, 5) && endedAt - stoppedAt < 0.1,
           [NSString stringWithFormat:@"options: a stopped Modified NFD of 7,800,000 characters ends at once (%.3f s)%@", endedAt - stoppedAt, tag]);
+    // Bytes composed as TeXShop saves with UTF-8-MAC converted: also a piece at a time.
+    NSMutableString *decomposed = [NSMutableString string];
+    for (int i = 0; i < 2000000; i++) [decomposed appendString:@"e\u0301\u304B\u3099"];
+    TSCharacterCountOptions *composing = Plain(); composing.unit = TSCharacterUnitByte; composing.composesForSaving = YES;
+    Check(Count(@"e\u0301", ^(TSCharacterCountOptions *o) { o.unit = TSCharacterUnitByte; o.composesForSaving = YES; }) == 2
+          && Count(@"e\u0301", ^(TSCharacterCountOptions *o) { o.unit = TSCharacterUnitByte; }) == 3,
+          [@"options: bytes composed as saved with UTF-8-MAC converted" stringByAppendingString:tag]);
+    stopNow = NO; endedAt = 0;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        TSCharacterCountWithOptions(decomposed, composing, ^BOOL{ return stopNow; });
+        endedAt = CFAbsoluteTimeGetCurrent();
+    });
+    Spin(0.02);
+    stoppedAt = CFAbsoluteTimeGetCurrent(); stopNow = YES;
+    Check(WaitFor(^BOOL{ return endedAt > 0; }, 60) && endedAt - stoppedAt < 0.1,
+          [NSString stringWithFormat:@"options: a stopped composition for the bytes of 8,000,000 characters ends at once (%.3f s)%@", endedAt - stoppedAt, tag]);
     Check(Count(@"\u00DF\u00DF\u00AD", nil) == 3 && Count(@"\u00DF\u00DF\u00AD", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKC; }) == 3
           && Count(@"\u00DF\u00DF\u00AD", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKCCaseFold; }) == 4,
           [@"options: NFKC Case-Fold folds ß to ss and drops the soft hyphen" stringByAppendingString:tag]);
@@ -723,13 +747,14 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(content.optionsButton.state == NSControlStateValueOff && content.optionsView.hiddenOrHasHiddenAncestor && content.optionsButton.contentTintColor == nil
           && [content.optionsButton.toolTip isEqual:L(@"Character Count Options")] && [content.optionsButton.accessibilityLabel isEqual:L(@"Character Count Options")],
           [@"popover options: hidden at first, behind a plain button with its name" stringByAppendingString:tag]);
-    // Bytes as TeXShop saves the text: composed when UTF-8-MAC is converted to UTF-8 (TSDocument's block).
+    // Bytes as TeXShop saves the text: composed when UTF-8-MAC is converted to UTF-8 (TSDocument's blocks).
     [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"AutomaticUTF8MACtoUTF8Conversion"];
-    NSString *savedText = popover.textForEncoding ? popover.textForEncoding(@"e\u0301", NSUTF8StringEncoding) : nil;
+    BOOL composesOn = popover.composesForSaving && popover.composesForSaving();
     [NSUserDefaults.standardUserDefaults setBool:NO forKey:@"AutomaticUTF8MACtoUTF8Conversion"];
+    BOOL composesOff = popover.composesForSaving && popover.composesForSaving();
     NSString *plainText = popover.textForEncoding ? popover.textForEncoding(@"e\u0301", NSUTF8StringEncoding) : nil;
-    Check([savedText isEqual:@"\u00E9"] && [plainText isEqual:@"e\u0301"],
-          [NSString stringWithFormat:@"popover options: bytes of the text as it is saved, composed when UTF-8-MAC is converted (%lu, %lu)%@", savedText.length, plainText.length, tag]);
+    Check(composesOn && !composesOff && [plainText isEqual:@"e\u0301"] && savingCalls > 0,
+          [NSString stringWithFormat:@"popover options: bytes of the text as it is saved, composed when UTF-8-MAC is converted (%d, %d)%@", composesOn, composesOff, tag]);
     [content.optionsButton performClick:nil];
     Check(!content.optionsView.hiddenOrHasHiddenAncestor && [NSUserDefaults.standardUserDefaults boolForKey:@"StatisticsShowsCharacterCountOptions"]
           && content.encodingPopUp.hiddenOrHasHiddenAncestor && content.consecutiveWhitespaceBox.enabled,

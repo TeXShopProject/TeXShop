@@ -82,6 +82,7 @@ static NSArray<NSString *> *TSUnitNames(void)
     copy.unit = self.unit;
     copy.encoding = self.encoding;
     copy.textForEncoding = self.textForEncoding;
+    copy.composesForSaving = self.composesForSaving;
     return copy;
 }
 
@@ -97,9 +98,10 @@ const UNormalizer2 *unorm2_getNFKCCasefoldInstance(UErrorCode *error);
 int32_t unorm2_normalize(const UNormalizer2 *normalizer, const UChar *source, int32_t length, UChar *destination, int32_t capacity, UErrorCode *error);
 UBool unorm2_hasBoundaryBefore(const UNormalizer2 *normalizer, UChar32 c);
 
-// The way CotEditor's Advanced Character Count leaves out and joins characters, a whole character (grapheme cluster)
-// at a time, by its first code point: line endings (\R: LF, VT, FF, CR, CR LF, NEL, LS, PS), whitespace ([\t\p{Zs}]),
-// and runs of two or more white space characters (\s: White_Space), each run becoming one space.
+// The way CotEditor's Advanced Character Count leaves out and joins characters (String+AdvancedCounting.swift): three
+// passes, each over the characters (grapheme clusters) of what the pass before left, as Swift's regular expressions
+// match whole characters by their first code point. Line endings (\R: LF, VT, FF, CR, CR LF, NEL, LS, PS) go first,
+// then whitespace ([\t\p{Zs}]), and then a run of two or more white space characters (\s: White_Space) becomes one space.
 static UChar32 TSFirstCodePoint(NSString *string, NSUInteger location, NSUInteger end)
 {
     unichar c = [string characterAtIndex:location];
@@ -116,54 +118,72 @@ static inline BOOL TSIsLineEnding(UChar32 c)
     return (c >= 0x0A && c <= 0x0D) || c == 0x85 || c == 0x2028 || c == 0x2029;
 }
 
-static NSString *TSFilteredText(NSString *string, TSCharacterCountOptions *options, TSStatusBarCancel cancel)
+static inline BOOL TSIsWhitespace(UChar32 c)
 {
-    BOOL lineEndings = options.ignoresLineEndings, whitespace = options.ignoresWhitespace;
-    BOOL runs = options.treatsConsecutiveWhitespaceAsOne && !(lineEndings && whitespace);
-    if (!lineEndings && !whitespace && !runs)
-        return string;
+    return c == '\t' || u_charType(c) == U_SPACE_SEPARATOR;
+}
+
+// The text without the characters whose first code point `takes` takes, or, with `runs`, with each run of two or more
+// characters it takes replaced by one space. nil when `cancel` stopped it.
+static NSString *TSFilterPass(NSString *string, BOOL (*takes)(UChar32), BOOL runs, TSStatusBarCancel cancel)
+{
     NSUInteger length = string.length, check = 1 << 16;
     NSMutableString *result = [NSMutableString stringWithCapacity:length];
-    // The text kept since `kept`, appended in one piece when something is left out or a run ends.
-    __block NSUInteger kept = 0;
-    void (^flush)(NSUInteger) = ^(NSUInteger upTo) {
-        if (upTo > kept)
-            [result appendString:[string substringWithRange:NSMakeRange(kept, upTo - kept)]];
-    };
-    // A run of white space characters: its first character, and how many.
-    NSRange first = NSMakeRange(0, 0);
-    NSUInteger inRun = 0;
+    // The text kept since `kept`, appended in one piece; a run of taken characters starts at `run`.
+    NSUInteger kept = 0, run = NSNotFound, inRun = 0;
     for (NSUInteger i = 0; i < length; ) {
         if (i >= check) {
             if (cancel && cancel())
-                return string;
+                return nil;
             check = i + (1 << 16);
         }
         NSUInteger next = TSStatusBarCharacterEnd(string, i, length);
-        UChar32 c = TSFirstCodePoint(string, i, next);
-        if ((lineEndings && TSIsLineEnding(c)) || (whitespace && (c == '\t' || u_charType(c) == U_SPACE_SEPARATOR))) {
-            // Left out; it does not end a run.
-            if (!inRun)
-                flush(i);
-            kept = next;
-        } else if (runs && u_isUWhiteSpace(c)) {
-            if (inRun++ == 0) {
-                flush(i);
-                first = NSMakeRange(i, next - i);
+        BOOL taken = takes(TSFirstCodePoint(string, i, next));
+        if (!runs) {
+            if (taken) {
+                if (i > kept)
+                    [result appendString:[string substringWithRange:NSMakeRange(kept, i - kept)]];
+                kept = next;
             }
-            kept = next;
+        } else if (taken) {
+            if (inRun++ == 0)
+                run = i;
         } else if (inRun) {
-            [result appendString:inRun == 1 ? [string substringWithRange:first] : @" "];
+            if (inRun > 1) {
+                [result appendString:[string substringWithRange:NSMakeRange(kept, run - kept)]];
+                [result appendString:@" "];
+                kept = i;
+            }
             inRun = 0;
-            kept = i;
         }
         i = next;
     }
-    if (inRun)
-        [result appendString:inRun == 1 ? [string substringWithRange:first] : @" "];
-    else
-        flush(length);
+    if (runs && inRun > 1) {
+        [result appendString:[string substringWithRange:NSMakeRange(kept, run - kept)]];
+        [result appendString:@" "];
+    } else if (length > kept) {
+        [result appendString:[string substringWithRange:NSMakeRange(kept, length - kept)]];
+    }
     return result;
+}
+
+static BOOL TSTakesLineEnding(UChar32 c) { return TSIsLineEnding(c); }
+static BOOL TSTakesWhitespace(UChar32 c) { return TSIsWhitespace(c); }
+static BOOL TSTakesWhiteSpaceProperty(UChar32 c) { return u_isUWhiteSpace(c); }
+
+// nil when `cancel` stopped it.
+static NSString *TSFilteredText(NSString *string, TSCharacterCountOptions *options, TSStatusBarCancel cancel)
+{
+    BOOL lineEndings = options.ignoresLineEndings, whitespace = options.ignoresWhitespace;
+    NSString *text = string;
+    if (lineEndings && !(text = TSFilterPass(text, TSTakesLineEnding, NO, cancel)))
+        return nil;
+    if (whitespace && !(text = TSFilterPass(text, TSTakesWhitespace, NO, cancel)))
+        return nil;
+    if (options.treatsConsecutiveWhitespaceAsOne && !(lineEndings && whitespace)
+        && !(text = TSFilterPass(text, TSTakesWhiteSpaceProperty, YES, cancel)))
+        return nil;
+    return text;
 }
 
 // The text normalized a piece at a time, cut where the normalizer starts afresh, so that a count can stop between pieces.
@@ -269,7 +289,7 @@ static NSUInteger TSByteCount(NSString *string, NSStringEncoding encoding)
 NSUInteger TSCharacterCountWithOptions(NSString *string, TSCharacterCountOptions *options, TSStatusBarCancel cancel)
 {
     NSString *text = TSFilteredText(string, options, cancel);
-    if (cancel && cancel())
+    if (!text || (cancel && cancel()))
         return NSNotFound;
     text = TSNormalizedText(text, options.normalization, cancel);
     if (cancel && cancel())
@@ -286,6 +306,12 @@ NSUInteger TSCharacterCountWithOptions(NSString *string, TSCharacterCountOptions
             count = text.length;
             break;
         case TSCharacterUnitByte:
+            // Composed as TeXShop composes the text it saves, a piece at a time.
+            if (options.composesForSaving && options.normalization != TSUnicodeNormalizationModifiedNFC) {
+                text = TSNormalizedText(text, TSUnicodeNormalizationModifiedNFC, cancel);
+                if (cancel && cancel())
+                    return NSNotFound;
+            }
             count = TSByteCount(options.textForEncoding ? options.textForEncoding(text, options.encoding) : text, options.encoding);
             break;
     }

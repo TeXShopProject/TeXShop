@@ -507,6 +507,7 @@ static NSString *TSUnitRowName(TSCharacterUnit unit)
 {
     TSCharacterCountOptions *options = [self.contentController.options copy];
     options.textForEncoding = self.textForEncoding;
+    options.composesForSaving = self.composesForSaving && self.composesForSaving();
     return options;
 }
 

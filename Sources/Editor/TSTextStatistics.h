@@ -9,11 +9,13 @@
  * folder, so the document need not be saved; the file is removed afterwards. detex's
  * output is counted here, as the status bar counts, not with wc.
  *
- * The characters can also be counted with options, as CotEditor's Advanced Character Count
- * counts them: line endings and whitespace left out, a run of whitespace taken as one, a
- * Unicode normalization first, and a unit other than the character (Unicode scalars, UTF-16
- * code units, or the bytes of an encoding). The options are kept for the whole application,
- * except the encoding, which is the document's each time the popover opens.
+ * The characters can also be counted with options, as CotEditor 7.1.3's Advanced Character
+ * Count counts them (String+AdvancedCounting.swift): line endings and whitespace left out, a
+ * run of two or more white space characters taken as one space, a Unicode normalization first
+ * (ICU's, and Modified NFC and NFD as Edit > Unicode Normalization makes them), and a unit other
+ * than the character (Unicode scalars, UTF-16 code units, or the bytes of an encoding). The
+ * options are kept for the whole application, except the encoding, which is the document's each
+ * time the popover opens. The characters of both columns are counted with the options.
  */
 
 #import <Foundation/Foundation.h>
@@ -23,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// What the characters are counted in.
 typedef NS_ENUM(NSInteger, TSCharacterUnit) {
-    TSCharacterUnitGraphemeCluster,   // as the status bar counts
+    TSCharacterUnitGraphemeCluster,   // the unit of the status bar
     TSCharacterUnitUnicodeScalar,
     TSCharacterUnitUTF16,
     TSCharacterUnitByte,              // in the options' encoding
@@ -37,22 +39,24 @@ typedef NS_ENUM(NSInteger, TSUnicodeNormalization) {
     TSUnicodeNormalizationNFKC,
     TSUnicodeNormalizationNFKD,
     TSUnicodeNormalizationNFKCCaseFold,
-    TSUnicodeNormalizationModifiedNFC,  // NFC except U+2000–U+2FFF, U+F900–U+FAFF and U+2F800–U+2FAFF, as HFS+ leaves them
-    TSUnicodeNormalizationModifiedNFD,  // NFD except the same ranges
+    TSUnicodeNormalizationModifiedNFC,  // as Edit > Unicode Normalization: NFC except the Full_Composition_Exclusion characters
+    TSUnicodeNormalizationModifiedNFD,  // as Edit > Unicode Normalization: the decomposition of HFS+ file names
 };
 
 /// How Text Statistics counts the characters.
 @interface TSCharacterCountOptions : NSObject <NSCopying>
-/// LF, CR, CR LF, NEL, LINE SEPARATOR and PARAGRAPH SEPARATOR are not counted.
+/// Characters that start with a line ending (\R: LF, VT, FF, CR, CR LF, NEL, LINE SEPARATOR, PARAGRAPH SEPARATOR) are not counted.
 @property (nonatomic) BOOL ignoresLineEndings;
-/// Tabs, the space separators (U+0020, U+00A0, U+3000 and the like), VT and FF are not counted.
+/// Then the characters that start with a tab or a space separator (U+0020, U+00A0, U+3000 and the like) are not counted.
 @property (nonatomic) BOOL ignoresWhitespace;
-/// A run of whitespace and line endings that are counted counts as its first one.
+/// Then a run of two or more characters that start with white space (\s) counts as one space; not with both options above.
 @property (nonatomic) BOOL treatsConsecutiveWhitespaceAsOne;
 @property (nonatomic) TSUnicodeNormalization normalization;
 @property (nonatomic) TSCharacterUnit unit;
 /// The encoding of TSCharacterUnitByte. Not saved.
 @property (nonatomic) NSStringEncoding encoding;
+/// Bytes are counted after Modified NFC, as TeXShop saves when it converts UTF-8-MAC to UTF-8. Not saved.
+@property (nonatomic) BOOL composesForSaving;
 /// The text as the encoding writes it (TeXShop writes a backslash as a yen sign in some Japanese encodings), or nil.
 @property (nonatomic, copy, nullable) NSString *_Nonnull (^textForEncoding)(NSString *text, NSStringEncoding encoding);
 /// The options kept in the settings, with UTF-8 as the encoding.
