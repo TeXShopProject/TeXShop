@@ -137,7 +137,7 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     CGFloat otherViewScale;
     PDFSelection *otherViewSelection;
     TSLinkPreviewView *otherViewPinnedLinkPreview;
-    // Closing the window closes that popup, as it does those shown (#60).
+    // Closing the window keeps that popup, as it does those shown; a new PDF closes it (#60, #70).
     // The popup's frame in window coordinates, less the top left corner of this view.
     NSRect otherViewPinnedLinkPreviewFrame;
 }

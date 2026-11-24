@@ -7788,7 +7788,10 @@ if (! useFullSplitWindow) {
     if (!self.externalPDFLoadedSignature) {
         NSString *path = [self externalPDFPath], *changeTime = nil;
         NSString *signature = TSExternalPDFState(path, &changeTime);
-        [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:self.myPDFKitView.document];
+        // A file changed since the PDF on display was read, as one with a password that was not
+        // taken because it showed no pages while locked, is not taken for it: it is read (#70).
+        if (!self.shownPDFSignature || [signature isEqualToString:self.shownPDFSignature])
+            [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:self.myPDFKitView.document];
     } else [self prepareExternalPDFContent];
     self.pdfActivity = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiatedAllowingIdleSystemSleep
                                                                    reason:@"Watch externally updated PDF"];
@@ -7820,7 +7823,6 @@ if (! useFullSplitWindow) {
                         document:(PDFDocument *)document
 {
     self.externalPDFLoadedSignature = signature;
-    self.shownPDFSignature = signature;
     self.externalPDFLoadedChangeTime = changeTime;
     self.externalPDFLoadedContent = signature && changeTime ?
         [[TSExternalPDFContent alloc] initWithDocument:document path:path signature:signature changeTime:changeTime] : nil;
@@ -7981,6 +7983,7 @@ if (! useFullSplitWindow) {
     if (split)
         TSExternalPDFRestore(self.myPDFKitView2, second);
     [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:replacement];
+    self.shownPDFSignature = signature;
     self.externalPDFPendingSignature = nil;
     self.pdfLastModDate = modified;
     if (!_externalEditor && self.documentType != isPDF) {
