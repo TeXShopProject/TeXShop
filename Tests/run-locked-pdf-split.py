@@ -11,8 +11,7 @@ the password field in each part while the PDF is locked.
 
 The page count in the toolbar, the outline and the PDF's own settings could only be read
 once the PDF was unlocked: they are filled in then, for each part that shows the PDF. A PDF
-shown again after the Preview was closed, or when there was no PDF at first, also tells the
-part when it is unlocked.
+shown when there was no PDF at first also tells the part when it is unlocked.
 
 Stand-ins, and what they hide:
 - MyPDFKitView here has only the methods the split code and the unlock call; display styles,
@@ -54,10 +53,10 @@ MUTATIONS = {
     'other-part-not-adopted': ('view', '            [part adoptUnlockedDocument];\n', '            ;\n'),
     'no-outline': ('view', '    [self setupOutline];\n    PDFView *activePart', '    PDFView *activePart'),
     'no-content-width': ('view', '    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)\n        [self fitContentWidth];\n', ''),
-    # A PDF shown again after the Preview was closed does not tell the part it was unlocked.
-    'closed-no-delegate': ('early', '        [[self document] setDelegate: (id<PDFDocumentDelegate>)self];\n', ''),
-    # A PDF shown again after the Preview was closed keeps the drawer's outline of the old PDF (#59).
-    'closed-no-outline': ('early', '        [self setupOutline];\n', ''),
+    # A PDF shown when there was no PDF at first does not tell the part it was unlocked.
+    'no-pdf-no-delegate': ('early', '        [[self document] setDelegate: (id<PDFDocumentDelegate>)self];\n', ''),
+    # A PDF shown when there was no PDF at first leaves the drawer's outline empty (#59).
+    'no-pdf-no-outline': ('early', '        [self setupOutline];\n', ''),
     # The page is marked before the outline of the unlocked PDF is read (#59).
     'outline-after-page': ('view',
                            '    [self setupOutline];\n    PDFView *activePart = self.myPDFWindow.activeView ?: self;\n    if ([activePart currentPage])\n        [self makePageChanges: [document indexForPage: [activePart currentPage]]];\n',
@@ -98,10 +97,11 @@ window_parts = [last_method(window_source, s) for s in (
 view_methods = [last_method(view_source, s) for s in (
     '- (void)documentDidUnlock:(NSNotification *)notification', '- (void)adoptUnlockedDocument',
     '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:')]
-# reShowWithDocument: shows a new PDF this way after the Preview was closed, or when there was no PDF.
-early_start = view_source.index('    if (self.myPDFWindow.noPdfFile  || self.myPDFWindow.previewClosed)\n')
+# reShowWithDocument: shows a new PDF this way when there was no PDF; a Preview that was closed
+# takes the usual reload since #70.
+early_start = view_source.index('    if (self.myPDFWindow.noPdfFile)\n')
 early = view_source[early_start:closing_brace(view_source, view_source.index('{', early_start))]
-fragments.append(('statements: reShowWithDocument: after the Preview was closed', view_source, early))
+fragments.append(('statements: reShowWithDocument: when there was no PDF', view_source, early))
 view_methods.append(last_method(view_source, '- (void)shareDocumentWithSecondView'))
 fragments += [('complete method: ' + text.split('\n')[0], source, text)
              for source, text in [(window_source, m) for m in window_parts] + [(view_source, m) for m in view_methods]]
@@ -418,8 +418,8 @@ int main(int argc, char **argv) { @autoreleasepool {
             [p.window close];
         }
     }
-    for (NSString *state in @[@"closed", @"no PDF"]) {
-        // Typesetting shows the PDF again after the Preview was closed, or when there was no PDF.
+    for (NSString *state in @[@"no PDF"]) {
+        // Typesetting shows the PDF when there was no PDF.
         NSString *name = [NSString stringWithFormat:@"shown again (%@)", state];
         Preview p = makePreview(plain, NO, NEW_PDF_FIT_TO_CONTENT_WIDTH);
         PDFDocument *first = p.first.document;

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Check that the Preview drawer's outline leads to the new PDF after the Preview is shown again (#59).
 
-When the Preview window was closed, or there was no PDF yet, reShowWithDocument: shows the new PDF through a short
-branch of its own. The drawer's outline must then be rebuilt from the new PDF: its entries for the old PDF point to
+When there was no PDF yet, reShowWithDocument: shows the new PDF through a short branch of its own; up to 6.00 RC2 a
+Preview that had been closed took it as well, and now takes the usual reload, which keeps the place (#70). The drawer's outline must then be rebuilt from the new PDF: its entries for the old PDF point to
 pages of a document that is gone, so a click on them moved nothing.
 
 The statements of that branch, setupOutline, the outline data source methods and takeDestinationFromOutline: run
@@ -42,10 +42,10 @@ if args.mutation == 'mark-scrolls':
     text = fragments[1][2]
     assert text.count(old) == 1
     fragments[1] = (fragments[1][0], source, text.replace(old, '    if (NO)\n'))
-# reShowWithDocument: shows a new PDF this way after the Preview was closed, or when there was no PDF.
-early_start = source.index('    if (self.myPDFWindow.noPdfFile  || self.myPDFWindow.previewClosed)\n')
+# reShowWithDocument: shows a new PDF this way when there was no PDF.
+early_start = source.index('    if (self.myPDFWindow.noPdfFile)\n')
 early = source[early_start:closing_brace(source, source.index('{', early_start))]
-fragments.append(('statements: reShowWithDocument: after the Preview was closed', source, early))
+fragments.append(('statements: reShowWithDocument: when there was no PDF', source, early))
 # The end of reShowForSecond, after the second part got its page back.
 second_start = source.index('    // The outline may have been rebuilt while this part showed another page; when this part\n')
 second_end = source.index('        [self showActivePartInOutline];\n', second_start) + len('        [self showActivePartInOutline];\n')
@@ -169,7 +169,7 @@ static ReopenView *makePart(NSWindow *window, PreviewWindowState *state) {
     return part;
 }
 
-// state: "closed" or "no PDF"; parts: "one", "split, first in use", "split, second in use".
+// state: "no PDF"; parts: "one", "split, first in use", "split, second in use".
 static void run(NSString *state, NSString *parts, BOOL cover) {
     NSString *name = [NSString stringWithFormat:@"%@, %@%@: ", state, parts, cover ? @", cover" : @""];
     NSData *data = bookData(cover);
@@ -201,25 +201,9 @@ static void run(NSString *state, NSString *parts, BOOL cover) {
 
     PDFDocument *first = [[PDFDocument alloc] initWithData:data];
     NSPoint scrolled = NSZeroPoint;
-    if ([state isEqual:@"closed"]) {
-        v.document = first;
-        second.document = first;
-        [v setupOutline];
-        click(v, @"Chapter 3");
-        check(shownPage(v) == 2 + c, [name stringByAppendingString:@"before the Preview is closed, the drawer leads to page 3"]);
-        check([marked(v) isEqual:@"Chapter 3"], [name stringByAppendingString:@"the entry clicked is marked"]);
-        // The outline is scrolled so that the entry to be marked is out of sight.
-        [o layoutSubtreeIfNeeded];
-        CGFloat bottom = NSHeight(o.frame) - NSHeight(clip.bounds);
-        check(bottom > 60, [name stringByAppendingString:@"the outline is taller than the drawer"]);
-        [clip scrollToPoint:NSMakePoint(0, [expected isEqual:@"Chapter 1"] ? bottom : 0)];
-        [scroll reflectScrolledClipView:clip];
-        windowState.previewClosed = YES;
-    } else {
-        [v setupOutline];
-        check(o.numberOfRows == 0, [name stringByAppendingString:@"with no PDF, the drawer is empty"]);
-        windowState.noPdfFile = YES;
-    }
+    [v setupOutline];
+    check(o.numberOfRows == 0, [name stringByAppendingString:@"with no PDF, the drawer is empty"]);
+    windowState.noPdfFile = YES;
     first = nil;
     scrolled = clip.bounds.origin;
     // Typesetting, or Command-1, reads the PDF again into a new document.
@@ -255,12 +239,11 @@ static void run(NSString *state, NSString *parts, BOOL cover) {
 int main(void) { @autoreleasepool {
     [SUD registerDefaults:@{@"UseOutline": @YES}];
     for (NSNumber *cover in @[@NO, @YES]) {
-        run(@"closed", @"one", cover.boolValue);
         run(@"no PDF", @"one", cover.boolValue);
-        run(@"closed", @"split, first in use", cover.boolValue);
-        run(@"closed", @"split, second in use", cover.boolValue);
+        run(@"no PDF", @"split, first in use", cover.boolValue);
+        run(@"no PDF", @"split, second in use", cover.boolValue);
     }
-    puts("PASS: after the Preview was closed and with no PDF before, the drawer leads to the pages of the new PDF and marks the page of the part in use");
+    puts("PASS: with no PDF before, the drawer leads to the pages of the new PDF and marks the page of the part in use");
 } return 0; }
 '''
 program = program.replace('METHODS', '\n'.join(f for label, _, f in fragments if label.startswith('complete method:')))

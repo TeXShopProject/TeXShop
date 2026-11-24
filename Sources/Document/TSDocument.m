@@ -100,6 +100,12 @@
 @interface TSDocument ()
 // Keep external PDF observation independent of source-file watching.
 @property (copy) NSString *externalPDFLoadedSignature;
+// The state of the file when the PDF on display was read, also for a locked PDF, which shows no
+// pages until it is unlocked: Command-1 shows a closed Preview again without reading an unchanged
+// file (#70).
+@property (copy) NSString *shownPDFSignature;
+// Its change time, which also tells an overwrite that keeps the size and modification time.
+@property (copy) NSString *shownPDFChangeTime;
 // Change time last known to belong to the loaded content, and that content.
 @property (copy) NSString *externalPDFLoadedChangeTime;
 @property (strong) TSExternalPDFContent *externalPDFLoadedContent;
@@ -7139,10 +7145,35 @@ if (! useFullSplitWindow) {
 		if ([self fromKit]){
 			if ([self.pdfKitWindow isVisible])
 				[self.pdfKitWindow makeKeyAndOrderFront: self];
-			else
+			else if ([self closedPreviewShowsPDFOnDisk]) {
+				// The Preview comes back as it was closed: at its place, with its pinned popups (#70).
+				[[NSApplication sharedApplication] activateIgnoringOtherApps: YES];
+				[self.pdfKitWindow makeKeyAndOrderFront: self];
+			} else
+				// A PDF changed while the Preview was closed is read; the place is kept, as after
+				// typesetting, and the pinned popups close, as on every reload (#70).
 				[self refreshPDFAndBringFront: YES];
 			}
 		}
+}
+
+// Whether the closed Preview still shows the PDF on disk: the file has not changed since it was
+// read (#70). The check made when the Preview becomes key compares the content as well. A locked
+// PDF counts too: reading it again would not show it.
+- (BOOL)closedPreviewShowsPDFOnDisk
+{
+	NSString *signature = TSExternalPDFSignature([self previewPDFPath]);
+	return signature && !self.pdfKitWindow.noPdfFile && self.myPDFKitView.document != nil
+		&& [signature isEqualToString: self.shownPDFSignature];
+}
+
+// The PDF the Preview shows: a PDF opened by itself is read again from the document's own file,
+// whatever the case of its extension; a source is shown by the PDF beside it.
+- (NSString *)previewPDFPath
+{
+	if ([self documentIsPDF])
+		return [[self fileURL] path];
+	return [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
 }
 
 // Explanation: When this document is the root document for a chapter of a project and the user switched to
@@ -7755,7 +7786,12 @@ if (! useFullSplitWindow) {
     if (!self.externalPDFLoadedSignature) {
         NSString *path = [self externalPDFPath], *changeTime = nil;
         NSString *signature = TSExternalPDFState(path, &changeTime);
-        [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:self.myPDFKitView.document];
+        // A file changed since the PDF on display was read, as one with a password that was not
+        // taken because it showed no pages while locked, is not taken for it: it is read (#70).
+        // A new change time alone may be an overwrite that kept the size and modification time.
+        if (!self.shownPDFSignature || ([signature isEqualToString:self.shownPDFSignature] &&
+            (!self.shownPDFChangeTime || [changeTime isEqualToString:self.shownPDFChangeTime])))
+            [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:self.myPDFKitView.document];
     } else [self prepareExternalPDFContent];
     self.pdfActivity = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiatedAllowingIdleSystemSleep
                                                                    reason:@"Watch externally updated PDF"];
@@ -7772,8 +7808,13 @@ if (! useFullSplitWindow) {
 // The state is taken before loading, so a later overwrite is still noticed.
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime
 {
-    if (signature && [path isEqualToString:[self externalPDFPath]] &&
-        self.myPDFKitView.document.pageCount && [signature isEqualToString:TSExternalPDFSignature(path)]) {
+    BOOL unchanged = signature && [path isEqualToString:[self externalPDFPath]] &&
+        [signature isEqualToString:TSExternalPDFSignature(path)];
+    self.shownPDFSignature = unchanged ? signature : nil;
+    self.shownPDFChangeTime = unchanged ? changeTime : nil;
+    // A PDF with a password may show no pages until it is unlocked; it is the PDF shown all the
+    // same, and a change of its file is told apart from one of its metadata as for any other (#70).
+    if (unchanged && (self.myPDFKitView.document.pageCount || self.myPDFKitView.document.isLocked)) {
         [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:self.myPDFKitView.document];
         self.externalPDFPendingSignature = nil;
         self.externalPDFGeneration++;
@@ -7945,6 +7986,8 @@ if (! useFullSplitWindow) {
     if (split)
         TSExternalPDFRestore(self.myPDFKitView2, second);
     [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:replacement];
+    self.shownPDFSignature = signature;
+    self.shownPDFChangeTime = changeTime;
     self.externalPDFPendingSignature = nil;
     self.pdfLastModDate = modified;
     if (!_externalEditor && self.documentType != isPDF) {
@@ -7966,14 +8009,7 @@ if (! useFullSplitWindow) {
 - (void)refreshPDFAndBringFront:(BOOL)front
 {
 	NSPDFImageRep	*tempRep;
-	NSString		*pdfPath;
-	
-	// A PDF opened by itself is read again from the document's own file, whatever the case of its
-	// extension; a source is shown by the PDF beside it.
-	if ([self documentIsPDF])
-		pdfPath = [[self fileURL] path];
-	else
-		pdfPath = [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
+	NSString		*pdfPath = [self previewPDFPath];
 
 	if ([[NSFileManager defaultManager] fileExistsAtPath: pdfPath]) {
 		tempRep = [NSPDFImageRep imageRepWithContentsOfFile: pdfPath];

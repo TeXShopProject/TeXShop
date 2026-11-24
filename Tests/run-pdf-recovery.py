@@ -193,9 +193,11 @@ int main(int argc,char**argv){@autoreleasepool{
    [v reShowWithPath:live];
    check([v.document indexForPage:v.currentPage]==2,@"Reload preserves the most recent page after reopening");
   }
+  // A Preview that stays closed until typesetting finishes keeps its place too (#70).
   [v.myPDFWindow close];
   [v reShowWithPath:live];
-  check([v.document indexForPage:v.currentPage]==0 && !v.myPDFWindow.previewClosed,@"Reload while still closed retains initial-page behavior");
+  check([v.document indexForPage:v.currentPage]==2,@"Reload while still closed keeps the page");
+  check(v.myPDFWindow.previewClosed,@"Reload while still closed leaves the window closed until it is shown");
   v.myPDFWindow.noPdfFile=YES;
   [v.myPDFWindow orderWindow:NSWindowAbove relativeTo:0];
   check(v.myPDFWindow.noPdfFile,@"Reopening does not discard first-PDF initialization");
