@@ -100,6 +100,10 @@
 @interface TSDocument ()
 // Keep external PDF observation independent of source-file watching.
 @property (copy) NSString *externalPDFLoadedSignature;
+// The state of the file when the PDF on display was read, also for a locked PDF, which shows no
+// pages until it is unlocked: Command-1 shows a closed Preview again without reading an unchanged
+// file (#70).
+@property (copy) NSString *shownPDFSignature;
 // Change time last known to belong to the loaded content, and that content.
 @property (copy) NSString *externalPDFLoadedChangeTime;
 @property (strong) TSExternalPDFContent *externalPDFLoadedContent;
@@ -7156,12 +7160,13 @@ if (! useFullSplitWindow) {
 }
 
 // Whether the closed Preview still shows the PDF on disk: the file has not changed since it was
-// read (#70). The check made when the Preview becomes key compares the content as well.
+// read (#70). The check made when the Preview becomes key compares the content as well. A locked
+// PDF counts too: reading it again would not show it.
 - (BOOL)closedPreviewShowsPDFOnDisk
 {
 	NSString *signature = TSExternalPDFSignature([self previewPDFPath]);
-	return signature && !self.pdfKitWindow.noPdfFile && self.myPDFKitView.document.pageCount > 0
-		&& [signature isEqualToString: self.externalPDFLoadedSignature];
+	return signature && !self.pdfKitWindow.noPdfFile && self.myPDFKitView.document != nil
+		&& [signature isEqualToString: self.shownPDFSignature];
 }
 
 // The PDF the Preview shows: a PDF opened by itself is read again from the document's own file,
@@ -7800,8 +7805,10 @@ if (! useFullSplitWindow) {
 // The state is taken before loading, so a later overwrite is still noticed.
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime
 {
-    if (signature && [path isEqualToString:[self externalPDFPath]] &&
-        self.myPDFKitView.document.pageCount && [signature isEqualToString:TSExternalPDFSignature(path)]) {
+    BOOL unchanged = signature && [path isEqualToString:[self externalPDFPath]] &&
+        [signature isEqualToString:TSExternalPDFSignature(path)];
+    self.shownPDFSignature = unchanged ? signature : nil;
+    if (unchanged && self.myPDFKitView.document.pageCount) {
         [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:self.myPDFKitView.document];
         self.externalPDFPendingSignature = nil;
         self.externalPDFGeneration++;
@@ -7813,6 +7820,7 @@ if (! useFullSplitWindow) {
                         document:(PDFDocument *)document
 {
     self.externalPDFLoadedSignature = signature;
+    self.shownPDFSignature = signature;
     self.externalPDFLoadedChangeTime = changeTime;
     self.externalPDFLoadedContent = signature && changeTime ?
         [[TSExternalPDFContent alloc] initWithDocument:document path:path signature:signature changeTime:changeTime] : nil;

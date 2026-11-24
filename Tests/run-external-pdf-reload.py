@@ -86,7 +86,7 @@ static void RunInline(dispatch_block_t block) { block(); }
 @property NSTask *texTask;
 @property BOOL annotationsExist, useOldSyncParser, useConTeXtSyncParser;
 @property NSInteger documentType;
-@property NSString *externalPDFLoadedSignature,*externalPDFPendingSignature,*externalPDFLoadedChangeTime;
+@property NSString *externalPDFLoadedSignature,*externalPDFPendingSignature,*externalPDFLoadedChangeTime,*shownPDFSignature;
 @property TSExternalPDFContent *externalPDFLoadedContent;
 @property NSTimer *pdfRefreshTimer;
 @property NSDate *pdfLastModDate;

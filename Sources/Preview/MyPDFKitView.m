@@ -138,7 +138,6 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     PDFSelection *otherViewSelection;
     TSLinkPreviewView *otherViewPinnedLinkPreview;
     // Closing the window closes that popup, as it does those shown (#60).
-    id otherViewWindowObserver;
     // The popup's frame in window coordinates, less the top left corner of this view.
     NSRect otherViewPinnedLinkPreviewFrame;
 }
@@ -154,7 +153,6 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
 - (void)dealloc
 {
     if (linkPreviewEventMonitor) [NSEvent removeMonitor:linkPreviewEventMonitor];
-    if (otherViewWindowObserver) [[NSNotificationCenter defaultCenter] removeObserver:otherViewWindowObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (external_scanner != NULL)
         synctex_scanner_free(external_scanner);
@@ -8921,13 +8919,8 @@ else
     [[NSNotificationCenter defaultCenter] removeObserver:self name:PDFViewDocumentChangedNotification object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(otherViewDocumentChanged:)
         name:PDFViewDocumentChangedNotification object:self];
-    // A block, which the link popups' own observers of the window, removed by name, leave alone.
-    if (otherViewWindowObserver) [[NSNotificationCenter defaultCenter] removeObserver:otherViewWindowObserver];
-    __weak MyPDFKitView *weakSelf = self;
-    otherViewWindowObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowWillCloseNotification
-        object:self.window queue:nil usingBlock:^(NSNotification *notification) {
-            [weakSelf closeOtherViewPinnedLinkPreview];
-        }];
+    // Closing the window keeps the popup of the other view, as that of the view shown: Command-1
+    // shows the window again as it was closed (#70).
     self.oldUsed = YES;
     otherViewPlace = place;
     otherViewPageStyle = style;

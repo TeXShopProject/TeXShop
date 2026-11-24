@@ -10,9 +10,13 @@ PDF cannot be shown, previewClosed is set again, so that a later typeset run sti
 bringPdfWindowFront, closedPreviewShowsPDFOnDisk and previewPDFPath run unchanged in a stand-in document with a
 real PDFView and real files; refreshPDFAndBringFront: is recorded instead of reading the PDF, and the window is a
 stand-in that is never shown.
+notePDFLoadedAtPath: and externalPDFPath run unchanged as well: the state of the file is noted also for a PDF
+with a password, which shows no pages while it is locked, and not for a file that changed while it was read.
 --mutation always-reload reads the PDF also when it has not changed, ignores-change never reads it again,
 reload-from-top reads a changed PDF with previewClosed still set, closed-flag-lost leaves previewClosed cleared
-after a reload that showed nothing, ignores-missing-pdf counts a Preview without a PDF as showing the file.
+after a reload that showed nothing, ignores-missing-pdf counts a Preview without a PDF as showing the file,
+locked-not-noted notes no state for a locked PDF, locked-not-shown reads a locked PDF again,
+changed-on-load-noted notes the state of a file that changed while it was read.
 The harness must then fail.
 """
 import argparse
@@ -25,19 +29,27 @@ from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['always-reload', 'ignores-change', 'reload-from-top', 'closed-flag-lost',
-                                           'ignores-missing-pdf'])
+                                           'ignores-missing-pdf', 'locked-not-noted', 'locked-not-shown',
+                                           'changed-on-load-noted'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Document/TSDocument.m').read_text(encoding='utf-8')
-signatures = ['- (void)bringPdfWindowFront{', '- (BOOL)closedPreviewShowsPDFOnDisk', '- (NSString *)previewPDFPath']
+signatures = ['- (void)bringPdfWindowFront{', '- (BOOL)closedPreviewShowsPDFOnDisk', '- (NSString *)previewPDFPath',
+              '- (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime\n{',
+              '- (NSString *)externalPDFPath\n{']
 fragments = [('complete method: ' + s, source, method(source, s)) for s in signatures]
 mutations = {
     'always-reload': (1, '\treturn signature && ', '\treturn NO && signature && '),
-    'ignores-change': (1, '[signature isEqualToString: self.externalPDFLoadedSignature]', 'YES'),
+    'ignores-change': (1, '[signature isEqualToString: self.shownPDFSignature]', 'YES'),
     'reload-from-top': (0, '\t\t\t\tself.pdfKitWindow.previewClosed = NO;\n\t\t\t\t[self refreshPDFAndBringFront: YES];',
                         '\t\t\t\t[self refreshPDFAndBringFront: YES];'),
     'closed-flag-lost': (0, '\t\t\t\tif (![self.pdfKitWindow isVisible])\n\t\t\t\t\tself.pdfKitWindow.previewClosed = YES;\n', ''),
-    'ignores-missing-pdf': (1, ' && !self.pdfKitWindow.noPdfFile && self.myPDFKitView.document.pageCount > 0', ''),
+    'ignores-missing-pdf': (1, ' && !self.pdfKitWindow.noPdfFile && self.myPDFKitView.document != nil', ''),
+    # The first audit: a locked PDF, which has no pages until it is unlocked, left no signature, and Command-1
+    # read it again, which showed nothing.
+    'locked-not-noted': (3, '    BOOL unchanged = signature && ', '    BOOL unchanged = signature && self.myPDFKitView.document.pageCount && '),
+    'locked-not-shown': (1, ' && self.myPDFKitView.document != nil', ' && self.myPDFKitView.document.pageCount > 0'),
+    'changed-on-load-noted': (3, '    self.shownPDFSignature = unchanged ? signature : nil;', '    self.shownPDFSignature = signature;'),
 }
 texts = [f for _, _, f in fragments]
 if args.mutation:
@@ -85,7 +97,8 @@ program = r'''
 }
 @property (strong) StandInPreviewWindow *pdfKitWindow;
 @property (strong) PDFView *myPDFKitView;
-@property (copy) NSString *externalPDFLoadedSignature;
+@property (copy) NSString *shownPDFSignature, *externalPDFPendingSignature;
+@property NSInteger externalPDFGeneration, accepted;
 @property (strong) NSURL *fileURL;
 @property BOOL documentIsPDF, readingShowsPDF;
 @property NSInteger reloads;
@@ -97,6 +110,9 @@ program = r'''
 - (BOOL)checkMasterFile:(NSString *)text forTask:(NSInteger)task { return NO; }
 - (BOOL)checkRootFile_forTask:(NSInteger)task { return NO; }
 - (BOOL)fromKit { return YES; }
+// The PDF with pages is also taken for the external reloads; it is only counted here.
+- (void)acceptExternalPDFAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime
+                        document:(PDFDocument *)document { self.accepted++; }
 // Reading the PDF again: recorded, with the state it starts from. The Preview is shown when the PDF can be read.
 - (void)refreshPDFAndBringFront:(BOOL)front {
     self.reloads++;
@@ -109,6 +125,23 @@ METHODS
 static void check(BOOL ok, NSString *message) {
     if (!ok) { fprintf(stderr, "FAIL: %s\n", message.UTF8String); exit(1); }
 }
+// PDFKit counts the pages of the PDF it writes with a password while it is locked; it counts none in a PDF
+// whose cross-reference table is compressed, as the reporter's of #55, until it is unlocked.
+@interface CompressedLockedPDF : PDFDocument
+@end
+@implementation CompressedLockedPDF
+- (NSUInteger)pageCount { return self.isLocked ? 0 : [super pageCount]; }
+@end
+static NSData *pdfData(NSInteger pages);
+static NSData *lockedData(void) {
+    PDFDocument *document = [[PDFDocument alloc] initWithData:pdfData(6)];
+    NSDictionary *options = @{PDFDocumentUserPasswordOption: @"secret", PDFDocumentOwnerPasswordOption: @"owner"};
+    NSString *file = [NSProcessInfo.processInfo.environment[@"TS_TEST_DIR"] stringByAppendingPathComponent:@"lock.tmp"];
+    [document writeToFile:file withOptions:options];
+    NSData *data = [NSData dataWithContentsOfFile:file];
+    [[NSFileManager defaultManager] removeItemAtPath:file error:nil];
+    return data;
+}
 static NSData *pdfData(NSInteger pages) {
     PDFDocument *document = [[PDFDocument alloc] init];
     for (NSInteger i = 0; i < pages; i++) {
@@ -119,24 +152,39 @@ static NSData *pdfData(NSInteger pages) {
     return [document dataRepresentation];
 }
 
-// A document whose Preview was closed while it showed page 4 of its PDF.
-static ReopenDocument *closedPreview(NSString *directory, NSString *name, BOOL isPDF) {
+// A document whose Preview was closed while it showed page 4 of its PDF; a locked PDF is left
+// locked, or unlocked before, as the user does in the Preview.
+static ReopenDocument *closedPreviewOf(NSString *directory, NSString *name, BOOL isPDF, int lock) {
     ReopenDocument *d = [ReopenDocument new];
     d.documentIsPDF = isPDF;
     d.fileURL = [NSURL fileURLWithPath:[directory stringByAppendingPathComponent:name]];
     NSString *pdf = isPDF ? d.fileURL.path : [[d.fileURL.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
     if (!isPDF) [@"\\documentclass{article}" writeToURL:d.fileURL atomically:YES encoding:NSUTF8StringEncoding error:nil];
-    [pdfData(6) writeToFile:pdf atomically:YES];
+    [(lock ? lockedData() : pdfData(6)) writeToFile:pdf atomically:YES];
     d.pdfKitWindow = [StandInPreviewWindow new];
     d.myPDFKitView = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 300, 400)];
     d.myPDFKitView.displayMode = kPDFDisplaySinglePage;
-    d.myPDFKitView.document = [[PDFDocument alloc] initWithData:[NSData dataWithContentsOfFile:pdf]];
-    // The state of the file when it was read, as notePDFLoadedAtPath: records it.
-    d.externalPDFLoadedSignature = TSExternalPDFSignature(pdf);
-    [d.myPDFKitView goToPage:[d.myPDFKitView.document pageAtIndex:3]];
+    // Read as reShowWithPath: does: the state of the file is taken first, and noted after the PDF is shown.
+    NSString *signature = TSExternalPDFSignature(pdf);
+    Class kind = lock ? [CompressedLockedPDF class] : [PDFDocument class];
+    d.myPDFKitView.document = [[kind alloc] initWithData:[NSData dataWithContentsOfFile:pdf]];
+    [d notePDFLoadedAtPath:pdf signature:signature changeTime:nil];
+    check(d.shownPDFSignature != nil && [d.shownPDFSignature isEqual:signature], @"fixture: the state of the file read is noted");
+    check(d.accepted == (lock ? 0 : 1), @"fixture: only a PDF with pages is taken for the external reloads");
+    if (lock) {
+        check(d.myPDFKitView.document.isLocked && d.myPDFKitView.document.pageCount == 0, @"fixture: a locked PDF shows no pages");
+        if (lock == 2)
+            check([d.myPDFKitView.document unlockWithPassword:@"secret"] && d.myPDFKitView.document.pageCount == 6,
+                  @"fixture: the PDF is unlocked");
+    }
+    if (d.myPDFKitView.document.pageCount)
+        [d.myPDFKitView goToPage:[d.myPDFKitView.document pageAtIndex:3]];
     d.pdfKitWindow.previewClosed = YES;
     d.readingShowsPDF = YES;
     return d;
+}
+static ReopenDocument *closedPreview(NSString *directory, NSString *name, BOOL isPDF) {
+    return closedPreviewOf(directory, name, isPDF, 0);
 }
 static NSInteger shownPage(ReopenDocument *d) {
     return (NSInteger)[d.myPDFKitView.document indexForPage:d.myPDFKitView.currentPage];
@@ -205,6 +253,26 @@ int main(void) { @autoreleasepool {
     rewrite(d.fileURL.path);
     [d bringPdfWindowFront];
     check(d.reloads == 1 && !d.closedAtReload, @"PDF document: a changed file is read at the place left");
+
+    // A PDF with a password, unlocked before the Preview was closed: shown again unlocked, at its place.
+    d = closedPreviewOf(directory, @"unlocked.tex", NO, 2);
+    shown = d.myPDFKitView.document;
+    [d bringPdfWindowFront];
+    check(d.reloads == 0 && d.pdfKitWindow.visible && d.myPDFKitView.document == shown && !shown.isLocked && shownPage(d) == 3,
+          @"unlocked PDF: shown again unlocked at page 4, without reading it again");
+    // Still locked: shown again as it was, asking for the password, since reading it again shows nothing.
+    d = closedPreviewOf(directory, @"locked.tex", NO, 1);
+    [d bringPdfWindowFront];
+    check(d.reloads == 0 && d.pdfKitWindow.visible, @"locked PDF: the Preview is shown again");
+    // A PDF that changed while it was read: its state is not taken for the PDF shown.
+    d = closedPreview(directory, @"during.tex", NO);
+    NSString *during = [directory stringByAppendingPathComponent:@"during.pdf"];
+    NSString *before = TSExternalPDFSignature(during);
+    rewrite(during);
+    [d notePDFLoadedAtPath:during signature:before changeTime:nil];
+    check(d.shownPDFSignature == nil, @"PDF changed while it was read: no state is noted");
+    [d bringPdfWindowFront];
+    check(d.reloads == 1, @"PDF changed while it was read: Command-1 reads it again");
 
     // An external editor has no Preview of TeXShop's to bring front.
     d = closedPreview(directory, @"external.tex", NO);
