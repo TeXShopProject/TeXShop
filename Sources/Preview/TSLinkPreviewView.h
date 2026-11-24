@@ -45,6 +45,18 @@
 - (TSLinkPreviewView *)copyWithFrame:(NSRect)frame;
 - (BOOL)returnToPlaceOnPage;
 - (BOOL)returnToPlaceIfAway;
+// What the popup shows, kept for the next launch of TeXShop (#71): its pages, the part of them
+// in view and its label, under keys starting with prefix.
+- (void)encodeContentWithCoder:(NSCoder *)coder prefix:(NSString *)prefix;
+// A popup showing the same part of the same pages of document, drawn again: the linked page alone
+// when the next one is gone, and the part in view moved and kept in proportion when the pages
+// changed size. nil when the coder holds none or the linked page is no longer there.
++ (TSLinkPreviewView *)linkPreviewWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
+                                    document:(PDFDocument *)document frame:(NSRect)frame;
+// While the popup is away from its place because its page is not shown (#35), the page and the
+// rectangle on it it goes back to; nil otherwise. Kept for the next launch of TeXShop (#71).
+- (PDFPage *)awayPlaceOnPage:(NSRect *)rect;
+- (void)setAwayPlaceOnPage:(PDFPage *)page rect:(NSRect)rect;
 
 @end
 

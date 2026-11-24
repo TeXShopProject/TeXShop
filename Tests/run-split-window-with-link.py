@@ -202,6 +202,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 // TSPreviewChangeSize and tell the keeper when they were laid out, as MyPDFKitView does (#53).
 static BOOL fullSizeWindows;
 @implementation MyPDFKitView
+// The state kept for the next launch of TeXShop has its own test, run-preview-restore-state.py.
+- (void)previewStateChanged {}
 - (void)setFrameSize:(NSSize)size {
     if (fullSizeWindows) TSPreviewChangeSize(self, ^{ [super setFrameSize:size]; });
     else [super setFrameSize:size];

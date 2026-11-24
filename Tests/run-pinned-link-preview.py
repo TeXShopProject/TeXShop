@@ -513,6 +513,8 @@ DOCUMENTMETHODS
 - (void)closeOtherViewPinnedLinkPreview;
 @end
 @implementation MyPDFKitView
+// The state kept for the next launch of TeXShop has its own test, run-preview-restore-state.py.
+- (void)previewStateChanged {}
 // The other view of Switch Views has its own test, run-preview-switch-views.py.
 - (void)closeOtherViewPinnedLinkPreview {}
 // The popup on show, the pinned one if there is one; and whether one is pinned.

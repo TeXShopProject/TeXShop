@@ -97,6 +97,8 @@ BACKFORWARDITEM
 - (void)applyPreviewArrangement;
 @end
 @implementation MyPDFKitView
+// The state kept for the next launch of TeXShop has its own test, run-preview-restore-state.py.
+- (void)previewStateChanged {}
 - (void)doKillPopup { self.handlingLink = 0; }
 - (void)cleanupMarquee:(BOOL)b {}
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
