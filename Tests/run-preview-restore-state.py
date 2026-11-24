@@ -56,11 +56,16 @@ MUTATIONS = {
     # The third audit: a narrower linked page above a wider next one showed the gray margin.
     # The fourth audit: a popup scrolled onto its next page was moved back onto the linked page.
     'linked-page-only': ('popup', '            anchor = i;\n', '            anchor = 0;\n'),
-    'same-pages-fitted': ('popup', '    if (pages.count == indices.count && NSEqualSizes(saved, size))', '    if (NO)'),
+    'same-pages-fitted': ('popup', '    if (same)\n', '    if (NO)\n'),
+    # The fifth audit: one page narrower, the whole image as wide as before, went unnoticed.
+    'image-size-only': ('popup', '        same = [coder containsValueForKey:key] && NSEqualSizes([coder decodeSizeForKey:key], rects[i].size);', '        same = YES;'),
+    # The fifth audit: a part within a lower next page went on onto the linked page.
+    # A part across the gap kept from the bottom of its page left the gap when the next page got lower.
+    'gap-ignored': ('popup', '            source.origin.y = NSMaxY(rects[1]) + [coder decodeDoubleForKey:gap];', '            ;'),
+    'strip-height': ('popup', '        bounds = rects[anchor];\n', '        bounds = NSMakeRect(NSMinX(rects[anchor]), 0, NSWidth(rects[anchor]), size.height);\n'),
     # The fourth audit: away from a page turned a quarter, the popup came back upright.
     'away-turn-ignored': ('view', '            if (((home.rotation % 180) + 180) % 180 == 90)', '            if (NO)'),
-    'strip-margin': ('popup', '        bounds = NSMakeRect(NSMinX(rects[anchor]), 0, NSWidth(rects[anchor]), size.height);',
-                     '        bounds = NSMakeRect(0, 0, size.width, size.height);'),
+    'strip-margin': ('popup', '        bounds = rects[anchor];\n', '        bounds = NSMakeRect(0, 0, size.width, size.height);\n'),
     # The second audit: pages of another size stretched the popup or lost it; a missing next page lost it.
     'source-cut': ('popup', '    source = TSLinkPreviewFitSource(source, bounds);', '    source = NSIntersectionRect(source, NSMakeRect(0, 0, size.width, size.height));'),
     'next-page-required': ('popup', '        if (!there) {\n            if (pages.count == 0) return nil;\n            break;\n        }', '        if (!there) return nil;'),
@@ -223,6 +228,17 @@ static void check(BOOL ok, NSString *message) {
 static BOOL near(CGFloat a, CGFloat b, CGFloat d) { return fabs(a - b) <= d; }
 static void pump(void) {
     for (int i = 0; i < 5; i++) [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+}
+// Pages of the given sizes.
+static PDFDocument *pagesOfSizes(NSArray<NSValue *> *sizes) {
+    PDFDocument *document = [[PDFDocument alloc] init];
+    for (NSUInteger i = 0; i < sizes.count; i++) {
+        NSSize size = sizes[i].sizeValue;
+        NSImage *image = [[NSImage alloc] initWithSize:size];
+        [image lockFocus]; [NSColor.whiteColor setFill]; NSRectFill(NSMakeRect(0, 0, size.width, size.height)); [image unlockFocus];
+        [document insertPage:[[PDFPage alloc] initWithImage:image] atIndex:i];
+    }
+    return [[PDFDocument alloc] initWithData:document.dataRepresentation];
 }
 // Pages of the given widths, 792 points high.
 static PDFDocument *pagesOfWidths(NSArray<NSNumber *> *widths) {
@@ -646,6 +662,43 @@ int main(void) { @autoreleasepool {
         check(moved && near(NSMinX(moved.source), NSMaxX(second) - 170, 0.5) && near(NSMinY(moved.source), 300, 0.5)
               && near(NSWidth(moved.source), 170, 0.5),
               [NSString stringWithFormat:@"a narrower next page: the part lies on it (%@ within %@)", NSStringFromRect(moved.source), NSStringFromRect(second)]);
+    }
+
+    {   // Only one page of a popup changed size, the whole image keeping its size; or the next page is
+        // lower: the part in view stays on the page it showed (fifth audit).
+        PDFDocument *wide = pagesOfWidths(@[@612, @612, @800, @612]);
+        TestWindow *before = preview(wide);
+        MyPDFKitView *one = (MyPDFKitView *)before.myPDFKitView;
+        TSLinkPreviewView *onLinked = pin(one, 1, NSMakeRect(100, 120, 170, 100), NSMakeRect(500, 1000, 170, 100));
+        NSData *content = archive(^(NSKeyedArchiver *a) { [onLinked encodeContentWithCoder:a prefix:@"C"]; });
+        [onLinked removeFromSuperview]; one->pinnedLinkPreview = nil;
+        PDFDocument *narrowLinked = pagesOfWidths(@[@612, @300, @800, @612]);
+        TSLinkPreviewView *fitted = [TSLinkPreviewView linkPreviewWithCoder:unarchiver(content) prefix:@"C" document:narrowLinked frame:NSMakeRect(0, 0, 170, 100)];
+        NSRect first, second;
+        TSLinkPreviewStrip(NSMakeSize(300, 792), NSMakeSize(800, 792), &first, &second);
+        check(fitted && NSContainsRect(NSInsetRect(first, -0.5, -0.5), fitted.source),
+              [NSString stringWithFormat:@"only the linked page narrower: the part lies on it (%@ within %@)", NSStringFromRect(fitted.source), NSStringFromRect(first)]);
+
+        PDFDocument *tall = pagesOfWidths(@[@612, @612, @612, @612]);
+        before = preview(tall); one = (MyPDFKitView *)before.myPDFKitView;
+        TSLinkPreviewView *onNext = pin(one, 1, NSMakeRect(100, 120, 170, 100), NSMakeRect(100, 600, 170, 100));
+        content = archive(^(NSKeyedArchiver *a) { [onNext encodeContentWithCoder:a prefix:@"C"]; });
+        [onNext removeFromSuperview]; one->pinnedLinkPreview = nil;
+        PDFDocument *lowNext = pagesOfSizes(@[[NSValue valueWithSize:NSMakeSize(612, 792)], [NSValue valueWithSize:NSMakeSize(612, 792)],
+                                              [NSValue valueWithSize:NSMakeSize(612, 340)], [NSValue valueWithSize:NSMakeSize(612, 792)]]);
+        fitted = [TSLinkPreviewView linkPreviewWithCoder:unarchiver(content) prefix:@"C" document:lowNext frame:NSMakeRect(0, 0, 170, 100)];
+        TSLinkPreviewStrip(NSMakeSize(612, 792), NSMakeSize(612, 340), &first, &second);
+        check(fitted && NSContainsRect(NSInsetRect(second, -0.5, -0.5), fitted.source) && near(NSHeight(fitted.source), 100, 0.5),
+              [NSString stringWithFormat:@"a lower next page: the part stays on it (%@ within %@)", NSStringFromRect(fitted.source), NSStringFromRect(second)]);
+
+        // A part that went on across the gap still may, down the whole strip.
+        TSLinkPreviewView *across = pin(one, 1, NSMakeRect(100, 120, 170, 100), NSMakeRect(100, 740, 170, 100));
+        content = archive(^(NSKeyedArchiver *a) { [across encodeContentWithCoder:a prefix:@"C"]; });
+        fitted = [TSLinkPreviewView linkPreviewWithCoder:unarchiver(content) prefix:@"C" document:lowNext frame:NSMakeRect(0, 0, 170, 100)];
+        // It went from 52 points below the top of the next page across the gap; it still does.
+        check(fitted && near(NSHeight(fitted.source), 100, 0.5) && near(NSMinY(fitted.source), NSMaxY(second) - 52, 0.5)
+              && NSMaxY(fitted.source) > NSMinY(first),
+              [NSString stringWithFormat:@"a part across the gap stays across it (%@)", NSStringFromRect(fitted.source)]);
     }
 
     {   // Away from its place on a page turned a quarter, with the page it was brought to gone, the popup

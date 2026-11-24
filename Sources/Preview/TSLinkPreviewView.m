@@ -483,7 +483,16 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     [coder encodeInteger:(NSInteger)anchor forKey:[prefix stringByAppendingString:@"SourcePage"]];
     [coder encodeRect:NSOffsetRect(_source, -NSMinX(_pageRects[anchor]), -NSMinY(_pageRects[anchor]))
                forKey:[prefix stringByAppendingString:@"SourceOnPage"]];
-    [coder encodeSize:_pageSize forKey:[prefix stringByAppendingString:@"ImageSize"]];
+    // The size of each page, which tells whether the pages changed: the whole image can keep its
+    // size when only one of them does.
+    for (NSUInteger i = 0; i < _pageCount; i++)
+        [coder encodeSize:_pageRects[i].size forKey:[prefix stringByAppendingFormat:@"PageSize%lu", (unsigned long)i]];
+    // Whether the part in view lay within that page from top to bottom, or went on across the gap;
+    // then its height is kept from the gap, the top of the next page, which it straddles.
+    BOOL within = NSMinY(_source) >= NSMinY(_pageRects[anchor]) - 0.5 && NSMaxY(_source) <= NSMaxY(_pageRects[anchor]) + 0.5;
+    [coder encodeBool:within forKey:[prefix stringByAppendingString:@"SourceWithinPage"]];
+    if (!within && _pageCount == 2)
+        [coder encodeDouble:NSMinY(_source) - NSMaxY(_pageRects[1]) forKey:[prefix stringByAppendingString:@"SourceFromGap"]];
     if (self.pageLabel)
         [coder encodeObject:self.pageLabel forKey:[prefix stringByAppendingString:@"Label"]];
 }
@@ -543,15 +552,27 @@ static NSRect TSLinkPreviewFitSource(NSRect source, NSRect bounds)
     // Without the next page, the part in view goes onto the linked page.
     if (anchor < 0 || (NSUInteger)anchor >= pages.count) anchor = 0;
     NSRect source = NSOffsetRect(onPage, NSMinX(rects[anchor]), NSMinY(rects[anchor]));
-    NSSize saved = [coder decodeSizeForKey:[prefix stringByAppendingString:@"ImageSize"]];
+    BOOL same = pages.count == indices.count;
+    for (NSUInteger i = 0; same && i < pages.count; i++) {
+        NSString *key = [prefix stringByAppendingFormat:@"PageSize%lu", (unsigned long)i];
+        same = [coder containsValueForKey:key] && NSEqualSizes([coder decodeSizeForKey:key], rects[i].size);
+    }
     NSRect bounds;
-    if (pages.count == indices.count && NSEqualSizes(saved, size))
+    if (same)
         // The same pages: the part in view is the one shown before, wherever it was scrolled to.
         bounds = NSMakeRect(0, 0, size.width, size.height);
-    else
-        // Pages of another size: across the width of the page it showed, which in the strip may be
-        // narrower than the other one and lie between gray margins; down the whole strip.
+    else if ([coder decodeBoolForKey:[prefix stringByAppendingString:@"SourceWithinPage"]])
+        // Pages of another size: on the page it showed, which in the strip may be narrower or lower
+        // than the other one and lie beside gray margins.
+        bounds = rects[anchor];
+    else {
+        // A part that went on across the gap: across the width of its page, down the whole strip,
+        // still straddling the gap.
         bounds = NSMakeRect(NSMinX(rects[anchor]), 0, NSWidth(rects[anchor]), size.height);
+        NSString *gap = [prefix stringByAppendingString:@"SourceFromGap"];
+        if (pages.count == 2 && [coder containsValueForKey:gap])
+            source.origin.y = NSMaxY(rects[1]) + [coder decodeDoubleForKey:gap];
+    }
     source = TSLinkPreviewFitSource(source, bounds);
     if (!image || NSIsEmptyRect(source)) return nil;
     TSLinkPreviewView *preview = [[self alloc] initWithFrame:frame image:image source:source pageSize:size
