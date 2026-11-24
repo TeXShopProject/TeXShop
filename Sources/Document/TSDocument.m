@@ -3560,6 +3560,13 @@ else {
             *folder = file.isFileURL ? file.URLByDeletingLastPathComponent : nil;
             *encoding = document->_encoding;
         }];
+        // Bytes are counted as TeXShop writes the text, in the encodings of its list.
+        self.textStatistics.textForEncoding = ^NSString *(NSString *text, NSStringEncoding encoding) {
+            return [[TSEncodingSupport sharedInstance] textForSaving:text encoding:encoding];
+        };
+        self.textStatistics.contentController.addEncodings = ^(NSMenu *menu) {
+            [[TSEncodingSupport sharedInstance] addEncodingsToMenu:menu withTarget:nil action:NULL];
+        };
     }
     // The popover opens above the anchor, over the source. NSPopover takes the edge in the anchor's own coordinates,
     // where the top is the minimum y of a flipped view (the status bar's button, the source's scroll view).

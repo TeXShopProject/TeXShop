@@ -27,12 +27,24 @@ is faked far off the real screens (NSScreen's frame), and nothing is ordered in:
    as well. The document nibs no longer hold the former Statistics panel.
 5. The menus keep Edit > Statistics… with its shortcut identifier in 12 languages; the old
    statistics code and detexwrap are gone.
+6. The character count options (as CotEditor's Advanced Character Count): line endings and
+   whitespace left out, runs of whitespace as one (CR LF one line ending), the Unicode
+   normalizations, and the units (grapheme clusters, Unicode scalars, UTF-16, bytes of an
+   encoding as TeXShop writes the text, a character it cannot write); the options kept for the
+   application but not the encoding; a count again with other options without detex.
+7. The popover's options: the button shows them under the table and is remembered; a change
+   counts again at once without running detex and is kept; the first row is named after the
+   unit; the encoding row only for bytes, with TeXShop's encodings and the document's encoding
+   each time the popover opens; "Treat consecutive whitespace as one" off when both kinds are
+   left out; a byte count that fails shows a dash with a tool tip; the button is tinted while
+   the options are hidden and not those of the status bar.
 
 --images DIR draws the source window of the Base and Japanese nibs in Light and Dark Mode
 with the popover's content (production views) in a drawn popover frame where AppKit placed
 the popover (the picture grows when the popover is outside the window): whole document,
-selection, counting, detex missing, the status bar hidden, and the ⓘ tool tip (drawn as a
-box, because tool tips cannot be drawn offscreen). For each picture the popover is shown again
+selection, counting, detex missing, the status bar hidden, the ⓘ tool tip (drawn as a
+box, because tool tips cannot be drawn offscreen), the options shown, and the options
+hidden with the tinted button. For each picture the popover is shown again
 in its appearance (its secondary labels are drawn for the appearance it was shown in), and the
 pictures are checked to hold every secondary label (time, Source column, warning, Counting…).
 """
@@ -58,6 +70,13 @@ MUTATIONS = {
     'edge-always-maxy': ('TSDocument.m', 'preferredEdge:view.isFlipped ? NSRectEdgeMinY : NSRectEdgeMaxY];', 'preferredEdge:NSRectEdgeMaxY];'),
     # The other constant: right for the flipped anchors only.
     'edge-always-miny': ('TSDocument.m', 'preferredEdge:view.isFlipped ? NSRectEdgeMinY : NSRectEdgeMaxY];', 'preferredEdge:NSRectEdgeMinY];'),
+    # An option counts all again, running detex.
+    'option-runs-detex': ('TSTextStatisticsPopover.m', '_contentController.optionsChanged = ^{ [weakSelf recount]; };', '_contentController.optionsChanged = ^{ [weakSelf refresh]; };'),
+    # The encoding is kept from the last time instead of the document's.
+    'encoding-not-documents': ('TSTextStatisticsPopover.m', '        options.encoding = encoding;\n        self.contentController.options = options;\n',
+                               '        options.encoding = self.contentController.options.encoding;\n        self.contentController.options = options;\n'),
+    # CR LF is two line endings: a run of one CR LF loses its LF.
+    'crlf-two-endings': ('TSTextStatistics.m', "NSUInteger width = c == '\\r' && i + 1 < length", "NSUInteger width = 0 && i + 1 < length"),
     # The pictures (--images) take the content as shown once: the dark pictures lose their secondary labels.
     'picture-shown-once': ('PROGRAM', '        real.delegate = nil;\n        [real close];\n        real.contentViewController = nil; real.contentViewController = content;\n        real.appearance = appearance;\n        ((void (*)(id, SEL, NSRect, NSView *, NSRectEdge))originalShow)(real, @selector(showRelativeToRect:ofView:preferredEdge:), shownRect, shownView, shownEdge);\n        real.delegate = (id<NSPopoverDelegate>)doc.textStatistics;\n', ''),
 }
@@ -143,6 +162,37 @@ static NSRect OnScreen(NSView *view, NSRect rect) { return [view.window convertR
 static BOOL Above(NSRect content, NSRect anchor) { return NSHeight(content) > 0 && NSMinY(content) >= NSMaxY(anchor) - 0.5; }
 static NSString *Where(NSRect content, NSRect anchor) {
     return [NSString stringWithFormat:@"content %@, anchor %@", NSStringFromRect(content), NSStringFromRect(anchor)];
+}
+
+// TeXShop's encodings, as TSDocument gives them to the popover: three of them, and the text as it is written.
+static NSUInteger savingCalls;
+@interface TSEncodingSupport : NSObject
++ (instancetype)sharedInstance;
+- (NSString *)textForSaving:(NSString *)text encoding:(NSStringEncoding)encoding;
+- (void)addEncodingsToMenu:(NSMenu *)menu withTarget:(id)target action:(SEL)action;
+@end
+@implementation TSEncodingSupport
++ (instancetype)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }
+- (NSString *)textForSaving:(NSString *)text encoding:(NSStringEncoding)encoding { savingCalls++; return text; }
+- (void)addEncodingsToMenu:(NSMenu *)menu withTarget:(id)target action:(SEL)action {
+    for (NSNumber *e in @[@(NSUTF8StringEncoding), @(NSShiftJISStringEncoding), @(NSJapaneseEUCStringEncoding)]) {
+        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:e.unsignedIntegerValue] action:action keyEquivalent:@""];
+        item.tag = e.integerValue;
+        [menu addItem:item];
+    }
+}
+@end
+static TSCharacterCountOptions *Plain(void) { return [TSCharacterCountOptions new]; }
+static NSUInteger Count(NSString *string, void (^set)(TSCharacterCountOptions *o)) {
+    TSCharacterCountOptions *o = Plain();
+    if (set) set(o);
+    return TSCharacterCountWithOptions(string, o, nil);
+}
+// The number in a cell of the table, without the grouping.
+static NSUInteger Cell(NSString *row, NSUInteger column) {
+    NSString *cell = [row componentsSeparatedByString:@"|"][column];
+    NSString *digits = [[cell componentsSeparatedByCharactersInSet:NSCharacterSet.decimalDigitCharacterSet.invertedSet] componentsJoinedByString:@""];
+    return digits.length ? (NSUInteger)digits.longLongValue : NSNotFound;
 }
 
 @interface TSDocumentBase : NSObject @end
@@ -378,7 +428,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     // 1. The TeX Live detex, on the text in memory; the file on disk stays as it was.
     TSTextStatistics *statistics = [TSTextStatistics new];
     __block TSTextStatisticsResult *result = nil;
-    [statistics countString:memory ranges:@[[NSValue valueWithRange:NSMakeRange(0, 0)]] folder:folder detex:detex encoding:NSUTF8StringEncoding
+    [statistics countString:memory ranges:@[[NSValue valueWithRange:NSMakeRange(0, 0)]] folder:folder detex:detex encoding:NSUTF8StringEncoding options:Plain()
                  completion:^(TSTextStatisticsResult *r) { result = r; }];
     Check(statistics.running && statistics.temporaryFile != nil, [@"a count runs with its temporary file" stringByAppendingString:tag]);
     Check(WaitFor(^BOOL{ return result != nil; }, 20) && result.state == TSTextStatisticsDone && !result.selection, [@"detex counts the whole text" stringByAppendingString:tag]);
@@ -396,7 +446,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     // Japanese: the sentence alone through detex.
     result = nil;
     NSString *japanese = [spec[@"sentence"] stringByAppendingString:@"\n"];
-    [statistics countString:japanese ranges:@[] folder:folder detex:detex encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { result = r; }];
+    [statistics countString:japanese ranges:@[] folder:folder detex:detex encoding:NSUTF8StringEncoding options:Plain() completion:^(TSTextStatisticsResult *r) { result = r; }];
     WaitFor(^BOOL{ return result != nil; }, 20);
     printf("JAPANESE: the Text column: %lu characters, %lu words (wc: %s bytes for -m in the C locale, %s word for -w)\n",
            result.text.characters, result.text.words, [spec[@"wcBytes"] description].UTF8String, [spec[@"wcWords"] description].UTF8String);
@@ -407,7 +457,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     // The selection.
     NSRange sentence = [memory rangeOfString:spec[@"sentence"]];
     result = nil;
-    [statistics countString:memory ranges:@[[NSValue valueWithRange:sentence]] folder:folder detex:detex encoding:NSUTF8StringEncoding
+    [statistics countString:memory ranges:@[[NSValue valueWithRange:sentence]] folder:folder detex:detex encoding:NSUTF8StringEncoding options:Plain()
                  completion:^(TSTextStatisticsResult *r) { result = r; }];
     Check(WaitFor(^BOOL{ return result != nil; }, 20) && result.selection && result.source.characters == TSStatusBarCharacterCount(memory, sentence, nil)
           && result.text.characters != NSNotFound, [NSString stringWithFormat:@"the selection is counted (%lu)%@", result.source.characters, tag]);
@@ -415,18 +465,18 @@ int main(int argc, char **argv) { @autoreleasepool {
     // 2. A second count stops the first detex; stop ends it; missing or failing detex.
     NSString *pidFile = spec[@"pid"];
     __block NSUInteger firstDone = 0;
-    [statistics countString:memory ranges:@[] folder:folder detex:slow encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { firstDone++; }];
+    [statistics countString:memory ranges:@[] folder:folder detex:slow encoding:NSUTF8StringEncoding options:Plain() completion:^(TSTextStatisticsResult *r) { firstDone++; }];
     NSURL *firstFile = statistics.temporaryFile;
     Check(WaitFor(^BOOL{ return Alive(PidIn(pidFile)); }, 10), [@"the slow detex runs" stringByAppendingString:tag]);
     pid_t first = PidIn(pidFile);
     result = nil;
-    [statistics countString:memory ranges:@[] folder:folder detex:detex encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { result = r; }];
+    [statistics countString:memory ranges:@[] folder:folder detex:detex encoding:NSUTF8StringEncoding options:Plain() completion:^(TSTextStatisticsResult *r) { result = r; }];
     Check(WaitFor(^BOOL{ return !Alive(first); }, 5), [@"a second count stops the detex still running" stringByAppendingString:tag]);
     Check(WaitFor(^BOOL{ return result != nil; }, 20) && result.state == TSTextStatisticsDone && firstDone == 0,
           [@"only the second count shows" stringByAppendingString:tag]);
     Check(![NSFileManager.defaultManager fileExistsAtPath:firstFile.path] && TemporaryFiles() == before, [@"the first count's temporary file is removed" stringByAppendingString:tag]);
     [NSFileManager.defaultManager removeItemAtPath:pidFile error:NULL];
-    [statistics countString:memory ranges:@[] folder:folder detex:slow encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { firstDone++; }];
+    [statistics countString:memory ranges:@[] folder:folder detex:slow encoding:NSUTF8StringEncoding options:Plain() completion:^(TSTextStatisticsResult *r) { firstDone++; }];
     WaitFor(^BOOL{ return Alive(PidIn(pidFile)); }, 10);
     pid_t stopped = PidIn(pidFile);
     [statistics stop];
@@ -435,31 +485,118 @@ int main(int argc, char **argv) { @autoreleasepool {
     // A process that detex left holds the output open: stopping detex does not wait for it, nor does detex's own end.
     NSURL *holding = [NSURL fileURLWithPath:spec[@"holding"]], *leaving = [NSURL fileURLWithPath:spec[@"leaving"]];
     [NSFileManager.defaultManager removeItemAtPath:pidFile error:NULL];
-    [statistics countString:memory ranges:@[] folder:folder detex:holding encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { firstDone++; }];
+    [statistics countString:memory ranges:@[] folder:folder detex:holding encoding:NSUTF8StringEncoding options:Plain() completion:^(TSTextStatisticsResult *r) { firstDone++; }];
     NSURL *heldFile = statistics.temporaryFile;
     Check(WaitFor(^BOOL{ return Alive(PidIn(pidFile)); }, 10), [@"the detex that leaves a process runs" stringByAppendingString:tag]);
     Spin(0.3);
     result = nil;
     CFAbsoluteTime started = CFAbsoluteTimeGetCurrent();
-    [statistics countString:memory ranges:@[] folder:folder detex:nil encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { result = r; }];
+    [statistics countString:memory ranges:@[] folder:folder detex:nil encoding:NSUTF8StringEncoding options:Plain() completion:^(TSTextStatisticsResult *r) { result = r; }];
     Check(WaitFor(^BOOL{ return result != nil; }, 1.5) && firstDone == 0 && ![NSFileManager.defaultManager fileExistsAtPath:heldFile.path],
           [NSString stringWithFormat:@"a stopped detex whose output another process holds does not hold up the next count or the removal of its file (%.2f s)%@",
            CFAbsoluteTimeGetCurrent() - started, tag]);
     result = nil;
     started = CFAbsoluteTimeGetCurrent();
-    [statistics countString:memory ranges:@[] folder:folder detex:leaving encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { result = r; }];
+    [statistics countString:memory ranges:@[] folder:folder detex:leaving encoding:NSUTF8StringEncoding options:Plain() completion:^(TSTextStatisticsResult *r) { result = r; }];
     Check(WaitFor(^BOOL{ return result != nil; }, 3) && result.state == TSTextStatisticsDone && result.text.characters == source.characters,
           [NSString stringWithFormat:@"a detex that ends leaving a process with its output is counted without waiting for that process (%.2f s, %lu)%@",
            CFAbsoluteTimeGetCurrent() - started, result.text.characters, tag]);
     Check(WaitFor(^BOOL{ return TemporaryFiles() == before; }, 2), [@"and its file is removed" stringByAppendingString:tag]);
     for (NSArray *c in @[@[[NSNull null], @(TSTextStatisticsDetexMissing)], @[failing, @(TSTextStatisticsDetexFailed)]]) {
         result = nil;
-        [statistics countString:memory ranges:@[] folder:folder detex:c[0] == NSNull.null ? nil : c[0] encoding:NSUTF8StringEncoding
+        [statistics countString:memory ranges:@[] folder:folder detex:c[0] == NSNull.null ? nil : c[0] encoding:NSUTF8StringEncoding options:Plain()
                      completion:^(TSTextStatisticsResult *r) { result = r; }];
         Check(WaitFor(^BOOL{ return result != nil; }, 20) && result.state == [c[1] integerValue] && result.source.characters == source.characters
               && result.text.characters == NSNotFound && TemporaryFiles() == before, [NSString stringWithFormat:@"detex %@: the Source column stays%@",
               c[0] == NSNull.null ? @"missing" : @"failing", tag]);
     }
+
+    // 6. Counting with options.
+    NSString *spaced = @"a b\r\nc\u3000\u3000d\n\n\te";
+    struct { const char *name; BOOL le, ws, runs; TSCharacterUnit unit; NSUInteger want; } spacing[] = {
+        {"as the status bar", NO, NO, NO, TSCharacterUnitGraphemeCluster, 12},
+        {"line endings left out", YES, NO, NO, TSCharacterUnitGraphemeCluster, 9},
+        {"whitespace left out (U+3000 and tab too)", NO, YES, NO, TSCharacterUnitGraphemeCluster, 8},
+        {"both left out", YES, YES, NO, TSCharacterUnitGraphemeCluster, 5},
+        {"runs as one, line endings among them", NO, NO, YES, TSCharacterUnitGraphemeCluster, 9},
+        {"runs as one without whitespace: the blank lines are one", NO, YES, YES, TSCharacterUnitGraphemeCluster, 7},
+        {"runs as one without line endings", YES, NO, YES, TSCharacterUnitGraphemeCluster, 8},
+        {"UTF-16: CR LF two units", NO, NO, NO, TSCharacterUnitUTF16, 13},
+        {"bytes of UTF-8: U+3000 three bytes", NO, NO, NO, TSCharacterUnitByte, 17},
+    };
+    for (size_t i = 0; i < sizeof spacing / sizeof spacing[0]; i++) {
+        __typeof__(spacing[0]) c = spacing[i];
+        NSUInteger got = Count(spaced, ^(TSCharacterCountOptions *o) {
+            o.ignoresLineEndings = c.le; o.ignoresWhitespace = c.ws; o.treatsConsecutiveWhitespaceAsOne = c.runs; o.unit = c.unit;
+        });
+        Check(got == spacing[i].want, [NSString stringWithFormat:@"options: %s: %lu, expected %lu%@", spacing[i].name, got, spacing[i].want, tag]);
+    }
+    Check(Count(spaced, nil) == TSStatusBarCharacterCount(spaced, NSMakeRange(0, spaced.length), nil), [@"options: the default counts as the status bar" stringByAppendingString:tag]);
+    Check(Count(@"a\r\nb", ^(TSCharacterCountOptions *o) { o.treatsConsecutiveWhitespaceAsOne = YES; o.unit = TSCharacterUnitUTF16; }) == 4,
+          [@"options: a run of one CR LF keeps both units" stringByAppendingString:tag]);
+    Check(Count(@"x\u3000 y", ^(TSCharacterCountOptions *o) { o.treatsConsecutiveWhitespaceAsOne = YES; o.unit = TSCharacterUnitByte; }) == 5,
+          [@"options: a run counts as its first character (U+3000, three bytes of UTF-8)" stringByAppendingString:tag]);
+    NSString *joined = @"e\u0301\U0001F468\u200D\U0001F469\u200D\U0001F467";
+    struct { const char *name; TSUnicodeNormalization n; TSCharacterUnit unit; NSUInteger want; } forms[] = {
+        {"grapheme clusters", TSUnicodeNormalizationNone, TSCharacterUnitGraphemeCluster, 2},
+        {"Unicode scalars", TSUnicodeNormalizationNone, TSCharacterUnitUnicodeScalar, 7},
+        {"UTF-16", TSUnicodeNormalizationNone, TSCharacterUnitUTF16, 10},
+        {"NFC scalars", TSUnicodeNormalizationNFC, TSCharacterUnitUnicodeScalar, 6},
+    };
+    for (size_t i = 0; i < sizeof forms / sizeof forms[0]; i++) {
+        __typeof__(forms[0]) f = forms[i];
+        NSUInteger got = Count(joined, ^(TSCharacterCountOptions *o) { o.normalization = f.n; o.unit = f.unit; });
+        Check(got == forms[i].want, [NSString stringWithFormat:@"options: e + U+0301 and a family emoji in %s: %lu, expected %lu%@", forms[i].name, got, forms[i].want, tag]);
+    }
+    Check(Count(@"\uFF71\u2460\uFB01", nil) == 3 && Count(@"\uFF71\u2460\uFB01", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKC; }) == 4
+          && Count(@"\uFF71\u2460\uFB01", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKD; }) == 4,
+          [@"options: NFKC and NFKD map half-width kana, circled digits and ligatures" stringByAppendingString:tag]);
+    Check(Count(@"\u00DF\u00DF\u00AD", nil) == 3 && Count(@"\u00DF\u00DF\u00AD", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKC; }) == 3
+          && Count(@"\u00DF\u00DF\u00AD", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFKCCaseFold; }) == 4,
+          [@"options: NFKC Case-Fold folds ß to ss and drops the soft hyphen" stringByAppendingString:tag]);
+    Check(Count(@"\u304C\u212B", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationNFD; o.unit = TSCharacterUnitUTF16; }) == 4
+          && Count(@"\u304C\u212B", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationModifiedNFD; o.unit = TSCharacterUnitUTF16; }) == 3
+          && Count(@"\u304B\u3099\u212B", ^(TSCharacterCountOptions *o) { o.normalization = TSUnicodeNormalizationModifiedNFC; o.unit = TSCharacterUnitUTF16; }) == 2,
+          [@"options: modified NFD and NFC leave U+2000–U+2FFF as they are" stringByAppendingString:tag]);
+    Check(Count(@"\u65E5\u672C\\", ^(TSCharacterCountOptions *o) { o.unit = TSCharacterUnitByte; o.encoding = NSShiftJISStringEncoding; }) == 5
+          && Count(@"ab", ^(TSCharacterCountOptions *o) { o.unit = TSCharacterUnitByte; o.encoding = NSUnicodeStringEncoding; }) == 4,
+          [@"options: bytes of Shift JIS, and of UTF-16 without a byte order mark" stringByAppendingString:tag]);
+    Check(Count(@"\U0001F600", ^(TSCharacterCountOptions *o) { o.unit = TSCharacterUnitByte; o.encoding = NSShiftJISStringEncoding; }) == TSCharacterCountUnencodable
+          && Count(@"\U0001F600", ^(TSCharacterCountOptions *o) { o.unit = TSCharacterUnitUnicodeScalar; o.encoding = NSShiftJISStringEncoding; }) == 1,
+          [@"options: a character Shift JIS cannot write fails the byte count only" stringByAppendingString:tag]);
+    Check(Count(@"ab", ^(TSCharacterCountOptions *o) {
+              o.unit = TSCharacterUnitByte; o.textForEncoding = ^NSString *(NSString *t, NSStringEncoding e) { return [t stringByAppendingString:@"xyz"]; }; }) == 5,
+          [@"options: bytes are those of the text as TeXShop writes it" stringByAppendingString:tag]);
+    TSCharacterCountOptions *saved = Plain();
+    Check(saved.isDefault && [TSCharacterCountOptions savedOptions].isDefault, [@"options: the default ones" stringByAppendingString:tag]);
+    saved.ignoresLineEndings = YES; saved.ignoresWhitespace = YES; saved.treatsConsecutiveWhitespaceAsOne = YES;
+    saved.normalization = TSUnicodeNormalizationNFKCCaseFold; saved.unit = TSCharacterUnitByte; saved.encoding = NSShiftJISStringEncoding;
+    [saved save];
+    TSCharacterCountOptions *loaded = [TSCharacterCountOptions savedOptions];
+    Check(loaded.ignoresLineEndings && loaded.ignoresWhitespace && loaded.treatsConsecutiveWhitespaceAsOne && loaded.normalization == TSUnicodeNormalizationNFKCCaseFold
+          && loaded.unit == TSCharacterUnitByte && loaded.encoding == NSUTF8StringEncoding && !loaded.isDefault,
+          [@"options: kept in the settings, all but the encoding" stringByAppendingString:tag]);
+    [Plain() save];
+    // Counting again with other options: detex does not run, the rest of the result stays.
+    result = nil;
+    [statistics countString:memory ranges:@[] folder:folder detex:detex encoding:NSUTF8StringEncoding options:Plain() completion:^(TSTextStatisticsResult *r) { result = r; }];
+    WaitFor(^BOOL{ return result != nil; }, 20);
+    TSTextStatisticsResult *counted = result;
+    Check(counted.sourceCharacters == counted.source.characters && counted.textCharacters == counted.text.characters && [counted.textString isEqual:spec[@"oracle"]],
+          [@"options: the default count is the status bar's, and the result keeps detex's output" stringByAppendingString:tag]);
+    TSCharacterCountOptions *noSpace = Plain(); noSpace.ignoresWhitespace = YES; noSpace.ignoresLineEndings = YES;
+    result = nil;
+    [statistics recountCharactersOfResult:counted options:noSpace completion:^(TSTextStatisticsResult *r) { result = r; }];
+    Check(!statistics.temporaryFile, [@"options: counting again writes no file for detex" stringByAppendingString:tag]);
+    Check(WaitFor(^BOOL{ return result != nil; }, 10) && result.sourceCharacters == TSCharacterCountWithOptions(memory, noSpace, nil)
+          && result.textCharacters == TSCharacterCountWithOptions(spec[@"oracle"], noSpace, nil) && result.textCharacters < counted.textCharacters
+          && result.text.words == counted.text.words && [result.date isEqual:counted.date] && result.state == TSTextStatisticsDone,
+          [NSString stringWithFormat:@"options: counted again without whitespace: %lu/%lu, before %lu/%lu%@", result.sourceCharacters, result.textCharacters,
+           counted.sourceCharacters, counted.textCharacters, tag]);
+    result = nil;
+    [statistics countString:memory ranges:@[] folder:folder detex:detex encoding:NSUTF8StringEncoding options:noSpace completion:^(TSTextStatisticsResult *r) { result = r; }];
+    Check(WaitFor(^BOOL{ return result != nil; }, 20) && result.textCharacters == TSCharacterCountWithOptions(spec[@"oracle"], noSpace, nil),
+          [@"options: a count with options counts detex's output with them" stringByAppendingString:tag]);
 
     // 3 and 4. The document: Edit > Statistics… and the status bar's button.
     TSDocument *doc = Open(memory);
@@ -526,6 +663,79 @@ int main(int argc, char **argv) { @autoreleasepool {
           && [[content.rows[0] componentsSeparatedByString:@"|"][2] length] == 0, [@"detex missing: a warning in place of the Text column" stringByAppendingString:tag]);
     DrawWithPopover(doc, [lang stringByAppendingString:@"-04-detex-missing"], nil);
     popover.detex = ^NSURL *{ return detex; };
+
+    // 7. The options in the popover.
+    [popover close];
+    [doc showStatistics:nil];
+    WaitFor(^BOOL{ return !content.counting; }, 20);
+    Check(content.optionsButton.state == NSControlStateValueOff && content.optionsView.hiddenOrHasHiddenAncestor && content.optionsButton.contentTintColor == nil
+          && [content.optionsButton.toolTip isEqual:L(@"Character Count Options")] && [content.optionsButton.accessibilityLabel isEqual:L(@"Character Count Options")],
+          [@"popover options: hidden at first, behind a plain button with its name" stringByAppendingString:tag]);
+    [content.optionsButton performClick:nil];
+    Check(!content.optionsView.hiddenOrHasHiddenAncestor && [NSUserDefaults.standardUserDefaults boolForKey:@"StatisticsShowsCharacterCountOptions"]
+          && content.encodingPopUp.hiddenOrHasHiddenAncestor && content.consecutiveWhitespaceBox.enabled,
+          [@"popover options: the button shows them, remembered; no encoding for characters" stringByAppendingString:tag]);
+    counts = popover.countsStarted;
+    NSString *beforeRow = content.rows[0];
+    NSString *sourceText = [doc->textView1.string copy];
+    [content.ignoreWhitespaceBox performClick:nil];
+    [content.ignoreLineEndingsBox performClick:nil];
+    TSCharacterCountOptions *shown = Plain(); shown.ignoresWhitespace = YES; shown.ignoresLineEndings = YES;
+    __block TSTextStatisticsResult *expected = nil;
+    TSTextStatistics *other = [TSTextStatistics new];
+    [other countString:sourceText ranges:@[] folder:folder detex:detex encoding:NSUTF8StringEncoding options:shown completion:^(TSTextStatisticsResult *r) { expected = r; }];
+    WaitFor(^BOOL{ return expected != nil; }, 20);
+    Check(WaitFor(^BOOL{ return Cell(content.rows[0], 1) == TSCharacterCountWithOptions(sourceText, shown, nil); }, 10)
+          && Cell(content.rows[0], 2) == expected.textCharacters && popover.countsStarted == counts && !content.counting,
+          [NSString stringWithFormat:@"popover options: a change counts again at once, without detex: %@ → %@ (text %lu)%@", beforeRow, content.rows[0], expected.textCharacters, tag]);
+    Check([NSUserDefaults.standardUserDefaults boolForKey:@"StatisticsIgnoresWhitespace"] && [NSUserDefaults.standardUserDefaults boolForKey:@"StatisticsIgnoresLineEndings"]
+          && !content.consecutiveWhitespaceBox.enabled, [@"popover options: kept; no runs to take as one with both left out" stringByAppendingString:tag]);
+    [content.unitPopUp selectItemWithTag:TSCharacterUnitByte];
+    [content.unitPopUp sendAction:content.unitPopUp.action to:content.unitPopUp.target];
+    TSCharacterCountOptions *bytes = [shown copy]; bytes.unit = TSCharacterUnitByte;
+    Check(WaitFor(^BOOL{ return [content.rows[0] hasPrefix:[L(@"Bytes") stringByAppendingString:@"|"]] && Cell(content.rows[0], 1) == TSCharacterCountWithOptions(sourceText, bytes, nil); }, 10)
+          && !content.encodingPopUp.hiddenOrHasHiddenAncestor && content.encodingPopUp.numberOfItems == 3 && content.encodingPopUp.selectedTag == (NSInteger)NSUTF8StringEncoding,
+          [NSString stringWithFormat:@"popover options: bytes, named so, in the document's encoding among TeXShop's: %@%@", content.rows[0], tag]);
+    NSUInteger calls = savingCalls;
+    [content.encodingPopUp selectItemWithTag:(NSInteger)NSShiftJISStringEncoding];
+    [content.encodingPopUp sendAction:content.encodingPopUp.action to:content.encodingPopUp.target];
+    bytes.encoding = NSShiftJISStringEncoding;
+    Check(WaitFor(^BOOL{ return Cell(content.rows[0], 1) == TSCharacterCountWithOptions(sourceText, bytes, nil); }, 10) && savingCalls > calls,
+          [NSString stringWithFormat:@"popover options: bytes of Shift JIS, as TeXShop writes the text: %@%@", content.rows[0], tag]);
+    DrawWithPopover(doc, [lang stringByAppendingString:@"-07-options"], nil);
+    [doc->textView1 insertText:@"\U0001F600" replacementRange:NSMakeRange(0, 0)];
+    [content.refreshButton performClick:nil];
+    NSString *cannot = [NSString stringWithFormat:L(@"Some characters cannot be written in %@."), [NSString localizedNameOfStringEncoding:NSShiftJISStringEncoding]];
+    Check(WaitFor(^BOOL{ return !content.counting; }, 20) && [[content.rows[0] componentsSeparatedByString:@"|"][1] isEqual:@"—"]
+          && content.encodingPopUp.selectedTag == (NSInteger)NSShiftJISStringEncoding,
+          [NSString stringWithFormat:@"popover options: a character Shift JIS cannot write: a dash (%@); refresh keeps the encoding chosen%@", content.rows[0], tag]);
+    NSTextField *dash = nil;
+    NSMutableArray *queue = [NSMutableArray arrayWithObject:content.view];
+    while (queue.count) { NSView *v = queue.firstObject; [queue removeObjectAtIndex:0]; [queue addObjectsFromArray:v.subviews];
+        if ([v isKindOfClass:NSTextField.class] && [[(NSTextField *)v stringValue] isEqual:@"—"]) dash = (NSTextField *)v; }
+    Check([dash.toolTip isEqual:cannot], [NSString stringWithFormat:@"popover options: the dash says why: %@%@", dash.toolTip, tag]);
+    [doc->textView1 replaceCharactersInRange:NSMakeRange(0, 2) withString:@""];
+    // Opened again: the options kept, the encoding the document's.
+    [popover close];
+    doc->_encoding = NSJapaneseEUCStringEncoding;
+    [doc showStatistics:nil];
+    WaitFor(^BOOL{ return !content.counting; }, 20);
+    Check(!content.optionsView.hiddenOrHasHiddenAncestor && content.unitPopUp.selectedTag == TSCharacterUnitByte && content.ignoreWhitespaceBox.state == NSControlStateValueOn
+          && content.encodingPopUp.selectedTag == (NSInteger)NSJapaneseEUCStringEncoding,
+          [NSString stringWithFormat:@"popover options: opened again, the options stay and the encoding is the document's (%ld)%@", (long)content.encodingPopUp.selectedTag, tag]);
+    doc->_encoding = NSUTF8StringEncoding;
+    [content.optionsButton performClick:nil];
+    Check(content.optionsView.hiddenOrHasHiddenAncestor && [content.optionsButton.contentTintColor isEqual:NSColor.controlAccentColor]
+          && ![NSUserDefaults.standardUserDefaults boolForKey:@"StatisticsShowsCharacterCountOptions"],
+          [@"popover options: hidden again, the button tinted while the count is not the status bar's" stringByAppendingString:tag]);
+    [content.unitPopUp selectItemWithTag:TSCharacterUnitGraphemeCluster];
+    [content.unitPopUp sendAction:content.unitPopUp.action to:content.unitPopUp.target];
+    WaitFor(^BOOL{ return [content.rows[0] hasPrefix:[L(@"Characters") stringByAppendingString:@"|"]]; }, 10);
+    DrawWithPopover(doc, [lang stringByAppendingString:@"-08-options-tinted"], nil);
+    for (NSButton *box in @[content.ignoreWhitespaceBox, content.ignoreLineEndingsBox]) [box performClick:nil];
+    Check(WaitFor(^BOOL{ return Cell(content.rows[0], 1) == TSStatusBarCharacterCount(doc->textView1.string, NSMakeRange(0, doc->textView1.string.length), nil); }, 10)
+          && content.optionsButton.contentTintColor == nil && [TSCharacterCountOptions savedOptions].isDefault,
+          [@"popover options: back to the status bar's count, the button plain" stringByAppendingString:tag]);
 
     // The window near the top and near the bottom of the screen: above the button too.
     NSRect middle = doc->textWindow.frame;

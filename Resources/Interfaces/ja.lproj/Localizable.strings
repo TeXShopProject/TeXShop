@@ -393,6 +393,26 @@
 "detex failed." = "detexが失敗しました。";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "detexでTeXの命令を除いた数です（\\input・\\includeで読み込むファイルを含みます）。";
 
+/* Text Statistics: how the characters are counted */
+"Character Count Options" = "文字カウントのオプション";
+"Whitespace:" = "空白：";
+"Ignore line endings" = "改行を無視";
+"Ignore whitespace" = "空白を無視";
+"Treat consecutive whitespace as one" = "連続する空白を1文字として扱う";
+"Normalization:" = "正規化：";
+"Normalization: None" = "なし";
+"Modified NFC" = "修正NFC";
+"Modified NFD" = "修正NFD";
+"Unit:" = "単位：";
+"Grapheme Cluster" = "書記素クラスタ";
+"Unicode Scalar" = "Unicodeスカラー";
+"Byte" = "バイト";
+"What the reader sees as one character, an emoji of several code points among them." = "人が1文字と感じる単位です。複数のコードポイントから成る絵文字も1文字です。";
+"Encoding:" = "エンコーディング：";
+"Unicode Scalars" = "Unicodeスカラー";
+"Bytes" = "バイト";
+"Some characters cannot be written in %@." = "%@では書けない文字があります。";
+
 /* Issue #49: the annotation toolbar of the Preview */
 /* Annotation tool: the name the annotation menu gives it */
 "Strikeout" = "取り消し線";

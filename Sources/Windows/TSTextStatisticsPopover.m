@@ -5,6 +5,8 @@
 
 #import "TSTextStatisticsPopover.h"
 
+static NSString *const TSShowsOptionsKey = @"StatisticsShowsCharacterCountOptions";
+
 static NSString *TSFormatCount(NSUInteger value)
 {
     static NSNumberFormatter *formatter;
@@ -14,6 +16,8 @@ static NSString *TSFormatCount(NSUInteger value)
         formatter.numberStyle = NSNumberFormatterDecimalStyle;
         formatter.locale = NSLocale.autoupdatingCurrentLocale;
     });
+    if (value == TSCharacterCountUnencodable)
+        return @"—";
     return value == NSNotFound ? @"" : [formatter stringFromNumber:@(value)];
 }
 
@@ -53,7 +57,11 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
 
 @interface TSTextStatisticsViewController ()
 @property (nonatomic, strong) NSTextField *headingLabel, *timeLabel, *countingLabel, *warningLabel;
-@property (nonatomic, strong) NSButton *refreshButton;
+@property (nonatomic, strong) NSButton *refreshButton, *optionsButton;
+@property (nonatomic, strong) NSView *optionsView;
+@property (nonatomic, strong) NSButton *ignoreLineEndingsBox, *ignoreWhitespaceBox, *consecutiveWhitespaceBox;
+@property (nonatomic, strong) NSPopUpButton *normalizationPopUp, *unitPopUp, *encodingPopUp;
+@property (nonatomic, strong) NSGridView *optionsGrid;
 @property (nonatomic, strong) TSStatisticsGrid *grid;
 @property (nonatomic, strong) NSStackView *countingView, *warningView, *tableView;
 @property (nonatomic, strong) NSProgressIndicator *spinner;
@@ -63,6 +71,99 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
 @end
 
 @implementation TSTextStatisticsViewController
+
+- (instancetype)initWithNibName:(NSNibName)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]))
+        _options = [TSCharacterCountOptions savedOptions];
+    return self;
+}
+
+// The name of the first row of the table: what the characters are counted in.
+static NSString *TSUnitRowName(TSCharacterUnit unit)
+{
+    switch (unit) {
+        case TSCharacterUnitUnicodeScalar: return NSLocalizedString(@"Unicode Scalars", @"Text Statistics: the first row when Unicode scalars are counted");
+        case TSCharacterUnitUTF16: return @"UTF-16";
+        case TSCharacterUnitByte: return NSLocalizedString(@"Bytes", @"Text Statistics: the first row when bytes are counted");
+        case TSCharacterUnitGraphemeCluster: break;
+    }
+    return NSLocalizedString(@"Characters", @"status bar: the number of characters");
+}
+
+- (NSView *)makeOptionsView
+{
+    NSFont *body = [NSFont systemFontOfSize:NSFont.systemFontSize];
+    NSButton *(^box)(NSString *) = ^NSButton *(NSString *title) {
+        return [NSButton checkboxWithTitle:title target:self action:@selector(changeOption:)];
+    };
+    self.ignoreLineEndingsBox = box(NSLocalizedString(@"Ignore line endings", @"Text Statistics: character count option"));
+    self.ignoreWhitespaceBox = box(NSLocalizedString(@"Ignore whitespace", @"Text Statistics: character count option"));
+    self.consecutiveWhitespaceBox = box(NSLocalizedString(@"Treat consecutive whitespace as one", @"Text Statistics: character count option"));
+    NSStackView *spaces = [NSStackView stackViewWithViews:@[self.ignoreLineEndingsBox, self.ignoreWhitespaceBox, self.consecutiveWhitespaceBox]];
+    spaces.orientation = NSUserInterfaceLayoutOrientationVertical;
+    spaces.alignment = NSLayoutAttributeLeading;
+    spaces.spacing = 6;
+
+    NSPopUpButton *(^popUp)(void) = ^NSPopUpButton *{
+        NSPopUpButton *button = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:NO];
+        button.target = self;
+        button.action = @selector(changeOption:);
+        return button;
+    };
+    void (^add)(NSPopUpButton *, NSString *, NSInteger) = ^(NSPopUpButton *button, NSString *title, NSInteger tag) {
+        if (!title) {
+            [button.menu addItem:NSMenuItem.separatorItem];
+            return;
+        }
+        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:title action:NULL keyEquivalent:@""];
+        item.tag = tag;
+        [button.menu addItem:item];
+    };
+    self.normalizationPopUp = popUp();
+    add(self.normalizationPopUp, NSLocalizedString(@"Normalization: None", @"Text Statistics: no Unicode normalization"), TSUnicodeNormalizationNone);
+    add(self.normalizationPopUp, nil, 0);
+    add(self.normalizationPopUp, @"NFC", TSUnicodeNormalizationNFC);
+    add(self.normalizationPopUp, @"NFD", TSUnicodeNormalizationNFD);
+    add(self.normalizationPopUp, @"NFKC", TSUnicodeNormalizationNFKC);
+    add(self.normalizationPopUp, @"NFKD", TSUnicodeNormalizationNFKD);
+    add(self.normalizationPopUp, @"NFKC Case-Fold", TSUnicodeNormalizationNFKCCaseFold);
+    add(self.normalizationPopUp, nil, 0);
+    add(self.normalizationPopUp, NSLocalizedString(@"Modified NFC", @"Text Statistics: the Unicode normalization of HFS+, composed"), TSUnicodeNormalizationModifiedNFC);
+    add(self.normalizationPopUp, NSLocalizedString(@"Modified NFD", @"Text Statistics: the Unicode normalization of HFS+"), TSUnicodeNormalizationModifiedNFD);
+
+    self.unitPopUp = popUp();
+    add(self.unitPopUp, NSLocalizedString(@"Grapheme Cluster", @"Text Statistics: count unit"), TSCharacterUnitGraphemeCluster);
+    add(self.unitPopUp, NSLocalizedString(@"Unicode Scalar", @"Text Statistics: count unit"), TSCharacterUnitUnicodeScalar);
+    add(self.unitPopUp, @"UTF-16", TSCharacterUnitUTF16);
+    add(self.unitPopUp, NSLocalizedString(@"Byte", @"Text Statistics: count unit"), TSCharacterUnitByte);
+    self.unitPopUp.itemArray[0].toolTip = NSLocalizedString(@"What the reader sees as one character, an emoji of several code points among them.",
+                                                            @"Text Statistics: the tool tip of the grapheme cluster unit");
+
+    self.encodingPopUp = popUp();
+
+    NSTextField *(^name)(NSString *) = ^NSTextField *(NSString *text) { return TSLabel(text, body, NSColor.labelColor); };
+    self.optionsGrid = [NSGridView gridViewWithViews:@[
+        @[name(NSLocalizedString(@"Whitespace:", @"Text Statistics: the label of the whitespace options")), spaces],
+        @[name(NSLocalizedString(@"Normalization:", @"Text Statistics: the label of the Unicode normalization")), self.normalizationPopUp],
+        @[name(NSLocalizedString(@"Unit:", @"Text Statistics: the label of the count unit")), self.unitPopUp],
+        @[name(NSLocalizedString(@"Encoding:", @"Encoding:")), self.encodingPopUp],
+    ]];
+    self.optionsGrid.rowSpacing = 10;
+    self.optionsGrid.columnSpacing = 8;
+    [self.optionsGrid columnAtIndex:0].xPlacement = NSGridCellPlacementTrailing;
+    for (NSInteger row = 0; row < self.optionsGrid.numberOfRows; row++)
+        [self.optionsGrid rowAtIndex:row].rowAlignment = NSGridRowAlignmentFirstBaseline;
+
+    NSBox *line = [NSBox new];
+    line.boxType = NSBoxSeparator;
+    NSStackView *view = [NSStackView stackViewWithViews:@[line, self.optionsGrid]];
+    view.orientation = NSUserInterfaceLayoutOrientationVertical;
+    view.alignment = NSLayoutAttributeLeading;
+    view.spacing = 12;
+    [line.widthAnchor constraintEqualToAnchor:view.widthAnchor].active = YES;
+    return view;
+}
 
 - (void)loadView
 {
@@ -83,9 +184,19 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
     NSStackView *top = [NSStackView new];
     top.spacing = 6;
     [top addView:self.headingLabel inGravity:NSStackViewGravityLeading];
+    NSString *optionsName = NSLocalizedString(@"Character Count Options", @"Text Statistics: the button that shows the options of the character count");
+    NSImage *sliders = [NSImage imageWithSystemSymbolName:@"slider.horizontal.3" accessibilityDescription:optionsName] ?: [NSImage new];
+    self.optionsButton = [NSButton buttonWithImage:sliders target:self action:@selector(toggleOptions:)];
+    self.optionsButton.bezelStyle = NSBezelStyleAccessoryBarAction;
+    self.optionsButton.buttonType = NSButtonTypePushOnPushOff;
+    self.optionsButton.toolTip = optionsName;
+    self.optionsButton.accessibilityLabel = optionsName;
+    [self.optionsButton.widthAnchor constraintEqualToConstant:24].active = YES;
     [top addView:self.timeLabel inGravity:NSStackViewGravityTrailing];
+    [top addView:self.optionsButton inGravity:NSStackViewGravityTrailing];
     [top addView:self.refreshButton inGravity:NSStackViewGravityTrailing];
     [top setCustomSpacing:4 afterView:self.timeLabel];
+    [top setCustomSpacing:2 afterView:self.optionsButton];
 
     // The table: the names, Source (as the status bar counts) and Text (what detex leaves).
     NSTextField *sourceHeading = TSLabel(NSLocalizedString(@"Source", @"Source"), small, NSColor.secondaryLabelColor);
@@ -150,14 +261,81 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
     self.countingView.spacing = 6;
     self.countingView.hidden = YES;
 
-    NSStackView *content = [NSStackView stackViewWithViews:@[top, self.tableView, self.countingView]];
+    self.optionsView = [self makeOptionsView];
+    NSStackView *content = [NSStackView stackViewWithViews:@[top, self.tableView, self.countingView, self.optionsView]];
     content.orientation = NSUserInterfaceLayoutOrientationVertical;
     content.alignment = NSLayoutAttributeLeading;
     content.spacing = 12;
     content.edgeInsets = NSEdgeInsetsMake(14, 16, 14, 16);
     [top.widthAnchor constraintEqualToAnchor:content.widthAnchor constant:-32].active = YES;
+    [self.optionsView.widthAnchor constraintEqualToAnchor:content.widthAnchor constant:-32].active = YES;
+    [self.optionsGrid.widthAnchor constraintLessThanOrEqualToAnchor:content.widthAnchor constant:-32].active = YES;
     [content.widthAnchor constraintGreaterThanOrEqualToConstant:250].active = YES;
     self.view = content;
+    BOOL shows = [NSUserDefaults.standardUserDefaults boolForKey:TSShowsOptionsKey];
+    self.optionsButton.state = shows ? NSControlStateValueOn : NSControlStateValueOff;
+    self.optionsView.hidden = !shows;
+    [self updateOptions];
+}
+
+- (void)toggleOptions:(id)sender
+{
+    BOOL shows = self.optionsButton.state == NSControlStateValueOn;
+    [NSUserDefaults.standardUserDefaults setBool:shows forKey:TSShowsOptionsKey];
+    self.optionsView.hidden = !shows;
+    [self updateOptions];
+}
+
+- (void)setOptions:(TSCharacterCountOptions *)options
+{
+    _options = options;
+    if (self.isViewLoaded)
+        [self updateOptions];
+}
+
+- (void)updateOptions
+{
+    [self view];
+    TSCharacterCountOptions *options = self.options;
+    self.ignoreLineEndingsBox.state = options.ignoresLineEndings ? NSControlStateValueOn : NSControlStateValueOff;
+    self.ignoreWhitespaceBox.state = options.ignoresWhitespace ? NSControlStateValueOn : NSControlStateValueOff;
+    self.consecutiveWhitespaceBox.state = options.treatsConsecutiveWhitespaceAsOne ? NSControlStateValueOn : NSControlStateValueOff;
+    // With both kinds left out, no whitespace is left to take as one.
+    self.consecutiveWhitespaceBox.enabled = !(options.ignoresLineEndings && options.ignoresWhitespace);
+    [self.normalizationPopUp selectItemWithTag:options.normalization];
+    [self.unitPopUp selectItemWithTag:options.unit];
+    if ([self.encodingPopUp indexOfItemWithTag:(NSInteger)options.encoding] < 0) {
+        [self.encodingPopUp removeAllItems];
+        if (self.addEncodings)
+            self.addEncodings(self.encodingPopUp.menu);
+        if ([self.encodingPopUp indexOfItemWithTag:(NSInteger)options.encoding] < 0) {
+            NSString *title = [NSString localizedNameOfStringEncoding:options.encoding];
+            NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:title.length ? title : @"?" action:NULL keyEquivalent:@""];
+            item.tag = (NSInteger)options.encoding;
+            [self.encodingPopUp.menu addItem:item];
+        }
+    }
+    [self.encodingPopUp selectItemWithTag:(NSInteger)options.encoding];
+    [self.optionsGrid rowAtIndex:3].hidden = options.unit != TSCharacterUnitByte;
+    // The button is tinted while the characters are not counted as the status bar counts them.
+    self.optionsButton.contentTintColor = options.isDefault || self.optionsButton.state == NSControlStateValueOn ? nil : NSColor.controlAccentColor;
+    self.optionsButton.bordered = self.optionsButton.state == NSControlStateValueOn;
+}
+
+- (void)changeOption:(id)sender
+{
+    TSCharacterCountOptions *options = [self.options copy];
+    options.ignoresLineEndings = self.ignoreLineEndingsBox.state == NSControlStateValueOn;
+    options.ignoresWhitespace = self.ignoreWhitespaceBox.state == NSControlStateValueOn;
+    options.treatsConsecutiveWhitespaceAsOne = self.consecutiveWhitespaceBox.state == NSControlStateValueOn;
+    options.normalization = (TSUnicodeNormalization)self.normalizationPopUp.selectedTag;
+    options.unit = (TSCharacterUnit)self.unitPopUp.selectedTag;
+    if (self.encodingPopUp.selectedItem)
+        options.encoding = (NSStringEncoding)self.encodingPopUp.selectedTag;
+    [options save];
+    self.options = options;
+    if (self.optionsChanged)
+        self.optionsChanged();
 }
 
 - (NSView *)infoMark
@@ -194,10 +372,15 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
     [self setHeadingForSelection:result.selection];
     self.timeLabel.stringValue = [NSDateFormatter localizedStringFromDate:result.date dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle];
     TSStatusBarCounts s = result.source, t = result.text;
-    NSUInteger sources[] = {s.characters, s.words, s.lines}, texts[] = {t.characters, t.words, t.lines};
+    NSUInteger sources[] = {result.sourceCharacters, s.words, s.lines}, texts[] = {result.textCharacters, t.words, t.lines};
+    self.names[0].stringValue = TSUnitRowName(result.options.unit);
+    NSString *unencodable = [NSString stringWithFormat:NSLocalizedString(@"Some characters cannot be written in %@.", @"Text Statistics: the tool tip of a byte count that failed; %@ is the encoding"),
+                             [NSString localizedNameOfStringEncoding:result.options.encoding]];
     for (NSUInteger i = 0; i < 3; i++) {
         self.sourceValues[i].stringValue = TSFormatCount(sources[i]);
         self.textValues[i].stringValue = TSFormatCount(texts[i]);
+        self.sourceValues[i].toolTip = sources[i] == TSCharacterCountUnencodable ? unencodable : nil;
+        self.textValues[i].toolTip = texts[i] == TSCharacterCountUnencodable ? unencodable : nil;
     }
     BOOL failed = result.state == TSTextStatisticsDetexMissing || result.state == TSTextStatisticsDetexFailed;
     self.warningLabel.stringValue = result.state == TSTextStatisticsDetexMissing
@@ -244,6 +427,9 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
 @property (nonatomic, readwrite) TSTextStatisticsViewController *contentController;
 @property (nonatomic, readwrite) TSTextStatistics *statistics;
 @property (nonatomic, readwrite) NSUInteger countsStarted;
+@property (nonatomic, strong, nullable) TSTextStatisticsResult *lastResult;
+/// The next count takes the saved options and the document's encoding.
+@property (nonatomic) BOOL needsOptions;
 @end
 
 @implementation TSTextStatisticsPopover
@@ -256,6 +442,8 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
         _contentController = [TSTextStatisticsViewController new];
         __weak TSTextStatisticsPopover *weakSelf = self;
         _contentController.refresh = ^{ [weakSelf refresh]; };
+        _contentController.optionsChanged = ^{ [weakSelf recount]; };
+        _needsOptions = YES;
         _popover = [NSPopover new];
         _popover.behavior = NSPopoverBehaviorTransient;
         _popover.contentViewController = _contentController;
@@ -267,8 +455,10 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
 
 - (void)showRelativeToRect:(NSRect)rect ofView:(NSView *)view preferredEdge:(NSRectEdge)edge
 {
-    if (!self.popover.shown)
+    if (!self.popover.shown) {
+        self.needsOptions = YES;
         [self.popover showRelativeToRect:rect ofView:view preferredEdge:edge];
+    }
     [self refresh];
 }
 
@@ -287,6 +477,13 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
     self.source(&text, &ranges, &folder, &encoding);
     if (!text)
         return;
+    if (self.needsOptions) {
+        // The options another document changed, and this document's encoding.
+        self.needsOptions = NO;
+        TSCharacterCountOptions *options = [TSCharacterCountOptions savedOptions];
+        options.encoding = encoding;
+        self.contentController.options = options;
+    }
     BOOL selection = NO;
     for (NSValue *value in ranges ?: @[])
         if (value.rangeValue.length > 0)
@@ -295,8 +492,31 @@ static NSFont *TSDigits(CGFloat size, NSFontWeight weight)
     self.countsStarted++;
     __weak TSTextStatisticsPopover *weakSelf = self;
     [self.statistics countString:text ranges:ranges ?: @[] folder:folder detex:self.detex ? self.detex() : nil encoding:encoding
-                      completion:^(TSTextStatisticsResult *result) {
+                         options:[self countOptions] completion:^(TSTextStatisticsResult *result) {
+        weakSelf.lastResult = result;
         [weakSelf.contentController showResult:result];
+    }];
+}
+
+- (TSCharacterCountOptions *)countOptions
+{
+    TSCharacterCountOptions *options = [self.contentController.options copy];
+    options.textForEncoding = self.textForEncoding;
+    return options;
+}
+
+// An option changed: the characters are counted again from what was counted, or, while a count runs, all again.
+- (void)recount
+{
+    TSTextStatisticsResult *result = self.lastResult;
+    if (!result || self.contentController.isCounting) {
+        [self refresh];
+        return;
+    }
+    __weak TSTextStatisticsPopover *weakSelf = self;
+    [self.statistics recountCharactersOfResult:result options:[self countOptions] completion:^(TSTextStatisticsResult *recounted) {
+        weakSelf.lastResult = recounted;
+        [weakSelf.contentController showResult:recounted];
     }];
 }
 

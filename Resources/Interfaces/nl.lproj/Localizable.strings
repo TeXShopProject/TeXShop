@@ -385,6 +385,26 @@
 "detex failed." = "detex is mislukt.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Geteld door detex zonder de TeX-opdrachten, inclusief de bestanden die met \\input en \\include worden gelezen.";
 
+/* Text Statistics: how the characters are counted */
+"Character Count Options" = "Opties voor tekentelling";
+"Whitespace:" = "Witruimte:";
+"Ignore line endings" = "Negeer regeleinden";
+"Ignore whitespace" = "Negeer witruimte";
+"Treat consecutive whitespace as one" = "Behandel opeenvolgende witruimte als één";
+"Normalization:" = "Normalisatie:";
+"Normalization: None" = "Geen";
+"Modified NFC" = "Gewijzigde NFC";
+"Modified NFD" = "Gewijzigde NFD";
+"Unit:" = "Eenheid:";
+"Grapheme Cluster" = "Grafeemcluster";
+"Unicode Scalar" = "Unicode-scalar";
+"Byte" = "Byte";
+"What the reader sees as one character, an emoji of several code points among them." = "Wat de lezer als één teken ziet, ook een emoji van meerdere codepunten.";
+"Encoding:" = "Codering:";
+"Unicode Scalars" = "Unicode-scalars";
+"Bytes" = "Bytes";
+"Some characters cannot be written in %@." = "Sommige tekens kunnen niet in %@ worden geschreven.";
+
 /* Issue #49: the annotation toolbar of the Preview */
 /* Annotation tool: the name the annotation menu gives it */
 "Strikeout" = "Doorgehaald";
