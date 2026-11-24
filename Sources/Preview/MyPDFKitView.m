@@ -354,6 +354,86 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     pageStyle = thePageStyle;
 }
 
+// Restoring the Preview on the next launch of TeXShop, as macOS does with the windows of an
+// application that is quit with its windows kept (#71).
+static NSString *TSPreviewStateKey(NSString *prefix, NSString *name)
+{
+    return [prefix stringByAppendingString:name];
+}
+
+- (void)encodePreviewStateWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
+{
+    if (![[self document] pageCount]) return;
+    [coder encodeInteger:pageStyle forKey:TSPreviewStateKey(prefix, @"PageStyle")];
+    [coder encodeInteger:firstPageStyle forKey:TSPreviewStateKey(prefix, @"FirstPageStyle")];
+    [coder encodeInteger:resizeOption forKey:TSPreviewStateKey(prefix, @"ResizeOption")];
+    [coder encodeBool:self.autoScales forKey:TSPreviewStateKey(prefix, @"AutoScales")];
+    [coder encodeDouble:self.scaleFactor forKey:TSPreviewStateKey(prefix, @"Scale")];
+    TSPreviewPanePlace place = TSPreviewPaneCapture(self);
+    if (place.valid) {
+        [coder encodeInteger:(NSInteger)place.pageIndex forKey:TSPreviewStateKey(prefix, @"PageIndex")];
+        [coder encodePoint:place.pagePoint forKey:TSPreviewStateKey(prefix, @"PagePoint")];
+    }
+}
+
+- (TSPreviewPanePlace)restorePreviewDisplayWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
+{
+    TSPreviewPanePlace place = {0};
+    NSUInteger pageCount = [[self document] pageCount];
+    if (!pageCount || ![coder containsValueForKey:TSPreviewStateKey(prefix, @"PageStyle")]) return place;
+    NSInteger style = [coder decodeIntegerForKey:TSPreviewStateKey(prefix, @"PageStyle")];
+    NSInteger first = [coder decodeIntegerForKey:TSPreviewStateKey(prefix, @"FirstPageStyle")];
+    NSInteger resize = [coder decodeIntegerForKey:TSPreviewStateKey(prefix, @"ResizeOption")];
+    BOOL autoScales = [coder decodeBoolForKey:TSPreviewStateKey(prefix, @"AutoScales")];
+    double scale = [coder decodeDoubleForKey:TSPreviewStateKey(prefix, @"Scale")];
+
+    BOOL newStyle = NO;
+    if ((first == PDF_FIRST_LEFT || first == PDF_FIRST_RIGHT) && first != firstPageStyle) {
+        firstPageStyle = first;
+        newStyle = YES;
+    }
+    if (style >= PDF_SINGLE_PAGE_STYLE && style <= PDF_DOUBLE_MULTI_PAGE_STYLE && style != pageStyle) {
+        pageStyle = style;
+        newStyle = YES;
+    }
+    if (newStyle)
+        [self setupPageStyle];
+    if (resize >= NEW_PDF_ACTUAL_SIZE && resize <= NEW_PDF_FIT_TO_CONTENT_WIDTH)
+        resizeOption = resize;
+    if (autoScales)
+        [self setAutoScales:YES];
+    else if (scale > 0) {
+        // Also Fit to Content Width, which is fitted again once the window is laid out.
+        [self setAutoScales:NO];
+        [self setMagnification:scale];
+    }
+    [self scaleChanged:nil];
+
+    if ([coder containsValueForKey:TSPreviewStateKey(prefix, @"PageIndex")]) {
+        NSInteger index = [coder decodeIntegerForKey:TSPreviewStateKey(prefix, @"PageIndex")];
+        place.valid = YES;
+        // The PDF may have fewer pages since; its last page is shown then.
+        place.pageIndex = (index < 0) ? 0 : MIN((NSUInteger)index, pageCount - 1);
+        place.pagePoint = [coder decodePointForKey:TSPreviewStateKey(prefix, @"PagePoint")];
+    }
+    return place;
+}
+
+- (void)restorePreviewPlace:(TSPreviewPanePlace)place
+{
+    if (![[self document] pageCount]) return;
+    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)
+        [self fitContentWidth];
+    if (place.valid && place.pageIndex < [[self document] pageCount])
+        TSPreviewPaneRestore(self, place);
+}
+
+- (void)previewStateChanged
+{
+    [self.myDocument invalidateRestorableState];
+    [self.window invalidateRestorableState];
+}
+
 - (void)setFirstPageStyle: (NSInteger)theFirstPageStyle;
 {
     firstPageStyle = theFirstPageStyle;
@@ -462,6 +542,7 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
         case PDF_DOUBLE_MULTI_PAGE_STYLE: [self setDisplayMode:kPDFDisplayTwoUpContinuous]; break;
     }
     [self setDisplaysPageBreaks:pageStyle != PDF_SINGLE_PAGE_STYLE];
+    [self previewStateChanged];
 }
 
 - (void) setupMagnificationStyle
@@ -1920,6 +2001,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (void)previewZoomBoundsChanged:(NSNotification *)notification
 {
     if (notification.object != self.documentView.enclosingScrollView.contentView) return;
+    // Scrolling, zooming and a new layout move the place kept for the next launch (#71).
+    [self previewStateChanged];
     if (scaleMag != lround(self.scaleFactor * 100.0))
         [self scaleChanged:nil];
 }
@@ -8961,6 +9044,7 @@ else
 	if (activePage)
 		[self showPageInOutline: [[self document] indexForPage: activePage]];
     [self.myDocument updatePreviewLayoutControls];
+    [self previewStateChanged];
 }
 
 

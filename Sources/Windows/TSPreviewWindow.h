@@ -31,7 +31,11 @@
 @class TSDocument;
 @class TSPreviewSplitDivider;
 
-@interface TSPreviewWindow : NSWindow
+// The identifier of the Preview window of a PDF opened by itself, which macOS restores on the next
+// launch (#71); a source restores its Preview with its own window.
+extern NSUserInterfaceItemIdentifier const TSPreviewWindowRestorationIdentifier;
+
+@interface TSPreviewWindow : NSWindow <NSWindowRestoration>
 {
 //	TSDocument	*myDocument;
 //	BOOL		windowIsSplit;
@@ -153,6 +157,12 @@
 
 - (BOOL)windowIsSplit;
 - (void)showActivePart; // the line along the active part of a split window (#14)
+
+// The state of the Preview kept for the next launch of TeXShop (#71): split or not and how, the
+// part in use, the Two-Page Arrangement chosen, and the display of each part.
+- (void)encodePreviewStateWithCoder:(NSCoder *)coder;
+// NO if the coder holds no such state, as one saved by an earlier version.
+- (BOOL)restorePreviewStateWithCoder:(NSCoder *)coder;
 
 
 @end

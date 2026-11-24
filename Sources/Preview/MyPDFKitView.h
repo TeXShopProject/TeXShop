@@ -368,6 +368,16 @@
 - (void)saveLocation;
 - (void)restoreLocation;
 
+// The display of this part kept for the next launch of TeXShop (#71): display format,
+// magnification and the place at its top edge, under keys starting with prefix.
+- (void)encodePreviewStateWithCoder:(NSCoder *)coder prefix:(NSString *)prefix;
+// Puts back the display format and magnification, and returns the place to go back to once the
+// window is laid out; invalid if the coder has none for this part.
+- (TSPreviewPanePlace)restorePreviewDisplayWithCoder:(NSCoder *)coder prefix:(NSString *)prefix;
+- (void)restorePreviewPlace:(TSPreviewPanePlace)place;
+// The state to keep for the next launch has changed.
+- (void)previewStateChanged;
+
 
 @end
 

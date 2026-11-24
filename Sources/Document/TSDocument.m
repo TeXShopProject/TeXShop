@@ -772,7 +772,9 @@ withDarkColors = NO;
                 [self.pdfKitWindow setFrameFromString:windowState];
             }
             
-            if ([coder containsValueForKey:@"VisiblePDFPage"])
+            // The display format, magnification, split and place of the Preview (#71); a state saved by
+            // an earlier version has only the page.
+            if (! [self.pdfKitWindow restorePreviewStateWithCoder: coder] && [coder containsValueForKey:@"VisiblePDFPage"])
             {
                 pageIndex = [coder decodeIntegerForKey:@"VisiblePDFPage"];
                 aView = (MyPDFKitView *)self.myPDFKitView;
@@ -803,7 +805,7 @@ withDarkColors = NO;
                 [fullSplitWindow setFrameFromString:windowState];
             }
             
-            if ([coder containsValueForKey:@"SplitVisiblePDFPage"])
+            if (! [self.pdfKitWindow restorePreviewStateWithCoder: coder] && [coder containsValueForKey:@"SplitVisiblePDFPage"])
             {
                 pageIndex = [coder decodeIntegerForKey:@"SplitVisiblePDFPage"];
                 aView = (MyPDFKitView *)self.myPDFKitView;
@@ -849,6 +851,9 @@ withDarkColors = NO;
      
     [coder encodeBool:useFullSplitWindow forKey:@"ForFullSplitWindow"];
     [coder encodeInteger:[myDrawer state] forKey:@"TeXShopDrawerState"];
+    // The display format, magnification, split and place of the Preview (#71).
+    if (! skipTextWindow)
+        [self.pdfKitWindow encodePreviewStateWithCoder: coder];
 
     if (! useFullSplitWindow) {
         
@@ -1430,6 +1435,11 @@ static void TSAddContextCopyOfSubmenu(NSMenu *contextMenu, SEL action)
                 [[[self windowControllers] objectAtIndex:0] setWindow: nil];
         // [[[self windowControllers] objectAtIndex:0] setShouldCloseDocument: NO];
         // [[[self windowControllers] objectAtIndex:0] close];
+        // Its only window is the Preview: macOS keeps it, and opens the file again with it on the
+        // next launch, as other applications do with their documents (#71).
+        self.pdfKitWindow.restorable = YES;
+        self.pdfKitWindow.restorationClass = [TSPreviewWindow class];
+        self.pdfKitWindow.identifier = TSPreviewWindowRestorationIdentifier;
     }
 
 

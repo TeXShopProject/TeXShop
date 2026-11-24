@@ -267,6 +267,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)restoreLocation;
 @end
 @implementation MyPDFKitView
+// The state kept for the next launch of TeXShop has its own test, run-preview-restore-state.py.
+- (void)previewStateChanged {}
 - (TSLinkPreviewView *)preview { return pinnedLinkPreview ?: linkPreview; }
 - (NSInteger)pageStyle { return pageStyle; }
 - (NSInteger)firstPageStyle { return firstPageStyle; }
