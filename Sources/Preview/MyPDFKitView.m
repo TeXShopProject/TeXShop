@@ -1346,19 +1346,16 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
  the file. It should not scroll because there is no previous scroll position selected by the user. Instead it should
  display the start of the pdf file.
  
- The second tricky case occurs if the user closes the preview window. Since this window is part of the NSDocument object
+ The second tricky case occurred when the user closed the preview window. Since this window is part of the NSDocument object
  associated with the source file, the window is not removed from memory. It disappears from the screen, but its scroll
- position and configuration are still known. If it remains closed until typesetting finishes, reShowWithPath
- displays the start of the pdf file. If the user reopens it first (for example through SyncTeX), the window clears previewClosed
- so reloading preserves the user's newly selected position instead. Command-1 shows a closed window again without reading
- the pdf file when it has not changed, so the window keeps its place and pinned popups; a changed file is read with
- previewClosed cleared, so the place is kept as well (#70).
+ position and configuration are still known. Up to TeXShop 6.00 RC2, reShowWithPath displayed the start of the pdf file
+ if the window remained closed until typesetting finished. Now the window keeps its place, as after any other typeset
+ run, and Command-1 shows a closed window again without reading the pdf file when it has not changed, so it also keeps
+ its pinned popups (#70). previewClosed still keeps external reloads from reading the pdf file while the window is closed.
  
- We handle these two special cases with boolean values attached to the preview window: noPdfFile and previewClosed.
+ We handle the first case with a boolean value attached to the preview window: noPdfFile.
  If noPdfFile = YES, then there was no pdf file when the document was opened and so reShowWithPath must initialize
- the PdfView. It also sets noPdfFile --> NO so this doesn't happen with further typesetting. Similarly
- if previewClosed = YES, when the pdf is scrolled to the top when displayed, and previewClosed --> NO
- so this will not happen in the future.
+ the PdfView. It also sets noPdfFile --> NO so this doesn't happen with further typesetting.
  */
 
 
@@ -1409,7 +1406,8 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
     
     // self.PDFFlashFix = NO;
     
-    if (self.myPDFWindow.noPdfFile  || self.myPDFWindow.previewClosed)
+    // A Preview that was closed keeps its place, as after any other typeset run (#70).
+    if (self.myPDFWindow.noPdfFile)
     {
         
         if ([[self document] isFinding])
@@ -1523,7 +1521,9 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
         _searchResults = NULL;
     }
     
-   if ((atLeastHighSierra) && self.PDFFlashFix && (self.myHideView1 == nil))
+   // A closed Preview shows nothing on the screen to cover the reload with; its picture of the
+   // screen would cover the PDF for a moment once the window is shown (#70).
+   if ((atLeastHighSierra) && self.PDFFlashFix && (self.myHideView1 == nil) && [[self window] isVisible])
     {
         NSView *myView;
         

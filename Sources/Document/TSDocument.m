@@ -7149,14 +7149,10 @@ if (! useFullSplitWindow) {
 				// The Preview comes back as it was closed: at its place, with its pinned popups (#70).
 				[[NSApplication sharedApplication] activateIgnoringOtherApps: YES];
 				[self.pdfKitWindow makeKeyAndOrderFront: self];
-			} else {
-				// A PDF changed while the Preview was closed is shown at the place the user left, as
-				// after typesetting (#70). The pinned popups close, as on every reload.
-				self.pdfKitWindow.previewClosed = NO;
+			} else
+				// A PDF changed while the Preview was closed is read; the place is kept, as after
+				// typesetting, and the pinned popups close, as on every reload (#70).
 				[self refreshPDFAndBringFront: YES];
-				if (![self.pdfKitWindow isVisible])
-					self.pdfKitWindow.previewClosed = YES;
-			}
 			}
 		}
 }
@@ -7816,7 +7812,9 @@ if (! useFullSplitWindow) {
         [signature isEqualToString:TSExternalPDFSignature(path)];
     self.shownPDFSignature = unchanged ? signature : nil;
     self.shownPDFChangeTime = unchanged ? changeTime : nil;
-    if (unchanged && self.myPDFKitView.document.pageCount) {
+    // A PDF with a password may show no pages until it is unlocked; it is the PDF shown all the
+    // same, and a change of its file is told apart from one of its metadata as for any other (#70).
+    if (unchanged && (self.myPDFKitView.document.pageCount || self.myPDFKitView.document.isLocked)) {
         [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:self.myPDFKitView.document];
         self.externalPDFPendingSignature = nil;
         self.externalPDFGeneration++;

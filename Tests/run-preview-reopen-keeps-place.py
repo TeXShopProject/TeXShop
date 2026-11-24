@@ -4,8 +4,8 @@
 Up to 6.00 RC2, Command-1 read the PDF again when the Preview window was closed, and reShowWithDocument: then showed
 page 1, because previewClosed was still set; the pinned popups were gone as well. Now a closed Preview whose PDF has
 not changed since it was read is only ordered front, so it keeps its place, its pinned popups and its drawer. A PDF
-changed in the meantime is read with previewClosed cleared, so that the place is kept, as after typesetting; if the
-PDF cannot be shown, previewClosed is set again, so that a later typeset run still starts at page 1.
+changed in the meantime is read; reShowWithDocument: keeps the place of a closed Preview as of any other
+(run-pdf-recovery.py checks that), and the pinned popups close, as on every reload.
 
 bringPdfWindowFront, closedPreviewShowsPDFOnDisk and previewPDFPath run unchanged in a stand-in document with a
 real PDFView and real files; refreshPDFAndBringFront: is recorded instead of reading the PDF, and the window is a
@@ -13,8 +13,7 @@ stand-in that is never shown.
 notePDFLoadedAtPath: and externalPDFPath run unchanged as well: the state of the file is noted also for a PDF
 with a password, which shows no pages while it is locked, and not for a file that changed while it was read.
 --mutation always-reload reads the PDF also when it has not changed, ignores-change never reads it again,
-reload-from-top reads a changed PDF with previewClosed still set, closed-flag-lost leaves previewClosed cleared
-after a reload that showed nothing, ignores-missing-pdf counts a Preview without a PDF as showing the file,
+ignores-missing-pdf counts a Preview without a PDF as showing the file,
 locked-not-noted notes no state for a locked PDF, locked-not-shown reads a locked PDF again,
 changed-on-load-noted notes the state of a file that changed while it was read.
 The harness must then fail.
@@ -28,8 +27,7 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['always-reload', 'ignores-change', 'reload-from-top', 'closed-flag-lost',
-                                           'ignores-missing-pdf', 'locked-not-noted', 'locked-not-shown',
+parser.add_argument('--mutation', choices=['always-reload', 'ignores-change', 'ignores-missing-pdf', 'locked-not-noted', 'locked-not-taken', 'locked-not-shown',
                                            'changed-on-load-noted'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -41,12 +39,11 @@ fragments = [('complete method: ' + s, source, method(source, s)) for s in signa
 mutations = {
     'always-reload': (1, '\treturn signature && ', '\treturn NO && signature && '),
     'ignores-change': (1, '[signature isEqualToString: self.shownPDFSignature]', 'YES'),
-    'reload-from-top': (0, '\t\t\t\tself.pdfKitWindow.previewClosed = NO;\n\t\t\t\t[self refreshPDFAndBringFront: YES];',
-                        '\t\t\t\t[self refreshPDFAndBringFront: YES];'),
-    'closed-flag-lost': (0, '\t\t\t\tif (![self.pdfKitWindow isVisible])\n\t\t\t\t\tself.pdfKitWindow.previewClosed = YES;\n', ''),
     'ignores-missing-pdf': (1, ' && !self.pdfKitWindow.noPdfFile && self.myPDFKitView.document != nil', ''),
     # The first audit: a locked PDF, which has no pages until it is unlocked, left no signature, and Command-1
     # read it again, which showed nothing.
+    # The fourth audit: a locked PDF was not taken for the external reloads, which then read it again and again.
+    'locked-not-taken': (3, ' || self.myPDFKitView.document.isLocked', ''),
     'locked-not-noted': (3, '    BOOL unchanged = signature && ', '    BOOL unchanged = signature && self.myPDFKitView.document.pageCount && '),
     'locked-not-shown': (1, ' && self.myPDFKitView.document != nil', ' && self.myPDFKitView.document.pageCount > 0'),
     'changed-on-load-noted': (3, '    self.shownPDFSignature = unchanged ? signature : nil;', '    self.shownPDFSignature = signature;'),
@@ -102,7 +99,6 @@ program = r'''
 @property (strong) NSURL *fileURL;
 @property BOOL documentIsPDF, readingShowsPDF;
 @property NSInteger reloads;
-@property BOOL closedAtReload;
 @end
 
 @implementation ReopenDocument
@@ -116,7 +112,6 @@ program = r'''
 // Reading the PDF again: recorded, with the state it starts from. The Preview is shown when the PDF can be read.
 - (void)refreshPDFAndBringFront:(BOOL)front {
     self.reloads++;
-    self.closedAtReload = self.pdfKitWindow.previewClosed;
     if (self.readingShowsPDF) [self.pdfKitWindow makeKeyAndOrderFront:self];
 }
 METHODS
@@ -170,7 +165,8 @@ static ReopenDocument *closedPreviewOf(NSString *directory, NSString *name, BOOL
     d.myPDFKitView.document = [[kind alloc] initWithData:[NSData dataWithContentsOfFile:pdf]];
     [d notePDFLoadedAtPath:pdf signature:signature changeTime:nil];
     check(d.shownPDFSignature != nil && [d.shownPDFSignature isEqual:signature], @"fixture: the state of the file read is noted");
-    check(d.accepted == (lock ? 0 : 1), @"fixture: only a PDF with pages is taken for the external reloads");
+    // Also a locked PDF, which shows no pages, is the PDF shown for the external reloads (#70 audit).
+    check(d.accepted == 1, @"a PDF read, locked or not, is taken for the external reloads");
     if (lock) {
         check(d.myPDFKitView.document.isLocked && d.myPDFKitView.document.pageCount == 0, @"fixture: a locked PDF shows no pages");
         if (lock == 2)
@@ -214,22 +210,19 @@ int main(void) { @autoreleasepool {
     [d bringPdfWindowFront];
     check(d.reloads == 0 && d.pdfKitWindow.frontings == 2 && app.activations == 1, @"open Preview: ordered front only");
 
-    // The PDF changed while the Preview was closed: it is read again with previewClosed cleared, so that
-    // reShowWithDocument: keeps the place.
+    // The PDF changed while the Preview was closed: it is read again.
     d = closedPreview(directory, @"changed.tex", NO);
     rewrite([directory stringByAppendingPathComponent:@"changed.pdf"]);
     [d bringPdfWindowFront];
     check(d.reloads == 1, @"changed PDF: the PDF is read again");
-    check(!d.closedAtReload, @"changed PDF: read with previewClosed cleared, so the place is kept");
     check(d.pdfKitWindow.visible && !d.pdfKitWindow.previewClosed, @"changed PDF: the Preview is shown");
 
-    // A changed PDF that cannot be read yet: the Preview stays closed and a later typeset run starts at page 1.
+    // A changed PDF that cannot be read yet: the Preview stays closed.
     d = closedPreview(directory, @"unreadable.tex", NO);
     rewrite([directory stringByAppendingPathComponent:@"unreadable.pdf"]);
     d.readingShowsPDF = NO;
     [d bringPdfWindowFront];
-    check(d.reloads == 1 && !d.closedAtReload, @"unreadable PDF: reading is tried at the place left");
-    check(!d.pdfKitWindow.visible && d.pdfKitWindow.previewClosed, @"unreadable PDF: the Preview stays closed and previewClosed is set again");
+    check(d.reloads == 1 && !d.pdfKitWindow.visible && d.pdfKitWindow.previewClosed, @"unreadable PDF: reading is tried, the Preview stays closed");
 
     // The PDF was removed: nothing on disk matches, so it is read as before.
     d = closedPreview(directory, @"removed.tex", NO);
@@ -252,7 +245,7 @@ int main(void) { @autoreleasepool {
     d = closedPreview(directory, @"Changed.PDF", YES);
     rewrite(d.fileURL.path);
     [d bringPdfWindowFront];
-    check(d.reloads == 1 && !d.closedAtReload, @"PDF document: a changed file is read at the place left");
+    check(d.reloads == 1, @"PDF document: a changed file is read again");
 
     // A PDF with a password, unlocked before the Preview was closed: shown again unlocked, at its place.
     d = closedPreviewOf(directory, @"unlocked.tex", NO, 2);

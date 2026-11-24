@@ -49,6 +49,8 @@ mutations={
  # Ignore a new ctime when the cheap signature is unchanged, as before content comparison.
  'nohash': ('if (changeTime && loadedChangeTime && ![changeTime isEqualToString:loadedChangeTime]) {', 'if (0) {'),
  # Digest a file read in place on the main thread.
+ # A locked PDF read is not taken for the external reloads, which read it again and again (#70).
+ 'lockednottaken': (' || self.myPDFKitView.document.isLocked', ''),
  # Turning automatic reloading on takes a file changed since the PDF on display was read for it (#70).
  'lockedwatch': ('        if (!self.shownPDFSignature || ([signature', '        if (YES || ([signature'),
  # An overwrite keeping the size and modification time is taken for the PDF shown (#70).
@@ -159,6 +161,13 @@ static void OverwriteKeepingTimes(NSString *path,NSData *data){
  Check(stat(path.fileSystemRepresentation,&after)==0 && after.st_dev==before.st_dev && after.st_ino==before.st_ino && after.st_size==before.st_size &&
   SameTime(after.st_mtimespec,before.st_mtimespec) && !SameTime(after.st_ctimespec,before.st_ctimespec),@"Overwrite keeps inode, size and mtime; ctime changes");
 }
+// PDFKit counts the pages of the PDF it writes with a password while it is locked; it counts none in one
+// whose cross-reference table is compressed, until it is unlocked.
+@interface CompressedLockedPDF : PDFDocument
+@end
+@implementation CompressedLockedPDF
+- (NSUInteger)pageCount { return self.isLocked ? 0 : [super pageCount]; }
+@end
 static NSData *Padded(NSData *data,NSUInteger size){NSMutableData *m=[data mutableCopy];while(m.length<size)[m appendBytes:" " length:1];return m;}
 static void SamePosition(RecoveryView *v,TSExternalPDFPosition old,NSString *label){
  TSExternalPDFPosition now=TSExternalPDFCapture(v);
@@ -457,28 +466,28 @@ int main(int argc,char **argv){@autoreleasepool{
  v.document=[[PDFDocument alloc]initWithData:first];NoteLoaded(q,pdf);[q configureExternalPDFObservation];
  old=v.document;[changed writeToFile:pdf atomically:YES];Return(NSApp);Check(v.document==old,@"PdfFileRefresh NO: a PDF opened by itself is not reloaded");
  [q stopExternalPDFObservation];
- // A PDF with a password that shows no pages while it is locked is not taken for the external
- // reloads when it is read; it is noted for Command-1 only. Turning automatic reloading on then
- // takes the file for it only if it has not changed since; a changed file is read (#70).
+ // A PDF that showed no pages when it was read, and is not locked, is not taken for the external
+ // reloads; it is noted for Command-1 only. Turning automatic reloading on then takes the file for
+ // it only if it has not changed since; a changed file is read (#70).
  TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@NO,@"PdfFileRefresh":@YES} mutableCopy];
  TSDocument *k=[TSDocument new];k.fileURL=[NSURL fileURLWithPath:pdf];k->taskDone=YES;k.pdfKitWindow=[TestWindow new];k.documentType=isPDF;k.myPDFKitView=v;
  [first writeToFile:pdf atomically:YES];v.document=[PDFDocument new];NoteLoaded(k,pdf);
- Check(k.externalPDFLoadedSignature==nil && [k.shownPDFSignature isEqualToString:TSExternalPDFSignature(pdf)],@"Locked: the load is noted for Command-1 only");
+ Check(k.externalPDFLoadedSignature==nil && [k.shownPDFSignature isEqualToString:TSExternalPDFSignature(pdf)],@"No pages: the load is noted for Command-1 only");
  TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@30} mutableCopy];
  [k startExternalPDFObservation];[k.pdfRefreshTimer invalidate];
- Check([k.externalPDFLoadedSignature isEqualToString:TSExternalPDFSignature(pdf)],@"Locked, unchanged: turning reloading on takes the file");
+ Check([k.externalPDFLoadedSignature isEqualToString:TSExternalPDFSignature(pdf)],@"No pages, unchanged: turning reloading on takes the file");
  [k stopExternalPDFObservation];
  TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@NO,@"PdfFileRefresh":@YES} mutableCopy];
  k=[TSDocument new];k.fileURL=[NSURL fileURLWithPath:pdf];k->taskDone=YES;k.pdfKitWindow=[TestWindow new];k.documentType=isPDF;k.myPDFKitView=v;
  v.document=[PDFDocument new];NoteLoaded(k,pdf);
  NSString *lockedState=k.shownPDFSignature;
  [changed writeToFile:pdf atomically:YES];Pump(1.1);[changed writeToFile:pdf atomically:YES];
- Check(![lockedState isEqualToString:TSExternalPDFSignature(pdf)],@"Locked: fixture: the file changed");
+ Check(![lockedState isEqualToString:TSExternalPDFSignature(pdf)],@"No pages: fixture: the file changed");
  TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@30} mutableCopy];
  [k startExternalPDFObservation];[k.pdfRefreshTimer invalidate];
- Check(k.externalPDFLoadedSignature==nil && [k.shownPDFSignature isEqualToString:lockedState],@"Locked: turning reloading on does not take the changed file for the PDF shown");
+ Check(k.externalPDFLoadedSignature==nil && [k.shownPDFSignature isEqualToString:lockedState],@"No pages: turning reloading on does not take the changed file for the PDF shown");
  StablePoll(k);
- Check(v.document.pageCount==12 && [k.shownPDFSignature isEqualToString:TSExternalPDFSignature(pdf)] && [k.externalPDFLoadedSignature isEqualToString:k.shownPDFSignature],@"Locked: the changed file is read and noted");
+ Check(v.document.pageCount==12 && [k.shownPDFSignature isEqualToString:TSExternalPDFSignature(pdf)] && [k.externalPDFLoadedSignature isEqualToString:k.shownPDFSignature],@"No pages: the changed file is read and noted");
  [k stopExternalPDFObservation];
  // An overwrite that keeps the size and modification time shows only in the change time: it is read too.
  TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@NO,@"PdfFileRefresh":@YES} mutableCopy];
@@ -488,13 +497,38 @@ int main(int argc,char **argv){@autoreleasepool{
  v.document=[PDFDocument new];NoteLoaded(k,pdf);
  lockedState=k.shownPDFSignature;NSString *lockedTime=k.shownPDFChangeTime;
  OverwriteKeepingTimes(pdf,Padded(first,same));
- Check([lockedState isEqualToString:TSExternalPDFSignature(pdf)],@"Locked, kept times: fixture: the cheap signature is the same");
+ Check([lockedState isEqualToString:TSExternalPDFSignature(pdf)],@"No pages, kept times: fixture: the cheap signature is the same");
  TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@30} mutableCopy];
  [k startExternalPDFObservation];[k.pdfRefreshTimer invalidate];
- Check(k.externalPDFLoadedSignature==nil && [k.shownPDFChangeTime isEqualToString:lockedTime],@"Locked, kept times: turning reloading on does not take the overwritten file for the PDF shown");
+ Check(k.externalPDFLoadedSignature==nil && [k.shownPDFChangeTime isEqualToString:lockedTime],@"No pages, kept times: turning reloading on does not take the overwritten file for the PDF shown");
  StablePoll(k);
  NSString *nowTime=nil;TSExternalPDFState(pdf,&nowTime);
- Check(v.document.pageCount==12 && [k.shownPDFChangeTime isEqualToString:nowTime],@"Locked, kept times: the overwritten file is read and noted");
+ Check(v.document.pageCount==12 && [k.shownPDFChangeTime isEqualToString:nowTime],@"No pages, kept times: the overwritten file is read and noted");
+ [k stopExternalPDFObservation];
+ // A PDF with a password that shows no pages until it is unlocked is the PDF shown: a change of
+ // its metadata alone neither reads it again nor counts as a failed reload, and an overwrite that
+ // keeps the size and modification time is read (#70).
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@NO,@"PdfFileRefresh":@YES} mutableCopy];
+ [Padded(changed,same) writeToFile:pdf atomically:YES];
+ NSString *lockFile=[pdf stringByAppendingString:@".lock.pdf"];
+ [[[PDFDocument alloc]initWithData:Padded(changed,same)] writeToFile:lockFile withOptions:@{PDFDocumentUserPasswordOption:@"secret",PDFDocumentOwnerPasswordOption:@"owner"}];
+ NSData *lockedBytes=[NSData dataWithContentsOfFile:lockFile];[[NSFileManager defaultManager] removeItemAtPath:lockFile error:nil];
+ NSUInteger lockedSize=MAX(lockedBytes.length,same)+16;
+ [Padded(lockedBytes,lockedSize) writeToFile:pdf atomically:YES];
+ k=[TSDocument new];k.fileURL=[NSURL fileURLWithPath:pdf];k->taskDone=YES;k.pdfKitWindow=[TestWindow new];k.documentType=isPDF;k.myPDFKitView=v;
+ PDFDocument *lockedDoc=[[CompressedLockedPDF alloc]initWithData:[NSData dataWithContentsOfFile:pdf]];
+ Check(lockedDoc.isLocked && lockedDoc.pageCount==0,@"Locked: fixture: the PDF shows no pages while locked");
+ v.document=lockedDoc;NoteLoaded(k,pdf);
+ Check([k.externalPDFLoadedSignature isEqualToString:TSExternalPDFSignature(pdf)] && [k.shownPDFSignature isEqualToString:k.externalPDFLoadedSignature],@"Locked: the PDF read is taken for the external reloads");
+ Check([lockedDoc unlockWithPassword:@"secret"],@"Locked: fixture: unlocked");
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@30} mutableCopy];
+ [k startExternalPDFObservation];[k.pdfRefreshTimer invalidate];
+ unsigned long snapshotsBefore=snapshotCount;
+ SetAttribute(pdf);StablePoll(k);StablePoll(k);
+ Check(v.document==lockedDoc && !lockedDoc.isLocked && snapshotCount==snapshotsBefore && k.externalPDFFailedSignature==nil,
+       @"Locked: a change of metadata alone keeps the unlocked PDF, without a reload or a failed one");
+ OverwriteKeepingTimes(pdf,Padded(first,lockedSize));StablePoll(k);StablePoll(k);
+ Check(v.document!=lockedDoc && v.document.pageCount==12 && !v.document.isLocked,@"Locked: an overwrite keeping the size and modification time is read");
  [k stopExternalPDFObservation];
  [shown close];[other close];
  printf("PASS: automatic reloading off: returning to TeXShop or the preview, partly written PDFs, following later passes, blocking, PdfFileRefresh\n");
