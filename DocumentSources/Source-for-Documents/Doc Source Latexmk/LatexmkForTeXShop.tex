@@ -113,11 +113,11 @@ You can use these \cmd{engine} files by using the drop down menu on the source t
 \begin{verbatim}
 % !TEX program = pdflatexmk
 \end{verbatim}
-(for using \cmd{pdflatex}---similar lines for \cmd{latex} and \cmd{xelatex}, etc.) at the top of your document\footnote{For the dtxmk engine the line should be placed just below the initial ``\cmd{\% \textbackslash iffalse}'' line of the \cmd{dtx} file.}; then simply using \mnu{Typeset} (\cmd{\cmdkey-T}) will automatically run the proper \cmd{engine}. Note: these engines \emph{don't} appear under the \mnu{Typeset} Menu but only under the pop-up menu on the source toolbar. Figure (\ref{fig:popupmenus}) shows the default and updated pop-up menu after installing the \latexmk\ engine files.
+(for using \cmd{pdflatex}---similar lines for \cmd{latex} and \cmd{xelatex}, etc.) at the top of your document\footnote{For the dtxmk engine the line should be placed just below the initial ``\cmd{\% \textbackslash iffalse}'' line of the \cmd{dtx} file.}; then simply using \mnu{Typeset} (\cmd{\cmdkey-T}) will automatically run the proper \cmd{engine}. Note: these engines \emph{don't} appear under the \mnu{Typeset} Menu but only under the pop-up menu on the source toolbar. Figure (\ref{fig:popupmenus}) shows an example of the pop-up menu before and after installing the \latexmk\ engine files.
 \begin{figure}
 \centering
 \includegraphics[width=2in]{figs/OriginalTypesetPopup}\qquad\includegraphics[width=2in]{figs/UpdatedTypesetPopup}
-\caption{Default and updated versions of the engine pop-up menu after installing the \latexmk\ engines.}\label{fig:popupmenus}
+\caption{An example of the engine pop-up menu before and after installing the \latexmk\ engines. The \latexmk\ engines appear after installing; the other items depend on the engines in your \cmd{Engines} folder.}\label{fig:popupmenus}
 \end{figure}
 
 I have only tested these engines with relatively trivial distributed documents (which include other files using \verb|\include| commands) but it appears that \latexmk\ deals with them properly. Note that when compiling a file with name \cmd{rootname.tex} a file with name \cmd{rootname.fdb\_latexmk}\footnote{The dependency file had extension \cmd{dep} in previous versions of \latexmk\ but didn't do a complete job of keeping track of those dependencies.} is created. This file contains the dependency information for the distributed document so making changes in an included file will force the recompile of the root document by \latexmk.
