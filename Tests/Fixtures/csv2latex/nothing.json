@@ -1,0 +1,18 @@
+{
+ "empty": [
+  "cells",
+  "simple",
+  "booktabs",
+  "longtable",
+  "none",
+  "tabularx"
+ ],
+ "ends-only": [
+  "cells",
+  "simple",
+  "booktabs",
+  "longtable",
+  "none",
+  "tabularx"
+ ]
+}

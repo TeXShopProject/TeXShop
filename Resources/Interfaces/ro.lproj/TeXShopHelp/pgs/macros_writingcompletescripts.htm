@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scrierea scripturilor cu comenzile de compilare ale TeXShop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; macrocomanda Bibliography; latexinteractive; bibtex; taskdone; succesiune de comenzi de compilare">
+<meta name="description" content="AppleScript; bibliografie; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; succesiune de comenzi de compilare">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <main id="content">
 <h1>Scrierea scripturilor cu comenzile de compilare ale TeXShop</h1>
 <p>Un document cu bibliografie are nevoie de o succesiune de compilări: LaTeX scrie fișierul .aux, BibTeX îl folosește pentru a scrie fișierele .bbl și .blg, LaTeX rulează din nou pentru a adăuga bibliografia în document și încă o dată pentru a actualiza trimiterile la ea. Proiectele dvs. pot avea nevoie de succesiuni asemănătoare, iar o macrocomandă AppleScript le poate rula în locul dvs.</p>
-<p>Macrocomanda Macro › Applescript › Bibliography, livrată cu TeXShop, arată cum. Iată conținutul ei:</p>
+<p>Macrocomanda Macro › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice, livrată cu TeXShop, arată cum. Iată conținutul ei:</p>
 <pre>--Applescript
 
 set fileName to #FILEPATH#

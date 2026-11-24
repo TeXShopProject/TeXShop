@@ -1,0 +1,13 @@
+\begin{longtable}{llll}
+a_b & {c} & \d & ~e^f \\
+\endfirsthead
+a_b & {c} & \d & ~e^f \\
+\endhead
+\multicolumn{4}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+<g> & |h| & "i" \\
+
+\end{longtable}

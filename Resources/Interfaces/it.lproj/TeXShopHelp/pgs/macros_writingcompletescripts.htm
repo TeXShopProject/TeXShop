@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scrivere script con i comandi di compilazione di TeXShop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; sequenza di comandi di compilazione">
+<meta name="description" content="AppleScript; bibliografia; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; sequenza di comandi di compilazione">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <main id="content">
 <h1>Scrivere script con i comandi di compilazione di TeXShop</h1>
 <p>Un documento con una bibliografia richiede una sequenza di compilazioni: LaTeX scrive il file .aux, BibTeX lo usa per scrivere i file .bbl e .blg, LaTeX viene eseguito di nuovo per aggiungere la bibliografia al documento e un’altra volta ancora per aggiornarne i riferimenti. I tuoi progetti potrebbero richiedere sequenze simili, e una macro AppleScript può eseguirle al posto tuo.</p>
-<p>La macro Macro › Applescript › Bibliography, fornita con TeXShop, mostra come fare. Ecco il suo contenuto:</p>
+<p>La macro Macro › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice, fornita con TeXShop, mostra come fare. Ecco il suo contenuto:</p>
 <pre>--Applescript
 
 set fileName to #FILEPATH#

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ConTeXt et MetaPost</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; nv-metafun; mfpic; luamplib">
+<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; mfpic; luamplib">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -59,14 +59,14 @@
 <p>MetaPost, de John Hobby, dessine des illustrations à partir d’une description écrite dans un langage de programmation dérivé de METAFONT de Knuth. Son manuel fait partie de TeX Live : choisissez Aide › Afficher l’aide d’un paquet... et tapez <code>metapost</code>.</p>
 <p>Composition › MetaPost (<kbd>⇧⌘M</kbd>), ou MetaPost dans le menu local situé à côté du bouton « Composer », exécute MetaPost sur le fichier qui porte le nom du document actif et l’extension <code>.mp</code> : sur le document lui-même s’il s’agit d’un fichier <code>.mp</code>, et sinon sur le fichier <code>.mp</code> situé à côté, par exemple celui que le paquet mfpic écrit pour un document <code>.tex</code>. Il exécute la commande indiquée dans Réglages › Composition › « Outils associés » › « MetaPost », <code>mpost</code> par défaut. Les profils du moteur règlent ce champ : <code>pmpost</code> pour pLaTeX + dvipdfmx et <code>upmpost</code> pour upLaTeX + dvipdfmx, qui composent du texte japonais dans les étiquettes, et <code>mpost</code> pour les autres profils. LuaLaTeX ne peut pas inclure de figures dont pmpost ou upmpost ont composé les étiquettes en japonais ; avec LuaLaTeX, dessinez ces figures dans le document avec le paquet luamplib.</p>
 <p>Pour enregistrer un nouveau fichier en tant que fichier MetaPost, choisissez le type mp dans le menu « Format de fichier » de la zone de dialogue d’enregistrement.</p>
-<p>Les moteurs nv-metapost et nv-metafun, de Nicola Vitacolonna, facilitent le travail avec MetaPost et MetaFun et affichent les figures d’un fichier dans la fenêtre d’aperçu. Ils se trouvent dans <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code> ; le fichier <code>README.pdf</code> et le dossier <code>examples</code>, un niveau plus haut dans <code>MetaPostEngines-1.4.7</code>, expliquent comment les installer et les utiliser et fournissent des fichiers d’exemple. Par exemple, un fichier qui commence par</p>
-<pre>% !TEX program = nv-metafun
+<p>Le moteur nv-metapost, de Nicola Vitacolonna, facilite le travail avec MetaPost et affiche les figures d’un fichier dans la fenêtre d’aperçu. Il se trouve dans <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code> ; le fichier <code>README.pdf</code> et le dossier <code>examples</code>, un niveau plus haut dans <code>MetaPostEngines-1.4.7</code>, expliquent comment l’installer et l’utiliser et fournissent des fichiers d’exemple. Par exemple, un fichier qui commence par</p>
+<pre>% !TEX program = nv-metapost
 beginfig(1);
   pickup pencircle scaled 2mm;
   draw fullcircle scaled 2cm withcolor red;
 endfig;
 end</pre>
-<p>est composé avec nv-metafun dès que ce moteur se trouve dans le dossier Engines.</p>
+<p>est composé avec nv-metapost dès que ce moteur se trouve dans le dossier Engines.</p>
 <p>Les dessins MetaPost peuvent aussi être écrits à l’intérieur d’un document LaTeX, avec le paquet luamplib pour LuaLaTeX, ou avec des paquets tels que mfpic, qui écrivent les dessins dans un fichier <code>.mp</code> que MetaPost traite entre deux compositions.</p>
 </main>
 </body>

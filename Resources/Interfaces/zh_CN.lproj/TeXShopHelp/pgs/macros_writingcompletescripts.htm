@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>用 TeXShop 排版命令编写脚本</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript；Bibliography 宏；latexinteractive；bibtex；taskdone；排版命令序列">
+<meta name="description" content="AppleScript；参考文献；Run LaTeX, BibTeX, Then LaTeX Twice；latexinteractive；bibtex；taskdone；排版命令序列">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <main id="content">
 <h1>用 TeXShop 排版命令编写脚本</h1>
 <p>带有参考文献列表的文稿需要依次进行多次排版：LaTeX 写出 .aux 文件，BibTeX 用它写出 .bbl 和 .blg 文件，LaTeX 再次运行以把参考文献列表加入文稿，然后再运行一次以更新对它的引用。你的项目可能也需要类似的排版顺序，AppleScript 宏可以替你执行。</p>
-<p>TeXShop 附带的宏“宏”>“Applescript”>“Bibliography”演示了如何做到这一点。它的内容如下：</p>
+<p>TeXShop 附带的宏“宏”>“Applescript”>“Run LaTeX, BibTeX, Then LaTeX Twice”演示了如何做到这一点。它的内容如下：</p>
 <pre>--Applescript
 
 set fileName to #FILEPATH#

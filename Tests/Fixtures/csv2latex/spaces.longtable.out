@@ -1,0 +1,13 @@
+\begin{longtable}{lll}
+ a  &   b &  c   \\
+\endfirsthead
+ a  &   b &  c   \\
+\endhead
+\multicolumn{3}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+    &  &   \\
+
+\end{longtable}

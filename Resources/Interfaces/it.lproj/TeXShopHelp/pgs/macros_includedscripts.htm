@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Macro AppleScript predefinite</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="macro AppleScript; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; fine riga; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
+<meta name="description" content="macro AppleScript; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Save Copy with Unix Line Endings; fine riga; bibliografia; Claus Gerhardt Macros; TeX4ht; Extract Pages from PDF; MetaPost">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -41,20 +41,20 @@
 </dl>
 <p>La macro sostituisce il contenuto degli appunti con il testo LaTeX. Per incollare le stesse celle in un altro stile, copiale prima di nuovo nel foglio di calcolo.</p>
 
-<h2 id="line-endings">Applescript › Convert to MAC, Convert to Unix, Convert to Windows</h2>
-<p>I file di testo terminano le righe in modi diversi: macOS e Unix con un avanzamento di riga (line feed), Windows con un ritorno a capo (carriage return) seguito da un avanzamento di riga, e i file Macintosh molto vecchi con un solo ritorno a capo. TeXShop li legge tutti e tre. Se l’editor di qualcun altro non ci riesce, usa queste macro. Per un file sorgente MyFile.tex, Convert to Unix scrive una copia del file salvato chiamata MyFile_Unix.tex con avanzamenti di riga; Convert to Windows scrive MyFile_Windows.tex e Convert to MAC scrive MyFile_Mac.tex. Le macro usano il programma flip di Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
+<h2 id="line-endings">Applescript › Save Copy with Unix Line Endings, Save Copy with Windows Line Endings, Save Copy with Classic Mac Line Endings</h2>
+<p>I file di testo terminano le righe in modi diversi: macOS e Unix con un avanzamento di riga (line feed), Windows con un ritorno a capo (carriage return) seguito da un avanzamento di riga, e i file Macintosh molto vecchi con un solo ritorno a capo. TeXShop li legge tutti e tre. Se l’editor di qualcun altro non ci riesce, usa queste macro. Per un file sorgente MyFile.tex, Save Copy with Unix Line Endings scrive una copia del file salvato chiamata MyFile_Unix.tex con avanzamenti di riga; Save Copy with Windows Line Endings scrive MyFile_Windows.tex e Save Copy with Classic Mac Line Endings scrive MyFile_Mac.tex. Le macro usano il programma flip di Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
 
-<h2 id="bibliography">Applescript › Bibliography</h2>
-<p>Un documento con una bibliografia richiede diverse esecuzioni: LaTeX scrive il file .aux, BibTeX lo usa per scrivere i file .bbl e .blg, LaTeX viene eseguito di nuovo per aggiungere la bibliografia e un’altra volta ancora per aggiornarne i riferimenti. La macro Bibliography esegue LaTeX, BibTeX, LaTeX e LaTeX uno dopo l’altro. <a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di compilazione di TeXShop</a> spiega come funziona.</p>
+<h2 id="bibliography">Applescript › Run LaTeX, BibTeX, Then LaTeX Twice</h2>
+<p>Un documento con una bibliografia richiede diverse esecuzioni: LaTeX scrive il file .aux, BibTeX lo usa per scrivere i file .bbl e .blg, LaTeX viene eseguito di nuovo per aggiungere la bibliografia e un’altra volta ancora per aggiornarne i riferimenti. Questa macro le esegue una dopo l’altra. <a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di compilazione di TeXShop</a> spiega come funziona.</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
-<p>La maggior parte delle macro di questo sottomenu richiama gli script della shell con lo stesso nome in ~/Library/TeXShop/bin; bibtexcpl, mpostcpl e latex-makeindex-mpost ne richiamano diversi in successione, e openpdf apre il PDF del documento. Funzionano su un file salvato. <a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a> prende come esempio pdflatexc.</p>
-<h3>htlatexc, htlatexr</h3>
-<p>TeX4ht converte un documento LaTeX in una pagina web: una pagina HTML e alcuni file di immagine. htlatexc esegue htlatex sul documento e apre in Safari il file HTML risultante. Non è necessario caricare il pacchetto tex4ht nel documento; lo carica htlatex. htlatexr esegue htlatex con l’opzione <code>-r</code>, che crea di nuovo le immagini anche quando esistono già.</p>
-<h3>pdfselectc</h3>
-<p>pdfselectc crea file PDF che contengono pagine scelte del PDF del documento. Prima chiede quanti file creare, poi le pagine di ciascun file, per esempio <code>5:8</code> per le pagine da 5 a 8 oppure <code>3:4,6,8:12</code>. Se il documento si chiama MyFile, i file vengono salvati come MyFile-1.pdf, MyFile-2.pdf e così via.</p>
-<h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
-<p>mpostc esegue MetaPost e poi pdfLaTeX; mpostcpl esegue pdfLaTeX, MetaPost e di nuovo pdfLaTeX. latex-makeindex-mpost esegue pdfLaTeX, MakeIndex, MetaPost e di nuovo pdfLaTeX, aprendo strada facendo i file di log. Per MetaPost consulta <a href="advanced_context.htm">ConTeXt e MetaPost</a>.</p>
+<p>La maggior parte delle macro di questo sottomenu richiama script della shell in ~/Library/TeXShop/bin, come pdflatexc, che esegue pdfLaTeX, e bibtexc, che esegue BibTeX. Ogni macro il cui nome inizia con Run esegue i programmi che nomina, in quell’ordine, e Open PDF apre il PDF del documento. Run LaTeX, dvips and ps2pdf richiede inoltre Ghostscript. Funzionano su un file salvato. <a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a> prende come esempio Run pdfLaTeX with Shell Escape.</p>
+<h3>Make HTML with TeX4ht</h3>
+<p>TeX4ht converte un documento LaTeX in una pagina web: una pagina HTML e alcuni file di immagine. Make HTML with TeX4ht esegue htlatex sul documento e apre in Safari il file HTML risultante. Non è necessario caricare il pacchetto tex4ht nel documento; lo carica htlatex. Make HTML with TeX4ht, Remaking Images esegue htlatex con l’opzione <code>-r</code>, che crea di nuovo le immagini anche quando esistono già.</p>
+<h3>Extract Pages from PDF…</h3>
+<p>Extract Pages from PDF… crea file PDF che contengono pagine scelte del PDF del documento. Prima chiede quanti file creare, poi le pagine di ciascun file, per esempio <code>5:8</code> per le pagine da 5 a 8 oppure <code>3:4,6,8:12</code>. Se il documento si chiama MyFile, i file vengono salvati come MyFile-1.pdf, MyFile-2.pdf e così via.</p>
+<h3>MetaPost</h3>
+<p>Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX apre strada facendo i file di log. Per MetaPost consulta <a href="advanced_context.htm">ConTeXt e MetaPost</a>.</p>
 </main>
 </body>
 </html>

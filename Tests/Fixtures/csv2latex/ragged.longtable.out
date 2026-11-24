@@ -1,0 +1,14 @@
+\begin{longtable}{lllll}
+h1 & h2 \\
+\endfirsthead
+h1 & h2 \\
+\endhead
+\multicolumn{5}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+only \\
+1 & 2 & 3 & 4 & 5 \\
+
+\end{longtable}

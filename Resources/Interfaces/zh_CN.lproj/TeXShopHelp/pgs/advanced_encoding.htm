@@ -54,7 +54,7 @@
 <h2>编码行</h2>
 <p>源文件前二十行之一中的如下一行，可以固定该文件读取和保存时所用的编码，并优先于其他所有设置：</p>
 <pre>% !TEX encoding = UTF-8 Unicode</pre>
-<p>请按所示格式书写这一行，等号前有一个空格；<code>%</code> 后面没有空格的 <code>%!TEX encoding =</code> 也能被读取。名称必须与下表中的写法完全一致。“宏”菜单中的“Encoding”宏会为你插入这一行，并提供一个可供选择的编码列表。TeXworks 使用的名称（例如 <code>UTF-8</code> 或 <code>ISO 8859-1</code>）也能被识别。</p>
+<p>请按所示格式书写这一行，等号前有一个空格；<code>%</code> 后面没有空格的 <code>%!TEX encoding =</code> 也能被读取。名称必须与下表中的写法完全一致。“宏”菜单中的“Set Encoding…”宏会为你插入这一行，并提供一个可供选择的编码列表。TeXworks 使用的名称（例如 <code>UTF-8</code> 或 <code>ISO 8859-1</code>）也能被识别。</p>
 <p>如果这一行指定了 TeXShop 不认识的编码，TeXShop 会按 UTF-8 读取文件并给出提示。如果这一行指定了 UTF-8，但文件不是有效的 UTF-8，TeXShop 会报告这一情况，并以 ISO Latin 9 打开文件，这种编码可以读取任何文件；不更改这一行就保存时，会写回相同的字节，因此不会丢失任何内容。要在打开文件时不应用它的编码行，请在文件打开时按住 Option 键。</p>
 <table>
 <tr><th>编码行中的名称</th><th>菜单中的名称</th></tr>

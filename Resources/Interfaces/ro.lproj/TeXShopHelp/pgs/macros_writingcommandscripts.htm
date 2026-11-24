@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scrierea scripturilor cu comenzi shell</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; script shell; do shell script; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<meta name="description" content="AppleScript; script shell; do shell script; Run pdfLaTeX with Shell Escape; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
 </nav>
 <main id="content">
 <h1>Scrierea scripturilor cu comenzi shell</h1>
-<p>Această pagină folosește macrocomanda pdflatexc a lui Claus Gerhardt, din Macro › Claus Gerhardt Macros, pentru a arăta cum apelează un script AppleScript un script shell. Scriptul shell în sine este simplu: adaugă dosarele programelor TeX la calea de căutare și rulează pdflatex cu <code>--shell-escape</code>. Scripturile dvs. vor face probabil mai mult, de exemplu vor rula mai multe programe unul după altul; atunci devin utile aceste tehnici.</p>
+<p>Această pagină folosește macrocomanda Run pdfLaTeX with Shell Escape a lui Claus Gerhardt, din Macro › Claus Gerhardt Macros, pentru a arăta cum apelează un script AppleScript un script shell. Scriptul shell în sine este simplu: adaugă dosarele programelor TeX la calea de căutare și rulează pdflatex cu <code>--shell-escape</code>. Scripturile dvs. vor face probabil mai mult, de exemplu vor rula mai multe programe unul după altul; atunci devin utile aceste tehnici.</p>
 
 <h2 id="shell-script">Scriptul shell</h2>
 <p>Scriptul shell este ~/Library/TeXShop/bin/pdflatexc. Nu depinde de TeXShop: dacă dosarul lui se află în calea dvs. de căutare, tastarea <code>pdflatexc myfile.tex</code> în Terminal îl rulează. Iată-l:</p>

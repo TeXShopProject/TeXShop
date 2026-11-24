@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>用 Shell 命令编写脚本</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript；shell 脚本；do shell script；pdflatexc；setname.scpt；Claus Gerhardt；~/Library/TeXShop/bin">
+<meta name="description" content="AppleScript；shell 脚本；do shell script；Run pdfLaTeX with Shell Escape；pdflatexc；setname.scpt；Claus Gerhardt；~/Library/TeXShop/bin">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
 </nav>
 <main id="content">
 <h1>用 Shell 命令编写脚本</h1>
-<p>本页以 Claus Gerhardt 编写的宏 pdflatexc（位于“宏”>“Claus Gerhardt Macros”中）为例，说明 AppleScript 如何调用 shell 脚本。这个 shell 脚本本身很简单：它把 TeX 程序所在的文件夹添加到搜索路径中，然后用 <code>--shell-escape</code> 运行 pdflatex。你自己的脚本可能会做更多的事情，例如依次运行多个程序；这时这些技巧就会派上用场。</p>
+<p>本页以 Claus Gerhardt 编写的宏 Run pdfLaTeX with Shell Escape（位于“宏”>“Claus Gerhardt Macros”中）为例，说明 AppleScript 如何调用 shell 脚本。这个 shell 脚本本身很简单：它把 TeX 程序所在的文件夹添加到搜索路径中，然后用 <code>--shell-escape</code> 运行 pdflatex。你自己的脚本可能会做更多的事情，例如依次运行多个程序；这时这些技巧就会派上用场。</p>
 
 <h2 id="shell-script">shell 脚本</h2>
 <p>这个 shell 脚本是 ~/Library/TeXShop/bin/pdflatexc。它不依赖于 TeXShop：如果它所在的文件夹在你的搜索路径中，在终端中键入 <code>pdflatexc myfile.tex</code> 就能运行它。脚本如下：</p>

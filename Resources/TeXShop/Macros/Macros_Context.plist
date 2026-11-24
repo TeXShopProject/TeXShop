@@ -39,7 +39,7 @@ end tell
 on error
 end try</string>
 					<key>name</key>
-					<string>Show files</string>
+					<string>Show Source and PDF in Finder</string>
 				</dict>
 				<dict>
 					<key>content</key>

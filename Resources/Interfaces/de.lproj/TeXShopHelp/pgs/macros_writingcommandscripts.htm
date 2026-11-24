@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Skripte mit Shell-Befehlen schreiben</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="AppleScript; Shell-Skript; do shell script; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<meta name="description" content="AppleScript; Shell-Skript; do shell script; Run pdfLaTeX with Shell Escape; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
 </nav>
 <main id="content">
 <h1>Skripte mit Shell-Befehlen schreiben</h1>
-<p>Diese Seite zeigt am Makro pdflatexc von Claus Gerhardt unter Makros › Claus Gerhardt Macros, wie ein AppleScript ein Shell-Skript aufruft. Das Shell-Skript selbst ist einfach: Es fügt die Ordner der TeX-Programme dem Suchpfad hinzu und startet pdflatex mit <code>--shell-escape</code>. Ihre eigenen Skripte werden wahrscheinlich mehr tun, etwa mehrere Programme nacheinander starten; dann werden diese Techniken nützlich.</p>
+<p>Diese Seite zeigt am Makro Run pdfLaTeX with Shell Escape von Claus Gerhardt unter Makros › Claus Gerhardt Macros, wie ein AppleScript ein Shell-Skript aufruft. Das Shell-Skript selbst ist einfach: Es fügt die Ordner der TeX-Programme dem Suchpfad hinzu und startet pdflatex mit <code>--shell-escape</code>. Ihre eigenen Skripte werden wahrscheinlich mehr tun, etwa mehrere Programme nacheinander starten; dann werden diese Techniken nützlich.</p>
 
 <h2 id="shell-script">Das Shell-Skript</h2>
 <p>Das Shell-Skript ist ~/Library/TeXShop/bin/pdflatexc. Es hängt nicht von TeXShop ab: Liegt sein Ordner in Ihrem Suchpfad, startet die Eingabe <code>pdflatexc myfile.tex</code> im Terminal das Skript. Hier ist es:</p>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Écrire des scripts avec les commandes de composition de TeXShop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; suite de commandes de composition">
+<meta name="description" content="AppleScript; bibliographie; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; suite de commandes de composition">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <main id="content">
 <h1>Écrire des scripts avec les commandes de composition de TeXShop</h1>
 <p>Un document comportant une bibliographie nécessite une suite de compositions : LaTeX écrit le fichier .aux, BibTeX l’utilise pour écrire les fichiers .bbl et .blg, LaTeX s’exécute de nouveau pour ajouter la bibliographie au document, puis une fois encore pour mettre à jour les références qui y renvoient. Vos projets peuvent nécessiter des suites semblables, et une macro AppleScript peut les exécuter pour vous.</p>
-<p>La macro Macros › Applescript › Bibliography, fournie avec TeXShop, montre comment faire. Voici son contenu :</p>
+<p>La macro Macros › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice, fournie avec TeXShop, montre comment faire. Voici son contenu :</p>
 <pre>--Applescript
 
 set fileName to #FILEPATH#

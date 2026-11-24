@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ConTeXt en MetaPost</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; nv-metafun; mfpic; luamplib">
+<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; mfpic; luamplib">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -59,14 +59,14 @@
 <p>MetaPost, van John Hobby, tekent illustraties op basis van een beschrijving in een programmeertaal die is afgeleid van METAFONT van Knuth. De handleiding maakt deel uit van TeX Live: kies Help › Toon documentatie voor pakket… en typ <code>metapost</code>.</p>
 <p>Zet › MetaPost (<kbd>⇧⌘M</kbd>), of MetaPost in het venstermenu naast de knop ‘Zet’, voert MetaPost uit op het bestand met de naam van het actieve document en de extensie <code>.mp</code>: op het document zelf als het een <code>.mp</code>-bestand is, en anders op het <code>.mp</code>-bestand ernaast, zoals het bestand dat het pakket mfpic voor een <code>.tex</code>-document schrijft. Het voert het commando uit in Instellingen › Zetten › Verwante programma’s › ‘MetaPost’, standaard <code>mpost</code>. De engineprofielen stellen dit veld in: <code>pmpost</code> voor pLaTeX + dvipdfmx en <code>upmpost</code> voor upLaTeX + dvipdfmx, die Japanse tekst in labels zetten, en <code>mpost</code> voor de andere profielen. LuaLaTeX kan geen figuren opnemen waarvan pmpost of upmpost de labels in het Japans heeft gezet; teken zulke figuren bij LuaLaTeX in het document zelf met het pakket luamplib.</p>
 <p>Om een nieuw bestand als MetaPost-bestand te bewaren, kiest u in het bewaarvenster het type mp in het menu ‘Bestandstype’.</p>
-<p>De engines nv-metapost en nv-metafun, van Nicola Vitacolonna, maken het werken met MetaPost en MetaFun eenvoudiger en tonen de figuren van een bestand in het voorvertoningsvenster. Ze staan in <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>; het bestand <code>README.pdf</code> en de map <code>examples</code>, één niveau hoger in <code>MetaPostEngines-1.4.7</code>, leggen uit hoe u ze installeert en gebruikt, en bevatten voorbeeldbestanden. Een bestand dat begint met</p>
-<pre>% !TEX program = nv-metafun
+<p>De engine nv-metapost, van Nicola Vitacolonna, maakt het werken met MetaPost eenvoudiger en toont de figuren van een bestand in het voorvertoningsvenster. Ze staat in <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>; het bestand <code>README.pdf</code> en de map <code>examples</code>, één niveau hoger in <code>MetaPostEngines-1.4.7</code>, leggen uit hoe u haar installeert en gebruikt, en bevatten voorbeeldbestanden. Een bestand dat begint met</p>
+<pre>% !TEX program = nv-metapost
 beginfig(1);
   pickup pencircle scaled 2mm;
   draw fullcircle scaled 2cm withcolor red;
 endfig;
 end</pre>
-<p>wordt bijvoorbeeld met nv-metafun gezet zodra die engine in de map Engines staat.</p>
+<p>wordt bijvoorbeeld met nv-metapost gezet zodra die engine in de map Engines staat.</p>
 <p>MetaPost-tekeningen kunnen ook in een LaTeX-document worden geschreven, met het pakket luamplib voor LuaLaTeX, of met pakketten zoals mfpic, die de tekeningen naar een <code>.mp</code>-bestand schrijven dat MetaPost tussen twee zetrondes verwerkt.</p>
 </main>
 </body>

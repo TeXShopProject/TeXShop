@@ -181,7 +181,7 @@ end sort</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>Program</string>
+			<string>Set Typesetting Program…</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -350,7 +350,7 @@ end sort</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>Encoding</string>
+			<string>Set Encoding…</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -385,8 +385,6 @@ tell application "TeXShop"
 		return
 	end try
 	
-	set TeX_path to do shell script "dirname " &amp; quoted form of TeX_path
-	
 	-- Get the absolute path to the Root document
 	try
 		set Root_abs_path to POSIX path of (choose file with prompt "Pick the Root document:")
@@ -394,14 +392,8 @@ tell application "TeXShop"
 		return
 	end try
 	
-	-- Use perl to convert the absolute path to the Root document 
-	-- to a relative path to it.
-	set command to "perl -e 'use File::Spec; "
-	set command to command &amp; "$rel_path = File::Spec-&gt;abs2rel"
-	set command to command &amp; "( \"" &amp; Root_abs_path &amp; "\","
-	set command to command &amp; "\"" &amp; TeX_path &amp; "\" ) ; "
-	set command to command &amp; "print $rel_path'"
-	tell me to set Root_rel_path to do shell script command
+	-- The path of the Root document relative to the folder of this document
+	set Root_rel_path to my relative_root_path(Root_abs_path, TeX_path)
 	
 	if relative then
 		set i to 1
@@ -517,11 +509,48 @@ tell application "TeXShop"
 	
 	-- Restore the length of the selection
 	set length of the selection of the front document to selection_length
-end tell</string>
+end tell
+
+-- The path of the file target_path relative to the folder of the file document_path, as earlier
+-- versions gave it with File::Spec-&gt;abs2rel of Perl: ".." for each folder to go up, then the rest.
+-- Names are compared character for character, so a path may have any character in it.
+on relative_root_path(target_path, document_path)
+	set saved_delimiters to AppleScript's text item delimiters
+	set AppleScript's text item delimiters to "/"
+	set target_names to {}
+	repeat with a_name in text items of target_path
+		if contents of a_name is not in {"", "."} then set end of target_names to contents of a_name
+	end repeat
+	set base_names to {}
+	repeat with a_name in text items of document_path
+		if contents of a_name is not in {"", "."} then set end of base_names to contents of a_name
+	end repeat
+	-- The folder of the document: its path without the name of the document.
+	if (count of base_names) &gt; 0 then set base_names to reverse of rest of reverse of base_names
+	set common to 0
+	repeat while common &lt; (count of target_names) and common &lt; (count of base_names)
+		if id of (item (common + 1) of target_names) is not id of (item (common + 1) of base_names) then exit repeat
+		set common to common + 1
+	end repeat
+	set relative_names to {}
+	repeat (count of base_names) - common times
+		set end of relative_names to ".."
+	end repeat
+	repeat with i from common + 1 to count of target_names
+		set end of relative_names to item i of target_names
+	end repeat
+	if relative_names is {} then
+		set relative_path to "."
+	else
+		set relative_path to relative_names as text
+	end if
+	set AppleScript's text item delimiters to saved_delimiters
+	return relative_path
+end relative_root_path</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>Root</string>
+			<string>Set Root File…</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -529,7 +558,7 @@ end tell</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>Numbering</string>
+			<string>Page Number Correction</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -547,7 +576,7 @@ end tell</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>PreText Personal Mark</string>
+			<string>PreTeXt Tag Comment</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -633,7 +662,7 @@ end tell</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>Root (Short Version)</string>
+			<string>Root File Line</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -1441,7 +1470,7 @@ end stroffset</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>GetFontSet</string>
+			<string>Insert Font Set…</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -1646,7 +1675,7 @@ end stroffset</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>SaveFontSet</string>
+			<string>Save Font Set</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -1868,7 +1897,7 @@ end clean</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>TestFontSet</string>
+			<string>Test Font Set Sizes</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -2095,7 +2124,7 @@ end makelst</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>Tabularize</string>
+			<string>Align Table Columns</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -2330,7 +2359,7 @@ end makelst</string>
 			<key>key</key>
 			<string></string>
 			<key>name</key>
-			<string>Tabularize +space</string>
+			<string>Align Table Columns with Spaces</string>
 		</dict>
 		<dict>
 			<key>content</key>
@@ -2401,7 +2430,7 @@ end try</string>
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>Show files</string>
+					<string>Show Source and PDF in Finder</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -2477,7 +2506,7 @@ do shell script shellScript
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>Convert to MAC</string>
+					<string>Save Copy with Classic Mac Line Endings</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -2502,7 +2531,7 @@ do shell script shellScript
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>Convert to Unix</string>
+					<string>Save Copy with Unix Line Endings</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -2527,7 +2556,7 @@ do shell script shellScript
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>Convert to Windows</string>
+					<string>Save Copy with Windows Line Endings</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -2586,7 +2615,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>Bibliography</string>
+					<string>Run LaTeX, BibTeX, Then LaTeX Twice</string>
 				</dict>
 			</array>
 		</dict>
@@ -3059,7 +3088,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>bibtexc</string>
+					<string>Run BibTeX, Then pdfLaTeX Twice</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3124,7 +3153,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>bibtexcpl</string>
+					<string>Run pdfLaTeX, BibTeX, Then pdfLaTeX Twice</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3186,7 +3215,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>mpostc</string>
+					<string>Run MetaPost, Then pdfLaTeX</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3244,7 +3273,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>mpostcpl</string>
+					<string>Run pdfLaTeX, MetaPost, Then pdfLaTeX</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3291,7 +3320,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>htlatexc</string>
+					<string>Make HTML with TeX4ht</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3330,7 +3359,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>htlatexr</string>
+					<string>Make HTML with TeX4ht, Remaking Images</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3372,7 +3401,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>altpdflatexc</string>
+					<string>Run LaTeX, dvips and ps2pdf</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3406,7 +3435,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>pdflatexc</string>
+					<string>Run pdfLaTeX with Shell Escape</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3460,7 +3489,7 @@ do shell script shellScript
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>pdfselectc</string>
+					<string>Extract Pages from PDF…</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3486,7 +3515,7 @@ set pdfFile to alias POSIX file thePDF
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>openpdf</string>
+					<string>Open PDF</string>
 				</dict>
 				<dict>
 					<key>content</key>
@@ -3556,7 +3585,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>latex-makeindex-mpost</string>
+					<string>Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX</string>
 				</dict>
 			</array>
 		</dict>
@@ -4287,7 +4316,7 @@ end tell
 					<key>key</key>
 					<string></string>
 					<key>name</key>
-					<string>regular</string>
+					<string>figure</string>
 				</dict>
 				<dict>
 					<key>content</key>

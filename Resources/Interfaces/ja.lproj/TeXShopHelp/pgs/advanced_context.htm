@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ConTeXtとMetaPost</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; nv-metafun; mfpic; luamplib">
+<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; mfpic; luamplib">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -58,8 +58,8 @@
 <p>MetaPostは、John Hobbyによるプログラムで、KnuthのMETAFONTから派生したプログラミング言語での記述から図を描きます。マニュアルはTeX Liveに含まれています。「ヘルプ」→「パッケージのヘルプを表示...」を選び、<code>metapost</code>と入力してください。</p>
 <p>「タイプセット」→「MetaPost」（<kbd>⇧⌘M</kbd>）、または「タイプセット」ボタンの横のポップアップメニューの「MetaPost」は、作業中の書類と同じ名前で拡張子が<code>.mp</code>のファイルにMetaPostを実行します。書類自体が<code>.mp</code>ファイルならその書類に、そうでなければ隣にある<code>.mp</code>ファイル（たとえばmfpicパッケージが<code>.tex</code>の書類のために書き出すもの）に実行します。実行するのは「設定」→「タイプセット」→「周辺ツール」の「MetaPost」にあるコマンドで、初期値は<code>mpost</code>です。エンジンのプロファイルはこの欄を設定します。pLaTeX + dvipdfmxでは<code>pmpost</code>、upLaTeX + dvipdfmxでは<code>upmpost</code>になり、ラベルの日本語をタイプセットできます。ほかのプロファイルでは<code>mpost</code>です。pmpostやupmpostで日本語のラベルをタイプセットした図は、LuaLaTeXでは取り込めません。LuaLaTeXでは、そうした図はluamplibパッケージを使って書類の中で描いてください。</p>
 <p>新しいファイルをMetaPostのファイルとして保存するには、保存ダイアログの「ファイルフォーマット」のメニューでmpを選びます。</p>
-<p>Nicola Vitacolonnaによるエンジンnv-metapostとnv-metafunを使うと、MetaPostとMetaFunでの作業が楽になり、ファイルの中の図をプレビューのウインドウに表示できます。これらは<code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>にあります。インストールと使い方は1つ上の<code>MetaPostEngines-1.4.7</code>フォルダにある<code>README.pdf</code>に説明されていて、同じフォルダの<code>examples</code>フォルダにはサンプルファイルがあります。たとえば、次のように始まるファイルは、nv-metafunのエンジンをEnginesフォルダに置けばnv-metafunでタイプセットされます。</p>
-<pre>% !TEX program = nv-metafun
+<p>Nicola Vitacolonnaによるエンジンnv-metapostを使うと、MetaPostでの作業が楽になり、ファイルの中の図をプレビューのウインドウに表示できます。このエンジンは<code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>にあります。インストールと使い方は1つ上の<code>MetaPostEngines-1.4.7</code>フォルダにある<code>README.pdf</code>に説明されていて、同じフォルダの<code>examples</code>フォルダにはサンプルファイルがあります。たとえば、次のように始まるファイルは、nv-metapostのエンジンをEnginesフォルダに置けばnv-metapostでタイプセットされます。</p>
+<pre>% !TEX program = nv-metapost
 beginfig(1);
   pickup pencircle scaled 2mm;
   draw fullcircle scaled 2cm withcolor red;

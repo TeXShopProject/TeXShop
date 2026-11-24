@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Macrocomenzile AppleScript implicite</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="macrocomenzi AppleScript; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; sfârșit de rând; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
+<meta name="description" content="macrocomenzi AppleScript; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Save Copy with Unix Line Endings; sfârșit de rând; bibliografie; Claus Gerhardt Macros; TeX4ht; Extract Pages from PDF; MetaPost">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -41,20 +41,20 @@
 </dl>
 <p>Macrocomanda înlocuiește conținutul clipboardului cu textul LaTeX. Pentru a lipi aceleași celule în alt stil, copiați-le mai întâi din nou din foaia de calcul.</p>
 
-<h2 id="line-endings">Applescript › Convert to MAC, Convert to Unix, Convert to Windows</h2>
-<p>Fișierele text își încheie rândurile în moduri diferite: macOS și Unix cu un caracter de avans de linie (line feed), Windows cu un retur de car (carriage return) urmat de un avans de linie, iar fișierele Macintosh foarte vechi doar cu un retur de car. TeXShop le citește pe toate trei. Dacă editorul altcuiva nu le poate citi, folosiți aceste macrocomenzi. Pentru un fișier sursă MyFile.tex, Convert to Unix scrie o copie a fișierului salvat numită MyFile_Unix.tex, cu avansuri de linie; Convert to Windows scrie MyFile_Windows.tex, iar Convert to MAC scrie MyFile_Mac.tex. Macrocomenzile folosesc programul flip al lui Craig Stuart Sapp, din ~/Library/TeXShop/bin.</p>
+<h2 id="line-endings">Applescript › Save Copy with Unix Line Endings, Save Copy with Windows Line Endings, Save Copy with Classic Mac Line Endings</h2>
+<p>Fișierele text își încheie rândurile în moduri diferite: macOS și Unix cu un caracter de avans de linie (line feed), Windows cu un retur de car (carriage return) urmat de un avans de linie, iar fișierele Macintosh foarte vechi doar cu un retur de car. TeXShop le citește pe toate trei. Dacă editorul altcuiva nu le poate citi, folosiți aceste macrocomenzi. Pentru un fișier sursă MyFile.tex, Save Copy with Unix Line Endings scrie o copie a fișierului salvat numită MyFile_Unix.tex, cu avansuri de linie; Save Copy with Windows Line Endings scrie MyFile_Windows.tex, iar Save Copy with Classic Mac Line Endings scrie MyFile_Mac.tex. Macrocomenzile folosesc programul flip al lui Craig Stuart Sapp, din ~/Library/TeXShop/bin.</p>
 
-<h2 id="bibliography">Applescript › Bibliography</h2>
-<p>Un document cu bibliografie are nevoie de mai multe rulări: LaTeX scrie fișierul .aux, BibTeX îl folosește pentru a scrie fișierele .bbl și .blg, LaTeX rulează din nou pentru a adăuga bibliografia și încă o dată pentru a actualiza trimiterile la ea. Macrocomanda Bibliography rulează LaTeX, BibTeX, LaTeX și LaTeX una după alta. <a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a> explică modul în care funcționează.</p>
+<h2 id="bibliography">Applescript › Run LaTeX, BibTeX, Then LaTeX Twice</h2>
+<p>Un document cu bibliografie are nevoie de mai multe rulări: LaTeX scrie fișierul .aux, BibTeX îl folosește pentru a scrie fișierele .bbl și .blg, LaTeX rulează din nou pentru a adăuga bibliografia și încă o dată pentru a actualiza trimiterile la ea. Această macrocomandă le rulează una după alta. <a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a> explică modul în care funcționează.</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
-<p>Majoritatea macrocomenzilor din acest submeniu apelează scripturile shell cu același nume din ~/Library/TeXShop/bin; bibtexcpl, mpostcpl și latex-makeindex-mpost apelează pe rând mai multe dintre ele, iar openpdf deschide PDF-ul documentului. Ele lucrează pe un fișier salvat. <a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a> explică pdflatexc ca exemplu.</p>
-<h3>htlatexc, htlatexr</h3>
-<p>TeX4ht convertește un document LaTeX într-o pagină web: o pagină HTML și fișiere imagine. htlatexc rulează htlatex pe document și deschide fișierul HTML rezultat în Safari. Pachetul tex4ht nu trebuie încărcat în document; htlatex îl încarcă. htlatexr rulează htlatex cu opțiunea <code>-r</code>, care creează din nou imaginile chiar dacă ele există deja.</p>
-<h3>pdfselectc</h3>
-<p>pdfselectc creează fișiere PDF care conțin pagini selectate din PDF-ul documentului. Întreabă mai întâi câte fișiere să creeze, apoi paginile fiecărui fișier, de exemplu <code>5:8</code> pentru paginile 5–8 sau <code>3:4,6,8:12</code>. Dacă documentul se numește MyFile, fișierele sunt salvate ca MyFile-1.pdf, MyFile-2.pdf și așa mai departe.</p>
-<h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
-<p>mpostc rulează MetaPost și apoi pdfLaTeX; mpostcpl rulează pdfLaTeX, MetaPost și din nou pdfLaTeX. latex-makeindex-mpost rulează pdfLaTeX, MakeIndex, MetaPost și din nou pdfLaTeX, deschizând pe parcurs fișierele jurnal. Pentru MetaPost, consultați <a href="advanced_context.htm">ConTeXt și MetaPost</a>.</p>
+<p>Majoritatea macrocomenzilor din acest submeniu apelează scripturi shell din ~/Library/TeXShop/bin, precum pdflatexc, care rulează pdfLaTeX, și bibtexc, care rulează BibTeX. Fiecare macrocomandă al cărei nume începe cu Run rulează programele din numele ei, în ordinea în care apar, iar Open PDF deschide PDF-ul documentului. Run LaTeX, dvips and ps2pdf are nevoie și de Ghostscript. Ele lucrează pe un fișier salvat. <a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a> explică Run pdfLaTeX with Shell Escape ca exemplu.</p>
+<h3>Make HTML with TeX4ht</h3>
+<p>TeX4ht convertește un document LaTeX într-o pagină web: o pagină HTML și fișiere imagine. Make HTML with TeX4ht rulează htlatex pe document și deschide fișierul HTML rezultat în Safari. Pachetul tex4ht nu trebuie încărcat în document; htlatex îl încarcă. Make HTML with TeX4ht, Remaking Images rulează htlatex cu opțiunea <code>-r</code>, care creează din nou imaginile chiar dacă ele există deja.</p>
+<h3>Extract Pages from PDF…</h3>
+<p>Extract Pages from PDF… creează fișiere PDF care conțin pagini selectate din PDF-ul documentului. Întreabă mai întâi câte fișiere să creeze, apoi paginile fiecărui fișier, de exemplu <code>5:8</code> pentru paginile 5–8 sau <code>3:4,6,8:12</code>. Dacă documentul se numește MyFile, fișierele sunt salvate ca MyFile-1.pdf, MyFile-2.pdf și așa mai departe.</p>
+<h3>MetaPost</h3>
+<p>Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX deschide pe parcurs fișierele jurnal. Pentru MetaPost, consultați <a href="advanced_context.htm">ConTeXt și MetaPost</a>.</p>
 </main>
 </body>
 </html>

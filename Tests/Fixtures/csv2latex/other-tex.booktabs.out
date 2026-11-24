@@ -1,0 +1,9 @@
+\begin{tabular}{llll}
+
+\toprule
+a_b & {c} & \d & ~e^f \\
+\midrule
+<g> & |h| & "i" \\
+
+\bottomrule
+\end{tabular}

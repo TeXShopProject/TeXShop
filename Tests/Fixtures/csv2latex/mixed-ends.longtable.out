@@ -1,0 +1,16 @@
+\begin{longtable}{ll}
+a & b \\
+\endfirsthead
+a & b \\
+\endhead
+\multicolumn{2}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+ \\
+c & d \\
+ \\
+e & f \\
+
+\end{longtable}

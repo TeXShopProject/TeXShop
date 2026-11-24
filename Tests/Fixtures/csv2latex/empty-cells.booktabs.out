@@ -1,0 +1,11 @@
+\begin{tabular}{llll}
+
+\toprule
+ & a &  & b \\
+\midrule
+ \\
+1 &  & 3 \\
+ &  &  & 4 \\
+
+\bottomrule
+\end{tabular}

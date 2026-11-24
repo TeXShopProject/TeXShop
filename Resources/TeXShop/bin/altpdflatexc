@@ -1,4 +1,62 @@
-#!/bin/tcsh
+#!/bin/sh
+# altpdflatexc
+# Claus Gerhardt; rewritten in TeXShop 6.00 to run latex, dvips and ps2pdf itself, as the
+# altpdflatex script it used to call is not part of TeX Live.
+#
+# Usage, in the folder of the file:
+# altpdflatexc filename.tex
+#
+# Makes filename.pdf: latex, then dvips (with Type 1 fonts as far as possible), then ps2pdf of
+# Ghostscript. When a step fails, it stops with a message on standard error and exit status 1,
+# and an earlier filename.pdf is left as it was.
 
-set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
-altpdflatex --maxpfb "$1"
+# TeX Live and Ghostscript as set in TeXShop's Settings (Typesetting > Paths), then the usual places.
+setting() {
+    value=$(/usr/bin/defaults read TeXShop "$1" 2>/dev/null)
+    case $value in
+    "~"*) value=$HOME${value#\~} ;;
+    esac
+    echo "$value"
+}
+texbin=$(setting TetexBinPath)
+gsbin=$(setting GSBinPath)
+PATH="${texbin:+$texbin:}${gsbin:+$gsbin:}$PATH:/Library/TeX/texbin:/usr/texbin:/usr/local/bin"
+export PATH
+
+fail() {
+    echo "altpdflatexc: $*" >&2
+    exit 1
+}
+
+[ $# -eq 1 ] || fail "usage: altpdflatexc filename.tex"
+file=$1
+name=$(basename "$file")
+name=${name%.*}
+
+for program in latex dvips; do
+    command -v $program >/dev/null 2>&1 ||
+        fail "$program of TeX Live is not found; check Settings > Typesetting > Paths > TeX Engines in TeXShop"
+done
+command -v ps2pdf >/dev/null 2>&1 && command -v gs >/dev/null 2>&1 ||
+    fail "ps2pdf of Ghostscript is not found; check Settings > Typesetting > Paths > Ghostscript in TeXShop"
+
+work=$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/altpdflatexc.XXXXXX") || fail "cannot make a temporary folder"
+trap '/bin/rm -rf "$work"' EXIT
+
+echo "### latex $file"
+latex --interaction=nonstopmode "$file" ||
+    fail "latex stopped with an error; see $name.log"
+[ -f "$name.dvi" ] || fail "latex made no $name.dvi; see $name.log"
+
+echo "### dvips -R -Poutline -o $name.ps $name.dvi"
+dvips -R -Poutline -o "$work/$name.ps" "$name.dvi" 2>"$work/dvips.err" ||
+    fail "dvips could not make $name.ps: $(tail -n 5 "$work/dvips.err")"
+
+echo "### ps2pdf $name.ps $name.pdf"
+ps2pdf "$work/$name.ps" "$work/$name.pdf" >"$work/ps2pdf.err" 2>&1 && [ -s "$work/$name.pdf" ] ||
+    fail "ps2pdf could not make $name.pdf: $(tail -n 5 "$work/ps2pdf.err")"
+
+# The PDF is put in place at once, so that a viewer never sees half of it.
+/bin/cp "$work/$name.pdf" "$name.pdf.$$" && /bin/mv -f "$name.pdf.$$" "$name.pdf" ||
+    { /bin/rm -f "$name.pdf.$$"; fail "cannot write $name.pdf"; }
+echo "### $name.pdf is made"

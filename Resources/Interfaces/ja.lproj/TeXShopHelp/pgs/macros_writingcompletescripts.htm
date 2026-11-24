@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TeXShopのタイプセットコマンドでスクリプトを書く</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; Bibliographyマクロ; latexinteractive; bibtex; taskdone; タイプセットコマンドの連続実行">
+<meta name="description" content="AppleScript; 参考文献; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; タイプセットコマンドの連続実行">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <main id="content">
 <h1>TeXShopのタイプセットコマンドでスクリプトを書く</h1>
 <p>参考文献リストのある書類には、一連のタイプセットが必要です。LaTeXが.auxファイルを書き出し、BibTeXがそれを使って.bblファイルと.blgファイルを書き出し、もう一度LaTeXを実行して参考文献リストを書類に加え、さらにもう一度実行してリストへの参照を更新します。自分のプロジェクトでも似たような手順が必要になることがあり、AppleScriptマクロでそれを実行できます。</p>
-<p>TeXShopに付属するマクロ「マクロ」→「Applescript」→「Bibliography」がその方法を示しています。内容は次のとおりです。</p>
+<p>TeXShopに付属するマクロ「マクロ」→「Applescript」→「Run LaTeX, BibTeX, Then LaTeX Twice」がその方法を示しています。内容は次のとおりです。</p>
 <pre>--Applescript
 
 set fileName to #FILEPATH#

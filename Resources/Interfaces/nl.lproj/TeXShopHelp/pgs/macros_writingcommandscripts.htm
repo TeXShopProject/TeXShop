@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scripts schrijven met shell-commando’s</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; shellscript; do shell script; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<meta name="description" content="AppleScript; shellscript; do shell script; Run pdfLaTeX with Shell Escape; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
 </nav>
 <main id="content">
 <h1>Scripts schrijven met shell-commando’s</h1>
-<p>Deze pagina gebruikt de macro pdflatexc van Claus Gerhardt, in Macro’s › Claus Gerhardt Macros, om te laten zien hoe een AppleScript een shellscript aanroept. Het shellscript zelf is eenvoudig: het voegt de mappen van de TeX-programma’s aan het zoekpad toe en voert pdflatex uit met <code>--shell-escape</code>. Uw eigen scripts doen waarschijnlijk meer, bijvoorbeeld meerdere programma’s na elkaar uitvoeren; juist dan komen deze technieken van pas.</p>
+<p>Deze pagina gebruikt de macro Run pdfLaTeX with Shell Escape van Claus Gerhardt, in Macro’s › Claus Gerhardt Macros, om te laten zien hoe een AppleScript een shellscript aanroept. Het shellscript zelf is eenvoudig: het voegt de mappen van de TeX-programma’s aan het zoekpad toe en voert pdflatex uit met <code>--shell-escape</code>. Uw eigen scripts doen waarschijnlijk meer, bijvoorbeeld meerdere programma’s na elkaar uitvoeren; juist dan komen deze technieken van pas.</p>
 
 <h2 id="shell-script">Het shellscript</h2>
 <p>Het shellscript is ~/Library/TeXShop/bin/pdflatexc. Het is niet afhankelijk van TeXShop: als de map ervan in uw zoekpad staat, voert u het uit door in Terminal <code>pdflatexc myfile.tex</code> te typen. Dit is het script:</p>

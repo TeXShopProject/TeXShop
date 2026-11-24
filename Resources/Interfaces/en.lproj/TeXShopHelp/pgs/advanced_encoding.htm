@@ -54,7 +54,7 @@
 <h2>The encoding line</h2>
 <p>A line in one of the first twenty lines of a source file fixes its encoding for reading and for saving, overriding everything else:</p>
 <pre>% !TEX encoding = UTF-8 Unicode</pre>
-<p>Write the line as shown, with one space before the equals sign; <code>%!TEX encoding =</code>, without the space after <code>%</code>, is read too. The name must be written exactly as in the table below. The Encoding macro in the Macros menu inserts the line for you, with a list of encodings to choose from. The names that TeXworks uses, such as <code>UTF-8</code> or <code>ISO 8859-1</code>, are also understood.</p>
+<p>Write the line as shown, with one space before the equals sign; <code>%!TEX encoding =</code>, without the space after <code>%</code>, is read too. The name must be written exactly as in the table below. The Set Encoding… macro in the Macros menu inserts the line for you, with a list of encodings to choose from. The names that TeXworks uses, such as <code>UTF-8</code> or <code>ISO 8859-1</code>, are also understood.</p>
 <p>If the line names an encoding that TeXShop does not know, TeXShop reads the file as UTF-8 and says so. If the line names UTF-8 but the file is not valid UTF-8, TeXShop reports it and opens the file in ISO Latin 9, which reads any file; saving it without changing the line writes the same bytes back, so nothing is lost. To open a file without applying its encoding line, hold down Option while it opens.</p>
 <table>
 <tr><th>Name in the encoding line</th><th>Name in menus</th></tr>

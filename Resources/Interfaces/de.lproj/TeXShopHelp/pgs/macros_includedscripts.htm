@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mitgelieferte AppleScript-Makros</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="AppleScript-Makros; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; Zeilenenden; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
+<meta name="description" content="AppleScript-Makros; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Save Copy with Unix Line Endings; Zeilenenden; Literaturverzeichnis; Claus Gerhardt Macros; TeX4ht; Extract Pages from PDF; MetaPost">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -41,20 +41,20 @@
 </dl>
 <p>Das Makro ersetzt den Inhalt der Zwischenablage durch den LaTeX-Text. Um dieselben Zellen in einem anderen Stil einzusetzen, kopieren Sie sie zuerst erneut in der Tabellenkalkulation.</p>
 
-<h2 id="line-endings">Applescript › Convert to MAC, Convert to Unix, Convert to Windows</h2>
-<p>Textdateien beenden ihre Zeilen auf verschiedene Weise: macOS und Unix mit einem Zeilenvorschub, Windows mit einem Wagenrücklauf, gefolgt von einem Zeilenvorschub, und sehr alte Macintosh-Dateien mit einem Wagenrücklauf allein. TeXShop liest alle drei. Kann der Editor einer anderen Person das nicht, verwenden Sie diese Makros. Für eine Quelltextdatei MyFile.tex schreibt Convert to Unix eine Kopie der gesicherten Datei namens MyFile_Unix.tex mit Zeilenvorschüben; Convert to Windows schreibt MyFile_Windows.tex und Convert to MAC schreibt MyFile_Mac.tex. Die Makros verwenden das Programm flip von Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
+<h2 id="line-endings">Applescript › Save Copy with Unix Line Endings, Save Copy with Windows Line Endings, Save Copy with Classic Mac Line Endings</h2>
+<p>Textdateien beenden ihre Zeilen auf verschiedene Weise: macOS und Unix mit einem Zeilenvorschub, Windows mit einem Wagenrücklauf, gefolgt von einem Zeilenvorschub, und sehr alte Macintosh-Dateien mit einem Wagenrücklauf allein. TeXShop liest alle drei. Kann der Editor einer anderen Person das nicht, verwenden Sie diese Makros. Für eine Quelltextdatei MyFile.tex schreibt Save Copy with Unix Line Endings eine Kopie der gesicherten Datei namens MyFile_Unix.tex mit Zeilenvorschüben; Save Copy with Windows Line Endings schreibt MyFile_Windows.tex und Save Copy with Classic Mac Line Endings schreibt MyFile_Mac.tex. Die Makros verwenden das Programm flip von Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
 
-<h2 id="bibliography">Applescript › Bibliography</h2>
-<p>Ein Dokument mit Literaturverzeichnis braucht mehrere Läufe: LaTeX schreibt die .aux-Datei, BibTeX schreibt daraus die .bbl- und .blg-Dateien, LaTeX läuft erneut, um das Literaturverzeichnis aufzunehmen, und noch einmal, um die Verweise darauf zu aktualisieren. Das Makro Bibliography führt LaTeX, BibTeX, LaTeX und LaTeX nacheinander aus. <a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a> erklärt, wie es funktioniert.</p>
+<h2 id="bibliography">Applescript › Run LaTeX, BibTeX, Then LaTeX Twice</h2>
+<p>Ein Dokument mit Literaturverzeichnis braucht mehrere Läufe: LaTeX schreibt die .aux-Datei, BibTeX schreibt daraus die .bbl- und .blg-Dateien, LaTeX läuft erneut, um das Literaturverzeichnis aufzunehmen, und noch einmal, um die Verweise darauf zu aktualisieren. Dieses Makro führt sie nacheinander aus. <a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a> erklärt, wie es funktioniert.</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
-<p>Die meisten Makros dieses Untermenüs rufen gleichnamige Shell-Skripte in ~/Library/TeXShop/bin auf; bibtexcpl, mpostcpl und latex-makeindex-mpost rufen mehrere davon nacheinander auf, und openpdf öffnet das PDF des Dokuments. Sie arbeiten mit einer gesicherten Datei. <a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a> erklärt pdflatexc als Beispiel.</p>
-<h3>htlatexc, htlatexr</h3>
-<p>TeX4ht wandelt ein LaTeX-Dokument in eine Webseite um: eine HTML-Seite und Bilddateien. htlatexc führt htlatex für das Dokument aus und öffnet die entstandene HTML-Datei in Safari. Das Paket tex4ht muss im Dokument nicht geladen werden; htlatex lädt es. htlatexr führt htlatex mit der Option <code>-r</code> aus, die die Bilder neu erstellt, auch wenn sie schon vorhanden sind.</p>
-<h3>pdfselectc</h3>
-<p>pdfselectc erstellt PDF-Dateien, die ausgewählte Seiten des PDF des Dokuments enthalten. Es fragt zuerst, wie viele Dateien erstellt werden sollen, dann nach den Seiten jeder Datei, etwa <code>5:8</code> für die Seiten 5 bis 8 oder <code>3:4,6,8:12</code>. Heißt das Dokument MyFile, werden die Dateien als MyFile-1.pdf, MyFile-2.pdf und so weiter gesichert.</p>
-<h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
-<p>mpostc führt MetaPost und dann pdfLaTeX aus; mpostcpl führt pdfLaTeX, MetaPost und erneut pdfLaTeX aus. latex-makeindex-mpost führt pdfLaTeX, MakeIndex, MetaPost und erneut pdfLaTeX aus und öffnet dabei die Protokolldateien. Zu MetaPost siehe <a href="advanced_context.htm">ConTeXt und MetaPost</a>.</p>
+<p>Die meisten Makros dieses Untermenüs rufen Shell-Skripte in ~/Library/TeXShop/bin auf, etwa pdflatexc, das pdfLaTeX ausführt, und bibtexc, das BibTeX ausführt. Jedes Makro, dessen Name mit Run beginnt, führt die darin genannten Programme in dieser Reihenfolge aus, und Open PDF öffnet das PDF des Dokuments. Run LaTeX, dvips and ps2pdf benötigt außerdem Ghostscript. Sie arbeiten mit einer gesicherten Datei. <a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen schreiben</a> erklärt Run pdfLaTeX with Shell Escape als Beispiel.</p>
+<h3>Make HTML with TeX4ht</h3>
+<p>TeX4ht wandelt ein LaTeX-Dokument in eine Webseite um: eine HTML-Seite und Bilddateien. Make HTML with TeX4ht führt htlatex für das Dokument aus und öffnet die entstandene HTML-Datei in Safari. Das Paket tex4ht muss im Dokument nicht geladen werden; htlatex lädt es. Make HTML with TeX4ht, Remaking Images führt htlatex mit der Option <code>-r</code> aus, die die Bilder neu erstellt, auch wenn sie schon vorhanden sind.</p>
+<h3>Extract Pages from PDF…</h3>
+<p>Extract Pages from PDF… erstellt PDF-Dateien, die ausgewählte Seiten des PDF des Dokuments enthalten. Es fragt zuerst, wie viele Dateien erstellt werden sollen, dann nach den Seiten jeder Datei, etwa <code>5:8</code> für die Seiten 5 bis 8 oder <code>3:4,6,8:12</code>. Heißt das Dokument MyFile, werden die Dateien als MyFile-1.pdf, MyFile-2.pdf und so weiter gesichert.</p>
+<h3>MetaPost</h3>
+<p>Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX öffnet dabei die Protokolldateien. Zu MetaPost siehe <a href="advanced_context.htm">ConTeXt und MetaPost</a>.</p>
 </main>
 </body>
 </html>

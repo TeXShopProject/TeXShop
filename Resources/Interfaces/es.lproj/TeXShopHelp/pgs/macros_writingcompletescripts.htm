@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scripts con los comandos de composición de TeXShop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; secuencia de comandos de composición">
+<meta name="description" content="AppleScript; bibliografía; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; secuencia de comandos de composición">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <main id="content">
 <h1>Scripts con los comandos de composición de TeXShop</h1>
 <p>Un documento con bibliografía necesita una secuencia de composiciones: LaTeX escribe el archivo .aux, BibTeX lo usa para escribir los archivos .bbl y .blg, LaTeX vuelve a ejecutarse para añadir la bibliografía al documento, y una vez más para actualizar las referencias a ella. Sus proyectos pueden necesitar secuencias parecidas, y una macro AppleScript puede ejecutarlas por usted.</p>
-<p>La macro Macros › Applescript › Bibliography, incluida en TeXShop, muestra cómo hacerlo. Este es su contenido:</p>
+<p>La macro Macros › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice, incluida en TeXShop, muestra cómo hacerlo. Este es su contenido:</p>
 <pre>--Applescript
 
 set fileName to #FILEPATH#
