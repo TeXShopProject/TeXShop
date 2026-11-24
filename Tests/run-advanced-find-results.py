@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The Find All list of the Advanced Find panel (Tests/AdvancedFindResults.m): the matches with their lines,
-text and group colors, OgreKit's six edit cases and stale rows, typing in TeXShop's text, live update and its scope,
-an 8 MB document, the list in the panel (growing, closing, jumping, quitting, closing the document), and the panel
+text and group colors, Highlight All with the colors of the groups in the text, OgreKit's six edit cases and stale
+rows, typing in TeXShop's text, live update and its scope, an 8 MB document, the list in the panel (growing, closing, jumping, quitting, closing the document), and the panel
 with its list in all 12 languages. Nothing is displayed; the defaults stay in memory and the pasteboards are unique.
 
 --image DIR writes the panel with its list, light and dark, in English and Japanese (--image-all-languages: in all 12).
@@ -62,6 +62,28 @@ MUTATIONS = {
                                          '        [self.liveUpdateBox.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.countField.trailingAnchor constant:12],'),
     'the count line does not wrap': ('TSAdvancedFindResultsView.m', '    self.countField.maximumNumberOfLines = 2;\n', '    self.countField.maximumNumberOfLines = 1;\n'),
     'a row jumps without a text view': ('TSAdvancedFindResultsView.m', '    if (NSMaxRange(item.currentRange) > textView.string.length) {', '    if (NO) {'),
+    'Highlight All keeps no groups': ('TSAdvancedFindController.m', '    if (groupCount > 0) {\n        // The groups show', '    if (NO) {\n        // The groups show'),
+    'the groups are not drawn': ('TSAdvancedFindHighlights.m', '        if (groupCount == 0) {\n            fill(match, matchColor);', '        if (YES) {\n            fill(match, matchColor);'),
+    'the groups are mixed with the highlight color': ('TSAdvancedFindHighlights.m',
+        '        if (groupCount == 0) {\n            fill(match, matchColor);\n            continue;\n        }', '        fill(match, matchColor);\n        if (groupCount == 0)\n            continue;'),
+    'the outer group wins': ('TSAdvancedFindHighlights.m', '                    color = groupColors[k % groupColors.count];',
+                             '                    color = color && color != matchColor ? color : groupColors[k % groupColors.count];'),
+    'an edit in a group outside the match keeps it': ('TSAdvancedFindHighlights.m',
+        '        NSRange extent = TSHighlightExtent(match, own, groupCount);', '        NSRange extent = match;'),
+    'the groups stay where they were': ('TSAdvancedFindHighlights.m', '                        target[k] = TSShiftedRange(target[k], delta);', '                        ;'),
+    'a dropped highlight is not drawn again': ('TSAdvancedFindHighlights.m', '    if (!scheduled)\n        [self redisplayDroppedLater];', '    if (!scheduled)\n        ;'),
+    'drawing visits every match': ('TSAdvancedFindHighlights.m', 'for (NSUInteger i = [highlights firstMatchReaching:characters.location]; i < ranges.count; i++) {',
+                                   'for (NSUInteger i = 0; i < ranges.count; i++) {'),
+    'drawing goes on past the drawn text': ('TSAdvancedFindHighlights.m', '        if (match.location >= last)\n            break;', '        if (NO)\n            break;'),
+    'drawing forgets groups before their match': ('TSAdvancedFindHighlights.m', '    NSUInteger last = NSMaxRange(characters) + highlights->_reachBefore;',
+                                                  '    NSUInteger last = NSMaxRange(characters);'),
+    'drawing forgets groups after their match': ('TSAdvancedFindHighlights.m',
+        '        NSRange extent = TSHighlightExtent(match, groups ? groups + i * groupCount : NULL, groupCount);\n        _reachBefore',
+        '        NSRange extent = match;\n        _reachBefore'),
+    'a long match before is forgotten': ('TSAdvancedFindHighlights.m', '        furthest = MAX(furthest, NSMaxRange(extent));\n        ends[i++] = furthest;',
+                                         '        furthest = NSMaxRange(extent);\n        ends[i++] = furthest;'),
+    'the ends do not move with an edit': ('TSAdvancedFindHighlights.m', '            furthest = MAX(furthest, NSMaxRange(after ? TSShiftedRange(extent, delta) : extent));',
+                                          '            furthest = MAX(furthest, NSMaxRange(extent));'),
     'Remove Highlights is left out': ('TSAdvancedFindPanelController.m',
         '    [allMenu addItem:NSMenuItem.separatorItem];\n    [allMenu addItemWithTitle:TSLocalized(@"AdvancedFind.Unhighlight"', '    [allMenu addItemWithTitle:TSLocalized(@"AdvancedFind.Unhighlight"'),
 }

@@ -45,6 +45,12 @@ NS_SWIFT_NAME(RegexTextFind)
 - (nullable NSArray<NSValue *> *)matchRangesWithCancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
     NS_SWIFT_NAME(matchRanges(isCancelled:));
 
+/// All matches in the scope in ascending order, with their groups in `groupRanges`: the pattern's number of groups of
+/// NSRanges for each match ({NSNotFound, 0} for a group that did not take part). Nil when cancelled.
+- (nullable NSArray<NSValue *> *)matchRangesWithGroupRanges:(NSData *_Nullable *_Nonnull)groupRanges
+                                               cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
+    NS_SWIFT_NAME(matchRanges(groupRanges:isCancelled:));
+
 /// Every match with its groups: element 0 is the match, element k is group k ({NSNotFound, 0} if it did not take part).
 - (void)enumerateMatchesWithCancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
                               usingBlock:(void (NS_NOESCAPE ^)(NSArray<NSValue *> *ranges, BOOL *stop))block
