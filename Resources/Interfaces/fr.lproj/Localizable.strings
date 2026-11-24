@@ -193,6 +193,7 @@
 "No command uses this key." = "Aucune commande n’utilise cette touche.";
 "Press a key" = "Appuyez sur une touche";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Cette touche ne peut pas servir de raccourci. Utilisez Commande ou Contrôle avec une touche, ou F1–F20.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Les raccourcis avec la touche Globe (fn) ne peuvent pas être affectés aux commandes de TeXShop.";
 
 
 "This key cannot be assigned to a new shortcut." = "Cette touche ne peut pas être affectée à un nouveau raccourci.";

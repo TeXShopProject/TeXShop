@@ -214,6 +214,7 @@
 "No command uses this key." = "このキーを使うコマンドはありません。";
 "Press a key" = "キーを押してください";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "ショートカットに使えないキーです。⌘か⌃と組み合わせるか、F1〜F20を使ってください。";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "地球儀（fn）キーを使うショートカットは、TeXShopのコマンドには割り当てられません。";
 
 
 "This key cannot be assigned to a new shortcut." = "このキーは新しいショートカットには割り当てられません。";

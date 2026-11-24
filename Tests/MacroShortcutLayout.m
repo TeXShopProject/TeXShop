@@ -514,6 +514,12 @@ static void CheckRecording(TSMacroEditor *owner) {
         if(![recorder.shortcut isEqual:shown]) fprintf(stderr,"REFUSED KEY %zu shown %s, pressed %s\n",i,recorder.shortcut.UTF8String,shown.UTF8String);
         REQUIRE(recording(macro) && [recorder.shortcut isEqual:shown] && ![shown isEqual:@"⇧⌘M"] && !cell.warning.hidden && [owner.shortcutStatus.stringValue isEqual:unusable] && !owner.shortcutStatusMark.hidden && [macro.key isEqual:@"M+ShiftKey"]);
     }
+    // A character key with the Globe key (fn), which AppKit would drop from the macro's item: refused, the field showing
+    // the key pressed with 🌐︎; recording goes on.
+    NSString *globeRefusal=NSLocalizedString(@"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands.",@"");
+    SendKey(owner,window,Typed(window,@"\x02",@"b",11,NSEventModifierFlagControl|NSEventModifierFlagCommand|NSEventModifierFlagFunction));
+    if(![owner.shortcutStatus.stringValue isEqual:globeRefusal]) fprintf(stderr,"GLOBE shown %s, message %s, key %s\n",recorder.shortcut.UTF8String,owner.shortcutStatus.stringValue.UTF8String,macro.key.UTF8String);
+    REQUIRE(recording(macro) && [recorder.shortcut isEqual:@"⌃⌘\U0001F310\uFE0EB"] && !cell.warning.hidden && [owner.recordingError isEqual:globeRefusal] && [owner.shortcutStatus.stringValue isEqual:globeRefusal] && [macro.key isEqual:@"M+ShiftKey"]);
     // The next key that can be one becomes the shortcut and ends the recording: no triangle, no message.
     int before=reflections; [owner setValue:@NO forKey:@"dataTouched"];
     SendKey(owner,window,KeyIn(window,@"j",38,NSEventModifierFlagCommand)); ended();
@@ -529,6 +535,9 @@ static void CheckRecording(TSMacroEditor *owner) {
         {@"",@"",96,0,@"+NoCommandKey",@"F5"},
         {@"",@"",96,NSEventModifierFlagCommand|NSEventModifierFlagOption,@"+OptionKey",@"⌥⌘F5"},
         {@"k",@"k",40,NSEventModifierFlagCommand,@"K",@"⌘K"},
+        // An arrow and a function key as the keyboard sends them, with the fn flag of their own.
+        {@"\uF700",@"\uF700",126,NSEventModifierFlagCommand|NSEventModifierFlagFunction|NSEventModifierFlagNumericPad,@"\uF700",@"⌘↑"},
+        {@"\uF708",@"\uF708",96,NSEventModifierFlagFunction,@"\uF708+NoCommandKey",@"F5"},
     };
     for(size_t i=0;i<sizeof cases/sizeof *cases;i++) {
         Click(owner,row,@"Key",NO); REQUIRE(recording(macro));
@@ -1203,6 +1212,7 @@ int main(int argc,char **argv) { @autoreleasepool {
     [messages addObject:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.",@""),longMacro]];
     [messages addObject:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by:\n%@",@""),[@[@"Typeset › Typeset",longMacro] componentsJoinedByString:@"\n"]]];
     [messages addObject:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")];
+    [messages addObject:NSLocalizedString(@"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands.",@"")];
     NSRect frame=window.frame;
     for(int narrow=0;narrow<2;narrow++) {
       if(narrow) { NSRect n=window.frame; n.size.width=window.minSize.width; [window setFrame:n display:NO]; [window.contentView layoutSubtreeIfNeeded]; }

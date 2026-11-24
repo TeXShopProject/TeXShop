@@ -116,6 +116,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'the refused cell has no triangle': ('    self.recordingCell.warning.hidden = self.recordingError == nil;', '    self.recordingCell.warning.hidden = YES;'),
             'the message has no triangle': ('    self.shortcutStatusMark.hidden = message.length == 0;', '    self.shortcutStatusMark.hidden = YES;'),
             'a refused key is not shown in the field': ('    self.recordingCell.recorder.shortcut = self.refusedShortcut ?: getMenuItemString(current);', '    self.recordingCell.recorder.shortcut = getMenuItemString(current);'),
+            'a Globe key is recorded without fn': ('    NSString *globe = TSGlobeRecordingRefusal(event);\n    if (globe) {', '    NSString *globe = nil;\n    if (globe) {'),
+            'a Globe key refused is shown without fn': ('        self.refusedShortcut = TSShortcutDisplayKey(binding.key, binding.modifiers | NSEventModifierFlagFunction);', '        self.refusedShortcut = TSShortcutDisplayKey(binding.key, binding.modifiers);'),
             'a key that cannot be one is not shown in the field': ('        self.refusedShortcut = binding.key.length ? TSShortcutDisplayKey(binding.key, binding.modifiers) : nil;', '        self.refusedShortcut = nil;'),
             'a submenu records': ('    if (![item isKindOfClass:TSMacroTreeNode.class] || !item.isStandardItem || recorder == nil', '    if (![item isKindOfClass:TSMacroTreeNode.class] || recorder == nil'),
             'the field stays after a click elsewhere': ('            if (strongSelf != nil && strongSelf.recordingItem != item) [strongSelf removeShortcutRecorderOfItem:item];', '            (void)strongSelf;'),
@@ -126,6 +128,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
         }
         # Mutations of the sidebar shared with the Multiple Replace window.
         file_cases={
+            # The refusal shared with Settings › Keyboard: arrows and function keys carry fn of their own and still record.
+            'ShortcutProduction.m': {
+                'arrows and function keys with fn are refused': ('    return TSEventGlobeModifier(event) ? NSLocalizedString(', '    return (event.modifierFlags & NSEventModifierFlagFunction) ? NSLocalizedString('),
+            },
             'TSListBottomBar.m': {
                 'the sidebar stops above the bottom edge': ('        [bar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],', '        [bar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-20],'),
                 'the window\'s contents stay below the title bar': ('        window.styleMask |= NSWindowStyleMaskFullSizeContentView;', '        (void)0;'),

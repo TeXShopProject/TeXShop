@@ -192,6 +192,7 @@
 "No command uses this key." = "Ningún comando usa esta tecla.";
 "Press a key" = "Pulse una tecla";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla no se puede usar como atajo. Use Comando o Control con una tecla, o F1–F20.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Los atajos con la tecla del globo terráqueo (fn) no se pueden asignar a comandos de TeXShop.";
 
 
 "This key cannot be assigned to a new shortcut." = "Esta tecla no se puede asignar a un nuevo atajo.";

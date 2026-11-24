@@ -193,6 +193,7 @@
 "No command uses this key." = "Nessun comando usa questo tasto.";
 "Press a key" = "Premi un tasto";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Questo tasto non può essere usato come scorciatoia. Usa Comando o Controllo con un tasto, oppure F1–F20.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Le scorciatoie con il tasto Globo (fn) non possono essere assegnate ai comandi di TeXShop.";
 
 
 "This key cannot be assigned to a new shortcut." = "Questo tasto non può essere assegnato a una nuova scorciatoia.";

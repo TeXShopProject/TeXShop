@@ -193,6 +193,7 @@
 "No command uses this key." = "이 키를 사용하는 명령이 없습니다.";
 "Press a key" = "키를 누르세요";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "이 키는 단축키로 사용할 수 없습니다. Command 또는 Control과 조합하거나 F1–F20을 사용하세요.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "지구본(fn) 키를 사용하는 단축키는 TeXShop 명령에 할당할 수 없습니다.";
 
 
 "This key cannot be assigned to a new shortcut." = "이 키는 새 단축키에 할당할 수 없습니다.";

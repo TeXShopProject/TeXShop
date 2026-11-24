@@ -190,6 +190,7 @@
 "No command uses this key." = "Geen commando gebruikt deze toets.";
 "Press a key" = "Druk op een toets";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Deze toets kan niet als toetscombinatie worden gebruikt. Gebruik Command of Control met een toets, of F1–F20.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Toetscombinaties met de wereldboltoets (fn) kunnen niet aan TeXShop-commando’s worden toegewezen.";
 
 
 "This key cannot be assigned to a new shortcut." = "Deze toets kan niet aan een nieuwe toetscombinatie worden toegewezen.";

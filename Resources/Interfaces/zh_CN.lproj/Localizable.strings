@@ -190,6 +190,7 @@
 "No command uses this key." = "没有命令使用此按键。";
 "Press a key" = "请按键";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与Command或Control组合使用，或使用F1–F20。";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "使用地球仪(fn)键的快捷键不能分配给TeXShop命令。";
 
 
 "This key cannot be assigned to a new shortcut." = "此按键不能分配给新的快捷键。";

@@ -172,6 +172,7 @@
 "No command uses this key." = "No command uses this key.";
 "Press a key" = "Press a key";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands.";
 
 
 "This key cannot be assigned to a new shortcut." = "This key cannot be assigned to a new shortcut.";

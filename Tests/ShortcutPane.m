@@ -590,7 +590,48 @@ int main(int argc,char **argv){@autoreleasepool{
    if(!wasSearching){pane.searchMode.selectedSegment=0;[pane changeSearchMode:pane.searchMode];REQUIRE(!pane.searchingByKey);}
   }
   [first.menu removeItem:fullScreen];[first.menu removeItem:nextMark];[coordinator refreshMenuAndMacros];[pane reloadCommands];
+  // 🌐︎⌃⌘B (fn) is refused while recording, before anything is saved: AppKit keeps fn only on its own items and would
+  // give the command ⌃⌘B. ⌃⌘B records; ⌘↑ and F5, which carry the fn flag of their own, record as before. What the
+  // store saves and what key search finds agree for each.
+  {
+   const NSUInteger G=NSEventModifierFlagFunction,K=NSEventModifierFlagControl,P=NSEventModifierFlagNumericPad;
+   NSString *globeRefusal=NSLocalizedString(@"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands.",@"");
+   if(pane.searchingByKey){pane.searchMode.selectedSegment=0;[pane changeSearchMode:pane.searchMode];}
+   pane.search.stringValue=@"";[pane reloadCommands];
+   NSString *keptKey=first.keyEquivalent;NSEventModifierFlags keptFlags=first.keyEquivalentModifierMask&TSShortcutModifiers;
+   NSDictionary *unchanged=[TSIsolatedAppKitDefaults.values copy];
+   // What key search finds for a key typed with these flags.
+   NSArray<TSShortcutMatch *> *(^search)(NSString *,NSUInteger,unsigned short)=^NSArray<TSShortcutMatch *> *(NSString *c,NSUInteger flags,unsigned short code){
+    pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];
+    fixtureCharacters=c;REQUIRE([pane handleKeySearchEvent:Event(c,flags,code)]);NSArray *hits=pane.searchMatches;
+    pane.searchMode.selectedSegment=0;[pane changeSearchMode:pane.searchMode];pane.search.stringValue=@"";[pane reloadCommands];return hits;};
+   REQUIRE(search(@"b",C|K,11).count==0 && search(@"b",C|K|G,11).count==0);
+   [pane beginRecordingAtRow:[pane rowForCommand:firstCommand]];REQUIRE(pane.editingCommand==firstCommand && shell.window.firstResponder==pane.recorder);
+   fixtureCharacters=@"b";[shell.window performKeyEquivalent:Event(@"b",C|K|G,11)];
+   NSDictionary *globeStored=TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][firstCommand.commandID];
+   printf("Recorded fn+ctrl+cmd+B -> item %s, stored %s, message %s\n",[TSShortcutStore displayKey:first.keyEquivalent modifiers:first.keyEquivalentModifierMask].UTF8String,globeStored?[TSShortcutStore displayKey:globeStored[@"key"] modifiers:[globeStored[@"modifiers"] unsignedIntegerValue]].UTF8String:"(none)",pane.statusText.stringValue.UTF8String);
+   REQUIRE(pane.editingCommand==firstCommand && shell.window.firstResponder==pane.recorder && [first.keyEquivalent isEqual:keptKey] && (first.keyEquivalentModifierMask&TSShortcutModifiers)==keptFlags && [TSIsolatedAppKitDefaults.values isEqual:unchanged]);
+   REQUIRE([pane.recordingError isEqual:globeRefusal] && [pane.statusText.stringValue isEqual:globeRefusal] && !status.arrangedSubviews[0].hidden && !pane.recordingWarning.hidden);
+   REQUIRE([pane.recorder.shortcut isEqual:[TSShortcutStore displayKey:keptKey modifiers:keptFlags]]);
+   [shell.window performKeyEquivalent:Event(@"\033",0,53)];REQUIRE(pane.editingCommand==nil && [first.keyEquivalent isEqual:keptKey]);
+   REQUIRE(search(@"b",C|K,11).count==0 && search(@"b",C|K|G,11).count==0);
+   // ⌃⌘B, ⌘↑ (as a real arrow key comes: fn and the keypad flag) and F5 (fn) record; search finds them as saved.
+   struct { NSString *c; NSUInteger flags; unsigned short code; NSString *key; NSUInteger saved; } keys[]={
+    {@"b",C|K,11,@"b",C|K},{@"\uF700",C|G|P,126,@"\uF700",C},{@"\uF708",G,96,@"\uF708",0}};
+   for(size_t i=0;i<sizeof keys/sizeof *keys;i++){
+    [pane beginRecordingAtRow:[pane rowForCommand:firstCommand]];REQUIRE(pane.editingCommand==firstCommand);
+    sheetReply=nil;fixtureCharacters=keys[i].c;[shell.window performKeyEquivalent:Event(keys[i].c,keys[i].flags,keys[i].code)];
+    if(sheetReply)sheetReply(NSAlertSecondButtonReturn);
+    NSDictionary *stored=TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][firstCommand.commandID];
+    NSArray<TSShortcutMatch *> *hits=search(keys[i].c,keys[i].flags,keys[i].code);
+    printf("Recorded %s -> stored %s, search hits %lu\n",[TSShortcutStore displayKey:keys[i].key modifiers:keys[i].saved].UTF8String,stored?[TSShortcutStore displayKey:stored[@"key"] modifiers:[stored[@"modifiers"] unsignedIntegerValue]].UTF8String:"(none)",(unsigned long)hits.count);
+    REQUIRE(pane.editingCommand==nil && pane.recordingError==nil && [stored isEqual:TSBinding(keys[i].key,keys[i].saved)] && [TSShownBinding(first) isEqual:TSBinding(keys[i].key,keys[i].saved)]);
+    REQUIRE(hits.count==1 && hits[0].command==firstCommand);
+   }
+   REQUIRE([store setKey:keptKey modifiers:keptFlags forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];[pane reloadCommands];
+  }
  }
+ puts("PASS: Globe-key characters are refused while recording, nothing saved; Control-Command-B, Command-Up Arrow and F5 record and are found as saved");
  puts("PASS: in-cell recording starts from the selected shortcut, double click, Return and VoiceOver; Escape, Tab and focus elsewhere end it; keys in use are refused under the list; free keys apply at once; macro keys confirm; Delete and the field button remove; Save As… under autosave is dimmed and kept");
  TSMacroTreeNode *tree=[TSMacroTreeNode submenuNodeWithName:@"root"],*group=[TSMacroTreeNode submenuNodeWithName:@"group"];
  TSMacroTreeNode *a=[TSMacroTreeNode nodeWithName:@"same" content:@"unsaved" key:@"A"],*b=[TSMacroTreeNode nodeWithName:@"same" content:@"other" key:@"B"];
@@ -607,6 +648,7 @@ int main(int argc,char **argv){@autoreleasepool{
  originalLocalization=method_setImplementation(class_getInstanceMethod(NSBundle.class,@selector(localizedStringForKey:value:table:)),(IMP)Localized);
  for(NSString *language in translations){@autoreleasepool{
   localizedStrings=translations[language];
+  REQUIRE([localizedStrings[@"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands."] length]>0);
   TSShortcutPaneController *translated=[[TSShortcutPaneController alloc]initWithShortcuts:coordinator];
   NSView *inputHeader=InputHeader();translated.settingsHeader=inputHeader;
   NSWindow *host=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,460) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];NSScrollView *outer=[[NSScrollView alloc]initWithFrame:host.contentView.bounds];outer.hasVerticalScroller=YES;outer.automaticallyAdjustsContentInsets=NO;outer.autoresizingMask=NSViewWidthSizable|NSViewHeightSizable;host.contentView=outer;translated.view.translatesAutoresizingMaskIntoConstraints=NO;outer.documentView=translated.view;[translated.view.widthAnchor constraintEqualToAnchor:outer.contentView.widthAnchor].active=YES;
@@ -698,7 +740,8 @@ int main(int argc,char **argv){@autoreleasepool{
    [translated stopKeySearch];translated.search.stringValue=@"";[translated reloadCommands];
    REQUIRE(translated.table.numberOfRows>0);[translated.table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
    for(NSString *text in @[NSLocalizedString(@"Default shortcut: None",@""),[NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@",@""),@"⌃⌥⇧⌘F12"],
-     [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.",@""),@"Format ▸ Font ▸ Bigger"],NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")]){
+     [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.",@""),@"Format ▸ Font ▸ Bigger"],NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@""),
+     NSLocalizedString(@"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands.",@"")]){
     translated.statusText.stringValue=text;translated.status.arrangedSubviews[0].hidden=NO;[translated.view layoutSubtreeIfNeeded];
     NSRect line=[translated.status convertRect:translated.status.bounds toView:translated.view];
     REQUIRE(NSContainsRect(NSInsetRect(translated.view.bounds,-.5,-.5),line));

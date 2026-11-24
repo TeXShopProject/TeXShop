@@ -831,6 +831,12 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 - (BOOL)captureShortcutEvent:(NSEvent *)event {
     NSString *key = TSShortcutCharacterForEvent(event);
     NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
+    NSString *globe = TSGlobeRecordingRefusal(event);
+    if (globe != nil) {
+        self.capturedKey = nil; self.capturedBindings = nil; self.capturedModifiers = 0;
+        [self showRecordingError:globe];
+        return NO;
+    }
     if (key.length == 0 || ![TSShortcutStore isAllowedKey:key modifiers:flags]) {
         self.capturedKey = nil; self.capturedBindings = nil; self.capturedModifiers = 0;
         [self showRecordingError:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"")];

@@ -9,6 +9,8 @@ TSShortcutBinding *TSBinding(NSString * _Nullable key, NSEventModifierFlags flag
 // NSEventModifierFlagFunction when flags hold the Globe (fn) key and key is a character key, else 0.
 NSEventModifierFlags TSGlobeModifier(NSString * _Nullable key, NSEventModifierFlags flags);
 NSEventModifierFlags TSEventGlobeModifier(NSEvent *event);
+// Why a key pressed while recording a shortcut cannot have the Globe key; nil when it has none.
+NSString * _Nullable TSGlobeRecordingRefusal(NSEvent *event);
 // The key a menu item was given, before AppKit adapts it to the keyboard layout.
 TSShortcutBinding *TSGivenBinding(NSMenuItem *item);
 // The key AppKit shows for a menu item on the current keyboard layout.

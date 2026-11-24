@@ -35,6 +35,11 @@ NSEventModifierFlags TSGlobeModifier(NSString *key, NSEventModifierFlags flags) 
 NSEventModifierFlags TSEventGlobeModifier(NSEvent *event) {
     return TSGlobeModifier(TSShortcutCharacterForEvent(event), event.modifierFlags);
 }
+// AppKit keeps the Globe key in a key equivalent only for the menu items macOS provides: on TeXShop's
+// commands and macros it drops fn, so that 🌐︎⌃⌘B would be saved as ⌃⌘B. Recording refuses such a key.
+NSString *TSGlobeRecordingRefusal(NSEvent *event) {
+    return TSEventGlobeModifier(event) ? NSLocalizedString(@"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands.", @"") : nil;
+}
 // With automatic key-equivalent localization, AppKit reports the key it shows on the current
 // keyboard layout (on a French layout, & for the 1 the item was given) and works it out again
 // whenever the item changes. The key and modifiers the item was given are read with the

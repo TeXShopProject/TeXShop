@@ -192,6 +192,7 @@
 "No command uses this key." = "Kein Befehl verwendet diese Taste.";
 "Press a key" = "Taste drücken";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Diese Taste kann nicht als Kurzbefehl verwendet werden. Verwenden Sie Command oder Control mit einer Taste oder F1–F20.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Kurzbefehle mit der Globus-Taste (fn) können TeXShop-Befehlen nicht zugewiesen werden.";
 
 
 "This key cannot be assigned to a new shortcut." = "Diese Taste kann keinem neuen Tastaturkurzbefehl zugewiesen werden.";
