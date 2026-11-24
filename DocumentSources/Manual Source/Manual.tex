@@ -180,7 +180,7 @@ and other systems from the same sources, and a new version appears every year in
 installed with an ordinary installer package from \url{https://tug.org/mactex/}, which offers two packages:
 
 \begin{description}
-\item[MacTeX] The complete TeX Live, a download of several gigabytes that needs about 10~GB on the disk, together
+\item[MacTeX] The complete TeX Live, together
 with Ghostscript, and TeXShop and a few other applications in \path{/Applications/TeX}. With it almost any example
 from a book about \TeX\ or \LaTeX\ works without adding anything. Choose this package for real work.
 \item[BasicTeX] A small part of TeX Live, enough to try \TeX\ and to typeset many \LaTeX\ documents. It installs
@@ -695,7 +695,7 @@ Settings that are not shown in this window are hidden settings, changed with the
 
 {\bf Encoding} \mnu{Encoding for new documents} is \mnu{Unicode (UTF-8)} by default, the right choice for almost everyone. \mnu{Show Encoding in Save Dialog} adds an encoding menu to the Save dialog. See \cref{EncodingsChapter}.
 
-{\bf Saving Documents} \mnu{Enable Autosave and Versions} turns on the macOS feature that saves documents while you edit them and keeps earlier versions; it is on by default, and a change takes effect after TeXShop restarts. \mnu{Keep the previous file as ``name\textasciitilde'' when saving} keeps a copy of the file as it was before each save; it can be turned on while \mnu{Enable Autosave and Versions} is off. See \cref{SavingChapter}. \mnu{Automatically convert UTF-8-MAC to UTF-8} combines characters stored in separate parts, such as a kana and a separate voiced sound mark, into single characters when a document is saved.
+{\bf Saving Documents} \mnu{Enable Autosave and Versions} turns on the macOS feature that saves documents while you edit them and keeps earlier versions; it is on by default, and a change takes effect after TeXShop restarts. \mnu{Keep the previous file as ``name\textasciitilde'' when saving} keeps a copy of the file as it was before each save, with a tilde before the extension: for \texttt{paper.tex} the copy is \texttt{paper\textasciitilde.tex}, and for \texttt{mystyle.sty} it is \texttt{mystyle\textasciitilde.sty}; it can be turned on while \mnu{Enable Autosave and Versions} is off. See \cref{SavingChapter}. \mnu{Automatically convert UTF-8-MAC to UTF-8} combines characters stored in separate parts, such as a kana and a separate voiced sound mark, into single characters when a document is saved.
 
 \section{Settings for the Source Window}\label{sec:SettingsEditor}
 
@@ -1756,7 +1756,7 @@ A completion can do more than finish the word. The completion of \verb|\begin{th
 \selmark\\
 \textbackslash end\{theorem\}•
 \end{quote}
-When the theorem is written, \mnu{Edit}\To\mnu{Marks}\To\mnu{Next Mark} (\ctlkey-\cmdkey-F), or \optkey-\esckey, selects the next mark, here the one after \verb|\end{theorem}|, so that you can go on typing; see \cref{MarksSection}.
+When the theorem is written, \mnu{Edit}\To\mnu{Marks}\To\mnu{Next Mark} (\ctlkey-\cmdkey-{]}), or \optkey-\esckey, selects the next mark, here the one after \verb|\end{theorem}|, so that you can go on typing; see \cref{MarksSection}.
 
 Pressing \esckey\ several times often gives the same command with more arguments. Typing \verb|\newc| on a new line and pressing \esckey\ gives the first line below; further presses of \esckey\ give the others in turn, each with the first mark selected:
 \begin{quote}\ttfamily
@@ -1822,8 +1822,8 @@ A mark (•) is a place to come back to; a mark with a note (•‹note›) also
 \begin{description}
 \item[Insert Mark] (\cmdkey-8) inserts a mark.
 \item[Insert Mark with Note] (\ctlkey-\cmdkey-8) inserts •‹› with the insertion point between the brackets, or turns the selected text into the note.
-\item[Next Mark] (\ctlkey-\cmdkey-F) and \textbf{Previous Mark} (\ctlkey-\cmdkey-G) select the next or the previous mark together with its note, so that typing replaces it.
-\item[Next Mark (Del)] and \textbf{Previous Mark (Del)}, shown while the Option key is held down (\ctlkey-\optkey-\cmdkey-F and \ctlkey-\optkey-\cmdkey-G), delete the • and select the note instead.
+\item[Next Mark] (\ctlkey-\cmdkey-{]}) and \textbf{Previous Mark} (\ctlkey-\cmdkey-{[}) select the next or the previous mark together with its note, so that typing replaces it.
+\item[Next Mark (Del)] and \textbf{Previous Mark (Del)}, shown while the Option key is held down (\ctlkey-\optkey-\cmdkey-{]} and \ctlkey-\optkey-\cmdkey-{[}), delete the • and select the note instead.
 \item[How to Use Marks\ldots] opens the help page about marks.
 \end{description}
 
@@ -2964,7 +2964,7 @@ changes is closed, or TeXShop quits, you are asked whether to save the changes.
 file as it was last saved; macOS keeps no earlier versions, so \mnu{Browse All Versions...} is not available.
 \item The switch \mnu{Keep the previous file as ``name\textasciitilde'' when saving}, just below
 \mnu{Enable Autosave and Versions}, can be turned on: each time a file is saved, the previous file is kept as a
-backup, with the name of the file followed by a tilde.
+backup, with a tilde before the extension: \texttt{paper.tex} is kept as \texttt{paper\textasciitilde.tex}.
 \end{itemize}
 
 \section{Revert To}\label{RevertToSection}
