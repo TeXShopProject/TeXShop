@@ -6,8 +6,9 @@
  * Statistics…). It shows the characters, words and lines of the whole document, or of the
  * selection, in two columns: Source, the text as it is written, and Text, what detex
  * leaves of it without the TeX commands, with the files of \input and \include. detex runs
- * only when the popover opens and when its refresh button is pressed, never while typing;
- * the time of the count shows how old the numbers are.
+ * when the popover opens, when its refresh button is pressed, and when an option changes
+ * while a count runs (below), never while typing; the time of the count shows how old the
+ * numbers are.
  *
  * The options button beside the refresh button shows how the characters are counted
  * (TSCharacterCountOptions) under the table. A change counts the characters again at once:
