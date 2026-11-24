@@ -10,8 +10,19 @@ The macro still calls the script as before: the selections, then the file name w
 Pages with /UserUnit (PDF 1.6; the length of the page's unit in points, not inherited) keep the size a viewer shows:
 UserUnit 2 with /Rotate 90 or 270, 2.5 with a crop box, a page too large for 14400 points that keeps its own UserUnit,
 UserUnit 1, and a page with no UserUnit under a page tree that has one. The content of each new page is checked to
-fill the page. The mutation ignore-userunit (a copy of the script that reads every UserUnit as 1) must be caught;
---mutation ignore-userunit runs the whole test against that copy and fails.
+fill the page.
+
+Pages whose crop box goes past the media box show only the part inside it (ISO 32000-1, 14.11.2). The source and the
+new pages are drawn by Ghostscript at 72 dpi (4 dpi for the large pages) and must have the same size and each of four
+colored rectangles in the same place, give or take a pixel: a crop box partly outside (the audit's case) with Rotate
+0/90/180/270, with and without UserUnit; one outside on all four sides; one inside; one equal to the media box; one
+inherited from the page tree; a page too large for points that keeps its UserUnit; one whose crop box is too large for
+TeX, so that the media box is placed; and one where both are, so that the page keeps its UserUnit.
+
+Each mutation (a copy of the script with one change) must be caught: ignore-userunit reads every UserUnit as 1;
+place-page-size squeezes the whole crop box onto the page (the bug of the second audit); place-mediabox gives luatex the
+media box but places it as the crop box; turn-margins mixes up Rotate 90 and 270 when the box is moved. --mutation NAME
+runs the whole test against that copy and fails.
 """
 from pathlib import Path
 import argparse
@@ -24,7 +35,11 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 BIN = ROOT / 'Resources/TeXShop/bin'
-MUTATIONS = {'ignore-userunit': ('local unit = pdfe.getnumber(page, "UserUnit")', 'local unit = 1')}
+MUTATIONS = {'ignore-userunit': ('local unit = pdfe.getnumber(page, "UserUnit")', 'local unit = 1'),
+             'place-page-size': ('across * try, up * try, left * try, bottom * try}', 'width * try, height * try, 0, 0}'),
+             'place-mediabox': ('{{"cropbox", crop}, {"mediabox", media}}', '{{"mediabox", crop}, {"mediabox", media}}'),
+             'turn-margins': ('if rotate == 90 then left, bottom', 'if rotate == 270 then left, bottom')}
+GS = None
 TEXBIN = next((d for d in ['/Applications/TeXLive/2026/bin/universal-darwin', '/Library/TeX/texbin']
                if Path(d, 'texlua').exists() and Path(d, 'luatex').exists()), None)
 failures = []
@@ -213,6 +228,168 @@ def userunit_checks(scripts, folder, tmp, top):
         pdf.unlink()
     return found
 
+# Four rectangles, each its own color, in fractions of an anchor box (the media box unless a page names another): red and
+# green inside, blue over the lower left corner and yellow over the upper right one, both partly outside the media box.
+COLORS = {'red': (0.8, 0.2, 0.1), 'green': (0.3, 0.6, 0.1), 'blue': (0.1, 0.2, 0.8), 'yellow': (0.9, 0.8, 0.1)}
+SHAPES = [('red', 0.1, 0.08, 0.5, 0.72), ('green', 0.25, 0.26, 0.625, 0.66), ('blue', -0.15, -0.15, 0.2, 0.15),
+          ('yellow', 0.7, 0.85, 1.15, 1.15)]
+
+
+def drawing(anchor):
+    x0, y0, x1, y1 = anchor
+    w, h = x1 - x0, y1 - y0
+    parts = ['q']
+    for color, a, b, c, d in SHAPES:
+        r, g, bl = COLORS[color]
+        parts.append(f'{r} {g} {bl} rg {x0 + a * w:g} {y0 + b * h:g} {(c - a) * w:g} {(d - b) * h:g} re f')
+    parts.append('Q')
+    return ' '.join(parts)
+
+
+def write_pdf(path, pages, tree=''):
+    """A PDF 1.7 file written by hand: each page a dict with media, and crop, unit, rotate and anchor when it has them;
+    tree is put into the page tree (to be inherited)."""
+    body = {1: b'<< /Type /Catalog /Pages 2 0 R >>'}
+    kids = []
+    for i, page in enumerate(pages):
+        number, content = 3 + 2 * i, 4 + 2 * i
+        kids.append(f'{number} 0 R')
+        entry = f'<< /Type /Page /Parent 2 0 R /MediaBox [{" ".join(map(str, page["media"]))}]'
+        if page.get('crop'):
+            entry += f' /CropBox [{" ".join(map(str, page["crop"]))}]'
+        if page.get('unit'):
+            entry += f' /UserUnit {page["unit"]}'
+        if page.get('rotate'):
+            entry += f' /Rotate {page["rotate"]}'
+        body[number] = (entry + f' /Resources << >> /Contents {content} 0 R >>').encode()
+        stream = drawing(page.get('anchor', page['media'])).encode()
+        body[content] = b'<< /Length %d >>\nstream\n' % len(stream) + stream + b'\nendstream'
+    body[2] = f'<< /Type /Pages /Kids [{" ".join(kids)}] /Count {len(pages)} {tree}>>'.encode()
+    out = bytearray(b'%PDF-1.7\n%\xe2\xe3\xcf\xd3\n')
+    offsets = {}
+    for key in sorted(body):
+        offsets[key] = len(out)
+        out += b'%d 0 obj\n' % key + body[key] + b'\nendobj\n'
+    start = len(out)
+    out += b'xref\n0 %d\n0000000000 65535 f \n' % (len(body) + 1)
+    for key in sorted(body):
+        out += b'%010d 00000 n \n' % offsets[key]
+    out += b'trailer\n<< /Size %d /Root 1 0 R >>\nstartxref\n%d\n%%%%EOF\n' % (len(body) + 1, start)
+    path.write_bytes(bytes(out))
+
+
+MEDIA = [0, 0, 200, 250]
+PARTIAL = [-20, -30, 160, 230]  # the audit's crop box: past the media box on the left and at the bottom
+AROUND = [-20, -30, 240, 300]  # past the media box on all four sides, by 20, 30, 40 and 50
+CROP_FILES = {
+    # name: (pages, page tree, dpi)
+    'crops': ([dict(media=MEDIA, crop=PARTIAL, rotate=r, unit=u) for u in (None, 2.5) for r in (0, 90, 180, 270)] +
+              [dict(media=MEDIA, crop=AROUND, rotate=r, unit=2) for r in (0, 90, 180, 270)] +
+              [dict(media=MEDIA, crop=[20, 30, 160, 230]), dict(media=MEDIA, crop=[20, 30, 160, 230], rotate=270, unit=2.5),
+               dict(media=MEDIA, crop=MEDIA), dict(media=MEDIA, crop=MEDIA, rotate=90, unit=2.5),
+               # Crop and media box both too large for TeX at UserUnit 2.5: the page keeps its unit.
+               dict(media=[0, 0, 7000, 7000], crop=[-7000, -7000, 100, 100], unit=2.5, rotate=90, anchor=[-20, -20, 120, 120])],
+              '', 72),
+    'inherit': ([dict(media=MEDIA, rotate=90, unit=2.5), dict(media=MEDIA)], f'/CropBox [{" ".join(map(str, PARTIAL))}] ', 72),
+    'large': ([dict(media=[0, 0, 10000, 6000], crop=[-100, -50, 9000, 6000], unit=2, rotate=90),
+               # The crop box is too large for TeX at UserUnit 50, the media box is not.
+               dict(media=MEDIA, crop=[-200, -200, 400, 450], unit=50, rotate=180)], '', 4),
+}
+# The UserUnit of the new pages; None for pages made in points.
+CROP_UNITS = {'crops': [None] * 12 + [None] * 4 + [2.5], 'inherit': [None, None], 'large': [2, None]}
+
+
+def render(pdf, dpi, top):
+    """Each page of pdf drawn by Ghostscript (the crop box inside the media box, with UserUnit): a list of
+    (width, height, rows of RGB bytes)."""
+    folder = Path(tempfile.mkdtemp(prefix='render-', dir=top))
+    env = {'PATH': os.environ['PATH'], 'HOME': os.environ.get('HOME', '/'), 'TMPDIR': str(folder) + '/'}
+    subprocess.run([GS, '-q', '-dSAFER', '-dBATCH', '-dNOPAUSE', '-dUseCropBox', '-sDEVICE=ppmraw', f'-r{dpi}',
+                    f'-sOutputFile={folder}/page-%03d.ppm', str(pdf)], env=env, check=True, capture_output=True, timeout=120)
+    images = []
+    for name in sorted(p.name for p in folder.glob('page-*.ppm')):
+        data = (folder / name).read_bytes()
+        fields, at = [], 0
+        while len(fields) < 4:
+            while data[at:at + 1].isspace():
+                at += 1
+            if data[at:at + 1] == b'#':
+                at = data.index(b'\n', at)
+                continue
+            end = at
+            while not data[end:end + 1].isspace():
+                end += 1
+            fields.append(data[at:end])
+            at = end
+        width, height = int(fields[1]), int(fields[2])
+        pixels = data[at + 1:]
+        images.append((width, height, [pixels[y * width * 3:(y + 1) * width * 3] for y in range(height)]))
+    shutil.rmtree(folder)
+    return images
+
+
+def color_boxes(image):
+    """The pixel box of each of the four colors: {color: (left, top, right, bottom)}."""
+    width, height, rows = image
+    targets = {name: tuple(round(v * 255) for v in rgb) for name, rgb in COLORS.items()}
+    boxes = {}
+    white = b'\xff' * (width * 3)
+    for y, row in enumerate(rows):
+        if row == white:
+            continue
+        for x in range(width):
+            pixel = row[3 * x:3 * x + 3]
+            if pixel == b'\xff\xff\xff':
+                continue
+            for name, (r, g, b) in targets.items():
+                if abs(pixel[0] - r) + abs(pixel[1] - g) + abs(pixel[2] - b) < 40:
+                    box = boxes.get(name)
+                    boxes[name] = (x, y, x, y) if box is None else (min(box[0], x), min(box[1], y), max(box[2], x), max(box[3], y))
+                    break
+    return boxes
+
+
+def crop_checks(scripts, folder, tmp, top):
+    """Failures of the crop box cases run with the scripts in the folder scripts."""
+    found = []
+    def expect(ok, message):
+        if not ok:
+            found.append(message)
+    for name, (pages, tree, dpi) in CROP_FILES.items():
+        source = folder / f'{name}.pdf'
+        if not source.exists():
+            write_pdf(source, pages, tree)
+        made = folder / f'{name}-1.pdf'
+        made.unlink(missing_ok=True)
+        result = run([f'1:{len(pages)}', name], folder, tmp, scripts)
+        expect(result.returncode == 0, f'{name}: pdfselectc succeeds: {result.returncode} {result.stderr}')
+        if not made.exists():
+            expect(False, f'{name}-1.pdf is made')
+            continue
+        _, before = info(source, top)
+        _, after = info(made, top)
+        expect(len(after) == len(pages), f'{name}-1.pdf has {len(pages)} pages: {len(after)}')
+        for number, (old, new, unit) in enumerate(zip(before, after, CROP_UNITS[name]), 1):
+            where = f'{name}-1.pdf, page {number}'
+            expect(near(old['shown'], new['shown']), f'{where} is shown at {new["shown"]} points, not {old["shown"]}')
+            expect(new['unit'] == unit and new['rotate'] == 0, f'{where} has UserUnit {new["unit"]} and Rotate {new["rotate"]}')
+        wanted, got = render(source, dpi, top), render(made, dpi, top)
+        expect(len(wanted) == len(got), f'{name}: Ghostscript draws {len(got)} pages, not {len(wanted)}')
+        for number, (a, b) in enumerate(zip(wanted, got), 1):
+            where = f'{name}-1.pdf, page {number} at {dpi} dpi'
+            if abs(a[0] - b[0]) > 1 or abs(a[1] - b[1]) > 1:
+                expect(False, f'{where} is {b[0]}x{b[1]} pixels, not {a[0]}x{a[1]}')
+                continue
+            boxes_a, boxes_b = color_boxes(a), color_boxes(b)
+            expect(len(boxes_a) >= 2, f'{name}.pdf, page {number}: the test draws at least two colors: {boxes_a}')
+            for color in COLORS:
+                one, two = boxes_a.get(color), boxes_b.get(color)
+                expect((one is None) == (two is None) and (one is None or all(abs(p - q) <= 1 for p, q in zip(one, two))),
+                       f'{where}: {color} lies at {two}, not {one}')
+        made.unlink()
+    expect(not any(tmp.iterdir()), f'the temporary folder is removed after the crop box cases: {list(tmp.iterdir())}')
+    return found
+
 
 def pages(pdf):
     return int(subprocess.run(['qpdf', '--show-npages', str(pdf)], capture_output=True, text=True, check=True).stdout)
@@ -222,8 +399,13 @@ def main(mutation=None):
     if TEXBIN is None:
         print('FAIL: TeX Live with texlua and luatex is not found')
         sys.exit(1)
-    if shutil.which('qpdf') is None:
+    global GS
+    if shutil.which('qpdf') is None or shutil.which('gs') is None:
         os.environ['PATH'] += ':/usr/local/tetex/bin'
+    GS = shutil.which('gs')
+    if GS is None:
+        print('FAIL: Ghostscript (gs) is not found')
+        sys.exit(1)
     # The script runs with only TeX Live and /bin/sh: no ConTeXt MkII, Ruby, Python or Perl.
     wrapper = (BIN / 'pdfselectc').read_text()
     script = (BIN / 'pdfselectc.lua').read_text()
@@ -238,7 +420,7 @@ def main(mutation=None):
     found = []
     def walk(items):
         for item in items:
-            if item.get('name') == 'pdfselectc':
+            if item.get('name') == 'Extract Pages from PDF…':
                 found.append(item['content'])
             walk(item.get('submenu', []))
     walk(macros.get('submenu', []))
@@ -316,12 +498,13 @@ def main(mutation=None):
         for name in ('units', 'units15'):
             subprocess.run([f'{TEXBIN}/luatex', '-interaction=batchmode', f'{name}.tex'], cwd=folder, env=environment(tmp),
                            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, check=True, timeout=120)
-        found = userunit_checks(scripts, folder, tmp, top)
-        failures.extend(found)
+        failures.extend(userunit_checks(scripts, folder, tmp, top))
+        failures.extend(crop_checks(scripts, folder, tmp, top))
         if not mutation:
-            # The test catches a pdfselectc that ignores UserUnit.
+            # The test catches each mutated copy of pdfselectc.
             for name in MUTATIONS:
-                caught = userunit_checks(mutated(name, top), folder, tmp, top)
+                copy = mutated(name, top)
+                caught = userunit_checks(copy, folder, tmp, top) + crop_checks(copy, folder, tmp, top)
                 check(bool(caught), f'mutation {name} is caught')
 
     if failures:
@@ -330,7 +513,8 @@ def main(mutation=None):
     print('PASS: pdfselectc makes 3 selections of a 3-page PDF with texlua and luatex (page counts by qpdf, sizes by pdfe, crop box '
           'and /Rotate kept), 10 wrong uses stop with a message and no file, no temporary folder is left, pages with UserUnit '
           '(rotated, cropped, too large for points, 1, and none under a page tree with one) keep the size a viewer shows with '
-          'content filling the page, and a copy that ignores UserUnit is caught')
+          'content filling the page, pages whose crop box goes past the media box (Rotate 0/90/180/270, with and without '
+          'UserUnit, inherited, too large) draw as the source in Ghostscript, and 4 mutated copies are caught')
 
 
 if __name__ == '__main__':

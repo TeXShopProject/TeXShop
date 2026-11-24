@@ -4,9 +4,9 @@
 --
 -- filename is the PDF without .pdf. For each selection, filename-i.pdf is made with the pages
 -- it lists: 5:8 is pages 5 to 8; 3:4,6,8:12 is pages 3, 4, 6 and 8 to 12. A page may be listed
--- more than once and in any order. Each page keeps its own size (the crop box, as a PDF viewer
--- shows the page, scaled by the page's UserUnit) and orientation. Links, annotations and the
--- outline of the PDF are not kept.
+-- more than once and in any order. Each page keeps its size and contents as a PDF viewer shows
+-- them (the crop box inside the media box, scaled by the page's UserUnit) and its orientation.
+-- Links, annotations and the outline of the PDF are not kept.
 --
 -- The PDF is read with pdfe, the PDF library of LuaTeX, and every selection is checked before
 -- any file is made; a wrong selection stops with a message and exit status 1. The pages are put
@@ -56,11 +56,24 @@ end
 
 -- PDF 1.7 (ISO 32000-1, Annex C) allows pages up to 14400 units on a side.
 local largest = 14400
+-- TeX cannot hold a length above 16383.99998pt (about 16322bp).
+local fits = 16000
 local withunits = false
 
--- Width and height of each page as a viewer shows it: the crop box inside the media box, turned
--- by the Rotate entry, in PostScript points, and 1 as the unit of the new page. A page that is
--- too large in points keeps its own unit: the sizes are then in that unit, written as UserUnit.
+local function rectangle(box)
+    return {math.min(box[1], box[3]), math.min(box[2], box[4]), math.max(box[1], box[3]), math.max(box[2], box[4])}
+end
+
+-- How each page is made. A viewer shows the part of the crop box inside the media box (ISO 32000-1,
+-- 14.11.2), turned by the Rotate entry. The new page has that size, in PostScript points and with 1
+-- as its unit; a page too large in points keeps its own unit, and its sizes are then in that unit,
+-- written as UserUnit. luatex places the whole box it is given, the crop box as it is written even
+-- where it goes past the media box, so that box is placed at its own size, moved so that the part
+-- a viewer shows lands on the new page; the rest is cut off by the page. When the crop box is too
+-- large for TeX the media box is given instead, and when both are, the page keeps its own unit.
+-- Each record: the width and height of the new page, the unit, the box given to luatex, the width
+-- and height of that box on the new page, and how far its lower left corner lies to the left of
+-- and below the page's.
 local sizes = {}
 local function pagesize(number)
     if sizes[number] then return sizes[number] end
@@ -68,23 +81,43 @@ local function pagesize(number)
     if not page then fail(string.format("page %d of %s cannot be read", number, input)) end
     local media = inherited(page, pdfe.getbox, "MediaBox")
     if not media then fail(string.format("page %d of %s has no size (MediaBox)", number, input)) end
-    local crop = inherited(page, pdfe.getbox, "CropBox") or media
-    local llx = math.max(math.min(crop[1], crop[3]), math.min(media[1], media[3]))
-    local lly = math.max(math.min(crop[2], crop[4]), math.min(media[2], media[4]))
-    local urx = math.min(math.max(crop[1], crop[3]), math.max(media[1], media[3]))
-    local ury = math.min(math.max(crop[2], crop[4]), math.max(media[2], media[4]))
-    local width, height = urx - llx, ury - lly
+    media = rectangle(media)
+    local crop = rectangle(inherited(page, pdfe.getbox, "CropBox") or media)
+    local shown = {math.max(crop[1], media[1]), math.max(crop[2], media[2]), math.min(crop[3], media[3]), math.min(crop[4], media[4])}
+    local width, height = shown[3] - shown[1], shown[4] - shown[2]
     if width <= 0 or height <= 0 then fail(string.format("page %d of %s has an empty crop box", number, input)) end
     local rotate = (inherited(page, pdfe.getinteger, "Rotate") or 0) % 360
-    if rotate == 90 or rotate == 270 then width, height = height, width end
+    local turned = rotate == 90 or rotate == 270
+    if turned then width, height = height, width end
     local unit = userunit(page)
-    if unit ~= 1 and math.max(width, height) * unit > largest then
-        withunits = true
-        sizes[number] = {width, height, unit}
-    else
-        sizes[number] = {width * unit, height * unit, 1}
+    local scale = 1
+    if not (unit ~= 1 and math.max(width, height) * unit > largest) then scale = unit end
+    -- The box given to luatex, in its own units: its width and height as shown, and its margins
+    -- around the part shown, left and below as shown after the turn.
+    local function place(box)
+        local left, bottom = shown[1] - box[1], shown[2] - box[2]
+        local right, top = box[3] - shown[3], box[4] - shown[4]
+        local across, up = box[3] - box[1], box[4] - box[2]
+        if turned then across, up = up, across end
+        if rotate == 90 then left, bottom = bottom, right
+        elseif rotate == 180 then left, bottom = right, top
+        elseif rotate == 270 then left, bottom = top, left end
+        return across, up, left, bottom
     end
-    return sizes[number]
+    local chosen
+    for _, try in ipairs({scale, 1}) do
+        for _, choice in ipairs({{"cropbox", crop}, {"mediabox", media}}) do
+            local across, up, left, bottom = place(choice[2])
+            if not chosen and math.max(across, up) * try <= fits then
+                chosen = {width * try, height * try, unit / try, choice[1],
+                          across * try, up * try, left * try, bottom * try}
+            end
+        end
+    end
+    if not chosen then fail(string.format("page %d of %s is too large", number, input)) end
+    if chosen[3] ~= 1 then withunits = true end
+    sizes[number] = chosen
+    return chosen
 end
 
 -- Read every selection before making any file.
@@ -176,13 +209,15 @@ for index, pages in ipairs(selections) do
         "\\pdfvariable horigin=0pt \\pdfvariable vorigin=0pt",
     }
     for _, number in ipairs(pages) do
-        local width, height, unit = sizes[number][1], sizes[number][2], sizes[number][3]
-        local attributes = unit ~= 1 and ("/UserUnit " .. decimal(unit)) or ""
+        local size = sizes[number]
+        local attributes = size[3] ~= 1 and ("/UserUnit " .. decimal(size[3])) or ""
         lines[#lines + 1] = string.format(
-            "\\saveimageresource page %d cropbox {in.pdf}\\pagewidth=%s \\pageheight=%s " ..
+            "\\saveimageresource page %d %s {in.pdf}\\pagewidth=%s \\pageheight=%s " ..
             "\\pdfvariable pageattr{%s}" ..
-            "\\shipout\\hbox{\\useimageresource width %s height %s \\lastsavedimageresourceindex}",
-            number, bp(width), bp(height), attributes, bp(width), bp(height))
+            "\\setbox0\\hbox{\\kern%s\\lower%s\\hbox{\\useimageresource width %s height %s \\lastsavedimageresourceindex}}" ..
+            "\\wd0=%s \\ht0=%s \\dp0=0pt \\shipout\\box0",
+            number, size[4], bp(size[1]), bp(size[2]), attributes, bp(-size[7]), bp(size[8]),
+            bp(size[5]), bp(size[6]), bp(size[1]), bp(size[2]))
     end
     lines[#lines + 1] = "\\end"
     local file = io.open(work .. "/select.tex", "w")
