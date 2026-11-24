@@ -75,44 +75,145 @@ static NSMapTable<NSTextView *, NSValue *> *TSAnchorsFollowingEdits(NSMapTable<N
     return mapped;
 }
 
-/// Puts each view's line back where it was. The distance above the viewport is only an estimate until the text up
-/// to the anchor is laid out, and that estimate moves the line after the replacement (#72). A line the shorter text
-/// no longer reaches is brought into view instead of leaving the viewport below the text.
+static CGFloat TSClampScroll(CGFloat value, CGFloat lower, CGFloat upper)
+{
+    if (upper < lower)
+        upper = lower;
+    if (value < lower)
+        return lower;
+    if (value > upper)
+        return upper;
+    return value;
+}
+
+static void TSScroll(NSTextView *view, CGFloat x, CGFloat y)
+{
+    NSScrollView *scroll = view.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    if (!clip)
+        return;
+    NSRect frame = view.frame;
+    x = TSClampScroll(x, NSMinX(frame), NSMaxX(frame) - NSWidth(clip.bounds));
+    y = TSClampScroll(y, NSMinY(frame), NSMaxY(frame) - NSHeight(clip.bounds));
+    [clip scrollToPoint:NSMakePoint(x, y)];
+    [scroll reflectScrolledClipView:clip];
+}
+
+/// The top of the line that holds `character`, in the text view. Laying out every character above it would put the
+/// line on its final coordinates, and that stalls the main thread when the line is near the end of a long file (#72).
+/// The lines around it are laid out instead, until the line stops moving.
+static BOOL TSLineTop(NSTextView *view, NSUInteger character, CGFloat *lineTop)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0 || character == NSNotFound)
+        return NO;
+    character = MIN(character, view.string.length - 1);
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    CGFloat viewport = clip ? NSHeight(clip.bounds) : NSHeight(view.visibleRect);
+    NSRect fragment = NSZeroRect;
+    for (NSUInteger pass = 0; pass < 8; pass++) {
+        [layout ensureLayoutForCharacterRange:NSMakeRange(character, 1)];
+        if (layout.numberOfGlyphs == 0)
+            return NO;
+        NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:character];
+        if (glyph >= layout.numberOfGlyphs)
+            glyph = layout.numberOfGlyphs - 1;
+        NSRect next = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+        if (pass > 0 && fabs(next.origin.y - fragment.origin.y) < 0.5 && fabs(next.size.height - fragment.size.height) < 0.5) {
+            fragment = next;
+            break;
+        }
+        fragment = next;
+        CGFloat height = MAX(viewport, NSHeight(next));
+        CGFloat width = NSWidth(next);
+        if (!(width > 1) || width > 100000)
+            width = MAX(NSWidth(view.bounds), 1);
+        [layout ensureLayoutForBoundingRect:NSMakeRect(0, NSMinY(next) - height, width, height * 2) inTextContainer:container];
+    }
+    *lineTop = NSMinY(fragment) + view.textContainerOrigin.y;
+    return YES;
+}
+
+/// The visual line at the top of the viewport. Its rectangle is only an estimate until the lines above it are laid
+/// out, so a scroll aimed at that estimate can show a different line (#72).
+static BOOL TSTopLine(NSTextView *view, NSRange *characterRange, CGFloat *lineTop, CGFloat *lineHeight)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0)
+        return NO;
+    NSRect visible = view.visibleRect;
+    [layout ensureLayoutForBoundingRect:NSOffsetRect(visible, -view.textContainerOrigin.x, -view.textContainerOrigin.y) inTextContainer:container];
+    if (layout.numberOfGlyphs == 0)
+        return NO;
+    NSPoint point = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x + 1, NSMinY(visible) - view.textContainerOrigin.y + 1);
+    NSUInteger glyph = [layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (glyph >= layout.numberOfGlyphs)
+        glyph = layout.numberOfGlyphs - 1;
+    NSRange glyphs;
+    NSRect fragment = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:&glyphs];
+    NSRange characters = [layout characterRangeForGlyphRange:glyphs actualGlyphRange:NULL];
+    if (characters.location == NSNotFound)
+        return NO;
+    *characterRange = characters;
+    *lineTop = NSMinY(fragment) + view.textContainerOrigin.y;
+    *lineHeight = MAX(NSHeight(fragment), 1);
+    return YES;
+}
+
+/// After the estimated scroll, step by the lines actually on screen until `character` is on the top line.
+static void TSRefineAnchor(NSTextView *view, TSScrollAnchor anchor)
+{
+    if (anchor.character == NSNotFound || view.string.length == 0)
+        return;
+    NSUInteger character = MIN(anchor.character, view.string.length - 1);
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    if (!clip)
+        return;
+    for (NSUInteger pass = 0; pass < 6; pass++) {
+        NSRange line;
+        CGFloat top = 0, height = 1;
+        if (!TSTopLine(view, &line, &top, &height))
+            return;
+        if (NSLocationInRange(character, line)) {
+            CGFloat delta = (top - anchor.pin) - NSMinY(view.visibleRect);
+            if (fabs(delta) >= 0.5 && fabs(delta) < height)
+                TSScroll(view, anchor.clipX, NSMinY(clip.bounds) + delta);
+            return;
+        }
+        CGFloat linesAway = character < line.location
+            ? ((CGFloat)character - (CGFloat)line.location) / (CGFloat)MAX(line.length, 1)
+            : ((CGFloat)character - (CGFloat)NSMaxRange(line)) / (CGFloat)MAX(line.length, 1) + 1;
+        CGFloat delta = linesAway * height;
+        if (fabs(delta) < height)
+            delta = linesAway < 0 ? -height : height;
+        CGFloat before = NSMinY(clip.bounds);
+        TSScroll(view, anchor.clipX, before + delta);
+        if (fabs(NSMinY(clip.bounds) - before) < 0.5)
+            return; // The text is already at the end of its scroll range.
+    }
+}
+
+/// Puts each view back on the line it showed (#72). A scroll offset the shorter text no longer reaches, down or
+/// across, is brought back into the text instead of leaving the viewport past it.
 static void TSApplyAnchors(NSMapTable<NSTextView *, NSValue *> *anchors)
 {
     for (NSTextView *view in anchors) {
-        NSScrollView *scroll = view.enclosingScrollView;
-        NSClipView *clip = scroll.contentView;
+        NSClipView *clip = view.enclosingScrollView.contentView;
         if (!clip)
             continue;
         TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
-        NSLayoutManager *layout = view.layoutManager;
-        NSTextContainer *container = view.textContainer;
-        CGFloat y = view.frame.origin.y;
-        if (anchor.character != NSNotFound && layout && container && view.string.length > 0) {
-            NSUInteger character = MIN(anchor.character, view.string.length - 1);
-            [layout ensureLayoutForCharacterRange:NSMakeRange(0, character + 1)];
-            NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:character];
-            if (layout.numberOfGlyphs > 0) {
-                if (glyph >= layout.numberOfGlyphs)
-                    glyph = layout.numberOfGlyphs - 1;
-                NSRect fragment = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
-                CGFloat lineTop = fragment.origin.y + view.textContainerOrigin.y;
-                y = clip.bounds.origin.y + (lineTop - anchor.pin - NSMinY(view.visibleRect));
-            }
-        }
-        NSRect frame = view.frame;
-        CGFloat minY = frame.origin.y;
-        CGFloat maxY = NSMaxY(frame) - clip.bounds.size.height;
-        if (maxY < minY)
-            maxY = minY;
-        if (y < minY)
-            y = minY;
-        else if (y > maxY)
-            y = maxY;
-        [clip scrollToPoint:NSMakePoint(anchor.clipX, y)];
-        [scroll reflectScrolledClipView:clip];
+        CGFloat y = NSMinY(view.frame);
+        CGFloat lineTop = 0;
+        if (TSLineTop(view, anchor.character, &lineTop))
+            y = NSMinY(clip.bounds) + (lineTop - anchor.pin - NSMinY(view.visibleRect));
+        TSScroll(view, anchor.clipX, y);
+        TSRefineAnchor(view, anchor);
     }
+    // Laying out one part of a split source can move the other's estimate. Check again once both have been laid out.
+    for (NSTextView *view in anchors)
+        TSRefineAnchor(view, TSAnchorFromValue([anchors objectForKey:view]));
 }
 
 static NSMapTable<NSTextView *, NSArray<NSValue *> *> *TSSelections(NSTextStorage *storage)

@@ -734,6 +734,11 @@ static CGFloat ScrollY(NSTextView *view)
     return view.enclosingScrollView.contentView.bounds.origin.y;
 }
 
+static CGFloat ScrollX(NSTextView *view)
+{
+    return view.enclosingScrollView.contentView.bounds.origin.x;
+}
+
 /// The line at the top of the viewport, or empty when the viewport is below the text.
 static NSString *VisibleTopLine(NSTextView *view)
 {
@@ -769,13 +774,17 @@ static NSUInteger CaretAfterShorterAlphas(NSString *text, NSRange caret)
 }
 
 /// A split source, scrolled, as in a document window. Nothing is ordered on screen. The window is kept for the rest of the test.
-static BOOL MakeScrolledSource(NSString *text, NSTextView *_Nonnull *_Nonnull upperOut, NSTextView *_Nonnull *_Nonnull lowerOut, CGFloat *upperY, CGFloat *lowerY)
+/// `clipping` is the source's no-wrap setting: the text view grows to the longest line and scrolls sideways. `clipX`
+/// is then the horizontal scroll, after the carets have been scrolled into view.
+static BOOL MakeScrolledSource(NSString *text, BOOL clipping, CGFloat clipX, NSTextView *_Nonnull *_Nonnull upperOut, NSTextView *_Nonnull *_Nonnull lowerOut, CGFloat *upperY, CGFloat *lowerY)
 {
     static NSMutableArray<NSWindow *> *windows;
     if (!windows)
         windows = [NSMutableArray array];
     NSFont *font = [NSFont userFixedPitchFontOfSize:13] ?: [NSFont systemFontOfSize:13];
-    NSTextStorage *storage = [[NSTextStorage alloc] initWithString:text attributes:@{NSFontAttributeName: font}];
+    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+    style.lineBreakMode = clipping ? NSLineBreakByClipping : NSLineBreakByWordWrapping;
+    NSTextStorage *storage = [[NSTextStorage alloc] initWithString:text attributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: style}];
     NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 420, 200) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     window.releasedWhenClosed = NO;
     [windows addObject:window];
@@ -784,19 +793,21 @@ static BOOL MakeScrolledSource(NSString *text, NSTextView *_Nonnull *_Nonnull up
         NSLayoutManager *layout = [NSLayoutManager new];
         layout.allowsNonContiguousLayout = YES;
         [storage addLayoutManager:layout];
-        NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(400, CGFLOAT_MAX)];
-        container.widthTracksTextView = YES;
+        NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:clipping ? NSMakeSize(FLT_MAX, FLT_MAX) : NSMakeSize(400, CGFLOAT_MAX)];
+        container.widthTracksTextView = !clipping;
         [layout addTextContainer:container];
         NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 100 * (1 - i), 420, 100)];
         scroll.hasVerticalScroller = YES;
+        scroll.hasHorizontalScroller = clipping;
         NSTextView *view = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 400, 100) textContainer:container];
         view.minSize = NSMakeSize(0, 100);
-        view.maxSize = NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX);
+        view.maxSize = NSMakeSize(FLT_MAX, FLT_MAX);
         view.verticallyResizable = YES;
-        view.horizontallyResizable = NO;
-        view.autoresizingMask = NSViewWidthSizable;
+        view.horizontallyResizable = clipping;
+        view.autoresizingMask = clipping ? NSViewNotSizable : NSViewWidthSizable;
         view.allowsUndo = YES;
         view.richText = NO;
+        view.defaultParagraphStyle = style;
         scroll.documentView = view;
         [window.contentView addSubview:scroll];
         [views addObject:view];
@@ -805,12 +816,25 @@ static BOOL MakeScrolledSource(NSString *text, NSTextView *_Nonnull *_Nonnull up
     [window display];
     [upper.layoutManager ensureLayoutForTextContainer:upper.textContainer];
     [lower.layoutManager ensureLayoutForTextContainer:lower.textContainer];
+    if (clipping) {
+        [upper sizeToFit];
+        [lower sizeToFit];
+    }
     CGFloat upperTop = ScrollY(upper), lowerTop = ScrollY(lower);
     NSUInteger line = [text rangeOfString:@"\n"].location + 1;
     upper.selectedRange = NSMakeRange(50 * line, 0);
     lower.selectedRange = NSMakeRange(20 * line + 4, 0);
     [upper scrollRangeToVisible:upper.selectedRange];
     [lower scrollRangeToVisible:lower.selectedRange];
+    if (clipX > 0) {
+        for (NSTextView *view in views) {
+            NSClipView *clip = view.enclosingScrollView.contentView;
+            NSRect bounds = clip.bounds;
+            bounds.origin.x = clipX;
+            [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+            [view.enclosingScrollView reflectScrolledClipView:clip];
+        }
+    }
     [window display];
     *upperOut = upper;
     *lowerOut = lower;
@@ -838,7 +862,7 @@ static void TestReplaceAllKeepsPlace(void)
         [text appendFormat:@"line %03d alpha word\n", i];
     NSTextView *upper = nil, *lower = nil;
     CGFloat upperY = 0, lowerY = 0;
-    Check(MakeScrolledSource(text, &upper, &lower, &upperY, &lowerY), @"both parts of the split source are scrolled down");
+    Check(MakeScrolledSource(text, NO, 0, &upper, &lower, &upperY, &lowerY), @"both parts of the split source are scrolled down");
     NSString *upperLine = VisibleTopLine(upper), *lowerLine = VisibleTopLine(lower);
     NSRange upperCaret = upper.selectedRange, lowerCaret = lower.selectedRange;
     controller.settings.findString = @"alpha";
@@ -879,7 +903,7 @@ static void TestReplaceAllKeepsPlace(void)
     // Every line becomes one character. The old scroll offset is below the text; both parts still show it.
     NSTextView *shortUpper = nil, *shortLower = nil;
     CGFloat shortUpperY = 0, shortLowerY = 0;
-    Check(MakeScrolledSource(text, &shortUpper, &shortLower, &shortUpperY, &shortLowerY), @"scrolled before a replacement that removes the lines");
+    Check(MakeScrolledSource(text, NO, 0, &shortUpper, &shortLower, &shortUpperY, &shortLowerY), @"scrolled before a replacement that removes the lines");
     controller.settings.findString = @".+\\n";
     controller.settings.replaceString = @"x";
     controller.settings.options = TSRegexFindRegularExpression;
@@ -896,7 +920,7 @@ static void TestReplaceAllKeepsPlace(void)
     controller.settings.options = 0;
     NSTextView *scopeUpper = nil, *scopeLower = nil;
     CGFloat scopeUpperY = 0, scopeLowerY = 0;
-    Check(MakeScrolledSource(text, &scopeUpper, &scopeLower, &scopeUpperY, &scopeLowerY), @"scrolled again for Replace All in Selection");
+    Check(MakeScrolledSource(text, NO, 0, &scopeUpper, &scopeLower, &scopeUpperY, &scopeLowerY), @"scrolled again for Replace All in Selection");
     NSUInteger line = [text rangeOfString:@"\n"].location + 1;
     NSRange scope = NSMakeRange(40 * line, line); // one line, one "alpha"
     scopeUpper.selectedRange = scope;
@@ -914,10 +938,60 @@ static void TestReplaceAllKeepsPlace(void)
     Check([scopeUpper.string containsString:@"alpha"] && [[scopeUpper.string substringWithRange:NSMakeRange(scope.location, line - 4)] containsString:@"X"],
           @"only the selected line is replaced");
 
+    // No wrap, scrolled past the start of a long line. Shortening every line to a few characters used to leave both
+    // parts looking at the old horizontal offset, which is past the text, so both were blank.
+    NSMutableString *wide = [NSMutableString string];
+    NSString *chunk = [@"a" stringByPaddingToLength:360 withString:@"a" startingAtIndex:0];
+    for (int i = 0; i < 80; i++)
+        [wide appendFormat:@"line %03d %@ tail\n", i, chunk];
+    NSTextView *wideUpper = nil, *wideLower = nil;
+    CGFloat wideUpperY = 0, wideLowerY = 0;
+    Check(MakeScrolledSource(wide, YES, 1300, &wideUpper, &wideLower, &wideUpperY, &wideLowerY) && ScrollX(wideUpper) > 1000 && ScrollX(wideLower) > 1000,
+          @"both parts are scrolled across a long line");
+    NSString *wideUpperLabel = LineNumberLabel(VisibleTopLine(wideUpper));
+    NSString *wideLowerLabel = LineNumberLabel(VisibleTopLine(wideLower));
+    controller.settings.findString = chunk;
+    controller.settings.replaceString = @"x";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, wideUpper), @"Replace All that shortens the long lines");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check(wideUpperLabel.length > 0 && [LineNumberLabel(VisibleTopLine(wideUpper)) isEqualToString:wideUpperLabel]
+          && [LineNumberLabel(VisibleTopLine(wideLower)) isEqualToString:wideLowerLabel]
+          && ScrollX(wideUpper) < 50 && ScrollX(wideLower) < 50,
+          [NSString stringWithFormat:@"a shortened long line stays in view (%@ / %@, x %.0f / %.0f)",
+           LineNumberLabel(VisibleTopLine(wideUpper)), LineNumberLabel(VisibleTopLine(wideLower)), ScrollX(wideUpper), ScrollX(wideLower)]);
+    [wideUpper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([LineNumberLabel(VisibleTopLine(wideUpper)) isEqualToString:wideUpperLabel]
+          && [LineNumberLabel(VisibleTopLine(wideLower)) isEqualToString:wideLowerLabel]
+          && ScrollX(wideUpper) > 1000 && ScrollX(wideLower) > 1000,
+          [NSString stringWithFormat:@"undo scrolls back across the long line (%@ / %@, x %.0f / %.0f)",
+           LineNumberLabel(VisibleTopLine(wideUpper)), LineNumberLabel(VisibleTopLine(wideLower)), ScrollX(wideUpper), ScrollX(wideLower)]);
+
+    // The same horizontal offset stays when the lines are still wider than the window.
+    NSTextView *keptUpper = nil, *keptLower = nil;
+    CGFloat keptUpperY = 0, keptLowerY = 0;
+    Check(MakeScrolledSource(wide, YES, 1300, &keptUpper, &keptLower, &keptUpperY, &keptLowerY), @"scrolled across before a replacement that keeps the width");
+    NSString *keptUpperLabel = LineNumberLabel(VisibleTopLine(keptUpper));
+    NSString *keptLowerLabel = LineNumberLabel(VisibleTopLine(keptLower));
+    controller.settings.findString = @"tail";
+    controller.settings.replaceString = @"TAIL";
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, keptUpper), @"Replace All that keeps the long lines wide");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check(keptUpperLabel.length > 0 && [LineNumberLabel(VisibleTopLine(keptUpper)) isEqualToString:keptUpperLabel]
+          && [LineNumberLabel(VisibleTopLine(keptLower)) isEqualToString:keptLowerLabel]
+          && ScrollX(keptUpper) > 1000 && ScrollX(keptLower) > 1000,
+          [NSString stringWithFormat:@"a still-wide line keeps its horizontal place (%@ / %@, x %.0f / %.0f)",
+           LineNumberLabel(VisibleTopLine(keptUpper)), LineNumberLabel(VisibleTopLine(keptLower)), ScrollX(keptUpper), ScrollX(keptLower)]);
+
     // A refused replacement must not drop a redo that was already there, nor end a group that was not begun.
+    controller.settings.findString = @"alpha";
+    controller.settings.replaceString = @"X";
+    controller.settings.options = 0;
     NSTextView *vetoUpper = nil, *vetoLower = nil;
     CGFloat vetoUpperY = 0, vetoLowerY = 0;
-    Check(MakeScrolledSource(text, &vetoUpper, &vetoLower, &vetoUpperY, &vetoLowerY), @"scrolled before a refused replacement");
+    Check(MakeScrolledSource(text, NO, 0, &vetoUpper, &vetoLower, &vetoUpperY, &vetoLowerY), @"scrolled before a refused replacement");
     [vetoUpper insertText:@"Z" replacementRange:vetoUpper.selectedRange];
     [vetoUpper.undoManager undo];
     Check(vetoUpper.undoManager.canRedo && [vetoUpper.string isEqualToString:text], @"an earlier edit can be redone");
