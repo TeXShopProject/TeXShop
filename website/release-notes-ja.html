@@ -70,7 +70,7 @@
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案と報告により、「実験」で書類の画像や参照を使ってタイプセットでき、ソースも書類と同じように表示されるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>）。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/experiment.png" width="572" height="431" alt="定理1を参照する断片を入れた「実験」のソースのパネルと、それを組んだ「実験」のプレビュー" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/experiment-dark.png" width="572" height="431" alt="定理1を参照する断片を入れた「実験」のソースのパネルと、それを組んだ「実験」のプレビュー" loading="lazy"></figure></li>
 <li>「編集」→「ラベルと引用キーを補完」（F5）で、書類で定義したラベルとBibDeskの引用キーを補完できるようになりました。「設定」→「キーボード」にOption・Controlでマークへ移動するキーの項目が加わり、「実験」でもソースウインドウと同じキーでコマンド補完できるようになりました。</li>
 <li>「タグ」メニューがいつも最新の内容になり、「文字情報」で文字の詳しい情報が表示されるようになりました。</li>
-<li>行列パネルが使いやすくなりました。表に直接入力し、Return・Tab・矢印キーで移動でき、表計算アプリなどとセルをコピー・ペーストできます。行列もパネルも必要なだけ大きくできます。</li>
+<li>行列パネルが使いやすくなりました。表に直接入力し、Return・Tab・矢印キーで移動でき、表計算アプリなどとセルをコピー・ペーストできます。行列は999行・999列まで作れ、パネルも大きくできます。</li>
 </ul>
 <h3 id="v6.00-settings-window">設定画面</h3>
 <ul>
@@ -137,7 +137,7 @@
 <h3 id="v6.00-fixes-opening-and-saving-documents">不具合の修正：書類の読み書き</h3>
 <ul>
 <li><a href="https://github.com/Steuard">Steuard</a>氏、<a href="https://github.com/yo3iti">Tom</a>氏の報告と、<a href="https://github.com/TeXShopProject/TeXShop/pull/1">PR #1</a>の<a href="https://github.com/ddd3h">Daisuke Nishihama</a>氏の貢献により、OneDriveやGoogle Driveなどで同期しているファイルでカーソルが飛ぶ問題、ルーマニア語で書類の窓が開かない問題、ほかのエディタで保存した変更に気付かない問題を修正しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/29">#29</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/42">#42</a>）。</li>
-<li>文字コードの読み書きの不具合を直しました。UTF-8のBOM、UTF-16、GB 2312、日本語の文字コードでのバックスラッシュとチルダ、保存ダイアログの文字コードのメニュー、「UTF-8-MAC を UTF-8 に自動変換」、otfパッケージの<code>\UTF</code> / <code>\CID</code>への自動変換が正しく働き、「デフォルトエディタに設定」も<code>.tex</code>ファイルに効きます。</li>
+<li>文字コードの読み書きの不具合を直しました。UTF-8のBOM、UTF-16、GB 2312、日本語の文字コードでのバックスラッシュとチルダ、保存ダイアログの文字コードのメニュー、「UTF-8-MACをUTF-8に自動変換」、otfパッケージの<code>\UTF</code> / <code>\CID</code>への自動変換が正しく働き、「TeXShopを既定のTeXエディタにする」も<code>.tex</code>ファイルに効きます。</li>
 <li>ツールバーの「フルパス表示」をオンにすると、ソースウインドウ・プレビューウインドウ・コンソールのタイトルがすべてフルパスになり、自動保存や PDF の読み直しのあともファイル名に戻らなくなりました。</li>
 </ul>
 <h3 id="v6.00-fixes-editing-and-other">不具合の修正：編集とその他</h3>
@@ -172,7 +172,7 @@
 <li>「ヘルプ」→「TeX Liveドキュメント」が、翻訳のない言語では英語版で開くようになり、MacTeXだけが入れる文書ではなく、オンラインの最新の文書にリンクするようにしました。</li>
 <li>以前の版から使っている場合も、「ヘルプ」→「HTMLコマンド」に必要なhtmlエンジンが入るようにし、この文書から削除済みのデモ動画への案内をなくしました。</li>
 <li>同梱のConTeXtマクロのうち、teTeXのページを開いていたものが、TeX Liveのホームページを開くようにしました。</li>
-<li>TeXShopのシェルスクリプトを使う同梱のマクロ（BibliographyやConvert to Unixなど）が、空白を含むファイル名やフォルダ名でも動くようにしました。<code>~/Library/TeXShop/Macros</code>にある既存の写しは変わりません。</li>
+<li>TeXShopのシェルスクリプトを使う同梱のマクロ（bibtexcやpdflatexc、Convert to Unixなど）が、空白を含むファイル名やフォルダ名でも動くようにしました。<code>~/Library/TeXShop/Macros</code>にある既存の写しは変わりません。</li>
 <li>LaTeXの構文を考慮するスペルチェックのヘルプを加えました。</li>
 <li>日本語のヘルプでTeXの命令のバックスラッシュが円記号になる問題と、英語・韓国語の一部のヘルプの文字化けを修正しました。</li>
 <li>同梱するzlibを1.4、SyncTeXパーサーを1.21に更新しました。</li>

@@ -51,7 +51,7 @@
 <pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
 <p>To give the files of <code>\input</code> commands tabs as well, use this hidden setting in Terminal:</p>
 <pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
-<p>To choose the files yourself, start with <code>useTabsWithFiles</code> and add a <code>tabbedFile</code> line for each tab, all in the first 50 lines of the root file. A name for the tab can follow in parentheses:</p>
+<p>To choose the files yourself, put a <code>useTabsWithFiles</code> line in the first 20 lines of the root file and add a <code>tabbedFile</code> line for each tab, all in its first 50 lines. A name for the tab can follow in parentheses:</p>
 <pre>% !TEX useTabsWithFiles
 % !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
 % !TEX tabbedFile{Galois.log}

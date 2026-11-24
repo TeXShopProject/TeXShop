@@ -56,7 +56,7 @@
 <li>Experiment typesets with the document’s pictures and references, and its source looks like the document’s source. Suggested and reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>).</li>
 <li>Complete the reference names that the document defines, and BibDesk citations, with a new item in the Edit menu. Settings → Keyboard shows the Option and Control mark keys, and Experiment uses the same completion key as the source window.</li>
 <li>The Tags menu is always up to date, and Character Info shows details of a character.</li>
-<li>The Matrix panel is easier to use: type entries directly in its table, move with Return, Tab and the arrow keys, and copy and paste entries with other applications. A matrix can be as large as needed, and so can the panel.</li>
+<li>The Matrix panel is easier to use: type entries directly in its table, move with Return, Tab and the arrow keys, and copy and paste entries with other applications. A matrix can be far bigger, and so can the panel.</li>
 </ul>
 <h4>Settings window</h4>
 <ul>
@@ -123,7 +123,7 @@
 <h4>Fixes: opening and saving documents</h4>
 <ul>
 <li>The cursor no longer jumps in files synced by OneDrive, Google Drive and similar services, document windows open again in Romanian, and TeXShop notices changes saved by other editors. Reported by <a href="https://github.com/Steuard">Steuard</a> and <a href="https://github.com/yo3iti">Tom</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/29">#29</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/42">#42</a>), with a contribution from <a href="https://github.com/ddd3h">Daisuke Nishihama</a> in <a href="https://github.com/TeXShopProject/TeXShop/pull/1">PR #1</a>.</li>
-<li>Fix reading and saving in several encodings: UTF-8 with a byte order mark, UTF-16, GB 2312, the backslash and the tilde in Japanese encodings, the encoding menu in the Save dialog, Automatic UTF-8-Mac to UTF-8 Conversion and conversion to otf package <code>\UTF</code> / <code>\CID</code> work correctly, and Make Default Editor works for <code>.tex</code> files.</li>
+<li>Fix reading and saving in several encodings: UTF-8 with a byte order mark, UTF-16, GB 2312, the backslash and the tilde in Japanese encodings, the encoding menu in the Save dialog, the automatic conversion of UTF-8-MAC to UTF-8 and the conversion to otf package <code>\UTF</code> / <code>\CID</code> work correctly, and Select TeXShop as Default TeX Editor works for <code>.tex</code> files.</li>
 <li>With Show Full Path in Window Title on in the toolbar, the source window, the Preview window and the console show the full path in their title, and it no longer goes back to the file name after an autosave or when the PDF is read again.</li>
 </ul>
 <h4>Fixes: editing and other</h4>
@@ -158,7 +158,7 @@
 <li>Help → TeX Live Documentation opens in every language, in English where there is no version in that language, and links to the current documents on the web instead of files that only MacTeX has.</li>
 <li>Users of earlier versions also get the html engine that Help → HTML Commands needs, and that page no longer points to the removed demo movies.</li>
 <li>The bundled ConTeXt macro that opened an old web page opens the TeX Live home page instead.</li>
-<li>Bundled macros that run shell commands, such as Bibliography, work with names of files and folders that have a space. The macros already in <code>~/Library/TeXShop/Macros</code> are not changed.</li>
+<li>Bundled macros that run shell commands, such as the macros that typeset with pdflatex or change line endings, work with names of files and folders that have a space. The macros already in <code>~/Library/TeXShop/Macros</code> are not changed.</li>
 <li>Add help for LaTeX-aware spell checking.</li>
 <li>The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.</li>
 <li>Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.</li>

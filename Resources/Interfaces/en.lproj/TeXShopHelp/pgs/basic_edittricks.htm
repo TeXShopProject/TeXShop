@@ -75,7 +75,7 @@
 
 <p>Here <var>path</var> is the path of the file from the folder of the source file, and <var>name</var> is the file name without its extension. A dropped alias is replaced by the file it stands for, which TeX could not find by itself. A file whose path contains a space is not inserted; TeXShop shows a warning instead.</p>
 
-<p>To insert something else for a kind of file, open the Macro Editor (Macros › Open Macro Editor...) and add a submenu named <code>Drag &amp; Drop</code>. In it, add an item named after the extension, such as <code>.pdf</code>, whose content is the text to insert, for example <code>\includegraphics[#INS#]{%r}</code>; an item named <code>.*</code> is used for every extension without an item of its own. The content can use these abbreviations:</p>
+<p>To insert something else for a kind of file, open the Macro Editor (Macros › Open Macro Editor...) and add a submenu named <code>Drag &amp; Drop</code>. In it, add an item named after the extension, such as <code>.pdf</code>, whose content is the text to insert, for example <code>\includegraphics[#INS#]{%r}</code>; an item named <code>.*</code> is used for every other extension, one that has no item of its own and is not in the table above. The content can use these abbreviations:</p>
 
 <dl>
 <dt><code>%F</code></dt><dd>the full path of the dropped file</dd>
@@ -103,7 +103,7 @@
 
 <h2>Backup files</h2>
 
-<p>When “Enable Autosave and Versions” is off in Settings › Documents and Saving, turn on “Keep the previous file as “name~” when saving” there to keep the previous version of a file each time it is saved. The backup has the name of the file followed by a tilde.</p>
+<p>When “Enable Autosave and Versions” is off in Settings › Documents and Saving, turn on “Keep the previous file as “name~” when saving” there to keep the previous version of a file each time it is saved. The backup has a tilde after the name of the file, before the extension: the backup of paper.tex is paper~.tex.</p>
 
 <p>Finding and replacing, with regular expressions and Multiple Replace, is described in <a href="basic_find.htm">Find and Replace</a>.</p>
 </main>
