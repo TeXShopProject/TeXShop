@@ -393,8 +393,6 @@
 "Treat consecutive whitespace as one" = "Compter les espaces consécutifs comme un seul";
 "Normalization:" = "Normalisation :";
 "Normalization: None" = "Aucune";
-"Modified NFC" = "NFC modifié";
-"Modified NFD" = "NFD modifié";
 "Unit:" = "Unité :";
 "Grapheme Cluster" = "Groupe graphémique";
 "Unicode Scalar" = "Scalaire Unicode";

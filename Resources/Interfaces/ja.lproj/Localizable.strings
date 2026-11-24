@@ -401,8 +401,6 @@
 "Treat consecutive whitespace as one" = "連続する空白を1文字として扱う";
 "Normalization:" = "正規化：";
 "Normalization: None" = "なし";
-"Modified NFC" = "修正NFC";
-"Modified NFD" = "修正NFD";
 "Unit:" = "単位：";
 "Grapheme Cluster" = "書記素クラスタ";
 "Unicode Scalar" = "Unicodeスカラー";

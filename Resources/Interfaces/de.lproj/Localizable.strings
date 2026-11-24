@@ -393,8 +393,6 @@
 "Treat consecutive whitespace as one" = "Aufeinander folgende Leerzeichen als eines behandeln";
 "Normalization:" = "Normalisierung:";
 "Normalization: None" = "Keine";
-"Modified NFC" = "Modifizierte NFC";
-"Modified NFD" = "Modifizierte NFD";
 "Unit:" = "Einheit:";
 "Grapheme Cluster" = "Graphemcluster";
 "Unicode Scalar" = "Unicode-Skalar";

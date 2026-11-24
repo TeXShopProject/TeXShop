@@ -393,8 +393,6 @@
 "Treat consecutive whitespace as one" = "연속적인 공백을 한 개로 취급";
 "Normalization:" = "정규화:";
 "Normalization: None" = "없음";
-"Modified NFC" = "수정된 NFC";
-"Modified NFD" = "수정된 NFD";
 "Unit:" = "단위:";
 "Grapheme Cluster" = "문자소 클러스터";
 "Unicode Scalar" = "유니코드 스칼라";

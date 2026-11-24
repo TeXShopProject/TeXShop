@@ -389,8 +389,6 @@
 "Treat consecutive whitespace as one" = "Treat consecutive whitespace as one";
 "Normalization:" = "Normalization:";
 "Normalization: None" = "None";
-"Modified NFC" = "Modified NFC";
-"Modified NFD" = "Modified NFD";
 "Unit:" = "Unit:";
 "Grapheme Cluster" = "Grapheme Cluster";
 "Unicode Scalar" = "Unicode Scalar";

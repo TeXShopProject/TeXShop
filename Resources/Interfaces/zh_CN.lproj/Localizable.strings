@@ -390,8 +390,6 @@
 "Treat consecutive whitespace as one" = "将连续空格视作一个";
 "Normalization:" = "标准化：";
 "Normalization: None" = "无";
-"Modified NFC" = "修改NFC";
-"Modified NFD" = "修改NFD";
 "Unit:" = "单位：";
 "Grapheme Cluster" = "字位簇";
 "Unicode Scalar" = "Unicode标量";

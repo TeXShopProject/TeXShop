@@ -129,8 +129,8 @@ static NSString *TSUnitRowName(TSCharacterUnit unit)
     add(self.normalizationPopUp, @"NFKD", TSUnicodeNormalizationNFKD);
     add(self.normalizationPopUp, @"NFKC Case-Fold", TSUnicodeNormalizationNFKCCaseFold);
     add(self.normalizationPopUp, nil, 0);
-    add(self.normalizationPopUp, NSLocalizedString(@"Modified NFC", @"Text Statistics: the Unicode normalization of HFS+, composed"), TSUnicodeNormalizationModifiedNFC);
-    add(self.normalizationPopUp, NSLocalizedString(@"Modified NFD", @"Text Statistics: the Unicode normalization of HFS+"), TSUnicodeNormalizationModifiedNFD);
+    add(self.normalizationPopUp, @"Modified NFC", TSUnicodeNormalizationModifiedNFC);
+    add(self.normalizationPopUp, @"Modified NFD", TSUnicodeNormalizationModifiedNFD);
 
     self.unitPopUp = popUp();
     add(self.unitPopUp, NSLocalizedString(@"Grapheme Cluster", @"Text Statistics: count unit"), TSCharacterUnitGraphemeCluster);

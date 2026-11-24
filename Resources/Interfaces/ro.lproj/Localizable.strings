@@ -393,8 +393,6 @@
 "Treat consecutive whitespace as one" = "Tratează spațiile albe consecutive ca unul singur";
 "Normalization:" = "Normalizare:";
 "Normalization: None" = "Niciuna";
-"Modified NFC" = "NFC modificat";
-"Modified NFD" = "NFD modificat";
 "Unit:" = "Unitate:";
 "Grapheme Cluster" = "Cluster de grafeme";
 "Unicode Scalar" = "Scalar Unicode";
