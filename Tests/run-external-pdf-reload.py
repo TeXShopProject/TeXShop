@@ -50,9 +50,11 @@ mutations={
  'nohash': ('if (changeTime && loadedChangeTime && ![changeTime isEqualToString:loadedChangeTime]) {', 'if (0) {'),
  # Digest a file read in place on the main thread.
  # Turning automatic reloading on takes a file changed since the PDF on display was read for it (#70).
- 'lockedwatch': ('        if (!self.shownPDFSignature || [signature isEqualToString:self.shownPDFSignature])\n', '        if (YES)\n'),
+ 'lockedwatch': ('        if (!self.shownPDFSignature || ([signature', '        if (YES || ([signature'),
+ # An overwrite keeping the size and modification time is taken for the PDF shown (#70).
+ 'ctimewatch': ('[signature isEqualToString:self.shownPDFSignature] &&\n            (!self.shownPDFChangeTime || [changeTime isEqualToString:self.shownPDFChangeTime])', '[signature isEqualToString:self.shownPDFSignature]'),
  # A PDF read by the external reloads is not noted for Command-1 (#70).
- 'reloadnotnoted': ('    self.shownPDFSignature = signature;\n    self.externalPDFPendingSignature = nil;', '    self.externalPDFPendingSignature = nil;'),
+ 'reloadnotnoted': ('    self.shownPDFSignature = signature;\n    self.shownPDFChangeTime = changeTime;\n    self.externalPDFPendingSignature = nil;', '    self.externalPDFPendingSignature = nil;'),
  'mainhash': ('dispatch_async(self.externalPDFQueue, ^{ [content prepareDigest]; });', '[content prepareDigest];'),
 }
 if mutation in mutations:
@@ -90,7 +92,7 @@ static void RunInline(dispatch_block_t block) { block(); }
 @property NSTask *texTask;
 @property BOOL annotationsExist, useOldSyncParser, useConTeXtSyncParser;
 @property NSInteger documentType;
-@property NSString *externalPDFLoadedSignature,*externalPDFPendingSignature,*externalPDFLoadedChangeTime,*shownPDFSignature;
+@property NSString *externalPDFLoadedSignature,*externalPDFPendingSignature,*externalPDFLoadedChangeTime,*shownPDFSignature,*shownPDFChangeTime;
 @property TSExternalPDFContent *externalPDFLoadedContent;
 @property NSTimer *pdfRefreshTimer;
 @property NSDate *pdfLastModDate;
@@ -477,6 +479,22 @@ int main(int argc,char **argv){@autoreleasepool{
  Check(k.externalPDFLoadedSignature==nil && [k.shownPDFSignature isEqualToString:lockedState],@"Locked: turning reloading on does not take the changed file for the PDF shown");
  StablePoll(k);
  Check(v.document.pageCount==12 && [k.shownPDFSignature isEqualToString:TSExternalPDFSignature(pdf)] && [k.externalPDFLoadedSignature isEqualToString:k.shownPDFSignature],@"Locked: the changed file is read and noted");
+ [k stopExternalPDFObservation];
+ // An overwrite that keeps the size and modification time shows only in the change time: it is read too.
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@NO,@"PdfFileRefresh":@YES} mutableCopy];
+ NSUInteger same=MAX(first.length,changed.length)+16;
+ [Padded(changed,same) writeToFile:pdf atomically:YES];
+ k=[TSDocument new];k.fileURL=[NSURL fileURLWithPath:pdf];k->taskDone=YES;k.pdfKitWindow=[TestWindow new];k.documentType=isPDF;k.myPDFKitView=v;
+ v.document=[PDFDocument new];NoteLoaded(k,pdf);
+ lockedState=k.shownPDFSignature;NSString *lockedTime=k.shownPDFChangeTime;
+ OverwriteKeepingTimes(pdf,Padded(first,same));
+ Check([lockedState isEqualToString:TSExternalPDFSignature(pdf)],@"Locked, kept times: fixture: the cheap signature is the same");
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@30} mutableCopy];
+ [k startExternalPDFObservation];[k.pdfRefreshTimer invalidate];
+ Check(k.externalPDFLoadedSignature==nil && [k.shownPDFChangeTime isEqualToString:lockedTime],@"Locked, kept times: turning reloading on does not take the overwritten file for the PDF shown");
+ StablePoll(k);
+ NSString *nowTime=nil;TSExternalPDFState(pdf,&nowTime);
+ Check(v.document.pageCount==12 && [k.shownPDFChangeTime isEqualToString:nowTime],@"Locked, kept times: the overwritten file is read and noted");
  [k stopExternalPDFObservation];
  [shown close];[other close];
  printf("PASS: automatic reloading off: returning to TeXShop or the preview, partly written PDFs, following later passes, blocking, PdfFileRefresh\n");

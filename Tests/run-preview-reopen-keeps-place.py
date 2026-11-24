@@ -97,7 +97,7 @@ program = r'''
 }
 @property (strong) StandInPreviewWindow *pdfKitWindow;
 @property (strong) PDFView *myPDFKitView;
-@property (copy) NSString *shownPDFSignature, *externalPDFPendingSignature;
+@property (copy) NSString *shownPDFSignature, *shownPDFChangeTime, *externalPDFPendingSignature;
 @property NSInteger externalPDFGeneration, accepted;
 @property (strong) NSURL *fileURL;
 @property BOOL documentIsPDF, readingShowsPDF;
