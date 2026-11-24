@@ -147,6 +147,9 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)fitContentWidth {
     if (resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || !self.document.pageCount) return;
     if (self.autoScales) self.autoScales = NO;
+    // The production view fits only once the resolution-1.0 store is complete.
+    if (!TSContentWidthIsComplete(self.document, self.displayBox))
+        TSContentWidthMeasureAll(self.document, self.displayBox);
     TSContentFitWidthKeeping(self, TSContentTopOf(self), ^CGFloat(CGFloat scale) {
         [self setScaleFactor:MAX(0.2, MIN(scale, 16))];
         return self.scaleFactor;
@@ -586,9 +589,12 @@ with tempfile.TemporaryDirectory() as temp:
     subprocess.run([pdflatex, '-interaction=batchmode', '-output-directory', str(temp), str(tex)],
                    check=True, stdout=subprocess.DEVNULL, cwd=temp)
     (temp / 'test.m').write_text(program, encoding='latin1')
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'PDFKit',
                     '-I', str(temp), '-I', str(root / 'Tests'), *include_args(root),
-                    str(temp / 'test.m'), *([str(divider), str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m')] if uses_divider else []), str(root / 'Sources/Windows/TSDocumentWindowGlass.m'), '-o', str(temp / 'test')], check=True)
+                    str(temp / 'test.m'), str(root / 'Sources/Preview/TSContentWidth.m'),
+                    str(root / 'Sources/Preview/TSExternalPDFSnapshot.m'),
+                    *([str(divider), str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m')] if uses_divider else []),
+                    str(root / 'Sources/Windows/TSDocumentWindowGlass.m'), '-o', str(temp / 'test')], check=True)
     result = subprocess.run([str(temp / 'test'), str(temp / 'doc.pdf')], capture_output=True, text=True)
     output = result.stdout + result.stderr
     if args.mutation:

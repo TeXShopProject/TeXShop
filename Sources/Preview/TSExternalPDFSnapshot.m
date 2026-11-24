@@ -119,6 +119,14 @@ static NSString *TSCreateSnapshotDirectory(NSString *path, dev_t device)
 }
 @end
 
+NSURL *TSExternalPDFCloneURL(PDFDocument *document)
+{
+    if (![document isKindOfClass:[TSExternalPDFDocument class]]) return nil;
+    NSString *directory = ((TSExternalPDFDocument *)document).snapshotDirectory;
+    if (!directory.length) return nil;
+    return [NSURL fileURLWithPath:[directory stringByAppendingPathComponent:TSSnapshotName]];
+}
+
 static PDFDocument *TSPDFSnapshot(NSString *path, NSString *signature, BOOL allowLocked)
 {
     if (!signature || ![signature isEqualToString:TSExternalPDFSignature(path)]) return nil;

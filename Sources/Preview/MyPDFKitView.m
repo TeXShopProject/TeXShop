@@ -259,44 +259,117 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
 {
     if (resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || _fittingContentWidth || !self.document.pageCount)
         return;
+    if (self.document.isLocked) return;
+    // Nothing moves until every page is in the resolution-1.0 store (#62).
+    if (!TSContentWidthIsComplete(self.document, self.displayBox)) {
+        if (self.autoScales) {
+            self.autoScales = NO;
+            [self scaleChanged:nil];
+        }
+        [self measureContentLater];
+        return;
+    }
     _fittingContentWidth = YES;
     if (self.autoScales)
         self.autoScales = NO;
-    TSContentFitWidthKeeping(self, top, ^CGFloat(CGFloat scale) {
+    BOOL fitted = TSContentFitWidthKeeping(self, top, ^CGFloat(CGFloat scale) {
         [self setScaleFactor: MAX(0.2, MIN(scale, PDF_MAX_SCALE / 100.0))];
         return self.scaleFactor;
     });
     _fittingContentWidth = NO;
-    [self scaleChanged: nil];
-    [self measureContentLater];
+    if (fitted) [self scaleChanged: nil];
 }
 
-// The pages that are not measured yet are measured a few at a time; then the content of all
-// of them is fitted.
+// The finished measurement moves the view only when its edges are not already in place.
+- (void)applyMeasuredContentWidth
+{
+    if (resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || !TSContentWidthIsComplete(self.document, self.displayBox))
+        return;
+    if (!TSContentWidthShouldRefit(self)) return;
+    [self fitContentWidthKeepingTop:TSContentTopOf(self)];
+}
+
+// The pages that are not measured yet are measured away from the main thread when the
+// document allows it, and a few at a time on the main thread otherwise. The magnification
+// stays as it is until every page is known.
 - (void)measureContentLater
 {
     PDFDocument *document = self.document;
-    if (_measuringContent || resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || !document ||
-        TSContentAllMeasured(document, self.displayBox))
+    if (_measuringContent || _fittingContentWidth || resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || !document)
+        return;
+    if (document.isLocked || document.pageCount == 0 || TSContentWidthIsComplete(document, self.displayBox) ||
+        TSContentWidthHasFailure(document, self.displayBox))
         return;
     _measuringContent = YES;
     __weak MyPDFKitView *weakSelf = self;
+    PDFDisplayBox box = self.displayBox;
+    NSUInteger token = TSContentWidthTakeToken(self);
+    // The annotation walk of a long PDF stays off one long turn of the main thread (#62).
+    TSContentWidthScan scan = TSContentWidthPrepareFast(document, box, 0.008);
+    if (scan == TSContentWidthScanPending) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            MyPDFKitView *view = weakSelf;
+            if (!view || !TSContentWidthTokenCurrent(view, token)) return;
+            view->_measuringContent = NO;
+            [view measureContentLater];
+        });
+        return;
+    }
+    if (scan == TSContentWidthScanDeny) {
+        _measuringContent = NO;
+        [self measureContentWithPDFKit];
+        return;
+    }
+    if (TSContentWidthScheduleFast(self, ^(TSContentWidthResult result) {
+        MyPDFKitView *view = weakSelf;
+        if (!view || !TSContentWidthTokenCurrent(view, token)) return;
+        view->_measuringContent = NO;
+        if (view.resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || view.document != document) return;
+        if (view.displayBox != box) {
+            [view measureContentLater];
+            return;
+        }
+        if (result == TSContentWidthResultPDFKit) [view measureContentWithPDFKit];
+        else if (result == TSContentWidthResultRetry) [view measureContentLater];
+        else [view applyMeasuredContentWidth];
+    })) return;
+    _measuringContent = NO;
+    [self measureContentWithPDFKit];
+}
+
+- (void)measureContentWithPDFKit
+{
+    PDFDocument *document = self.document;
+    if (_measuringContent || resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || !document) return;
+    if (document.isLocked || document.pageCount == 0 || TSContentWidthHasFailure(document, self.displayBox)) return;
+    if (TSContentWidthIsComplete(document, self.displayBox)) {
+        [self applyMeasuredContentWidth];
+        return;
+    }
+    _measuringContent = YES;
+    __weak MyPDFKitView *weakSelf = self;
+    NSUInteger token = TSContentWidthTakeToken(self);
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [weakSelf measureContentOf:document];
+        [weakSelf measureContentOf:document token:token];
     });
 }
 
-- (void)measureContentOf:(PDFDocument *)document
+- (void)measureContentOf:(PDFDocument *)document token:(NSUInteger)token
 {
+    if (!TSContentWidthTokenCurrent(self, token)) return;
     _measuringContent = NO;
     if (resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH)
         return;
     if (document != self.document)
         [self measureContentLater];
-    else if (TSContentMeasurePages(document, self.displayBox, 0.008))
-        [self fitContentWidth];
-    else
-        [self measureContentLater];
+    else {
+        BOOL failed = NO;
+        if (!TSContentWidthMeasureSlice(document, self.displayBox, 0.008, &failed)) {
+            if (failed) TSContentWidthRecordFailure(document, self.displayBox);
+            else [self measureContentWithPDFKit];
+        } else
+            [self applyMeasuredContentWidth];
+    }
 }
 
 // Fit to Content Width, one page or one row at a time: the content of the new page or row
@@ -594,6 +667,15 @@ static PDFPage *TSPreviewDecodePopupHome(NSCoder *coder, NSString *prefix, PDFDo
     }
     totalRotation = rotation;
     [self layoutDocumentView];
+    [self contentWidthPagesChanged];
+}
+
+// Page rotation is kept on the PDFPage, not in the clone file the workers read.
+- (void)contentWidthPagesChanged
+{
+    TSContentWidthNoteDrawingDiverged(self.document);
+    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)
+        [self measureContentLater];
 }
 
 - (void)previewStateChanged
@@ -1246,6 +1328,7 @@ static PDFPage *TSPreviewDecodePopupHome(NSCoder *coder, NSString *prefix, PDFDo
 			[myPage setRotation: newAmount];
 		}
 		[self layoutDocumentView];
+		[self contentWidthPagesChanged];
 	}
 	[self setupOutline];
 		
@@ -1478,6 +1561,7 @@ if ((atLeastHighSierra) && (self.PDFFlashFix))
             [myPage setRotation: newAmount];
         }
         [self layoutDocumentView];
+        [self contentWidthPagesChanged];
     }
     [self setupOutline];
         
@@ -1829,6 +1913,7 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
             [myPage setRotation: newAmount];
         }
         [self layoutDocumentView];
+        [self contentWidthPagesChanged];
     }
     [self setupOutline];
         
@@ -2098,6 +2183,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 		newAmount = amount + 90;
 		[myPage setRotation: newAmount];
 	}
+	[self contentWidthPagesChanged];
 }
 
 
@@ -2129,6 +2215,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 		newAmount = amount - 90;
 		[myPage setRotation: newAmount];
 	}
+	[self contentWidthPagesChanged];
 }
 
 - (void) rotateCounterclockwise:sender
@@ -9401,8 +9488,13 @@ else
     // Fit to Content Width: a new PDF keeps the magnification until its pages are measured.
     // A PDF whose pages are all measured already, as when the other part of a split window
     // showed it first, is fitted now.
+    _measuringContent = NO;
+    TSContentWidthTakeToken(self);
+    TSContentWidthWatch(self);
+    if (previousDocument && previousDocument != document)
+        TSContentWidthDocumentVisibilityChanged(previousDocument);
     if (document && resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH) {
-        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))
+        if (preserveZoom && !TSContentWidthIsComplete(document, self.displayBox))
             [self measureContentLater];
         else
             [self fitContentWidth];
