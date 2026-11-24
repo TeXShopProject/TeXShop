@@ -43,8 +43,8 @@
 
 <h2>将文件移到废纸篓</h2>
 <ul>
-<li>“文件”>“删除Aux文件”（<kbd>⌃⌘A</kbd>）或控制台中的“删除Aux文件”按钮，会把文稿的辅助文件移到废纸篓。</li>
-<li>“排版”>“删除Aux文件 &amp; 开始排版”（<kbd>⌥⌘T</kbd>）会执行此操作，然后进行排版。在“排版”菜单中，按住 Option 键时，该项目会出现在“开始排版”的位置。</li>
+<li>“文件”>“删除 Aux 文件”（<kbd>⌃⌘A</kbd>）或控制台中的“删除 Aux 文件”按钮，会把文稿的辅助文件移到废纸篓。</li>
+<li>“排版”>“删除 Aux 文件 &amp; 开始排版”（<kbd>⌥⌘T</kbd>）会执行此操作，然后进行排版。在“排版”菜单中，按住 Option 键时，该项目会出现在“开始排版”的位置。</li>
 </ul>
 <p>移到废纸篓的文件，是源文件所在文件夹中与源文件同名、并带有以下扩展名之一的文件：</p>
 <pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
@@ -52,18 +52,18 @@ gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
 lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
 ttt  wrm  xref</pre>
 <p>排版中断时 SyncTeX 留下的、名称以 <code>(busy)</code> 结尾的文件也会被移到废纸篓。BibTeX 的 <code>.bbl</code> 文件会保留。</p>
-<p>在各章文件用 <code>% !TEX root</code> 指定根文件的项目中，移到废纸篓的是根文件的辅助文件，即使是在章文件中执行该命令也是如此。</p>
+<p>在各章节文件用 <code>% !TEX root</code> 指定根文件的项目中，移到废纸篓的是根文件的辅助文件，即使是在章节文件中执行该命令也是如此。</p>
 
 <h2>变体</h2>
 <ul>
-<li>在选取“删除Aux文件”或点按该按钮时按住 Shift 键，会把文稿的 PDF 文件也移到废纸篓。通常旧的 PDF 会被保留，以便排版失败时预览窗口仍有内容可显示。</li>
-<li>在选取“删除Aux文件”或点按该按钮时按住 Option 键，会清理整个项目：根文件所在文件夹及其下所有文件夹中带有上述扩展名之一的每个文件，无论名称如何，都会被移到废纸篓。这也会移除 <code>\include</code> 为子文件夹中的各章写出的 <code>.aux</code> 文件。</li>
+<li>在选取“删除 Aux 文件”或点按该按钮时按住 Shift 键，会把文稿的 PDF 文件也移到废纸篓。通常旧的 PDF 会被保留，以便排版失败时预览窗口仍有内容可显示。</li>
+<li>在选取“删除 Aux 文件”或点按该按钮时按住 Option 键，会清理整个项目：根文件所在文件夹及其下所有文件夹中带有上述扩展名之一的每个文件，无论名称如何，都会被移到废纸篓。这也会移除 <code>\include</code> 为子文件夹中的各章写出的 <code>.aux</code> 文件。</li>
 </ul>
 <p>有两项隐藏设置可以改变这一行为。要向列表中添加扩展名（例如 <code>dvi</code>），请在终端中键入</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
 <p>要恢复标准列表，请键入</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array</pre>
-<p>要让按住 Option 键时的行为成为“删除Aux文件”的标准行为：</p>
+<p>要让按住 Option 键时的行为成为“删除 Aux 文件”的标准行为：</p>
 <pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
 </main>
 </body>

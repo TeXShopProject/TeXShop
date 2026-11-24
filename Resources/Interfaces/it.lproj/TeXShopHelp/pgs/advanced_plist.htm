@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
@@ -47,23 +47,23 @@
 <tr><th>File o cartella</th><th>Contenuto</th><th>Dove modificarlo</th></tr>
 <tr><td><code>Keyboard/autocompletion.plist</code>, con <code>autocompletionPaste.plist</code> e <code>autocompletionDisplayOrder.plist</code></td><td>Associazioni dei tasti</td><td>Impostazioni › Tastiera › «Elenco delle associazioni dei tasti»</td></tr>
 <tr><td><code>CommandCompletion/CommandCompletion.txt</code></td><td>Elenco per il completamento dei comandi</td><td>Impostazioni › Tastiera › «Modifica il completamento dei comandi…»</td></tr>
-<tr><td><code>Menus/KeyEquivalents.plist</code></td><td>Abbreviazioni predefinite dei menu</td><td>Impostazioni › Tastiera, elenco delle abbreviazioni dei menu</td></tr>
-<tr><td><code>Macros/Macros_Latex.plist</code></td><td>Menu Macro</td><td>Macro › Apri Editor delle Macro...</td></tr>
+<tr><td><code>Menus/KeyEquivalents.plist</code></td><td>Scorciatoie predefinite dei menu</td><td>Impostazioni › Tastiera, elenco delle scorciatoie dei menu</td></tr>
+<tr><td><code>Macros/Macros_Latex.plist</code></td><td>Menu Macro</td><td>Macro › Apri Editor delle macro...</td></tr>
 <tr><td><code>Themes/</code></td><td>Temi dei colori</td><td>Impostazioni › Temi</td></tr>
 <tr><td><code>SpellCheck/SpellingExclusions.txt</code></td><td>Ciò che il controllo ortografico adatto a LaTeX salta</td><td>Impostazioni › Ortografia › «Modifica esclusioni LaTeX…»</td></tr>
-<tr><td><code>Engines/</code></td><td>Motori di composizione</td><td>Impostazioni › Composizione › «Modifica l’elenco dei motori…»</td></tr>
+<tr><td><code>Engines/</code></td><td>Motori di compilazione</td><td>Impostazioni › Compilazione › «Modifica l’elenco dei motori…»</td></tr>
 <tr><td><code>LatexPanel/completion.plist</code></td><td>Testi del Pannello LaTeX</td><td>A mano; consulta <a href="configure_panel.htm">Modificare il Pannello LaTeX</a></td></tr>
 <tr><td><code>MatrixPanel/matrixpanel_1.plist</code></td><td>Testi del Pannello Matrici</td><td>A mano</td></tr>
-<tr><td><code>Templates/</code>, <code>Stationery/</code></td><td>Menu Modelli, File › Nuovo da Modello…</td><td>Nel Finder; consulta <a href="basic_templates.htm">Modelli e moduli</a></td></tr>
+<tr><td><code>Templates/</code>, <code>Stationery/</code></td><td>Menu Modelli, File › Nuovo da modulo…</td><td>Nel Finder; consulta <a href="basic_templates.htm">Modelli e moduli</a></td></tr>
 </table>
-<p>Le abbreviazioni dei menu in <code>KeyEquivalents.plist</code> diventano i valori predefiniti dell’elenco delle abbreviazioni in Impostazioni › Tastiera; le abbreviazioni modificate nelle impostazioni hanno la precedenza. Consulta <a href="configure_menushortcuts.htm">Ridefinire le abbreviazioni da tastiera dei menu</a>.</p>
+<p>Le scorciatoie dei menu in <code>KeyEquivalents.plist</code> diventano i valori predefiniti dell’elenco delle scorciatoie in Impostazioni › Tastiera; le scorciatoie modificate nelle impostazioni hanno la precedenza. Consulta <a href="configure_menushortcuts.htm">Ridefinire le scorciatoie da tastiera dei menu</a>.</p>
 
 <h2>Modificare un file a mano</h2>
 <p>I file con l’estensione <code>.plist</code> sono testo XML. Si possono aprire e modificare in TeXShop, in un altro editor di testo o in Xcode. Diversi di essi iniziano con commenti che ne spiegano il formato. Conservali in UTF-8, la codifica in cui sono scritti. Modifica i colori dei temi in Impostazioni › Temi anziché nei loro file.</p>
-<p>Se un file che hai modificato smette di funzionare, spostalo fuori dalla cartella, oppure sposta la sua cartella sulla scrivania, e riavvia TeXShop: il file viene creato di nuovo con il contenuto originale.</p>
+<p>Se un file che hai modificato smette di funzionare, spostalo fuori dalla cartella, oppure sposta la sua cartella sulla Scrivania, e riavvia TeXShop: il file viene creato di nuovo con il contenuto originale.</p>
 
 <h2>File mancanti o danneggiati</h2>
-<p>Quando uno dei file di cui TeXShop ha bisogno, come le macro, le associazioni dei tasti, i testi del Pannello LaTeX e del Pannello Matrici, le abbreviazioni dei menu, l’elenco per il completamento dei comandi, le esclusioni dell’ortografia o i temi standard, manca oppure risulta danneggiato all’avvio di TeXShop, TeXShop lo sostituisce con una propria copia senza messaggi di errore. Un file danneggiato viene spostato nella cartella <code>~/Library/TeXShop/Backups</code>, in una cartella che porta la data e l’ora, così puoi recuperare da lì le tue modifiche.</p>
+<p>Quando uno dei file di cui TeXShop ha bisogno, come le macro, le associazioni dei tasti, i testi del Pannello LaTeX e del Pannello Matrici, le scorciatoie dei menu, l’elenco per il completamento dei comandi, le esclusioni dell’ortografia o i temi standard, manca oppure risulta danneggiato all’avvio di TeXShop, TeXShop lo sostituisce con una propria copia senza messaggi di errore. Un file danneggiato viene spostato nella cartella <code>~/Library/TeXShop/Backups</code>, in una cartella che porta la data e l’ora, così puoi recuperare da lì le tue modifiche.</p>
 <p>I file che potresti eliminare di proposito, come modelli, documenti modello, motori e i tuoi temi, non vengono ripristinati.</p>
 </main>
 </body>

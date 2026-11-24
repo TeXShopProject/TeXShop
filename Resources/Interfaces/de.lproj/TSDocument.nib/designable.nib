@@ -277,7 +277,7 @@
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="286">
                         <rect key="frame" x="-1" y="398" width="123" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="Zum Fehler ^⌘E" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3825">
+                        <buttonCell key="cell" type="square" title="Gehe zu Fehler" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3825">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -299,7 +299,7 @@
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="670">
                         <rect key="frame" x="363" y="398" width="142" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="Aux-Dateien löschen" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3827">
+                        <buttonCell key="cell" type="square" title="Aux-Dateien in den Papierkorb legen" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3827">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -720,7 +720,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="672">
                     <rect key="frame" x="388" y="48" width="112" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="SynchPunkte" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3860">
+                    <buttonCell key="cell" type="check" title="Sync-Punkte" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3860">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -771,7 +771,7 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Auswahl" tag="4" inset="2" id="568">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="PDF-Auswahl" tag="4" inset="2" id="568">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -1194,7 +1194,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3921">
                     <rect key="frame" x="345" y="178" width="116" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Gesamt-Pfad" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="3922">
+                    <buttonCell key="cell" type="check" title="Vollständiger Pfad" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="3922">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1415,7 +1415,7 @@ DQ
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="558">
                     <rect key="frame" x="12" y="42" width="82" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Kodierung:" id="3881">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Codierung:" id="3881">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2034,7 +2034,7 @@ DQ
                                     <action selector="showFontPanel:" target="-1" id="Twu-Ha-Nkz"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Text bearbeiten …" id="4sM-XS-7P7">
+                            <menuItem title="Text bearbeiten …" id="4sM-XS-7P7">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showTextPanel:" target="-1" id="1b2-ny-uv3"/>
@@ -2049,13 +2049,13 @@ DQ
                         <action selector="setRunMode:" target="-1" id="e3W-ZW-end"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Anmerkungen speichern" id="LJu-sa-gVg">
+                <menuItem title="Anmerkungen sichern" id="LJu-sa-gVg">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="saveAnnotations:" target="-1" id="WoR-Yr-6js"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Streams löschen" id="4BL-2o-wvc">
+                <menuItem title="Bild-Streams entfernen" id="4BL-2o-wvc">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="removeStreams:" target="-1" id="WZk-BV-YuS"/>
@@ -2064,7 +2064,7 @@ DQ
             </items>
             <point key="canvasLocation" x="1071" y="643"/>
         </menu>
-        <window title="Log-Datei" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Log" animationBehavior="default" id="1605" userLabel="Log Window" customClass="TSLogWindow">
+        <window title="Protokolldatei" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Log" animationBehavior="default" id="1605" userLabel="Log Window" customClass="TSLogWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="1217" y="199" width="622" height="601"/>
@@ -2163,7 +2163,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sLh-Fd-5Sl">
                         <rect key="frame" x="170" y="505" width="140" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Ende der Log-Datei" bezelStyle="regularSquare" imagePosition="left" inset="2" id="aYx-iu-5hQ">
+                        <buttonCell key="cell" type="check" title="Ende der Protokolldatei" bezelStyle="regularSquare" imagePosition="left" inset="2" id="aYx-iu-5hQ">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2399,7 +2399,7 @@ Gw
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mG2-Lp-xwn">
                     <rect key="frame" x="12" y="45" width="82" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Kodierung:" id="Bae-Rt-Aa3">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Codierung:" id="Bae-Rt-Aa3">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2439,7 +2439,7 @@ Gw
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ofe-lc-Nwh">
                     <rect key="frame" x="-2" y="11" width="94" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Dateityp:" id="fy4-hN-Mxa">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Dateiformat:" id="fy4-hN-Mxa">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

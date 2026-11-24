@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Macro</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="macro; menu Macro; Editor delle Macro; abbreviazione delle macro; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
+<meta name="description" content="macro; menu Macro; Editor delle macro; scorciatoia delle macro; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,8 +15,8 @@
 <li><a href="basic_preliminaries.htm">Preliminari</a></li>
 <li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
 <li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Comporre i documenti</a></li>
-<li><a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
 <li><a href="basic_preview.htm">La finestra di anteprima</a></li>
 <li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
 <li><a href="basic_find.htm">Trova e sostituisci</a></li>
@@ -42,15 +42,15 @@
 <h1>Macro</h1>
 <p>Il menu Macro, e l’elemento «Macro» della barra strumenti, contengono comandi che inseriscono codice LaTeX nel sorgente o eseguono script AppleScript. Alcune delle macro fornite con TeXShop:</p>
 <ul>
-<li>Program, Encoding e Root scrivono le righe <code>% !TEX</code> che scelgono il motore di composizione, la codifica e il file principale di un documento. Scegli il motore o la codifica dall’elenco che mostra Program o Encoding, oppure il file principale nella finestra di dialogo che apre Root; la riga viene scritta correttamente all’inizio del sorgente.</li>
+<li>Program, Encoding e Root scrivono le righe <code>% !TEX</code> che scelgono il motore di compilazione, la codifica e il file principale di un documento. Scegli il motore o la codifica dall’elenco che mostra Program o Encoding, oppure il file principale nella finestra di dialogo che apre Root; la riga viene scritta correttamente all’inizio del sorgente.</li>
 <li>Insert Begin/End trasforma la parola nel punto di inserimento o la parola selezionata, come <code>theorem</code>, in una coppia <code>\begin{theorem}</code> … <code>\end{theorem}</code>, con il punto di inserimento tra le due righe.</li>
 <li>Sottomenu come Headings, Mathematics, Lists, Tables e Figures inseriscono codice LaTeX di uso comune.</li>
 </ul>
 
-<h2>L’Editor delle Macro</h2>
-<p>Scegli Macro › Apri Editor delle Macro... per vedere come è definita ogni macro, modificarla o aggiungere macro tue. L’elenco a sinistra è il menu Macro: trascina le voci per riordinarle, e usa la barra sotto l’elenco per aggiungere voci, sottomenu e separatori. Il testo di una macro viene inserito nel sorgente. In questo testo, dei segnaposto arrotondati rappresentano il testo selezionato, il testo negli appunti e la posizione del punto di inserimento; sceglili dal menu «Inserisci» sotto il testo.</p>
-<p>Per assegnare a una macro un’abbreviazione da tastiera, selezionala nell’elenco, fai clic sulla sua abbreviazione (o fai doppio clic) e premi i tasti. Un’abbreviazione usa il tasto Comando o Controllo, oppure è un tasto funzione. Se un comando di menu o un’altra macro la usa già, l’Editor delle Macro lo segnala.</p>
-<p>Le macro sono conservate in <code>~/Library/TeXShop/Macros/Macros_Latex.plist</code>. Per dare delle macro ad altri, selezionale nell’Editor delle Macro e scegli Macro › Salva la selezione...; per aggiungere le macro di un file di questo tipo, scegli Macro › Aggiungi macro da un file....</p>
+<h2>L’Editor delle macro</h2>
+<p>Scegli Macro › Apri Editor delle macro... per vedere come è definita ogni macro, modificarla o aggiungere macro tue. L’elenco a sinistra è il menu Macro: trascina le voci per riordinarle, e usa la barra sotto l’elenco per aggiungere voci, sottomenu e separatori. Il testo di una macro viene inserito nel sorgente. In questo testo, dei segnaposto arrotondati rappresentano il testo selezionato, il testo negli appunti e la posizione del punto di inserimento; sceglili dal menu «Inserisci» sotto il testo.</p>
+<p>Per assegnare a una macro una scorciatoia da tastiera, selezionala nell’elenco, fai clic sulla sua scorciatoia (o fai doppio clic) e premi i tasti. Una scorciatoia usa il tasto Comando o Controllo, oppure è un tasto funzione. Se un comando di menu o un’altra macro la usa già, l’Editor delle macro lo segnala.</p>
+<p>Le macro sono conservate in <code>~/Library/TeXShop/Macros/Macros_Latex.plist</code>. Per dare delle macro ad altri, selezionale nell’Editor delle macro e scegli Macro › Salva la selezione in un file...; per aggiungere le macro di un file di questo tipo, scegli Macro › Aggiungi macro da un file....</p>
 <p>Il capitolo <a href="macros.htm">Aiuto sulle macro</a> spiega le macro in dettaglio, comprese le <a href="macros_applescript.htm">macro AppleScript</a>.</p>
 </main>
 </body>

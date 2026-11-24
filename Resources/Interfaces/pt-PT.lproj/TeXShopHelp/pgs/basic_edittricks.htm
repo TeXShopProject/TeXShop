@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Truques de edição</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="truques de edição; parênteses correspondentes; selecionar linhas; comentar; avanço; menu Marcas; Fechar ambiente atual; dividir o código-fonte; arrastar e largar; barra de estado; estatísticas; Trocar com a área de transferência; Copiar com estilo; Conversão do tipo de carácter; ficheiro de cópia de segurança">
+<meta name="description" content="truques de edição; parênteses correspondentes; selecionar linhas; comentar; indentação; menu Etiquetas; Fechar ambiente atual; dividir o código-fonte; arrastar e largar; barra de estado; estatísticas; Trocar com a área de transferência; Copiar com estilo; Conversão do tipo de carácter; ficheiro de cópia de segurança">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -45,13 +45,13 @@
 
 <p>Faça duplo clique num parêntese, como ( ou }, para selecionar tudo o que está entre ele e o parêntese correspondente; isto ajuda a encontrar uma chaveta em falta. Faça duplo clique com a tecla Opção premida para selecionar apenas o parêntese. Clique ou arraste sobre os números de linha para selecionar linhas inteiras. O grupo «Correspondência de parênteses» de Definições › Editor define como os parênteses correspondentes são mostrados enquanto escreve.</p>
 
-<h2>Comentários e avanço</h2>
+<h2>Comentários e indentação</h2>
 
-<p>Código-fonte › Comentar (<kbd>⌘{</kbd>) coloca % no início das linhas selecionadas, e Código-fonte › Não comentar (<kbd>⌘}</kbd>) remove-o. Código-fonte › Recolher parágrafo e Código-fonte › Não recolher deslocam as linhas selecionadas para a direita ou para a esquerda, uma tabulação quando «Usar tabulações no menu de indentação» está ativado em Definições › Editor › Estilo do editor e, caso contrário, tantos espaços como a «Largura da tabulação». Uma nova linha começa com as mesmas tabulações e espaços da linha anterior; prima Delete para os remover.</p>
+<p>Código-fonte › Comentar (<kbd>⌘{</kbd>) coloca % no início das linhas selecionadas, e Código-fonte › Não comentar (<kbd>⌘}</kbd>) remove-o. Código-fonte › Aumentar indentação e Código-fonte › Diminuir indentação deslocam as linhas selecionadas para a direita ou para a esquerda, uma tabulação quando «Usar tabulações no menu de indentação» está ativado em Definições › Editor › Estilo do editor e, caso contrário, tantos espaços como a «Largura da tabulação». Uma nova linha começa com as mesmas tabulações e espaços da linha anterior; prima Delete para os remover.</p>
 
 <h2>Percorrer o código-fonte</h2>
 
-<p>O menu «Marcas» da barra de ferramentas enumera os capítulos, as secções e as outras divisões do documento; escolha uma para ir até lá. Uma linha que começa com <code>%:</code> acrescenta o resto da linha ao menu como uma entrada sua. «Menu de etiquetas na barra de menus», em Definições › Editor › Visualização, coloca o mesmo menu na barra de menus. O item «Rótulos» da barra de ferramentas enumera as etiquetas do documento. Editar › Mostrar linha... (<kbd>⌘L</kbd>) vai para uma linha pelo seu número.</p>
+<p>O menu «Etiquetas» da barra de ferramentas enumera os capítulos, as secções e as outras divisões do documento; escolha uma para ir até lá. Uma linha que começa com <code>%:</code> acrescenta o resto da linha ao menu como uma entrada sua. «Menu Etiquetas na barra de menus», em Definições › Editor › Visualização, coloca o mesmo menu na barra de menus. O item «Rótulos» da barra de ferramentas enumera os rótulos (<code>\label</code>) do documento. Edição › Mostrar linha... (<kbd>⌘L</kbd>) vai para uma linha pelo seu número.</p>
 
 <p>Janela › Dividir janela (<kbd>⌃2</kbd>), ou o item «Dividir janela» da barra de ferramentas, divide a janela do código-fonte em duas partes que mostram o mesmo texto, para que possa ler uma parte do documento enquanto escreve outra. Mantenha premida a tecla Opção para a dividir lado a lado. O que escreve numa parte aparece também na outra.</p>
 
@@ -89,17 +89,17 @@
 
 <p>A barra de estado por baixo do código-fonte mostra as linhas, os caracteres e as palavras do documento, com os números da seleção entre parênteses, e a posição, a linha e a coluna do ponto de inserção. Os caracteres são contados tal como se veem, pelo que uma letra acentuada ou um emoji conta como um, e os comandos do TeX são contados tal como estão escritos; um emoji também conta como uma palavra. O tamanho do ficheiro guardado é mostrado à direita. Código-fonte › Mostrar barra de estado mostra ou oculta a barra de estado em todas as janelas.</p>
 
-<p>«Estatísticas do texto…» na barra de estado, ou Editar › Estatísticas..., conta o texto sem os comandos do TeX. O programa detex do TeX Live remove-os do documento, ou da seleção, e acrescenta os ficheiros lidos com <code>\input</code> e <code>\include</code>; o TeXShop conta o que resta da mesma forma que a barra de estado. Não é necessário que o documento esteja guardado. A contagem é feita quando o popover se abre e quando se clica no respetivo botão de atualização.</p>
+<p>«Estatísticas do texto…» na barra de estado, ou Edição › Estatísticas..., conta o texto sem os comandos do TeX. O programa detex do TeX Live remove-os do documento, ou da seleção, e acrescenta os ficheiros lidos com <code>\input</code> e <code>\include</code>; o TeXShop conta o que resta da mesma forma que a barra de estado. Não é necessário que o documento esteja guardado. A contagem é feita quando o popover se abre e quando se clica no respetivo botão de atualização.</p>
 
 <h2>A área de transferência</h2>
 
-<p>Editar › Trocar com a área de transferência substitui a seleção pelo texto da área de transferência e coloca a seleção na área de transferência. Para trocar dois trechos de texto, copie o primeiro, selecione o segundo e escolha «Trocar com a área de transferência»; depois selecione o local do primeiro e cole. Quando nada está selecionado, este comando cola.</p>
+<p>Edição › Trocar com a área de transferência substitui a seleção pelo texto da área de transferência e coloca a seleção na área de transferência. Para trocar dois trechos de texto, copie o primeiro, selecione o segundo e escolha «Trocar com a área de transferência»; depois selecione o local do primeiro e cole. Quando nada está selecionado, este comando cola.</p>
 
-<p>Editar › Copiar com estilo copia a seleção com o tipo de letra do código-fonte e com as cores do tema do modo claro ou do modo escuro, com ou sem a cor de fundo, para colar num processador de texto, numa apresentação ou num e-mail. Cada um dos seus quatro itens pode receber um atalho em Definições › Teclado.</p>
+<p>Edição › Copiar com estilo copia a seleção com o tipo de letra do código-fonte e com as cores do tema do modo claro ou do modo escuro, com ou sem a cor de fundo, para colar num processador de texto, numa apresentação ou num e-mail. Cada um dos seus quatro itens pode receber um atalho em Definições › Teclado.</p>
 
 <h2>Converter caracteres</h2>
 
-<p>Os submenus «Conversão do tipo de carácter» e «Normalização Unicode» do menu Editar, que estão também no menu de contexto do código-fonte, reescrevem a seleção; se nada estiver selecionado, o TeXShop pergunta se deve reescrever o documento inteiro. «Conversão do tipo de carácter» destina-se sobretudo a documentos em japonês. Converte entre hiragana e katakana, entre dígitos e letras de largura total e de meia largura, entre caracteres como os números dentro de círculos e os comandos do pacote ajmacros, e entre caracteres fora de JIS X 0208 e os comandos <code>\UTF</code> e <code>\CID</code> do pacote otf. Também transforma aspas tipográficas em aspas do TeX. «Normalização Unicode» converte a seleção para NFC, NFD, NFKC ou NFKD, ou para Modified NFC ou Modified NFD, que deixam inalterados os ideogramas de compatibilidade CJK. Ambas as conversões podem ser anuladas.</p>
+<p>Os submenus «Conversão do tipo de carácter» e «Normalização Unicode» do menu Edição, que estão também no menu de contexto do código-fonte, reescrevem a seleção; se nada estiver selecionado, o TeXShop pergunta se deve reescrever o documento inteiro. «Conversão do tipo de carácter» destina-se sobretudo a documentos em japonês. Converte entre hiragana e katakana, entre dígitos e letras de largura total e de meia largura, entre caracteres como os números dentro de círculos e os comandos do pacote ajmacros, e entre caracteres fora de JIS X 0208 e os comandos <code>\UTF</code> e <code>\CID</code> do pacote otf. Também transforma aspas tipográficas em aspas do TeX. «Normalização Unicode» converte a seleção para NFC, NFD, NFKC ou NFKD, ou para Modified NFC ou Modified NFD, que deixam inalterados os ideogramas de compatibilidade CJK. Ambas as conversões podem ser anuladas.</p>
 
 <h2>Ficheiros de cópia de segurança</h2>
 

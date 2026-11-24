@@ -66,7 +66,7 @@ pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
 <p>Documenten die u daarna opent, tonen Oregon in het venstermenu naast de knop ‘Zet’. Om het formaat voor één document te gebruiken, ongeacht wat daar is gekozen, voegt u deze regel bovenaan de bron toe:</p>
 <pre>% !TEX program = Oregon</pre>
 <p>Om het de standaard te maken, kiest u ‘Engine-bestand’ bij Instellingen › Zetten › Engine › ‘Nieuwe documenten zetten met’, en Oregon in het menu ‘Engine-bestand’. Zie <a href="advanced_addengine.htm">Zet-engines toevoegen</a>.</p>
-<p>Voor een formaat voor plain TeX gebruikt u in de engine <code>pdftex</code> in plaats van <code>pdflatex</code>. Voor een formaat dat via DVI wordt gebruikt, moet de engine het DVI-bestand ook naar pdf omzetten, bijvoorbeeld met <code>dvipdfmx "${1:r}.dvi"</code> in een zsh-script, omdat TeXShop het pdf-bestand met de naam van de bron toont.</p>
+<p>Voor een formaat voor plain TeX gebruikt u in de engine <code>pdftex</code> in plaats van <code>pdflatex</code>. Voor een formaat dat via DVI wordt gebruikt, moet de engine het DVI-bestand ook naar PDF omzetten, bijvoorbeeld met <code>dvipdfmx "${1:r}.dvi"</code> in een zsh-script, omdat TeXShop het PDF-bestand met de naam van de bron toont.</p>
 </main>
 </body>
 </html>

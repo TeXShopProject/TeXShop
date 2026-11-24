@@ -288,7 +288,7 @@
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="630">
                         <rect key="frame" x="286" y="398" width="78" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="Parar" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3826">
+                        <buttonCell key="cell" type="square" title="Interromper" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3826">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -999,12 +999,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="357">
                     <rect key="frame" x="17" y="186" width="71" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Marcas" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="359" id="3842">
+                    <popUpButtonCell key="cell" type="push" title="Etiquetas" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="359" id="3842">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="358">
                             <items>
-                                <menuItem title="Marcas" state="on" hidden="YES" id="359"/>
+                                <menuItem title="Etiquetas" state="on" hidden="YES" id="359"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -1055,12 +1055,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UxI-pZ-QKJ">
                     <rect key="frame" x="817" y="52" width="71" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Marcas" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="1q5-uq-LcM" id="Wyq-zK-JWu">
+                    <popUpButtonCell key="cell" type="push" title="Etiquetas" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="1q5-uq-LcM" id="Wyq-zK-JWu">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="dJv-qC-n6L">
                             <items>
-                                <menuItem title="Marcas" hidden="YES" id="1q5-uq-LcM"/>
+                                <menuItem title="Etiquetas" hidden="YES" id="1q5-uq-LcM"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -1211,7 +1211,7 @@ DQ
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="0wU-22-9dN">
                             <items>
-                                <menuItem title="Labels" state="mixed" hidden="YES" id="ClC-rh-Br1">
+                                <menuItem title="Rótulos" state="mixed" hidden="YES" id="ClC-rh-Br1">
                                     <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 </menuItem>
                             </items>
@@ -1229,7 +1229,7 @@ DQ
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="gZ0-5N-1zV">
                             <items>
-                                <menuItem title="Labels" state="mixed" hidden="YES" id="Lfq-8e-TaJ">
+                                <menuItem title="Rótulos" state="mixed" hidden="YES" id="Lfq-8e-TaJ">
                                     <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 </menuItem>
                             </items>
@@ -2171,7 +2171,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uYV-Xj-Zuv">
                         <rect key="frame" x="179" y="520" width="150" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="informação de fonte" bezelStyle="regularSquare" imagePosition="left" inset="2" id="zzH-cL-AFU">
+                        <buttonCell key="cell" type="check" title="tipos de letra" bezelStyle="regularSquare" imagePosition="left" inset="2" id="zzH-cL-AFU">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2179,7 +2179,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jqT-eV-hmy">
                         <rect key="frame" x="179" y="500" width="158" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="fim do arquivo de log" bezelStyle="regularSquare" imagePosition="left" inset="2" id="H2k-CG-rRB">
+                        <buttonCell key="cell" type="check" title="fim do registo" bezelStyle="regularSquare" imagePosition="left" inset="2" id="H2k-CG-rRB">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2187,7 +2187,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tvY-tP-mea">
                         <rect key="frame" x="336" y="560" width="151" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="arquivos .tex usados" bezelStyle="regularSquare" imagePosition="left" inset="2" id="3mB-AJ-eid">
+                        <buttonCell key="cell" type="check" title="ficheiros .tex usados" bezelStyle="regularSquare" imagePosition="left" inset="2" id="3mB-AJ-eid">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2195,7 +2195,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tey-Ba-mLd">
                         <rect key="frame" x="336" y="540" width="185" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="arquivos .sty e .cls usados" bezelStyle="regularSquare" imagePosition="left" inset="2" id="4JV-a3-lDl">
+                        <buttonCell key="cell" type="check" title="ficheiros .sty e .cls usados" bezelStyle="regularSquare" imagePosition="left" inset="2" id="4JV-a3-lDl">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>

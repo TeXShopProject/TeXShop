@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Supprimer les fichiers AUX</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="Fichiers .aux vers corbeille; Fichiers .aux vers corbeille &amp; Composer; aux; log; fichiers auxiliaires; OtherTrashExtensions; AggressiveTrashAUX">
+<meta name="description" content="Fichiers AUX à la corbeille; Fichiers AUX à la corbeille et composer; aux; log; fichiers auxiliaires; OtherTrashExtensions; AggressiveTrashAUX">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -43,8 +43,8 @@
 
 <h2>Placer les fichiers dans la Corbeille</h2>
 <ul>
-<li>Fichier › Fichiers .aux vers corbeille (<kbd>⌃⌘A</kbd>), ou le bouton « Fichiers aux. Corbeille » de la console, place les fichiers auxiliaires du document dans la Corbeille.</li>
-<li>Composition › Fichiers .aux vers corbeille &amp; Composer (<kbd>⌥⌘T</kbd>) fait la même chose, puis compose. Dans le menu Composition, cette commande apparaît à la place de « Composer » tant que vous maintenez la touche Option enfoncée.</li>
+<li>Fichier › Fichiers AUX à la corbeille (<kbd>⌃⌘A</kbd>), ou le bouton « Fichiers AUX à la corbeille » de la console, place les fichiers auxiliaires du document dans la Corbeille.</li>
+<li>Composition › Fichiers AUX à la corbeille et composer (<kbd>⌥⌘T</kbd>) fait la même chose, puis compose. Dans le menu Composition, cette commande apparaît à la place de « Composer » tant que vous maintenez la touche Option enfoncée.</li>
 </ul>
 <p>Les fichiers placés dans la Corbeille sont ceux du dossier de la source qui portent son nom et l’une de ces extensions :</p>
 <pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
@@ -56,14 +56,14 @@ ttt  wrm  xref</pre>
 
 <h2>Variantes</h2>
 <ul>
-<li>Maintenez la touche Maj enfoncée en choisissant « Fichiers .aux vers corbeille » ou en cliquant sur le bouton pour placer aussi le fichier PDF du document dans la Corbeille. D’habitude, l’ancien PDF est conservé, afin que la fenêtre d’aperçu ait quelque chose à afficher si la composition échoue.</li>
-<li>Maintenez la touche Option enfoncée en choisissant « Fichiers .aux vers corbeille » ou en cliquant sur le bouton pour nettoyer tout un projet : tous les fichiers portant l’une des extensions ci-dessus, dans le dossier du fichier racine et dans tous les dossiers qu’il contient, sont placés dans la Corbeille, quel que soit leur nom. Cela supprime aussi les fichiers <code>.aux</code> que <code>\include</code> écrit pour les chapitres situés dans des sous-dossiers.</li>
+<li>Maintenez la touche Maj enfoncée en choisissant « Fichiers AUX à la corbeille » ou en cliquant sur le bouton pour placer aussi le fichier PDF du document dans la Corbeille. D’habitude, l’ancien PDF est conservé, afin que la fenêtre d’aperçu ait quelque chose à afficher si la composition échoue.</li>
+<li>Maintenez la touche Option enfoncée en choisissant « Fichiers AUX à la corbeille » ou en cliquant sur le bouton pour nettoyer tout un projet : tous les fichiers portant l’une des extensions ci-dessus, dans le dossier du fichier racine et dans tous les dossiers qu’il contient, sont placés dans la Corbeille, quel que soit leur nom. Cela supprime aussi les fichiers <code>.aux</code> que <code>\include</code> écrit pour les chapitres situés dans des sous-dossiers.</li>
 </ul>
 <p>Deux réglages cachés modifient ce comportement. Pour ajouter des extensions à la liste, par exemple <code>dvi</code>, tapez dans Terminal</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
 <p>et pour revenir à la liste standard</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array</pre>
-<p>Pour faire du comportement avec Option le comportement standard de « Fichiers .aux vers corbeille » :</p>
+<p>Pour faire du comportement avec Option le comportement standard de « Fichiers AUX à la corbeille » :</p>
 <pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
 </main>
 </body>

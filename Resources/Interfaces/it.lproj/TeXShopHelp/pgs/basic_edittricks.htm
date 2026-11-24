@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Trucchi di scrittura</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="trucchi di scrittura; parentesi corrispondenti; selezionare righe; commento; rientranza; menu Etichette; Chiudi Ambiente Corrente; dividere il sorgente; trascinamento; barra di stato; statistiche; Scambia con gli appunti; Copia con stile; Conversione tipo di carattere; file di backup">
+<meta name="description" content="trucchi di scrittura; parentesi corrispondenti; selezionare righe; commento; rientranza; menu Tag; Chiudi ambiente corrente; dividere il sorgente; trascinamento; barra di stato; statistiche; Scambia con gli appunti; Copia con stile; Conversione tipo di carattere; file di backup">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,8 +15,8 @@
 <li><a href="basic_preliminaries.htm">Preliminari</a></li>
 <li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
 <li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Comporre i documenti</a></li>
-<li><a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
 <li><a href="basic_preview.htm">La finestra di anteprima</a></li>
 <li><a href="basic_edittricks.htm" class="current">Trucchi di scrittura</a></li>
 <li><a href="basic_find.htm">Trova e sostituisci</a></li>
@@ -47,17 +47,17 @@
 
 <h2>Commenti e rientranza</h2>
 
-<p>Sorgente › Aggiungi Commento (<kbd>⌘{</kbd>) mette % all’inizio delle righe selezionate, e Sorgente › Rimuovi Commento (<kbd>⌘}</kbd>) lo toglie. Sorgente › Aumenta Rientranza e Sorgente › Diminuisci Rientranza spostano le righe selezionate a destra o a sinistra, di una tabulazione quando «Usa tabulazione per la rientranza» è attivo in Impostazioni › Editor › Stile, altrimenti di tanti spazi quanti ne indica «Ampiezza tabulazione». Una nuova riga inizia con le stesse tabulazioni e gli stessi spazi della riga precedente; premi Elimina per toglierli.</p>
+<p>Sorgente › Aggiungi commento (<kbd>⌘{</kbd>) mette % all’inizio delle righe selezionate, e Sorgente › Rimuovi commento (<kbd>⌘}</kbd>) lo toglie. Sorgente › Aumenta rientranza e Sorgente › Diminuisci rientranza spostano le righe selezionate a destra o a sinistra, di una tabulazione quando «Usa tabulazione per la rientranza» è attivo in Impostazioni › Editor › Stile, altrimenti di tanti spazi quanti ne indica «Ampiezza tabulazione». Una nuova riga inizia con le stesse tabulazioni e gli stessi spazi della riga precedente; premi Elimina per toglierli.</p>
 
 <h2>Muoversi nel sorgente</h2>
 
-<p>Il menu «Etichette» della barra strumenti elenca i capitoli, le sezioni e le altre suddivisioni del documento; scegline una per andarci. Una riga che inizia con <code>%:</code> aggiunge il resto della riga al menu come voce personale. «Etichette nella barra dei menù» in Impostazioni › Editor › Visualizzazione mette lo stesso menu nella barra dei menu. L’altro elemento «Etichette» della barra strumenti, quello delle etichette, elenca le etichette del documento. Modifica › Vai alla riga... (<kbd>⌘L</kbd>) va a una riga in base al numero.</p>
+<p>Il menu «Tag» della barra strumenti elenca i capitoli, le sezioni e le altre suddivisioni del documento; scegline una per andarci. Una riga che inizia con <code>%:</code> aggiunge il resto della riga al menu come voce personale. «Menu Tag nella barra dei menu» in Impostazioni › Editor › Visualizzazione mette lo stesso menu nella barra dei menu. L’elemento «Etichette» della barra strumenti elenca le etichette del documento. Modifica › Vai alla riga... (<kbd>⌘L</kbd>) va a una riga in base al numero.</p>
 
 <p>Finestra › Dividi finestra (<kbd>⌃2</kbd>), oppure l’elemento «Dividi finestra» della barra strumenti, divide la finestra sorgente in due parti che mostrano lo stesso testo, così puoi leggere una parte del documento mentre ne scrivi un’altra. Tieni premuto Opzione per dividerla in due parti affiancate. Ciò che scrivi in una parte compare anche nell’altra.</p>
 
 <h2>Scrivere meno</h2>
 
-<p>Sorgente › Chiudi Ambiente Corrente (<kbd>⌃⌘C</kbd>) aggiunge la riga <code>\end</code> dell’ambiente ancora aperto, per esempio <code>\end{itemize}</code> dopo un elenco. Il completamento dei comandi termina i comandi e gli ambienti che hai iniziato a scrivere; consulta <a href="basic_commandcompletion.htm">Completamento dei comandi</a>. Le associazioni dei tasti sostituiscono un carattere digitato con un testo; consulta <a href="basic_autocompletion.htm">Associazioni dei tasti</a>. Il pannello LaTeX, il pannello Matrici e il menu Macro inseriscono porzioni di testo più lunghe.</p>
+<p>Sorgente › Chiudi ambiente corrente (<kbd>⌃⌘C</kbd>) aggiunge la riga <code>\end</code> dell’ambiente ancora aperto, per esempio <code>\end{itemize}</code> dopo un elenco. Il completamento dei comandi termina i comandi e gli ambienti che hai iniziato a scrivere; consulta <a href="basic_commandcompletion.htm">Completamento dei comandi</a>. Le associazioni dei tasti sostituiscono un carattere digitato con un testo; consulta <a href="basic_autocompletion.htm">Associazioni dei tasti</a>. Il pannello LaTeX, il pannello Matrici e il menu Macro inseriscono porzioni di testo più lunghe.</p>
 
 <h2>Trascinare file sul sorgente</h2>
 
@@ -75,7 +75,7 @@
 
 <p>Qui <var>percorso</var> è il percorso del file a partire dalla cartella del file sorgente, e <var>nome</var> è il nome del file senza estensione. Un alias trascinato viene sostituito dal file che rappresenta, che TeX non saprebbe trovare da solo. Un file il cui percorso contiene uno spazio non viene inserito; TeXShop mostra invece un avviso.</p>
 
-<p>Per inserire qualcos’altro per un tipo di file, apri l’Editor delle Macro (Macro › Apri Editor delle Macro...) e aggiungi un sottomenu chiamato <code>Drag &amp; Drop</code>. Al suo interno, aggiungi una voce chiamata come l’estensione, per esempio <code>.pdf</code>, il cui contenuto è il testo da inserire, per esempio <code>\includegraphics[#INS#]{%r}</code>; una voce chiamata <code>.*</code> vale per ogni altra estensione, cioè per quelle che non hanno una voce propria e non compaiono nella tabella qui sopra. Il contenuto può usare queste abbreviazioni:</p>
+<p>Per inserire qualcos’altro per un tipo di file, apri l’Editor delle macro (Macro › Apri Editor delle macro...) e aggiungi un sottomenu chiamato <code>Drag &amp; Drop</code>. Al suo interno, aggiungi una voce chiamata come l’estensione, per esempio <code>.pdf</code>, il cui contenuto è il testo da inserire, per esempio <code>\includegraphics[#INS#]{%r}</code>; una voce chiamata <code>.*</code> vale per ogni altra estensione, cioè per quelle che non hanno una voce propria e non compaiono nella tabella qui sopra. Il contenuto può usare queste abbreviazioni:</p>
 
 <dl>
 <dt><code>%F</code></dt><dd>il percorso completo del file trascinato</dd>
@@ -95,7 +95,7 @@
 
 <p>Modifica › Scambia con gli appunti sostituisce la selezione con il testo negli appunti e mette la selezione negli appunti. Per scambiare due porzioni di testo, copia la prima, seleziona la seconda e scegli «Scambia con gli appunti», poi seleziona il punto della prima e incolla. Quando non c’è nulla di selezionato, incolla.</p>
 
-<p>Modifica › Copia con stile copia la selezione nel font del sorgente e con i colori del tema della modalità chiara o della modalità scura, con o senza il colore di sfondo, da incollare in un programma di videoscrittura, in una presentazione o in un’email. A ciascuna delle sue quattro voci si può assegnare un’abbreviazione in Impostazioni › Tastiera.</p>
+<p>Modifica › Copia con stile copia la selezione nel font del sorgente e con i colori del tema della modalità chiara o della modalità scura, con o senza il colore di sfondo, da incollare in un programma di videoscrittura, in una presentazione o in un’email. A ciascuna delle sue quattro voci si può assegnare una scorciatoia in Impostazioni › Tastiera.</p>
 
 <h2>Convertire i caratteri</h2>
 

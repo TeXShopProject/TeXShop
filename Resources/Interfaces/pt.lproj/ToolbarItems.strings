@@ -12,8 +12,8 @@ tiLabelTypeset				= "Compor";
 tiPaletteLabelTypeset			= "Compor";
 tiToolTipTypeset			= "Executar o programa de composição";
 
-tiLabelSharing				= "Compartilhamento";
-tiPaletteLabelSharing		= "Compartilhamento";
+tiLabelSharing				= "Compartilhar";
+tiPaletteLabelSharing		= "Compartilhar";
 tiToolTipSharing			= "Compartilhar texto e imagens";
 
 
@@ -59,7 +59,7 @@ tiToolTipNextPage			= "Mostrar a página seguinte";
 
 tiLabelGotoPage				= "Ir para pág.";
 tiPaletteLabelGotoPage			= "Ir para pág.";
-tiToolTipGotoPage			= "Saltar para a página...";
+tiToolTipGotoPage			= "Ir para a página";
 
 tiLabelMagnification			= "Ampliação";
 tiPaletteLabelMagnification		= "Ampliação";
@@ -69,9 +69,9 @@ tiLabelTemplates			= "Modelos";
 tiPaletteLabelTemplates			= "Modelos";
 tiToolTipTemplates			= "Escolher um modelo para inserir";
 
-tiLabelTags				= "Marcas";
-tiPaletteLabelTags			= "Marcas";
-tiToolTipTags				= "Escolher uma marca para saltar";
+tiLabelTags				= "Etiquetas";
+tiPaletteLabelTags			= "Etiquetas";
+tiToolTipTags				= "Escolher uma etiqueta para ir até ela";
 
 tiLabelPreviousPageButton		= "Anterior";
 tiPaletteLabelPreviousPageButton	= "Página anterior";
@@ -93,12 +93,12 @@ tiLabelAutoComplete			= "Associações de teclas";
 tiPaletteLabelAutoComplete		= "Associações de teclas";
 tiToolTipAutoComplete			= "Ativar/desativar associações de teclas";
 
-tiLabelSplit				= "Dividir Janela";
-tiPaletteLabelSplit			= "Dividir Janela";
+tiLabelSplit				= "Dividir janela";
+tiPaletteLabelSplit			= "Dividir janela";
 tiToolTipSplit				= "Alternar dividir janela; clique mantendo a tecla Option pressionada para dividir verticalmente";
 
-tiLabelSplitKIT				= "Dividir Janela";
-tiPaletteLabelSplitKIT		= "Dividir Janela";
+tiLabelSplitKIT				= "Dividir janela";
+tiPaletteLabelSplitKIT		= "Dividir janela";
 tiToolTipSplitKIT			= "Alternar dividir janela; clique mantendo a tecla Option pressionada para dividir verticalmente";
 "tiToolTipSplitKITContinuous" = "Alternar dividir janela; clique mantendo a tecla Option pressionada para dividir verticalmente, ou a tecla Shift para continuar as páginas abaixo";
 
@@ -120,23 +120,23 @@ tiToolTipSyncMarks			= "Exibir marcas de sincronismo";
 
 tiLabelTypesetKIT				= "Compor";
 tiPaletteLabelTypesetKIT		= "Compor";
-tiToolTipTypesetKIT				= "Executar programa de composição";
+tiToolTipTypesetKIT				= "Executar o programa de composição";
 
-tiLabelSharingKIT				= "Compartilhamento";
-tiPaletteLabelSharingKIT		= "Compartilhamento";
+tiLabelSharingKIT				= "Compartilhar";
+tiPaletteLabelSharingKIT		= "Compartilhar";
 tiToolTipSharingKIT				= "Compartilhar texto e imagens";
 
 tiLabelProgramKIT				= "Programa";
 tiPaletteLabelProgramKIT		= "Programa";
-tiToolTipProgramKIT				= "Escolher programa de composição";
+tiToolTipProgramKIT				= "Escolher o programa de composição";
 
 tiLabelPreviousPageButtonKIT		= "Anterior";
 tiPaletteLabelPreviousPageButtonKIT	= "Página anterior";
-tiToolTipPreviousPageButtonKIT		= "Exibir página anterior";
+tiToolTipPreviousPageButtonKIT		= "Mostrar a página anterior";
 
 tiLabelNextPageButtonKIT			= "Seguinte";
 tiPaletteLabelNextPageButtonKIT		= "Página seguinte";
-tiToolTipNextPageButtonKIT			= "Exibir próxima página";
+tiToolTipNextPageButtonKIT			= "Mostrar a página seguinte";
 
 tiLabelGotoPageKIT				= "Ir para a página";
 tiPaletteLabelGotoPageKIT		= "Ir para a página";
@@ -154,8 +154,8 @@ tiLabelMouseModeKIT				= "Modo do Mouse";
 tiPaletteLabelMouseModeKIT		= "Modo do Mouse";
 tiToolTipMouseModeScroll = "Rolar: arrastar para mover o documento";
 tiToolTipMouseModeSelectText = "Selecionar texto: arrastar para selecionar texto para copiar";
-tiToolTipMouseModeMagnify = "Ampliar: manter pressionado para ver através de uma lupa pequena";
-tiToolTipMouseModeMagnifyLarge = "Ampliar (grande): manter pressionado para ver através de uma lupa grande";
+tiToolTipMouseModeMagnify = "Lupa: manter pressionado para ver através de uma lupa pequena";
+tiToolTipMouseModeMagnifyLarge = "Lupa (grande): manter pressionado para ver através de uma lupa grande";
 tiToolTipMouseModeSelectPDF = "Selecionar PDF: arrastar para selecionar uma área para copiar como imagem";
 
 tiLabelSyncMarksKIT				= "Marcas sinc.";
@@ -192,13 +192,13 @@ tiLabelMacrosSplit				= "Macros";
 tiPaletteLabelMacrosSplit		= "Macros";
 tiToolTipMacrosSplit			= "Inserir macros";
 
-tiLabelTagsSplit				= "Marcas";
-tiPaletteLabelTagsSplit         = "Marcas";
-tiToolTipTagsSplit              = "Escolher uma marca para saltar";
+tiLabelTagsSplit				= "Etiquetas";
+tiPaletteLabelTagsSplit         = "Etiquetas";
+tiToolTipTagsSplit              = "Escolher uma etiqueta para ir até ela";
 
 tiLabelGotoPageSplit			= "Ir para pág.";
 tiPaletteLabelGotoPageSplit     = "Ir para pág.";
-tiToolTipGotoPageSplit          = "Saltar para a página...";
+tiToolTipGotoPageSplit          = "Ir para a página";
 
 tiLabelMagnificationSplit		= "Ampliação";
 tiPaletteLabelMagnificationSplit   = "Ampliação";
@@ -212,8 +212,8 @@ tiLabelTemplatesSplit            =  "Modelos";
 tiPaletteLabelTemplatesSplit            =  "Modelos";
 tiToolTipTemplatesSplit            = "Escolher um modelo para inserir";
 
-tiLabelSharingSplit                = "Compartilhamento";
-tiPaletteLabelSharingSplit        = "Compartilhamento";
+tiLabelSharingSplit                = "Compartilhar";
+tiPaletteLabelSharingSplit        = "Compartilhar";
 tiToolTipSharingSplit            = "Compartilhar texto e imagens";
 
 tiLabelMouseModeKITSplit                = "Modo do Mouse";
@@ -254,7 +254,7 @@ tiToolTipHtmlSearch           = "Buscar";
 /* Experiment preview tools */
 "ExperimentToolScroll" = "Rolar";
 "ExperimentToolSelectText" = "Selecionar texto";
-"ExperimentToolMagnify" = "Ampliar";
+"ExperimentToolMagnify" = "Lupa";
 "ExperimentToolSelectPDF" = "Selecionar PDF";
 "ExperimentZoomOut" = "Reduzir";
 "ExperimentZoomIn" = "Ampliar";

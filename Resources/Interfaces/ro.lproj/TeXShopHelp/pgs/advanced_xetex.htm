@@ -44,8 +44,8 @@
 <h2>Compilarea cu XeLaTeX sau LuaLaTeX</h2>
 <p>Există trei căi, de la cea mai generală la cea mai specifică:</p>
 <ul>
-<li><strong>Profilul motorului.</strong> În Configurări › Compunere › „Profilul motorului”, alegeți XeLaTeX sau LuaLaTeX. Profilul setează comenzile LaTeX și plain TeX din „PDF direct” la xelatex și xetex, respectiv lualatex și luatex, astfel încât alegerea LaTeX din bara de instrumente și Compilare › LaTeX să folosească acel motor. Înainte să confirmați, o foaie listează valorile pe care le setează profilul.</li>
-<li><strong>Fișierul de motor.</strong> Motoarele LuaLaTeX și XeLaTeX se află în meniul pop-up de lângă butonul „Compilare”. Pentru a compila documentele noi cu unul dintre ele, alegeți „Fișier de motor” în Configurări › Compunere › Motor › „Culege documentele noi cu”, iar motorul în meniul „Fișier de motor”; inițial acolo este ales LuaLaTeX.</li>
+<li><strong>Profilul motorului.</strong> În Configurări › Compilare › „Profilul motorului”, alegeți XeLaTeX sau LuaLaTeX. Profilul setează comenzile LaTeX și plain TeX din „PDF direct” la xelatex și xetex, respectiv lualatex și luatex, astfel încât alegerea LaTeX din bara de instrumente și Compilare › LaTeX să folosească acel motor. Înainte să confirmați, o foaie listează valorile pe care le setează profilul.</li>
+<li><strong>Fișierul de motor.</strong> Motoarele LuaLaTeX și XeLaTeX se află în meniul pop-up de lângă butonul „Compilare”. Pentru a compila documentele noi cu unul dintre ele, alegeți „Fișier de motor” în Configurări › Compilare › Motor › „Compilați documentele noi cu”, iar motorul în meniul „Fișier de motor”; inițial acolo este ales LuaLaTeX.</li>
 <li><strong>Comentariul special.</strong> O linie la începutul sursei alege motorul pentru acel document, indiferent de celelalte setări:
 <pre>% !TEX program = LuaLaTeX</pre></li>
 </ul>
@@ -61,7 +61,7 @@
 \begin{document}
 Text in Palatino, \textsf{and in Helvetica Neue}.
 \end{document}</pre>
-<p>Fără fontspec sau fără o comandă de font, ambele motoare folosesc Latin Modern, fontul standard al LaTeX. Pachete precum polyglossia sau babel configurează despărțirea în silabe și convențiile altor limbi; documentația lor este disponibilă cu Ajutor › Afișează ajutorul pentru pachet....</p>
+<p>Fără fontspec sau fără o comandă de font, ambele motoare folosesc Latin Modern, fontul standard al LaTeX. Pachete precum polyglossia sau babel configurează despărțirea în silabe și convențiile altor limbi; documentația lor este disponibilă cu Ajutor › Afișați ajutorul pentru pachet....</p>
 
 <h2>Tastarea altor scrieri</h2>
 <p>Pentru a tasta în greacă, chirilică, arabă, ebraică sau alte scrieri, adăugați sursele de introducere ale acestora în Configurări sistem › Tastatură și comutați între ele cu meniul de introducere din bara de meniuri. TeXShop poate afișa aliniate la dreapta rândurile în arabă, ebraică și persană; consultați <a href="advanced_encoding.htm">Codificări</a>. Salvați astfel de documente în UTF-8, codificarea implicită pentru documentele noi.</p>

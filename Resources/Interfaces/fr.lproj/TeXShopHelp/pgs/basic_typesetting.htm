@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Composer des documents</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="composition; premier document; Composer; console; erreurs; Aller à l’erreur; Arrêter; Fichiers .aux vers corbeille; profil du moteur; % !TEX program; fichier racine; SyncTeX; Utiliser une seule fenêtre">
+<meta name="description" content="composition; premier document; Composer; console; erreurs; Aller à l’erreur; Arrêter; Fichiers AUX à la corbeille; profil du moteur; % !TEX program; fichier racine; SyncTeX; Utiliser une seule fenêtre">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -43,7 +43,7 @@
 
 <h2>Un premier document</h2>
 
-<p>Choisissez Fichier › Nouveau. Dans la barre d’outils de la nouvelle fenêtre, choisissez LatexTemplate dans le menu « Modèle » ; la fenêtre se remplit des lignes dont tout document LaTeX a besoin. Écrivez votre texte entre <code>\begin{document}</code> et <code>\end{document}</code>. Une ligne vide commence un nouveau paragraphe.</p>
+<p>Choisissez Fichier › Nouveau. Dans la barre d’outils de la nouvelle fenêtre, choisissez LatexTemplate dans le menu « Modèles » ; la fenêtre se remplit des lignes dont tout document LaTeX a besoin. Écrivez votre texte entre <code>\begin{document}</code> et <code>\end{document}</code>. Une ligne vide commence un nouveau paragraphe.</p>
 
 <p>Cliquez sur « Composer » dans la barre d’outils, ou appuyez sur <kbd>⌘T</kbd> (Composition › Composer). La première fois, TeXShop demande où enregistrer le document. TeX écrit plusieurs fichiers à côté de la source ; donnez donc à chaque document son propre dossier. TeXShop exécute ensuite TeX et ouvre une fenêtre d’aperçu avec le document composé.</p>
 
@@ -59,9 +59,9 @@
 
 <h2>Trouver les erreurs</h2>
 
-<p>« Aller à l'erreur » dans la console, ou Édition › Erreur (<kbd>⌃⌘E</kbd>), fait défiler la source jusqu’à la ligne de la première erreur et la met en évidence ; choisissez-le de nouveau pour l’erreur suivante. Si l’erreur se trouve dans un autre fichier du projet, ce fichier est ouvert. Corriger quelques erreurs puis composer de nouveau est souvent le plus rapide, car une erreur peut en provoquer plusieurs autres. Cette fonction s’appuie sur les noms de fichiers et les numéros de ligne que TeX écrit avec <code>-file-line-error</code>, option qu’utilisent les commandes et les fichiers de moteur de TeXShop.</p>
+<p>« Aller à l’erreur » dans la console, ou Édition › Aller à l’erreur (<kbd>⌃⌘E</kbd>), fait défiler la source jusqu’à la ligne de la première erreur et la met en évidence ; choisissez-le de nouveau pour l’erreur suivante. Si l’erreur se trouve dans un autre fichier du projet, ce fichier est ouvert. Corriger quelques erreurs puis composer de nouveau est souvent le plus rapide, car une erreur peut en provoquer plusieurs autres. Cette fonction s’appuie sur les noms de fichiers et les numéros de ligne que TeX écrit avec <code>-file-line-error</code>, option qu’utilisent les commandes et les fichiers de moteur de TeXShop.</p>
 
-<p>LaTeX écrit des informations pour sa prochaine exécution, comme la table des matières et les renvois, dans un fichier .aux et d’autres fichiers auxiliaires ; un document peut donc nécessiter deux ou trois exécutions avant que toutes les références soient justes. Une erreur peut laisser ces fichiers endommagés, et le document peut alors ne plus se composer, même une fois l’erreur corrigée. Choisissez Composition › Fichiers .aux vers corbeille &amp; Composer (<kbd>⌥⌘T</kbd>) pour placer les fichiers auxiliaires dans la Corbeille et composer de nouveau, ou Fichier › Fichiers .aux vers corbeille (<kbd>⌃⌘A</kbd>), également présent sous forme de bouton dans la console. Voir <a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a>.</p>
+<p>LaTeX écrit des informations pour sa prochaine exécution, comme la table des matières et les renvois, dans un fichier .aux et d’autres fichiers auxiliaires ; un document peut donc nécessiter deux ou trois exécutions avant que toutes les références soient justes. Une erreur peut laisser ces fichiers endommagés, et le document peut alors ne plus se composer, même une fois l’erreur corrigée. Choisissez Composition › Fichiers AUX à la corbeille et composer (<kbd>⌥⌘T</kbd>) pour placer les fichiers auxiliaires dans la Corbeille et composer de nouveau, ou Fichier › Fichiers AUX à la corbeille (<kbd>⌃⌘A</kbd>), également présent sous forme de bouton dans la console. Voir <a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a>.</p>
 
 <h2 id="engine">Choisir le moteur</h2>
 

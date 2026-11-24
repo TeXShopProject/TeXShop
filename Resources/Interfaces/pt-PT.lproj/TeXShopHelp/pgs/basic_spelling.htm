@@ -44,7 +44,7 @@
 
 <h2>Verificar um documento</h2>
 
-<p>As palavras com erros são sublinhadas enquanto escreve, desde que Editar › Ortografia e gramática › Corrigir ortografia ao escrever esteja ativado. Para percorrer o documento palavra a palavra, escolha Editar › Ortografia e gramática › Mostrar ortografia e gramática (<kbd>⌘:</kbd>): o painel mostra a primeira palavra com erro a seguir ao ponto de inserção. Clique em «Procurar seguinte» no painel, ou escolha «Corrigir documento agora» (<kbd>⌘;</kbd>), para ir para a seguinte. Mantenha premida a tecla Opção ao fazê-lo para usar a procura do macOS, que não ignora nenhuma marcação.</p>
+<p>As palavras com erros são sublinhadas enquanto escreve, desde que Edição › Ortografia e gramática › Corrigir ortografia ao escrever esteja ativado. Para percorrer o documento palavra a palavra, escolha Edição › Ortografia e gramática › Mostrar ortografia e gramática (<kbd>⌘:</kbd>): o painel mostra a primeira palavra com erro a seguir ao ponto de inserção. Clique em «Procurar seguinte» no painel, ou escolha «Corrigir documento agora» (<kbd>⌘;</kbd>), para ir para a seguinte. Mantenha premida a tecla Opção ao fazê-lo para usar a procura do macOS, que não ignora nenhuma marcação.</p>
 
 <p>Para substituir uma palavra em todo o lado, escreva a substituição no campo «Substituição para Alterar tudo» do painel, ou selecione uma sugestão, e clique em «Alterar tudo»; um «Desfazer» anula a alteração. Depois de editar o documento ou de selecionar outro texto, clique novamente em «Procurar seguinte» antes de alterar uma palavra. Se tiver editado o campo «Substituição para Alterar tudo» e quiser uma sugestão que estava selecionada, selecione primeiro outra sugestão e depois essa; quando só há uma sugestão, escreva-a. «Esquecer palavras aprendidas…», no submenu «Ortografia e gramática», enumera as palavras do documento que foram aprendidas para o idioma atual e remove do dicionário as que selecionar. «Corrigir ortografia automaticamente», no mesmo submenu, altera as palavras enquanto escreve; está desativado de início, o que convém ao TeX, onde também alteraria comandos.</p>
 
@@ -61,7 +61,7 @@
 
 <h2>Regras de exclusão</h2>
 
-<p>As regras da verificação ortográfica adaptada ao LaTeX estão no ficheiro ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Abra-o com «Editar exclusões de LaTeX…» nas Definições ou com Editar › Ortografia e gramática › Editar exceções de ortografia…; o ficheiro abre-se no TeXShop, e o seu início explica o formato. Por exemplo, estas linhas ignoram o primeiro argumento de um comando <code>\mycommand</code> e o conteúdo do ambiente <code>proof</code>:</p>
+<p>As regras da verificação ortográfica adaptada ao LaTeX estão no ficheiro ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Abra-o com «Editar exclusões de LaTeX…» nas Definições ou com Edição › Ortografia e gramática › Editar exclusões de ortografia…; o ficheiro abre-se no TeXShop, e o seu início explica o formato. Por exemplo, estas linhas ignoram o primeiro argumento de um comando <code>\mycommand</code> e o conteúdo do ambiente <code>proof</code>:</p>
 <pre>skip-args  1  mycommand
 skip-body  proof</pre>
 <p>As alterações produzem efeito na verificação ortográfica seguinte. Se o ficheiro for apagado, o TeXShop cria uma nova cópia do ficheiro predefinido no arranque seguinte. Para não ignorar nada, deixe nele apenas linhas de comentário.</p>

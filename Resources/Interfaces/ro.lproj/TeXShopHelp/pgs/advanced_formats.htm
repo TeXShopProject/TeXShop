@@ -56,7 +56,7 @@
 <h2>Folosirea unui format în TeXShop</h2>
 <ol>
 <li>Mutați <code>uo.fmt</code> în dosarul <code>~/Library/texmf/web2c</code>, creând dosarele dacă este nevoie, pentru ca TeX să îl găsească din orice dosar.</li>
-<li>În Finder, deschideți <code>~/Library/TeXShop/Engines</code> (TeXShop › Deschide ~/Library/TeXShop), duplicați un motor precum <code>XeLaTeX.engine</code> și redenumiți copia, de exemplu <code>Oregon.engine</code>. Numele apare în TeXShop și nu trebuie să corespundă formatului.</li>
+<li>În Finder, deschideți <code>~/Library/TeXShop/Engines</code> (TeXShop › Deschideți ~/Library/TeXShop), duplicați un motor precum <code>XeLaTeX.engine</code> și redenumiți copia, de exemplu <code>Oregon.engine</code>. Numele apare în TeXShop și nu trebuie să corespundă formatului.</li>
 <li>Deschideți copia în TeXShop și modificați ultima linie, astfel încât motorul să arate așa:
 <pre>#!/bin/tcsh
 
@@ -65,7 +65,7 @@ pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
 </ol>
 <p>Documentele deschise după aceea listează Oregon în meniul pop-up de lângă butonul „Compilare”. Pentru a folosi formatul într-un document indiferent de ce este ales acolo, adăugați această linie la începutul sursei:</p>
 <pre>% !TEX program = Oregon</pre>
-<p>Pentru a-l face implicit, alegeți „Fișier de motor” în Configurări › Compunere › Motor › „Culege documentele noi cu”, iar în meniul „Fișier de motor” alegeți Oregon. Consultați <a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a>.</p>
+<p>Pentru a-l face implicit, alegeți „Fișier de motor” în Configurări › Compilare › Motor › „Compilați documentele noi cu”, iar în meniul „Fișier de motor” alegeți Oregon. Consultați <a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a>.</p>
 <p>Pentru un format plain TeX, folosiți în motor <code>pdftex</code> în loc de <code>pdflatex</code>. Pentru un format folosit „Prin DVI”, motorul trebuie să convertească și fișierul DVI în PDF, de exemplu cu <code>dvipdfmx "${1:r}.dvi"</code> într-un script zsh, deoarece TeXShop afișează fișierul PDF cu numele sursei.</p>
 </main>
 </body>

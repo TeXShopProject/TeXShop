@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm" class="current">ConTeXt e MetaPost</a></li>
@@ -43,7 +43,7 @@
 <p>ConTeXt è un pacchetto di macro di Hans Hagen, un’alternativa a LaTeX con comandi propri e una forte attenzione al progetto tipografico. TeX Live include ConTeXt, e ConTeXt Garden distribuisce una versione, aggiornata spesso, che si installa nella tua cartella Inizio.</p>
 <p>I motori per ConTeXt si trovano in <code>~/Library/TeXShop/Engines/Inactive/ConTeXt</code>, insieme alla guida <code>Setting-Up-ConTeXt.pdf</code> e ad alcuni documenti di esempio:</p>
 <table>
-<tr><th>Motore</th><th>Compone con</th></tr>
+<tr><th>Motore</th><th>Compila con</th></tr>
 <tr><td><code>ConTeXt.engine</code></td><td>il ConTeXt di TeX Live che funziona su LuaTeX</td></tr>
 <tr><td><code>ConTeXt-TL.engine</code></td><td>il ConTeXt di TeX Live che funziona su luametatex</td></tr>
 <tr><td><code>ConTeXt-CG.engine</code></td><td>la versione di ConTeXt Garden nella tua cartella Inizio</td></tr>
@@ -51,13 +51,13 @@
 <p>Sposta il motore che ti serve in <code>~/Library/TeXShop/Engines</code> e scrivi delle righe speciali all’inizio del file principale del documento, per esempio:</p>
 <pre>% !TEX program = ConTeXt-TL
 % !TEX useConTeXtSyncParser</pre>
-<p>Per ConTeXt-CG, inserisci la cartella dei programmi dell’installazione di ConTeXt Garden nel campo «Secondi motori TeX» di Impostazioni › Composizione › Percorsi e aggiungi la riga <code>% !TEX useAlternatePath</code>, con cui TeXShop passa al motore quella cartella invece di quella di TeX Live.</p>
+<p>Per ConTeXt-CG, inserisci la cartella dei programmi dell’installazione di ConTeXt Garden nel campo «Secondi motori TeX» di Impostazioni › Compilazione › Percorsi e aggiungi la riga <code>% !TEX useAlternatePath</code>, con cui TeXShop passa al motore quella cartella invece di quella di TeX Live.</p>
 <p>Per la sincronizzazione tra sorgente e anteprima, aggiungi <code>\setupsynctex[state=start,method=min]</code> all’impostazione del documento; la riga <code>% !TEX useConTeXtSyncParser</code> fa sì che TeXShop usi il codice di sincronizzazione proprio di ConTeXt. Il capitolo su ConTeXt di Aiuto › Manuale di TeXShop (in inglese) descrive in dettaglio l’installazione della versione di ConTeXt Garden e ogni motore.</p>
-<p>Per elencare nel menu Etichette i comandi di sezione di ConTeXt come <code>\title</code> e <code>\subject</code>, attiva l’impostazione nascosta ConTeXtTags; consulta <a href="configure_hidden.htm">Impostazioni nascoste</a>.</p>
+<p>Per elencare nel menu Tag i comandi di sezione di ConTeXt come <code>\title</code> e <code>\subject</code>, attiva l’impostazione nascosta ConTeXtTags; consulta <a href="configure_hidden.htm">Impostazioni nascoste</a>.</p>
 
 <h2>MetaPost</h2>
 <p>MetaPost, di John Hobby, disegna illustrazioni a partire da una descrizione in un linguaggio di programmazione derivato da METAFONT di Knuth. Il suo manuale fa parte di TeX Live: scegli Aiuto › Mostra aiuto per il pacchetto... e digita <code>metapost</code>.</p>
-<p>Compilatore › MetaPost (<kbd>⇧⌘M</kbd>), oppure MetaPost nel menu a comparsa accanto al pulsante «Compila», esegue MetaPost sul file che ha il nome del documento attivo e l’estensione <code>.mp</code>: sul documento stesso se è un file <code>.mp</code>, altrimenti sul file <code>.mp</code> che gli sta accanto, come quello che il pacchetto mfpic scrive per un documento <code>.tex</code>. Esegue il comando di Impostazioni › Composizione › Strumenti correlati › MetaPost, che è <code>mpost</code> per impostazione predefinita. I profili del motore impostano questo campo: <code>pmpost</code> per pLaTeX + dvipdfmx e <code>upmpost</code> per upLaTeX + dvipdfmx, che compongono il testo giapponese nelle etichette, e <code>mpost</code> per gli altri profili. LuaLaTeX non può includere figure le cui etichette in giapponese sono state composte da pmpost o upmpost; con LuaLaTeX, disegna queste figure all’interno del documento con il pacchetto luamplib.</p>
+<p>Compila › MetaPost (<kbd>⇧⌘M</kbd>), oppure MetaPost nel menu a comparsa accanto al pulsante «Compila», esegue MetaPost sul file che ha il nome del documento attivo e l’estensione <code>.mp</code>: sul documento stesso se è un file <code>.mp</code>, altrimenti sul file <code>.mp</code> che gli sta accanto, come quello che il pacchetto mfpic scrive per un documento <code>.tex</code>. Esegue il comando di Impostazioni › Compilazione › Strumenti correlati › MetaPost, che è <code>mpost</code> per impostazione predefinita. I profili del motore impostano questo campo: <code>pmpost</code> per pLaTeX + dvipdfmx e <code>upmpost</code> per upLaTeX + dvipdfmx, che compilano il testo giapponese nelle etichette, e <code>mpost</code> per gli altri profili. LuaLaTeX non può includere figure le cui etichette in giapponese sono state composte da pmpost o upmpost; con LuaLaTeX, disegna queste figure all’interno del documento con il pacchetto luamplib.</p>
 <p>Per salvare un nuovo file come file MetaPost, scegli il tipo mp nel menu «Tipo di file» della finestra di dialogo Salva.</p>
 <p>I motori nv-metapost e nv-metafun, di Nicola Vitacolonna, semplificano il lavoro con MetaPost e MetaFun e mostrano le figure di un file nella finestra di anteprima. Si trovano in <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>; il file <code>README.pdf</code> e la cartella <code>examples</code>, un livello più su in <code>MetaPostEngines-1.4.7</code>, spiegano come installarli e usarli e forniscono file di esempio. Per esempio, un file che inizia con</p>
 <pre>% !TEX program = nv-metafun
@@ -66,8 +66,8 @@ beginfig(1);
   draw fullcircle scaled 2cm withcolor red;
 endfig;
 end</pre>
-<p>viene composto con nv-metafun quando quel motore si trova nella cartella Engines.</p>
-<p>I disegni MetaPost si possono scrivere anche all’interno di un documento LaTeX, con il pacchetto luamplib per LuaLaTeX, oppure con pacchetti come mfpic, che scrivono i disegni in un file <code>.mp</code> elaborato da MetaPost tra due composizioni.</p>
+<p>viene compilato con nv-metafun quando quel motore si trova nella cartella Engines.</p>
+<p>I disegni MetaPost si possono scrivere anche all’interno di un documento LaTeX, con il pacchetto luamplib per LuaLaTeX, oppure con pacchetti come mfpic, che scrivono i disegni in un file <code>.mp</code> elaborato da MetaPost tra due compilazioni.</p>
 </main>
 </body>
 </html>

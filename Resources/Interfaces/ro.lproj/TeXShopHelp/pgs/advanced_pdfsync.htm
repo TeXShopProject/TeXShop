@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sincronizarea sursei cu previzualizarea</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="SyncTeX; sincronizare; sincronizarea sursei; Comandă-clic; Metoda de sincronizare; Caută în PDF; synctex.gz; projectfile; useConTeXtSyncParser">
+<meta name="description" content="SyncTeX; sincronizare; sincronizarea sursei; Comandă-clic; Metoda de sincronizare; Căutare în PDF; synctex.gz; projectfile; useConTeXtSyncParser">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -42,18 +42,18 @@
 <p>Faceți Comandă-clic pe un cuvânt din fereastra sursă, iar fereastra de previzualizare derulează la locul corespunzător și îl marchează. Faceți Comandă-clic pe un loc din fereastra de previzualizare, iar fișierul sursă se deschide, dacă este necesar, la linia corespunzătoare, care este marcată. Culorile celor două marcaje se setează în Configurări › Teme › „SyncTeX”, la „Previzualizare” și „Sursă”.</p>
 
 <h2>SyncTeX</h2>
-<p>TeXShop sincronizează cu SyncTeX. Când TeX este rulat cu opțiunea <code>-synctex=1</code>, scrie lângă PDF un fișier precum <code>Galois.synctex.gz</code>, care înregistrează unde a ajuns pe pagină fiecare bucată din sursă. Comenzile de compilare din Configurări › Compunere, așa cum le setează profilurile motorului, și motoarele pe care TeXShop le pune în <code>~/Library/TeXShop/Engines</code> și care rulează TeX folosesc deja această opțiune. Un motor pe care îl adăugați acolo, inclusiv unul dintre motoarele opționale din dosarul Inactive, o folosește doar dacă o are în comanda lui. Într-un motor propriu, adăugați <code>-synctex=1</code> la apelul lui TeX (cu una sau două cratime; orice motor le acceptă pe ambele).</p>
+<p>TeXShop sincronizează cu SyncTeX. Când TeX este rulat cu opțiunea <code>-synctex=1</code>, scrie lângă PDF un fișier precum <code>Galois.synctex.gz</code>, care înregistrează unde a ajuns pe pagină fiecare bucată din sursă. Comenzile de compilare din Configurări › Compilare, așa cum le setează profilurile motorului, și motoarele pe care TeXShop le pune în <code>~/Library/TeXShop/Engines</code> și care rulează TeX folosesc deja această opțiune. Un motor pe care îl adăugați acolo, inclusiv unul dintre motoarele opționale din dosarul Inactive, o folosește doar dacă o are în comanda lui. Într-un motor propriu, adăugați <code>-synctex=1</code> la apelul lui TeX (cu una sau două cratime; orice motor le acceptă pe ambele).</p>
 <p>Fișierul synctex conține căile complete ale fișierelor sursă. După ce un dosar de proiect este mutat, copiat sau trimis altcuiva, sincronizarea nu face nimic până când documentul nu este compilat din nou.</p>
 <p>SyncTeX nu este complet exact: locul căutat poate fi puțin înainte sau după marcaj.</p>
 
 <h2>Proiecte cu mai multe fișiere</h2>
-<p>Într-un proiect ale cărui fișiere de capitol indică fișierul principal cu <code>% !TEX root</code> (consultați <a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a>), Comandă-clic într-un fișier de capitol duce la locul lui în previzualizarea întregului document, iar Comandă-clic în previzualizare deschide fișierul de capitol care conține locul pe care ați făcut clic. Cu Configurări › Compunere › „Sincronizarea sursei și a previzualizării” › „Deschide ca file în fereastra fișierului principal fișierele accesate prin sincronizare” activată, un fișier deschis astfel se alătură ferestrei fișierului principal ca filă, în loc să se deschidă în propria fereastră.</p>
+<p>Într-un proiect ale cărui fișiere de capitol indică fișierul principal cu <code>% !TEX root</code> (consultați <a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a>), Comandă-clic într-un fișier de capitol duce la locul lui în previzualizarea întregului document, iar Comandă-clic în previzualizare deschide fișierul de capitol care conține locul pe care ați făcut clic. Cu Configurări › Compilare › „Sincronizarea sursei și a previzualizării” › „Deschideți ca file în fereastra fișierului principal fișierele accesate prin sincronizare” activată, un fișier deschis astfel se alătură ferestrei fișierului principal ca filă, în loc să se deschidă în propria fereastră.</p>
 
 <h2>Metoda de sincronizare</h2>
-<p>Configurări › Compunere › „Sincronizarea sursei și a previzualizării” › „Metoda de sincronizare” are două variante:</p>
+<p>Configurări › Compilare › „Sincronizarea sursei și a previzualizării” › „Metoda de sincronizare” are două variante:</p>
 <dl>
 <dt>SyncTeX (recomandat)</dt><dd>Folosește fișierul synctex, așa cum s-a descris mai sus. Aceasta este valoarea implicită.</dd>
-<dt>Caută în PDF</dt><dd>Caută în PDF textul din jurul clicului, iar în sursă textul din jurul unui clic din previzualizare. Nu are nevoie de fișierul synctex, dar eșuează acolo unde textul cules diferă de sursă, ca în formule și în textul cu multe comenzi. Pentru a găsi fișierul unui loc din previzualizare, caută în fișierele indicate în comenzile <code>\include</code> și <code>\input</code> ale fișierului principal. Pentru proiectele care includ fișiere în alt mod, listați-le în fișierul principal cu linii precum
+<dt>Căutare în PDF</dt><dd>Caută în PDF textul din jurul clicului, iar în sursă textul din jurul unui clic din previzualizare. Nu are nevoie de fișierul synctex, dar eșuează acolo unde textul cules diferă de sursă, ca în formule și în textul cu multe comenzi. Pentru a găsi fișierul unui loc din previzualizare, caută în fișierele indicate în comenzile <code>\include</code> și <code>\input</code> ale fișierului principal. Pentru proiectele care includ fișiere în alt mod, listați-le în fișierul principal cu linii precum
 <pre>% !TEX projectfile = chapter2.tex
 % !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
 Un nume este o cale completă sau o cale relativă la fișierul principal; aceste linii pot fi oriunde în fișierul principal.</dd>

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Scrivere script con i comandi di composizione di TeXShop</title>
+<title>Scrivere script con i comandi di compilazione di TeXShop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; sequenza di comandi di composizione">
+<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; sequenza di comandi di compilazione">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -20,13 +20,13 @@
 <li><a href="macros_includedscripts.htm">Macro AppleScript predefinite</a></li>
 <li><a href="macros_defapplescript.htm">Definire macro AppleScript</a></li>
 <li><a href="macros_dialogs.htm">Creare finestre di dialogo</a></li>
-<li><a href="macros_writingcompletescripts.htm" class="current">Scrivere script con i comandi di composizione di TeXShop</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">Scrivere script con i comandi di compilazione di TeXShop</a></li>
 <li><a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Scrivere script con i comandi di composizione di TeXShop</h1>
-<p>Un documento con una bibliografia richiede una sequenza di composizioni: LaTeX scrive il file .aux, BibTeX lo usa per scrivere i file .bbl e .blg, LaTeX viene eseguito di nuovo per aggiungere la bibliografia al documento e un’altra volta ancora per aggiornarne i riferimenti. I tuoi progetti potrebbero richiedere sequenze simili, e una macro AppleScript può eseguirle al posto tuo.</p>
+<h1>Scrivere script con i comandi di compilazione di TeXShop</h1>
+<p>Un documento con una bibliografia richiede una sequenza di compilazioni: LaTeX scrive il file .aux, BibTeX lo usa per scrivere i file .bbl e .blg, LaTeX viene eseguito di nuovo per aggiungere la bibliografia al documento e un’altra volta ancora per aggiornarne i riferimenti. I tuoi progetti potrebbero richiedere sequenze simili, e una macro AppleScript può eseguirle al posto tuo.</p>
 <p>La macro Macro › Applescript › Bibliography, fornita con TeXShop, mostra come fare. Ecco il suo contenuto:</p>
 <pre>--Applescript
 
@@ -78,9 +78,9 @@ tell document frontName of application "TeXShop"
     end repeat
 
 end tell</pre>
-<p>La prima riga fa di questa una macro AppleScript eseguita da ScriptRunner, così può chiedere a TeXShop di comporre (consulta <a href="macros_applescript.htm">Macro AppleScript</a>). Le righe successive controllano #FILEPATH#, il percorso completo del file sorgente. È una stringa vuota quando il documento non è ancora stato salvato; in tal caso lo script ti chiede di salvarlo e si ferma.</p>
-<p>Lo script si riferisce poi al documento tramite #DOCUMENTNAME#. TeXShop salva il documento da sé quando inizia un comando di composizione, quindi lo script non ha bisogno di salvarlo.</p>
-<p>I comandi rimanenti eseguono latexinteractive, bibtex, latex e latex. Un comando di composizione restituisce subito il controllo allo script, prima che la composizione sia terminata, perciò dopo ogni comando un ciclo <code>repeat</code> attende finché <code>taskdone</code> segnala che il lavoro è completato. La riga <code>delay 2</code> fa sì che lo script faccia una pausa tra un controllo e l’altro, invece di chiedere di continuo e rallentare il computer. I comandi sono elencati in <a href="macros_defapplescript.htm">Definire macro AppleScript</a>.</p>
+<p>La prima riga fa di questa una macro AppleScript eseguita da ScriptRunner, così può chiedere a TeXShop di compilare (consulta <a href="macros_applescript.htm">Macro AppleScript</a>). Le righe successive controllano #FILEPATH#, il percorso completo del file sorgente. È una stringa vuota quando il documento non è ancora stato salvato; in tal caso lo script ti chiede di salvarlo e si ferma.</p>
+<p>Lo script si riferisce poi al documento tramite #DOCUMENTNAME#. TeXShop salva il documento da sé quando inizia un comando di compilazione, quindi lo script non ha bisogno di salvarlo.</p>
+<p>I comandi rimanenti eseguono latexinteractive, bibtex, latex e latex. Un comando di compilazione restituisce subito il controllo allo script, prima che la compilazione sia terminata, perciò dopo ogni comando un ciclo <code>repeat</code> attende finché <code>taskdone</code> segnala che il lavoro è completato. La riga <code>delay 2</code> fa sì che lo script faccia una pausa tra un controllo e l’altro, invece di chiedere di continuo e rallentare il computer. I comandi sono elencati in <a href="macros_defapplescript.htm">Definire macro AppleScript</a>.</p>
 </main>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Includerea imaginilor</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="includerea imaginilor; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; Convertește TIFF">
+<meta name="description" content="includerea imaginilor; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; Convertiți TIFF">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,8 +24,8 @@
 <li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
 <li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
 <li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
-<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
-<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
 <li><a href="basic_macros.htm">Macrocomenzi</a></li>
 <li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
 <li><a href="basic_graphics.htm" class="current">Includerea imaginilor</a></li>
@@ -52,7 +52,7 @@
 <p>Un fișier EPS deschis în TeXShop este și el convertit: TeXShop scrie un fișier PDF cu același nume lângă el sau într-un dosar temporar, când în dosarul fișierului EPS nu se poate scrie, și îl afișează.</p>
 
 <h2>Fișiere TIFF</h2>
-<p>LaTeX nu poate include fișiere TIFF. Alegeți Fișier › Convertește TIFF cât timp o fereastră sursă este activă: un dialog afișează dosarul documentului, în care pot fi alese doar fișiere TIFF. Selectați unul sau mai multe și faceți clic pe „Convertiți”. Fiecare este convertit într-un fișier PNG cu același nume, în același dosar; fișierele TIFF sunt păstrate.</p>
+<p>LaTeX nu poate include fișiere TIFF. Alegeți Fișier › Convertiți TIFF cât timp o fereastră sursă este activă: un dialog afișează dosarul documentului, în care pot fi alese doar fișiere TIFF. Selectați unul sau mai multe și faceți clic pe „Convertiți”. Fiecare este convertit într-un fișier PNG cu același nume, în același dosar; fișierele TIFF sunt păstrate.</p>
 
 <h2>Compilarea prin DVI</h2>
 <p>Documentele care folosesc cod PostScript, de exemplu cu pachetul pstricks, sunt compilate cu metoda „Prin DVI”, care rulează în mod implicit dvips. Imaginile sunt atunci incluse în format EPS; fișierele PDF, PNG și JPEG nu pot fi folosite. Profilurile motorului ale căror nume se termină în „+ dvipdfmx” compilează și ele „Prin DVI”, dar rulează dvipdfmx în loc de dvips; cu <code>\usepackage[dvipdfmx]{graphicx}</code>, acolo pot fi folosite fișiere PDF, PNG și JPEG. Consultați <a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a>.</p>

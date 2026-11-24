@@ -2,18 +2,18 @@
 
 tiLabelSave				= "Enregistrer";
 tiPaletteLabelSave			= "Enregistrer";
-tiToolTipSave				= "Enregistre la source du document";
+tiToolTipSave				= "Enregistrer la source du document";
 
 /* tool tips for the default Print item. Different actions depending on the window */
-tiToolTipPrintSource		= "Imprimer le source TeX";
+tiToolTipPrintSource		= "Imprimer la source TeX";
 tiToolTipPrint				= "Imprimer l'image PDF";
 
 tiLabelTypeset				= "Composer";
 tiPaletteLabelTypeset		= "Composer";
 tiToolTipTypeset			= "Composer";
 
-tiLabelSharing				= "Partage";
-tiPaletteLabelSharing		= "Partage";
+tiLabelSharing				= "Partager";
+tiPaletteLabelSharing		= "Partager la source";
 tiToolTipSharing			= "Partager texte et images";
 
 
@@ -65,9 +65,9 @@ tiLabelMagnification			= "Agrandissement";
 tiPaletteLabelMagnification		= "Agrandissement";
 tiToolTipMagnification			= "Régler l’agrandissement de la page";
 
-tiLabelTemplates			= "Modèle";
-tiPaletteLabelTemplates			= "Modèle";
-tiToolTipTemplates			= "Modèle";
+tiLabelTemplates			= "Modèles";
+tiPaletteLabelTemplates			= "Modèles";
+tiToolTipTemplates			= "Choisir un modèle à insérer au point d’insertion";
 
 tiLabelTags				= "Étiquettes";
 tiPaletteLabelTags			= "Étiquettes";
@@ -75,7 +75,7 @@ tiToolTipTags				= "Choisir une étiquette à atteindre";
 
 tiLabelLabels                = "Labels";
 tiPaletteLabelLabels            = "Labels";
-tiToolTipLabels                = "Sélectionner un label vers où défiler";
+tiToolTipLabels                = "Choisir un label à atteindre";
 
 tiLabelPreviousPageButton		= "Précédent";
 tiPaletteLabelPreviousPageButton	= "Page précédente";
@@ -97,22 +97,22 @@ tiLabelAutoComplete			= "Raccourcis de saisie";
 tiPaletteLabelAutoComplete	= "Raccourcis de saisie";
 tiToolTipAutoComplete		= "Activer/Désactiver les raccourcis de saisie";
 
-tiLabelSplit				= "Fenêtre divisée";
-tiPaletteLabelSplit			= "Fenêtre divisée";
+tiLabelSplit				= "Diviser";
+tiPaletteLabelSplit			= "Diviser la source";
 tiToolTipSplit				= "Diviser la fenêtre ou annuler la division ; cliquez en maintenant la touche Option enfoncée pour diviser verticalement";
 
-tiLabelSplitKIT				= "Fenêtre divisée";
-tiPaletteLabelSplitKIT		= "Fenêtre divisée";
+tiLabelSplitKIT				= "Diviser";
+tiPaletteLabelSplitKIT		= "Diviser l’aperçu";
 tiToolTipSplitKIT			= "Diviser la fenêtre ou annuler la division ; cliquez en maintenant la touche Option enfoncée pour diviser verticalement";
 "tiToolTipSplitKITContinuous" = "Diviser la fenêtre ou annuler la division ; cliquez en maintenant la touche Option enfoncée pour diviser verticalement, ou la touche Maj pour continuer les pages en dessous";
 
 tiLabelMacros				= "Macros";
 tiPaletteLabelMacros		= "Macros";
-tiToolTipMacros				= "Insère les macros";
+tiToolTipMacros				= "Insérer des macros";
 
 tiLabelMacrosEE				= "Macros";
 tiPaletteLabelMacrosEE		= "Macros";
-tiToolTipMacrosEE           = "Insére les macros";
+tiToolTipMacrosEE           = "Insérer des macros";
 
 tiLabelMouseMode			= "Mode de la souris";
 tiPaletteLabelMouseMode		= "Mode de la souris";
@@ -127,17 +127,17 @@ tiPaletteLabelTypesetKIT		= "Composer";
 tiToolTipTypesetKIT				= "Composer";
 
 tiLabelSearchKIT				= "Rechercher";
-tiPaletteLabelSearchKIT         = "Rechercher";
-tiToolTipSearchKIT				= "Rechercher";
+tiPaletteLabelSearchKIT         = "Rechercher dans le PDF";
+tiToolTipSearchKIT				= "Rechercher dans le PDF";
 
-tiLabelSharingKIT				= "Partage";
-tiPaletteLabelSharingKIT		= "Partage";
+tiLabelSharingKIT				= "Partager";
+tiPaletteLabelSharingKIT		= "Partager l’aperçu";
 tiToolTipSharingKIT				= "Partager texte et images";
 
 
 tiLabelProgramKIT				= "Programme";
 tiPaletteLabelProgramKIT		= "Programme";
-tiToolTipProgramKIT				= "Composer";
+tiToolTipProgramKIT				= "Choisir le programme de composition";
 
 tiLabelPreviousPageButtonKIT		= "Précédent";
 tiPaletteLabelPreviousPageButtonKIT	= "Page précédente";
@@ -153,11 +153,11 @@ tiToolTipGotoPageKIT			= "Aller à la page";
 
 tiLabelMagnificationKIT			= "Agrandissement";
 tiPaletteLabelMagnificationKIT	= "Agrandissement";
-tiToolTipMagnificationKIT		= "Agrandissement";
+tiToolTipMagnificationKIT		= "Régler l’agrandissement de la page";
 
 tiLabelMacrosKIT				= "Macros";
 tiPaletteLabelMacrosKIT			= "Macros";
-tiToolTipMacrosKIT              = "Insérer les macros";
+tiToolTipMacrosKIT              = "Insérer des macros";
 
 tiLabelMouseModeKIT				= "Mode de la souris";
 tiPaletteLabelMouseModeKIT		= "Mode de la souris";
@@ -171,15 +171,15 @@ tiLabelSyncMarksKIT				= "Marques synchro";
 tiPaletteLabelSyncMarksKIT		= "Marques synchro";
 tiToolTipSyncMarksKIT			= "Afficher les marques synchro";
 
-tiLabelBackForthKIT				= "Revenir/Avancer";
-tiPaletteLabelBackForthKIT		= "Revenir/Avancer";
-tiToolTipGoBack				= "Revenir";
-tiToolTipGoForward			= "Avancer";
-tiBack					= "Revenir";
-tiForward				= "Avancer";
+tiLabelBackForthKIT				= "Précédent/Suivant";
+tiPaletteLabelBackForthKIT		= "Précédent/Suivant";
+tiToolTipGoBack				= "Précédent";
+tiToolTipGoForward			= "Suivant";
+tiBack					= "Précédent";
+tiForward				= "Suivant";
 
-tiLabelBackForthKITSplit                = "Revenir/Avancer";
-tiPaletteLabelBackForthKITSplit        = "Revenir/Avancer";
+tiLabelBackForthKITSplit                = "Précédent/Suivant";
+tiPaletteLabelBackForthKITSplit        = "Précédent/Suivant";
 
 tiLabelDrawerKIT				= "Tiroir";
 tiPaletteLabelDrawerKIT			= "Tiroir";
@@ -187,15 +187,15 @@ tiToolTipDrawerKIT				= "Basculer le tiroir";
 
 tiLabelShowFullPath				= "Chemin entier";
 tiPaletteLabelShowFullPath		= "Chemin entier";
-tiToolTipShowFullPath			= "Affiche le chemin entier dans le titre de la fenêtre";
+tiToolTipShowFullPath			= "Afficher le chemin entier dans le titre de la fenêtre";
 
 tiLabelProgramSplit				= "Programme";
 tiPaletteLabelProgramSplit		= "Programme";
-tiToolTipProgramSplit			= "Programme";
+tiToolTipProgramSplit			= "Choisir le programme de composition";
 
 tiLabelMacrosSplit				= "Macros";
 tiPaletteLabelMacrosSplit		= "Macros";
-tiToolTipMacrosSplit			= "Insère les macros";
+tiToolTipMacrosSplit			= "Insérer des macros";
 
 tiLabelTagsSplit				= "Étiquettes";
 tiPaletteLabelTagsSplit         = "Étiquettes";
@@ -203,7 +203,7 @@ tiToolTipTagsSplit              = "Choisir une étiquette à atteindre";
 
 tiLabelLabelsSplit                = "Labels";
 tiPaletteLabelLabelsSplit         = "Labels";
-tiToolTipLabelsSplit              = "Sélectionner un label vers où défiler";
+tiToolTipLabelsSplit              = "Choisir un label à atteindre";
 
 
 tiLabelGotoPageSplit			= "Aller à la page";
@@ -218,20 +218,20 @@ tiLabelAutoCompleteSplit		= "Raccourcis de saisie";
 tiPaletteLabelAutoCompleteSplit   = "Raccourcis de saisie";
 tiToolTipAutoCompleteSplit     = "Activer/Désactiver les raccourcis de saisie";
 
-tiLabelTemplatesSplit            = "Modèle";
-tiPaletteLabelTemplatesSplit            = "Modèle";
-tiToolTipTemplatesSplit            = "Modèle";
+tiLabelTemplatesSplit            = "Modèles";
+tiPaletteLabelTemplatesSplit            = "Modèles";
+tiToolTipTemplatesSplit            = "Choisir un modèle à insérer au point d’insertion";
 
-tiLabelSharingSplit                = "Partage";
-tiPaletteLabelSharingSplit        = "Partage";
+tiLabelSharingSplit                = "Partager";
+tiPaletteLabelSharingSplit        = "Partager la source";
 tiToolTipSharingSplit            = "Partager texte et images";
 
 tiLabelMouseModeKITSplit                = "Mode de la souris";
 tiPaletteLabelMouseModeKITSplit        = "Mode de la souris";
 
 tiLabelSearchKITSplit                = "Rechercher";
-tiPaletteLabelSearchKITSplit         = "Rechercher";
-tiToolTipSearchKITSplit                = "Rechercher";
+tiPaletteLabelSearchKITSplit         = "Rechercher dans le PDF";
+tiToolTipSearchKITSplit                = "Rechercher dans le PDF";
 
 tiLabelTypesetSplit                = "Composer";
 tiPaletteLabelTypesetSplit            = "Composer";
@@ -239,15 +239,15 @@ tiToolTipTypesetSplit            = "Composer";
 
 tiLabelHtmlPreviousPageButton                = "Précédent";
 tiPaletteLabelHtmlPreviousPageButton            = "Précédent";
-tiToolTipHtmlPreviousPageButton            = "Précédent";
+tiToolTipHtmlPreviousPageButton            = "Aller à la page précédente";
 
 tiLabelHtmlNextPageButton                = "Suivant";
 tiPaletteLabelHtmlNextPageButton            = "Suivant";
-tiToolTipHtmlNextPageButton           = "Suivant";
+tiToolTipHtmlNextPageButton           = "Aller à la page suivante";
 
 tiLabelHtmlURLField                = "URL";
 tiPaletteLabelHtmlURLField            = "URL";
-tiToolTipHtmlURLField            = "URL";
+tiToolTipHtmlURLField            = "Aller à cette URL";
 
 tiLabelHtmlSearch             = "Rechercher";
 tiPaletteLabelHtmlSearch      = "Rechercher";
@@ -257,7 +257,7 @@ tiToolTipHtmlSearch           = "Rechercher";
 "ExperimentToolScroll" = "Dérouler";
 "ExperimentToolSelectText" = "Sélectionner le texte";
 "ExperimentToolMagnify" = "Agrandir";
-"ExperimentToolSelectPDF" = "Sélectionner";
+"ExperimentToolSelectPDF" = "Sélectionner (PDF)";
 "ExperimentZoomOut" = "Zoom arrière";
 "ExperimentZoomIn" = "Zoom avant";
 "ExperimentZoomToContent" = "Zoom sur le contenu";
@@ -265,17 +265,17 @@ tiToolTipHtmlSearch           = "Rechercher";
 
 "Page Layout" = "Format d’affichage";
 "tiLabelTSPreviewAppearance" = "Apparence";
-"Continuous Two Pages" = "Page multiple en double";
+"Continuous Two Pages" = "Deux pages en continu";
 "Restore Document Settings" = "Rétablir les réglages du document";
-"Single Page" = "Page simple";
+"Single Page" = "Page unique";
 "PreviewAppearanceDark" = "Sombre";
 "PreviewAppearanceLight" = "Clair";
-"Two Pages" = "Page double";
+"Two Pages" = "Deux pages";
 "PreviewAppearanceSystem" = "Système";
 "Left to right" = "De gauche à droite";
-"Two-Page Arrangement" = "Page double (variantes)";
-"Applies when displaying two pages" = "S’applique à l’affichage en page double";
-"Continuous" = "Page multiple";
+"Two-Page Arrangement" = "Disposition sur deux pages";
+"Applies when displaying two pages" = "S’applique à l’affichage sur deux pages";
+"Continuous" = "Page unique en continu";
 "Right to left" = "De droite à gauche";
 "Show first page alone as cover" = "Afficher la première page seule comme couverture";
 "tiToolTipUnsplit" = "Annuler la division de la fenêtre";

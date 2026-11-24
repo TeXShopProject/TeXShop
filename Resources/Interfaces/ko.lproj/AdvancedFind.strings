@@ -173,7 +173,7 @@
 "MultipleReplace.Untitled" = "무제";
 "TeXRootSearch.AX.File" = "%1$@, %2$lu개";
 "TeXRootSearch.AX.Files" = "파일";
-"TeXRootSearch.AX.FindRow" = "%1$lu행: %2$@";
+"TeXRootSearch.AX.FindRow" = "줄 %1$lu: %2$@";
 "TeXRootSearch.AX.Mode" = "모드";
 "TeXRootSearch.AX.Node" = "%1$@, %2$lu개, %3$@";
 "TeXRootSearch.AX.NotSearched" = "찾지 않음";
@@ -181,7 +181,7 @@
 "TeXRootSearch.AX.On" = "대치함";
 "TeXRootSearch.AX.PartlySearched" = "일부 찾음";
 "TeXRootSearch.AX.Replace" = "대치";
-"TeXRootSearch.AX.ReplaceRow" = "%1$lu행: %2$@, 대치 후: %3$@, %4$@";
+"TeXRootSearch.AX.ReplaceRow" = "줄 %1$lu: %2$@, 대치 후: %3$@, %4$@";
 "TeXRootSearch.AX.Results" = "결과";
 "TeXRootSearch.AX.Searched" = "찾음";
 "TeXRootSearch.AX.Set" = "일괄 대치 세트";
@@ -211,7 +211,7 @@
 "TeXRootSearch.Outcome.NotEditable" = "문서를 편집할 수 없었음";
 "TeXRootSearch.Outcome.NotReached" = "처리되지 않음";
 "TeXRootSearch.Outcome.Refused" = "문서가 변경을 받아들이지 않음";
-"TeXRootSearch.Outcome.Stopped" = "정지됨";
+"TeXRootSearch.Outcome.Stopped" = "중단됨";
 "TeXRootSearch.Outcome.Unencodable" = "대치한 문자를 파일의 인코딩으로 쓸 수 없음";
 "TeXRootSearch.Outcome.UnexpectedChange" = "대치하는 동안 본문이 다른 곳에서 변경됨";
 "TeXRootSearch.Outcome.Verification" = "쓴 내용을 다시 읽으면 일치하지 않음";
@@ -231,7 +231,7 @@
 "TeXRootSearch.Report.BackupUTF8" = "UTF-8로 저장한 백업: %@";
 "TeXRootSearch.Report.FileReason" = "%1$@(%2$@)";
 "TeXRootSearch.Report.NotReplaced" = "대치하지 않은 파일: %@";
-"TeXRootSearch.Report.Partly" = "일부만 대치한 문서: %@";
+"TeXRootSearch.Report.Partly" = "일부만 대치한 파일: %@";
 "TeXRootSearch.Report.Replaced" = "대치한 파일: %@";
 "TeXRootSearch.Report.SomeTitle" = "일부 파일에서 대치할 수 없음";
 "TeXRootSearch.Root" = "루트: %@";
@@ -249,9 +249,9 @@
 "TeXRootSearch.Status.Replaced" = "%2$lu개 파일의 %1$lu개 항목을 대치함";
 "TeXRootSearch.Status.Replacing" = "대치하는 중…";
 "TeXRootSearch.Status.RootMissing" = "루트 파일을 찾을 수 없습니다.";
-"TeXRootSearch.Status.Stopped" = "정지됨";
+"TeXRootSearch.Status.Stopped" = "중단됨";
 "TeXRootSearch.Status.ToReplace" = "대치: %1$lu · 파일: %2$lu";
-"TeXRootSearch.Stop" = "정지";
+"TeXRootSearch.Stop" = "중단";
 "TeXRootSearch.Title" = "TeX 소스에서 찾기";
 "TeXRootSearch.Unreadable.File" = "파일을 읽을 수 없습니다.";
 "TeXRootSearch.Unreadable.Folder" = "폴더를 열 수 없습니다.";

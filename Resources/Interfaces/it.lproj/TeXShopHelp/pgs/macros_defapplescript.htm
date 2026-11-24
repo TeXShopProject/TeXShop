@@ -20,7 +20,7 @@
 <li><a href="macros_includedscripts.htm">Macro AppleScript predefinite</a></li>
 <li><a href="macros_defapplescript.htm" class="current">Definire macro AppleScript</a></li>
 <li><a href="macros_dialogs.htm">Creare finestre di dialogo</a></li>
-<li><a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di composizione di TeXShop</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di compilazione di TeXShop</a></li>
 <li><a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a></li>
 </ul>
 </nav>
@@ -45,7 +45,7 @@
 end tell</pre>
 
 <h2 id="commands">Comandi di TeXShop</h2>
-<p>Un AppleScript può svolgere il suo lavoro in due modi: può eseguire comandi della shell, come descritto in <a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a>, oppure può richiamare i comandi propri di TeXShop, come descritto in <a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di composizione di TeXShop</a>. Tra gli altri, TeXShop riconosce questi comandi:</p>
+<p>Un AppleScript può svolgere il suo lavoro in due modi: può eseguire comandi della shell, come descritto in <a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a>, oppure può richiamare i comandi propri di TeXShop, come descritto in <a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di compilazione di TeXShop</a>. Tra gli altri, TeXShop riconosce questi comandi:</p>
 <pre>typeset
 latex
 tex
@@ -62,7 +62,7 @@ taskdone
 refreshpdf
 refreshtext
 goto line</pre>
-<p>I primi sei comandi compongono senza interruzioni, senza fermarsi agli errori. I sei successivi compongono anch’essi, ma si fermano a un errore in modo che tu possa rispondere nella console. Un comando di composizione restituisce subito il controllo, prima che la composizione sia terminata. <code>taskdone</code> restituisce NO mentre la composizione è ancora in corso e YES quando è terminata. <code>refreshpdf</code> e <code>refreshtext</code> fanno sì che le finestre PDF e di testo mostrino la versione più recente dei loro file. <code>goto line</code> seleziona una riga del sorgente:</p>
+<p>I primi sei comandi compilano senza interruzioni, senza fermarsi agli errori. I sei successivi compilano anch’essi, ma si fermano a un errore in modo che tu possa rispondere nella console. Un comando di compilazione restituisce subito il controllo, prima che la compilazione sia terminata. <code>taskdone</code> restituisce NO mentre la compilazione è ancora in corso e YES quando è terminata. <code>refreshpdf</code> e <code>refreshtext</code> fanno sì che le finestre PDF e di testo mostrino la versione più recente dei loro file. <code>goto line</code> seleziona una riga del sorgente:</p>
 <pre>tell document #DOCUMENTNAME# of application "TeXShop"
   goto line 37
 end tell</pre>

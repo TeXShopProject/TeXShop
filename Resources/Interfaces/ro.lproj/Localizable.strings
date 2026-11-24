@@ -6,32 +6,32 @@
 "Save" = "Salvați";
 "Print..." = "Tipăriți...";
 "Print Source..." = "Tipăriți sursa...";
-"Set Project Root..." = "Stabilește Fișierul Principal al Proiectului...";
-"LaTeX Panel..." = "Tablou de Comandă LaTeX...";
-"Close LaTeX Panel" = "Închide Tabloul de Comandă LaTeX";
-"Matrix Panel..." = "Tablou de Comandă Matrix...";
-"Close Matrix Panel" = "Închide Tabloul de Comandă Matrix";
-"Open for Preview..." = "Deschide pentru Previzualizare...";
-"Open for Editing..." = "Deschide pentru Editare...";
+"Set Project Root..." = "Stabiliți fișierul principal al proiectului...";
+"LaTeX Panel..." = "Panoul LaTeX...";
+"Close LaTeX Panel" = "Închideți panoul LaTeX";
+"Matrix Panel..." = "Panoul de matrice...";
+"Close Matrix Panel" = "Închideți panoul de matrice";
+"Open for Preview..." = "Deschideți pentru previzualizare...";
+"Open for Editing..." = "Deschideți pentru editare...";
 "File" = "Fișier";
-"Goto Error" = "Mergi la Eroare";
-"RotateClockwise" = "Rotește în Sensul Orar";
-"RotateCounterclockwise" = "Rotește în Sens Antiorar";
-"Comment" = "Comentare";
-"Uncomment" = "Eliminare comentariu";
-"Indent" = "Indentare";
-"Unindent" = "Micșorare indentare";
+"Goto Error" = "Accesați eroarea";
+"RotateClockwise" = "Rotiți spre dreapta";
+"RotateCounterclockwise" = "Rotiți spre stânga";
+"Comment" = "Transformați în comentariu";
+"Uncomment" = "Eliminați comentariul";
+"Indent" = "Indentați";
+"Unindent" = "Reduceți indentarea";
 "Macros" = "Macro";
-"Open Macro Editor..." = "Deschide Editorul de Macro...";
-"Close Macro Editor" = "Închide Editorul de Macro";
-"Add macros from file..." = "Adaugă Macro din Fișier...";
-"Save selection to file..." = "Salvează Selecția ca Fișier...";
+"Open Macro Editor..." = "Deschideți Editorul de Macro...";
+"Close Macro Editor" = "Închideți Editorul de Macro";
+"Add macros from file..." = "Adăugați macrocomenzi din fișier...";
+"Save selection to file..." = "Salvați selecția în fișier...";
 "Edit" = "Editare";
 "Warning" = "Avertisment";
 "Don't Save" = "Nu salvați";
 "Cancel" = "Anulați";
 "Do you want to save macros?" = "Doriți să salvați macrocomenzile?";
-"Save Spot" = "Salvează poziția";
+"Save Spot" = "Salvați poziția";
 "Template" = "Model";
 "AutoComplete" = "Asocieri de taste";  //Should be translation of "Key Bindings", even in English
 "Page Number" = "Număr pagină";
@@ -40,11 +40,11 @@
 "Omit Shell Escape" = "Omiteți shell escape";
 "Warning: Using Shell Escape" = "Avertisment: se folosește shell escape";
 "Preview" = "Previzualizare";
-"Display Format" = "Formatul de Afișare";// mitsu 1.29b
+"Display Format" = "Format de afișare";// mitsu 1.29b
 "Magnification" = "Mărire";// mitsu 1.29b
-"Copy Format" = "Format de Copiere";// mitsu 1.29b
+"Copy Format" = "Format de copiere";// mitsu 1.29b
 "ToolbarItems" = "ToolbarItems";
-"Autocompletion" = "Expresie asociată";
+"Autocompletion" = "Asociere de taste";
 "Completion" = "Completare";
 "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Cale: %@\nDimensiunea fișierului (octeți): %d\nData creării: %@\nData modificării: %@";
 "Info: %@" = "Informații: %@";
@@ -55,7 +55,7 @@
 "The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "Legătura /Library/TeX/texbin nu există. Pentru a remedia problema, accesați https://tug.org/mactex și instalați MacTeX sau Basic TeX (2015 sau o versiune ulterioară).";
 "%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ nu există. TeXShop este o interfață pentru TeX, dar aveți nevoie și de o distribuție TeX. Poate că o astfel de distribuție nu a fost instalată sau a fost eliminată în timpul unei actualizări de sistem. În acest caz, accesați https://tug.org/mactex și urmați instrucțiunile pentru a instala MacTeX sau BasicTeX.";
 "Can't find required tool." = "Instrumentul necesar nu a fost găsit.";
-"Typesetting engine cannot be found." = "Motorul de tehnoredactare nu a fost găsit.";
+"Typesetting engine cannot be found." = "Motorul de compilare nu a fost găsit.";
 "The source LaTeX document cannot be found." = "Documentul LaTeX sursă nu a fost găsit.";
 "Sync Marks" = "Marcaje de sincronizare";
 "%@ does not exist." = "%@ nu există.";
@@ -68,8 +68,8 @@
 "Newline Removal" = "Eliminarea sfârșiturilor de rând";
 "Help" = "Ajutor";
 "Sync" = "Sincronizați";
-"ShowFullPath" = "Afișează calea completă";
-"Close Current Environment" = "Închide mediul curent"; // Terada
+"ShowFullPath" = "Afișați calea completă";
+"Close Current Environment" = "Închideți mediul curent"; // Terada
 "Your current setting of %@ will be replaced. OK?" = "Configurarea actuală pentru %@ va fi înlocuită. Continuați?"; // Terada
 "Convert" = "Convertiți";
 "The program " = "Programul ";
@@ -102,40 +102,40 @@
 "File Already Exists" = "Fișierul există deja";
 "Labels" = "Referințe";
 "New Tag" = "Etichetă nouă";
-"Split Window" = "Scindează Fereastra";
+"Split Window" = "Scindați fereastra";
 "New Document" = "Document nou";
 "Link Popups" = "Ferestre pop-up";
-"Split Window with Link" = "Scindează Fereastra cu Legătura";
-"Highlight expl3 Code" = "Evidențiază codul expl3";
+"Split Window with Link" = "Scindați fereastra cu linkul";
+"Highlight expl3 Code" = "Evidențiați codul expl3";
 "PDF File Has No Annotations" = "Fișierul PDF nu are adnotări";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
-"Forget Learned Words…" = "Uită cuvintele învățate…";
-"Edit Spelling Exclusions…" = "Editează excepțiile de ortografie…";
-"Forget learned words" = "Uită cuvintele învățate";
-"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Aceste cuvinte din acest document au fost învățate pentru %@. Selectați cuvintele de uitat. Clic cu Shift sau Command selectează mai multe.";
-"Forget Selected" = "Uită selecția";
+"Forget Learned Words…" = "Uitați cuvintele învățate…";
+"Edit Spelling Exclusions…" = "Editați excluderile de ortografie…";
+"Forget learned words" = "Uitați cuvintele învățate";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Aceste cuvinte din acest document au fost învățate pentru %@. Selectați cuvintele de uitat. Clic cu Shift sau Comandă selectează mai multe.";
+"Forget Selected" = "Uitați selecția";
 "Forgot %lu word." = "S-a uitat %lu cuvânt.";
 "Forgot %lu words." = "S-au uitat %lu cuvinte.";
 "No learned words in this document" = "Niciun cuvânt învățat în acest document";
 "None of the words in this document have been learned for %@." = "Niciunul dintre cuvintele din acest document nu a fost învățat pentru %@.";
-"Problems in the spelling exclusions file" = "Probleme în fișierul cu excepții de ortografie";
+"Problems in the spelling exclusions file" = "Probleme în fișierul cu excluderi de ortografie";
 "OK" = "OK";
 /* Button added to the Spelling and Grammar panel */
-"Change All" = "Schimbă tot";
+"Change All" = "Schimbați tot";
 
-"Replacement for Change All" = "Înlocuire pentru Schimbă tot";
+"Replacement for Change All" = "Înlocuire pentru Schimbați tot";
 
 "Return to the word and choose Find Next before replacing." = "Reveniți la cuvânt și căutați următorul înainte de înlocuire.";
 
-"Enter a different replacement in the Change All field." = "Introduceți altă înlocuire în câmpul pentru Schimbă tot.";
+"Enter a different replacement in the Change All field." = "Introduceți altă înlocuire în câmpul pentru Schimbați tot.";
 
 /* Notice after line endings were converted to LF when a document was opened */
 "This document mixes different line endings." = "Acest document amestecă terminații de linie diferite.";
 "This document uses Windows line endings (CRLF)." = "Acest document folosește terminații de linie Windows (CRLF).";
 "This document uses classic Mac line endings (CR)." = "Acest document folosește terminații de linie Mac clasic (CR).";
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop a convertit toate terminațiile de linie în LF. Când salvați documentul, fișierul va avea terminații de linie LF.";
-"Don’t show again for this document" = "Nu mai afișa pentru acest document";
+"Don’t show again for this document" = "Nu mai afișați pentru acest document";
 
 /* Engine path discovery */
 
@@ -143,10 +143,10 @@
 "Version unavailable" = "Necunoscută";
 
 /* Menu keyboard shortcut customization */
-"Search commands" = "Caută comenzi";
+"Search commands" = "Căutați comenzi";
 "Command" = "Comandă";
 "Shortcut" = "Scurtătură";
-"Remove Shortcut" = "Elimină scurtătura";
+"Remove Shortcut" = "Eliminați scurtătura";
 "Restore Default" = "Restaurați valoarea implicită";
 "Default shortcut: %@" = "Scurtătură implicită: %@";
 "Default shortcut: None" = "Scurtătură implicită: niciuna";
@@ -185,14 +185,14 @@
 "Forward (⌘])" = "Înainte (⌘])";
 
 "Keyboard" = "Tastatură";
-"Search by Function" = "Caută după funcție";
-"Search by Key" = "Caută după tastă";
-"Show in Macro Editor" = "Arată în editorul de macrocomenzi";
+"Search by Function" = "Căutați după funcție";
+"Search by Key" = "Căutați după tastă";
+"Show in Macro Editor" = "Afișați în Editorul de Macro";
 "Assigned" = "Atribuit";
 "Inactive for this key" = "Inactiv pentru această tastă";
 "No command uses this key." = "Nicio comandă nu folosește această tastă.";
 "Press a key" = "Apăsați o tastă";
-"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Această tastă nu poate fi folosită drept scurtătură. Folosiți Command sau Control cu o tastă, ori F1–F20.";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Această tastă nu poate fi folosită drept scurtătură. Folosiți Comandă sau Control cu o tastă, ori F1–F20.";
 
 
 "This key cannot be assigned to a new shortcut." = "Această tastă nu poate fi atribuită unei scurtături noi.";
@@ -205,13 +205,13 @@
 "Replace" = "Înlocuiți";
 
 "Appearance" = "Aspect";
-"Use LaTeX-aware spell checking (recommended)" = "Folosește verificarea adaptată la LaTeX (recomandat)";
+"Use LaTeX-aware spell checking (recommended)" = "Folosiți verificarea adaptată la LaTeX (recomandat)";
 "Key Bindings" = "Asocieri de taste";
-"Edit Command Completion…" = "Editează completarea comenzilor…";
+"Edit Command Completion…" = "Editați completarea comenzilor…";
 "Command Completion" = "Completarea comenzilor";
 
-"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Instalați TeX Live sau MacTeX, apoi alegeți „Detectați căile” în Configurări > Compunere.";
-"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript nu a fost găsit. Instalați Ghostscript, apoi alegeți „Detectați căile” în Configurări > Compunere.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Instalați TeX Live sau MacTeX, apoi alegeți „Detectați căile” în Configurări > Compilare.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript nu a fost găsit. Instalați Ghostscript, apoi alegeți „Detectați căile” în Configurări > Compilare.";
 
 
 "This key is reserved for command completion." = "Această tastă este rezervată completării comenzilor.";
@@ -230,7 +230,7 @@
 
 
 
-"Search Settings" = "Caută în configurări";
+"Search Settings" = "Căutați în configurări";
 
 "Settings results: %lu" = "Configurări găsite: %lu";
 
@@ -239,7 +239,7 @@
 
 /* Independent Experiment console */
 "Experiment input" = "Intrare pentru experiment";
-"Stop Experiment" = "Oprește experimentul";
+"Stop Experiment" = "Opriți experimentul";
 "%@ — Experiment Console" = "%@ — Consola experimentului";
 "Experiment stopped.\n" = "Experiment oprit.\n";
 
@@ -292,9 +292,9 @@
 /* Key binding editor placeholder guide */
 
 /* Edit › Mark */
-"Insert Mark with Note" = "Inserează marcaj cu notă";
-"Insert Mark" = "Inserează marcaj";
-"Delete Mark" = "Șterge marcajul";
+"Insert Mark with Note" = "Inserați un marcaj cu notă";
+"Insert Mark" = "Inserați un marcaj";
+"Delete Mark" = "Ștergeți marcajul";
 "How to Use Marks…" = "Cum se folosesc marcajele…";
 "Inserts a mark (•) to come back to later." = "Inserează un marcaj (•) la care să reveniți mai târziu.";
 "Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Inserează un marcaj cu notă (•‹notă›). Textul selectat devine nota.";
@@ -318,9 +318,9 @@
 "Mark" = "Marcaj";
 "Mark with Note" = "Marcaj cu notă";
 "note" = "notă";
-"Insert" = "Inserează";
-"Add" = "Adaugă";
-"Delete" = "Șterge";
+"Insert" = "Inserați";
+"Add" = "Adăugați";
+"Delete" = "Ștergeți";
 "Symbols" = "Simboluri";
 "Display" = "Afișare";
 "Typed As" = "Se tastează";
@@ -340,7 +340,7 @@
 "Values to Set" = "Valori de setat";
 "On" = "Activat";
 "Off" = "Dezactivat";
-"Engine profile row: Typesetting Method" = "Metoda de tehnoredactare";
+"Engine profile row: Typesetting Method" = "Metoda de compilare";
 "Engine profile row: plain TeX" = "plain TeX";
 "Engine profile row: LaTeX" = "LaTeX";
 "Engine profile row: kpsewhich" = "kpsewhich";
@@ -360,7 +360,7 @@
 "This item is in the %@ menu." = "Acest articol se află în meniul „%@”.";
 "Key: %@" = "Tastă: %@";
 "No key is assigned." = "Nicio tastă atribuită.";
-"Typesets once with this engine instead of the one chosen in the toolbar." = "Culege o dată cu acest motor în locul celui ales în bara de instrumente.";
+"Typesets once with this engine instead of the one chosen in the toolbar." = "Compilează o dată cu acest motor în locul celui ales în bara de instrumente.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "O linie % !TEX TS-program la începutul documentului are prioritate.";
 "Choose an Engine Profile" = "Alegeți un profil al motorului";
 
@@ -438,9 +438,9 @@
 "Right" = "Dreapta";
 
 /* Edit menu */
-"Complete Label or Citation Key" = "Completează eticheta sau cheia de citare";
+"Complete Label or Citation Key" = "Completați referința sau cheia de citare";
 /* Edit › Complete Label or Citation Key tooltip */
-"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Oferă etichetele fișierului după \\ref{ și, dacă setările permit, cheile de citare BibDesk după \\cite{.";
+"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Oferă referințele (\\label) din fișier după \\ref{ și, dacă configurările permit, cheile de citare BibDesk după \\cite{.";
 
 /* Print panel: the section of a PDF print, as in Preview */
 "Auto Rotate" = "Rotire automată";

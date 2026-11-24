@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Completamento dei comandi</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="completamento dei comandi; tasto Esc; tasto di attivazione; marcatori; Marcatore Successivo; etichette e chiavi di citazione">
+<meta name="description" content="completamento dei comandi; tasto Esc; tasto di attivazione; marcatori; Marcatore successivo; etichette e chiavi di citazione">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,8 +15,8 @@
 <li><a href="basic_preliminaries.htm">Preliminari</a></li>
 <li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
 <li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Comporre i documenti</a></li>
-<li><a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
 <li><a href="basic_preview.htm">La finestra di anteprima</a></li>
 <li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
 <li><a href="basic_find.htm">Trova e sostituisci</a></li>
@@ -49,15 +49,15 @@
 
 <h2>Impostazioni</h2>
 
-<p>In Impostazioni › Tastiera, «Tasto di attivazione» sceglie «Esc» o «Tabulatore» come tasto che completa. Il pannello del sorgente di Modifica › Sperimenta... usa lo stesso tasto della finestra sorgente.</p>
+<p>In Impostazioni › Tastiera, «Tasto di attivazione» sceglie «Esc» o «Tabulazione» come tasto che completa. Il pannello del sorgente di Modifica › Sperimenta... usa lo stesso tasto della finestra sorgente.</p>
 
 <p>Per aggiungere una parola al file di completamento, selezionala e scegli Sorgente › Aggiungi all’elenco di completamento comandi. Per modificare il file, fai clic su «Modifica il completamento dei comandi…» in Impostazioni › Tastiera. Studiare i completamenti già presenti è il modo migliore per imparare a scriverne di nuovi; la cartella ~/Library/TeXShop/CommandCompletion contiene anche un documento dettagliato al riguardo.</p>
 
 <h2><a name="marks"></a>Marcatori</h2>
 
-<p>Un marcatore (•) è un punto a cui tornare; un marcatore con nota (•‹nota›) dice anche che cosa va scritto lì. I completamenti dei comandi, le macro e le associazioni dei tasti possono contenere marcatori, e puoi inserirli anche tu con Modifica › Marcatori › Inserisci Marcatore (<kbd>⌘8</kbd>) e «Inserisci marcatore con nota» (<kbd>⌃⌘8</kbd>). «Inserisci marcatore con nota» inserisce •‹› con il punto di inserimento tra le parentesi, oppure trasforma in nota il testo selezionato.</p>
+<p>Un marcatore (•) è un punto a cui tornare; un marcatore con nota (•‹nota›) dice anche che cosa va scritto lì. I completamenti dei comandi, le macro e le associazioni dei tasti possono contenere marcatori, e puoi inserirli anche tu con Modifica › Marcatori › Inserisci marcatore (<kbd>⌘8</kbd>) e «Inserisci marcatore con nota» (<kbd>⌃⌘8</kbd>). «Inserisci marcatore con nota» inserisce •‹› con il punto di inserimento tra le parentesi, oppure trasforma in nota il testo selezionato.</p>
 
-<p>«Marcatore Successivo» (<kbd>⌃⌘F</kbd>) e «Marcatore Precedente» (<kbd>⌃⌘G</kbd>) selezionano il marcatore successivo o precedente insieme alla sua nota, così che ciò che digiti lo sostituisca. Tieni premuto Opzione per eliminare solo il • e selezionare invece la nota (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+<p>«Marcatore successivo» (<kbd>⌃⌘]</kbd>) e «Marcatore precedente» (<kbd>⌃⌘[</kbd>) selezionano il marcatore successivo o precedente insieme alla sua nota, così che ciò che digiti lo sostituisca. Tieni premuto Opzione per eliminare solo il • e selezionare invece la nota (<kbd>⌃⌥⌘]</kbd>, <kbd>⌃⌥⌘[</kbd>).</p>
 
 <p>Anche il tasto di attivazione si sposta tra i marcatori: con Esc come tasto di attivazione, Opzione-Esc va al marcatore successivo e Controllo-Esc a quello precedente; con Tab, Opzione-Tab e Controllo-Tab. Se un’altra applicazione ha bisogno di questi tasti, disattiva «Vai al marcatore successivo o precedente con Opzione o Controllo e il tasto di attivazione» in Impostazioni › Tastiera.</p>
 
@@ -72,7 +72,7 @@
 <dt><a href="basic_autocompletion.htm">Associazioni dei tasti</a></dt>
 <dd>Premendo un tasto si inserisce un testo: <code>_</code> produce <code>_{}</code> intorno alla selezione, e ≤ (Opzione-virgola nel layout U.S.) produce <code>\leq</code>. Impostazioni › Tastiera le attiva per i nuovi documenti e contiene il loro elenco; Sorgente › Associazioni dei tasti le attiva o disattiva per il documento in primo piano. Digita prima <code>\</code> per mantenere così com’è un tasto come <code>_</code> o <code>^</code>. Un carattere digitato con un tasto morto, come é ottenuta con Opzione-E ed E, non può avere un’associazione.</dd>
 <dt><a href="basic_macros.htm">Macro</a></dt>
-<dd>Le voci del menu Macro inseriscono testo o eseguono programmi AppleScript, e possono avere un’abbreviazione da tastiera con il tasto Comando o Controllo, oppure un tasto funzione. Macro › Apri Editor delle Macro... le aggiunge, le modifica e le ordina. Un testo che vuoi associare a un tasto Comando, come <code>\textbf</code> intorno alla selezione con ⌘B, è meglio farlo diventare una macro.</dd>
+<dd>Le voci del menu Macro inseriscono testo o eseguono programmi AppleScript, e possono avere una scorciatoia da tastiera con il tasto Comando o Controllo, oppure un tasto funzione. Macro › Apri Editor delle macro... le aggiunge, le modifica e le ordina. Un testo che vuoi associare a un tasto Comando, come <code>\textbf</code> intorno alla selezione con ⌘B, è meglio farlo diventare una macro.</dd>
 <dt>Completamento dei comandi</dt>
 <dd>Digita l’inizio di un comando o un’abbreviazione e premi il tasto di attivazione: <code>\sec</code> produce <code>\section{•}</code>, premendo di nuovo il tasto di attivazione si ottiene la corrispondenza successiva, e <code>\benu</code> produce un intero ambiente enumerate con i marcatori. A differenza delle associazioni dei tasti e delle macro, il completamento dei comandi sostituisce il testo selezionato.</dd>
 </dl>

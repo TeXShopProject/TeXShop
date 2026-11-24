@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Folosirea unui editor extern</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="editor extern; Deschide pentru Previzualizare; Configurează pentru Editor Extern; Urmărește permanent modificările PDF-ului făcute de alte aplicații; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
+<meta name="description" content="editor extern; Deschideți pentru previzualizare; Configurați pentru un editor extern; Urmăriți permanent modificările PDF-ului făcute de alte aplicații; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -42,15 +42,15 @@
 <p>Puteți scrie în alt editor și folosi TeXShop pentru a compila și a afișa PDF-ul.</p>
 
 <h2>Deschiderea doar a previzualizării</h2>
-<p>Fișier › Deschide pentru Previzualizare... cere un fișier sursă și deschide doar fereastra lui de previzualizare. Dacă fișierul nu a fost încă compilat sau dacă PDF-ul este mai vechi decât sursa, TeXShop îl compilează mai întâi. Editați sursa în editorul dvs.; pentru a compila, salvați-o acolo și apăsați „Compilare” în fereastra de previzualizare sau apăsați <kbd>⌘T</kbd>. În acest mod, TeXShop nu deschide și nu modifică niciodată fișierul sursă. Dacă bara de instrumente a ferestrei de previzualizare nu are butonul „Compilare”, adăugați-l cu Fereastră › Personalizare bară de instrumente....</p>
-<p>Dacă lucrați mereu astfel, activați Configurări › General › „La pornire” › „Configurează pentru Editor Extern”. Fișier › Deschideți... și „Deschideți recente” deschid atunci fișierele sursă doar pentru previzualizare, iar Fișier › Deschide pentru Previzualizare... devine „Deschide pentru Editare...”, care deschide un fișier sursă în editorul propriu al TeXShop atunci când aveți nevoie. Celelalte fișiere, precum PDF-urile, imaginile și fișierele jurnal, se deschid ca înainte.</p>
+<p>Fișier › Deschideți pentru previzualizare... cere un fișier sursă și deschide doar fereastra lui de previzualizare. Dacă fișierul nu a fost încă compilat sau dacă PDF-ul este mai vechi decât sursa, TeXShop îl compilează mai întâi. Editați sursa în editorul dvs.; pentru a compila, salvați-o acolo și apăsați „Compilare” în fereastra de previzualizare sau apăsați <kbd>⌘T</kbd>. În acest mod, TeXShop nu deschide și nu modifică niciodată fișierul sursă. Dacă bara de instrumente a ferestrei de previzualizare nu are butonul „Compilare”, adăugați-l cu Fereastră › Personalizare bară de instrumente....</p>
+<p>Dacă lucrați mereu astfel, activați Configurări › General › „La pornire” › „Configurați pentru un editor extern”. Fișier › Deschideți... și „Deschideți recente” deschid atunci fișierele sursă doar pentru previzualizare, iar Fișier › Deschideți pentru previzualizare... devine „Deschideți pentru editare...”, care deschide un fișier sursă în editorul propriu al TeXShop atunci când aveți nevoie. Celelalte fișiere, precum PDF-urile, imaginile și fișierele jurnal, se deschid ca înainte.</p>
 
 <h2>Menținerea previzualizării la zi</h2>
-<p>Când PDF-ul este rescris de alt program, de exemplu de editorul dvs. sau de latexmk în Terminal, TeXShop îl reîncarcă atunci când reveniți în TeXShop sau în fereastra de previzualizare, păstrând pagina și mărirea. Cu Configurări › Previzualizare › „Actualizare” › „Urmărește permanent modificările PDF-ului făcute de alte aplicații” activată, reîncarcă PDF-ul imediat ce se schimbă, chiar și când TeXShop este în fundal, de exemplu când previzualizarea este așezată lângă editor. O previzualizare cu adnotări nesalvate nu este reîncărcată, pentru ca adnotările să nu se piardă.</p>
+<p>Când PDF-ul este rescris de alt program, de exemplu de editorul dvs. sau de latexmk în Terminal, TeXShop îl reîncarcă atunci când reveniți în TeXShop sau în fereastra de previzualizare, păstrând pagina și mărirea. Cu Configurări › Previzualizare › „Actualizare” › „Urmăriți permanent modificările PDF-ului făcute de alte aplicații” activată, reîncarcă PDF-ul imediat ce se schimbă, chiar și când TeXShop este în fundal, de exemplu când previzualizarea este așezată lângă editor. O previzualizare cu adnotări nesalvate nu este reîncărcată, pentru ca adnotările să nu se piardă.</p>
 <p>TeXShop urmărește și fișierele sursă deschise în propriul editor. Când alt editor modifică un astfel de fișier, TeXShop îl reîncarcă, cu excepția cazului în care copia din TeXShop are modificări nesalvate.</p>
 
 <h2>Sincronizarea cu editorul</h2>
-<p>Comandă-clic în fereastra de previzualizare vă poate duce la linia respectivă din editorul dvs., iar „Mergi la Eroare” din consolă poate deschide acolo linia unei erori. Pentru aceasta este nevoie de „Configurează pentru Editor Extern”, de o configurare ascunsă și de un program în linie de comandă al editorului:</p>
+<p>Comandă-clic în fereastra de previzualizare vă poate duce la linia respectivă din editorul dvs., iar „Accesați eroarea” din consolă poate deschide acolo linia unei erori. Pentru aceasta este nevoie de „Configurați pentru un editor extern”, de o configurare ascunsă și de un program în linie de comandă al editorului:</p>
 <ul>
 <li>Pentru TextMate, a cărui comandă <code>mate</code> se află în <code>/usr/local/bin</code>: <code>defaults write TeXShop TextMateSync YES</code>.</li>
 <li>Pentru orice alt editor: <code>defaults write TeXShop OtherEditorSync YES</code> și un script executabil <code>/usr/local/bin/othereditor</code> care primește numărul liniei ca <code>$1</code> și calea completă a fișierului ca <code>$2</code>. Pentru BBEdit, scriptul este:
@@ -69,9 +69,9 @@
 <dt><code>refreshpdf</code></dt><dd>Reîncarcă PDF-ul și aduce în față fereastra de previzualizare.</dd>
 <dt><code>refreshpdfbackground</code></dt><dd>Reîncarcă PDF-ul fără să aducă TeXShop în față, când fereastra de previzualizare este deja deschisă.</dd>
 <dt><code>refreshtext</code></dt><dd>Citește din nou fișierul sursă de pe disc.</dd>
-<dt><code>open_for_externaleditor</code></dt><dd>Deschide un fișier sursă la fel ca Fișier › Deschide pentru Previzualizare....</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Deschide un fișier sursă la fel ca Fișier › Deschideți pentru previzualizare....</dd>
 </dl>
-<p>Când editorul compilează prin TeXShop, „Urmărește permanent modificările PDF-ului făcute de alte aplicații” nu este necesară. Consultați și <a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a>.</p>
+<p>Când editorul compilează prin TeXShop, „Urmăriți permanent modificările PDF-ului făcute de alte aplicații” nu este necesară. Consultați și <a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a>.</p>
 </main>
 </body>
 </html>

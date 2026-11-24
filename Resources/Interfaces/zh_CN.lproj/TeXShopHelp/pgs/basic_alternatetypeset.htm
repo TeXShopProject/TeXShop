@@ -41,13 +41,13 @@
 <main id="content">
 <h1>替代排版方式</h1>
 
-<p>TeXShop 通常使用“直接生成PDF”方式排版：pdfLaTeX 或 pdfTeX 直接写出 PDF 文件。替代方式“经由DVI”则运行 LaTeX 或 TeX 生成 DVI 文件，用 dvips 将其转换为 PostScript，再用 Ghostscript 将 PostScript 转换为 PDF。这些步骤由 TeX Live 的脚本 simpdftex 完成。</p>
+<p>TeXShop 通常使用“直接生成 PDF”方式排版：pdfLaTeX 或 pdfTeX 直接写出 PDF 文件。替代方式“经由 DVI”则运行 LaTeX 或 TeX 生成 DVI 文件，用 dvips 将其转换为 PostScript，再用 Ghostscript 将 PostScript 转换为 PDF。这些步骤由 TeX Live 的脚本 simpdftex 完成。</p>
 
-<p>如果文稿要在输出中加入 PostScript 代码（例如使用 pstricks 宏包），就需要“经由DVI”。EPS 图片则不需要：使用“直接生成PDF”排版时，TeX Live 会将它们转换为 PDF。</p>
+<p>如果文稿要在输出中加入 PostScript 代码（例如使用 pstricks 宏包），就需要“经由 DVI”。EPS 图片则不需要：使用“直接生成 PDF”排版时，TeX Live 会将它们转换为 PDF。</p>
 
 <h2>选择排版方式</h2>
 
-<p>“排版”>“经由DVI”和“排版”>“直接生成PDF”用于切换当前文稿的排版方式；其他已打开的文稿保持各自的方式。“设置”>“排版”>“排版方式”用于设置文稿开始时使用的方式。它的第三个选项“个性化脚本”会改为运行“个性化脚本”组中的命令。“经由DVI”的命令（plain TeX 和 LaTeX 各一个）位于“设置”>“排版”的“经由DVI”组中。“引擎配置”菜单中“其他”下的引擎配置 LaTeX + dvips + Ghostscript 会设置为“经由DVI”排版。</p>
+<p>“排版”>“经由 DVI”和“排版”>“直接生成 PDF”用于切换当前文稿的排版方式；其他已打开的文稿保持各自的方式。“设置”>“排版”>“排版方式”用于设置文稿开始时使用的方式。它的第三个选项“个性化脚本”会改为运行“个性化脚本”组中的命令。“经由 DVI”的命令（plain TeX 和 LaTeX 各一个）位于“设置”>“排版”的“经由 DVI”组中。“引擎配置”菜单中“其他”下的引擎配置 LaTeX + dvips + Ghostscript 会设置为“经由 DVI”排版。</p>
 
 <h2>在文稿中选择排版方式</h2>
 
@@ -63,9 +63,9 @@
 <tr><td><code>% !TEX program = personaltex</code></td><td>plain TeX，个性化脚本</td></tr>
 </table>
 
-<h2>“经由DVI”的选项</h2>
+<h2>“经由 DVI”的选项</h2>
 
-<p>Ghostscript 默认会忽略 PostScript 的透明效果。要保留透明效果，请在“经由DVI”组中命令的末尾加上 <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code>。要保留中间生成的 PostScript 文件，请加上 <code>--keep-psfile</code>。Ghostscript 从“设置”>“排版”>“路径”>“Ghostscript”中设置的文件夹运行。</p>
+<p>Ghostscript 默认会忽略 PostScript 的透明效果。要保留透明效果，请在“经由 DVI”组中命令的末尾加上 <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code>。要保留中间生成的 PostScript 文件，请加上 <code>--keep-psfile</code>。Ghostscript 从“设置”>“排版”>“路径”>“Ghostscript”中设置的文件夹运行。</p>
 </main>
 </body>
 </html>

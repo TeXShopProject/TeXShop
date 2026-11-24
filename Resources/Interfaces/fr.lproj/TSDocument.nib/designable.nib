@@ -277,7 +277,7 @@
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="286">
                         <rect key="frame" x="-1" y="398" width="142" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="Aller à l'erreur ^⌘E" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3825">
+                        <buttonCell key="cell" type="square" title="Aller à l’erreur ^⌘E" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3825">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -299,7 +299,7 @@
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="670">
                         <rect key="frame" x="339" y="398" width="166" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="Fichiers aux. Corbeille" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3827">
+                        <buttonCell key="cell" type="square" title="Fichiers AUX à la corbeille" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3827">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -597,7 +597,7 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Texte" tag="2" inset="2" id="788">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Sélectionner le texte" tag="2" inset="2" id="788">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -609,13 +609,13 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Agrandir davantage" tag="4" inset="2" id="790">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Agrandissement maximal" tag="4" inset="2" id="790">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Sélectionner" tag="5" inset="2" id="791">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Sélectionner (PDF)" tag="5" inset="2" id="791">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -765,13 +765,13 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Agrandir davantage" tag="3" inset="2" id="565">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Agrandissement maximal" tag="3" inset="2" id="565">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Sélectionner" tag="4" inset="2" id="568">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Sélectionner (PDF)" tag="4" inset="2" id="568">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -806,7 +806,7 @@ DQ
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="398">
                     <rect key="frame" x="193" y="91" width="121" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="Composition" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="3853">
+                    <buttonCell key="cell" type="push" title="Composer" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="3853">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1196,7 +1196,7 @@ DQ
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="417">
                     <rect key="frame" x="145" y="51" width="121" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="Composition" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3855">
+                    <buttonCell key="cell" type="push" title="Composer" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3855">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1927,7 +1927,7 @@ DQ
                         <action selector="changeMouseMode:" target="314" id="3693"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Sélectionner" state="on" tag="4" id="832">
+                <menuItem title="Sélectionner (PDF)" state="on" tag="4" id="832">
                     <connections>
                         <action selector="changeMouseMode:" target="314" id="3694"/>
                     </connections>
@@ -1999,9 +1999,9 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Fils" id="MYx-Ir-UqX">
+                <menuItem title="Textes" id="MYx-Ir-UqX">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Fils" id="rmw-kx-9H8">
+                    <menu key="submenu" title="Textes" id="rmw-kx-9H8">
                         <items>
                             <menuItem title="Texte" id="hFw-x2-0cp">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -2070,7 +2070,7 @@ DQ
             </items>
             <point key="canvasLocation" x="1071" y="643"/>
         </menu>
-        <window title="Fichier log" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Log" animationBehavior="default" id="1605" userLabel="Log Window" customClass="TSLogWindow">
+        <window title="Fichier journal" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Log" animationBehavior="default" id="1605" userLabel="Log Window" customClass="TSLogWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="1217" y="199" width="636" height="596"/>
@@ -2180,7 +2180,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bRE-Cz-3bH">
                         <rect key="frame" x="179" y="506" width="127" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="fin du fichier log" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6oO-ER-qHg">
+                        <buttonCell key="cell" type="check" title="fin du fichier journal" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6oO-ER-qHg">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2212,7 +2212,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AXk-V1-uUq">
                         <rect key="frame" x="336" y="506" width="153" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="information package" bezelStyle="regularSquare" imagePosition="left" inset="2" id="zmm-oL-vSL">
+                        <buttonCell key="cell" type="check" title="information paquet" bezelStyle="regularSquare" imagePosition="left" inset="2" id="zmm-oL-vSL">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2459,7 +2459,7 @@ Gw
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBb-Dx-KEU">
                     <rect key="frame" x="47" y="128" width="110" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="Composition" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="P6d-Xn-5dp">
+                    <buttonCell key="cell" type="push" title="Composer" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="P6d-Xn-5dp">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -2503,7 +2503,7 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Texte" tag="2" inset="2" id="Eja-Hb-KHk">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Sélectionner le texte" tag="2" inset="2" id="Eja-Hb-KHk">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2515,13 +2515,13 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Agrandir davantage" tag="4" inset="2" id="m6P-iZ-T87">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Agrandissement maximal" tag="4" inset="2" id="m6P-iZ-T87">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Sélectionner" tag="5" inset="2" id="gvV-nA-wPA">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Sélectionner (PDF)" tag="5" inset="2" id="gvV-nA-wPA">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2561,7 +2561,7 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Texte" tag="2" inset="2" id="mPg-oS-5KE">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Sélectionner le texte" tag="2" inset="2" id="mPg-oS-5KE">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2573,13 +2573,13 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Agrandir davantage" tag="4" inset="2" id="QzE-X2-JgP">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Agrandissement maximal" tag="4" inset="2" id="QzE-X2-JgP">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Sélectionner" tag="5" inset="2" id="yQG-zD-bbr">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Sélectionner (PDF)" tag="5" inset="2" id="yQG-zD-bbr">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2642,7 +2642,7 @@ Gw
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1bb-6b-jxR">
                         <rect key="frame" x="4" y="17" width="34" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" title="URL:" id="JII-HO-wif">
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="URL :" id="JII-HO-wif">
                             <font key="font" usesAppearanceFont="YES"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

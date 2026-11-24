@@ -27,7 +27,7 @@
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
 <li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
-<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_externaleditor.htm">외부 편집기 사용하기</a></li>
 <li><a href="advanced_experiments.htm">실험</a></li>
 <li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
 <li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
@@ -47,7 +47,7 @@
 <p>문서를 특정 엔진으로 조판하게 하려면 문서의 처음 20줄 안에 다음과 같은 줄을 넣습니다.</p>
 <pre>% !TEX program = XeLaTeX</pre>
 <p>이름은 엔진 파일의 이름에서 <code>.engine</code>을 뺀 것입니다. <code>tex</code>와 <code>latex</code>는 plain TeX와 LaTeX를 DVI 경유로, <code>pdftex</code>와 <code>pdflatex</code>는 PDF 직접 생성으로 조판합니다. 이 줄은 도구 막대, 설정, 조판 › 대체 엔진으로 조판보다 우선합니다. <code>% !TEX TS-program =</code> 형식도 같은 뜻으로 읽습니다. 이 줄은 위에 보인 그대로, 등호 양쪽에 공백을 하나씩 두고 쓰십시오. 매크로 메뉴의 Program 매크로는 목록에서 엔진 이름을 고르게 하여 이 줄을 대신 넣어 줍니다. 루트 파일이 있는 프로젝트에서는 루트 파일에만 이 줄이 있으면 됩니다.</p>
-<p>조판 › 대체 엔진으로 조판(<kbd>⌃⌥⌘T</kbd>)은 도구 막대의 선택을 바꾸지 않고, 설정 › 조판 › 엔진 › 대체 엔진에 지정된 엔진(기본값은 pdflatexmk)으로 한 번 조판합니다. 조판 메뉴에서는 Control 키와 Option 키를 누르고 있는 동안 조판하기 대신 이 항목이 나타납니다. 평소에는 빠르게 한 번만 조판하고, 가끔 latexmk로 완전하게 조판하는 문서에 알맞습니다.</p>
+<p>조판 › 대체 엔진으로 조판(<kbd>⌃⌥⌘T</kbd>)은 도구 막대의 선택을 바꾸지 않고, 설정 › 조판 › 엔진 › 대체 엔진에 지정된 엔진(기본값은 pdflatexmk)으로 한 번 조판합니다. 조판 메뉴에서는 Control 키와 Option 키를 누르고 있는 동안 조판 항목 대신 이 항목이 나타납니다. 평소에는 빠르게 한 번만 조판하고, 가끔 latexmk로 완전하게 조판하는 문서에 알맞습니다.</p>
 
 <h2>엔진 만들기</h2>
 <p>엔진을 만드는 가장 쉬운 방법은 Finder에서 Engines 폴더의 엔진 하나를 복제하고, 사본의 이름을 바꾼 다음, TeXShop에서 열어 편집하는 것입니다. 엔진 파일은 확장자가 <code>.engine</code>이어야 하고 실행 권한이 있어야 하는데, 복제한 파일은 실행 권한을 그대로 유지합니다. 그 뒤에 여는 문서에서는 도구 막대에 새 엔진이 나타납니다. 다음은 XeLaTeX.engine입니다.</p>

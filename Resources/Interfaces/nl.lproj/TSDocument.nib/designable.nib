@@ -358,7 +358,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" id="3828">
                             <font key="font" metaFont="message" size="11"/>
-                            <string key="title">Als dit document deel uitmaakt van een project met meerdere bestanden, waarvan een "hoofddocument" gezet moet worden als er iets is veranderd, geef dan de naam van het "hoofddocument" hieronder.</string>
+                            <string key="title">Als dit document deel uitmaakt van een project met meerdere bestanden, waarvan een ‘hoofdbestand’ gezet moet worden als er iets is veranderd, geef dan de naam van dat hoofdbestand hieronder.</string>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -434,7 +434,7 @@ Gw
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="210">
                         <rect key="frame" x="17" y="61" width="182" height="34"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Sla dit bestand op voor een hoofdbestand te kiezen." id="3834">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Bewaar dit bestand voordat u een hoofdbestand kiest." id="3834">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -529,7 +529,7 @@ Gw
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="234">
                         <rect key="frame" x="17" y="61" width="179" height="53"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Het bestand moet eerst gezet worden voor het kan worden afgedrukt." id="3840">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Zet dit bestand voordat u het afdrukt." id="3840">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -593,7 +593,7 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Tekst" tag="2" inset="2" id="788">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Tekst selecteren" tag="2" inset="2" id="788">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -605,13 +605,13 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groter)" tag="4" inset="2" id="790">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groot)" tag="4" inset="2" id="790">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selecteren" tag="5" inset="2" id="791">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="PDF selecteren" tag="5" inset="2" id="791">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -653,8 +653,7 @@ DQ
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="3865">
                                     <font key="font" metaFont="message" size="11"/>
-                                    <string key="title">Schaal
-</string>
+                                    <string key="title">Schaal</string>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -727,12 +726,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="625">
                     <rect key="frame" x="365" y="96" width="89" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <popUpButtonCell key="cell" type="push" title="Macro's" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="626" id="3859">
+                    <popUpButtonCell key="cell" type="push" title="Macro’s" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="626" id="3859">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="628">
                             <items>
-                                <menuItem title="Macro's" hidden="YES" id="626"/>
+                                <menuItem title="Macro’s" hidden="YES" id="626"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -761,7 +760,7 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groter)" tag="3" inset="2" id="565">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groot)" tag="3" inset="2" id="565">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -791,7 +790,7 @@ DQ
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="398">
                     <rect key="frame" x="191" y="92" width="83" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="Zetten" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3853">
+                    <buttonCell key="cell" type="push" title="Zet" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3853">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -802,12 +801,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="436">
                     <rect key="frame" x="273" y="96" width="90" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <popUpButtonCell key="cell" type="push" title="Macro's" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="438" id="3857">
+                    <popUpButtonCell key="cell" type="push" title="Macro’s" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="438" id="3857">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="435">
                             <items>
-                                <menuItem title="Macro's" hidden="YES" id="438"/>
+                                <menuItem title="Macro’s" hidden="YES" id="438"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -904,8 +903,7 @@ DQ
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="3850">
                                     <font key="font" metaFont="message" size="11"/>
-                                    <string key="title">Schaal
-</string>
+                                    <string key="title">Schaal</string>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -984,12 +982,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="357">
                     <rect key="frame" x="17" y="186" width="118" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Markeringen" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="359" id="3842">
+                    <popUpButtonCell key="cell" type="push" title="Tags" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="359" id="3842">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="358">
                             <items>
-                                <menuItem title="Markeringen" state="on" hidden="YES" id="359"/>
+                                <menuItem title="Tags" state="on" hidden="YES" id="359"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -1027,12 +1025,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L1c-Vw-kBP">
                     <rect key="frame" x="790" y="87" width="84" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <popUpButtonCell key="cell" type="push" title="Macro's" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="6cg-gI-gSa" id="MS1-8n-5dm">
+                    <popUpButtonCell key="cell" type="push" title="Macro’s" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="6cg-gI-gSa" id="MS1-8n-5dm">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="wGV-cI-94F">
                             <items>
-                                <menuItem title="Macro's" hidden="YES" id="6cg-gI-gSa"/>
+                                <menuItem title="Macro’s" hidden="YES" id="6cg-gI-gSa"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -1040,12 +1038,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u6Y-Uk-Y6O">
                     <rect key="frame" x="876" y="87" width="71" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Markeringen" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="Xlm-0w-OlV" id="zWV-bw-Yji">
+                    <popUpButtonCell key="cell" type="push" title="Tags" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="Xlm-0w-OlV" id="zWV-bw-Yji">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="7mX-7p-ZWR">
                             <items>
-                                <menuItem title="Markeringen" hidden="YES" id="Xlm-0w-OlV"/>
+                                <menuItem title="Tags" hidden="YES" id="Xlm-0w-OlV"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -1156,8 +1154,7 @@ DQ
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="hoK-TJ-naI">
                                     <font key="font" metaFont="message" size="11"/>
-                                    <string key="title">Schaal
-</string>
+                                    <string key="title">Schaal</string>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1192,7 +1189,7 @@ DQ
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="417">
                     <rect key="frame" x="163" y="53" width="81" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="Zetten" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3855">
+                    <buttonCell key="cell" type="push" title="Zet" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3855">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1455,7 +1452,7 @@ DQ
                         <action selector="changeMouseMode:" target="675" id="3697"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Vergroten (groter)" tag="4" id="578">
+                <menuItem title="Vergroten (groot)" tag="4" id="578">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3698"/>
                     </connections>
@@ -1480,7 +1477,7 @@ DQ
                         <menu key="menu" title="OtherViews" id="595">
                             <items>
                                 <menuItem title="JPEG (hoge kwaliteit)" state="on" tag="11" id="596"/>
-                                <menuItem title="JPEG (medium kwaliteit)" tag="13" id="583"/>
+                                <menuItem title="JPEG (gemiddelde kwaliteit)" tag="13" id="583"/>
                                 <menuItem title="JPEG (lage kwaliteit)" tag="15" id="592"/>
                                 <menuItem title="TIFF (ongecomprimeerd)" tag="1" id="589"/>
                                 <menuItem title="TIFF (LZW)" tag="2" id="584"/>
@@ -1499,7 +1496,7 @@ DQ
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="586">
                     <rect key="frame" x="17" y="0.0" width="95" height="28"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Afbeeldingstype" id="3882">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Afbeeldingstype:" id="3882">
                         <font key="font" metaFont="message" size="11"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1919,12 +1916,12 @@ DQ
                         <action selector="changeMouseMode:" target="314" id="3692"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Vergroten (groter)" tag="3" id="831">
+                <menuItem title="Vergroten (groot)" tag="3" id="831">
                     <connections>
                         <action selector="changeMouseMode:" target="314" id="3693"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Selecteren" state="on" tag="4" id="832">
+                <menuItem title="PDF selecteren" state="on" tag="4" id="832">
                     <connections>
                         <action selector="changeMouseMode:" target="314" id="3694"/>
                     </connections>
@@ -2456,7 +2453,7 @@ Gw
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NEe-SS-2th">
                     <rect key="frame" x="47" y="128" width="90" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="Zetten" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="XVB-Of-OHg">
+                    <buttonCell key="cell" type="push" title="Zet" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="XVB-Of-OHg">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -2500,7 +2497,7 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Tekst" tag="2" inset="2" id="Lfg-78-nhT">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Tekst selecteren" tag="2" inset="2" id="Lfg-78-nhT">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2512,13 +2509,13 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groter)" tag="4" inset="2" id="RO8-Xz-u2g">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groot)" tag="4" inset="2" id="RO8-Xz-u2g">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selecteren" tag="5" inset="2" id="ZP5-Xg-ZHD">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="PDF selecteren" tag="5" inset="2" id="ZP5-Xg-ZHD">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2558,7 +2555,7 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Tekst" tag="2" inset="2" id="FHc-KC-TYv">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Tekst selecteren" tag="2" inset="2" id="FHc-KC-TYv">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2570,13 +2567,13 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groter)" tag="4" inset="2" id="YAs-Ct-IDd">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groot)" tag="4" inset="2" id="YAs-Ct-IDd">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selecteren" tag="5" inset="2" id="WU5-V5-cnL">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="PDF selecteren" tag="5" inset="2" id="WU5-V5-cnL">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>

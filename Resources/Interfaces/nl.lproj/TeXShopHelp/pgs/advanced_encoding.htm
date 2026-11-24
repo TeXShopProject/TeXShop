@@ -42,7 +42,7 @@
 <p>TeXShop bewerkt tekst in Unicode, zodat het bronvenster elk teken van elke taal accepteert. De <em>codering</em> bepaalt hoe deze tekst naar het bestand op schijf wordt geschreven en weer wordt ingelezen. UTF-8 kan elk teken opslaan, en LaTeX, XeLaTeX en LuaLaTeX lezen het standaard. Oudere bestanden en bestanden van andere systemen gebruiken mogelijk een andere codering, zoals ISO Latin 9 of Shift JIS.</p>
 
 <h2>Nieuwe documenten</h2>
-<p>Nieuwe documenten worden bewaard in de codering die is gekozen bij Instellingen › Documenten en bewaren › Tekstencodering › ‘Codering voor nieuwe documenten’. Standaard is dat Unicode (UTF-8); laat dat zo, tenzij u bestanden uitwisselt met mensen die een andere codering nodig hebben.</p>
+<p>Nieuwe documenten worden bewaard in de codering die is gekozen bij Instellingen › Documenten en bewaren › Codering › ‘Codering voor nieuwe documenten’. Standaard is dat Unicode (UTF-8); laat dat zo, tenzij u bestanden uitwisselt met mensen die een andere codering nodig hebben.</p>
 <p>Een document wordt bewaard in de codering waarmee het is geopend, zodat een ouder bestand zijn codering behoudt. Tekens die de codering van een bestand niet kan weergeven, gaan verloren wanneer het bestand wordt bewaard.</p>
 
 <h2>Bestanden openen</h2>
@@ -54,7 +54,7 @@
 <h2>De coderingsregel</h2>
 <p>Een regel in een van de eerste twintig regels van een bronbestand legt de codering vast voor het lezen en het bewaren, en gaat voor al het andere:</p>
 <pre>% !TEX encoding = UTF-8 Unicode</pre>
-<p>Schrijf de regel zoals hierboven, met één spatie vóór het isgelijkteken; <code>%!TEX encoding =</code>, zonder spatie na <code>%</code>, wordt ook gelezen. De naam moet precies zo worden geschreven als in de tabel hieronder. De macro Encoding in het menu Macro's voegt de regel voor u in, met een lijst van coderingen om uit te kiezen. De namen die TeXworks gebruikt, zoals <code>UTF-8</code> of <code>ISO 8859-1</code>, worden ook begrepen.</p>
+<p>Schrijf de regel zoals hierboven, met één spatie vóór het isgelijkteken; <code>%!TEX encoding =</code>, zonder spatie na <code>%</code>, wordt ook gelezen. De naam moet precies zo worden geschreven als in de tabel hieronder. De macro Encoding in het menu Macro’s voegt de regel voor u in, met een lijst van coderingen om uit te kiezen. De namen die TeXworks gebruikt, zoals <code>UTF-8</code> of <code>ISO 8859-1</code>, worden ook begrepen.</p>
 <p>Als de regel een codering noemt die TeXShop niet kent, leest TeXShop het bestand als UTF-8 en meldt het dat. Als de regel UTF-8 noemt maar het bestand geen geldige UTF-8 is, meldt TeXShop dat en opent het het bestand in ISO Latin 9, waarmee elk bestand kan worden gelezen; bewaart u het zonder de regel te wijzigen, dan worden dezelfde bytes teruggeschreven en gaat er niets verloren. Om een bestand te openen zonder de coderingsregel toe te passen, houdt u Option ingedrukt terwijl het opent.</p>
 <table>
 <tr><th>Naam in de coderingsregel</th><th>Naam in menu’s</th></tr>
@@ -92,7 +92,7 @@
 </table>
 
 <h2>Bewaren in een andere codering</h2>
-<p>Om bij het bewaren de codering te kiezen, zet u Instellingen › Documenten en bewaren › Tekstencodering › ‘Tekstencodering tonen in bewaarvenster’ aan; het bewaarvenster heeft dan een coderingsmenu. Wijzig › Omzetting › New Encoding kiest de codering waarin het geopende document vanaf dat moment wordt bewaard. Als het bestand een coderingsregel heeft, beslist die regel; pas dan de regel aan. TeXShop behoudt de byte order mark van een UTF-8-bestand en de bytevolgorde van een UTF-16-bestand.</p>
+<p>Om bij het bewaren de codering te kiezen, zet u Instellingen › Documenten en bewaren › Codering › ‘Codering tonen in bewaarvenster’ aan; het bewaarvenster heeft dan een coderingsmenu. Wijzig › Omzetting › Wijzig codering kiest de codering waarin het geopende document vanaf dat moment wordt bewaard. Als het bestand een coderingsregel heeft, beslist die regel; pas dan de regel aan. TeXShop behoudt de byte order mark van een UTF-8-bestand en de bytevolgorde van een UTF-16-bestand.</p>
 <p>Wanneer u een bestand naar een andere codering omzet, gaat elk teken verloren dat de nieuwe codering niet kan weergeven, en wanneer u een bestand in de verkeerde codering leest en bewaart, worden de tekens ervan definitief vervangen. Bewaar een kopie van het origineel. Het opdrachtregelprogramma <code>iconv</code> zet bestanden om zonder het origineel te wijzigen. Het document ‘Bestandscodering en TeXShop (Engels)’ in het menu Help gaat uitgebreider op deze vragen in.</p>
 
 <h2>Talen van rechts naar links</h2>

@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
@@ -55,15 +55,15 @@
 
 <h2>Eseguire BibTeX</h2>
 <ol>
-<li>Componi il documento. Le citazioni appaiono come [?] e la bibliografia manca.</li>
-<li>Scegli Compilatore › BibTeX (<kbd>⇧⌘B</kbd>), oppure scegli BibTeX nel menu a comparsa accanto al pulsante «Compila» e premi «Compila».</li>
-<li>Componi altre due volte: la prima esecuzione aggiunge la bibliografia, la seconda completa le citazioni.</li>
+<li>Compila il documento. Le citazioni appaiono come [?] e la bibliografia manca.</li>
+<li>Scegli Compila › BibTeX (<kbd>⇧⌘B</kbd>), oppure scegli BibTeX nel menu a comparsa accanto al pulsante «Compila» e premi «Compila».</li>
+<li>Compila altre due volte: la prima esecuzione aggiunge la bibliografia, la seconda completa le citazioni.</li>
 </ol>
-<p>La composizione con latexmk, ad esempio con il motore pdflatexmk o con un profilo «Con latexmk», esegue da sola BibTeX e i passaggi aggiuntivi.</p>
+<p>La compilazione con latexmk, ad esempio con il motore pdflatexmk o con un profilo «Con latexmk», esegue da sola BibTeX e i passaggi aggiuntivi.</p>
 <p>Per creare un nuovo database in TeXShop, scegli il tipo bib nel menu «Tipo di file» della finestra di dialogo Salva, così che il file riceva l’estensione <code>.bib</code>. Un database può trovarsi anche nel tuo albero TeX personale, dove ogni documento lo trova; consulta <a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a>.</p>
 
 <h2>Scegliere il programma</h2>
-<p>Compilatore › BibTeX esegue il comando indicato in Impostazioni › Composizione › Strumenti correlati › Motore BibTeX, per impostazione predefinita <code>bibtex</code>. Inserisci lì un altro programma con le opzioni necessarie, ad esempio <code>biber</code> per i documenti che usano il pacchetto biblatex. I profili del motore impostano questo campo: <code>pbibtex</code> per pLaTeX + dvipdfmx, <code>upbibtex</code> per upLaTeX + dvipdfmx e LuaLaTeX (giapponese), e <code>bibtex</code> per gli altri profili.</p>
+<p>Compila › BibTeX esegue il comando indicato in Impostazioni › Compilazione › Strumenti correlati › Motore BibTeX, per impostazione predefinita <code>bibtex</code>. Inserisci lì un altro programma con le opzioni necessarie, ad esempio <code>biber</code> per i documenti che usano il pacchetto biblatex. I profili del motore impostano questo campo: <code>pbibtex</code> per pLaTeX + dvipdfmx, <code>upbibtex</code> per upLaTeX + dvipdfmx e LuaLaTeX (giapponese), e <code>bibtex</code> per gli altri profili.</p>
 <p>Per scegliere il programma per un solo documento, inserisci una riga come questa in una delle sue prime venti righe:</p>
 <pre>% !BIB program = biber</pre>
 <p>La riga ha la precedenza sull’impostazione. La forma <code>% !BIB TS-program =</code> viene letta allo stesso modo.</p>

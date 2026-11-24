@@ -5,7 +5,7 @@
 	<key>TeXRootSearch.Confirm.Disk</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@f@ Je kunt deze actie niet ongedaan maken.</string>
+		<string>%#@f@ U kunt deze actie niet ongedaan maken.</string>
 		<key>f</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
@@ -40,9 +40,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>lu</string>
 			<key>one</key>
-			<string>%1$lu treffer</string>
+			<string>%1$lu overeenkomst</string>
 			<key>other</key>
-			<string>%1$lu treffers</string>
+			<string>%1$lu overeenkomsten</string>
 		</dict>
 	</dict>
 	<key>TeXRootSearch.Status.Replaced</key>
@@ -67,9 +67,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>lu</string>
 			<key>one</key>
-			<string>%1$lu treffer</string>
+			<string>%1$lu overeenkomst</string>
 			<key>other</key>
-			<string>%1$lu treffers</string>
+			<string>%1$lu overeenkomsten</string>
 		</dict>
 	</dict>
 </dict>

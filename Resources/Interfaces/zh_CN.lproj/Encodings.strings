@@ -3,7 +3,7 @@
     "DOS Chinese Traditional" = "\U7e41\U4f53\U4e2d\U6587 (Windows, DOS)";
     "DOS Cyrillic" = "\U897f\U91cc\U5c14\U6587 (DOS)";
     "DOS Russian" = "\U4fc4\U6587 (DOS)";
-    DOSJapanese = "\U65e5\U6587 (Windows, DOS, ShiftJIS )";
+    DOSJapanese = "日文 (Windows, DOS, ShiftJIS \\)";
     "EUC_JP" = "\U65e5\U6587 (EUC)";
     "GB 18030" = "\U4e2d\U6587 (GB 18030)";
     "GB 2312" = "\U7b80\U4f53\U4e2d\U6587 (GB 2312)";

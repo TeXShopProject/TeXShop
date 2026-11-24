@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm" class="current">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
@@ -39,13 +39,13 @@
 </nav>
 <main id="content">
 <h1>XeLaTeX e LuaLaTeX</h1>
-<p>XeLaTeX e LuaLaTeX sono versioni di LaTeX che leggono direttamente un sorgente in UTF-8 e usano i font OpenType e TrueType installati sul Mac oltre ai font di TeX Live. Qualsiasi sistema di scrittura codificato in Unicode si può digitare nel sorgente e comporre, purché un font ne contenga i caratteri. Entrambi fanno parte di TeX Live, ed entrambi compongono i normali documenti LaTeX senza modifiche.</p>
+<p>XeLaTeX e LuaLaTeX sono versioni di LaTeX che leggono direttamente un sorgente in UTF-8 e usano i font OpenType e TrueType installati sul Mac oltre ai font di TeX Live. Qualsiasi sistema di scrittura codificato in Unicode si può digitare nel sorgente e compilare, purché un font ne contenga i caratteri. Entrambi fanno parte di TeX Live, ed entrambi compilano i normali documenti LaTeX senza modifiche.</p>
 
-<h2>Comporre con XeLaTeX o LuaLaTeX</h2>
+<h2>Compilare con XeLaTeX o LuaLaTeX</h2>
 <p>Ci sono tre modi, dal più generale al più specifico:</p>
 <ul>
-<li><strong>Profilo del motore.</strong> In Impostazioni › Composizione › «Profilo del motore», scegli XeLaTeX o LuaLaTeX. Il profilo imposta i comandi LaTeX e plain TeX di PDF diretto su xelatex e xetex, oppure su lualatex e luatex, così la scelta LaTeX nella barra strumenti e Compilatore › LaTeX usano quel motore. Prima che tu confermi, un foglio elenca i valori che il profilo imposta.</li>
-<li><strong>File del motore.</strong> I motori LuaLaTeX e XeLaTeX si trovano nel menu a comparsa accanto al pulsante «Compila». Per comporre i nuovi documenti con uno di essi, scegli «File del motore» in Impostazioni › Composizione › Motore › «Componi i nuovi documenti con», e il motore nel menu «File del motore»; inizialmente lì è scelto LuaLaTeX.</li>
+<li><strong>Profilo del motore.</strong> In Impostazioni › Compilazione › «Profilo del motore», scegli XeLaTeX o LuaLaTeX. Il profilo imposta i comandi LaTeX e plain TeX di PDF diretto su xelatex e xetex, oppure su lualatex e luatex, così la scelta LaTeX nella barra strumenti e Compila › LaTeX usano quel motore. Prima che tu confermi, un foglio elenca i valori che il profilo imposta.</li>
+<li><strong>File del motore.</strong> I motori LuaLaTeX e XeLaTeX si trovano nel menu a comparsa accanto al pulsante «Compila». Per compilare i nuovi documenti con uno di essi, scegli «File del motore» in Impostazioni › Compilazione › Motore › «Compila i nuovi documenti con», e il motore nel menu «File del motore»; inizialmente lì è scelto LuaLaTeX.</li>
 <li><strong>Commento speciale.</strong> Una riga all’inizio del sorgente sceglie il motore per quel documento, indipendentemente dalle altre impostazioni:
 <pre>% !TEX program = LuaLaTeX</pre></li>
 </ul>

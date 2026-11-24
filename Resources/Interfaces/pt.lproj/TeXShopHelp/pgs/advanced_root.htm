@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Definir o arquivo principal de um projeto</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="arquivo principal; arquivo raiz; % !TEX root; projeto; arquivos de capítulo; include; input; Código ⇔ Visualizar; Arquivo principal do projeto">
+<meta name="description" content="arquivo principal; arquivo raiz; % !TEX root; projeto; arquivos de capítulo; include; input; Código-fonte ⇔ Pré-visualização; Arquivo principal do projeto">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -60,17 +60,17 @@
 <h2>O que a linha root faz</h2>
 <ul>
 <li>Compor em um arquivo de capítulo compõe o arquivo principal, e a janela de pré-visualização do arquivo principal mostra o documento inteiro. Uma linha <code>% !TEX program</code> ou outras linhas mágicas para a composição devem ficar no arquivo principal.</li>
-<li>Mostrar erro abre o arquivo que contém um erro, se ele não estiver aberto, e vai para a linha.</li>
+<li>Editar › Ir para o erro abre o arquivo que contém um erro, se ele não estiver aberto, e vai para a linha.</li>
 <li>A sincronização a partir da janela de pré-visualização abre o arquivo de capítulo que contém o ponto clicado; consulte <a href="advanced_pdfsync.htm">Sincronizar código-fonte e pré-visualização</a>.</li>
 <li>Limpar arquivos auxiliares remove os arquivos auxiliares do arquivo principal; consulte <a href="advanced_removeaux.htm">Remover arquivos AUX</a>.</li>
-<li>Janela › Código ⇔ Visualizar (<kbd>⌘1</kbd>) em um arquivo de capítulo traz para a frente a janela de pré-visualização do arquivo principal. Usá-lo de novo na janela de pré-visualização volta à janela do código-fonte de onde você veio, ou ao arquivo principal se você não veio de uma janela do código-fonte.</li>
+<li>Janela › Código-fonte ⇔ Pré-visualização (<kbd>⌘1</kbd>) em um arquivo de capítulo traz para a frente a janela de pré-visualização do arquivo principal. Usá-lo de novo na janela de pré-visualização volta à janela do código-fonte de onde você veio, ou ao arquivo principal se você não veio de uma janela do código-fonte.</li>
 </ul>
 
 <h2>Abrir um arquivo de capítulo</h2>
-<p>Quando um arquivo de capítulo com uma linha root é aberto, o TeXShop também abre o arquivo principal e a sua janela de pré-visualização. Dois itens de Ajustes › Geral › Arquivo principal do projeto controlam isso: “Abrir o arquivo principal ao abrir um documento” ativa ou desativa esse comportamento, e “Minimizar a janela do arquivo raiz” envia a janela do código-fonte do arquivo principal para o Dock, já que ela raramente é editada enquanto você trabalha em um capítulo.</p>
+<p>Quando um arquivo de capítulo com uma linha root é aberto, o TeXShop também abre o arquivo principal e a sua janela de pré-visualização. Dois itens de Ajustes › Geral › Arquivo principal do projeto controlam isso: “Abrir o arquivo principal ao abrir um documento” ativa ou desativa esse comportamento, e “Minimizar a janela do arquivo principal” envia a janela do código-fonte do arquivo principal para o Dock, já que ela raramente é editada enquanto você trabalha em um capítulo.</p>
 
 <h2>Buscar e substituir no projeto inteiro</h2>
-<p>Para buscar em todos os arquivos de um projeto de uma só vez, escolha Editar › Procurar › Buscar nas Fontes TeX com a Mesma TEX root… em um dos seus arquivos de capítulo, ou Buscar nas Fontes TeX com Este Arquivo como TEX root… no arquivo principal. A busca abrange o arquivo principal e os arquivos <code>.tex</code> da sua pasta e das subpastas que o indicam em uma linha root nas suas 20 primeiras linhas. Consulte <a href="basic_texrootsearch.htm">Buscar nas fontes TeX</a> e <a href="basic_find.htm">Buscar e substituir</a>.</p>
+<p>Para buscar em todos os arquivos de um projeto de uma só vez, escolha Editar › Buscar › Buscar nas Fontes TeX com a Mesma TEX root… em um dos seus arquivos de capítulo, ou Buscar nas Fontes TeX com Este Arquivo como TEX root… no arquivo principal. A busca abrange o arquivo principal e os arquivos <code>.tex</code> da sua pasta e das subpastas que o indicam em uma linha root nas suas 20 primeiras linhas. Consulte <a href="basic_texrootsearch.htm">Buscar nas fontes TeX</a> e <a href="basic_find.htm">Buscar e substituir</a>.</p>
 
 <h2>Arquivos principais indicados em arquivos .texshop</h2>
 <p>Um arquivo com a extensão <code>.texshop</code> ao lado de um arquivo de capítulo, como <code>two.texshop</code> para <code>two.tex</code>, também pode indicar o arquivo principal, e o TeXShop ainda o lê. Nenhum comando de menu cria esses arquivos; use uma linha <code>% !TEX root</code>, que acompanha o código-fonte.</p>

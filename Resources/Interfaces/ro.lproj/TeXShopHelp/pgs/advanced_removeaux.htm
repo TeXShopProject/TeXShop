@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ștergerea fișierelor AUX</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="Șterge fișierele aux; Trash Aux &amp; Compilare; aux; log; fișiere auxiliare; OtherTrashExtensions; AggressiveTrashAUX">
+<meta name="description" content="Ștergeți fișierele aux; Ștergeți fișierele aux și compilați; aux; log; fișiere auxiliare; OtherTrashExtensions; AggressiveTrashAUX">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -43,8 +43,8 @@
 
 <h2>Mutarea fișierelor în Coș</h2>
 <ul>
-<li>Fișier › Șterge fișierele aux (<kbd>⌃⌘A</kbd>) sau butonul „Ștergeți fișierele aux” din consolă mută în Coș fișierele auxiliare ale documentului.</li>
-<li>Compilare › Trash Aux &amp; Compilare (<kbd>⌥⌘T</kbd>) face acest lucru și apoi compilează. În meniul „Compilare”, articolul apare în locul articolului „Compilare” cât timp țineți apăsată tasta Opțiune.</li>
+<li>Fișier › Ștergeți fișierele aux (<kbd>⌃⌘A</kbd>) sau butonul „Ștergeți fișierele aux” din consolă mută în Coș fișierele auxiliare ale documentului.</li>
+<li>Compilare › Ștergeți fișierele aux și compilați (<kbd>⌥⌘T</kbd>) face acest lucru și apoi compilează. În meniul „Compilare”, articolul apare în locul articolului „Compilare” cât timp țineți apăsată tasta Opțiune.</li>
 </ul>
 <p>Sunt mutate în Coș fișierele din dosarul sursei care au numele ei și una dintre aceste extensii:</p>
 <pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
@@ -56,14 +56,14 @@ ttt  wrm  xref</pre>
 
 <h2>Variante</h2>
 <ul>
-<li>Țineți apăsată tasta Shift când alegeți „Șterge fișierele aux” sau când faceți clic pe buton pentru a muta în Coș și fișierul PDF al documentului. De obicei PDF-ul vechi se păstrează, pentru ca fereastra de previzualizare să aibă ce afișa când compilarea eșuează.</li>
-<li>Țineți apăsată tasta Opțiune când alegeți „Șterge fișierele aux” sau când faceți clic pe buton pentru a curăța un întreg proiect: orice fișier cu una dintre extensiile de mai sus din dosarul fișierului principal și din toate dosarele de sub el este mutat în Coș, oricare i-ar fi numele. Astfel se elimină și fișierele <code>.aux</code> pe care <code>\include</code> le scrie pentru capitolele din subdosare.</li>
+<li>Țineți apăsată tasta Shift când alegeți „Ștergeți fișierele aux” sau când faceți clic pe buton pentru a muta în Coș și fișierul PDF al documentului. De obicei PDF-ul vechi se păstrează, pentru ca fereastra de previzualizare să aibă ce afișa când compilarea eșuează.</li>
+<li>Țineți apăsată tasta Opțiune când alegeți „Ștergeți fișierele aux” sau când faceți clic pe buton pentru a curăța un întreg proiect: orice fișier cu una dintre extensiile de mai sus din dosarul fișierului principal și din toate dosarele de sub el este mutat în Coș, oricare i-ar fi numele. Astfel se elimină și fișierele <code>.aux</code> pe care <code>\include</code> le scrie pentru capitolele din subdosare.</li>
 </ul>
 <p>Două configurări ascunse modifică acest comportament. Pentru a adăuga extensii la listă, de exemplu <code>dvi</code>, tastați în Terminal</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
 <p>iar pentru a reveni la lista standard</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array</pre>
-<p>Pentru ca acțiunea cu tasta Opțiune să devină comportamentul standard al comenzii „Șterge fișierele aux”:</p>
+<p>Pentru ca acțiunea cu tasta Opțiune să devină comportamentul standard al comenzii „Ștergeți fișierele aux”:</p>
 <pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
 </main>
 </body>

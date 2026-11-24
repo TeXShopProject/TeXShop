@@ -59,7 +59,7 @@ xelatex  -file-line-error -synctex=1 "$1"</pre>
 <dl>
 <dt><code>$1</code></dt><dd>源文件的名称（带扩展名，不带所在文件夹），例如 <code>main.tex</code>。会切换到其他文件夹的脚本必须先记下完整路径，例如写成 <code>"$PWD/$1"</code>。在项目中，这是根文件。</dd>
 <dt><code>$2</code></dt><dd>源文件（根文件）开头附近 <code>% !TEX parameter = …</code> 一行的其余部分，多个选项以空格分隔，例如 <code>% !TEX parameter = -shell-escape</code>。没有这一行时，它是一个空格。</dd>
-<dt><code>$3</code></dt><dd>“设置”>“排版”>“路径”的“TeX引擎”栏中的文件夹；当文稿包含 <code>% !TEX useAlternatePath</code> 一行时，则是“第二组TeX引擎”中的文件夹。</dd>
+<dt><code>$3</code></dt><dd>“设置”>“排版”>“路径”的“TeX 引擎”栏中的文件夹；当文稿包含 <code>% !TEX useAlternatePath</code> 一行时，则是“第二组 TeX 引擎”中的文件夹。</dd>
 </dl>
 <p>引擎结束后，TeXShop 会在预览窗口中打开与源文件同名、扩展名为 <code>.pdf</code> 的 PDF 文件（如果存在），并滚动到排版前显示的位置。生成其他输出的脚本可以用以下几行指定要显示的内容，这些行可以写在引擎中的任何位置，放在该语言的注释中：</p>
 <table>
@@ -80,7 +80,7 @@ lualatex -file-line-error -synctex=1 "$1"</pre>
 
 <h2>Inactive 文件夹</h2>
 <p>子文件夹 <code>Engines/Inactive</code> 中包含用于特殊工作流程的引擎，通常附有说明文档和示例，例如用于 latexmk、ConTeXt、Sage、PreTeXt、pythontex 和 Typst 的引擎。要使用其中某个引擎，请将它从所在文件夹移到 Engines 文件夹本身中。更新 TeXShop 时，Inactive 文件夹会被替换为当前版本，而直接位于 Engines 文件夹中的文件永远不会被改动，因此你编辑过的引擎会保留下来。</p>
-<p>有关引擎的更多信息，请参阅“帮助”>“TeXShop手册（英文）”中的“Engines and latexmk”一章。</p>
+<p>有关引擎的更多信息，请参阅“帮助”>“TeXShop 手册（英文）”中的“Engines and latexmk”一章。</p>
 </main>
 </body>
 </html>

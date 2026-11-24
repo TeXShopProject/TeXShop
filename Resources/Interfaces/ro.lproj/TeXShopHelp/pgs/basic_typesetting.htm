@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Compilarea documentelor</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="compilare; primul document; Compilare; consolă; erori; Mergi la Eroare; Abandonați; Șterge fișierele aux; profilul motorului; % !TEX program; fișier principal; SyncTeX; Folosește o singură fereastră">
+<meta name="description" content="compilare; primul document; Compilare; consolă; erori; Accesați eroarea; Abandonați; Ștergeți fișierele aux; profilul motorului; % !TEX program; fișier principal; SyncTeX; Folosiți o singură fereastră">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,8 +24,8 @@
 <li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
 <li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
 <li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
-<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
-<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
 <li><a href="basic_macros.htm">Macrocomenzi</a></li>
 <li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
 <li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
@@ -47,49 +47,49 @@
 
 <p>Faceți clic pe „Compilare” în bara de instrumente sau apăsați <kbd>⌘T</kbd> (Compilare › Compilare). Prima dată, TeXShop vă întreabă unde să salveze documentul. TeX scrie mai multe fișiere lângă sursă, așa că dați fiecărui document un dosar propriu. Apoi TeXShop rulează TeX și deschide o fereastră de previzualizare cu documentul compilat.</p>
 
-<p>De acum înainte, scrieți, compilați și priviți rezultatul. TeXShop salvează sursa înainte de fiecare compilare, iar previzualizarea rămâne la pagina pe care o citeați. <kbd>⌘T</kbd> funcționează în sursă, în previzualizare și în consolă, iar <kbd>⌘1</kbd> (Fereastră › Sursă ⇔ Previzualizare) comută între sursă și previzualizarea ei. Configurări › Compunere › După tehnoredactare alege ce fereastră trece în prim-plan când TeX se termină.</p>
+<p>De acum înainte, scrieți, compilați și priviți rezultatul. TeXShop salvează sursa înainte de fiecare compilare, iar previzualizarea rămâne la pagina pe care o citeați. <kbd>⌘T</kbd> funcționează în sursă, în previzualizare și în consolă, iar <kbd>⌘1</kbd> (Fereastră › Sursă ⇔ Previzualizare) comută între sursă și previzualizarea ei. Configurări › Compilare › După compilare alege ce fereastră trece în prim-plan când TeX se termină.</p>
 
 <p>Deschiderea unui fișier .tex deschide și fișierul PDF cu același nume, dacă există. Închiderea ferestrei de previzualizare lasă sursa deschisă, iar previzualizarea revine la următoarea compilare; închiderea ferestrei sursă închide documentul.</p>
 
 <h2>Consola</h2>
 
-<p>Cât timp rulează TeX, mesajele sale apar în consolă. Configurări › Consolă › Arată consola alege dacă consola trece în prim-plan la fiecare compilare (întotdeauna) sau numai când TeX raportează o eroare (la apariția unei erori). Fișier › Afișează consola (<kbd>⌘0</kbd>) aduce în prim-plan consola documentului activ, iar <kbd>⌘0</kbd> în consolă revine la fereastra din care ați venit. Textul consolei poate fi selectat și copiat oricând.</p>
+<p>Cât timp rulează TeX, mesajele sale apar în consolă. Configurări › Consolă › Afișați consola alege dacă consola trece în prim-plan la fiecare compilare (întotdeauna) sau numai când TeX raportează o eroare (la apariția unei erori). Fișier › Afișați consola (<kbd>⌘0</kbd>) aduce în prim-plan consola documentului activ, iar <kbd>⌘0</kbd> în consolă revine la fereastra din care ați venit. Textul consolei poate fi selectat și copiat oricând.</p>
 
-<p>Când găsește o eroare, TeX afișează un mesaj la sfârșitul consolei și așteaptă un răspuns. Introduceți-l în câmpul din partea de jos a consolei și apăsați Return; Return singur trece la următoarea eroare, iar câmpul enumeră celelalte răspunsuri pe care TeX le acceptă. Pentru a opri TeX, faceți clic pe „Abandonați” în consolă sau alegeți Fișier › Abandonează compilarea (<kbd>⌃⌥⌘A</kbd>).</p>
+<p>Când găsește o eroare, TeX afișează un mesaj la sfârșitul consolei și așteaptă un răspuns. Introduceți-l în câmpul din partea de jos a consolei și apăsați Return; Return singur trece la următoarea eroare, iar câmpul enumeră celelalte răspunsuri pe care TeX le acceptă. Pentru a opri TeX, faceți clic pe „Abandonați” în consolă sau alegeți Fișier › Abandonați compilarea (<kbd>⌃⌥⌘A</kbd>).</p>
 
 <h2>Găsirea erorilor</h2>
 
-<p>„Mergi la Eroare” din consolă sau Editare › Mergi la Eroare (<kbd>⌃⌘E</kbd>) derulează sursa până la linia primei erori și o evidențiază; alegeți comanda din nou pentru eroarea următoare. Dacă eroarea se află în alt fișier al proiectului, acel fișier se deschide. Adesea este mai rapid să corectați câteva erori și să compilați din nou, deoarece o eroare poate provoca mai multe altele. „Mergi la Eroare” se bazează pe numele de fișiere și pe numerele de linie pe care TeX le scrie cu <code>-file-line-error</code>, opțiune folosită de comenzile și fișierele de motor ale TeXShop.</p>
+<p>„Accesați eroarea” din consolă sau Editare › Accesați eroarea (<kbd>⌃⌘E</kbd>) derulează sursa până la linia primei erori și o evidențiază; alegeți comanda din nou pentru eroarea următoare. Dacă eroarea se află în alt fișier al proiectului, acel fișier se deschide. Adesea este mai rapid să corectați câteva erori și să compilați din nou, deoarece o eroare poate provoca mai multe altele. „Accesați eroarea” se bazează pe numele de fișiere și pe numerele de linie pe care TeX le scrie cu <code>-file-line-error</code>, opțiune folosită de comenzile și fișierele de motor ale TeXShop.</p>
 
-<p>LaTeX scrie informații pentru rularea următoare, cum ar fi cuprinsul și trimiterile încrucișate, într-un fișier .aux și în alte fișiere auxiliare, așa că un document poate avea nevoie de două sau trei rulări până când toate trimiterile sunt corecte. O eroare poate lăsa aceste fișiere deteriorate, iar atunci documentul poate să nu se mai compileze nici după ce eroarea a fost corectată. Alegeți Compilare › Trash Aux &amp; Compilare (<kbd>⌥⌘T</kbd>) pentru a muta fișierele auxiliare în Coș și a compila din nou, sau Fișier › Șterge fișierele aux (<kbd>⌃⌘A</kbd>), care este și un buton în consolă. Consultați <a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a>.</p>
+<p>LaTeX scrie informații pentru rularea următoare, cum ar fi cuprinsul și trimiterile încrucișate, într-un fișier .aux și în alte fișiere auxiliare, așa că un document poate avea nevoie de două sau trei rulări până când toate trimiterile sunt corecte. O eroare poate lăsa aceste fișiere deteriorate, iar atunci documentul poate să nu se mai compileze nici după ce eroarea a fost corectată. Alegeți Compilare › Ștergeți fișierele aux și compilați (<kbd>⌥⌘T</kbd>) pentru a muta fișierele auxiliare în Coș și a compila din nou, sau Fișier › Ștergeți fișierele aux (<kbd>⌃⌘A</kbd>), care este și un buton în consolă. Consultați <a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a>.</p>
 
 <h2 id="engine">Alegerea motorului</h2>
 
-<p>Configurări › Compunere › Profilul motorului pregătește într-un singur pas compilarea pentru un motor. Alegeți profilul motorului pe care îl folosiți; o foaie enumeră valorile pe care le stabilește, iar „OK” le aplică. În foaie, „Rulare LaTeX” poate fi pus pe „Cu latexmk”, astfel încât latexmk să ruleze BibTeX, indexul și rulările suplimentare, după cum e nevoie. De îndată ce una dintre aceste valori este modificată, meniul arată „Personalizat”. Manualul TeXShop enumeră ce stabilesc profilurile.</p>
+<p>Configurări › Compilare › Profilul motorului pregătește într-un singur pas compilarea pentru un motor. Alegeți profilul motorului pe care îl folosiți; o foaie enumeră valorile pe care le stabilește, iar „OK” le aplică. În foaie, „Rulare LaTeX” poate fi pus pe „Cu latexmk”, astfel încât latexmk să ruleze BibTeX, indexul și rulările suplimentare, după cum e nevoie. De îndată ce una dintre aceste valori este modificată, meniul arată „Personalizat”. Manualul TeXShop enumeră ce stabilesc profilurile.</p>
 
-<p>Pentru un singur document, alegeți motorul din meniul pop-up „Programare” de lângă „Compilare” în bara de instrumente. Acesta enumeră plain TeX, LaTeX, BibTeX, MakeIndex și MetaPost, urmate de fișierele de motor din ~/Library/TeXShop/Engines, cum ar fi LuaLaTeX și XeLaTeX, iar alegerea este valabilă pentru acea fereastră. Pentru ca alegerea să facă parte din document, puneți o linie ca aceasta printre primele 20 de linii ale sursei:</p>
+<p>Pentru un singur document, alegeți motorul din meniul pop-up „Program” de lângă „Compilare” în bara de instrumente. Acesta enumeră plain TeX, LaTeX, BibTeX, MakeIndex și MetaPost, urmate de fișierele de motor din ~/Library/TeXShop/Engines, cum ar fi LuaLaTeX și XeLaTeX, iar alegerea este valabilă pentru acea fereastră. Pentru ca alegerea să facă parte din document, puneți o linie ca aceasta printre primele 20 de linii ale sursei:</p>
 
 <pre>% !TEX program = LuaLaTeX</pre>
 
-<p>Apoi <kbd>⌘T</kbd> compilează fișierul întotdeauna cu acel motor. Numele este cel al unui fișier de motor sau unul dintre <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> și <code>tex</code> pentru LaTeX și plain TeX încorporate (consultați <a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a>). Macro › Program inserează o astfel de linie, cu motorul ales dintr-o listă; scrie <code>% !TEX TS-program =</code>, care înseamnă același lucru. Configurări › Compunere › Culege documentele noi cu stabilește motorul documentelor fără o astfel de linie. Pentru fișierele de motor, consultați <a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a>.</p>
+<p>Apoi <kbd>⌘T</kbd> compilează fișierul întotdeauna cu acel motor. Numele este cel al unui fișier de motor sau unul dintre <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> și <code>tex</code> pentru LaTeX și plain TeX încorporate (consultați <a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a>). Macro › Program inserează o astfel de linie, cu motorul ales dintr-o listă; scrie <code>% !TEX TS-program =</code>, care înseamnă același lucru. Configurări › Compilare › Compilați documentele noi cu stabilește motorul documentelor fără o astfel de linie. Pentru fișierele de motor, consultați <a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a>.</p>
 
 <p>Meniul „Compilare” rulează și BibTeX, MakeIndex și MetaPost pentru document; consultați <a href="advanced_bibtex.htm">BibTeX</a> și <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
 
 <h2>Documente în mai multe fișiere</h2>
 
-<p>O carte este adesea împărțită într-un fișier principal, care conține preambulul, și fișiere de capitol pe care acesta le citește cu <code>\include</code> sau <code>\input</code>. Puneți o linie precum <code>% !TEX root = ../Book.tex</code> la începutul fiecărui fișier de capitol, indicând fișierul principal prin calea sa pornind de la fișierul de capitol. Atunci <kbd>⌘T</kbd> într-un fișier de capitol compilează fișierul principal, iar „Mergi la Eroare” și SyncTeX găsesc fișierul de capitol potrivit. Consultați <a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a>.</p>
+<p>O carte este adesea împărțită într-un fișier principal, care conține preambulul, și fișiere de capitol pe care acesta le citește cu <code>\include</code> sau <code>\input</code>. Puneți o linie precum <code>% !TEX root = ../Book.tex</code> la începutul fiecărui fișier de capitol, indicând fișierul principal prin calea sa pornind de la fișierul de capitol. Atunci <kbd>⌘T</kbd> într-un fișier de capitol compilează fișierul principal, iar „Accesați eroarea” și SyncTeX găsesc fișierul de capitol potrivit. Consultați <a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a>.</p>
 
 <h2>Trecerea între sursă și previzualizare</h2>
 
 <p>Faceți Comandă-clic pe un cuvânt din sursă, iar previzualizarea derulează până la textul compilat și îl marchează. Faceți Comandă-clic în previzualizare, iar sursa trece în prim-plan cu textul corespunzător marcat; într-un document cu fișiere de capitol, fișierul de capitol se deschide dacă e nevoie. Potrivirea nu este întotdeauna exactă, așa că priviți în jurul locului marcat. Culorile marcajelor se stabilesc în Configurări › Teme › SyncTeX.</p>
 
-<p>Aceasta folosește SyncTeX, pe care motoarele îl acceptă când sunt rulate cu <code>-synctex=1</code>, cum sunt rulate de comenzile și fișierele de motor ale TeXShop; Configurări › Compunere › Metoda de sincronizare trebuie să fie „SyncTeX (recomandat)”. Fișierul SyncTeX al unui document înregistrează unde se află fișierele sale, așa că, după mutarea dosarului unui proiect, compilați încă o dată înainte de sincronizare.</p>
+<p>Aceasta folosește SyncTeX, pe care motoarele îl acceptă când sunt rulate cu <code>-synctex=1</code>, cum sunt rulate de comenzile și fișierele de motor ale TeXShop; Configurări › Compilare › Metoda de sincronizare trebuie să fie „SyncTeX (recomandat)”. Fișierul SyncTeX al unui document înregistrează unde se află fișierele sale, așa că, după mutarea dosarului unui proiect, compilați încă o dată înainte de sincronizare.</p>
 
 <h2>Aranjarea ferestrelor</h2>
 
-<p>Fereastră › Folosește o singură fereastră așază sursa și previzualizarea ei una lângă alta într-o singură fereastră, iar Fereastră › Folosește ferestre separate le separă din nou. Pentru a deschide astfel fiecare document, setați Configurări › General › Ferestre › Sursă și previzualizare la „Unește într-o singură fereastră”; „Poziția sursei în fereastra combinată” pune sursa în stânga sau în dreapta. Trageți separatorul pentru a da sursei mai mult sau mai puțin spațiu; TeXShop deschide fiecare fereastră combinată cu aceeași proporție. Un fișier de capitol cu o linie <code>% !TEX root</code> rămâne în ferestre separate; fișierul principal însuși poate folosi o singură fereastră. Fișier › Nou deschide doar o fereastră sursă: compilați mai întâi documentul nou, apoi alegeți Folosește o singură fereastră.</p>
+<p>Fereastră › Folosiți o singură fereastră așază sursa și previzualizarea ei una lângă alta într-o singură fereastră, iar Fereastră › Folosiți ferestre separate le separă din nou. Pentru a deschide astfel fiecare document, setați Configurări › General › Ferestre › Sursă și previzualizare la „Folosiți o singură fereastră”; „Poziția sursei în fereastra combinată” pune sursa în stânga sau în dreapta. Trageți separatorul pentru a da sursei mai mult sau mai puțin spațiu; TeXShop deschide fiecare fereastră combinată cu aceeași proporție. Un fișier de capitol cu o linie <code>% !TEX root</code> rămâne în ferestre separate; fișierul principal însuși poate folosi o singură fereastră. Fișier › Nou deschide doar o fereastră sursă: compilați mai întâi documentul nou, apoi alegeți Folosiți o singură fereastră.</p>
 
-<p>Cu ferestre separate, așezați și dimensionați ferestrele sursă și de previzualizare cum doriți, apoi alegeți Sursă › Salvează poziția sursei și Previzualizare › Salvează poziția previzualizării; ferestrele noi se deschid acolo.</p>
+<p>Cu ferestre separate, așezați și dimensionați ferestrele sursă și de previzualizare cum doriți, apoi alegeți Sursă › Salvați poziția sursei și Previzualizare › Salvați poziția previzualizării; ferestrele noi se deschid acolo.</p>
 </main>
 </body>
 </html>

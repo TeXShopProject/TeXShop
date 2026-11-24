@@ -1,27 +1,27 @@
 /* Localizable strings Dutch*/
 
 /* title for the tags menu */
-"Tags" = "Markeringen";
+"Tags" = "Tags";
 "Typeset" = "Zet";
 "Save" = "Bewaar";
 "Print..." = "Druk af...";
-"Print Source..." = "Print broncode";
-"Set Project Root..." = "Stel moederbestand ln...";
+"Print Source..." = "Druk broncode af...";
+"Set Project Root..." = "Stel hoofdbestand in...";
 "LaTeX Panel..." = "LaTeX-venster...";
 "Close LaTeX Panel" = "Sluit LaTeX-venster";
 "Matrix Panel..." = "Matrix-venster...";
 "Close Matrix Panel" = "Sluit Matrix-venster";
-"Open for Preview..." = "Open alleen Printvoorbeeld";
-"Open for Editing..." = "Open in TeXShop Editor";
+"Open for Preview..." = "Open voor voorvertoning...";
+"Open for Editing..." = "Open voor bewerking...";
 "File" = "Archief";
-"Goto Error" = "Ga naar fout...";
+"Goto Error" = "Ga naar fout";
 "RotateClockwise" = "Roteer met klok mee";
 "RotateCounterclockwise" = "Roteer tegen klok in";
 "Comment" = "Maak commentaar";
 "Uncomment" = "Hef commentaar op";
 "Indent" = "Verhoog inspringniveau";
 "Unindent" = "Verlaag inspringniveau";
-"Macros" = "Macro's";
+"Macros" = "Macro’s";
 "Open Macro Editor..." = "Open macro-editor...";
 "Close Macro Editor" = "Sluit macro-editor";
 "Add macros from file..." = "Voeg macro’s toe uit bestand...";
@@ -39,9 +39,9 @@
 "Magnification Panel" = "Vergrotingsvenster";
 "Omit Shell Escape" = "Zonder shell-escape";
 "Warning: Using Shell Escape" = "Waarschuwing: shell-escape wordt gebruikt";
-"Preview" = "Pagina";
+"Preview" = "Voorvertoning";
 "Display Format" = "Weergavetype";// mitsu 1.29b
-"Magnification" = "Zoomen";// mitsu 1.29b
+"Magnification" = "Vergroting";// mitsu 1.29b
 "Copy Format" = "Formaat kopiëren";// mitsu 1.29b
 "ToolbarItems" = "Knoppenbalkonderdelen";
 "Autocompletion" = "Invoer via toetsbinding";
@@ -55,7 +55,7 @@
 "The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "De koppeling /Library/TeX/texbin bestaat niet. Ga om dit op te lossen naar https://tug.org/mactex en installeer MacTeX of Basic TeX (2015 of later).";
 "%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ bestaat niet. TeXShop is een front-end voor TeX, maar u hebt ook een TeX-distributie nodig. Misschien is zo’n distributie niet geïnstalleerd of is ze bij een systeemupgrade verwijderd. Ga in dat geval naar https://tug.org/mactex en volg de instructies om MacTeX of BasicTeX te installeren.";
 "Can't find required tool." = "Kan vereist hulpprogramma niet vinden.";
-"Typesetting engine cannot be found." = "Het zetprogramma is niet gevonden.";
+"Typesetting engine cannot be found." = "De zet-engine is niet gevonden.";
 "The source LaTeX document cannot be found." = "Het LaTeX-brondocument is niet gevonden.";
 "Sync Marks" = "Synchronisatiepunten";
 "%@ does not exist." = "%@ bestaat niet.";
@@ -101,9 +101,9 @@
 "New Tag" = "Nieuwe tag";
 "Split Window" = "Splits venster";
 "New Document" = "Nieuw document";
-"Link Popups" = "Beweeg pop-ups";
+"Link Popups" = "Pop-ups van links";
 "Split Window with Link" = "Splits venster met link";
-"Highlight expl3 Code" = "expl3-code markeren";
+"Highlight expl3 Code" = "Markeer expl3-code";
 "PDF File Has No Annotations" = "PDF-bestand bevat geen annotaties";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
@@ -123,27 +123,27 @@
 
 "Replacement for Change All" = "Vervanging voor Wijzig alles";
 
-"Return to the word and choose Find Next before replacing." = "Ga terug naar het woord en zoek opnieuw het volgende woord.";
+"Return to the word and choose Find Next before replacing." = "Ga terug naar het woord en kies ‘Zoek volgende’ voordat u vervangt.";
 
-"Enter a different replacement in the Change All field." = "Voer een andere vervanging in het aparte veld in.";
+"Enter a different replacement in the Change All field." = "Voer een andere vervanging in het veld ‘Wijzig alles’ in.";
 
 /* Notice after line endings were converted to LF when a document was opened */
 "This document mixes different line endings." = "Dit document bevat verschillende regeleinden.";
 "This document uses Windows line endings (CRLF)." = "Dit document gebruikt Windows-regeleinden (CRLF).";
 "This document uses classic Mac line endings (CR)." = "Dit document gebruikt klassieke Mac-regeleinden (CR).";
-"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop heeft alle regeleinden omgezet naar LF. Als je het document bewaart, krijgt het bestand LF-regeleinden.";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop heeft alle regeleinden omgezet naar LF. Als u het document bewaart, krijgt het bestand LF-regeleinden.";
 "Don’t show again for this document" = "Niet meer tonen voor dit document";
 
 /* Engine path discovery */
 
 "Not found" = "Niet gevonden";
-"Version unavailable" = "Onbekend";
+"Version unavailable" = "Versie niet beschikbaar";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "Zoek commando’s";
 "Command" = "Commando";
 "Shortcut" = "Toetscombinatie";
-"Remove Shortcut" = "Verwijder combinatie";
+"Remove Shortcut" = "Verwijder toetscombinatie";
 "Restore Default" = "Herstel standaard";
 "Default shortcut: %@" = "Standaardtoetscombinatie: %@";
 "Default shortcut: None" = "Standaardtoetscombinatie: geen";
@@ -189,13 +189,13 @@
 "Inactive for this key" = "Inactief voor deze toets";
 "No command uses this key." = "Geen commando gebruikt deze toets.";
 "Press a key" = "Druk op een toets";
-"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Deze toets kan niet als sneltoets worden gebruikt. Gebruik Command of Control met een toets, of F1–F20.";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Deze toets kan niet als toetscombinatie worden gebruikt. Gebruik Command of Control met een toets, of F1–F20.";
 
 
-"This key cannot be assigned to a new shortcut." = "Deze toets kan niet aan een nieuwe sneltoets worden toegewezen.";
+"This key cannot be assigned to a new shortcut." = "Deze toets kan niet aan een nieuwe toetscombinatie worden toegewezen.";
 
 /* Number of key search results, announced by VoiceOver. */
-"Matches: %lu" = "Resultaten: %lu";
+"Matches: %lu" = "Overeenkomsten: %lu";
 
 "The theme “%@” already exists. Replace it?" = "Het thema ‘%@’ bestaat al. Wilt u het vervangen?";
 
@@ -262,11 +262,11 @@
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "De volgende macro’s gebruiken deze toetscombinatie. Als u deze aan het menucommando toewijst, worden hun toetscombinaties inactief.\n\n%@";
 
-"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "Geopende pdf’s behouden hun zoom. De nieuwe waarde geldt voor pdf’s die vanaf nu worden geopend.";
+"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "Geopende PDF’s behouden hun zoom. De nieuwe waarde geldt voor PDF’s die vanaf nu worden geopend.";
 
 "Takes effect after you restart TeXShop." = "Wordt van kracht nadat u TeXShop opnieuw start.";
 
-"Custom menu shortcuts will be removed." = "Aangepaste menusneltoetsen worden verwijderd.";
+"Custom menu shortcuts will be removed." = "Aangepaste menutoetscombinaties worden verwijderd.";
 
 
 /* System spelling dictionary selection. */
@@ -311,7 +311,7 @@
 "Paste" = "Plak";
 "Check “Paste” to also apply the replacement to pasted text." = "Als ‘Plak’ is aangevinkt, wordt de vervanging ook toegepast op geplakte tekst.";
 "Selected Text" = "Geselecteerde tekst";
-"Insertion Point" = "Invoegpositie";
+"Insertion Point" = "Invoegpunt";
 "Clipboard Text" = "Tekst op klembord";
 "Line Break" = "Regeleinde";
 "Tab" = "Tab";
@@ -383,7 +383,7 @@
 "Counting…" = "Tellen…";
 "detex was not found." = "detex is niet gevonden.";
 "detex failed." = "detex is mislukt.";
-"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Geteld door detex zonder de TeX-opdrachten, inclusief de bestanden die met \\input en \\include worden gelezen.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Geteld door detex zonder de TeX-commando’s, inclusief de bestanden die met \\input en \\include worden gelezen.";
 
 /* Issue #49: the annotation toolbar of the Preview */
 /* Annotation tool: the name the annotation menu gives it */
@@ -409,7 +409,7 @@
 /* Annotation tool: the name the annotation menu gives it */
 "Popup" = "Pop-up";
 /* Annotation toolbar: switch for edit mode */
-"Edit Mode" = "Wijzig";
+"Edit Mode" = "Bewerkingsmodus";
 /* Preview menu: shows the annotation toolbar under the toolbar */
 "Show Annotation Toolbar" = "Toon annotatieknoppenbalk";
 /* Preview menu, while the annotation toolbar is shown */
@@ -429,7 +429,7 @@
 /* Annotation toolbar: saves the annotated PDF */
 "Save Annotations…" = "Bewaar annotaties…";
 /* Annotation toolbar: Save Annotations saves every page */
-"All Pages" = "Alle pagina's";
+"All Pages" = "Alle pagina’s";
 /* Alignment of the text of an annotation */
 "Left" = "Links";
 /* Alignment of the text of an annotation */
@@ -454,7 +454,7 @@
 "Settings" = "Instellingen";
 
 /* Help > Show Help for Package: %@ is the path of the setting */
-"Another TeX installation on this Mac may have it. The installation that TeXShop uses is set in %@." = "Een andere TeX-installatie op deze Mac heeft ze misschien wel. Welke installatie TeXShop gebruikt, stel je in bij %@.";
+"Another TeX installation on this Mac may have it. The installation that TeXShop uses is set in %@." = "Een andere TeX-installatie op deze Mac heeft ze misschien wel. Welke installatie TeXShop gebruikt, stelt u in bij %@.";
 
 /* Help > Show Help for Package: no texdoc */
 "texdoc was not found." = "texdoc is niet gevonden.";
@@ -475,7 +475,7 @@
 "texdoc cannot be run." = "texdoc kan niet worden uitgevoerd.";
 
 /* Help > Show Help for Package: the path of texdoc and the path of the setting */
-"%@ is not executable. The folder is set in %@." = "%@ is niet uitvoerbaar. De map stel je in bij %@.";
+"%@ is not executable. The folder is set in %@." = "%@ is niet uitvoerbaar. De map stelt u in bij %@.";
 
 /* Help > Show Help for Package: followed by the folders texdoc is set to search */
 "texdoc of the TeX installation in %@ is set to search these folders:" = "texdoc van de TeX-installatie in %@ is ingesteld om in deze mappen te zoeken:";

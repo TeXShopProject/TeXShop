@@ -59,7 +59,7 @@
 
 <h2>Fouten vinden</h2>
 
-<p>‘Ga naar fout’ in de console, of Wijzig › Ga naar fout… (<kbd>⌃⌘E</kbd>), scrolt de bron naar de regel van de eerste fout en markeert die; kies het opnieuw voor de volgende fout. Als de fout in een ander bestand van het project zit, wordt dat bestand geopend. Vaak is het het snelst om een paar fouten te herstellen en opnieuw te zetten, omdat één fout verscheidene andere kan veroorzaken. ‘Ga naar fout’ gebruikt de bestandsnamen en regelnummers die TeX met <code>-file-line-error</code> schrijft, wat de commando’s en engine-bestanden van TeXShop gebruiken.</p>
+<p>‘Ga naar fout’ in de console, of Wijzig › Ga naar fout (<kbd>⌃⌘E</kbd>), scrolt de bron naar de regel van de eerste fout en markeert die; kies het opnieuw voor de volgende fout. Als de fout in een ander bestand van het project zit, wordt dat bestand geopend. Vaak is het het snelst om een paar fouten te herstellen en opnieuw te zetten, omdat één fout verscheidene andere kan veroorzaken. ‘Ga naar fout’ gebruikt de bestandsnamen en regelnummers die TeX met <code>-file-line-error</code> schrijft, wat de commando’s en engine-bestanden van TeXShop gebruiken.</p>
 
 <p>LaTeX schrijft informatie voor de volgende keer, zoals de inhoudsopgave en de kruisverwijzingen, in een .aux-bestand en andere hulpbestanden, zodat een document soms twee of drie keer gezet moet worden voordat elke verwijzing klopt. Een fout kan deze bestanden beschadigen, en het document laat zich dan soms niet meer zetten, ook niet nadat de fout is hersteld. Kies Zet › Wis Aux-bestanden &amp; Zet (<kbd>⌥⌘T</kbd>) om de hulpbestanden naar de prullenmand te verplaatsen en opnieuw te zetten, of Archief › Wis Aux-bestanden (<kbd>⌃⌘A</kbd>), dat ook een knop in de console is. Zie <a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a>.</p>
 
@@ -71,7 +71,7 @@
 
 <pre>% !TEX program = LuaLaTeX</pre>
 
-<p><kbd>⌘T</kbd> zet het bestand dan altijd met die engine. De naam is die van een engine-bestand, of een van <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> en <code>tex</code> voor de ingebouwde LaTeX en plain TeX (zie <a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a>). Macro's › Program voegt zo’n regel in, met de engine gekozen uit een lijst; het schrijft <code>% !TEX TS-program =</code>, wat hetzelfde betekent. Instellingen › Zetten › ‘Nieuwe documenten zetten met’ bepaalt de engine van documenten zonder zo’n regel. Zie <a href="advanced_addengine.htm">Zet-engines toevoegen</a> voor engine-bestanden.</p>
+<p><kbd>⌘T</kbd> zet het bestand dan altijd met die engine. De naam is die van een engine-bestand, of een van <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> en <code>tex</code> voor de ingebouwde LaTeX en plain TeX (zie <a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a>). Macro’s › Program voegt zo’n regel in, met de engine gekozen uit een lijst; het schrijft <code>% !TEX TS-program =</code>, wat hetzelfde betekent. Instellingen › Zetten › ‘Nieuwe documenten zetten met’ bepaalt de engine van documenten zonder zo’n regel. Zie <a href="advanced_addengine.htm">Zet-engines toevoegen</a> voor engine-bestanden.</p>
 
 <p>Het menu Zet voert ook BibTeX, MakeIndex en MetaPost uit op het document; zie <a href="advanced_bibtex.htm">BibTeX</a> en <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
 
@@ -87,9 +87,9 @@
 
 <h2>De vensters schikken</h2>
 
-<p>Venster › Gebruik één venster zet de bron en de voorvertoning ervan naast elkaar in één venster, en Venster › Gebruik aparte vensters haalt ze weer uit elkaar. Om elk document zo te openen, zet u Instellingen › Algemeen › Vensters › ‘Bron en voorvertoning’ op ‘Samenvoegen in één venster’; ‘Bronpositie in het gecombineerde venster’ zet de bron links of rechts. Sleep de scheidingslijn om de bron meer of minder ruimte te geven; TeXShop opent elk gecombineerd venster met dezelfde verdeling. Een hoofdstukbestand met een regel <code>% !TEX root</code> blijft in aparte vensters; het hoofdbestand zelf kan één venster gebruiken. Archief › Nieuw opent alleen een bronvenster: zet het nieuwe document eerst en kies daarna ‘Gebruik één venster’.</p>
+<p>Venster › Gebruik één venster zet de bron en de voorvertoning ervan naast elkaar in één venster, en Venster › Gebruik aparte vensters haalt ze weer uit elkaar. Om elk document zo te openen, zet u Instellingen › Algemeen › Vensters › ‘Bron en voorvertoning’ op ‘Gebruik één venster’; ‘Bronpositie in het gecombineerde venster’ zet de bron links of rechts. Sleep de scheidingslijn om de bron meer of minder ruimte te geven; TeXShop opent elk gecombineerd venster met dezelfde verdeling. Een hoofdstukbestand met een regel <code>% !TEX root</code> blijft in aparte vensters; het hoofdbestand zelf kan één venster gebruiken. Archief › Nieuw opent alleen een bronvenster: zet het nieuwe document eerst en kies daarna ‘Gebruik één venster’.</p>
 
-<p>Plaats en vergroot of verklein bij aparte vensters het bron- en het voorvertoningsvenster zoals u wilt, en kies dan Bron › Bewaar positie in bron en Pagina › Bewaar positie voorvertoning; nieuwe vensters openen dan daar.</p>
+<p>Plaats en vergroot of verklein bij aparte vensters het bron- en het voorvertoningsvenster zoals u wilt, en kies dan Bron › Bewaar bronpositie en Voorvertoning › Bewaar voorvertoningspositie; nieuwe vensters openen dan daar.</p>
 </main>
 </body>
 </html>

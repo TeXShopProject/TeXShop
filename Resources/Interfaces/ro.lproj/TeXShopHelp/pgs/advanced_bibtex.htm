@@ -63,7 +63,7 @@
 <p>Pentru a crea o bază de date nouă în TeXShop, alegeți tipul bib în meniul de format al fișierului din dialogul de salvare, pentru ca fișierul să primească extensia <code>.bib</code>. O bază de date poate sta și în arborele TeX personal, unde o găsește orice document; consultați <a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a>.</p>
 
 <h2>Alegerea programului</h2>
-<p>Compilare › BibTeX rulează comanda din Configurări › Compunere › „Instrumente asociate” › „Motor BibTeX”, implicit <code>bibtex</code>. Introduceți acolo alt program cu opțiunile de care are nevoie, de exemplu <code>biber</code> pentru documentele care folosesc pachetul biblatex. Profilurile motorului setează acest câmp: <code>pbibtex</code> pentru pLaTeX + dvipdfmx, <code>upbibtex</code> pentru upLaTeX + dvipdfmx și LuaLaTeX (japoneză) și <code>bibtex</code> pentru celelalte profiluri.</p>
+<p>Compilare › BibTeX rulează comanda din Configurări › Compilare › „Instrumente asociate” › „Motor BibTeX”, implicit <code>bibtex</code>. Introduceți acolo alt program cu opțiunile de care are nevoie, de exemplu <code>biber</code> pentru documentele care folosesc pachetul biblatex. Profilurile motorului setează acest câmp: <code>pbibtex</code> pentru pLaTeX + dvipdfmx, <code>upbibtex</code> pentru upLaTeX + dvipdfmx și LuaLaTeX (japoneză) și <code>bibtex</code> pentru celelalte profiluri.</p>
 <p>Pentru a alege programul pentru un singur document, puneți o linie ca aceasta într-una dintre primele lui douăzeci de linii:</p>
 <pre>% !BIB program = biber</pre>
 <p>Linia are prioritate față de configurare. Forma <code>% !BIB TS-program =</code> este citită la fel.</p>

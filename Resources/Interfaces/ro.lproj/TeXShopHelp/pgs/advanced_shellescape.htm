@@ -44,14 +44,14 @@
 
 <h2>Adăugarea opțiunii</h2>
 <ul>
-<li>În comanda LaTeX sau plain TeX din Configurări › Compunere › „PDF direct”, pentru toate documentele compilate „PDF direct”.</li>
+<li>În comanda LaTeX sau plain TeX din Configurări › Compilare › „PDF direct”, pentru toate documentele compilate „PDF direct”.</li>
 <li>Într-un fișier de motor, pentru toate documentele compilate cu acel motor; consultați <a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a>.</li>
 <li>Pentru un singur document compilat cu unul dintre motoarele latexmk, precum pdflatexmk, cu linia <code>% !TEX parameter = -shell-escape</code> la începutul sursei.</li>
 </ul>
 <p>Un motor are deja opțiunea: sepdflatexmk, care vine cu TeXShop și se află de la început în dosarul Engines, compilează întotdeauna cu <code>--shell-escape</code>. Este suficient să-l alegeți în bara de instrumente a ferestrei sursă sau cu o linie <code>% !TEX program = sepdflatexmk</code>, așa că folosiți-l numai pentru documente în care aveți încredere.</p>
 
 <h2>Confirmare la shell-escape</h2>
-<p>Configurări › Compunere › „PDF direct” › „Confirmare la shell-escape”, dezactivată implicit, protejează comenzile din grupul „PDF direct”. Când este activată și comanda plain TeX sau LaTeX de acolo conține <code>-shell-escape</code> sau <code>--shell-escape</code>, TeXShop întreabă înainte de a compila un document pentru prima dată după deschiderea lui:</p>
+<p>Configurări › Compilare › „PDF direct” › „Confirmare la shell-escape”, dezactivată implicit, protejează comenzile din grupul „PDF direct”. Când este activată și comanda plain TeX sau LaTeX de acolo conține <code>-shell-escape</code> sau <code>--shell-escape</code>, TeXShop întreabă înainte de a compila un document pentru prima dată după deschiderea lui:</p>
 <ul>
 <li>„OK” compilează cu opțiunea.</li>
 <li>„Omiteți shell escape” compilează fără ea.</li>

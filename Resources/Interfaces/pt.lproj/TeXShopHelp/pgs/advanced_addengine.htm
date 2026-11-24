@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Adicionar motores de composição</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="motor; arquivo de motor; .engine; pasta Engines; % !TEX program; % !TEX parameter; Compilador alternativo; Inactive; script de shell">
+<meta name="description" content="motor; arquivo de motor; .engine; pasta Engines; % !TEX program; % !TEX parameter; Motor alternativo; Inactive; script de shell">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -46,8 +46,8 @@
 <p>Para compor os documentos novos com um motor, escolha “Arquivo de motor” em Ajustes › Composição › Motor › “Compor documentos novos com” e escolha o motor no menu “Arquivo de motor”, logo abaixo. “Editar a lista de motores…” abre a pasta Engines no Finder; o menu “Arquivo de motor” acompanha a pasta à medida que você acrescenta, remove ou renomeia arquivos. Se o arquivo de motor escolhido não estiver mais na pasta, o menu o mostra como não encontrado e os documentos são compostos com o LaTeX.</p>
 <p>Para vincular um documento a um motor, coloque uma linha como esta em uma das suas vinte primeiras linhas:</p>
 <pre>% !TEX program = XeLaTeX</pre>
-<p>O nome é o nome do arquivo de motor sem <code>.engine</code>; <code>tex</code> e <code>latex</code> compõem o plain TeX e o LaTeX via DVI, e <code>pdftex</code> e <code>pdflatex</code> os compõem com PDF direto. A linha tem prioridade sobre a barra de ferramentas, sobre os ajustes e sobre “Compor com compilador alternativo”. A forma <code>% !TEX TS-program =</code> é lida da mesma maneira. Escreva a linha exatamente como mostrado, com um espaço de cada lado do sinal de igual; a macro Program do menu Macros insere a linha para você, com uma lista de nomes de motores para escolher. Em um projeto com arquivo principal, só o arquivo principal precisa da linha.</p>
-<p>Compor › Compor com compilador alternativo (<kbd>⌃⌥⌘T</kbd>) compõe uma vez com o motor de Ajustes › Composição › Motor › Compilador alternativo, pdflatexmk por padrão, sem alterar a barra de ferramentas. No menu Compor, o item aparece no lugar de Compor enquanto você mantém pressionadas as teclas Control e Option. Ele é adequado para documentos que normalmente são compostos em uma passagem rápida e, de vez em quando, por completo, com o latexmk.</p>
+<p>O nome é o nome do arquivo de motor sem <code>.engine</code>; <code>tex</code> e <code>latex</code> compõem o plain TeX e o LaTeX via DVI, e <code>pdftex</code> e <code>pdflatex</code> os compõem com PDF direto. A linha tem prioridade sobre a barra de ferramentas, sobre os ajustes e sobre “Compor com motor alternativo”. A forma <code>% !TEX TS-program =</code> é lida da mesma maneira. Escreva a linha exatamente como mostrado, com um espaço de cada lado do sinal de igual; a macro Program do menu Macros insere a linha para você, com uma lista de nomes de motores para escolher. Em um projeto com arquivo principal, só o arquivo principal precisa da linha.</p>
+<p>Compor › Compor com motor alternativo (<kbd>⌃⌥⌘T</kbd>) compõe uma vez com o motor de Ajustes › Composição › Motor › Motor alternativo, pdflatexmk por padrão, sem alterar a barra de ferramentas. No menu Compor, o item aparece no lugar de Compor enquanto você mantém pressionadas as teclas Control e Option. Ele é adequado para documentos que normalmente são compostos em uma passagem rápida e, de vez em quando, por completo, com o latexmk.</p>
 
 <h2>Escrever um motor</h2>
 <p>A maneira mais fácil de criar um motor é duplicar um dos motores da pasta Engines no Finder, renomear a cópia e abri-la no TeXShop para editá-la. Um arquivo de motor precisa ter a extensão <code>.engine</code> e permissão de execução, que uma cópia duplicada mantém. Os documentos abertos depois disso listam o novo motor na barra de ferramentas. Este é o XeLaTeX.engine:</p>

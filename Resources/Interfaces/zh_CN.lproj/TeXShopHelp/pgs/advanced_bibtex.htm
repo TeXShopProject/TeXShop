@@ -59,11 +59,11 @@
 <li>选取“排版”>“BibTeX”（<kbd>⇧⌘B</kbd>），或者在“排版”按钮旁边的弹出式菜单中选择 BibTeX，然后点按“排版”。</li>
 <li>再排版两次：第一次加入参考文献列表，第二次填入引用编号。</li>
 </ol>
-<p>用 latexmk 排版时（例如使用 pdflatexmk 引擎，或使用以“使用latexmk”设置的引擎配置），latexmk 会自行运行 BibTeX 和额外的排版遍次。</p>
+<p>用 latexmk 排版时（例如使用 pdflatexmk 引擎，或使用以“使用 latexmk”设置的引擎配置），latexmk 会自行运行 BibTeX 和额外的排版遍次。</p>
 <p>要在 TeXShop 中新建数据库，请在保存对话框的“文件格式”菜单中选择 bib 类型，使文件获得扩展名 <code>.bib</code>。数据库也可以放在你的个人 TeX 目录树中，这样每个文稿都能找到它；请参阅<a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a>。</p>
 
 <h2>选择程序</h2>
-<p>“排版”>“BibTeX”运行“设置”>“排版”>“相关工具”>“BibTeX引擎”中的命令，默认为 <code>bibtex</code>。可以在那里输入其他程序及其所需的选项，例如对使用 biblatex 宏包的文稿输入 <code>biber</code>。引擎配置会设置这一栏：pLaTeX + dvipdfmx 设为 <code>pbibtex</code>，upLaTeX + dvipdfmx 和 LuaLaTeX（日语）设为 <code>upbibtex</code>，其他配置设为 <code>bibtex</code>。</p>
+<p>“排版”>“BibTeX”运行“设置”>“排版”>“相关工具”>“BibTeX 引擎”中的命令，默认为 <code>bibtex</code>。可以在那里输入其他程序及其所需的选项，例如对使用 biblatex 宏包的文稿输入 <code>biber</code>。引擎配置会设置这一栏：pLaTeX + dvipdfmx 设为 <code>pbibtex</code>，upLaTeX + dvipdfmx 和 LuaLaTeX（日语）设为 <code>upbibtex</code>，其他配置设为 <code>bibtex</code>。</p>
 <p>要为单个文稿选择程序，请在文稿的前二十行之一中加入如下一行：</p>
 <pre>% !BIB program = biber</pre>
 <p>这一行优先于该设置。<code>% !BIB TS-program =</code> 这种形式也以同样方式读取。</p>

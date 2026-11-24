@@ -1,34 +1,34 @@
 /* Localizable Strings: Italian */
 
 /* Tags menu */
-"Tags" = "Etichette";
-"Typeset" = "Compilatore";
+"Tags" = "Tag";
+"Typeset" = "Compila";
 "Save" = "Salva";
 "Print..." = "Stampa...";
-"Print Source..." = "Stampa Sorgente...";
-"Set Project Root..." = "Definisci Documento Principale...";
+"Print Source..." = "Stampa sorgente...";
+"Set Project Root..." = "Imposta file principale del progetto...";
 "LaTeX Panel..." = "Pannello LaTeX...";
 "Close LaTeX Panel" = "Chiudi Pannello LaTeX";
 "Matrix Panel..." = "Pannello Matrici...";
 "Close Matrix Panel" = "Chiudi Pannello Matrici";
-"Open for Preview..." = "Apri per Anteprima...";
-"Open for Editing..." = "Apri per Editare...";
+"Open for Preview..." = "Apri per anteprima...";
+"Open for Editing..." = "Apri per modificare...";
 "File" = "File";
-"Goto Error" = "Vai all'Errore";
-"RotateClockwise" = "Ruota in Senso Orario";
-"RotateCounterclockwise" = "Ruota in Senso Antiorario";
-"Comment" = "Aggiungi Commento";
-"Uncomment" = "Rimuovi Commento";
-"Indent" = "Aumenta Rientranza";
-"Unindent" = "Diminuisci Rientranza";
+"Goto Error" = "Vai all’errore";
+"RotateClockwise" = "Ruota in senso orario";
+"RotateCounterclockwise" = "Ruota in senso antiorario";
+"Comment" = "Aggiungi commento";
+"Uncomment" = "Rimuovi commento";
+"Indent" = "Aumenta rientranza";
+"Unindent" = "Diminuisci rientranza";
 "Macros" = "Macro";
-"Open Macro Editor..." = "Apri Editor delle Macro...";
-"Close Macro Editor" = "Chiudi Editor delle Macro";
+"Open Macro Editor..." = "Apri Editor delle macro...";
+"Close Macro Editor" = "Chiudi Editor delle macro";
 "Add macros from file..." = "Aggiungi macro da un file...";
-"Save selection to file..." = "Salva la selezione...";
+"Save selection to file..." = "Salva la selezione in un file...";
 "Edit" = "Modifica";
 "Warning" = "Avviso";
-"Don't Save" = "Non registrare";
+"Don't Save" = "Non salvare";
 "Cancel" = "Annulla";
 "Do you want to save macros?" = "Vuoi salvare le macro?";
 "Save Spot" = "Salva Spot";
@@ -37,13 +37,13 @@
 "Page Number" = "Numero di pagina";
 "Page Number Panel" = "Pannello Numero di pagina";
 "Magnification Panel" = "Pannello Ingrandimento";
-"Omit Shell Escape" = "Ometti Shell Escape";
-"Warning: Using Shell Escape" = "Avviso: si sta usando il comando di Shell Escape";
+"Omit Shell Escape" = "Ometti shell-escape";
+"Warning: Using Shell Escape" = "Avviso: uso di shell-escape";
 "Preview" = "Anteprima";
 "Display Format" = "Vista documento";// mitsu 1.29b
 "Magnification" = "Ingrandimento";// mitsu 1.29b
 "Copy Format" = "Formato di copia";// mitsu 1.29b
-"ToolbarItems" = "Elementi della Barra degli Strumenti";
+"ToolbarItems" = "Elementi della barra strumenti";
 "Autocompletion" = "Inserimento tramite associazione dei tasti";
 "Completion" = "Completamento";
 "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Percorso: %@\nDimensione: %d bytes\nData creazione: %@\nData modifica: %@";
@@ -55,7 +55,7 @@
 "The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "Il link /Library/TeX/texbin non esiste. Per correggere il problema, visita https://tug.org/mactex e installa MacTeX o Basic TeX (2015 o oltre).";
 "%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ non esiste. TeXShop è un front end per TeX, ma richiede anche l’installazione di una distribuzione TeX. Forse tale distribuzione non è stata installata oppure è stata rimossa durante un aggiornamento di sistema. Se è così, visita https://tug.org/mactex e segui le istruzioni per installare MacTeX o BasicTeX.";
 "Can't find required tool." = "Impossibile trovare lo strumento richiesto.";
-"Typesetting engine cannot be found." = "Impossibile trovare il motore di composizione.";
+"Typesetting engine cannot be found." = "Impossibile trovare il motore di compilazione.";
 "The source LaTeX document cannot be found." = "Impossibile trovare il documento sorgente LaTeX.";
 "Sync Marks" = "Segni sync";
 "%@ does not exist." = "%@ non esiste.";
@@ -69,7 +69,7 @@
 "Help" = "Aiuto";
 "Sync" = "Sincronizza";
 "ShowFullPath" = "Mostra percorso completo";
-"Close Current Environment" = "Chiudi Ambiente Corrente"; // Terada
+"Close Current Environment" = "Chiudi ambiente corrente"; // Terada
 "Your current setting of %@ will be replaced. OK?" = "L’impostazione attuale di %@ verrà sostituita. Continuare?"; // Terada
 "Convert" = "Converti";
 "The program " = "Il programma ";
@@ -77,17 +77,17 @@
 "failed to copy selection." = "non è possibile copiare la selezione.";
 "failed to save selection to the file." = "non è possibile salvare la selezione in un file.";
 "<a letter consisting of %d characters>" = "<un carattere composto da %d caratteri>";
-"%d letters, %d words, %d lines" = "%d lettere, %d parole, %d linee";
-"Emoji Style" = "Stile Emoji";
+"%d letters, %d words, %d lines" = "%d lettere, %d parole, %d righe";
+"Emoji Style" = "Stile emoji";
 "Text Style" = "Stile del testo";
 "Character Info" = "Info caratteri";
 "Variant" = "Variante";
 "Revert To" = "Ripristina a";
-"Skin Tone I-II" = "Carnagione Molto Chiara";
-"Skin Tone III" = "Carnagione Abbastanza Chiara";
-"Skin Tone IV" = "Carnagione Leggermente Scura/Olivastra";
-"Skin Tone V" = "Carnagione Scura";
-"Skin Tone VI" = "Carnagione Scurissima/Nera";
+"Skin Tone I-II" = "Carnagione molto chiara";
+"Skin Tone III" = "Carnagione abbastanza chiara";
+"Skin Tone IV" = "Carnagione leggermente scura/olivastra";
+"Skin Tone V" = "Carnagione scura";
+"Skin Tone VI" = "Carnagione scurissima/nera";
 "Code Point:" = "Punto di codice:";
 "Block:" = "Blocco:";
 "Category:" = "Categoria:";
@@ -95,7 +95,7 @@
 "Unknown" = "Sconosciuto";
 "No Block" = "Nessun blocco";
 "deprecated" = "obsoleto";
-"Unknown encoding; using UTF-8." = "Encoding sconosciuto; attivato UTF-8.";
+"Unknown encoding; using UTF-8." = "Codifica sconosciuta; si usa UTF-8.";
 "Source" = "Sorgente";
 "<<Close All - unlocalized>>" = "Chiudi tutto";
 "Close All" = "Chiudi tutto";
@@ -104,7 +104,7 @@
 "New Tag" = "Nuovo contrassegno";
 "Split Window" = "Dividi finestra";
 "New Document" = "Nuovo documento";
-"Link Popups" = "Collegamento popup";
+"Link Popups" = "Popup dei collegamenti";
 "Split Window with Link" = "Dividi finestra con collegamento";
 "Highlight expl3 Code" = "Evidenzia il codice expl3";
 "PDF File Has No Annotations" = "Il file PDF non ha annotazioni";
@@ -145,18 +145,18 @@
 /* Menu keyboard shortcut customization */
 "Search commands" = "Cerca comandi";
 "Command" = "Comando";
-"Shortcut" = "Abbreviazione";
-"Remove Shortcut" = "Rimuovi abbreviazione";
+"Shortcut" = "Scorciatoia";
+"Remove Shortcut" = "Rimuovi scorciatoia";
 "Restore Default" = "Ripristina predefinita";
-"Default shortcut: %@" = "Abbreviazione predefinita: %@";
-"Default shortcut: None" = "Abbreviazione predefinita: nessuna";
+"Default shortcut: %@" = "Scorciatoia predefinita: %@";
+"Default shortcut: None" = "Scorciatoia predefinita: nessuna";
 "Restore All…" = "Ripristina tutte…";
 "Restore All" = "Ripristina tutte";
-"Change Shortcut" = "Modifica abbreviazione";
-"Shortcut Unavailable" = "Abbreviazione non disponibile";
-"Restore all keyboard shortcuts?" = "Ripristinare tutte le abbreviazioni da tastiera?";
+"Change Shortcut" = "Modifica scorciatoia";
+"Shortcut Unavailable" = "Scorciatoia non disponibile";
+"Restore all keyboard shortcuts?" = "Ripristinare tutte le scorciatoie da tastiera?";
 "This command is no longer available." = "Questo comando non è più disponibile.";
-"This shortcut is already used by “%@”." = "Questa abbreviazione è già usata da “%@”.";
+"This shortcut is already used by “%@”." = "Questa scorciatoia è già usata da “%@”.";
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
@@ -187,7 +187,7 @@
 "Keyboard" = "Tastiera";
 "Search by Function" = "Cerca per funzione";
 "Search by Key" = "Cerca per tasto";
-"Show in Macro Editor" = "Mostra nell’editor di macro";
+"Show in Macro Editor" = "Mostra nell’Editor delle macro";
 "Assigned" = "Assegnato";
 "Inactive for this key" = "Inattivo per questo tasto";
 "No command uses this key." = "Nessun comando usa questo tasto.";
@@ -210,8 +210,8 @@
 "Edit Command Completion…" = "Modifica il completamento dei comandi…";
 "Command Completion" = "Completamento dei comandi";
 
-"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installa TeX Live o MacTeX, quindi scegli «Rileva percorsi» in Impostazioni > Composizione.";
-"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript non è stato trovato. Installa Ghostscript, quindi scegli «Rileva percorsi» in Impostazioni > Composizione.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installa TeX Live o MacTeX, quindi scegli «Rileva percorsi» in Impostazioni > Compilazione.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript non è stato trovato. Installa Ghostscript, quindi scegli «Rileva percorsi» in Impostazioni > Compilazione.";
 
 
 "This key is reserved for command completion." = "Questo tasto è riservato al completamento dei comandi.";
@@ -245,22 +245,22 @@
 
 /* Explicit fallback for shared keys without a translation. */
 "Assign" = "Assegna";
-"Assign a shortcut used by macros?" = "Assegnare un’abbreviazione usata dalle macro?";
-"Macro shortcut conflicts" = "Conflitti tra abbreviazioni delle macro";
-"Remove Conflicting Shortcuts and Save" = "Rimuovi le abbreviazioni in conflitto e salva";
+"Assign a shortcut used by macros?" = "Assegnare una scorciatoia usata dalle macro?";
+"Macro shortcut conflicts" = "Conflitti tra scorciatoie delle macro";
+"Remove Conflicting Shortcuts and Save" = "Rimuovi le scorciatoie in conflitto e salva";
 "Return to Editing" = "Torna alla modifica";
-"Save Anyway (Conflicting Shortcuts Inactive)" = "Salva comunque (abbreviazioni in conflitto inattive)";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Salva comunque (scorciatoie in conflitto inattive)";
 
-"These macro shortcuts will become inactive:" = "Queste abbreviazioni delle macro diventeranno inattive:";
-"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "Queste abbreviazioni appena assegnate o modificate si sovrappongono ad altre assegnazioni. L’elenco indica quali abbreviazioni saranno inattive. Puoi modificarle, mantenerle così come sono o rimuovere solo le abbreviazioni modificate in conflitto. I nomi e i contenuti delle macro verranno mantenuti.";
-"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Questa abbreviazione è in conflitto con la macro “%@” (%@), la cui abbreviazione sarà inattiva perché compare più avanti.";
-"This shortcut is already used by:\n%@" = "Questa abbreviazione è già usata da:\n%@";
-"This shortcut is inactive because it conflicts with “%@” (%@)." = "Questa abbreviazione è inattiva perché è in conflitto con “%@” (%@).";
-"This shortcut is inactive because macro “%@” (%@) uses it first." = "Questa abbreviazione è inattiva perché la macro “%@” (%@) la usa per prima.";
+"These macro shortcuts will become inactive:" = "Queste scorciatoie delle macro diventeranno inattive:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "Queste scorciatoie appena assegnate o modificate si sovrappongono ad altre assegnazioni. L’elenco indica quali scorciatoie saranno inattive. Puoi modificarle, mantenerle così come sono o rimuovere solo le scorciatoie modificate in conflitto. I nomi e i contenuti delle macro verranno mantenuti.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Questa scorciatoia è in conflitto con la macro “%@” (%@), la cui scorciatoia sarà inattiva perché compare più avanti.";
+"This shortcut is already used by:\n%@" = "Questa scorciatoia è già usata da:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "Questa scorciatoia è inattiva perché è in conflitto con “%@” (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "Questa scorciatoia è inattiva perché la macro “%@” (%@) la usa per prima.";
 
 
 
-"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Le seguenti macro usano questa abbreviazione. Assegnandola al comando del menu, le loro abbreviazioni saranno disattivate.\n\n%@";
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Le seguenti macro usano questa scorciatoia. Assegnandola al comando del menu, le loro scorciatoie saranno disattivate.\n\n%@";
 
 "Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "I PDF aperti mantengono il proprio zoom. Il nuovo valore si applica ai PDF aperti da questo momento.";
 
@@ -322,7 +322,7 @@
 "Add" = "Aggiungi";
 "Delete" = "Elimina";
 "Symbols" = "Simboli";
-"Display" = "Aspetto";
+"Display" = "Visualizzazione";
 "Typed As" = "Si digita";
 "Add Key Binding" = "Aggiungi associazione dei tasti";
 "Change Key Binding" = "Modifica associazione dei tasti";
@@ -340,7 +340,7 @@
 "Values to Set" = "Valori da impostare";
 "On" = "Attivo";
 "Off" = "Disattivo";
-"Engine profile row: Typesetting Method" = "Metodo di composizione";
+"Engine profile row: Typesetting Method" = "Metodo di compilazione";
 "Engine profile row: plain TeX" = "plain TeX";
 "Engine profile row: LaTeX" = "LaTeX";
 "Engine profile row: kpsewhich" = "kpsewhich";
@@ -355,12 +355,12 @@
 "%@ (Not Found)" = "%@ (non trovato)";
 "%1$@ (%2$@)" = "%1$@ (%2$@)";
 "None" = "Nessuno";
-"Typeset with Alternate Engine" = "Composizione con motore alternativo";
+"Typeset with Alternate Engine" = "Compila con motore alternativo";
 "In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@." = "Nel menu “%1$@”, questo elemento compare al posto di “%2$@” mentre tieni premuto %3$@.";
 "This item is in the %@ menu." = "Questo elemento si trova nel menu “%@”.";
 "Key: %@" = "Tasto: %@";
 "No key is assigned." = "Nessun tasto assegnato.";
-"Typesets once with this engine instead of the one chosen in the toolbar." = "Compone una volta con questo motore invece di quello scelto nella barra strumenti.";
+"Typesets once with this engine instead of the one chosen in the toolbar." = "Compila una volta con questo motore invece di quello scelto nella barra strumenti.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "Una riga % !TEX TS-program all’inizio del documento ha la precedenza.";
 "Choose an Engine Profile" = "Scegli un profilo del motore";
 
@@ -387,7 +387,7 @@
 
 /* Issue #49: the annotation toolbar of the Preview */
 /* Annotation tool: the name the annotation menu gives it */
-"Strikeout" = "Cancellato";
+"Strikeout" = "Barrato";
 /* Annotation tool: the name the annotation menu gives it */
 "Highlight" = "Evidenziato";
 /* Annotation tool: the name the annotation menu gives it */
@@ -405,7 +405,7 @@
 /* Annotation tool: the name the annotation menu gives it */
 "Text Annotation" = "Testo";
 /* Annotation tool: the name the annotation menu gives it */
-"Bordered Text" = "Testo con sfondo";
+"Bordered Text" = "Testo con bordo";
 /* Annotation tool: the name the annotation menu gives it */
 "Popup" = "Popup";
 /* Annotation toolbar: switch for edit mode */

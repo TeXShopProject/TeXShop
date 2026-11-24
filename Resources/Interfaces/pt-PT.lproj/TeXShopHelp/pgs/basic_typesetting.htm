@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Compor documentos</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="composição; primeiro documento; Compor; consola; erros; Mostrar erro; Parar; Apagar ficheiros auxiliares; perfil do motor; % !TEX program; ficheiro principal; SyncTeX; Unir numa única janela">
+<meta name="description" content="composição; primeiro documento; Compor; consola; erros; Mostrar erro; Interromper; Apagar ficheiros auxiliares; perfil do motor; % !TEX program; ficheiro principal; SyncTeX; Unir numa única janela">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -55,11 +55,11 @@
 
 <p>Enquanto o TeX é executado, as suas mensagens aparecem na consola. Definições › Consola › «Mostrar consola» escolhe se a consola passa para a frente em cada composição («sempre») ou apenas quando o TeX assinala um erro («em caso de erros»). Ficheiro › Mostrar consola (<kbd>⌘0</kbd>) traz para a frente a consola do documento ativo, e <kbd>⌘0</kbd> na consola regressa à janela de onde veio. O texto da consola pode ser selecionado e copiado em qualquer momento.</p>
 
-<p>Quando o TeX encontra um erro, escreve uma mensagem no fim da consola e espera por uma resposta. Escreva-a no campo na parte inferior da consola e prima Return; Return sozinho passa ao erro seguinte, e o campo enumera as outras respostas que o TeX aceita. Para parar o TeX, clique em «Parar» na consola ou escolha Ficheiro › Interromper composição (<kbd>⌃⌥⌘A</kbd>).</p>
+<p>Quando o TeX encontra um erro, escreve uma mensagem no fim da consola e espera por uma resposta. Escreva-a no campo na parte inferior da consola e prima Return; Return sozinho passa ao erro seguinte, e o campo enumera as outras respostas que o TeX aceita. Para parar o TeX, clique em «Interromper» na consola ou escolha Ficheiro › Interromper composição (<kbd>⌃⌥⌘A</kbd>).</p>
 
 <h2>Encontrar erros</h2>
 
-<p>«Mostrar erro» na consola, ou Editar › Mostrar erro (<kbd>⌃⌘E</kbd>), desloca o código-fonte até à linha do primeiro erro e destaca-a; escolha-o novamente para o erro seguinte. Se o erro estiver noutro ficheiro do projeto, esse ficheiro é aberto. Corrigir alguns erros e compor de novo é muitas vezes o mais rápido, porque um erro pode causar vários outros. «Mostrar erro» baseia-se nos nomes de ficheiro e nos números de linha que o TeX escreve com <code>-file-line-error</code>, opção usada pelos comandos e pelos ficheiros de motor do TeXShop.</p>
+<p>«Mostrar erro» na consola, ou Edição › Mostrar erro (<kbd>⌃⌘E</kbd>), desloca o código-fonte até à linha do primeiro erro e destaca-a; escolha-o novamente para o erro seguinte. Se o erro estiver noutro ficheiro do projeto, esse ficheiro é aberto. Corrigir alguns erros e compor de novo é muitas vezes o mais rápido, porque um erro pode causar vários outros. «Mostrar erro» baseia-se nos nomes de ficheiro e nos números de linha que o TeX escreve com <code>-file-line-error</code>, opção usada pelos comandos e pelos ficheiros de motor do TeXShop.</p>
 
 <p>O LaTeX escreve informação para a execução seguinte, como o índice e as referências cruzadas, num ficheiro .aux e noutros ficheiros auxiliares, pelo que um documento pode precisar de duas ou três execuções até todas as referências estarem certas. Um erro pode deixar estes ficheiros danificados, e o documento pode então não compor mesmo depois de o erro ser corrigido. Escolha Compor › Apagar aux. e compor (<kbd>⌥⌘T</kbd>) para mover os ficheiros auxiliares para o Lixo e compor de novo, ou Ficheiro › Apagar ficheiros auxiliares (<kbd>⌃⌘A</kbd>), que é também um botão da consola. Consulte <a href="advanced_removeaux.htm">Remover ficheiros AUX</a>.</p>
 
@@ -89,7 +89,7 @@
 
 <p>Janela › Unir numa única janela coloca o código-fonte e a respetiva pré-visualização lado a lado numa só janela, e Janela › Abrir em janelas separadas volta a separá-los. Para abrir todos os documentos desta forma, defina Definições › Geral › Janelas › «Código-fonte e pré-visualização» como «Unir numa única janela»; «Posição do código-fonte na janela combinada» coloca o código-fonte à esquerda ou à direita. Arraste o divisor para dar mais ou menos espaço ao código-fonte; o TeXShop abre todas as janelas combinadas com a mesma proporção. Um ficheiro de capítulo com uma linha <code>% !TEX root</code> fica em janelas separadas; o próprio ficheiro principal pode usar uma só janela. Ficheiro › Novo abre apenas uma janela do código-fonte: componha primeiro o novo documento e depois escolha «Unir numa única janela».</p>
 
-<p>Com janelas separadas, coloque e dimensione as janelas do código-fonte e da pré-visualização como preferir e depois escolha Código-fonte › Guardar posição do código-fonte e Página › Guardar posição da pré-visualização; as novas janelas abrem-se nesse local.</p>
+<p>Com janelas separadas, coloque e dimensione as janelas do código-fonte e da pré-visualização como preferir e depois escolha Código-fonte › Guardar posição do código-fonte e Pré-visualização › Guardar posição da pré-visualização; as novas janelas abrem-se nesse local.</p>
 </main>
 </body>
 </html>

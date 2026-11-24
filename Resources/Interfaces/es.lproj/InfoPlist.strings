@@ -18,7 +18,7 @@
   "cls" = "Archivo CLS";
   "mf" = "Archivo MF";
   "bst" = "Archivo BST";
-  "bib" = "Archivo bibTeX";
+  "bib" = "Archivo BibTeX";
   "comment" = "comment";
   "engine" = "Motor de TeXShop";
   "PDF Data" = "Datos PDF";
@@ -52,7 +52,7 @@
   "Stex" = "Archivo Stex";
   "lytex" = "Archivo lytex";
   "cbx" = "Archivo cbx";
-  "lbx" = "Archivo lbc";
+  "lbx" = "Archivo lbx";
   "bbx" = "Archivo bbx";
   "skt" = "Archivo skt";
   "py" = "Archivo Python";

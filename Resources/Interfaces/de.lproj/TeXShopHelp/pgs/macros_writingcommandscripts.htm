@@ -74,7 +74,7 @@ end tell</pre>
 tell document frontName of application "TeXShop"
     save
 end tell</pre>
-<p>Das Rezept hat zwei Vorteile. Es funktioniert auch, wenn das vorderste Dokument nicht dasjenige ist, das die späteren Befehle erhalten soll, etwa eine Log-Datei wie /Users/name/Examples/myfile.log. Und wurde die Datei noch nie gesichert, gibt das Rezept einen Fehler zurück, während der Befehl <code>save</code> das Skript hinter einem Sichern-Dialog warten ließe.</p>
+<p>Das Rezept hat zwei Vorteile. Es funktioniert auch, wenn das vorderste Dokument nicht dasjenige ist, das die späteren Befehle erhalten soll, etwa eine Protokolldatei wie /Users/name/Examples/myfile.log. Und wurde die Datei noch nie gesichert, gibt das Rezept einen Fehler zurück, während der Befehl <code>save</code> das Skript hinter einem Sichern-Dialog warten ließe.</p>
 <p>Die nächsten sechs Zeilen setzen die Variablen <code>dirName</code> und <code>baseName</code>. Ist die Quelltextdatei /Users/name/My Papers/Stuff/myfile.tex, so ist <code>dirName</code> gleich <code>'/Users/name/My Papers/Stuff'</code>, wegen des Leerzeichens in einem Ordnernamen für die Shell in Anführungszeichen gesetzt, und <code>baseName</code> ist <code>myfile.tex</code>. Der Dateiname wird ebenso in Anführungszeichen gesetzt, wenn er an das Shell-Skript übergeben wird, sodass beide Leerzeichen enthalten dürfen.</p>
 <p>Die nächsten drei Zeilen rufen das Shell-Skript auf. Das Ergebnis ist dasselbe wie die Eingabe von <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code> im Terminal. Die letzten drei Zeilen aktualisieren das Vorschaufenster.</p>
 <p>Einige dieser Zeilen sind kompliziert, lassen sich aber unverändert in neue Skripte kopieren.</p>

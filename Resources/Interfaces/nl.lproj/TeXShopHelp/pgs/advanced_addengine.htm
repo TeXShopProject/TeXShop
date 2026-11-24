@@ -46,7 +46,7 @@
 <p>Om nieuwe documenten met een engine te zetten, kiest u ‘Engine-bestand’ bij Instellingen › Zetten › Engine › ‘Nieuwe documenten zetten met’, en kiest u de engine in het menu ‘Engine-bestand’ daaronder. ‘Engine-lijst bewerken…’ opent de map Engines in de Finder; het menu ‘Engine-bestand’ volgt de map wanneer u bestanden toevoegt, verwijdert of een andere naam geeft. Als het gekozen engine-bestand niet meer in de map staat, toont het menu het als niet gevonden en worden documenten met LaTeX gezet.</p>
 <p>Om een document aan een engine te koppelen, zet u een regel als deze in een van de eerste twintig regels:</p>
 <pre>% !TEX program = XeLaTeX</pre>
-<p>De naam is de naam van het engine-bestand zonder <code>.engine</code>; <code>tex</code> en <code>latex</code> zetten plain TeX en LaTeX via DVI, en <code>pdftex</code> en <code>pdflatex</code> zetten ze met Direct PDF. De regel gaat voor de knoppenbalk, de instellingen en Zet met alternatieve engine. De vorm <code>% !TEX TS-program =</code> wordt op dezelfde manier gelezen. Schrijf de regel precies zoals hierboven, met één spatie aan weerszijden van het isgelijkteken; de macro Program in het menu Macro's voegt de regel voor u in, met een lijst van engine-namen om uit te kiezen. In een project met een hoofdbestand heeft alleen het hoofdbestand de regel nodig.</p>
+<p>De naam is de naam van het engine-bestand zonder <code>.engine</code>; <code>tex</code> en <code>latex</code> zetten plain TeX en LaTeX via DVI, en <code>pdftex</code> en <code>pdflatex</code> zetten ze met Direct PDF. De regel gaat voor de knoppenbalk, de instellingen en Zet met alternatieve engine. De vorm <code>% !TEX TS-program =</code> wordt op dezelfde manier gelezen. Schrijf de regel precies zoals hierboven, met één spatie aan weerszijden van het isgelijkteken; de macro Program in het menu Macro’s voegt de regel voor u in, met een lijst van engine-namen om uit te kiezen. In een project met een hoofdbestand heeft alleen het hoofdbestand de regel nodig.</p>
 <p>Zet › Zet met alternatieve engine (<kbd>⌃⌥⌘T</kbd>) zet één keer met de engine in Instellingen › Zetten › Engine › ‘Alternatieve engine’, standaard pdflatexmk, zonder de knoppenbalk te wijzigen. In het menu Zet verschijnt het onderdeel in plaats van ‘Zet’ zolang u Control en Option ingedrukt houdt. Het is geschikt voor documenten die meestal in één snelle doorgang en af en toe volledig worden gezet, met latexmk.</p>
 
 <h2>Een engine schrijven</h2>
@@ -61,13 +61,13 @@ xelatex  -file-line-error -synctex=1 "$1"</pre>
 <dt><code>$2</code></dt><dd>De rest van een regel <code>% !TEX parameter = …</code> bovenaan de bron (het hoofdbestand), met meerdere opties gescheiden door spaties, bijvoorbeeld <code>% !TEX parameter = -shell-escape</code>. Zonder zo’n regel is dit één spatie.</dd>
 <dt><code>$3</code></dt><dd>De map in het veld ‘TeX-engines’ van Instellingen › Zetten › Paden, of de map in ‘Tweede TeX-engines’ als het document de regel <code>% !TEX useAlternatePath</code> bevat.</dd>
 </dl>
-<p>Wanneer de engine klaar is, opent TeXShop het pdf-bestand met de naam van de bron en de extensie <code>.pdf</code> in het voorvertoningsvenster, als dat er is, en scrolt het naar de plaats die vóór het zetten te zien was. Een script dat andere uitvoer maakt, kan met de volgende regels aangeven wat getoond moet worden; ze mogen overal in de engine staan, binnen een commentaar van de taal van het script:</p>
+<p>Wanneer de engine klaar is, opent TeXShop het PDF-bestand met de naam van de bron en de extensie <code>.pdf</code> in het voorvertoningsvenster, als dat er is, en scrolt het naar de plaats die vóór het zetten te zien was. Een script dat andere uitvoer maakt, kan met de volgende regels aangeven wat getoond moet worden; ze mogen overal in de engine staan, binnen een commentaar van de taal van het script:</p>
 <table>
 <tr><th>Regel</th><th>Effect</th></tr>
 <tr><td><code>!TEX-noPreview</code></td><td>geen voorvertoningsvenster, ook als hieronder genoemde regels aanwezig zijn</td></tr>
-<tr><td><code>!TEX-pdfPreview</code></td><td>het pdf-bestand tonen</td></tr>
+<tr><td><code>!TEX-pdfPreview</code></td><td>het PDF-bestand tonen</td></tr>
 <tr><td><code>!TEX-htmlPreview</code></td><td>het HTML-bestand met dezelfde naam in het HTML-venster tonen</td></tr>
-<tr><td><code>!TEX-bothPreview</code></td><td>zowel het pdf-bestand als het HTML-bestand tonen</td></tr>
+<tr><td><code>!TEX-bothPreview</code></td><td>zowel het PDF-bestand als het HTML-bestand tonen</td></tr>
 <tr><td><code>!TEX-noConsole</code></td><td>de console niet tonen</td></tr>
 </table>
 <p>Een engine die LuaLaTeX, Biber en nog twee keer LuaLaTeX uitvoert, kan er in zsh bijvoorbeeld zo uitzien, waarbij <code>${1:r}</code> de naam zonder extensie is:</p>

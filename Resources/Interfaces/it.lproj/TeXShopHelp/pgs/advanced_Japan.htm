@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
@@ -39,12 +39,12 @@
 </nav>
 <main id="content">
 <h1>Composizione in giapponese</h1>
-<p>TeX Live include i motori TeX giapponesi pTeX e upTeX, con pLaTeX e upLaTeX, oltre a LuaLaTeX con il pacchetto LuaTeX-ja. L’aiuto giapponese di TeXShop descrive la composizione in giapponese in modo più dettagliato.</p>
+<p>TeX Live include i motori TeX giapponesi pTeX e upTeX, con pLaTeX e upLaTeX, oltre a LuaLaTeX con il pacchetto LuaTeX-ja. L’aiuto giapponese di TeXShop descrive la compilazione in giapponese in modo più dettagliato.</p>
 
 <h2>Profili del motore per il giapponese</h2>
-<p>Il modo più rapido per preparare TeXShop ai documenti giapponesi è un profilo del motore. In Impostazioni › Composizione › «Profilo del motore», scegli uno dei tre profili giapponesi:</p>
+<p>Il modo più rapido per preparare TeXShop ai documenti giapponesi è un profilo del motore. In Impostazioni › Compilazione › «Profilo del motore», scegli uno dei tre profili giapponesi:</p>
 <table>
-<tr><th>Profilo</th><th>Composizione</th><th>BibTeX, indice, MetaPost</th></tr>
+<tr><th>Profilo</th><th>Compilazione</th><th>BibTeX, indice, MetaPost</th></tr>
 <tr><td>upLaTeX + dvipdfmx</td><td>uplatex, poi dvipdfmx</td><td>upbibtex, upmendex, upmpost</td></tr>
 <tr><td>pLaTeX + dvipdfmx</td><td>platex, poi dvipdfmx</td><td>pbibtex, mendex, pmpost</td></tr>
 <tr><td>LuaLaTeX (giapponese)</td><td>lualatex</td><td>upbibtex, upmendex, mpost</td></tr>
@@ -52,7 +52,7 @@
 <p>I profili giapponesi impostano anche UTF-8 come codifica dei nuovi documenti, impostano il dizionario ortografico sul rilevamento automatico della lingua e attivano «Converti automaticamente UTF-8-MAC in UTF-8». pLaTeX + dvipdfmx attiva inoltre «Converti in \UTF / \CID del pacchetto otf», mentre tutti gli altri profili la disattivano. Prima della conferma, un foglio elenca i valori impostati dal profilo.</p>
 
 <h2>Caratteri esterni a JIS X 0208 con pLaTeX</h2>
-<p>pTeX legge sorgenti in UTF-8, ma internamente conosce solo i caratteri di JIS X 0208, quindi gli altri caratteri, come 鷗 in 森鷗外, vanno persi. Il pacchetto otf li stampa con comandi come <code>\UTF{9DD7}</code>. L’impostazione «Converti in \UTF / \CID del pacchetto otf» nel gruppo «pLaTeX giapponese» di Impostazioni › Composizione ti permette di digitare questi caratteri così come sono:</p>
+<p>pTeX legge sorgenti in UTF-8, ma internamente conosce solo i caratteri di JIS X 0208, quindi gli altri caratteri, come 鷗 in 森鷗外, vanno persi. Il pacchetto otf li stampa con comandi come <code>\UTF{9DD7}</code>. L’impostazione «Converti in \UTF / \CID del pacchetto otf» nel gruppo «pLaTeX giapponese» di Impostazioni › Compilazione ti permette di digitare questi caratteri così come sono:</p>
 <ul>
 <li>Quando il documento viene salvato, ogni carattere esterno a JIS X 0208 viene scritto come <code>\UTF{XXXX}</code>, e una variante di glifo scelta nell’editor come <code>\CID{number}</code>. Se uno di questi comandi termina una riga, dopo di esso viene aggiunto <code>%</code>, così nell’output non compare uno spazio.</li>
 <li>Quando si apre un documento, questi comandi vengono riconvertiti nei caratteri, che l’impostazione sia attiva o no, quindi la finestra sorgente mostra sempre i caratteri stessi.</li>
@@ -70,7 +70,7 @@
 <p>Alcuni caratteri giapponesi hanno due forme Unicode. が può essere un singolo carattere (U+304C), oppure か (U+304B) seguito dal segno di sonorizzazione combinante (U+3099). Le due forme hanno lo stesso aspetto, ma TeX le considera diverse, quindi un comando definito con una forma non viene trovato quando lo si usa con l’altra:</p>
 <pre>\def\が{GA}
 \が   % Undefined control sequence if this が is decomposed</pre>
-<p>Il testo scomposto proviene spesso dai nomi dei file, che i dischi HFS+ memorizzano in forma scomposta; questa forma si chiama UTF-8-MAC. Quando Impostazioni › Documenti e salvataggio › Salvataggio documenti › «Converti automaticamente UTF-8-MAC in UTF-8» è attivato, TeXShop unisce questi caratteri in caratteri singoli quando salva un documento. Lascia invariati gli ideogrammi di compatibilità CJK e gli altri caratteri che la composizione standard (NFC) sostituirebbe con caratteri diversi; questa forma si chiama Modified NFC.</p>
+<p>Il testo scomposto proviene spesso dai nomi dei file, che i dischi HFS+ memorizzano in forma scomposta; questa forma si chiama UTF-8-MAC. Quando Impostazioni › Documenti e salvataggio › Salvataggio documenti › «Converti automaticamente UTF-8-MAC in UTF-8» è attivato, TeXShop unisce questi caratteri in caratteri singoli quando salva un documento. Lascia invariati gli ideogrammi di compatibilità CJK e gli altri caratteri che la compilazione standard (NFC) sostituirebbe con caratteri diversi; questa forma si chiama Modified NFC.</p>
 <p>Il sottomenu Modifica › Normalizzazione Unicode converte una selezione, o l’intero documento, in NFC, Modified NFC, NFD, Modified NFD, NFKC o NFKD, e poi mostra il pannello «Info caratteri» per il risultato, perché il testo normalizzato di solito ha lo stesso aspetto di prima.</p>
 
 <h2>Il segno dello yen e la barra rovesciata</h2>

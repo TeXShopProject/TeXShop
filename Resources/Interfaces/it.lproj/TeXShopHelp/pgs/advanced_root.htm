@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
@@ -47,7 +47,7 @@
 \include{Chapter2/two}
 \include{Chapter3/three}
 \end{document}</pre>
-<p>Quando modifichi <code>two.tex</code>, TeXShop deve comporre <code>Main.tex</code>, non il capitolo, che non ha preambolo. Per indicarglielo, scrivi questa riga in una delle prime venti righe di ogni file di capitolo:</p>
+<p>Quando modifichi <code>two.tex</code>, TeXShop deve compilare <code>Main.tex</code>, non il capitolo, che non ha preambolo. Per indicarglielo, scrivi questa riga in una delle prime venti righe di ogni file di capitolo:</p>
 <pre>% !TEX root = ../Main.tex</pre>
 <p>Il file principale non ha bisogno di questa riga. Il nome del file principale si può indicare</p>
 <ul>
@@ -59,15 +59,15 @@
 
 <h2>Che cosa fa la riga root</h2>
 <ul>
-<li>Compila in un file di capitolo compone il file principale, e la finestra di anteprima del file principale mostra l’intero documento. Una riga <code>% !TEX program</code> o altre righe speciali per la composizione vanno nel file principale.</li>
-<li>Vai all'Errore apre il file che contiene un errore, se non è aperto, e va alla riga.</li>
+<li>Compila in un file di capitolo compila il file principale, e la finestra di anteprima del file principale mostra l’intero documento. Una riga <code>% !TEX program</code> o altre righe speciali per la compilazione vanno nel file principale.</li>
+<li>Vai all’errore apre il file che contiene un errore, se non è aperto, e va alla riga.</li>
 <li>La sincronizzazione dalla finestra di anteprima apre il file di capitolo che contiene il punto su cui hai fatto clic; consulta <a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a>.</li>
-<li>Butta i File Ausiliari nel Cestino elimina i file ausiliari del file principale; consulta <a href="advanced_removeaux.htm">Eliminare i file ausiliari</a>.</li>
+<li>Cestina file ausiliari elimina i file ausiliari del file principale; consulta <a href="advanced_removeaux.htm">Eliminare i file ausiliari</a>.</li>
 <li>Finestra › Sorgente ⇔ Anteprima (<kbd>⌘1</kbd>) in un file di capitolo porta in primo piano la finestra di anteprima del file principale. Usandolo di nuovo nella finestra di anteprima torni alla finestra sorgente da cui sei arrivato, oppure al file principale se non sei arrivato da una finestra sorgente.</li>
 </ul>
 
 <h2>Aprire un file di capitolo</h2>
-<p>Quando si apre un file di capitolo con una riga root, TeXShop apre anche il file principale e la sua finestra di anteprima. Due voci in Impostazioni › Generali › «File principale del progetto» lo controllano: «Aprire il file principale quando si apre un documento» attiva o disattiva questo comportamento, e «Riduci la finestra principale all'apertura» manda nel Dock la finestra sorgente del file principale, che raramente si modifica mentre lavori su un capitolo.</p>
+<p>Quando si apre un file di capitolo con una riga root, TeXShop apre anche il file principale e la sua finestra di anteprima. Due voci in Impostazioni › Generali › «File principale del progetto» lo controllano: «Apri il file principale quando si apre un documento» attiva o disattiva questo comportamento, e «Riduci la finestra principale all'apertura» manda nel Dock la finestra sorgente del file principale, che raramente si modifica mentre lavori su un capitolo.</p>
 
 <h2>Trovare e sostituire in tutto il progetto</h2>
 <p>Per cercare in tutti i file di un progetto in una volta, scegli Modifica › Trova › Cerca nei sorgenti TeX con la stessa TEX root… in uno dei suoi file di capitolo, oppure Cerca nei sorgenti TeX con questo file come TEX root… nel file principale. La ricerca riguarda il file principale e i file <code>.tex</code> nella sua cartella e nelle sottocartelle che lo indicano in una riga root nelle prime 20 righe. Consulta <a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a> e <a href="basic_find.htm">Trova e sostituisci</a>.</p>

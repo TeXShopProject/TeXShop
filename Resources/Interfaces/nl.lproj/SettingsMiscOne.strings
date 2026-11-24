@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"375.title" = "JPEG (hoog)";
+"375.title" = "JPEG (hoge kwaliteit)";
 "380.title" = "TIFF (ongecomprimeerd)";
 "395.title" = "PNG";
 "404.title" = "TIFF (PackBits)";
-"407.title" = "JPEG (laag)";
+"407.title" = "JPEG (lage kwaliteit)";
 "409.title" = "TIFF (LZW)";
 "416.title" = "PDF";
-"423.title" = "JPEG (gemiddeld)";
+"423.title" = "JPEG (gemiddelde kwaliteit)";
 "427.title" = "4";
 "428.title" = "0 (normaal)";
 "431.title" = "5";

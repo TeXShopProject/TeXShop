@@ -51,12 +51,12 @@
 <p>将需要的引擎移到 <code>~/Library/TeXShop/Engines</code>，并在文稿根文件的开头加入魔法注释，例如：</p>
 <pre>% !TEX program = ConTeXt-TL
 % !TEX useConTeXtSyncParser</pre>
-<p>对于 ConTeXt-CG，请在“设置”>“排版”>“路径”的“第二组TeX引擎”栏中输入 ConTeXt Garden 安装中程序所在的文件夹，并加入 <code>% !TEX useAlternatePath</code> 一行，这样 TeXShop 会把该文件夹而不是 TeX Live 的文件夹交给引擎。</p>
-<p>要在源文件和预览之间同步，请在文稿的设置部分加入 <code>\setupsynctex[state=start,method=min]</code>；<code>% !TEX useConTeXtSyncParser</code> 一行会让 TeXShop 使用 ConTeXt 自己的同步代码。“帮助”>“TeXShop手册（英文）”的 ConTeXt 一章详细介绍了 ConTeXt Garden 版本的安装和每个引擎。</p>
+<p>对于 ConTeXt-CG，请在“设置”>“排版”>“路径”的“第二组 TeX 引擎”栏中输入 ConTeXt Garden 安装中程序所在的文件夹，并加入 <code>% !TEX useAlternatePath</code> 一行，这样 TeXShop 会把该文件夹而不是 TeX Live 的文件夹交给引擎。</p>
+<p>要在源文件和预览之间同步，请在文稿的设置部分加入 <code>\setupsynctex[state=start,method=min]</code>；<code>% !TEX useConTeXtSyncParser</code> 一行会让 TeXShop 使用 ConTeXt 自己的同步代码。“帮助”>“TeXShop 手册（英文）”的 ConTeXt 一章详细介绍了 ConTeXt Garden 版本的安装和每个引擎。</p>
 <p>要在“标签”菜单中列出 <code>\title</code> 和 <code>\subject</code> 等 ConTeXt 章节命令，请打开隐藏设置 ConTeXtTags；请参阅<a href="configure_hidden.htm">隐藏设置</a>。</p>
 
 <h2>MetaPost</h2>
-<p>MetaPost 由 John Hobby 开发，它根据一种由 Knuth 的 METAFONT 派生而来的编程语言所写的描述来绘制插图。它的手册是 TeX Live 的一部分：选取“帮助”>“显示宏包的帮助...”，然后键入 <code>metapost</code>。</p>
+<p>MetaPost 由 John Hobby 开发，它根据一种由 Knuth 的 METAFONT 派生而来的编程语言所写的描述来绘制插图。它的手册是 TeX Live 的一部分：选取“帮助”>“显示宏包的帮助…”，然后键入 <code>metapost</code>。</p>
 <p>“排版”>“MetaPost”（<kbd>⇧⌘M</kbd>），或“排版”按钮旁边弹出式菜单中的 MetaPost，会对与当前文稿同名、扩展名为 <code>.mp</code> 的文件运行 MetaPost：如果文稿本身是 <code>.mp</code> 文件，就对文稿本身运行；否则对它旁边的 <code>.mp</code> 文件运行，例如 mfpic 宏包为 <code>.tex</code> 文稿写出的文件。它运行“设置”>“排版”>“相关工具”>“MetaPost”中的命令，默认为 <code>mpost</code>。引擎配置会设置这一栏：pLaTeX + dvipdfmx 设为 <code>pmpost</code>，upLaTeX + dvipdfmx 设为 <code>upmpost</code>，它们可以排版标签中的日文文本；其他配置设为 <code>mpost</code>。LuaLaTeX 无法插入由 pmpost 或 upmpost 排版了日文标签的图形；使用 LuaLaTeX 时，请用 luamplib 宏包在文稿中绘制这样的图形。</p>
 <p>要将新文件保存为 MetaPost 文件，请在保存对话框的“文件格式”菜单中选择 mp 类型。</p>
 <p>Nicola Vitacolonna 开发的引擎 nv-metapost 和 nv-metafun 让使用 MetaPost 和 MetaFun 更加方便，并能在预览窗口中显示文件中的图形。它们位于 <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code> 中；上一层 <code>MetaPostEngines-1.4.7</code> 中的文件 <code>README.pdf</code> 和文件夹 <code>examples</code> 说明了如何安装和使用它们，并提供了示例文件。例如，以下列内容开头的文件</p>

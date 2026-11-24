@@ -48,7 +48,7 @@
 <tr><td><code>ConTeXt-TL.engine</code></td><td>el ConTeXt de TeX Live que funciona sobre luametatex</td></tr>
 <tr><td><code>ConTeXt-CG.engine</code></td><td>la versión de ConTeXt Garden de su carpeta de inicio</td></tr>
 </table>
-<p>Mueva el motor que necesite a <code>~/Library/TeXShop/Engines</code> y escriba líneas mágicas al principio del archivo raíz del documento, por ejemplo:</p>
+<p>Mueva el motor que necesite a <code>~/Library/TeXShop/Engines</code> y escriba comentarios mágicos al principio del archivo raíz del documento, por ejemplo:</p>
 <pre>% !TEX program = ConTeXt-TL
 % !TEX useConTeXtSyncParser</pre>
 <p>Para ConTeXt-CG, escriba la carpeta de los programas de la instalación de ConTeXt Garden en el campo «Segundos motores TeX» de Ajustes › Composición › Rutas, y añada la línea <code>% !TEX useAlternatePath</code>, que hace que TeXShop pase esa carpeta al motor en lugar de la de TeX Live.</p>

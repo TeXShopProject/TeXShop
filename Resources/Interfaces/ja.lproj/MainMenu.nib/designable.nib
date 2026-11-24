@@ -572,7 +572,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="TCp-I6-1As"/>
-                                        <menuItem title="全角引用符 → 半角引用符" tag="11" id="BBe-tY-EcP" identifier="TSShortcut.convertCharacterType:.11">
+                                        <menuItem title="“ ” ‘ ’ → TeXの引用符" tag="11" id="BBe-tY-EcP" identifier="TSShortcut.convertCharacterType:.11">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="convertCharacterType:" target="-1" id="JiB-F0-YNz"/>
@@ -745,12 +745,12 @@
                                                 <action selector="setLineBreakMode:" target="-1" id="662"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="ワード毎" tag="1" id="658" identifier="TSShortcut.setLineBreakMode:.1">
+                                        <menuItem title="単語単位で" tag="1" id="658" identifier="TSShortcut.setLineBreakMode:.1">
                                             <connections>
                                                 <action selector="setLineBreakMode:" target="-1" id="663"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="文字毎" tag="2" id="656" identifier="TSShortcut.setLineBreakMode:.2">
+                                        <menuItem title="文字単位で" tag="2" id="656" identifier="TSShortcut.setLineBreakMode:.2">
                                             <connections>
                                                 <action selector="setLineBreakMode:" target="-1" id="664"/>
                                             </connections>
@@ -1208,12 +1208,12 @@
                                                 <action selector="changePageStyle:" target="-1" id="593"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="複数ページ" tag="3" id="566" identifier="TSShortcut.changePageStyle:.3">
+                                        <menuItem title="連続ページ" tag="3" id="566" identifier="TSShortcut.changePageStyle:.3">
                                             <connections>
                                                 <action selector="changePageStyle:" target="-1" id="594"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="複数見開きページ" tag="4" id="567" identifier="TSShortcut.changePageStyle:.4">
+                                        <menuItem title="連続見開きページ" tag="4" id="567" identifier="TSShortcut.changePageStyle:.4">
                                             <connections>
                                                 <action selector="changePageStyle:" target="-1" id="595"/>
                                             </connections>
@@ -1346,7 +1346,7 @@
                                     <action selector="switchSplitViews:" target="-1" id="rs5-cB-ypo"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="ソース／プレビューを切換" keyEquivalent="1" id="605" identifier="TSShortcut.associatedWindow:.0">
+                            <menuItem title="ソース／プレビューを切り替え" keyEquivalent="1" id="605" identifier="TSShortcut.associatedWindow:.0">
                                 <connections>
                                     <action selector="associatedWindow:" target="-1" id="606"/>
                                 </connections>

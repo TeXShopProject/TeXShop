@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Modul de compilare alternativ</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="Prin DVI; PDF direct; dvips; Ghostscript; PostScript; pstricks; Metoda de tehnoredactare; % !TEX program; Script personal">
+<meta name="description" content="Prin DVI; PDF direct; dvips; Ghostscript; PostScript; pstricks; Metoda de compilare; % !TEX program; Script personal">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,8 +24,8 @@
 <li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
 <li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
 <li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
-<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
-<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
 <li><a href="basic_macros.htm">Macrocomenzi</a></li>
 <li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
 <li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
@@ -47,7 +47,7 @@
 
 <h2>Alegerea metodei</h2>
 
-<p>Compilare › Prin DVI și Compilare › PDF direct schimbă metoda documentului activ; celelalte documente deschise o păstrează pe a lor. Configurări › Compunere › Metoda de tehnoredactare stabilește metoda cu care încep documentele. A treia ei opțiune, „Script personal”, rulează în schimb comenzile din grupul „Script personal”. Comenzile pentru „Prin DVI”, una pentru plain TeX și una pentru LaTeX, se află în grupul „Prin DVI” din Configurări › Compunere. Profilul motorului LaTeX + dvips + Ghostscript, aflat la „Altele” în meniul „Profilul motorului”, pregătește compilarea „Prin DVI”.</p>
+<p>Compilare › Prin DVI și Compilare › PDF direct schimbă metoda documentului activ; celelalte documente deschise o păstrează pe a lor. Configurări › Compilare › Metoda de compilare stabilește metoda cu care încep documentele. A treia ei opțiune, „Script personal”, rulează în schimb comenzile din grupul „Script personal”. Comenzile pentru „Prin DVI”, una pentru plain TeX și una pentru LaTeX, se află în grupul „Prin DVI” din Configurări › Compilare. Profilul motorului LaTeX + dvips + Ghostscript, aflat la „Altele” în meniul „Profilul motorului”, pregătește compilarea „Prin DVI”.</p>
 
 <h2>Alegerea metodei în document</h2>
 
@@ -65,7 +65,7 @@
 
 <h2>Opțiuni pentru Prin DVI</h2>
 
-<p>În mod implicit, Ghostscript ignoră transparența PostScript. Pentru a o păstra, adăugați <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code> la sfârșitul comenzii din grupul „Prin DVI”. Pentru a păstra fișierul PostScript intermediar, adăugați <code>--keep-psfile</code>. Ghostscript este rulat din dosarul indicat în Configurări › Compunere › Căi › Ghostscript.</p>
+<p>În mod implicit, Ghostscript ignoră transparența PostScript. Pentru a o păstra, adăugați <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code> la sfârșitul comenzii din grupul „Prin DVI”. Pentru a păstra fișierul PostScript intermediar, adăugați <code>--keep-psfile</code>. Ghostscript este rulat din dosarul indicat în Configurări › Compilare › Căi › Ghostscript.</p>
 </main>
 </body>
 </html>

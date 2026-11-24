@@ -44,20 +44,20 @@
 
 <h2>添加选项</h2>
 <ul>
-<li>加在“设置”>“排版”>“直接生成PDF”的 LaTeX 或 plain TeX 命令中：适用于以直接生成 PDF 方式排版的所有文稿。</li>
+<li>加在“设置”>“排版”>“直接生成 PDF”的 LaTeX 或 plain TeX 命令中：适用于以直接生成 PDF 方式排版的所有文稿。</li>
 <li>加在引擎文件中：适用于用该引擎排版的所有文稿；请参阅<a href="advanced_addengine.htm">添加排版引擎</a>。</li>
 <li>对于用某个 latexmk 引擎（例如 pdflatexmk）排版的单个文稿，在源文件开头加入 <code>% !TEX parameter = -shell-escape</code> 一行。</li>
 </ul>
 <p>有一个引擎已经带有这个选项：TeXShop 自带、一开始就位于 Engines 文件夹中的 sepdflatexmk 总是使用 <code>--shell-escape</code> 排版。只要在源代码窗口的工具栏中选择它，或者使用 <code>% !TEX program = sepdflatexmk</code> 一行，就会这样排版，因此请只对你信任的文稿使用它。</p>
 
-<h2>shell-escape时确认</h2>
-<p>“设置”>“排版”>“直接生成PDF”>“shell-escape时确认”默认关闭，用于保护“直接生成PDF”组中的命令。此项打开时，如果那里的 plain TeX 或 LaTeX 命令中含有 <code>-shell-escape</code> 或 <code>--shell-escape</code>，TeXShop 会在文稿打开后第一次排版之前询问：</p>
+<h2>shell-escape 时确认</h2>
+<p>“设置”>“排版”>“直接生成 PDF”>“shell-escape 时确认”默认关闭，用于保护“直接生成 PDF”组中的命令。此项打开时，如果那里的 plain TeX 或 LaTeX 命令中含有 <code>-shell-escape</code> 或 <code>--shell-escape</code>，TeXShop 会在文稿打开后第一次排版之前询问：</p>
 <ul>
 <li>“好”：使用该选项排版。</li>
-<li>“忽略Shell Escape”：不使用该选项排版。</li>
+<li>“忽略 Shell Escape”：不使用该选项排版。</li>
 <li>“取消”：不排版。</li>
 </ul>
-<p>一旦你选择了“好”或“忽略Shell Escape”，这一回答会对该文稿一直有效，直到文稿关闭，因此你可以用该选项排版自己的文稿，而不用它排版别人的文稿。引擎文件不会被检查，即使其中含有 <code>-shell-escape</code> 也是如此，因此 sepdflatexmk 会不经询问就使用该选项排版。</p>
+<p>一旦你选择了“好”或“忽略 Shell Escape”，这一回答会对该文稿一直有效，直到文稿关闭，因此你可以用该选项排版自己的文稿，而不用它排版别人的文稿。引擎文件不会被检查，即使其中含有 <code>-shell-escape</code> 也是如此，因此 sepdflatexmk 会不经询问就使用该选项排版。</p>
 </main>
 </body>
 </html>

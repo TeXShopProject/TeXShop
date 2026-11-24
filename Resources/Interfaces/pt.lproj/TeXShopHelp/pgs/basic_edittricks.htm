@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Truques de edição</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="truques de edição; parênteses correspondentes; selecionar linhas; comentar; recuo; menu Marcas; Fechar ambiente atual; dividir o código-fonte; arrastar e soltar; barra de estado; estatísticas; Trocar com a área de transferência; Copiar com Estilo; Conversão de tipo de caractere; arquivo de backup">
+<meta name="description" content="truques de edição; parênteses correspondentes; selecionar linhas; comentar; recuo; menu Etiquetas; Fechar ambiente atual; dividir o código-fonte; arrastar e soltar; barra de estado; estatísticas; Trocar com a área de transferência; Copiar com Estilo; Conversão de tipo de caractere; arquivo de backup">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -31,7 +31,7 @@
 <li><a href="basic_graphics.htm">Incluir gráficos</a></li>
 <li><a href="basic_printing.htm">Imprimir</a></li>
 <li><a href="basic_preferences.htm">Alterar os ajustes</a></li>
-<li><a href="basic_templates.htm">Modelos e documentos-modelo</a></li>
+<li><a href="basic_templates.htm">Modelos e gabaritos</a></li>
 <li><a href="basic_miscellaneous.htm">Janelas e abas</a></li>
 <li><a href="basic_bugs.htm">Enviar relatórios de erros</a></li>
 <li><a href="basic_websites.htm">Sites úteis</a></li>
@@ -47,17 +47,17 @@
 
 <h2>Comentários e recuo</h2>
 
-<p>Fonte › Comentar (<kbd>⌘{</kbd>) coloca % no início das linhas selecionadas, e Fonte › Não comentar (<kbd>⌘}</kbd>) o remove. Fonte › Aumentar nível do recuo e Fonte › Diminuir nível do recuo deslocam as linhas selecionadas para a direita ou para a esquerda, por uma tabulação quando “Usar Tab no menu de recuo” está ativado em Ajustes › Editor › Estilo e, caso contrário, por tantos espaços quanto o “Tamanho do tab”. Uma nova linha começa com as mesmas tabulações e espaços da linha anterior; pressione Delete para removê-los.</p>
+<p>Código-fonte › Comentar (<kbd>⌘{</kbd>) coloca % no início das linhas selecionadas, e Código-fonte › Descomentar (<kbd>⌘}</kbd>) o remove. Código-fonte › Aumentar nível do recuo e Código-fonte › Diminuir nível do recuo deslocam as linhas selecionadas para a direita ou para a esquerda, por uma tabulação quando “Usar Tab no menu de recuo” está ativado em Ajustes › Editor › Estilo e, caso contrário, por tantos espaços quanto o “Tamanho do tab”. Uma nova linha começa com as mesmas tabulações e espaços da linha anterior; pressione Delete para removê-los.</p>
 
 <h2>Navegar pelo código-fonte</h2>
 
-<p>O menu Marcas da barra de ferramentas lista os capítulos, seções e outras divisões do documento; escolha uma para ir até ela. Uma linha que começa com <code>%:</code> acrescenta o resto da linha ao menu como uma marca sua. “Marcas na barra de menus”, em Ajustes › Editor › Exibição, coloca o mesmo menu na barra de menus. O item Rótulos da barra de ferramentas lista os rótulos do documento. Editar › Mostrar linha... (<kbd>⌘L</kbd>) vai a uma linha pelo número.</p>
+<p>O menu Etiquetas da barra de ferramentas lista os capítulos, seções e outras divisões do documento; escolha uma para ir até ela. Uma linha que começa com <code>%:</code> acrescenta o resto da linha ao menu como uma etiqueta sua. “Menu Etiquetas na barra de menus”, em Ajustes › Editor › Exibição, coloca o mesmo menu na barra de menus. O item Rótulos da barra de ferramentas lista os rótulos do documento. Editar › Mostrar linha... (<kbd>⌘L</kbd>) vai a uma linha pelo número.</p>
 
-<p>Janela › Dividir janela (<kbd>⌃2</kbd>), ou o item “Dividir Janela” da barra de ferramentas, divide a janela do código-fonte em duas partes que mostram o mesmo texto, para que você possa ler uma parte do documento enquanto escreve outra. Mantenha a tecla Option pressionada para dividi-la lado a lado. O que você digita em uma parte aparece também na outra.</p>
+<p>Janela › Dividir janela (<kbd>⌃2</kbd>), ou o item “Dividir janela” da barra de ferramentas, divide a janela do código-fonte em duas partes que mostram o mesmo texto, para que você possa ler uma parte do documento enquanto escreve outra. Mantenha a tecla Option pressionada para dividi-la lado a lado. O que você digita em uma parte aparece também na outra.</p>
 
 <h2>Digitar menos</h2>
 
-<p>Fonte › Fechar ambiente atual (<kbd>⌃⌘C</kbd>) acrescenta a linha <code>\end</code> do ambiente que ainda está aberto, por exemplo <code>\end{itemize}</code> depois de uma lista. A conclusão de comandos termina comandos e ambientes que você começou a digitar; consulte <a href="basic_commandcompletion.htm">Conclusão de comandos</a>. As associações de teclas substituem um caractere digitado por um texto; consulte <a href="basic_autocompletion.htm">Associações de teclas</a>. O painel LaTeX, o painel Matriz e o menu Macros inserem trechos de texto mais longos.</p>
+<p>Código-fonte › Fechar ambiente atual (<kbd>⌃⌘C</kbd>) acrescenta a linha <code>\end</code> do ambiente que ainda está aberto, por exemplo <code>\end{itemize}</code> depois de uma lista. A conclusão de comandos termina comandos e ambientes que você começou a digitar; consulte <a href="basic_commandcompletion.htm">Conclusão de comandos</a>. As associações de teclas substituem um caractere digitado por um texto; consulte <a href="basic_autocompletion.htm">Associações de teclas</a>. O painel LaTeX, o painel Matriz e o menu Macros inserem trechos de texto mais longos.</p>
 
 <h2>Soltar arquivos no código-fonte</h2>
 
@@ -87,7 +87,7 @@
 
 <h2>A barra de estado e as estatísticas do texto</h2>
 
-<p>A barra de estado, abaixo do código-fonte, mostra as linhas, os caracteres e as palavras do documento, com os números da seleção entre parênteses, e a localização, a linha e a coluna do ponto de inserção. Os caracteres são contados como são vistos, de modo que uma letra acentuada ou um emoji conta como um, e os comandos TeX são contados como estão escritos; um emoji também conta como uma palavra. O tamanho do arquivo salvo aparece à direita. Fonte › Mostrar Barra de Estado mostra ou oculta a barra de estado em todas as janelas.</p>
+<p>A barra de estado, abaixo do código-fonte, mostra as linhas, os caracteres e as palavras do documento, com os números da seleção entre parênteses, e a localização, a linha e a coluna do ponto de inserção. Os caracteres são contados como são vistos, de modo que uma letra acentuada ou um emoji conta como um, e os comandos TeX são contados como estão escritos; um emoji também conta como uma palavra. O tamanho do arquivo salvo aparece à direita. Código-fonte › Mostrar Barra de Estado mostra ou oculta a barra de estado em todas as janelas.</p>
 
 <p>“Estatísticas do Texto…”, na barra de estado, ou Editar › Estatísticas..., conta o texto sem os comandos TeX. O programa detex do TeX Live os remove do documento, ou da seleção, e acrescenta os arquivos lidos com <code>\input</code> e <code>\include</code>; o TeXShop conta o que resta da mesma forma que a barra de estado. O documento não precisa estar salvo. A contagem é feita quando o popover se abre e quando se clica no botão de atualizar dele.</p>
 
@@ -99,7 +99,7 @@
 
 <h2>Converter caracteres</h2>
 
-<p>Os submenus Conversão de tipo de caractere e Normalização Unicode do menu Editar, presentes também no menu de contexto do código-fonte, reescrevem a seleção; se nada estiver selecionado, o TeXShop pergunta se deve reescrever o documento inteiro. Conversão de tipo de caractere serve principalmente para documentos em japonês. Ela converte entre hiragana e katakana, entre dígitos e letras de largura total e de meia largura, entre caracteres como números circulados e os comandos do pacote ajmacros, e entre caracteres fora do JIS X 0208 e os comandos <code>\UTF</code> e <code>\CID</code> do pacote otf. Também transforma aspas tipográficas em aspas do TeX. Normalização Unicode converte a seleção para NFC, NFD, NFKC ou NFKD, ou para Modified NFC ou Modified NFD, que deixam inalterados os ideogramas de compatibilidade CJK. Ambas podem ser desfeitas.</p>
+<p>Os submenus Conversão de tipo de caractere e Normalização Unicode do menu Editar, presentes também no menu de contexto do código-fonte, reescrevem a seleção; se nada estiver selecionado, o TeXShop pergunta se deve reescrever o documento inteiro. Conversão de tipo de caractere serve principalmente para documentos em japonês. Ela converte entre hiragana e katakana, entre dígitos e letras de largura total e de meia largura, entre caracteres como números circulados e os comandos do pacote ajmacros, e entre caracteres fora do JIS X 0208 e os comandos <code>\UTF</code> e <code>\CID</code> do pacote otf. Também transforma aspas tipográficas em aspas do TeX. Normalização Unicode converte a seleção para NFC, NFD, NFKC ou NFKD, ou para NFC modificado ou NFD modificado, que deixam inalterados os ideogramas de compatibilidade CJK. Ambas podem ser desfeitas.</p>
 
 <h2>Arquivos de backup</h2>
 

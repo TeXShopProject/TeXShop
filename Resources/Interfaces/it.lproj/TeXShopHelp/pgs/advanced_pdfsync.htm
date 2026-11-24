@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
@@ -42,15 +42,15 @@
 <p>Fai Comando-clic su una parola nella finestra sorgente: la finestra di anteprima scorre fino al punto corrispondente e lo contrassegna. Fai Comando-clic su un punto della finestra di anteprima: il file sorgente si apre, se necessario, alla riga corrispondente, che viene contrassegnata. I colori dei due contrassegni si impostano in Impostazioni › Temi › SyncTeX, alle voci Anteprima e Sorgente.</p>
 
 <h2>SyncTeX</h2>
-<p>TeXShop sincronizza con SyncTeX. Quando TeX viene eseguito con l’opzione <code>-synctex=1</code>, scrive accanto al PDF un file come <code>Galois.synctex.gz</code>, che registra dove è finita sulla pagina ciascuna parte del sorgente. I comandi di composizione in Impostazioni › Composizione, così come li impostano i profili del motore, e i motori che TeXShop mette in <code>~/Library/TeXShop/Engines</code> e che eseguono TeX usano già questa opzione. Un motore che aggiungi lì, compreso uno dei motori facoltativi della cartella Inactive, la usa solo se il suo comando la contiene. In un motore tuo, aggiungi <code>-synctex=1</code> alla chiamata di TeX (con uno o due trattini; ogni motore accetta entrambe le forme).</p>
-<p>Il file synctex contiene i percorsi completi dei file sorgente. Dopo che la cartella di un progetto è stata spostata, copiata o inviata a un’altra persona, la sincronizzazione non funziona finché il documento non viene composto di nuovo.</p>
+<p>TeXShop sincronizza con SyncTeX. Quando TeX viene eseguito con l’opzione <code>-synctex=1</code>, scrive accanto al PDF un file come <code>Galois.synctex.gz</code>, che registra dove è finita sulla pagina ciascuna parte del sorgente. I comandi di compilazione in Impostazioni › Compilazione, così come li impostano i profili del motore, e i motori che TeXShop mette in <code>~/Library/TeXShop/Engines</code> e che eseguono TeX usano già questa opzione. Un motore che aggiungi lì, compreso uno dei motori facoltativi della cartella Inactive, la usa solo se il suo comando la contiene. In un motore tuo, aggiungi <code>-synctex=1</code> alla chiamata di TeX (con uno o due trattini; ogni motore accetta entrambe le forme).</p>
+<p>Il file synctex contiene i percorsi completi dei file sorgente. Dopo che la cartella di un progetto è stata spostata, copiata o inviata a un’altra persona, la sincronizzazione non funziona finché il documento non viene compilato di nuovo.</p>
 <p>SyncTeX non è del tutto esatto: il punto che cerchi può trovarsi poco prima o poco dopo il contrassegno.</p>
 
 <h2>Progetti con più file</h2>
-<p>In un progetto i cui file dei capitoli indicano il file principale con <code>% !TEX root</code> (consulta <a href="advanced_root.htm">Impostare il file principale di un progetto</a>), un Comando-clic in un file di capitolo porta al punto corrispondente nell’anteprima dell’intero documento, e un Comando-clic nell’anteprima apre il file di capitolo che contiene il punto su cui hai fatto clic. Con Impostazioni › Composizione › Sincronizzazione di sorgente e anteprima › «Aprire come pannelli nella finestra del file principale i file raggiunti dalla sincronizzazione» attivato, un file aperto in questo modo si aggiunge come pannello alla finestra del file principale invece di aprirsi in una finestra propria.</p>
+<p>In un progetto i cui file dei capitoli indicano il file principale con <code>% !TEX root</code> (consulta <a href="advanced_root.htm">Impostare il file principale di un progetto</a>), un Comando-clic in un file di capitolo porta al punto corrispondente nell’anteprima dell’intero documento, e un Comando-clic nell’anteprima apre il file di capitolo che contiene il punto su cui hai fatto clic. Con Impostazioni › Compilazione › Sincronizzazione di sorgente e anteprima › «Apri come pannelli nella finestra del file principale i file raggiunti dalla sincronizzazione» attivato, un file aperto in questo modo si aggiunge come pannello alla finestra del file principale invece di aprirsi in una finestra propria.</p>
 
 <h2>Metodo di sincronizzazione</h2>
-<p>Impostazioni › Composizione › Sincronizzazione di sorgente e anteprima › «Metodo di sincronizzazione» offre due scelte:</p>
+<p>Impostazioni › Compilazione › Sincronizzazione di sorgente e anteprima › «Metodo di sincronizzazione» offre due scelte:</p>
 <dl>
 <dt>SyncTeX (consigliato)</dt><dd>Usa il file synctex, come descritto sopra. È la scelta predefinita.</dd>
 <dt>Cerca nel PDF</dt><dd>Cerca nel PDF il testo attorno al clic e, per un clic nell’anteprima, cerca nel sorgente il testo attorno al clic. Non richiede un file synctex, ma non funziona dove il testo composto è diverso dal sorgente, come nelle formule e nel testo con molti comandi. Per trovare il file di un punto dell’anteprima, cerca nei file indicati nei comandi <code>\include</code> e <code>\input</code> del file principale. Per i progetti che includono i file in altro modo, elencali nel file principale con righe come

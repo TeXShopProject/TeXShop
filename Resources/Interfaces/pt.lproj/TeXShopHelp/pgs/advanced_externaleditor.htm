@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Usar um editor externo</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="editor externo; Abrir só para ver; Usar editor externo; Sempre monitorar alterações no PDF feitas por outros apps; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
+<meta name="description" content="editor externo; Abrir para ver; Usar editor externo; Sempre monitorar alterações no PDF feitas por outros apps; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -42,15 +42,15 @@
 <p>Você pode escrever em outro editor e usar o TeXShop para compor e mostrar o PDF.</p>
 
 <h2>Abrir só a pré-visualização</h2>
-<p>Arquivo › Abrir só para ver... pede um arquivo de código-fonte e abre apenas a sua janela de pré-visualização. Se o arquivo ainda não tiver sido composto, ou se o PDF for mais antigo que o código-fonte, o TeXShop o compõe primeiro. Edite o código-fonte no seu editor; para compor, salve-o lá e clique em Compor na janela de pré-visualização ou pressione <kbd>⌘T</kbd>. Nesse modo, o TeXShop nunca abre nem altera o arquivo de código-fonte. Se a barra de ferramentas da janela de pré-visualização não tiver um botão Compor, use Janela › Personalizar barra de ferramentas... para acrescentar um.</p>
-<p>Se você sempre trabalha assim, ative Ajustes › Geral › Ao iniciar › “Usar editor externo”. Arquivo › Abrir... e Abrir recente passam então a abrir os arquivos de código-fonte só para pré-visualização, e Arquivo › Abrir só para ver... se torna Abrir para editar..., que abre um arquivo de código-fonte no editor do próprio TeXShop quando você precisar. Os outros arquivos, como os arquivos PDF, de imagem e de log, abrem como antes.</p>
+<p>Arquivo › Abrir para ver... pede um arquivo de código-fonte e abre apenas a sua janela de pré-visualização. Se o arquivo ainda não tiver sido composto, ou se o PDF for mais antigo que o código-fonte, o TeXShop o compõe primeiro. Edite o código-fonte no seu editor; para compor, salve-o lá e clique em Compor na janela de pré-visualização ou pressione <kbd>⌘T</kbd>. Nesse modo, o TeXShop nunca abre nem altera o arquivo de código-fonte. Se a barra de ferramentas da janela de pré-visualização não tiver um botão Compor, use Janela › Personalizar Barra de Ferramentas... para acrescentar um.</p>
+<p>Se você sempre trabalha assim, ative Ajustes › Geral › Ao iniciar › “Usar editor externo”. Arquivo › Abrir... e Abrir Recente passam então a abrir os arquivos de código-fonte só para pré-visualização, e Arquivo › Abrir para ver... se torna Abrir para editar..., que abre um arquivo de código-fonte no editor do próprio TeXShop quando você precisar. Os outros arquivos, como os arquivos PDF, de imagem e de log, abrem como antes.</p>
 
 <h2>Manter a pré-visualização atualizada</h2>
 <p>Quando o PDF é reescrito por outro programa, por exemplo pelo seu editor ou pelo latexmk no Terminal, o TeXShop o recarrega quando você volta ao TeXShop ou à janela de pré-visualização, mantendo a página e a ampliação. Com Ajustes › Pré-visualização › Atualização › “Sempre monitorar alterações no PDF feitas por outros apps” ativado, ele recarrega o PDF assim que este muda, mesmo com o TeXShop em segundo plano, por exemplo quando a pré-visualização está ao lado do seu editor. Uma pré-visualização com anotações que não foram salvas não é recarregada, para que as anotações não se percam.</p>
 <p>O TeXShop também monitora os arquivos de código-fonte abertos no seu próprio editor. Quando outro editor altera um desses arquivos, o TeXShop o recarrega, a menos que a cópia no TeXShop tenha alterações não salvas.</p>
 
 <h2>Sincronizar com o editor</h2>
-<p>Clicar com Command na janela de pré-visualização pode levar você à linha no seu editor, e o botão “Vá para o erro” do console pode abrir ali a linha de um erro. Isso requer “Usar editor externo”, um ajuste oculto e um programa de linha de comando do editor:</p>
+<p>Clicar com Command na janela de pré-visualização pode levar você à linha no seu editor, e o botão “Ir para o erro” do console pode abrir ali a linha de um erro. Isso requer “Usar editor externo”, um ajuste oculto e um programa de linha de comando do editor:</p>
 <ul>
 <li>Para o TextMate, cujo comando <code>mate</code> está em <code>/usr/local/bin</code>: <code>defaults write TeXShop TextMateSync YES</code>.</li>
 <li>Para qualquer outro editor: <code>defaults write TeXShop OtherEditorSync YES</code> e um script executável <code>/usr/local/bin/othereditor</code> que recebe o número da linha como <code>$1</code> e o caminho completo do arquivo como <code>$2</code>. Para o BBEdit, ele é assim:
@@ -69,7 +69,7 @@
 <dt><code>refreshpdf</code></dt><dd>Recarrega o PDF e traz a janela de pré-visualização para a frente.</dd>
 <dt><code>refreshpdfbackground</code></dt><dd>Recarrega o PDF sem trazer o TeXShop para a frente, quando a janela de pré-visualização já está aberta.</dd>
 <dt><code>refreshtext</code></dt><dd>Lê de novo do disco o arquivo de código-fonte.</dd>
-<dt><code>open_for_externaleditor</code></dt><dd>Abre um arquivo de código-fonte como Arquivo › Abrir só para ver... o faz.</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Abre um arquivo de código-fonte como Arquivo › Abrir para ver... o faz.</dd>
 </dl>
 <p>Quando o editor compõe por meio do TeXShop, “Sempre monitorar alterações no PDF feitas por outros apps” não é necessário. Consulte também <a href="macros_writingcompletescripts.htm">Scripts com os comandos de composição do TeXShop</a>.</p>
 </main>

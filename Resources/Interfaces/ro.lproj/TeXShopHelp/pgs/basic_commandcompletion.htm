@@ -24,8 +24,8 @@
 <li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
 <li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
 <li><a href="basic_commandcompletion.htm" class="current">Completarea comenzilor</a></li>
-<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
-<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
 <li><a href="basic_macros.htm">Macrocomenzi</a></li>
 <li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
 <li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
@@ -51,19 +51,19 @@
 
 <p>În Configurări › Tastatură, „Tastă de activare” alege Escape sau Tab ca tastă care completează. Panoul pentru sursă din Editare › Experiment... folosește aceeași tastă ca fereastra sursă.</p>
 
-<p>Pentru a adăuga un cuvânt în fișierul Completion, selectați-l și alegeți Sursă › Adăugați la lista de completare a comenzilor. Pentru a edita fișierul, faceți clic pe „Editează completarea comenzilor…” în Configurări › Tastatură. Studierea completărilor existente este cel mai bun mod de a învăța să scrieți altele noi; dosarul ~/Library/TeXShop/CommandCompletion conține și un document detaliat despre ele.</p>
+<p>Pentru a adăuga un cuvânt în fișierul Completion, selectați-l și alegeți Sursă › Adăugați la lista de completare a comenzilor. Pentru a edita fișierul, faceți clic pe „Editați completarea comenzilor…” în Configurări › Tastatură. Studierea completărilor existente este cel mai bun mod de a învăța să scrieți altele noi; dosarul ~/Library/TeXShop/CommandCompletion conține și un document detaliat despre ele.</p>
 
 <h2><a name="marks"></a>Marcaje</h2>
 
-<p>Un marcaj (•) este un loc la care să reveniți; un marcaj cu notă (•‹notă›) spune și ce trebuie pus acolo. Completările de comenzi, macrocomenzile și asocierile de taste pot conține marcaje, iar dumneavoastră le puteți insera singur cu Editare › Marcaje › Inserează marcaj (<kbd>⌘8</kbd>) și „Inserează marcaj cu notă” (<kbd>⌃⌘8</kbd>). „Inserează marcaj cu notă” inserează •‹› cu punctul de inserare între paranteze sau transformă textul selectat în notă.</p>
+<p>Un marcaj (•) este un loc la care să reveniți; un marcaj cu notă (•‹notă›) spune și ce trebuie pus acolo. Completările de comenzi, macrocomenzile și asocierile de taste pot conține marcaje, iar dumneavoastră le puteți insera singur cu Editare › Marcaje › Inserați un marcaj (<kbd>⌘8</kbd>) și „Inserați un marcaj cu notă” (<kbd>⌃⌘8</kbd>). „Inserați un marcaj cu notă” inserează •‹› cu punctul de inserare între paranteze sau transformă textul selectat în notă.</p>
 
-<p>„Marcajul următor” (<kbd>⌃⌘F</kbd>) și „Marcajul anterior” (<kbd>⌃⌘G</kbd>) selectează marcajul următor sau anterior împreună cu nota lui, astfel încât tastarea îl înlocuiește. Țineți apăsată tasta Opțiune pentru a șterge doar • și a selecta în schimb nota (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+<p>„Marcajul următor” (<kbd>⌃⌘]</kbd>) și „Marcajul anterior” (<kbd>⌃⌘[</kbd>) selectează marcajul următor sau anterior împreună cu nota lui, astfel încât tastarea îl înlocuiește. Țineți apăsată tasta Opțiune pentru a șterge doar • și a selecta în schimb nota (<kbd>⌃⌥⌘]</kbd>, <kbd>⌃⌥⌘[</kbd>).</p>
 
-<p>Tasta de activare trece și ea de la un marcaj la altul: cu Escape ca tastă de activare, Opțiune-Escape merge la marcajul următor, iar Control-Escape la cel anterior; cu Tab, Opțiune-Tab și Control-Tab. Dacă altă aplicație are nevoie de aceste taste, dezactivați „Mergi la marcajul următor sau anterior cu Opțiune sau Control și tasta de activare” în Configurări › Tastatură.</p>
+<p>Tasta de activare trece și ea de la un marcaj la altul: cu Escape ca tastă de activare, Opțiune-Escape merge la marcajul următor, iar Control-Escape la cel anterior; cu Tab, Opțiune-Tab și Control-Tab. Dacă altă aplicație are nevoie de aceste taste, dezactivați „Accesați marcajul următor sau anterior cu Opțiune sau Control și tasta de activare” în Configurări › Tastatură.</p>
 
-<h2><a name="labels"></a>Completarea etichetelor și a cheilor de citare</h2>
+<h2><a name="labels"></a>Completarea referințelor și a cheilor de citare</h2>
 
-<p>Editare › Completează eticheta sau cheia de citare (<kbd>F5</kbd>) completează o etichetă sau o cheie de citare dintr-o listă. Alegeți comanda imediat după <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> sau <code>\autoref{</code> ori după primele litere ale unei etichete tastate acolo, iar lista afișează etichetele definite cu <code>\label</code> în fișier; alegeți una cu tastele săgeată și apăsați Return. După <code>\cite{</code> și comenzi similare, lista afișează cheile de citare din BibDesk când „Oferă și cheile de citare din BibDesk” din Configurări › Tastatură este activat. În alte locuri, afișează completările de cuvinte ale macOS. Pe multe tastaturi, țineți apăsată tasta fn (tasta Glob) în timp ce apăsați F5.</p>
+<p>Editare › Completați referința sau cheia de citare (<kbd>F5</kbd>) completează o etichetă sau o cheie de citare dintr-o listă. Alegeți comanda imediat după <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> sau <code>\autoref{</code> ori după primele litere ale unei etichete tastate acolo, iar lista afișează etichetele definite cu <code>\label</code> în fișier; alegeți una cu tastele săgeată și apăsați Return. După <code>\cite{</code> și comenzi similare, lista afișează cheile de citare din BibDesk când „Oferiți și cheile de citare din BibDesk” din Configurări › Tastatură este activat. În alte locuri, afișează completările de cuvinte ale macOS. Pe multe tastaturi, țineți apăsată tasta fn (tasta Glob) în timp ce apăsați F5.</p>
 
 <h2><a name="compare"></a>Asocieri de taste, macrocomenzi și completarea comenzilor</h2>
 
@@ -72,7 +72,7 @@
 <dt><a href="basic_autocompletion.htm">Asocieri de taste</a></dt>
 <dd>Tastarea unei singure taste inserează text: <code>_</code> dă <code>_{}</code> în jurul selecției, iar ≤ (Opțiune-virgulă pe aranjamentul de tastatură SUA) dă <code>\leq</code>. Configurări › Tastatură le activează pentru documentele noi și conține lista lor; Sursă › Asocieri de taste le activează sau le dezactivează pentru documentul din prim-plan. Tastați mai întâi <code>\</code> pentru a păstra ca atare o tastă precum <code>_</code> sau <code>^</code>. Un caracter tastat cu o tastă moartă, cum ar fi é din Opțiune-E și E, nu poate avea o asociere de taste.</dd>
 <dt><a href="basic_macros.htm">Macrocomenzi</a></dt>
-<dd>Articolele meniului „Macro” inserează text sau rulează programe AppleScript și pot avea o scurtătură de tastatură cu tasta Comandă sau Control ori cu o tastă funcțională. Macro › Deschide Editorul de Macro... le adaugă, le editează și le ordonează. Textul pe care îl doriți pe o tastă Comandă, cum ar fi <code>\textbf</code> în jurul selecției pe ⌘B, este cel mai bine transformat într-o macrocomandă.</dd>
+<dd>Articolele meniului „Macro” inserează text sau rulează programe AppleScript și pot avea o scurtătură de tastatură cu tasta Comandă sau Control ori cu o tastă funcțională. Macro › Deschideți Editorul de Macro... le adaugă, le editează și le ordonează. Textul pe care îl doriți pe o tastă Comandă, cum ar fi <code>\textbf</code> în jurul selecției pe ⌘B, este cel mai bine transformat într-o macrocomandă.</dd>
 <dt>Completarea comenzilor</dt>
 <dd>Tastați începutul unei comenzi sau o abreviere și apăsați tasta de activare: <code>\sec</code> dă <code>\section{•}</code>, tasta de activare apăsată din nou dă următoarea potrivire, iar <code>\benu</code> dă un întreg mediu enumerate cu marcaje. Spre deosebire de asocierile de taste și de macrocomenzi, completarea comenzilor înlocuiește textul selectat.</dd>
 </dl>

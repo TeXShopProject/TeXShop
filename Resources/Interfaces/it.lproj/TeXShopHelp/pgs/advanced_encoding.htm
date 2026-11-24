@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
@@ -61,13 +61,13 @@
 <tr><td><code>UTF-8 Unicode</code></td><td>Unicode (UTF-8)</td></tr>
 <tr><td><code>Standard Unicode</code></td><td>Unicode (UTF-16)</td></tr>
 <tr><td><code>MacOSRoman</code></td><td>Occidentale (Mac OS Roman)</td></tr>
-<tr><td><code>IsoLatin</code></td><td>Occidentale (ISO Latin 1)</td></tr>
-<tr><td><code>IsoLatin9</code></td><td>Occidentale (ISO Latin 9)</td></tr>
-<tr><td><code>Windows Latin 1</code></td><td>Occidentale (Windows Latin 1)</td></tr>
-<tr><td><code>IsoLatin2</code></td><td>Centro-Europa (ISO Latin 2)</td></tr>
-<tr><td><code>Mac Central European Roman</code></td><td>Centro-Europa (Mac OS)</td></tr>
-<tr><td><code>WindowsCentralEurRoman</code></td><td>Centro-Europa (Windows Latin 2)</td></tr>
-<tr><td><code>IsoLatin5</code></td><td>Turco (ISO Latin 5)</td></tr>
+<tr><td><code>IsoLatin</code></td><td>Occidentale (ISO latino 1)</td></tr>
+<tr><td><code>IsoLatin9</code></td><td>Occidentale (ISO latino 9)</td></tr>
+<tr><td><code>Windows Latin 1</code></td><td>Occidentale (Windows latino 1)</td></tr>
+<tr><td><code>IsoLatin2</code></td><td>Centroeuropeo (ISO latino 2)</td></tr>
+<tr><td><code>Mac Central European Roman</code></td><td>Centroeuropeo (Mac OS)</td></tr>
+<tr><td><code>WindowsCentralEurRoman</code></td><td>Centroeuropeo (Windows latino 2)</td></tr>
+<tr><td><code>IsoLatin5</code></td><td>Turco (ISO latino 5)</td></tr>
 <tr><td><code>IsoLatinGreek</code></td><td>Greco (ISO 8859-7)</td></tr>
 <tr><td><code>Mac Cyrillic</code></td><td>Cirillico (Mac OS)</td></tr>
 <tr><td><code>DOS Cyrillic</code></td><td>Cirillico (DOS)</td></tr>
@@ -92,7 +92,7 @@
 </table>
 
 <h2>Salvare in un’altra codifica</h2>
-<p>Per scegliere la codifica al momento del salvataggio, attiva Impostazioni › Documenti e salvataggio › Codifica › «Mostra la codifica nel dialogo Salva»; la finestra di dialogo Salva ha allora un menu delle codifiche. Modifica › Trasformazioni › Nuova Codifica sceglie la codifica in cui il documento aperto verrà salvato da quel momento in poi. Se il file ha una riga di codifica, decide la riga; modifica invece la riga. TeXShop conserva l’indicatore dell’ordine dei byte di un file UTF-8 e l’ordine dei byte di un file UTF-16.</p>
+<p>Per scegliere la codifica al momento del salvataggio, attiva Impostazioni › Documenti e salvataggio › Codifica › «Mostra la codifica nel dialogo Salva»; la finestra di dialogo Salva ha allora un menu delle codifiche. Modifica › Trasformazioni › Cambia codifica sceglie la codifica in cui il documento aperto verrà salvato da quel momento in poi. Se il file ha una riga di codifica, decide la riga; modifica invece la riga. TeXShop conserva l’indicatore dell’ordine dei byte di un file UTF-8 e l’ordine dei byte di un file UTF-16.</p>
 <p>Convertire un file in un’altra codifica fa perdere ogni carattere che la nuova codifica non può rappresentare, e leggere un file nella codifica sbagliata e poi salvarlo ne sostituisce i caratteri definitivamente. Conserva una copia dell’originale. Il programma da riga di comando <code>iconv</code> converte i file senza modificare l’originale. Il documento «Codifica dei file e TeXShop» (in inglese) nel menu Aiuto tratta queste questioni più in dettaglio.</p>
 
 <h2>Lingue da destra a sinistra</h2>

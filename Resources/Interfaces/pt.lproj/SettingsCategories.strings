@@ -24,7 +24,7 @@
 "preview.summary" = "Exibição e controles da pré-visualização de PDF.";
 "typesetting.summary" = "Perfis do motor, composição, sincronização e caminhos das ferramentas.";
 "console.summary" = "O console que exibe a saída da composição.";
-"keyboard.summary" = "Associações de teclas, complementação e atalhos de menus.";
+"keyboard.summary" = "Associações de teclas, conclusão de comandos e atalhos de menus.";
 "updates.summary" = "Verificação automática e atualizações do software.";
 
 /* Approved catalog presentation */
@@ -38,7 +38,7 @@
 "catalog.general.1.1.title" = "Posição do código-fonte na janela combinada";
 "catalog.general.1.2.title" = "Abrir novas janelas como abas";
 "group.general.2.title" = "Posição das janelas";
-"catalog.general.2.0.title" = "Fonte";
+"catalog.general.2.0.title" = "Código-fonte";
 "catalog.general.2.0.button" = "Escolher a posição atual";
 "catalog.general.2.1.title" = "Pré-visualização";
 "catalog.general.2.1.button" = "Escolher a posição atual";
@@ -48,12 +48,12 @@
 "catalog.general.2.3.button" = "Escolher a posição atual";
 "group.general.3.title" = "Arquivo principal do projeto";
 "catalog.general.3.0.title" = "Abrir o arquivo principal ao abrir um documento";
-"catalog.general.3.1.title" = "Minimizar a janela do arquivo raiz";
+"catalog.general.3.1.title" = "Minimizar a janela do arquivo principal";
 "catalog.general.3.1.former" = "";
 "group.general.5.title" = "Avançado";
 "group.general.6.title" = "Ícone do Dock durante a execução";
-"catalog.general.5.0.title" = "As configurações que não aparecem aqui são descritas na ajuda “Linhas Especiais e Ajustes Ocultos”.";
-"catalog.general.5.1.title" = "Abrir o manual de linhas especiais e ajustes ocultos…";
+"catalog.general.5.0.title" = "Os ajustes que não aparecem aqui são descritos no documento de ajuda “Linhas de Comentário e Ajustes Ocultos”.";
+"catalog.general.5.1.title" = "Abrir o manual Linhas de Comentário e Ajustes Ocultos…";
 "group.encoding.title" = "Codificação";
 "catalog.documents.0.0.title" = "Codificação dos novos documentos";
 "catalog.documents.0.1.title" = "Mostrar codificação no diálogo Salvar";
@@ -65,11 +65,11 @@
 "group.editor.9.title" = "Ao abrir um documento";
 "group.editor.0.title" = "Exibição";
 "catalog.editor.0.0.title" = "Fonte para o documento";
-"catalog.editor.0.2.title" = "Número de linhas";
-"catalog.editor.0.3.title" = "Tamanho do número da linha";
+"catalog.editor.0.2.title" = "Números de linha";
+"catalog.editor.0.3.title" = "Tamanho dos números de linha";
 "catalog.editor.0.4.title" = "Destacar linha atual";
 "catalog.editor.0.5.title" = "Quebra de linha";
-"catalog.editor.0.6.title" = "Marcas na barra de menus";
+"catalog.editor.0.6.title" = "Menu Etiquetas na barra de menus";
 "group.editor.1.title" = "Estilo";
 "catalog.editor.1.0.title" = "Tamanho do tab";
 "catalog.editor.1.0.unit" = "caracteres";
@@ -120,9 +120,9 @@
 "catalog.editor.6.3.title" = "Largura para esquerda ou direita:";
 "group.editor.7.title" = "Busca";
 "catalog.editor.7.0.title" = "Interface de busca";
-"catalog.editor.7.1.title" = "Manter o painel de localizar avançado em primeiro plano";
+"catalog.editor.7.1.title" = "Manter o painel de busca avançada em primeiro plano";
 
-"group.editor.8.title" = "Tags XML na lista de tags";
+"group.editor.8.title" = "Tags XML na lista de etiquetas";
 "catalog.editor.8.0.choice.0" = "chapter";
 "catalog.editor.8.0.choice.1" = "section";
 "catalog.editor.8.0.choice.2" = "subsection";
@@ -133,7 +133,7 @@
 "catalog.editor.8.0.choice.7" = "project";
 "catalog.editor.8.0.choice.8" = "figure";
 "catalog.editor.8.0.choice.9" = "table";
-"catalog.editor.8.0.choice.10" = "marca pessoal";
+"catalog.editor.8.0.choice.10" = "etiqueta pessoal";
 "group.spelling.0.title" = "Ortografia";
 "catalog.spelling.0.0.title" = "Verificar a ortografia ao digitar";
 "catalog.spelling.0.1.title" = "Correção ortográfica automática";
@@ -180,7 +180,7 @@
 "catalog.appearance.2.0.column.0" = "Primeiro plano";
 "catalog.appearance.2.0.column.1" = "Fundo";
 "catalog.appearance.2.0.column.2" = "Alfa";
-"catalog.appearance.2.0.item.0" = "Fonte";
+"catalog.appearance.2.0.item.0" = "Código-fonte";
 "catalog.appearance.2.0.item.1" = "Console";
 "catalog.appearance.2.0.item.2" = "Log";
 "catalog.appearance.2.0.item.3" = "Pré-visualização";
@@ -243,7 +243,7 @@
 "catalog.preview.0.7.title" = "Manter a ampliação, o formato de visualização e a divisão ao entrar em tela cheia";
 "catalog.preview.1.0.title" = "Direção das páginas";
 "catalog.preview.1.1.title" = "Mostrar a primeira página sozinha como capa";
-"catalog.preview.1.2.title" = "Em “Direção das páginas” e “Mostrar a primeira página sozinha como capa”, os comentários especiais têm prioridade; em “Direção das páginas”, também a direção de exibição do PDF.";
+"catalog.preview.1.2.title" = "Em “Direção das páginas” e “Mostrar a primeira página sozinha como capa”, os comentários mágicos têm prioridade; em “Direção das páginas”, também a direção de exibição do PDF.";
 "group.preview.2.title" = "Atualização";
 "catalog.preview.2.0.title" = "Sempre monitorar alterações no PDF feitas por outros apps";
 "catalog.preview.2.0.note" = "Recarregar a pré-visualização assim que um editor externo, o latexmk ou outro app regrava o PDF, mesmo com o TeXShop em segundo plano.";
@@ -266,9 +266,9 @@
 "catalog.typesetting.0.1.note" = "Usado quando Arquivo de motor é escolhido acima.";
 "catalog.typesetting.0.1.button" = "Editar a lista de motores…";
 "catalog.typesetting.0.2.title" = "Método de composição";
-"catalog.typesetting.0.3.title" = "Compilador alternativo";
-"catalog.typesetting.0.3.note" = "O compilador usado em “Compor com compilador alternativo”.";
-"catalog.typesetting.0.3.info" = "Sobre “Compor com compilador alternativo”";
+"catalog.typesetting.0.3.title" = "Motor alternativo";
+"catalog.typesetting.0.3.note" = "O motor usado em “Compor com motor alternativo”.";
+"catalog.typesetting.0.3.info" = "Sobre “Compor com motor alternativo”";
 "group.typesetting.1.title" = "Após a composição";
 "catalog.typesetting.1.0.title" = "Depois de compor";
 "group.typesetting.2.title" = "Sincronização do código-fonte e da pré-visualização";
@@ -284,7 +284,7 @@
 "group.typesetting.4.title" = "PDF direto";
 "catalog.typesetting.4.0.title" = "plain TeX";
 "catalog.typesetting.4.1.title" = "LaTeX";
-"catalog.typesetting.4.2.title" = "Confirmar shell-escape";
+"catalog.typesetting.4.2.title" = "Confirmar shell escape";
 "catalog.typesetting.4.2.note" = "Pergunta antes de compor quando o comando plain TeX ou LaTeX acima contém -shell-escape.";
 "group.typesetting.5.title" = "Via DVI";
 "catalog.typesetting.5.0.title" = "plain TeX";
@@ -302,7 +302,7 @@
 "catalog.typesetting.9.0.title" = "Converter para \\UTF / \\CID do pacote otf";
 "group.console.0.title" = "Fonte";
 "catalog.console.0.0.title" = "Fonte do console";
-"catalog.console.0.1.title" = "Usar também no editor de macro";
+"catalog.console.0.1.title" = "Usar também no editor de macros";
 "group.console.1.title" = "Ações";
 "catalog.console.1.0.title" = "Mostrar console";
 "catalog.console.1.1.title" = "Redimensionar console";
@@ -315,7 +315,7 @@
 "group.completion.title" = "Conclusão de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de ativação";
 "catalog.keyboard.1.0.note" = "Completa o comando que você está digitando; pressione a tecla de novo para a próxima sugestão. Com Shift pressionado, volta à sugestão anterior.";
-"catalog.keyboard.1.3.title" = "Ir para a marca seguinte ou anterior com Option ou Controle e a tecla de ativação";
+"catalog.keyboard.1.3.title" = "Ir para a marca seguinte ou anterior com Option ou Control e a tecla de ativação";
 "catalog.keyboard.1.2.title" = "Editar conclusão de comandos…";
 "group.labelcompletion.title" = "Conclusão de rótulos e chaves de citação";
 "catalog.keyboard.3.0.title" = "Oferecer também chaves de citação do BibDesk";

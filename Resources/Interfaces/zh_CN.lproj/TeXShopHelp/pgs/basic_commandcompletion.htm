@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>命令补全</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="命令补全; Escape 键; 触发按键; 标记; 下一个标记; 补全标签和引用键">
+<meta name="description" content="命令补全; Escape 键; 触发按键; 标记; 下一个标记; 补全引用标签和引用键">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -49,7 +49,7 @@
 
 <h2>设置</h2>
 
-<p>在“设置”>“键盘”中，“触发按键”用于选择 Escape 或 Tab 作为补全键。“编辑”>“实验台...”的源代码面板使用与源代码窗口相同的键。</p>
+<p>在“设置”>“键盘”中，“触发按键”用于选择 Escape 或 Tab 作为补全键。“编辑”>“实验台…”的源代码面板使用与源代码窗口相同的键。</p>
 
 <p>要将某个词添加到补全文件中，请选中它，然后选取“源代码”>“添加到命令补全列表”。要编辑该文件，请点按“设置”>“键盘”中的“编辑命令补全文件…”。研究已有的补全是学习编写新补全的最佳方法；~/Library/TeXShop/CommandCompletion 文件夹中也有一份关于补全的详细文档。</p>
 
@@ -57,13 +57,13 @@
 
 <p>标记（•）是一个以后要回来的位置；带注释的标记（•‹注释›）还会说明那里应填写什么。命令补全、宏和按键绑定中都可以含有标记，你也可以用“编辑”>“标记”>“插入标记”（<kbd>⌘8</kbd>）和“插入带注释的标记”（<kbd>⌃⌘8</kbd>）自行插入标记。“插入带注释的标记”会插入 •‹›，插入点位于尖括号之间；或者将所选文本变为注释。</p>
 
-<p>“下一个标记”（<kbd>⌃⌘F</kbd>）和“上一个标记”（<kbd>⌃⌘G</kbd>）会连同注释一起选中下一个或上一个标记，这样键入的内容就会替换它。按住 Option 键则只删除 •，并改为选中注释（<kbd>⌃⌥⌘F</kbd>、<kbd>⌃⌥⌘G</kbd>）。</p>
+<p>“下一个标记”（<kbd>⌃⌘]</kbd>）和“上一个标记”（<kbd>⌃⌘[</kbd>）会连同注释一起选中下一个或上一个标记，这样键入的内容就会替换它。按住 Option 键则只删除 •，并改为选中注释（<kbd>⌃⌥⌘]</kbd>、<kbd>⌃⌥⌘[</kbd>）。</p>
 
-<p>触发按键也可以在标记之间移动：以 Escape 键为触发按键时，Option-Escape 转到下一个标记，Control-Escape 转到上一个标记；以 Tab 键为触发按键时，则是 Option-Tab 和 Control-Tab。如果其他应用需要使用这些键，请在“设置”>“键盘”中关闭“用Option或Control加触发按键，移到下一个或上一个标记”。</p>
+<p>触发按键也可以在标记之间移动：以 Escape 键为触发按键时，Option-Escape 转到下一个标记，Control-Escape 转到上一个标记；以 Tab 键为触发按键时，则是 Option-Tab 和 Control-Tab。如果其他应用需要使用这些键，请在“设置”>“键盘”中关闭“用 Option 或 Control 加触发按键，移到下一个或上一个标记”。</p>
 
-<h2><a name="labels"></a>补全标签和引用键</h2>
+<h2><a name="labels"></a>补全引用标签和引用键</h2>
 
-<p>“编辑”>“补全标签或引用键”（<kbd>F5</kbd>）会从列表中补全标签或引用键。在 <code>\ref{</code>、<code>\pageref{</code>、<code>\eqref{</code> 或 <code>\autoref{</code> 之后，或者在其后键入的标签的前几个字母之后选取此项，列表就会显示文件中用 <code>\label</code> 定义的标签；用方向键选择一个，然后按下 Return 键。在 <code>\cite{</code> 及类似命令之后，如果打开了“设置”>“键盘”中的“同时提供BibDesk中的引用键”，列表会显示 BibDesk 中的引用键。在其他位置，它会显示 macOS 的单词补全。在许多键盘上，需要按住 fn 键（地球仪键）再按 F5。</p>
+<p>“编辑”>“补全引用标签或引用键”（<kbd>F5</kbd>）会从列表中补全引用标签或引用键。在 <code>\ref{</code>、<code>\pageref{</code>、<code>\eqref{</code> 或 <code>\autoref{</code> 之后，或者在其后键入的引用标签的前几个字母之后选取此项，列表就会显示文件中用 <code>\label</code> 定义的引用标签；用方向键选择一个，然后按下 Return 键。在 <code>\cite{</code> 及类似命令之后，如果打开了“设置”>“键盘”中的“同时提供 BibDesk 中的引用键”，列表会显示 BibDesk 中的引用键。在其他位置，它会显示 macOS 的单词补全。在许多键盘上，需要按住 fn 键（地球仪键）再按 F5。</p>
 
 <h2><a name="compare"></a>按键绑定、宏和命令补全</h2>
 
@@ -72,7 +72,7 @@
 <dt><a href="basic_autocompletion.htm">按键绑定</a></dt>
 <dd>按一个键即可插入文本：<code>_</code> 会在所选内容两侧得到 <code>_{}</code>，≤（在美式键盘布局上为 Option-逗号）会得到 <code>\leq</code>。“设置”>“键盘”用于为新文稿打开按键绑定并保存其列表；“源代码”>“按键绑定”用于为最前面的文稿打开或关闭它们。先键入 <code>\</code>，可以让 <code>_</code> 或 <code>^</code> 等键保持原样。用死键键入的字符（例如用 Option-E 再按 E 键入的 é）不能设置按键绑定。</dd>
 <dt><a href="basic_macros.htm">宏</a></dt>
-<dd>“宏”菜单中的项目插入文本或运行 AppleScript 程序，并可以设置使用 Command 或 Control 键或功能键的键盘快捷键。“宏”>“打开宏编辑器...”用于添加、编辑宏并调整其顺序。想要用 Command 键完成的文本操作，例如用 ⌘B 在所选内容两侧加上 <code>\textbf</code>，最好做成宏。</dd>
+<dd>“宏”菜单中的项目插入文本或运行 AppleScript 程序，并可以设置使用 Command 或 Control 键或功能键的键盘快捷键。“宏”>“打开宏编辑器…”用于添加、编辑宏并调整其顺序。想要用 Command 键完成的文本操作，例如用 ⌘B 在所选内容两侧加上 <code>\textbf</code>，最好做成宏。</dd>
 <dt>命令补全</dt>
 <dd>键入命令的开头或缩写，然后按下触发按键：<code>\sec</code> 会得到 <code>\section{•}</code>，再按触发按键会得到下一个匹配项，<code>\benu</code> 则会得到带有标记的完整 enumerate 环境。与按键绑定和宏不同，命令补全会替换所选文本。</dd>
 </dl>

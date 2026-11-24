@@ -19,7 +19,7 @@
 <li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_encoding.htm">Codierungen</a></li>
 <li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
 <li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
 <li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
@@ -43,7 +43,7 @@
 
 <h2>Eine Engine wählen</h2>
 <p>Das Einblendmenü neben der Taste „Setzen“ in der Symbolleiste des Quelltextfensters listet die Engines auf. Wählen Sie eine aus und klicken Sie auf „Setzen“ oder drücken Sie <kbd>⌘T</kbd>. Die Wahl gilt nur für dieses Dokument.</p>
-<p>Um neue Dokumente mit einer Engine zu setzen, wählen Sie unter Einstellungen › Satz › Engine › Neue Dokumente setzen mit „Engine-Datei“ und darunter im Menü „Engine-Datei“ die Engine. „Engine-Liste bearbeiten…“ öffnet den Ordner „Engines“ im Finder; das Menü „Engine-Datei“ folgt dem Ordner, wenn Sie Dateien hinzufügen, entfernen oder umbenennen. Ist die gewählte Engine-Datei nicht mehr im Ordner, zeigt das Menü sie als nicht gefunden an, und Dokumente werden mit LaTeX gesetzt.</p>
+<p>Um neue Dokumente mit einer Engine zu setzen, wählen Sie unter Einstellungen › Satz › Engine › Neue Dokumente setzen mit „Engine-Datei“ und darunter im Menü „Engine-Datei“ die Engine. „Engine-Liste bearbeiten …“ öffnet den Ordner „Engines“ im Finder; das Menü „Engine-Datei“ folgt dem Ordner, wenn Sie Dateien hinzufügen, entfernen oder umbenennen. Ist die gewählte Engine-Datei nicht mehr im Ordner, zeigt das Menü sie als nicht gefunden an, und Dokumente werden mit LaTeX gesetzt.</p>
 <p>Um ein Dokument an eine Engine zu binden, schreiben Sie eine Zeile wie diese in eine seiner ersten zwanzig Zeilen:</p>
 <pre>% !TEX program = XeLaTeX</pre>
 <p>Der Name ist der Name der Engine-Datei ohne <code>.engine</code>; <code>tex</code> und <code>latex</code> setzen plain TeX und LaTeX „Über DVI“, <code>pdftex</code> und <code>pdflatex</code> setzen sie „PDF direkt“. Die Zeile hat Vorrang vor der Symbolleiste, vor den Einstellungen und vor „Setzen mit alternativer Engine“. Die Form <code>% !TEX TS-program =</code> wird genauso gelesen. Schreiben Sie die Zeile genau wie gezeigt, mit je einem Leerzeichen vor und nach dem Gleichheitszeichen; das Makro „Program“ im Menü „Makros“ fügt die Zeile für Sie ein, mit einer Liste von Engine-Namen zur Auswahl. In einem Projekt mit Hauptdatei braucht nur die Hauptdatei die Zeile.</p>
@@ -80,7 +80,7 @@ lualatex -file-line-error -synctex=1 "$1"</pre>
 
 <h2>Der Ordner „Inactive“</h2>
 <p>Der Unterordner <code>Engines/Inactive</code> enthält Engines für besondere Arbeitsabläufe, oft mit Dokumentation und Beispielen, etwa für latexmk, ConTeXt, Sage, PreTeXt, pythontex und Typst. Um eine davon zu verwenden, verschieben Sie sie aus ihrem Ordner in den Ordner „Engines“ selbst. Bei einem Update von TeXShop wird der Ordner „Inactive“ durch die aktuelle Version ersetzt, während die Dateien direkt im Ordner „Engines“ nie angetastet werden; von Ihnen bearbeitete Engines bleiben also erhalten.</p>
-<p>Mehr über Engines steht im Kapitel „Engines and latexmk“ in Hilfe › TeXShop Handbuch (Englisch).</p>
+<p>Mehr über Engines steht im Kapitel „Engines and latexmk“ in Hilfe › TeXShop-Handbuch (Englisch).</p>
 </main>
 </body>
 </html>

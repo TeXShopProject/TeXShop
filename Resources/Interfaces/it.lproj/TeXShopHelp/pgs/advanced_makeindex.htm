@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
@@ -48,8 +48,8 @@
 Examples include bears\index{animal!bear}
 and tigers\index{animal!tiger}.</pre></li>
 </ol>
-<p>Per creare l’indice, componi il documento, poi scegli Compilatore › MakeIndex (<kbd>⇧⌘I</kbd>), oppure scegli MakeIndex nel menu a comparsa accanto al pulsante «Compila» e premi «Compila», e poi componi di nuovo. La composizione con latexmk esegue MakeIndex da sola.</p>
-<p>MakeIndex esegue il programma indicato in Impostazioni › Composizione › Strumenti correlati › Programma per indici, seguito dal nome del file idx. Il valore predefinito è <code>makeindex</code>. Inserisci un altro programma, come <code>mendex</code> o <code>upmendex</code> per i documenti giapponesi, con le opzioni necessarie, ad esempio <code>upmendex -s mystyle.ist</code>. I profili del motore impostano questo campo: <code>makeindex</code> per i profili occidentali, <code>mendex</code> per pLaTeX + dvipdfmx, e <code>upmendex</code> per upLaTeX + dvipdfmx e LuaLaTeX (giapponese).</p>
+<p>Per creare l’indice, compila il documento, poi scegli Compila › MakeIndex (<kbd>⇧⌘I</kbd>), oppure scegli MakeIndex nel menu a comparsa accanto al pulsante «Compila» e premi «Compila», e poi compila di nuovo. La compilazione con latexmk esegue MakeIndex da sola.</p>
+<p>MakeIndex esegue il programma indicato in Impostazioni › Compilazione › Strumenti correlati › Programma per indici, seguito dal nome del file idx. Il valore predefinito è <code>makeindex</code>. Inserisci un altro programma, come <code>mendex</code> o <code>upmendex</code> per i documenti giapponesi, con le opzioni necessarie, ad esempio <code>upmendex -s mystyle.ist</code>. I profili del motore impostano questo campo: <code>makeindex</code> per i profili occidentali, <code>mendex</code> per pLaTeX + dvipdfmx, e <code>upmendex</code> per upLaTeX + dvipdfmx e LuaLaTeX (giapponese).</p>
 <p>Sorgente › Evidenzia le voci dell'indice mostra gli argomenti di <code>\index</code> nel colore «Indice» del tema; consulta <a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a>.</p>
 </main>
 </body>

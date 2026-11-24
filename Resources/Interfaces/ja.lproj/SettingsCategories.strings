@@ -157,7 +157,7 @@
 "theme.list.duplicate" = "複製";
 "theme.list.duplicate.named" = "“%@”を複製";
 "theme.list.rename" = "名前を変更";
-"theme.list.rename.named" = "“%@”を名称変更";
+"theme.list.rename.named" = "“%@”の名前を変更";
 "theme.list.restore" = "元に戻す";
 "theme.list.restore.named" = "“%@”を元に戻す";
 "theme.list.delete" = "削除";

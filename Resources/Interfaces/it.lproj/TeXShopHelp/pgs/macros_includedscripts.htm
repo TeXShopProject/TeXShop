@@ -20,13 +20,13 @@
 <li><a href="macros_includedscripts.htm" class="current">Macro AppleScript predefinite</a></li>
 <li><a href="macros_defapplescript.htm">Definire macro AppleScript</a></li>
 <li><a href="macros_dialogs.htm">Creare finestre di dialogo</a></li>
-<li><a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di composizione di TeXShop</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di compilazione di TeXShop</a></li>
 <li><a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Macro AppleScript predefinite</h1>
-<p>TeXShop include una raccolta di macro AppleScript di Will Robertson, Claus Gerhardt e altri. Alcune eseguono in sequenza una serie di comandi di composizione. Copiandole e modificandole, puoi costruire script per il tuo lavoro. Questa pagina ne descrive alcune, con i nomi che hanno nel menu Macro.</p>
+<p>TeXShop include una raccolta di macro AppleScript di Will Robertson, Claus Gerhardt e altri. Alcune eseguono in sequenza una serie di comandi di compilazione. Copiandole e modificandole, puoi costruire script per il tuo lavoro. Questa pagina ne descrive alcune, con i nomi che hanno nel menu Macro.</p>
 
 <h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
 <p>Queste macro sono di Will Robertson. Nel sottomenu Column macros, New tabular e New array inseriscono un ambiente tabular o array con il numero di righe e di colonne che inserisci, e Add column e Delete column modificano le righe che selezioni. Insert reference cerca nel file corrente i comandi <code>\label{…}</code> e ti permette di scegliere un’etichetta da un elenco; inserisce l’etichetta racchiusa in <code>\ref{…}</code>, un comando che puoi cambiare nello script. Se è selezionato del testo, vengono elencate solo le etichette che lo contengono. Open quickly… elenca i file .tex, .sty e .pdf nella cartella del file sorgente corrente e apre quelli che scegli.</p>
@@ -45,7 +45,7 @@
 <p>I file di testo terminano le righe in modi diversi: macOS e Unix con un avanzamento di riga (line feed), Windows con un ritorno a capo (carriage return) seguito da un avanzamento di riga, e i file Macintosh molto vecchi con un solo ritorno a capo. TeXShop li legge tutti e tre. Se l’editor di qualcun altro non ci riesce, usa queste macro. Per un file sorgente MyFile.tex, Convert to Unix scrive una copia del file salvato chiamata MyFile_Unix.tex con avanzamenti di riga; Convert to Windows scrive MyFile_Windows.tex e Convert to MAC scrive MyFile_Mac.tex. Le macro usano il programma flip di Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
 
 <h2 id="bibliography">Applescript › Bibliography</h2>
-<p>Un documento con una bibliografia richiede diverse esecuzioni: LaTeX scrive il file .aux, BibTeX lo usa per scrivere i file .bbl e .blg, LaTeX viene eseguito di nuovo per aggiungere la bibliografia e un’altra volta ancora per aggiornarne i riferimenti. La macro Bibliography esegue LaTeX, BibTeX, LaTeX e LaTeX uno dopo l’altro. <a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di composizione di TeXShop</a> spiega come funziona.</p>
+<p>Un documento con una bibliografia richiede diverse esecuzioni: LaTeX scrive il file .aux, BibTeX lo usa per scrivere i file .bbl e .blg, LaTeX viene eseguito di nuovo per aggiungere la bibliografia e un’altra volta ancora per aggiornarne i riferimenti. La macro Bibliography esegue LaTeX, BibTeX, LaTeX e LaTeX uno dopo l’altro. <a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di compilazione di TeXShop</a> spiega come funziona.</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
 <p>La maggior parte delle macro di questo sottomenu richiama gli script della shell con lo stesso nome in ~/Library/TeXShop/bin; bibtexcpl, mpostcpl e latex-makeindex-mpost ne richiamano diversi in successione, e openpdf apre il PDF del documento. Funzionano su un file salvato. <a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a> prende come esempio pdflatexc.</p>

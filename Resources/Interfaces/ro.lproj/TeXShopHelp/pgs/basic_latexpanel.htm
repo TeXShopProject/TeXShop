@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tabloul de comandă LaTeX</title>
+<title>Panoul LaTeX</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="Tablou de Comandă LaTeX; simboluri; litere grecești; medii; tipografie; amssymb; completion.plist; butoane personalizate">
+<meta name="description" content="Panoul LaTeX; simboluri; litere grecești; medii; tipografie; amssymb; completion.plist; butoane personalizate">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,8 +24,8 @@
 <li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
 <li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
 <li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
-<li><a href="basic_latexpanel.htm" class="current">Tabloul de comandă LaTeX</a></li>
-<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_latexpanel.htm" class="current">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
 <li><a href="basic_macros.htm">Macrocomenzi</a></li>
 <li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
 <li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
@@ -39,8 +39,8 @@
 </ul>
 </nav>
 <main id="content">
-<h1>Tabloul de comandă LaTeX</h1>
-<p>Fereastră › Tablou de Comandă LaTeX… deschide un panou cu cod LaTeX: simboluri matematice, litere grecești, funcții, caractere accentuate și internaționale, medii și comenzi tipografice. Faceți clic în sursă acolo unde trebuie să ajungă codul, apoi faceți clic pe un buton din panou. Codul acestuia este inserat la punctul de inserare. Panoul rămâne în fața ferestrelor sursă în timp ce lucrați.</p>
+<h1>Panoul LaTeX</h1>
+<p>Fereastră › Panoul LaTeX… deschide un panou cu cod LaTeX: simboluri matematice, litere grecești, funcții, caractere accentuate și internaționale, medii și comenzi tipografice. Faceți clic în sursă acolo unde trebuie să ajungă codul, apoi faceți clic pe un buton din panou. Codul acestuia este inserat la punctul de inserare. Panoul rămâne în fața ferestrelor sursă în timp ce lucrați.</p>
 <p>Butoanele sunt așezate pe pagini. Alegeți o pagină cu butoanele din partea de sus a fiecărei părți a panoului: „Matematică”, „Litere grecești”, „Simboluri”, „Funcții” și „Internațional”, respectiv „Medii”, „Tipografie” și „Personalizat”.</p>
 <p>Dacă este selectat text când faceți clic pe un buton de tipografie sau de mediu, textul selectat este pus în interiorul codului inserat, ca în <code>\textbf{text selectat}</code>.</p>
 <p>Unele simboluri au nevoie de pachetul amssymb. Adăugați această linie în preambulul unui document care le folosește:</p>
@@ -56,7 +56,7 @@
 <p>Pagina „Personalizat” are loc pentru până la șaisprezece butoane proprii. Fiecare este definit în lista <code>Customized</code> a fișierului prin două șiruri, numele butonului și codul pe care îl inserează:</p>
 <pre>&lt;string&gt;Section&lt;/string&gt;
 &lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
-<p>Salvați fișierul în UTF-8, apoi închideți și reporniți TeXShop pentru a vedea modificările în panou. Dacă fișierul lipsește sau este deteriorat, TeXShop îl înlocuiește cu propria copie. Consultați <a href="configure_panel.htm">Modificarea tabloului de comandă LaTeX</a> și <a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a>.</p>
+<p>Salvați fișierul în UTF-8, apoi închideți și reporniți TeXShop pentru a vedea modificările în panou. Dacă fișierul lipsește sau este deteriorat, TeXShop îl înlocuiește cu propria copie. Consultați <a href="configure_panel.htm">Modificarea panoului LaTeX</a> și <a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a>.</p>
 </main>
 </body>
 </html>

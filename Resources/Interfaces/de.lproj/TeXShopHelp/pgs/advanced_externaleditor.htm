@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Einen externen Editor verwenden</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="externer Editor; Zur Voransicht öffnen; Externen Editor benutzen; PDF-Änderungen durch andere Apps ständig überwachen; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
+<meta name="description" content="externer Editor; Zur Vorschau öffnen; Externen Editor benutzen; PDF-Änderungen durch andere Apps ständig überwachen; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -19,7 +19,7 @@
 <li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_encoding.htm">Codierungen</a></li>
 <li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
 <li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
 <li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
@@ -42,22 +42,22 @@
 <p>Sie können in einem anderen Editor schreiben und TeXShop zum Setzen und zum Anzeigen des PDF verwenden.</p>
 
 <h2>Nur die Vorschau öffnen</h2>
-<p>Ablage › Zur Voransicht öffnen... fragt nach einer Quelltextdatei und öffnet nur ihr Vorschaufenster. Wurde die Datei noch nicht gesetzt oder ist das PDF älter als der Quelltext, setzt TeXShop sie zuerst. Bearbeiten Sie den Quelltext in Ihrem Editor; zum Setzen sichern Sie ihn dort und klicken im Vorschaufenster auf „Setzen“ oder drücken <kbd>⌘T</kbd>. In diesem Modus öffnet oder ändert TeXShop die Quelltextdatei nie. Hat die Symbolleiste des Vorschaufensters keine Taste „Setzen“, fügen Sie sie mit Fenster › Symbolleiste anpassen... hinzu.</p>
-<p>Wenn Sie immer so arbeiten, schalten Sie Einstellungen › Allgemein › Beim Start › „Externen Editor benutzen“ ein. Ablage › Öffnen... und „Benutzte Dokumente“ öffnen Quelltextdateien dann nur zur Voransicht, und aus Ablage › Zur Voransicht öffnen... wird „Zum Bearbeiten öffnen...“, das eine Quelltextdatei im Editor von TeXShop öffnet, wenn Sie ihn brauchen. Andere Dateien, etwa PDF-, Bild- und Log-Dateien, öffnen sich wie bisher.</p>
+<p>Ablage › Zur Vorschau öffnen … fragt nach einer Quelltextdatei und öffnet nur ihr Vorschaufenster. Wurde die Datei noch nicht gesetzt oder ist das PDF älter als der Quelltext, setzt TeXShop sie zuerst. Bearbeiten Sie den Quelltext in Ihrem Editor; zum Setzen sichern Sie ihn dort und klicken im Vorschaufenster auf „Setzen“ oder drücken <kbd>⌘T</kbd>. In diesem Modus öffnet oder ändert TeXShop die Quelltextdatei nie. Hat die Symbolleiste des Vorschaufensters keine Taste „Setzen“, fügen Sie sie mit Fenster › Symbolleiste anpassen … hinzu.</p>
+<p>Wenn Sie immer so arbeiten, schalten Sie Einstellungen › Allgemein › Beim Start › „Externen Editor benutzen“ ein. Ablage › Öffnen … und „Benutzte Dokumente“ öffnen Quelltextdateien dann nur zur Vorschau, und aus Ablage › Zur Vorschau öffnen … wird „Zum Bearbeiten öffnen …“, das eine Quelltextdatei im Editor von TeXShop öffnet, wenn Sie ihn brauchen. Andere Dateien, etwa PDF-, Bild- und Protokolldateien, öffnen sich wie bisher.</p>
 
 <h2>Die Vorschau aktuell halten</h2>
 <p>Wenn ein anderes Programm das PDF neu schreibt, etwa Ihr Editor oder latexmk im Terminal, lädt TeXShop es neu, sobald Sie zu TeXShop oder zum Vorschaufenster zurückkehren, und behält dabei Seite und Vergrößerung bei. Ist Einstellungen › Vorschau › Aktualisierung › „PDF-Änderungen durch andere Apps ständig überwachen“ eingeschaltet, lädt TeXShop das PDF neu, sobald es sich ändert, auch wenn TeXShop im Hintergrund ist, etwa wenn die Vorschau neben Ihrem Editor steht. Eine Vorschau mit ungesicherten Anmerkungen wird nicht neu geladen, damit die Anmerkungen nicht verloren gehen.</p>
 <p>TeXShop überwacht auch die Quelltextdateien, die in seinem eigenen Editor geöffnet sind. Ändert ein anderer Editor eine solche Datei, lädt TeXShop sie neu, sofern die Kopie in TeXShop keine ungesicherten Änderungen hat.</p>
 
 <h2>Mit dem Editor synchronisieren</h2>
-<p>Ein Befehlstaste-Klick im Vorschaufenster kann Sie zur Zeile in Ihrem Editor bringen, und die Taste „Zum Fehler“ in der Konsole kann die Zeile eines Fehlers dort öffnen. Dafür braucht es „Externen Editor benutzen“, eine versteckte Einstellung und ein Befehlszeilenprogramm des Editors:</p>
+<p>Ein Befehlstaste-Klick im Vorschaufenster kann Sie zur Zeile in Ihrem Editor bringen, und die Taste „Gehe zu Fehler“ in der Konsole kann die Zeile eines Fehlers dort öffnen. Dafür braucht es „Externen Editor benutzen“, eine versteckte Einstellung und ein Befehlszeilenprogramm des Editors:</p>
 <ul>
 <li>Für TextMate, dessen Befehl <code>mate</code> in <code>/usr/local/bin</code> liegt: <code>defaults write TeXShop TextMateSync YES</code>.</li>
 <li>Für jeden anderen Editor: <code>defaults write TeXShop OtherEditorSync YES</code> und ein ausführbares Skript <code>/usr/local/bin/othereditor</code>, das die Zeilennummer als <code>$1</code> und den vollständigen Pfad der Datei als <code>$2</code> erhält. Für BBEdit lautet es:
 <pre>#!/bin/sh
 /usr/local/bin/bbedit "$2:$1"</pre></li>
 </ul>
-<p>Für die andere Richtung, von einer Zeile im Editor zum Vorschaufenster, ruft der Editor TeXShop über AppleScript mit den Befehlen <code>sync_preview_line</code>, <code>sync_preview_index</code> und <code>sync_preview_name</code> auf. Das Kapitel „Using an External Editor“ in Hilfe › TeXShop Handbuch (Englisch) enthält ein vollständiges Skript.</p>
+<p>Für die andere Richtung, von einer Zeile im Editor zum Vorschaufenster, ruft der Editor TeXShop über AppleScript mit den Befehlen <code>sync_preview_line</code>, <code>sync_preview_index</code> und <code>sync_preview_name</code> auf. Das Kapitel „Using an External Editor“ in Hilfe › TeXShop-Handbuch (Englisch) enthält ein vollständiges Skript.</p>
 <p>Der Ordner <code>~/Library/TeXShop/ExternalEditorScripts</code> enthält fertige Unterstützung mit Dokumentation: AppleScripts, die ein Dokument aus BBEdit in TeXShop setzen und anzeigen, und ein Plug-in für Vim.</p>
 
 <h2>AppleScript-Befehle für Editoren</h2>
@@ -69,7 +69,7 @@
 <dt><code>refreshpdf</code></dt><dd>Lädt das PDF neu und holt das Vorschaufenster nach vorn.</dd>
 <dt><code>refreshpdfbackground</code></dt><dd>Lädt das PDF neu, ohne TeXShop nach vorn zu holen, wenn das Vorschaufenster bereits geöffnet ist.</dd>
 <dt><code>refreshtext</code></dt><dd>Liest die Quelltextdatei erneut vom Volume.</dd>
-<dt><code>open_for_externaleditor</code></dt><dd>Öffnet eine Quelltextdatei wie Ablage › Zur Voransicht öffnen....</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Öffnet eine Quelltextdatei wie Ablage › Zur Vorschau öffnen ….</dd>
 </dl>
 <p>Wenn der Editor über TeXShop setzt, wird „PDF-Änderungen durch andere Apps ständig überwachen“ nicht gebraucht. Siehe auch <a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzbefehlen schreiben</a>.</p>
 </main>

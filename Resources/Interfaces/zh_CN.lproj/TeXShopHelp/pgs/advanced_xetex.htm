@@ -44,7 +44,7 @@
 <h2>用 XeLaTeX 或 LuaLaTeX 排版</h2>
 <p>有三种方法，从最通用到最具体：</p>
 <ul>
-<li><strong>引擎配置。</strong>在“设置”>“排版”>“引擎配置”中选择 XeLaTeX 或 LuaLaTeX。该配置会把“直接生成PDF”的 LaTeX 和 plain TeX 命令分别设为 xelatex 和 xetex，或 lualatex 和 luatex，这样工具栏中的 LaTeX 选项和“排版”>“LaTeX”就会使用该引擎。在你确认之前，会有一个对话框列出该配置要设置的值。</li>
+<li><strong>引擎配置。</strong>在“设置”>“排版”>“引擎配置”中选择 XeLaTeX 或 LuaLaTeX。该配置会把“直接生成 PDF”的 LaTeX 和 plain TeX 命令分别设为 xelatex 和 xetex，或 lualatex 和 luatex，这样工具栏中的 LaTeX 选项和“排版”>“LaTeX”就会使用该引擎。在你确认之前，会有一个对话框列出该配置要设置的值。</li>
 <li><strong>引擎文件。</strong>LuaLaTeX 和 XeLaTeX 引擎位于“排版”按钮旁边的弹出式菜单中。要用其中之一排版新文稿，请在“设置”>“排版”>“引擎”>“新文稿的排版”中选择“引擎文件”，并在“引擎文件”菜单中选择该引擎；那里最初选择的是 LuaLaTeX。</li>
 <li><strong>魔法注释。</strong>源文件开头的一行可以为该文稿选择引擎，不受其他设置影响：
 <pre>% !TEX program = LuaLaTeX</pre></li>
@@ -61,7 +61,7 @@
 \begin{document}
 Text in Palatino, \textsf{and in Helvetica Neue}.
 \end{document}</pre>
-<p>不使用 fontspec 或不使用字体命令时，两个引擎都使用 LaTeX 的标准字体 Latin Modern。polyglossia 或 babel 等宏包可为其他语言设置断词和书写习惯；它们的说明文档可以用“帮助”>“显示宏包的帮助...”打开。</p>
+<p>不使用 fontspec 或不使用字体命令时，两个引擎都使用 LaTeX 的标准字体 Latin Modern。polyglossia 或 babel 等宏包可为其他语言设置断词和书写习惯；它们的说明文档可以用“帮助”>“显示宏包的帮助…”打开。</p>
 
 <h2>键入其他文字</h2>
 <p>要键入希腊文、西里尔文、阿拉伯文、希伯来文或其他文字，请在“系统设置”>“键盘”中添加相应的输入法，然后用菜单栏中的输入法菜单在它们之间切换。TeXShop 可以把阿拉伯语、希伯来语和波斯语的行显示为右对齐；请参阅<a href="advanced_encoding.htm">编码</a>。请以 UTF-8（新文稿的默认编码）保存这样的文稿。</p>

@@ -334,7 +334,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="853875493">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">항목 :</string>
+								<string key="NSContents">항목:</string>
 								<object class="NSFont" key="NSSupport" id="392984145">
 									<string key="NSName">AppleSDGothicNeo-Regular</string>
 									<double key="NSSize">13</double>
@@ -363,7 +363,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="707536861">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">키 바인드：command ＋</string>
+								<string key="NSContents">단축키: Command +</string>
 								<reference key="NSSupport" ref="392984145"/>
 								<reference key="NSControlView" ref="809759547"/>
 								<reference key="NSBackgroundColor" ref="1041987312"/>
@@ -383,7 +383,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="35368155">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">기능키:</string>
+								<string key="NSContents">보조 키:</string>
 								<reference key="NSSupport" ref="392984145"/>
 								<reference key="NSControlView" ref="351560297"/>
 								<reference key="NSBackgroundColor" ref="1041987312"/>
@@ -627,7 +627,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="441439681">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">내용 :</string>
+								<string key="NSContents">내용:</string>
 								<reference key="NSSupport" ref="392984145"/>
 								<reference key="NSControlView" ref="660300299"/>
 								<reference key="NSBackgroundColor" ref="1041987312"/>

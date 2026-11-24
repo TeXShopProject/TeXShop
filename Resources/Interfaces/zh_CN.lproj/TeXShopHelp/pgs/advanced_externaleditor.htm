@@ -42,11 +42,11 @@
 <p>你可以在其他编辑器中写作，而用 TeXShop 排版并显示 PDF。</p>
 
 <h2>只打开预览</h2>
-<p>“文件”>“打开以预览...”会要求你选择一个源文件，然后只打开它的预览窗口。如果该文件尚未排版，或者 PDF 比源文件旧，TeXShop 会先排版它。请在你的编辑器中编辑源文件；要排版时，先在编辑器中保存，然后点按预览窗口中的“排版”或按 <kbd>⌘T</kbd>。在这种模式下，TeXShop 从不打开或更改源文件。如果预览窗口的工具栏中没有“排版”按钮，请用“窗口”>“自定义工具栏...”添加一个。</p>
-<p>如果你总是这样工作，请打开“设置”>“通用”>“启动时”>“配置为外部编辑器”。这样，“文件”>“打开...”和“打开最近使用”会以仅预览的方式打开源文件，而“文件”>“打开以预览...”会变为“打开以编辑...”，需要时可以用它在 TeXShop 自己的编辑器中打开源文件。其他文件（例如 PDF、图形文件和日志文件）的打开方式与以前相同。</p>
+<p>“文件”>“打开以预览…”会要求你选择一个源文件，然后只打开它的预览窗口。如果该文件尚未排版，或者 PDF 比源文件旧，TeXShop 会先排版它。请在你的编辑器中编辑源文件；要排版时，先在编辑器中保存，然后点按预览窗口中的“排版”或按 <kbd>⌘T</kbd>。在这种模式下，TeXShop 从不打开或更改源文件。如果预览窗口的工具栏中没有“排版”按钮，请用“窗口”>“自定义工具栏…”添加一个。</p>
+<p>如果你总是这样工作，请打开“设置”>“通用”>“启动时”>“配置为外部编辑器”。这样，“文件”>“打开…”和“打开最近使用”会以仅预览的方式打开源文件，而“文件”>“打开以预览…”会变为“打开以编辑…”，需要时可以用它在 TeXShop 自己的编辑器中打开源文件。其他文件（例如 PDF、图形文件和日志文件）的打开方式与以前相同。</p>
 
 <h2>让预览保持最新</h2>
-<p>当 PDF 被其他程序（例如你的编辑器或终端中的 latexmk）重写时，TeXShop 会在你返回 TeXShop 或预览窗口时重新载入它，并保持页面和放大率不变。打开“设置”>“预览”>“刷新”>“始终监视其他应用对PDF的更改”后，PDF 一有变化就会重新载入，即使 TeXShop 在后台也是如此，例如当预览放在你的编辑器旁边时。带有未保存批注的预览不会重新载入，因此批注不会丢失。</p>
+<p>当 PDF 被其他程序（例如你的编辑器或终端中的 latexmk）重写时，TeXShop 会在你返回 TeXShop 或预览窗口时重新载入它，并保持页面和放大率不变。打开“设置”>“预览”>“刷新”>“始终监视其他应用对 PDF 的更改”后，PDF 一有变化就会重新载入，即使 TeXShop 在后台也是如此，例如当预览放在你的编辑器旁边时。带有未保存批注的预览不会重新载入，因此批注不会丢失。</p>
 <p>TeXShop 也会监视在它自己的编辑器中打开的源文件。当其他编辑器更改了这样的文件时，TeXShop 会重新载入它，除非 TeXShop 中的副本有未保存的更改。</p>
 
 <h2>与编辑器同步</h2>
@@ -57,7 +57,7 @@
 <pre>#!/bin/sh
 /usr/local/bin/bbedit "$2:$1"</pre></li>
 </ul>
-<p>对于另一个方向（从编辑器中的某一行到预览窗口），编辑器通过 AppleScript 用命令 <code>sync_preview_line</code>、<code>sync_preview_index</code> 和 <code>sync_preview_name</code> 调用 TeXShop。“帮助”>“TeXShop手册（英文）”的“Using an External Editor”一章中有完整的脚本。</p>
+<p>对于另一个方向（从编辑器中的某一行到预览窗口），编辑器通过 AppleScript 用命令 <code>sync_preview_line</code>、<code>sync_preview_index</code> 和 <code>sync_preview_name</code> 调用 TeXShop。“帮助”>“TeXShop 手册（英文）”的“Using an External Editor”一章中有完整的脚本。</p>
 <p>文件夹 <code>~/Library/TeXShop/ExternalEditorScripts</code> 中有现成的支持文件及说明文档：在 TeXShop 中排版和预览 BBEdit 文稿的 AppleScript，以及一个 Vim 插件。</p>
 
 <h2>供编辑器使用的 AppleScript 命令</h2>
@@ -69,9 +69,9 @@
 <dt><code>refreshpdf</code></dt><dd>重新载入 PDF，并把预览窗口移到最前面。</dd>
 <dt><code>refreshpdfbackground</code></dt><dd>在预览窗口已打开时重新载入 PDF，而不把 TeXShop 移到最前面。</dd>
 <dt><code>refreshtext</code></dt><dd>从磁盘重新读取源文件。</dd>
-<dt><code>open_for_externaleditor</code></dt><dd>以“文件”>“打开以预览...”的方式打开源文件。</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>以“文件”>“打开以预览…”的方式打开源文件。</dd>
 </dl>
-<p>当编辑器通过 TeXShop 排版时，不需要“始终监视其他应用对PDF的更改”。另请参阅<a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a>。</p>
+<p>当编辑器通过 TeXShop 排版时，不需要“始终监视其他应用对 PDF 的更改”。另请参阅<a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a>。</p>
 </main>
 </body>
 </html>

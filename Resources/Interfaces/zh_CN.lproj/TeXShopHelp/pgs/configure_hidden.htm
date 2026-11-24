@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>隐藏设置</title>
-<meta name="description" content="隐藏设置；defaults write；终端；魔术行和隐藏设置；OtherTrashExtensions；ConTeXtTags；RedConsoleAfterError；RefreshTime">
+<meta name="description" content="隐藏设置；defaults write；终端；魔法注释行和隐藏设置；OtherTrashExtensions；ConTeXtTags；RedConsoleAfterError；RefreshTime">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -22,7 +22,7 @@
 </nav>
 <main id="content">
 <h1>隐藏设置</h1>
-<p>“设置”窗口中提供了大多数人需要的设置。不太常用的设置是隐藏设置：它们在“设置”窗口中没有对应的控制项，需要在终端中用命令更改。参考资料“魔术行和隐藏设置”按主题列出了每项隐藏设置及其命令。可以用“帮助”>“魔术行和隐藏设置（英文）”打开它，也可以用“设置”>“通用”>“高级”中的“打开魔术行与隐藏设置手册…”打开。</p>
+<p>“设置”窗口中提供了大多数人需要的设置。不太常用的设置是隐藏设置：它们在“设置”窗口中没有对应的控制项，需要在终端中用命令更改。参考资料“魔法注释行和隐藏设置”按主题列出了每项隐藏设置及其命令。可以用“帮助”>“魔法注释行和隐藏设置（英文）”打开它，也可以用“设置”>“通用”>“高级”中的“打开‘魔法注释行和隐藏设置’手册…”打开。</p>
 
 <h2 id="change">更改隐藏设置</h2>
 <ol>
@@ -35,16 +35,16 @@
 <h2 id="examples">示例</h2>
 <dl>
 <dt><code>defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'</code></dt>
-<dd>“文件”>“删除Aux文件”也会删除带有这些扩展名的文件。扩展名不带点号。请参阅<a href="advanced_removeaux.htm">删除辅助文件</a>。</dd>
+<dd>“文件”>“删除 Aux 文件”也会删除带有这些扩展名的文件。扩展名不带点号。请参阅<a href="advanced_removeaux.htm">删除辅助文件</a>。</dd>
 <dt><code>defaults write TeXShop ConTeXtTags YES</code></dt>
 <dd>“标签”菜单列出 ConTeXt 的章节命令（例如 \title 和 \subject），而不是 LaTeX 的章节命令。</dd>
 <dt><code>defaults write TeXShop RedConsoleAfterError YES</code></dt>
 <dd>为回应 TeX 错误而在控制台中键入的文本，以及该次运行此后的所有输出，都以红色显示。</dd>
 <dt><code>defaults write TeXShop RefreshTime 2</code></dt>
-<dd>当“设置”>“预览”中的“始终监视其他应用对PDF的更改”打开时，TeXShop 每 2 秒检查一次 PDF 是否已更改。默认值为 1 秒，最小值为 0.5 秒。</dd>
+<dd>当“设置”>“预览”中的“始终监视其他应用对 PDF 的更改”打开时，TeXShop 每 2 秒检查一次 PDF 是否已更改。默认值为 1 秒，最小值为 0.5 秒。</dd>
 </dl>
 
-<p>“设置”窗口中已有的设置不会在隐藏设置中重复出现。例如，用 Option 或 Control 加补全触发按键移到“编辑”>“标记”的下一个或上一个标记，这一功能由“设置”>“键盘”中的“用Option或Control加触发按键，移到下一个或上一个标记”打开或关闭。要查找这类设置，请使用“搜索设置”；请参阅<a href="basic_preferences.htm#settings-search">使用“设置”和“搜索设置”</a>。</p>
+<p>“设置”窗口中已有的设置不会在隐藏设置中重复出现。例如，用 Option 或 Control 加补全触发按键移到“编辑”>“标记”的下一个或上一个标记，这一功能由“设置”>“键盘”中的“用 Option 或 Control 加触发按键，移到下一个或上一个标记”打开或关闭。要查找这类设置，请使用“搜索设置”；请参阅“<a href="basic_preferences.htm#settings-search">搜索设置</a>”。</p>
 </main>
 </body>
 </html>

@@ -26,20 +26,20 @@
 </nav>
 <main id="content">
 <h1>预备知识</h1>
-<p>TeXShop 的宏和宏编辑器由 Mitsuhiro Shishikura 开发；默认的 LaTeX 宏由 Mitsuhiro Shishikura 和 Hirokazu Ogawa 创建。</p>
+<p>TeXShop 的宏和宏编辑器最初由 Mitsuhiro Shishikura 编写；默认的 LaTeX 宏由 Mitsuhiro Shishikura 和 Hirokazu Ogawa 创建。</p>
 <p>宏列在“宏”菜单以及源代码窗口工具栏的“宏”弹出式菜单中。宏有两种。文本宏像 LaTeX 面板的按钮一样，把文本插入源文件。AppleScript 宏运行一段 AppleScript；请参阅 <a href="macros_applescript.htm">AppleScript 宏</a>。</p>
 
 <h2 id="files">宏的存储位置</h2>
 <p>宏存储在</p>
 <pre>~/Library/TeXShop/Macros/Macros_Latex.plist</pre>
 <p>中，“宏”菜单对每种排版引擎都显示这些宏。对于内建引擎 plain TeX、BibTeX、MakeIndex 和 MetaPost，可以另外保留一组宏：当文稿选择了其中之一时，宏编辑器会把宏保存在单独的文件中（例如 Macros_Tex.plist），而不更改 Macros_Latex.plist。</p>
-<p>宏文件是普通的文本文件，但最好用宏编辑器更改它们：选取“宏”>“打开宏编辑器...”。<a href="macros_define.htm">定义新宏</a>说明了如何添加、删除和命名宏，以及如何为宏指定快捷键。</p>
+<p>宏文件是普通的文本文件，但最好用宏编辑器更改它们：选取“宏”>“打开宏编辑器…”。<a href="macros_define.htm">定义新宏</a>说明了如何添加、删除和命名宏，以及如何为宏指定快捷键。</p>
 
 <h2 id="missing">如果 Macros 文件夹丢失</h2>
 <p>如果 TeXShop 启动时 Macros 文件夹丢失，TeXShop 会用默认的宏重新创建它。如果 Macros_Latex.plist 已损坏，TeXShop 会在启动时用自带的副本替换它，且不显示任何信息，并把损坏的文件保留在 ~/Library/TeXShop/Backups 中。要从默认的宏重新开始，请退出 TeXShop，将 Macros 文件夹移到桌面，然后再次启动 TeXShop；移走的文件夹中保留着你原来的宏。</p>
 
 <h2 id="sharing">分享宏</h2>
-<p>宏编辑器打开时，“宏”菜单中多出两个命令。“保存选区到文件...”把所选的宏保存到单独的文件中，你可以把这个文件交给别人。“从文件添加宏...”把这样的文件中的宏添加到你的列表中；然后可以在宏编辑器中随意排列它们。</p>
+<p>宏编辑器打开时，“宏”菜单中多出两个命令。“保存选区到文件…”把所选的宏保存到单独的文件中，你可以把这个文件交给别人。“从文件添加宏…”把这样的文件中的宏添加到你的列表中；然后可以在宏编辑器中随意排列它们。</p>
 </main>
 </body>
 </html>

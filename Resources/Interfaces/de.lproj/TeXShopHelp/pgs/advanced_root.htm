@@ -19,7 +19,7 @@
 <li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_encoding.htm">Codierungen</a></li>
 <li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
 <li><a href="advanced_root.htm" class="current">Die Hauptdatei eines Projekts festlegen</a></li>
 <li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
@@ -62,7 +62,7 @@
 <li>Setzen in einer Kapiteldatei setzt die Hauptdatei, und das Vorschaufenster der Hauptdatei zeigt das ganze Dokument. Eine Zeile <code>% !TEX program</code> und andere magische Zeilen für das Setzen gehören in die Hauptdatei.</li>
 <li>„Gehe zu Fehler“ öffnet die Datei, die einen Fehler enthält, falls sie nicht geöffnet ist, und springt in die Zeile.</li>
 <li>Die Synchronisierung aus dem Vorschaufenster öffnet die Kapiteldatei, die die angeklickte Stelle enthält; siehe <a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a>.</li>
-<li>„Aux-Dateien löschen“ entfernt die Hilfsdateien der Hauptdatei; siehe <a href="advanced_removeaux.htm">Aux-Dateien entfernen</a>.</li>
+<li>„Aux-Dateien in den Papierkorb legen“ entfernt die Hilfsdateien der Hauptdatei; siehe <a href="advanced_removeaux.htm">Aux-Dateien entfernen</a>.</li>
 <li>Fenster › Quelltext ⇔ Vorschau (<kbd>⌘1</kbd>) holt in einer Kapiteldatei das Vorschaufenster der Hauptdatei nach vorn. Erneutes Wählen im Vorschaufenster kehrt zum Quelltextfenster zurück, aus dem Sie gekommen sind, oder zur Hauptdatei, wenn Sie nicht aus einem Quelltextfenster gekommen sind.</li>
 </ul>
 
@@ -70,7 +70,7 @@
 <p>Wird eine Kapiteldatei mit einer Root-Zeile geöffnet, öffnet TeXShop auch die Hauptdatei und ihr Vorschaufenster. Zwei Einstellungen unter Einstellungen › Allgemein › Projekt-Hauptdatei steuern dies: „Beim Öffnen eines Dokuments auch die Hauptdatei öffnen“ schaltet es ein oder aus, und „Fenster der geöffneten Hauptdatei im Dock ablegen“ legt das Quelltextfenster der Hauptdatei im Dock ab, da es selten bearbeitet wird, während Sie an einem Kapitel arbeiten.</p>
 
 <h2>Im ganzen Projekt suchen und ersetzen</h2>
-<p>Um alle Dateien eines Projekts auf einmal zu durchsuchen, wählen Sie in einer seiner Kapiteldateien Bearbeiten › Suchen › In TeX-Quellen mit derselben TEX root suchen … oder in der Hauptdatei „In TeX-Quellen mit dieser Datei als TEX root suchen …“. Durchsucht werden die Hauptdatei und die <code>.tex</code>-Dateien in ihrem Ordner und darunter, die sie in ihren ersten 20 Zeilen in einer Root-Zeile nennen. Siehe <a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a> und <a href="basic_find.htm">Suchen und Ersetzen</a>.</p>
+<p>Um alle Dateien eines Projekts auf einmal zu durchsuchen, wählen Sie in einer seiner Kapiteldateien Bearbeiten › Suchen › In TeX-Quellen mit derselben TEX root suchen … oder in der Hauptdatei „In TeX-Quellen mit dieser Datei als TEX root suchen …“. Durchsucht werden die Hauptdatei und die <code>.tex</code>-Dateien in ihrem Ordner und darunter, die sie in ihren ersten 20 Zeilen in einer Root-Zeile nennen. Siehe <a href="basic_texrootsearch.htm">In TeX-Quellen suchen</a> und <a href="basic_find.htm">Suchen und Ersetzen</a>.</p>
 
 <h2>Hauptdateien in .texshop-Dateien</h2>
 <p>Eine Datei mit der Endung <code>.texshop</code> neben einer Kapiteldatei, etwa <code>two.texshop</code> für <code>two.tex</code>, kann ebenfalls die Hauptdatei nennen, und TeXShop liest sie weiterhin. Kein Menübefehl erstellt solche Dateien; verwenden Sie eine Zeile <code>% !TEX root</code>, die mit dem Quelltext mitwandert.</p>

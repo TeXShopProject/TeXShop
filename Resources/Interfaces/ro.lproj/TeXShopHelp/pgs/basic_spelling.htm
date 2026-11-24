@@ -23,8 +23,8 @@
 <li><a href="basic_spelling.htm" class="current">Verificarea ortografiei</a></li>
 <li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
 <li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
-<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
-<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
 <li><a href="basic_macros.htm">Macrocomenzi</a></li>
 <li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
 <li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
@@ -46,22 +46,22 @@
 
 <p>Cuvintele scrise greșit sunt subliniate în timp ce tastați, cât timp Editare › Ortografie și gramatică › Verificați ortografia în timpul scrierii este activat. Pentru a parcurge documentul cuvânt cu cuvânt, alegeți Editare › Ortografie și gramatică › Afișați ortografia și gramatica (<kbd>⌘:</kbd>): panoul afișează primul cuvânt scris greșit după punctul de inserare. Faceți clic pe „Găsiți următorul” în panou sau alegeți „Verificați documentul acum” (<kbd>⌘;</kbd>) pentru a trece la următorul. Țineți apăsată tasta Opțiune în timp ce faceți acest lucru pentru a folosi căutarea macOS, care nu omite niciun marcaj.</p>
 
-<p>Pentru a înlocui un cuvânt peste tot, tastați înlocuirea în câmpul „Înlocuire pentru Schimbă tot” din panou sau selectați o sugestie și faceți clic pe „Schimbă tot”; o singură comandă „Infirmați” retrage modificarea. După ce editați documentul sau selectați alt text, faceți din nou clic pe „Găsiți următorul” înainte de a schimba un cuvânt. Dacă ați editat câmpul „Înlocuire pentru Schimbă tot” și doriți o sugestie care era selectată, selectați mai întâi altă sugestie și apoi pe aceea; când există o singură sugestie, tastați-o. „Uită cuvintele învățate…” din submeniul „Ortografie și gramatică” enumeră cuvintele documentului care au fost învățate pentru limba curentă și le elimină din dicționar pe cele pe care le selectați. „Corectați ortografia automat” din același submeniu schimbă cuvintele în timp ce tastați; inițial este dezactivat, ceea ce se potrivește cu TeX, unde ar schimba și comenzile.</p>
+<p>Pentru a înlocui un cuvânt peste tot, tastați înlocuirea în câmpul „Înlocuire pentru Schimbați tot” din panou sau selectați o sugestie și faceți clic pe „Schimbați tot”; o singură comandă „Infirmați” retrage modificarea. După ce editați documentul sau selectați alt text, faceți din nou clic pe „Găsiți următorul” înainte de a schimba un cuvânt. Dacă ați editat câmpul „Înlocuire pentru Schimbați tot” și doriți o sugestie care era selectată, selectați mai întâi altă sugestie și apoi pe aceea; când există o singură sugestie, tastați-o. „Uitați cuvintele învățate…” din submeniul „Ortografie și gramatică” enumeră cuvintele documentului care au fost învățate pentru limba curentă și le elimină din dicționar pe cele pe care le selectați. „Corectați ortografia automat” din același submeniu schimbă cuvintele în timp ce tastați; inițial este dezactivat, ceea ce se potrivește cu TeX, unde ar schimba și comenzile.</p>
 
 <h2>Configurări › Ortografie</h2>
 
-<p>În grupul „Verifică Ortografia”, „Verifică ortografia în timpul tastării” stabilește dacă într-un document cuvintele scrise greșit sunt subliniate atunci când acesta se deschide, „Corectează ortografia” stabilește dacă „Corectați ortografia automat” este activat într-un document atunci când acesta se deschide, iar „Dicționar” este descris mai jos. Grupul „Metodă” alege cum este verificată sursa TeX:</p>
+<p>În grupul „Verificarea ortografiei”, „Verificați ortografia în timpul scrierii” stabilește dacă într-un document cuvintele scrise greșit sunt subliniate atunci când acesta se deschide, „Corectați ortografia” stabilește dacă „Corectați ortografia automat” este activat într-un document atunci când acesta se deschide, iar „Dicționar” este descris mai jos. Grupul „Metodă” alege cum este verificată sursa TeX:</p>
 <dl>
-<dt>„Folosește verificarea adaptată la LaTeX (recomandat)”</dt>
-<dd>Metoda descrisă mai sus. „Editează excluderile LaTeX…” de la capătul liniei sale deschide regulile care spun ce se omite.</dd>
+<dt>„Folosiți verificarea adaptată la LaTeX (recomandat)”</dt>
+<dd>Metoda descrisă mai sus. „Editați excluderile LaTeX…” de la capătul liniei sale deschide regulile care spun ce se omite.</dd>
 <dt>„Metoda anterioară”</dt>
-<dd>macOS verifică tot, cu excepția a ceea ce omit cele trei opțiuni de sub ea: „Omite comenzile LaTeX”, „Omite parametrii selectați”, care omite parametrii unor comenzi cu cuvinte speciale, cum ar fi <code>\usepackage</code>, și „Omite comentariile”. Aceste opțiuni funcționează doar cât timp evidențierea sintaxei este activată, iar „Verificați documentul acum” nu ține cont de ele.</dd>
+<dd>macOS verifică tot, cu excepția a ceea ce omit cele trei opțiuni de sub ea: „Omiteți comenzile LaTeX”, „Omiteți parametrii selectați”, care omite parametrii unor comenzi cu cuvinte speciale, cum ar fi <code>\usepackage</code>, și „Omiteți comentariile”. Aceste opțiuni funcționează doar cât timp evidențierea sintaxei este activată, iar „Verificați documentul acum” nu ține cont de ele.</dd>
 </dl>
 <p>Metoda adaptată la LaTeX verifică documentele care nu au fost încă salvate și fișierele cu extensiile tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx și lbx. Celelalte fișiere, cum ar fi fișierele Sweave, sunt verificate întotdeauna cu metoda anterioară.</p>
 
 <h2>Reguli de excludere</h2>
 
-<p>Regulile verificării adaptate la LaTeX se află în fișierul ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Deschideți-l cu „Editează excluderile LaTeX…” din Configurări sau cu Editare › Ortografie și gramatică › Editează excepțiile de ortografie…; se deschide în TeXShop, iar începutul lui explică formatul. De exemplu, aceste linii omit primul argument al unei comenzi <code>\mycommand</code> și conținutul mediului <code>proof</code>:</p>
+<p>Regulile verificării adaptate la LaTeX se află în fișierul ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Deschideți-l cu „Editați excluderile LaTeX…” din Configurări sau cu Editare › Ortografie și gramatică › Editați excluderile de ortografie…; se deschide în TeXShop, iar începutul lui explică formatul. De exemplu, aceste linii omit primul argument al unei comenzi <code>\mycommand</code> și conținutul mediului <code>proof</code>:</p>
 <pre>skip-args  1  mycommand
 skip-body  proof</pre>
 <p>Modificările intră în vigoare la următoarea verificare a ortografiei. Dacă fișierul este șters, TeXShop creează o copie nouă a fișierului implicit la următoarea pornire. Pentru a nu omite absolut nimic, lăsați în el doar linii de comentariu.</p>

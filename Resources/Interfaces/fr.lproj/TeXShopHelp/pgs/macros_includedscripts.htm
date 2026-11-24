@@ -29,7 +29,7 @@
 <p>TeXShop est fourni avec une collection de macros AppleScript de Will Robertson, Claus Gerhardt et d’autres. Certaines exécutent une série de commandes de composition à la suite. En les copiant et en les modifiant, vous pouvez construire des scripts adaptés à votre propre travail. Cette page décrit certaines d’entre elles, sous le nom qu’elles portent dans le menu Macros.</p>
 
 <h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
-<p>Ces macros sont de Will Robertson. Dans le sous-menu Column macros, New tabular et New array insèrent un environnement tabular ou array avec le nombre de lignes et de colonnes que vous indiquez, et Add column et Delete column modifient les lignes que vous sélectionnez. Insert reference cherche les commandes <code>\label{…}</code> dans le fichier courant et vous laisse choisir une étiquette dans une liste ; elle insère l’étiquette entourée de <code>\ref{…}</code>, une commande que vous pouvez changer dans le script. Si du texte est sélectionné, seules les étiquettes qui le contiennent sont listées. Open quickly… liste les fichiers .tex, .sty et .pdf du dossier du fichier source courant et ouvre ceux que vous choisissez.</p>
+<p>Ces macros sont de Will Robertson. Dans le sous-menu Column macros, New tabular et New array insèrent un environnement tabular ou array avec le nombre de lignes et de colonnes que vous indiquez, et Add column et Delete column modifient les lignes que vous sélectionnez. Insert reference cherche les commandes <code>\label{…}</code> dans le fichier courant et vous laisse choisir un label dans une liste ; elle insère le label entouré de <code>\ref{…}</code>, une commande que vous pouvez changer dans le script. Si du texte est sélectionné, seuls les labels qui le contiennent sont listés. Open quickly… liste les fichiers .tex, .sty et .pdf du dossier du fichier source courant et ouvre ceux que vous choisissez.</p>
 
 <h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
 <p>Cette macro, d’Alan Munn, colle sous forme de tableau dans votre source LaTeX des cellules d’une feuille de calcul. Sélectionnez une plage de cellules dans Excel ou dans un autre tableur et copiez-les. Choisissez ensuite Macros › Paste Spreadsheet Cells, puis un style de tableau :</p>
@@ -54,7 +54,7 @@
 <h3>pdfselectc</h3>
 <p>pdfselectc crée des fichiers PDF contenant des pages choisies du PDF du document. Il demande d’abord combien de fichiers créer, puis les pages de chaque fichier, par exemple <code>5:8</code> pour les pages 5 à 8, ou <code>3:4,6,8:12</code>. Si le document s’appelle MyFile, les fichiers sont enregistrés sous les noms MyFile-1.pdf, MyFile-2.pdf, etc.</p>
 <h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
-<p>mpostc exécute MetaPost, puis pdfLaTeX ; mpostcpl exécute pdfLaTeX, MetaPost, puis de nouveau pdfLaTeX. latex-makeindex-mpost exécute pdfLaTeX, MakeIndex, MetaPost, puis de nouveau pdfLaTeX, en ouvrant les fichiers log au passage. Consultez <a href="advanced_context.htm">ConTeXt et MetaPost</a> au sujet de MetaPost.</p>
+<p>mpostc exécute MetaPost, puis pdfLaTeX ; mpostcpl exécute pdfLaTeX, MetaPost, puis de nouveau pdfLaTeX. latex-makeindex-mpost exécute pdfLaTeX, MakeIndex, MetaPost, puis de nouveau pdfLaTeX, en ouvrant les fichiers journaux au passage. Consultez <a href="advanced_context.htm">ConTeXt et MetaPost</a> au sujet de MetaPost.</p>
 </main>
 </body>
 </html>

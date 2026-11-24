@@ -11,7 +11,7 @@
 "Close LaTeX Panel" = "LaTeX 패널 닫기";
 "Matrix Panel..." = "행렬 패널...";
 "Close Matrix Panel" = "행렬 패널 닫기";
-"Open for Preview..." = "보기로 열기...";
+"Open for Preview..." = "미리보기로 열기...";
 "Open for Editing..." = "편집용으로 열기...";
 "File" = "파일";
 "Goto Error" = "오류 지점으로 이동";
@@ -19,13 +19,13 @@
 "RotateCounterclockwise" = "반시계방향으로 회전";
 "Comment" = "주석달기";
 "Uncomment" = "주석풀기";
-"Indent" = "우로 인덴트";
-"Unindent" = "좌로 언인덴트";
+"Indent" = "들여쓰기";
+"Unindent" = "내어쓰기";
 "Macros" = "매크로";
 "Open Macro Editor..." = "매크로 편집기 열기...";
 "Close Macro Editor" = "매크로 편집기 닫기";
 "Add macros from file..." = "파일에서 매크로 추가...";
-"Save selection to file..." = "선택부분을 파일로 저장...";
+"Save selection to file..." = "선택 부분을 파일로 저장...";
 "Edit" = "편집";
 "Warning" = "경고";
 "Don't Save" = "저장하지 않음";
@@ -40,10 +40,10 @@
 "Magnification Panel" = "배율 패널";
 "Omit Shell Escape" = "Shell Escape 생략";
 "Warning: Using Shell Escape" = "경고: Shell Escape를 사용합니다";
-"Preview" = "보기";
+"Preview" = "미리보기";
 "Display Format" = "보기 형식";// mitsu 1.29b
 "Magnification" = "배율";// mitsu 1.29b
-"Copy Format" = "파일 형식";// mitsu 1.29b
+"Copy Format" = "복사 형식";// mitsu 1.29b
 "ToolbarItems" = "ToolbarItems";
 "Completion" = "명령어 완성";
 "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "경로: %@\n파일 크기: %d바이트\n생성일: %@\n수정일: %@";
@@ -64,11 +64,11 @@
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "이 파일은 %@ 인코딩으로 저장되지 않았기 때문에 해당 인코딩으로 열 수 없습니다. 다른 인코딩으로 열려면 윈도우를 닫은 다음 다시 여십시오.";
 "Error" = "오류";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "이 버전의 TeXShop을 사용하려면 Mac OS X 10.4 이상이 필요합니다. 대신 TeXShop 1.37을 사용하십시오.";
-"Hard Wrap" = "행나눔 삽입";
+"Hard Wrap" = "줄바꿈 삽입";
 "Newline Removal" = "줄바꿈 제거";
 "Help" = "도움말";
 "Sync" = "동기화";
-"ShowFullPath" = "전체경로 표시";
+"ShowFullPath" = "전체 경로 표시";
 "Close Current Environment" = "현재 환경 닫기"; //Terada
 "Your current setting of %@ will be replaced. OK?" = "현재 %@ 설정이 대치됩니다. 계속하시겠습니까?"; // Terada
 "Convert" = "변환";
@@ -210,8 +210,8 @@
 "Edit Command Completion…" = "명령어 완성 파일 편집…";
 "Command Completion" = "명령어 완성";
 
-"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '경로 자동 감지'를 선택하십시오.";
-"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript를 찾을 수 없습니다. Ghostscript를 설치한 다음 설정 > 조판에서 '경로 자동 감지'를 선택하십시오.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 ‘경로 자동 감지’를 선택하십시오.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript를 찾을 수 없습니다. Ghostscript를 설치한 다음 설정 > 조판에서 ‘경로 자동 감지’를 선택하십시오.";
 
 
 "This key is reserved for command completion." = "명령어 완성을 위해 예약된 키입니다.";
@@ -239,9 +239,9 @@
 
 /* Independent Experiment console */
 "Experiment input" = "실험 입력";
-"Stop Experiment" = "실험 중지";
+"Stop Experiment" = "실험 중단";
 "%@ — Experiment Console" = "%@ — 실험 콘솔";
-"Experiment stopped.\n" = "실험이 중지되었습니다.\n";
+"Experiment stopped.\n" = "실험이 중단되었습니다.\n";
 
 /* Explicit fallback for shared keys without a translation. */
 "Assign" = "할당";
@@ -313,7 +313,7 @@
 "Selected Text" = "선택한 텍스트";
 "Insertion Point" = "출력 후 커서 위치";
 "Clipboard Text" = "클립보드 텍스트";
-"Line Break" = "줄 바꿈";
+"Line Break" = "줄바꿈";
 "Tab" = "탭";
 "Mark" = "마크";
 "Mark with Note" = "메모 있는 마크";

@@ -10,16 +10,16 @@ tiToolTipPrint				= "Tipăriți imaginea PDF";
 
 tiLabelTypeset				= "Compilare";
 tiPaletteLabelTypeset			= "Compilare";
-tiToolTipTypeset			= "Rulați programul de tehnoredactare";
+tiToolTipTypeset			= "Rulați programul de compilare";
 
 tiLabelSharing				= "Partajați";
 tiPaletteLabelSharing		= "Partajați";
 tiToolTipSharing			= "Partajați text și imagini";
 
 
-tiLabelProgram				= "Programare";
-tiPaletteLabelProgram			= "Programare";
-tiToolTipProgram			= "Alegeți programul de tehnoredactare";
+tiLabelProgram				= "Program";
+tiPaletteLabelProgram			= "Program";
+tiToolTipProgram			= "Alegeți programul de compilare";
 
 tiLabelTeX				= "plain TeX";
 tiPaletteLabelTeX			= "plain TeX";
@@ -49,11 +49,11 @@ tiLabelMetaFont				= "MetaFont";
 tiPaletteLabelMetaFont			= "MetaFont";
 tiToolTipMetaFont			= "Rulați MetaFont";
 
-tiLabelPreviousPage			= "Anter.";
+tiLabelPreviousPage			= "Anterior";
 tiPaletteLabelPreviousPage		= "Pagina anterioară (alternativ)";
 tiToolTipPreviousPage			= "Afișați pagina anterioară";
 
-tiLabelNextPage				= "Următ.";
+tiLabelNextPage				= "Următor";
 tiPaletteLabelNextPage			= "Pagina următoare (alternativ)";
 tiToolTipNextPage			= "Afișați pagina următoare";
 
@@ -73,34 +73,34 @@ tiLabelTags				= "Etichete";
 tiPaletteLabelTags			= "Etichete";
 tiToolTipTags				= "Selectați o etichetă la care să derulați";
 
-tiLabelPreviousPageButton		= "Anter.";
+tiLabelPreviousPageButton		= "Anterior";
 tiPaletteLabelPreviousPageButton	= "Pagina anterioară";
 tiToolTipPreviousPageButton		= "Afișați pagina anterioară";
 
-tiLabelNextPageButton			= "Următ.";
+tiLabelNextPageButton			= "Următor";
 tiPaletteLabelNextPageButton		= "Pagina următoare";
 tiToolTipNextPageButton			= "Afișați pagina următoare";
 
 tiLabelTypesetEE			= "Compilare";
 tiPaletteLabelTypesetEE			= "Compilare";
-tiToolTipTypesetEE			= "Rulați programul de tehnoredactare";
+tiToolTipTypesetEE			= "Rulați programul de compilare";
 
-tiLabelProgramEE			= "Programare";
-tiPaletteLabelProgramEE			= "Programare";
-tiToolTipProgramEE			= "Alegeți programul de tehnoredactare";
+tiLabelProgramEE			= "Program";
+tiPaletteLabelProgramEE			= "Program";
+tiToolTipProgramEE			= "Alegeți programul de compilare";
 
 tiLabelAutoComplete			= "Asocieri de taste";
 tiPaletteLabelAutoComplete		= "Asocieri de taste";
 tiToolTipAutoComplete			= "Comutați asocierile de taste";
 
-tiLabelSplit				= "Scindează Fereastra";
-tiPaletteLabelSplit			= "Scindează Fereastra";
-tiToolTipSplit				= "Comută scindarea ferestrei; faceți Opțiune-clic pentru a scinda vertical";
+tiLabelSplit				= "Scindați fereastra";
+tiPaletteLabelSplit			= "Scindați fereastra";
+tiToolTipSplit				= "Comutați scindarea sursei; faceți Opțiune-clic pentru a scinda vertical";
 
-tiLabelSplitKIT				= "Scindează Fereastra";
-tiPaletteLabelSplitKIT		= "Scindează Fereastra";
-tiToolTipSplitKIT			= "Comută scindarea ferestrei; faceți Opțiune-clic pentru a scinda vertical";
-"tiToolTipSplitKITContinuous" = "Comută scindarea ferestrei; faceți Opțiune-clic pentru a scinda vertical, Shift-clic pentru a continua paginile dedesubt";
+tiLabelSplitKIT				= "Scindați fereastra";
+tiPaletteLabelSplitKIT		= "Scindați fereastra";
+tiToolTipSplitKIT			= "Comutați scindarea previzualizării; faceți Opțiune-clic pentru a scinda vertical";
+"tiToolTipSplitKITContinuous" = "Comutați scindarea previzualizării; faceți Opțiune-clic pentru a scinda vertical, Shift-clic pentru a continua paginile dedesubt";
 
 tiLabelMacros				= "Macro";
 tiPaletteLabelMacros			= "Macro";
@@ -118,13 +118,13 @@ tiLabelSyncMarks			= "Marcaje sinc.";
 tiPaletteLabelSyncMarks			= "Marcaje de sincronizare";
 tiToolTipSyncMarks			= "Afișați marcajele de sincronizare";
 
-tiLabelSearchKIT				= "Caută în PDF";
-tiPaletteLabelSearchKIT         = "Caută în PDF";
-tiToolTipSearchKIT				= "Caută în PDF";
+tiLabelSearchKIT				= "Căutați în PDF";
+tiPaletteLabelSearchKIT         = "Căutați în PDF";
+tiToolTipSearchKIT				= "Căutați în PDF";
 
 tiLabelTypesetKIT				= "Compilare";
 tiPaletteLabelTypesetKIT		= "Compilare";
-tiToolTipTypesetKIT				= "Rulați programul de tehnoredactare";
+tiToolTipTypesetKIT				= "Rulați programul de compilare";
 
 tiLabelSharingKIT				= "Partajați";
 tiPaletteLabelSharingKIT		= "Partajați";
@@ -133,13 +133,13 @@ tiToolTipSharingKIT				= "Partajați text și imagini";
 
 tiLabelProgramKIT				= "Program";
 tiPaletteLabelProgramKIT		= "Program";
-tiToolTipProgramKIT				= "Alegeți programul de tehnoredactare";
+tiToolTipProgramKIT				= "Alegeți programul de compilare";
 
-tiLabelPreviousPageButtonKIT		= "Anter.";
+tiLabelPreviousPageButtonKIT		= "Anterior";
 tiPaletteLabelPreviousPageButtonKIT	= "Pagina anterioară";
 tiToolTipPreviousPageButtonKIT		= "Afișați pagina anterioară";
 
-tiLabelNextPageButtonKIT			= "Următ.";
+tiLabelNextPageButtonKIT			= "Următor";
 tiPaletteLabelNextPageButtonKIT		= "Pagina următoare";
 tiToolTipNextPageButtonKIT			= "Afișați pagina următoare";
 
@@ -158,10 +158,10 @@ tiToolTipMacrosKIT              = "Inserați macrocomenzi";
 tiLabelMouseModeKIT				= "Mod maus";
 tiPaletteLabelMouseModeKIT		= "Mod maus";
 tiToolTipMouseModeScroll = "Derulare: trageți pentru a muta documentul";
-tiToolTipMouseModeSelectText = "Selectează textul: trageți pentru a selecta textul de copiat";
+tiToolTipMouseModeSelectText = "Selecție text: trageți pentru a selecta textul de copiat";
 tiToolTipMouseModeMagnify = "Lupă: țineți apăsat pentru a privi printr-o lupă mică";
 tiToolTipMouseModeMagnifyLarge = "Lupă (mare): țineți apăsat pentru a privi printr-o lupă mare";
-tiToolTipMouseModeSelectPDF = "Selectează PDF: trageți pentru a selecta o zonă de copiat ca imagine";
+tiToolTipMouseModeSelectPDF = "Selecție PDF: trageți pentru a selecta o zonă de copiat ca imagine";
 
 tiLabelSyncMarksKIT				= "Marcaje sinc.";
 tiPaletteLabelSyncMarksKIT		= "Marcaje de sincronizare";
@@ -187,7 +187,7 @@ tiToolTipShowFullPath			= "Afișați calea completă în titlul ferestrei";
 
 tiLabelProgramSplit				= "Program";
 tiPaletteLabelProgramSplit		= "Program";
-tiToolTipProgramSplit			= "Alegeți programul de tehnoredactare";
+tiToolTipProgramSplit			= "Alegeți programul de compilare";
 
 tiLabelMacrosSplit				= "Macro";
 tiPaletteLabelMacrosSplit		= "Macro";
@@ -220,13 +220,13 @@ tiToolTipSharingSplit            = "Partajați text și imagini";
 tiLabelMouseModeKITSplit                = "Mod maus";
 tiPaletteLabelMouseModeKITSplit        = "Mod maus";
 
-tiLabelSearchKITSplit                = "Caută în PDF";
-tiPaletteLabelSearchKITSplit         = "Caută în PDF";
-tiToolTipSearchKITSplit                = "Caută în PDF";
+tiLabelSearchKITSplit                = "Căutați în PDF";
+tiPaletteLabelSearchKITSplit         = "Căutați în PDF";
+tiToolTipSearchKITSplit                = "Căutați în PDF";
 
 tiLabelTypesetSplit                = "Compilare";
 tiPaletteLabelTypesetSplit            = "Compilare";
-tiToolTipTypesetSplit            = "Rulați programul de tehnoredactare";
+tiToolTipTypesetSplit            = "Rulați programul de compilare";
 
 tiLabelLabels                = "Referințe";
 tiPaletteLabelLabels            = "Referințe";
@@ -254,28 +254,28 @@ tiToolTipHtmlSearch           = "Căutare";
 
 /* Experiment preview tools */
 "ExperimentToolScroll" = "Derulare";
-"ExperimentToolSelectText" = "Selectează textul";
+"ExperimentToolSelectText" = "Selecție text";
 "ExperimentToolMagnify" = "Lupă";
-"ExperimentToolSelectPDF" = "Selectează PDF";
+"ExperimentToolSelectPDF" = "Selecție PDF";
 "ExperimentZoomOut" = "Zoom înapoi";
 "ExperimentZoomIn" = "Zoom înainte";
-"ExperimentZoomToContent" = "Potrivește la conținut";
-"ExperimentZoomToContentWidth" = "Potrivește la lățimea conținutului";
+"ExperimentZoomToContent" = "Zoom la conținut";
+"ExperimentZoomToContentWidth" = "Zoom la lățimea conținutului";
 
 "Page Layout" = "Dispunerea paginilor";
 "tiLabelTSPreviewAppearance" = "Aspect";
-"Continuous Two Pages" = "Pagină Dublă Multiplă";
+"Continuous Two Pages" = "Două pagini, derulare continuă";
 "Restore Document Settings" = "Restaurați configurările documentului";
-"Single Page" = "Pagină Simplă";
+"Single Page" = "O singură pagină";
 "PreviewAppearanceDark" = "Întunecat";
 "PreviewAppearanceLight" = "Luminos";
-"Two Pages" = "Pagină Dublă";
+"Two Pages" = "Două pagini";
 "PreviewAppearanceSystem" = "Sistem";
 "Left to right" = "De la stânga la dreapta";
 "Two-Page Arrangement" = "Aranjarea paginilor duble";
 "Applies when displaying two pages" = "Se aplică la afișarea a două pagini";
-"Continuous" = "Pagină Multiplă";
+"Continuous" = "Derulare continuă";
 "Right to left" = "De la dreapta la stânga";
 "Show first page alone as cover" = "Afișați prima pagină separat, ca o copertă";
-"tiToolTipUnsplit" = "Anulează scindarea ferestrei";
-"tiToolTipUnsplitKIT" = "Anulează scindarea ferestrei";
+"tiToolTipUnsplit" = "Anulați scindarea sursei";
+"tiToolTipUnsplitKIT" = "Anulați scindarea previzualizării";

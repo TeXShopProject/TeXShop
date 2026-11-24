@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sincronizar código-fonte e pré-visualização</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="SyncTeX; sync; sincronizar; sincronização; Command-clique; Método Sync; Pesquisar PDF; synctex.gz; projectfile; useConTeXtSyncParser">
+<meta name="description" content="SyncTeX; sync; sincronizar; sincronização; Command-clique; Método Sync; Buscar no PDF; synctex.gz; projectfile; useConTeXtSyncParser">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -53,7 +53,7 @@
 <p>Ajustes › Composição › Sincronização do código-fonte e da pré-visualização › “Método Sync” tem duas opções:</p>
 <dl>
 <dt>SyncTeX (recomendado)</dt><dd>Usa o arquivo synctex, como descrito acima. Este é o padrão.</dd>
-<dt>Pesquisar PDF</dt><dd>Procura no PDF o texto em volta do clique, e no código-fonte o texto em volta de um clique na pré-visualização. Não precisa de arquivo synctex, mas falha onde o texto composto difere do código-fonte, como em fórmulas e em texto com muitos comandos. Para encontrar o arquivo de um ponto da pré-visualização, ele procura nos arquivos indicados nos comandos <code>\include</code> e <code>\input</code> do arquivo principal. Para projetos que incluem arquivos de outra forma, liste-os no arquivo principal com linhas como
+<dt>Buscar no PDF</dt><dd>Procura no PDF o texto em volta do clique, e no código-fonte o texto em volta de um clique na pré-visualização. Não precisa de arquivo synctex, mas falha onde o texto composto difere do código-fonte, como em fórmulas e em texto com muitos comandos. Para encontrar o arquivo de um ponto da pré-visualização, ele procura nos arquivos indicados nos comandos <code>\include</code> e <code>\input</code> do arquivo principal. Para projetos que incluem arquivos de outra forma, liste-os no arquivo principal com linhas como
 <pre>% !TEX projectfile = chapter2.tex
 % !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
 Um nome é um caminho completo ou um caminho relativo ao arquivo principal; essas linhas podem estar em qualquer lugar do arquivo principal.</dd>

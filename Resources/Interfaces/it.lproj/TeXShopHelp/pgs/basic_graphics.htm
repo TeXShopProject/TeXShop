@@ -15,8 +15,8 @@
 <li><a href="basic_preliminaries.htm">Preliminari</a></li>
 <li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
 <li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
-<li><a href="basic_typesetting.htm">Comporre i documenti</a></li>
-<li><a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
 <li><a href="basic_preview.htm">La finestra di anteprima</a></li>
 <li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
 <li><a href="basic_find.htm">Trova e sostituisci</a></li>
@@ -40,7 +40,7 @@
 </nav>
 <main id="content">
 <h1>Inserire immagini</h1>
-<p>Componendo direttamente in PDF, LaTeX inserisce immagini in formato PDF, PNG e JPEG. Il PDF mantiene nitidi linee e testo a qualsiasi dimensione, quindi usalo per diagrammi e grafici; PNG e JPEG sono adatti a schermate e fotografie.</p>
+<p>Compilando direttamente in PDF, LaTeX inserisce immagini in formato PDF, PNG e JPEG. Il PDF mantiene nitidi linee e testo a qualsiasi dimensione, quindi usalo per diagrammi e grafici; PNG e JPEG sono adatti a schermate e fotografie.</p>
 <p>Carica il pacchetto graphicx nel preambolo:</p>
 <pre>\usepackage{graphicx}</pre>
 <p>e inserisci un’immagine nel punto in cui deve comparire:</p>
@@ -48,14 +48,14 @@
 <p>L’estensione si può omettere; LaTeX cerca allora <code>diagram.pdf</code>, <code>diagram.png</code>, <code>diagram.jpg</code> e gli altri formati che conosce. Cambia la larghezza per cambiare la dimensione dell’immagine. Metti i file delle immagini nella cartella del documento, oppure indica un percorso relativo a essa, come <code>figures/diagram</code>.</p>
 
 <h2>File EPS</h2>
-<p>TeX Live converte automaticamente in PDF le immagini EPS durante la composizione, usando epstopdf, purché il documento carichi graphicx. Il file convertito, <code>diagram-eps-converted-to.pdf</code>, viene scritto accanto al file EPS e usato da quel momento in poi.</p>
+<p>TeX Live converte automaticamente in PDF le immagini EPS durante la compilazione, usando epstopdf, purché il documento carichi graphicx. Il file convertito, <code>diagram-eps-converted-to.pdf</code>, viene scritto accanto al file EPS e usato da quel momento in poi.</p>
 <p>Anche un file EPS aperto in TeXShop viene convertito: TeXShop scrive accanto a esso un file PDF con lo stesso nome, oppure in una cartella temporanea quando non si può scrivere nella cartella del file EPS, e lo mostra.</p>
 
 <h2>File TIFF</h2>
 <p>LaTeX non può inserire file TIFF. Scegli File › Converti TIFF mentre è attiva una finestra sorgente: una finestra di dialogo mostra la cartella del documento, in cui si possono scegliere solo file TIFF. Selezionane uno o più e fai clic su «Converti». Ciascuno viene convertito in un file PNG con lo stesso nome nella stessa cartella; i file TIFF vengono conservati.</p>
 
-<h2>Comporre tramite DVI</h2>
-<p>I documenti che usano codice PostScript, per esempio con il pacchetto pstricks, si compongono con il metodo Tramite DVI, che per impostazione predefinita esegue dvips. Le immagini vanno allora inserite in formato EPS; i file PDF, PNG e JPEG non si possono usare. Anche i profili del motore il cui nome termina con «+ dvipdfmx» compongono Tramite DVI, ma eseguono dvipdfmx invece di dvips; con <code>\usepackage[dvipdfmx]{graphicx}</code>, lì si possono usare file PDF, PNG e JPEG. Consulta <a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a>.</p>
+<h2>Compilare tramite DVI</h2>
+<p>I documenti che usano codice PostScript, per esempio con il pacchetto pstricks, si compilano con il metodo Tramite DVI, che per impostazione predefinita esegue dvips. Le immagini vanno allora inserite in formato EPS; i file PDF, PNG e JPEG non si possono usare. Anche i profili del motore il cui nome termina con «+ dvipdfmx» compilano Tramite DVI, ma eseguono dvipdfmx invece di dvips; con <code>\usepackage[dvipdfmx]{graphicx}</code>, lì si possono usare file PDF, PNG e JPEG. Consulta <a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a>.</p>
 </main>
 </body>
 </html>

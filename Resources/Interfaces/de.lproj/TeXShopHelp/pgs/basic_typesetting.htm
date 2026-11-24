@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dokumente setzen</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="setzen; erstes Dokument; Setzen; Konsole; Fehler; Gehe zu Fehler; Abbrechen; Aux-Dateien löschen; Engine-Profil; % !TEX program; Hauptdatei; SyncTeX; Ein gemeinsames Fenster">
+<meta name="description" content="setzen; erstes Dokument; Setzen; Konsole; Fehler; Gehe zu Fehler; Abbrechen; Aux-Dateien in den Papierkorb legen; Engine-Profil; % !TEX program; Hauptdatei; SyncTeX; Ein gemeinsames Fenster verwenden">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,8 +24,8 @@
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
 <li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
 <li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
-<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
 <li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
 <li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
@@ -59,13 +59,13 @@
 
 <h2>Fehler finden</h2>
 
-<p>„Zum Fehler“ in der Konsole oder Bearbeiten › Gehe zu Fehler (<kbd>⌃⌘E</kbd>) blättert den Quelltext zur Zeile des ersten Fehlers und hebt sie hervor; wählen Sie den Befehl erneut für den nächsten Fehler. Liegt der Fehler in einer anderen Datei des Projekts, wird diese Datei geöffnet. Oft ist es am schnellsten, einige Fehler zu beheben und erneut zu setzen, da ein Fehler mehrere weitere verursachen kann. „Gehe zu Fehler“ stützt sich auf die Dateinamen und Zeilennummern, die TeX mit <code>-file-line-error</code> ausgibt; die Befehle und Engine-Dateien von TeXShop verwenden diese Option.</p>
+<p>„Gehe zu Fehler“ in der Konsole oder im Menü „Bearbeiten“ (<kbd>⌃⌘E</kbd>) blättert den Quelltext zur Zeile des ersten Fehlers und hebt sie hervor; wählen Sie den Befehl erneut für den nächsten Fehler. Liegt der Fehler in einer anderen Datei des Projekts, wird diese Datei geöffnet. Oft ist es am schnellsten, einige Fehler zu beheben und erneut zu setzen, da ein Fehler mehrere weitere verursachen kann. „Gehe zu Fehler“ stützt sich auf die Dateinamen und Zeilennummern, die TeX mit <code>-file-line-error</code> ausgibt; die Befehle und Engine-Dateien von TeXShop verwenden diese Option.</p>
 
-<p>LaTeX schreibt Informationen für den nächsten Durchlauf, etwa das Inhaltsverzeichnis und die Querverweise, in eine .aux-Datei und weitere Hilfsdateien; ein Dokument kann daher zwei oder drei Durchläufe brauchen, bis alle Verweise stimmen. Ein Fehler kann diese Dateien beschädigen, und das Dokument lässt sich dann auch nach Behebung des Fehlers nicht setzen. Wählen Sie Setzen › Aux-Dateien löschen &amp; Setzen (<kbd>⌥⌘T</kbd>), um die Hilfsdateien in den Papierkorb zu legen und erneut zu setzen, oder Ablage › Aux-Dateien löschen (<kbd>⌃⌘A</kbd>), das es auch als Taste in der Konsole gibt. Siehe <a href="advanced_removeaux.htm">Aux-Dateien entfernen</a>.</p>
+<p>LaTeX schreibt Informationen für den nächsten Durchlauf, etwa das Inhaltsverzeichnis und die Querverweise, in eine .aux-Datei und weitere Hilfsdateien; ein Dokument kann daher zwei oder drei Durchläufe brauchen, bis alle Verweise stimmen. Ein Fehler kann diese Dateien beschädigen, und das Dokument lässt sich dann auch nach Behebung des Fehlers nicht setzen. Wählen Sie Setzen › Aux-Dateien in den Papierkorb legen und setzen (<kbd>⌥⌘T</kbd>), um die Hilfsdateien in den Papierkorb zu legen und erneut zu setzen, oder Ablage › Aux-Dateien in den Papierkorb legen (<kbd>⌃⌘A</kbd>), das es auch als Taste in der Konsole gibt. Siehe <a href="advanced_removeaux.htm">Aux-Dateien entfernen</a>.</p>
 
 <h2 id="engine">Die Engine wählen</h2>
 
-<p>Einstellungen › Satz › Engine-Profil richtet den Satz für eine Engine in einem Schritt ein. Wählen Sie das Profil der Engine, die Sie verwenden; ein Dialog listet die Werte auf, die es setzt, und „OK“ übernimmt sie. Im Dialog können Sie „LaTeX ausführen:“ auf „Mit latexmk“ stellen; latexmk ruft dann BibTeX, den Index und weitere Durchläufe nach Bedarf auf. Sobald Sie einen dieser Werte ändern, zeigt das Menü „Eigene“. Das TeXShop Handbuch führt auf, was die Profile setzen.</p>
+<p>Einstellungen › Satz › Engine-Profil richtet den Satz für eine Engine in einem Schritt ein. Wählen Sie das Profil der Engine, die Sie verwenden; ein Dialog listet die Werte auf, die es setzt, und „OK“ übernimmt sie. Im Dialog können Sie „LaTeX ausführen:“ auf „Mit latexmk“ stellen; latexmk ruft dann BibTeX, den Index und weitere Durchläufe nach Bedarf auf. Sobald Sie einen dieser Werte ändern, zeigt das Menü „Eigene“. Das TeXShop-Handbuch führt auf, was die Profile setzen.</p>
 
 <p>Für ein einzelnes Dokument wählen Sie die Engine im Einblendmenü „Programm“ neben „Setzen“ in der Symbolleiste. Es enthält plain TeX, LaTeX, BibTeX, MakeIndex und MetaPost, gefolgt von den Engine-Dateien in ~/Library/TeXShop/Engines, etwa LuaLaTeX und XeLaTeX, und die Wahl gilt für dieses Fenster. Um sie zum Teil des Dokuments zu machen, schreiben Sie eine Zeile wie diese in die ersten 20 Zeilen des Quelltexts:</p>
 
@@ -87,9 +87,9 @@
 
 <h2>Die Fenster anordnen</h2>
 
-<p>Fenster › Ein gemeinsames Fenster stellt den Quelltext und seine Vorschau nebeneinander in ein einziges Fenster, und Fenster › Separate Fenster verwenden trennt sie wieder. Um jedes Dokument so zu öffnen, stellen Sie Einstellungen › Allgemein › Fenster › Quelltext und Vorschau auf „Ein gemeinsames Fenster“; „Quelltextposition im gemeinsamen Fenster“ setzt den Quelltext nach links oder rechts. Ziehen Sie die Trennlinie, um dem Quelltext mehr oder weniger Platz zu geben; TeXShop öffnet jedes gemeinsame Fenster mit derselben Aufteilung. Eine Kapiteldatei mit einer Zeile <code>% !TEX root</code> bleibt in getrennten Fenstern; die Hauptdatei selbst kann ein gemeinsames Fenster verwenden. Ablage › Neu öffnet nur ein Quelltextfenster: Setzen Sie das neue Dokument zuerst und wählen Sie dann „Ein gemeinsames Fenster“.</p>
+<p>Fenster › Ein gemeinsames Fenster verwenden stellt den Quelltext und seine Vorschau nebeneinander in ein einziges Fenster, und Fenster › Separate Fenster verwenden trennt sie wieder. Um jedes Dokument so zu öffnen, stellen Sie Einstellungen › Allgemein › Fenster › Quelltext und Vorschau auf „Ein gemeinsames Fenster verwenden“; „Quelltextposition im gemeinsamen Fenster“ setzt den Quelltext nach links oder rechts. Ziehen Sie die Trennlinie, um dem Quelltext mehr oder weniger Platz zu geben; TeXShop öffnet jedes gemeinsame Fenster mit derselben Aufteilung. Eine Kapiteldatei mit einer Zeile <code>% !TEX root</code> bleibt in getrennten Fenstern; die Hauptdatei selbst kann ein gemeinsames Fenster verwenden. Ablage › Neu öffnet nur ein Quelltextfenster: Setzen Sie das neue Dokument zuerst und wählen Sie dann „Ein gemeinsames Fenster verwenden“.</p>
 
-<p>Bei getrennten Fenstern ordnen Sie Quelltext- und Vorschaufenster nach Belieben an und wählen dann Quelltext › Position des Quelltext-Fensters sichern und Vorschau › Position des Vorschau-Fensters sichern; neue Fenster öffnen sich dort.</p>
+<p>Bei getrennten Fenstern ordnen Sie Quelltext- und Vorschaufenster nach Belieben an und wählen dann Quelltext › Position des Quelltextfensters sichern und Vorschau › Position des Vorschaufensters sichern; neue Fenster öffnen sich dort.</p>
 </main>
 </body>
 </html>

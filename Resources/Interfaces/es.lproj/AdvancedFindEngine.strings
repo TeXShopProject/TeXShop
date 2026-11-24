@@ -25,7 +25,7 @@
 "ICU needs \\{ and \\} for literal braces (OgreKit did not)." = "ICU requiere \\{ y \\} para llaves literales (OgreKit no).";
 
 /* Cheat sheet and find field, differences from OgreKit. */
-"In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "En ICU, \\h es un espacio horizontal; en OgreKit, un dígito hexadecimal (usa [0-9a-fA-F]).";
+"In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "En ICU, \\h es un espacio horizontal; en OgreKit, un dígito hexadecimal (use [0-9a-fA-F]).";
 
 /* Cheat sheet and find field, differences from OgreKit. */
 "In ICU (?m) makes ^ and $ match at each line; OgreKit’s (?m), where . matches line breaks, is (?s)." = "ICU: (?m) aplica ^ y $ a cada línea. El (?m) de OgreKit (. con saltos de línea) es (?s) en ICU.";
@@ -34,13 +34,13 @@
 "In ICU {n}+ is possessive; in OgreKit it repeated the repetition." = "En ICU, {n}+ es posesivo; en OgreKit repetía la repetición.";
 
 /* Cheat sheet and find field, differences from OgreKit. */
-"ICU has no \\K. Write the part before it as a look-behind (?<=…)." = "ICU no admite \\K. Escribe la parte anterior como (?<=…).";
+"ICU has no \\K. Write the part before it as a look-behind (?<=…)." = "ICU no admite \\K. Escriba la parte anterior como (?<=…).";
 
 /* Cheat sheet and find field, differences from OgreKit. */
-"ICU cannot call a group with \\g<name>. Repeat the group's pattern instead." = "ICU no puede llamar a un grupo con \\g<nombre>. Repite su patrón.";
+"ICU cannot call a group with \\g<name>. Repeat the group's pattern instead." = "ICU no puede llamar a un grupo con \\g<nombre>. Repita su patrón.";
 
 /* Cheat sheet and find field, differences from OgreKit. */
 "ICU has no absent operator (?~…)." = "ICU no tiene el operador de ausencia (?~…).";
 
 /* Cheat sheet, differences from OgreKit: OgreKit's \p{^…} is an error in ICU. */
-"Write \\P{…} in ICU." = "En ICU, escribe \\P{…}.";
+"Write \\P{…} in ICU." = "En ICU, escriba \\P{…}.";

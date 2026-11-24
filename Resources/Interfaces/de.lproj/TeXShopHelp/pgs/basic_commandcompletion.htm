@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Befehlsvervollständigung</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="Befehlsvervollständigung; Escape-Taste; Auslösetaste; Marken; nächste Marke; Labels und Zitierschlüssel">
+<meta name="description" content="Befehlsvervollständigung; Escape-Taste; Auslösetaste; Marken; Nächste Marke; Labels und Zitierschlüssel">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,8 +24,8 @@
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
 <li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
 <li><a href="basic_commandcompletion.htm" class="current">Befehlsvervollständigung</a></li>
-<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
 <li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
 <li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
@@ -49,15 +49,15 @@
 
 <h2>Einstellungen</h2>
 
-<p>Unter Einstellungen › Tastatur legt „Auslösetaste“ fest, ob Escape oder Tabulator die Vervollständigung auslöst. Die Quelltextpalette von Bearbeiten › Testen... verwendet dieselbe Taste wie das Quelltextfenster.</p>
+<p>Unter Einstellungen › Tastatur legt „Auslösetaste“ fest, ob Escape oder Tabulator die Vervollständigung auslöst. Die Quelltextpalette von Bearbeiten › Testen … verwendet dieselbe Taste wie das Quelltextfenster.</p>
 
-<p>Um ein Wort zur Vervollständigungsdatei hinzuzufügen, wählen Sie es aus und wählen Quelltext › Zur Liste der Befehlsvervollständigung hinzufügen. Um die Datei zu bearbeiten, klicken Sie unter Einstellungen › Tastatur auf „Befehlsvervollständigung bearbeiten…“. Am besten lernen Sie, wie neue Vervollständigungen geschrieben werden, indem Sie die vorhandenen studieren; der Ordner ~/Library/TeXShop/CommandCompletion enthält außerdem ein ausführliches Dokument darüber.</p>
+<p>Um ein Wort zur Vervollständigungsdatei hinzuzufügen, wählen Sie es aus und wählen Quelltext › Zur Liste der Befehlsvervollständigung hinzufügen. Um die Datei zu bearbeiten, klicken Sie unter Einstellungen › Tastatur auf „Befehlsvervollständigung bearbeiten …“. Am besten lernen Sie, wie neue Vervollständigungen geschrieben werden, indem Sie die vorhandenen studieren; der Ordner ~/Library/TeXShop/CommandCompletion enthält außerdem ein ausführliches Dokument darüber.</p>
 
 <h2><a name="marks"></a>Marken</h2>
 
 <p>Eine Marke (•) ist eine Stelle, zu der Sie zurückkehren wollen; eine Marke mit Notiz (•‹Notiz›) sagt außerdem, was dorthin gehört. Befehlsvervollständigungen, Makros und Tastenbelegungen können Marken enthalten, und Sie können sie selbst mit Bearbeiten › Marken › Marke einfügen (<kbd>⌘8</kbd>) und „Marke mit Notiz einfügen“ (<kbd>⌃⌘8</kbd>) einfügen. „Marke mit Notiz einfügen“ fügt •‹› mit der Einfügemarke zwischen den spitzen Klammern ein oder macht den ausgewählten Text zur Notiz.</p>
 
-<p>„nächste Marke“ (<kbd>⌃⌘F</kbd>) und „vorhergehende Marke“ (<kbd>⌃⌘G</kbd>) wählen die nächste oder vorherige Marke samt ihrer Notiz aus, sodass Ihre Eingabe sie ersetzt. Halten Sie die Wahltaste gedrückt, um nur das • zu löschen und stattdessen die Notiz auszuwählen (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+<p>„Nächste Marke“ (<kbd>⌃⌘]</kbd>) und „Vorherige Marke“ (<kbd>⌃⌘[</kbd>) wählen die nächste oder vorherige Marke samt ihrer Notiz aus, sodass Ihre Eingabe sie ersetzt. Halten Sie die Wahltaste gedrückt, um nur das • zu löschen und stattdessen die Notiz auszuwählen (<kbd>⌃⌥⌘]</kbd>, <kbd>⌃⌥⌘[</kbd>).</p>
 
 <p>Auch die Auslösetaste springt zwischen Marken: Ist Escape die Auslösetaste, geht Wahltaste-Escape zur nächsten Marke und Control-Escape zur vorherigen; bei Tabulator sind es Wahltaste-Tabulator und Control-Tabulator. Braucht ein anderes Programm diese Tasten, schalten Sie „Mit Wahl- oder Control-Taste und der Auslösetaste zur nächsten oder vorherigen Marke springen“ unter Einstellungen › Tastatur aus.</p>
 
@@ -72,7 +72,7 @@
 <dt><a href="basic_autocompletion.htm">Tastenbelegungen</a></dt>
 <dd>Eine einzelne Taste fügt Text ein: <code>_</code> setzt <code>_{}</code> um die Auswahl, und ≤ (Wahl-Komma auf der US-Tastatur) ergibt <code>\leq</code>. Unter Einstellungen › Tastatur werden sie für neue Dokumente eingeschaltet und ihre Liste bearbeitet; Quelltext › Tastenbelegungen schaltet sie für das vordere Dokument ein oder aus. Tippen Sie zuerst <code>\</code>, um eine Taste wie <code>_</code> oder <code>^</code> unverändert einzugeben. Für Zeichen, die mit einer Tottaste getippt werden, etwa é mit Wahl-E und E, gibt es keine Tastenbelegung.</dd>
 <dt><a href="basic_macros.htm">Makros</a></dt>
-<dd>Die Einträge des Menüs „Makros“ fügen Text ein oder führen AppleScript-Programme aus und können einen Kurzbefehl mit der Befehls- oder Control-Taste oder einer Funktionstaste haben. Mit Makros › Makro-Editor öffnen... werden sie hinzugefügt, bearbeitet und angeordnet. Text, der auf einer Befehlstaste liegen soll, etwa <code>\textbf</code> um die Auswahl auf ⌘B, legen Sie am besten als Makro an.</dd>
+<dd>Die Einträge des Menüs „Makros“ fügen Text ein oder führen AppleScript-Programme aus und können einen Kurzbefehl mit der Befehls- oder Control-Taste oder einer Funktionstaste haben. Mit Makros › Makro-Editor öffnen … werden sie hinzugefügt, bearbeitet und angeordnet. Text, der auf einer Befehlstaste liegen soll, etwa <code>\textbf</code> um die Auswahl auf ⌘B, legen Sie am besten als Makro an.</dd>
 <dt>Befehlsvervollständigung</dt>
 <dd>Tippen Sie den Anfang eines Befehls oder eine Abkürzung und drücken Sie die Auslösetaste: <code>\sec</code> ergibt <code>\section{•}</code>, ein weiterer Druck den nächsten Treffer, und <code>\benu</code> eine ganze enumerate-Umgebung mit Marken. Anders als Tastenbelegungen und Makros ersetzt die Befehlsvervollständigung ausgewählten Text.</dd>
 </dl>

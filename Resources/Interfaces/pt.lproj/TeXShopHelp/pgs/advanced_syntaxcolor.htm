@@ -39,15 +39,15 @@
 </nav>
 <main id="content">
 <h1>Destaque de sintaxe</h1>
-<p>A janela do código-fonte mostra o TeX em cores: os comentários, os comandos, as notas de rodapé, os marcadores <code>$</code> e <code>&amp;</code> e os parênteses <code>( )</code>, <code>{ }</code> e <code>[ ]</code> têm cada um a sua cor. Fonte › Destaque de sintaxe ativa ou desativa o destaque para o documento ativo. Os documentos abrem com ele ativado; para abri-los com ele desativado, use o ajuste oculto</p>
+<p>A janela do código-fonte mostra o TeX em cores: os comentários, os comandos, as notas de rodapé, os marcadores <code>$</code> e <code>&amp;</code> e os parênteses <code>( )</code>, <code>{ }</code> e <code>[ ]</code> têm cada um a sua cor. Código-fonte › Destaque de sintaxe ativa ou desativa o destaque para o documento ativo. Os documentos abrem com ele ativado; para abri-los com ele desativado, use o ajuste oculto</p>
 <pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
 
 <h2>O que é destacado</h2>
 <ul>
 <li>Os comandos são uma barra invertida seguida de letras. Ajustes › Editor › Destaque de sintaxe › “@ faz parte dos comandos” conta também <code>@</code> como letra, como nos comandos internos dos pacotes.</li>
 <li>O texto de <code>\footnote</code>, <code>\footcite</code> e <code>\autocite</code>, e dos comandos que começam com <code>\cite</code> ou <code>\Cite</code>, como <code>\citep</code> e <code>\citeauthor</code>, aparece na cor “Nota de rodapé”. O ajuste oculto <code>defaults write TeXShop SyntaxColorFootnote NO</code> colore apenas o comando.</li>
-<li>Fonte › Destacar as entradas do índice mostra os argumentos de <code>\index</code> e <code>\esindex</code> na cor Índice. Ajustes › Editor › Destaque de sintaxe › “Destacar as entradas do índice por padrão” o ativa quando os documentos são abertos.</li>
-<li>Fonte › Destacar o código expl3 colore também as funções, as variáveis e as outras partes do código expl3, a camada de programação do LaTeX, para quem escreve pacotes. “Destacar o código expl3 por padrão”, no mesmo grupo, o ativa quando os documentos são abertos.</li>
+<li>Código-fonte › Destacar as entradas do índice mostra os argumentos de <code>\index</code> e <code>\esindex</code> na cor Índice. Ajustes › Editor › Destaque de sintaxe › “Destacar as entradas do índice por padrão” o ativa quando os documentos são abertos.</li>
+<li>Código-fonte › Destacar o código expl3 colore também as funções, as variáveis e as outras partes do código expl3, a camada de programação do LaTeX, para quem escreve pacotes. “Destacar o código expl3 por padrão”, no mesmo grupo, o ativa quando os documentos são abertos.</li>
 <li>“Destacar letras e símbolos de largura total”, no mesmo grupo, mostra nas cores “Largura total” as letras, os dígitos e os símbolos de largura total, que facilmente se confundem com caracteres ASCII em texto japonês.</li>
 </ul>
 <p>“Destacar as entradas do índice” e “Destacar o código expl3” se aplicam ao documento ativo; cada janela do código-fonte tem a sua própria escolha. Os arquivos que não são código-fonte TeX, como os arquivos de log, não são destacados; consulte <a href="advanced_otherfiles.htm">Abrir outros arquivos com o TeXShop</a> para ver a lista de extensões e como acrescentar uma.</p>

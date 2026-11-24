@@ -19,7 +19,7 @@
 <li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm" class="current">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_encoding.htm">Codierungen</a></li>
 <li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
 <li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
 <li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
@@ -52,11 +52,11 @@
 <pre>% !TEX program = ConTeXt-TL
 % !TEX useConTeXtSyncParser</pre>
 <p>Für ConTeXt-CG geben Sie den Ordner der Programme der ConTeXt-Garden-Installation im Feld „Zweite TeX-Engines“ unter Einstellungen › Satz › Pfade ein und fügen die Zeile <code>% !TEX useAlternatePath</code> hinzu; damit übergibt TeXShop der Engine diesen Ordner statt TeX Live.</p>
-<p>Für die Synchronisierung zwischen Quelltext und Vorschau fügen Sie <code>\setupsynctex[state=start,method=min]</code> in die Einrichtung des Dokuments ein; die Zeile <code>% !TEX useConTeXtSyncParser</code> lässt TeXShop den eigenen Synchronisierungscode von ConTeXt verwenden. Das ConTeXt-Kapitel in Hilfe › TeXShop Handbuch (Englisch) beschreibt die Installation der Version des ConTeXt Garden und jede Engine im Einzelnen.</p>
+<p>Für die Synchronisierung zwischen Quelltext und Vorschau fügen Sie <code>\setupsynctex[state=start,method=min]</code> in die Einrichtung des Dokuments ein; die Zeile <code>% !TEX useConTeXtSyncParser</code> lässt TeXShop den eigenen Synchronisierungscode von ConTeXt verwenden. Das ConTeXt-Kapitel in Hilfe › TeXShop-Handbuch (Englisch) beschreibt die Installation der Version des ConTeXt Garden und jede Engine im Einzelnen.</p>
 <p>Um Gliederungsbefehle von ConTeXt wie <code>\title</code> und <code>\subject</code> im Menü „Markierungen“ aufzuführen, schalten Sie die versteckte Einstellung ConTeXtTags ein; siehe <a href="configure_hidden.htm">Versteckte Einstellungen</a>.</p>
 
 <h2>MetaPost</h2>
-<p>MetaPost von John Hobby zeichnet Abbildungen nach einer Beschreibung in einer Programmiersprache, die von Knuths METAFONT abgeleitet ist. Sein Handbuch gehört zu TeX Live: Wählen Sie Hilfe › Hilfe für Paket einblenden... und geben Sie <code>metapost</code> ein.</p>
+<p>MetaPost von John Hobby zeichnet Abbildungen nach einer Beschreibung in einer Programmiersprache, die von Knuths METAFONT abgeleitet ist. Sein Handbuch gehört zu TeX Live: Wählen Sie Hilfe › Hilfe für Paket einblenden … und geben Sie <code>metapost</code> ein.</p>
 <p>Setzen › MetaPost (<kbd>⇧⌘M</kbd>) oder MetaPost im Einblendmenü neben der Taste „Setzen“ startet MetaPost für die Datei mit dem Namen des aktiven Dokuments und der Endung <code>.mp</code>: für das Dokument selbst, wenn es eine <code>.mp</code>-Datei ist, sonst für die <code>.mp</code>-Datei daneben, etwa die, die das Paket mfpic für ein <code>.tex</code>-Dokument schreibt. Ausgeführt wird der Befehl unter Einstellungen › Satz › Zugehörige Programme › MetaPost, als Vorgabe <code>mpost</code>. Die Engine-Profile setzen dieses Feld: <code>pmpost</code> für pLaTeX + dvipdfmx und <code>upmpost</code> für upLaTeX + dvipdfmx, die japanischen Text in Beschriftungen setzen, und <code>mpost</code> für die übrigen Profile. LuaLaTeX kann keine Abbildungen einbinden, deren Beschriftungen pmpost oder upmpost auf Japanisch gesetzt haben; zeichnen Sie solche Abbildungen mit LuaLaTeX im Dokument selbst mit dem Paket luamplib.</p>
 <p>Um eine neue Datei als MetaPost-Datei zu sichern, wählen Sie im Sichern-Dialog im Menü „Dateiformat“ den Typ mp.</p>
 <p>Die Engines nv-metapost und nv-metafun von Nicola Vitacolonna erleichtern die Arbeit mit MetaPost und MetaFun und zeigen die Abbildungen einer Datei im Vorschaufenster. Sie liegen in <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>; die Datei <code>README.pdf</code> und der Ordner <code>examples</code> eine Ebene höher in <code>MetaPostEngines-1.4.7</code> erklären, wie man sie installiert und verwendet, und enthalten Beispieldateien. Eine Datei, die zum Beispiel so beginnt,</p>

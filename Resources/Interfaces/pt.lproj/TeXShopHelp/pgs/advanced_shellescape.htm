@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proteção contra shell escape</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="shell escape; -shell-escape; --shell-escape; Confirmar shell-escape; segurança; % !TEX parameter">
+<meta name="description" content="shell escape; -shell-escape; --shell-escape; Confirmar shell escape; segurança; % !TEX parameter">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -50,14 +50,14 @@
 </ul>
 <p>Um motor já tem a opção: o sepdflatexmk, que vem com o TeXShop e está na pasta Engines desde o início, sempre compõe com <code>--shell-escape</code>. Escolhê-lo na barra de ferramentas da janela do código-fonte ou com uma linha <code>% !TEX program = sepdflatexmk</code> basta; por isso, use-o apenas para documentos em que você confia.</p>
 
-<h2>Confirmar shell-escape</h2>
-<p>Ajustes › Composição › PDF direto › “Confirmar shell-escape”, desativado por padrão, protege os comandos do grupo PDF direto. Quando ele está ativado e o comando plain TeX ou LaTeX desse grupo contém <code>-shell-escape</code> ou <code>--shell-escape</code>, o TeXShop pergunta antes de compor um documento pela primeira vez depois que ele é aberto:</p>
+<h2>Confirmar shell escape</h2>
+<p>Ajustes › Composição › PDF direto › “Confirmar shell escape”, desativado por padrão, protege os comandos do grupo PDF direto. Quando ele está ativado e o comando plain TeX ou LaTeX desse grupo contém <code>-shell-escape</code> ou <code>--shell-escape</code>, o TeXShop pergunta antes de compor um documento pela primeira vez depois que ele é aberto:</p>
 <ul>
 <li>OK compõe com a opção.</li>
-<li>“Omitir Shell Escape” compõe sem ela.</li>
+<li>“Omitir shell escape” compõe sem ela.</li>
 <li>Cancelar não compõe.</li>
 </ul>
-<p>Depois que você escolhe OK ou “Omitir Shell Escape”, a resposta vale para esse documento até que ele seja fechado; assim, você pode compor os seus próprios documentos com a opção e os documentos de outras pessoas sem ela. Os arquivos de motor não são verificados, mesmo que contenham <code>-shell-escape</code>; por isso, o sepdflatexmk compõe com a opção sem perguntar.</p>
+<p>Depois que você escolhe OK ou “Omitir shell escape”, a resposta vale para esse documento até que ele seja fechado; assim, você pode compor os seus próprios documentos com a opção e os documentos de outras pessoas sem ela. Os arquivos de motor não são verificados, mesmo que contenham <code>-shell-escape</code>; por isso, o sepdflatexmk compõe com a opção sem perguntar.</p>
 </main>
 </body>
 </html>

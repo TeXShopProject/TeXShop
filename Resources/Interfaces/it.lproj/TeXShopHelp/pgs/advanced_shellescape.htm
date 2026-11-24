@@ -15,7 +15,7 @@
 <li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
-<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
 <li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
@@ -39,25 +39,25 @@
 </nav>
 <main id="content">
 <h1>Protezione da shell escape</h1>
-<p>Durante la composizione TeX può eseguire altri programmi. Per impostazione predefinita TeX Live consente solo un breve elenco di programmi affidabili, ad esempio per convertire la grafica EPS in PDF. I pacchetti che devono eseguire altri programmi richiedono l’opzione <code>-shell-escape</code> (scritta anche <code>--shell-escape</code>).</p>
+<p>Durante la compilazione TeX può eseguire altri programmi. Per impostazione predefinita TeX Live consente solo un breve elenco di programmi affidabili, ad esempio per convertire la grafica EPS in PDF. I pacchetti che devono eseguire altri programmi richiedono l’opzione <code>-shell-escape</code> (scritta anche <code>--shell-escape</code>).</p>
 <p>Con questa opzione un documento può eseguire qualsiasi comando, ad esempio uno che elimina tutti i file della tua cartella Inizio. Usala solo per documenti di cui ti fidi, e non per i file che ricevi da altri.</p>
 
 <h2>Aggiungere l’opzione</h2>
 <ul>
-<li>Nel comando LaTeX o plain TeX di Impostazioni › Composizione › PDF diretto, per tutti i documenti composti con PDF diretto.</li>
-<li>In un file del motore, per tutti i documenti composti con quel motore; consulta <a href="advanced_addengine.htm">Aggiungere motori di composizione</a>.</li>
-<li>Per un singolo documento composto con uno dei motori latexmk, come pdflatexmk, con la riga <code>% !TEX parameter = -shell-escape</code> all’inizio del sorgente.</li>
+<li>Nel comando LaTeX o plain TeX di Impostazioni › Compilazione › PDF diretto, per tutti i documenti compilati con PDF diretto.</li>
+<li>In un file del motore, per tutti i documenti compilati con quel motore; consulta <a href="advanced_addengine.htm">Aggiungere motori di compilazione</a>.</li>
+<li>Per un singolo documento compilato con uno dei motori latexmk, come pdflatexmk, con la riga <code>% !TEX parameter = -shell-escape</code> all’inizio del sorgente.</li>
 </ul>
-<p>Un motore ha già l’opzione: sepdflatexmk, fornito con TeXShop e presente fin dall’inizio nella cartella Engines, compone sempre con <code>--shell-escape</code>. Basta sceglierlo nella barra strumenti della finestra sorgente o con una riga <code>% !TEX program = sepdflatexmk</code>, quindi usalo solo per documenti di cui ti fidi.</p>
+<p>Un motore ha già l’opzione: sepdflatexmk, fornito con TeXShop e presente fin dall’inizio nella cartella Engines, compila sempre con <code>--shell-escape</code>. Basta sceglierlo nella barra strumenti della finestra sorgente o con una riga <code>% !TEX program = sepdflatexmk</code>, quindi usalo solo per documenti di cui ti fidi.</p>
 
 <h2>Chiedi conferma per shell-escape</h2>
-<p>Impostazioni › Composizione › PDF diretto › «Chiedi conferma per shell-escape», disattivata per impostazione predefinita, protegge i comandi del gruppo PDF diretto. Quando è attiva e il comando plain TeX o LaTeX di quel gruppo contiene <code>-shell-escape</code> o <code>--shell-escape</code>, TeXShop chiede conferma prima di comporre un documento per la prima volta dopo la sua apertura:</p>
+<p>Impostazioni › Compilazione › PDF diretto › «Chiedi conferma per shell-escape», disattivata per impostazione predefinita, protegge i comandi del gruppo PDF diretto. Quando è attiva e il comando plain TeX o LaTeX di quel gruppo contiene <code>-shell-escape</code> o <code>--shell-escape</code>, TeXShop chiede conferma prima di compilare un documento per la prima volta dopo la sua apertura:</p>
 <ul>
-<li>«OK» compone con l’opzione.</li>
-<li>«Ometti Shell Escape» compone senza l’opzione.</li>
-<li>«Annulla» non compone.</li>
+<li>«OK» compila con l’opzione.</li>
+<li>«Ometti shell-escape» compila senza l’opzione.</li>
+<li>«Annulla» non compila.</li>
 </ul>
-<p>Dopo che hai scelto «OK» o «Ometti Shell Escape», la risposta vale per quel documento finché non viene chiuso; così puoi comporre i tuoi documenti con l’opzione e quelli ricevuti da altri senza. I file del motore non vengono controllati, anche se contengono <code>-shell-escape</code>, quindi sepdflatexmk compone con l’opzione senza chiedere.</p>
+<p>Dopo che hai scelto «OK» o «Ometti shell-escape», la risposta vale per quel documento finché non viene chiuso; così puoi compilare i tuoi documenti con l’opzione e quelli ricevuti da altri senza. I file del motore non vengono controllati, anche se contengono <code>-shell-escape</code>, quindi sepdflatexmk compila con l’opzione senza chiedere.</p>
 </main>
 </body>
 </html>

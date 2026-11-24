@@ -31,7 +31,7 @@
 <li><a href="basic_graphics.htm">Incluir gráficos</a></li>
 <li><a href="basic_printing.htm">Imprimir</a></li>
 <li><a href="basic_preferences.htm">Alterar os ajustes</a></li>
-<li><a href="basic_templates.htm">Modelos e documentos-modelo</a></li>
+<li><a href="basic_templates.htm">Modelos e gabaritos</a></li>
 <li><a href="basic_miscellaneous.htm">Janelas e abas</a></li>
 <li><a href="basic_bugs.htm">Enviar relatórios de erros</a></li>
 <li><a href="basic_websites.htm">Sites úteis</a></li>
@@ -51,15 +51,15 @@
 
 <p>Em Ajustes › Teclado, “Tecla de ativação” escolhe Escape ou Tab como a tecla que completa. O painel de código-fonte de Editar › Experimentar... usa a mesma tecla que a janela do código-fonte.</p>
 
-<p>Para acrescentar uma palavra ao arquivo de conclusão, selecione-a e escolha Fonte › Adicionar à lista de conclusão de comandos. Para editar o arquivo, clique em “Editar conclusão de comandos…” em Ajustes › Teclado. Estudar as conclusões que já estão lá é a melhor maneira de aprender a escrever novas; a pasta ~/Library/TeXShop/CommandCompletion também tem um documento detalhado sobre elas.</p>
+<p>Para acrescentar uma palavra ao arquivo de conclusão, selecione-a e escolha Código-fonte › Adicionar à lista de conclusão de comandos. Para editar o arquivo, clique em “Editar conclusão de comandos…” em Ajustes › Teclado. Estudar as conclusões que já estão lá é a melhor maneira de aprender a escrever novas; a pasta ~/Library/TeXShop/CommandCompletion também tem um documento detalhado sobre elas.</p>
 
 <h2><a name="marks"></a>Marcas</h2>
 
-<p>Uma marca (•) é um lugar para onde voltar; uma marca com nota (•‹nota›) também diz o que deve ir ali. As conclusões de comandos, as macros e as associações de teclas podem conter marcas, e você mesmo pode inseri-las com Editar › Marcas › Inserir Marca (<kbd>⌘8</kbd>) e Inserir marca com nota (<kbd>⌃⌘8</kbd>). Inserir marca com nota insere •‹› com o ponto de inserção entre os sinais, ou transforma o texto selecionado na nota.</p>
+<p>Uma marca (•) é um lugar para onde voltar; uma marca com nota (•‹nota›) também diz o que deve ir ali. As conclusões de comandos, as macros e as associações de teclas podem conter marcas, e você mesmo pode inseri-las com Editar › Marcas › Inserir marca (<kbd>⌘8</kbd>) e Inserir marca com nota (<kbd>⌃⌘8</kbd>). Inserir marca com nota insere •‹› com o ponto de inserção entre os sinais, ou transforma o texto selecionado na nota.</p>
 
-<p>Próxima marca (<kbd>⌃⌘F</kbd>) e Marca anterior (<kbd>⌃⌘G</kbd>) selecionam a marca seguinte ou a anterior junto com a nota dela, para que digitar a substitua. Mantenha a tecla Option pressionada para apagar apenas o • e selecionar a nota (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+<p>Próxima marca (<kbd>⌃⌘]</kbd>) e Marca anterior (<kbd>⌃⌘[</kbd>) selecionam a marca seguinte ou a anterior junto com a nota dela, para que digitar a substitua. Mantenha a tecla Option pressionada para apagar apenas o • e selecionar a nota (<kbd>⌃⌥⌘]</kbd>, <kbd>⌃⌥⌘[</kbd>).</p>
 
-<p>A tecla de ativação também se move entre as marcas: com Escape como tecla de ativação, Option-Escape vai para a próxima marca e Control-Escape para a anterior; com Tab, Option-Tab e Control-Tab. Se outro aplicativo precisar dessas teclas, desative “Ir para a marca seguinte ou anterior com Option ou Controle e a tecla de ativação” em Ajustes › Teclado.</p>
+<p>A tecla de ativação também se move entre as marcas: com Escape como tecla de ativação, Option-Escape vai para a próxima marca e Control-Escape para a anterior; com Tab, Option-Tab e Control-Tab. Se outro app precisar dessas teclas, desative “Ir para a marca seguinte ou anterior com Option ou Control e a tecla de ativação” em Ajustes › Teclado.</p>
 
 <h2><a name="labels"></a>Conclusão de rótulos e chaves de citação</h2>
 
@@ -70,7 +70,7 @@
 <p>Esses três recursos inserem texto no código-fonte e são facilmente confundidos. Cada um serve para uma tarefa diferente:</p>
 <dl>
 <dt><a href="basic_autocompletion.htm">Associações de teclas</a></dt>
-<dd>Digitar uma tecla insere texto: <code>_</code> produz <code>_{}</code> em volta da seleção, e ≤ (Option-vírgula no layout americano) produz <code>\leq</code>. Ajustes › Teclado as ativa para novos documentos e guarda a lista delas; Fonte › Associações de teclas as ativa ou desativa para o documento em primeiro plano. Digite <code>\</code> antes para manter uma tecla como <code>_</code> ou <code>^</code> como ela é. Um caractere digitado com uma tecla morta, como é a partir de Option-E e E, não pode ter uma associação de teclas.</dd>
+<dd>Digitar uma tecla insere texto: <code>_</code> produz <code>_{}</code> em volta da seleção, e ≤ (Option-vírgula no layout americano) produz <code>\leq</code>. Ajustes › Teclado as ativa para novos documentos e guarda a lista delas; Código-fonte › Associações de teclas as ativa ou desativa para o documento em primeiro plano. Digite <code>\</code> antes para manter uma tecla como <code>_</code> ou <code>^</code> como ela é. Um caractere digitado com uma tecla morta, como é a partir de Option-E e E, não pode ter uma associação de teclas.</dd>
 <dt><a href="basic_macros.htm">Macros</a></dt>
 <dd>Os itens do menu Macros inserem texto ou executam programas AppleScript e podem ter um atalho de teclado com a tecla Command ou Control ou com uma tecla de função. Macros › Abrir editor de macros... os acrescenta, edita e ordena. O texto que você quer em uma tecla Command, como <code>\textbf</code> em volta da seleção com ⌘B, deve preferencialmente virar uma macro.</dd>
 <dt>Conclusão de comandos</dt>
