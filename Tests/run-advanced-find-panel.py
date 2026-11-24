@@ -59,6 +59,8 @@ MUTATIONS = {
     'the line ending is not put into the find string': ('TSAdvancedFindController.m',
         'NSString *findString = lineEnding ? TSRegexStringByReplacingLineEndings(self.settings.findString, lineEnding) : self.settings.findString;',
         'NSString *findString = self.settings.findString;'),
+    'Replace All leaves the text where it jumped': ('TSAdvancedFindController+Tasks.m',
+        '    [clip scrollToPoint:NSMakePoint(x, y)];\n', ''),
 }
 
 
