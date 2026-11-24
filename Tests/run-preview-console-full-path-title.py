@@ -118,7 +118,8 @@ check(code(document).count('[self showPreviewTitleForPath:') >= 6 and '[self sho
       and code(document).count('[pdfWindow setTitle: [[[self fileURL] path] lastPathComponent]];') == 2,
       'opening and updating name the Preview window through the document; pictures keep the file name')
 body = method(document, '- (void)refreshPDFAndBringFront:(BOOL)front')
-check('if ([self documentIsPDF])\n\t\tpdfPath = [[self fileURL] path];' in body,
+check('pdfPath = [self previewPDFPath];' in body
+      and 'if ([self documentIsPDF])\n\t\treturn [[self fileURL] path];' in method(document, '- (NSString *)previewPDFPath'),
       'a PDF opened by itself is read again from the document\'s own file')
 check(code(document).count('[[fileExtension lowercaseString] isEqualToString: @"pdf"]') == 2
       and '[fileExtension isEqualToString: @"pdf"]' not in code(document),

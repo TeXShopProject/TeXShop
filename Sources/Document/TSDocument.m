@@ -7139,10 +7139,38 @@ if (! useFullSplitWindow) {
 		if ([self fromKit]){
 			if ([self.pdfKitWindow isVisible])
 				[self.pdfKitWindow makeKeyAndOrderFront: self];
-			else
+			else if ([self closedPreviewShowsPDFOnDisk]) {
+				// The Preview comes back as it was closed: at its place, with its pinned popups (#70).
+				[[NSApplication sharedApplication] activateIgnoringOtherApps: YES];
+				[self.pdfKitWindow makeKeyAndOrderFront: self];
+			} else {
+				// A PDF changed while the Preview was closed is shown at the place the user left, as
+				// after typesetting (#70). The pinned popups close, as on every reload.
+				self.pdfKitWindow.previewClosed = NO;
 				[self refreshPDFAndBringFront: YES];
+				if (![self.pdfKitWindow isVisible])
+					self.pdfKitWindow.previewClosed = YES;
+			}
 			}
 		}
+}
+
+// Whether the closed Preview still shows the PDF on disk: the file has not changed since it was
+// read (#70). The check made when the Preview becomes key compares the content as well.
+- (BOOL)closedPreviewShowsPDFOnDisk
+{
+	NSString *signature = TSExternalPDFSignature([self previewPDFPath]);
+	return signature && !self.pdfKitWindow.noPdfFile && self.myPDFKitView.document.pageCount > 0
+		&& [signature isEqualToString: self.externalPDFLoadedSignature];
+}
+
+// The PDF the Preview shows: a PDF opened by itself is read again from the document's own file,
+// whatever the case of its extension; a source is shown by the PDF beside it.
+- (NSString *)previewPDFPath
+{
+	if ([self documentIsPDF])
+		return [[self fileURL] path];
+	return [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
 }
 
 // Explanation: When this document is the root document for a chapter of a project and the user switched to
@@ -7966,14 +7994,7 @@ if (! useFullSplitWindow) {
 - (void)refreshPDFAndBringFront:(BOOL)front
 {
 	NSPDFImageRep	*tempRep;
-	NSString		*pdfPath;
-	
-	// A PDF opened by itself is read again from the document's own file, whatever the case of its
-	// extension; a source is shown by the PDF beside it.
-	if ([self documentIsPDF])
-		pdfPath = [[self fileURL] path];
-	else
-		pdfPath = [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
+	NSString		*pdfPath = [self previewPDFPath];
 
 	if ([[NSFileManager defaultManager] fileExistsAtPath: pdfPath]) {
 		tempRep = [NSPDFImageRep imageRepWithContentsOfFile: pdfPath];

@@ -1352,7 +1352,9 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
  associated with the source file, the window is not removed from memory. It disappears from the screen, but its scroll
  position and configuration are still known. If it remains closed until typesetting finishes, reShowWithPath
  displays the start of the pdf file. If the user reopens it first (for example through SyncTeX), the window clears previewClosed
- so reloading preserves the user's newly selected position instead.
+ so reloading preserves the user's newly selected position instead. Command-1 shows a closed window again without reading
+ the pdf file when it has not changed, so the window keeps its place and pinned popups; a changed file is read with
+ previewClosed cleared, so the place is kept as well (#70).
  
  We handle these two special cases with boolean values attached to the preview window: noPdfFile and previewClosed.
  If noPdfFile = YES, then there was no pdf file when the document was opened and so reShowWithPath must initialize
@@ -5142,9 +5144,11 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
         name:NSWindowWillCloseNotification object:self.window];
 }
 
+// A closed Preview keeps its pinned popups: Command-1 shows it again as it was closed, while its
+// PDF has not changed (#70). The popup shown by hovering goes.
 - (void)linkPreviewWindowWillClose:(NSNotification *)notification
 {
-    [self doKillPopup];
+    [self killTransientLinkPreview];
 }
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
