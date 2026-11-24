@@ -336,7 +336,7 @@
 								<int key="NSCellFlags2">4194304</int>
 								<string key="NSContents">항목:</string>
 								<object class="NSFont" key="NSSupport" id="392984145">
-									<string key="NSName">AppleSDGothicNeo-Regular</string>
+									<string key="NSName">.AppleSystemUIFont</string>
 									<double key="NSSize">13</double>
 									<int key="NSfFlags">16</int>
 								</object>
@@ -727,7 +727,7 @@
 								<int key="NSCellFlags2">134217728</int>
 								<string key="NSContents">새 매크로</string>
 								<object class="NSFont" key="NSSupport" id="376104693">
-									<string key="NSName">AppleSDGothicNeo-Regular</string>
+									<string key="NSName">.AppleSystemUIFont</string>
 									<double key="NSSize">11</double>
 									<int key="NSfFlags">16</int>
 								</object>

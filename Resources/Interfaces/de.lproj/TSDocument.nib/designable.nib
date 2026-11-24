@@ -1194,7 +1194,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3921">
                     <rect key="frame" x="345" y="178" width="116" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Vollständiger Pfad" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="3922">
+                    <buttonCell key="cell" type="check" title="Ganzer Pfad" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="3922">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -2034,7 +2034,7 @@ DQ
                                     <action selector="showFontPanel:" target="-1" id="Twu-Ha-Nkz"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Text bearbeiten …" id="4sM-XS-7P7">
+                            <menuItem title="Text bearbeiten …" id="4sM-XS-7P7">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showTextPanel:" target="-1" id="1b2-ny-uv3"/>

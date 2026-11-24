@@ -53,7 +53,7 @@
 "group.general.5.title" = "Erweitert";
 "group.general.6.title" = "Dock-Symbol während der Laufzeit";
 "catalog.general.5.0.title" = "Nicht hier angezeigte Einstellungen sind im Hilfedokument „Kommentarzeilen und versteckte Einstellungen“ beschrieben.";
-"catalog.general.5.1.title" = "Handbuch zu Kommentarzeilen und versteckten Einstellungen öffnen …";
+"catalog.general.5.1.title" = "Handbuch zu Kommentarzeilen und versteckten Einstellungen öffnen …";
 "group.encoding.title" = "Codierung";
 "catalog.documents.0.0.title" = "Codierung für neue Dokumente";
 "catalog.documents.0.1.title" = "Codierung im Sichern-Dialog anzeigen";
@@ -141,7 +141,7 @@
 "group.spelling.1.title" = "Methode";
 "catalog.spelling.1.0.title" = "LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)";
 "catalog.spelling.1.0.note" = "Fließtext prüfen; Befehle, Formeln, Kommentare und Verweisargumente ausschließen.";
-"catalog.spelling.1.0.button" = "LaTeX-Ausschlussregeln bearbeiten …";
+"catalog.spelling.1.0.button" = "LaTeX-Ausschlussregeln bearbeiten …";
 "catalog.spelling.1.2.title" = "Bisherige Methode";
 "catalog.spelling.1.3.title" = "LaTeX-Befehle nicht überprüfen";
 "catalog.spelling.1.4.title" = "Ausgewählte Parameter nicht überprüfen";
@@ -161,11 +161,11 @@
 "theme.list.restore" = "Wiederherstellen";
 "theme.list.restore.named" = "„%@“ wiederherstellen";
 "theme.list.delete" = "Löschen";
-"theme.list.export" = "Exportieren …";
-"theme.list.export.named" = "„%@“ exportieren …";
+"theme.list.export" = "Exportieren …";
+"theme.list.export.named" = "„%@“ exportieren …";
 "theme.list.showInFinder" = "Im Finder zeigen";
 "theme.list.showInFinder.named" = "„%@“ im Finder zeigen";
-"theme.list.import" = "Importieren …";
+"theme.list.import" = "Importieren …";
 "theme.list.untitled" = "Ohne Titel";
 "theme.list.copy" = "%@ Kopie";
 "theme.list.deleteQuestion" = "„%@“ in den Papierkorb legen?";
@@ -264,7 +264,7 @@
 "catalog.typesetting.0.0.note" = "Was die Symbolleiste neben „Setzen“ auswählt, wenn ein Dokument geöffnet wird. Eine Zeile % !TEX TS-program im Dokument hat Vorrang.";
 "catalog.typesetting.0.1.title" = "Engine-Datei";
 "catalog.typesetting.0.1.note" = "Wird verwendet, wenn oben „Engine-Datei“ gewählt ist.";
-"catalog.typesetting.0.1.button" = "Engine-Liste bearbeiten …";
+"catalog.typesetting.0.1.button" = "Engine-Liste bearbeiten …";
 "catalog.typesetting.0.2.title" = "Satzmethode";
 "catalog.typesetting.0.3.title" = "Alternative Engine";
 "catalog.typesetting.0.3.note" = "Die Engine für das Setzen mit der alternativen Engine.";
@@ -280,7 +280,7 @@
 "catalog.typesetting.3.1.title" = "Ghostscript";
 "catalog.typesetting.3.2.title" = "Zweite TeX-Engines";
 "catalog.typesetting.3.2.note" = "Für Dokumente mit % !TEX useAlternatePath.";
-"catalog.typesetting.3.3.title" = "Pfade erkennen …";
+"catalog.typesetting.3.3.title" = "Pfade erkennen …";
 "group.typesetting.4.title" = "PDF direkt";
 "catalog.typesetting.4.0.title" = "plain TeX";
 "catalog.typesetting.4.1.title" = "LaTeX";
@@ -316,7 +316,7 @@
 "catalog.keyboard.1.0.title" = "Auslösetaste";
 "catalog.keyboard.1.0.note" = "Vervollständigt den gerade eingegebenen Befehl; erneutes Drücken der Taste zeigt den nächsten Vorschlag. Mit gedrückter Umschalttaste erscheint der vorherige Vorschlag.";
 "catalog.keyboard.1.3.title" = "Mit Wahl- oder Control-Taste und der Auslösetaste zur nächsten oder vorherigen Marke springen";
-"catalog.keyboard.1.2.title" = "Befehlsvervollständigung bearbeiten …";
+"catalog.keyboard.1.2.title" = "Befehlsvervollständigung bearbeiten …";
 "group.labelcompletion.title" = "Vervollständigung von Labels und Zitierschlüsseln";
 "catalog.keyboard.3.0.title" = "Auch Zitierschlüssel aus BibDesk anbieten";
 "catalog.keyboard.3.0.note" = "Nach \\ref{ und ähnlichen Befehlen bietet „Label oder Zitierschlüssel vervollständigen“ die Labels der Datei an. Ist die Option an, werden nach \\cite{ und ähnlichen Befehlen auch Zitierschlüssel aus BibDesk angeboten.";
@@ -326,7 +326,7 @@
 "catalog.updates.0.1.title" = "Suchintervall";
 "group.updates.1.title" = "Einbezogene Updates";
 "catalog.updates.1.0.title" = "Vorabversionen einschließen";
-"catalog.updates.2.0.title" = "Nach Updates suchen …";
+"catalog.updates.2.0.title" = "Nach Updates suchen …";
 "catalog.updates.2.0.last" = "Zuletzt überprüft: %@";
 "catalog.updates.2.0.never" = "Nie";
 

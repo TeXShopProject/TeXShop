@@ -70,8 +70,8 @@
 <p>Sommige Japanse tekens hebben twee vormen in Unicode. が kan één teken zijn (U+304C), of か (U+304B) gevolgd door het combinerende stemhebbendheidsteken (U+3099). Beide zien er hetzelfde uit, maar TeX behandelt ze als verschillend, zodat een commando dat met de ene vorm is gedefinieerd niet wordt gevonden wanneer het met de andere wordt gebruikt:</p>
 <pre>\def\が{GA}
 \が   % Undefined control sequence if this が is decomposed</pre>
-<p>Ontlede tekst komt vaak uit bestandsnamen, die HFS+-schijven in ontlede vorm opslaan; deze vorm heet UTF-8-MAC. Als Instellingen › Documenten en bewaren › Documenten bewaren › ‘UTF-8-MAC automatisch omzetten naar UTF-8’ aan staat, voegt TeXShop zulke tekens bij het bewaren van een document samen tot enkele tekens. De CJK-compatibiliteitsideogrammen en andere tekens die de standaardsamenstelling (NFC) door andere tekens zou vervangen, laat het ongewijzigd; deze vorm heet Modified NFC.</p>
-<p>Het submenu Wijzig › Unicode-normalisatie zet een selectie of het hele document om naar NFC, Modified NFC, NFD, Modified NFD, NFKC of NFKD, en toont daarna het paneel ‘Tekeninfo’ voor het resultaat, omdat genormaliseerde tekst er meestal hetzelfde uitziet als ervoor.</p>
+<p>Ontlede tekst komt vaak uit bestandsnamen, die HFS+-schijven in ontlede vorm opslaan; deze vorm heet UTF-8-MAC. Als Instellingen › Documenten en bewaren › Documenten bewaren › ‘UTF-8-MAC automatisch omzetten naar UTF-8’ aan staat, voegt TeXShop zulke tekens bij het bewaren van een document samen tot enkele tekens. De CJK-compatibiliteitsideogrammen en andere tekens die de standaardsamenstelling (NFC) door andere tekens zou vervangen, laat het ongewijzigd; deze vorm heet Gewijzigde NFC.</p>
+<p>Het submenu Wijzig › Unicode-normalisatie zet een selectie of het hele document om naar NFC, Gewijzigde NFC, NFD, Gewijzigde NFD, NFKC of NFKD, en toont daarna het paneel ‘Tekeninfo’ voor het resultaat, omdat genormaliseerde tekst er meestal hetzelfde uitziet als ervoor.</p>
 
 <h2>Het yenteken en de backslash</h2>
 <p>Op Japanse toetsenborden typt de toets op de plaats van de backslash het yenteken ¥, terwijl TeX-commando’s met de backslash \ beginnen.</p>

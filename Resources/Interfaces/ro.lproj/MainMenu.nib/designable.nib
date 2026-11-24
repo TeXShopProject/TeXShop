@@ -357,25 +357,25 @@
                                         <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Marcajul următor" keyEquivalent="]" id="834" identifier="TSShortcut.doNextBullet:.0">
+                                        <menuItem title="Marcajul următor" keyEquivalent="f" id="834" identifier="TSShortcut.doNextBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBullet:" target="-1" id="842"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Marcajul următor (cu ștergere)" alternate="YES" keyEquivalent="]" id="836" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                        <menuItem title="Marcajul următor (cu ștergere)" alternate="YES" keyEquivalent="f" id="836" identifier="TSShortcut.doNextBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBulletAndDelete:" target="-1" id="843"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Marcajul anterior" keyEquivalent="[" id="835" identifier="TSShortcut.doPreviousBullet:.0">
+                                        <menuItem title="Marcajul anterior" keyEquivalent="g" id="835" identifier="TSShortcut.doPreviousBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBullet:" target="-1" id="844"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Marcajul anterior (cu ștergere)" alternate="YES" keyEquivalent="[" id="837" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                        <menuItem title="Marcajul anterior (cu ștergere)" alternate="YES" keyEquivalent="g" id="837" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBulletAndDelete:" target="-1" id="845"/>
@@ -836,18 +836,6 @@
                                                 <action selector="orderFrontFontPanel:" target="202" id="319"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Aldin" tag="2" id="287" identifier="TSShortcut.addFontTrait:.2">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="202" id="318"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Cursiv" tag="1" id="296" identifier="TSShortcut.addFontTrait:.1">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="202" id="333"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="782">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
@@ -859,113 +847,6 @@
                                         <menuItem title="Mai mic" tag="4" keyEquivalent="-" id="780" identifier="TSShortcut.modifyFont:.4">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="784"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="GT6-7Y-iyO">
-                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                                        </menuItem>
-                                        <menuItem title="Spațiere selectivă" id="F0e-1B-9C6">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Spațiere selectivă" id="QFZ-FK-HEV">
-                                                <items>
-                                                    <menuItem title="Utilizare valori implicite" id="Ej2-gg-Sj8" identifier="TSShortcut.useStandardKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardKerning:" target="-1" id="iy9-Xo-cxn"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Nu utilizați nimic" id="cgc-Rt-kMq" identifier="TSShortcut.turnOffKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffKerning:" target="-1" id="EQO-5R-3WE"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Mai strâns" id="WIX-Vk-vF8" identifier="TSShortcut.tightenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="tightenKerning:" target="-1" id="uqs-ac-8UQ"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Mai larg" id="1nf-QJ-vHI" identifier="TSShortcut.loosenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="loosenKerning:" target="-1" id="4VD-I5-D7T"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="Ligaturi" id="86K-Xm-hbp">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Ligaturi" id="lbv-82-wI9">
-                                                <items>
-                                                    <menuItem title="Utilizare valori implicite" id="q3W-1k-Z36" identifier="TSShortcut.useStandardLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardLigatures:" target="-1" id="KvK-tJ-07m"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Nu utilizați nimic" id="YTr-NE-77Z" identifier="TSShortcut.turnOffLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffLigatures:" target="-1" id="T9x-WE-IB8"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Utilizați tot" id="yDW-8c-Lzt" identifier="TSShortcut.useAllLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useAllLigatures:" target="-1" id="hMR-iU-oAL"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="Linie de bază" id="gtZ-Os-miU">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Linie de bază" id="lSS-8H-A0N">
-                                                <items>
-                                                    <menuItem title="Utilizare valori implicite" id="dnD-8h-wHM" identifier="TSShortcut.unscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="unscript:" target="-1" id="r5m-UH-bgl"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Exponent" id="2QB-zu-5FC" identifier="TSShortcut.superscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="superscript:" target="-1" id="0ZD-WC-IZa"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Indice" id="Z4j-Xn-8CE" identifier="TSShortcut.subscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="subscript:" target="-1" id="AmL-gq-dh7"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Mai sus" keyEquivalent="5" id="xVi-te-ph8" identifier="TSShortcut.raiseBaseline:.0">
-                                                        <connections>
-                                                            <action selector="raiseBaseline:" target="-1" id="rxk-4N-ccZ"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Mai jos" keyEquivalent="6" id="f0k-vI-pSH" identifier="TSShortcut.lowerBaseline:.0">
-                                                        <connections>
-                                                            <action selector="lowerBaseline:" target="-1" id="mzH-zR-2Am"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="4fU-wS-rFh"/>
-                                        <menuItem title="Copiați stilul" keyEquivalent="c" id="tfh-pA-b5F" identifier="TSShortcut.copyFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="copyFont:" target="-1" id="4eH-hs-a3Y"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Lipiți stilul" keyEquivalent="v" id="pv0-Rf-YJt" identifier="TSShortcut.pasteFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="pasteFont:" target="-1" id="KPE-OG-cpN"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1315,8 +1196,7 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Afișați pe tot ecranul" keyEquivalent="f" id="1019" identifier="TSShortcut.toggleFullScreen:.0">
-                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                            <menuItem title="Afișați pe tot ecranul" id="1019" identifier="TSShortcut.toggleFullScreen:.0">
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="1020"/>
                                 </connections>

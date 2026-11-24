@@ -359,7 +359,19 @@ static void CheckCompiledMenu(NSString *path)
     NSMenuItem *normalize = FindSubmenu(menu, @selector(normalizeSelectedString:));
     Require([path stringByAppendingString:@": normalization follows conversion"],
             normalize && normalize.menu == convert.menu && [normalize.menu indexOfItem:normalize] == [convert.menu indexOfItem:convert] + 1);
-    NSArray *forms = @[@"NFC", @"Modified NFC", @"NFD", @"Modified NFD", @"NFKC", @"NFKD"];
+    // The modified forms are named as CotEditor names them in each language.
+    NSDictionary<NSString *, NSArray<NSString *> *> *modifiedNames = @{
+        @"ja": @[@"修正NFC", @"修正NFD"], @"de": @[@"Modifizierte NFC", @"Modifizierte NFD"],
+        @"es": @[@"NFC modificado", @"NFD modificado"], @"ko": @[@"수정된 NFC", @"수정된 NFD"],
+        @"fr": @[@"NFC modifié", @"NFD modifié"], @"it": @[@"NFC modificato", @"NFD modificato"],
+        @"nl": @[@"Gewijzigde NFC", @"Gewijzigde NFD"], @"pt": @[@"NFC Modificado", @"NFD Modificado"],
+        @"pt-PT": @[@"NFC modificado", @"NFD modificado"], @"ro": @[@"NFC modificat", @"NFD modificat"],
+        @"zh_CN": @[@"修改NFC", @"修改NFD"]};
+    NSString *language = @"";
+    for (NSString *component in path.pathComponents)
+        if ([component hasSuffix:@".lproj"]) language = component.stringByDeletingPathExtension;
+    NSArray<NSString *> *modified = modifiedNames[language] ?: @[@"Modified NFC", @"Modified NFD"];
+    NSArray *forms = @[@"NFC", modified[0], @"NFD", modified[1], @"NFKC", @"NFKD"];
     NSArray *items = normalize.submenu.itemArray;
     Require([path stringByAppendingString:@": six normalization forms"], items.count == forms.count);
     for (NSUInteger i = 0; i < MIN(items.count, forms.count); i++) {

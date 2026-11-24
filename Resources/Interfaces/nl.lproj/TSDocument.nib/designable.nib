@@ -1477,7 +1477,7 @@ DQ
                         <menu key="menu" title="OtherViews" id="595">
                             <items>
                                 <menuItem title="JPEG (hoge kwaliteit)" state="on" tag="11" id="596"/>
-                                <menuItem title="JPEG (gemiddelde kwaliteit)" tag="13" id="583"/>
+                                <menuItem title="JPEG (normale kwaliteit)" tag="13" id="583"/>
                                 <menuItem title="JPEG (lage kwaliteit)" tag="15" id="592"/>
                                 <menuItem title="TIFF (ongecomprimeerd)" tag="1" id="589"/>
                                 <menuItem title="TIFF (LZW)" tag="2" id="584"/>

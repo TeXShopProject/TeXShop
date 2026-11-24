@@ -16,16 +16,16 @@ DESCRIPTION, LINK = 'catalog.general.5.0.title', 'catalog.general.5.1.title'
 EXPECTED = {
     'Base': 'Open the Comment Lines and Hidden Settings Manual…',
     'ja': 'マジックコメントと隠し設定のマニュアルを開く…',
-    'de': 'Handbuch zu Kommentarzeilen und versteckten Einstellungen öffnen…',
-    'es': 'Abrir el manual de líneas mágicas y ajustes ocultos…',
+    'de': 'Handbuch zu Kommentarzeilen und versteckten Einstellungen öffnen …',
+    'es': 'Abrir el manual de comentarios mágicos y ajustes ocultos…',
     'fr': 'Ouvrir le manuel des commentaires spéciaux et réglages cachés…',
-    'it': 'Apri il manuale delle linee di commento e impostazioni nascoste…',
+    'it': 'Apri il manuale delle righe di commento e impostazioni nascoste…',
     'ko': '매직 코멘트와 숨겨진 설정 설명서 열기…',
     'nl': 'Handleiding voor commentaarregels en verborgen instellingen openen…',
-    'pt': 'Abrir o manual de linhas especiais e ajustes ocultos…',
+    'pt': 'Abrir o manual Linhas de Comentário e Ajustes Ocultos…',
     'pt-PT': 'Abrir o manual de linhas de comentário e definições ocultas…',
-    'ro': 'Deschide manualul pentru linii de comentarii și configurări ascunse…',
-    'zh_CN': '打开魔术行与隐藏设置手册…',
+    'ro': 'Deschideți documentul „Linii de comentarii și configurări ascunse”…',
+    'zh_CN': '打开“魔法注释行和隐藏设置”手册…',
 }
 # A Help menu item may say the document is in English; the description quotes the name only.
 LANGUAGE_NOTE = re.compile(r'\s*[(（][^()（）]*[)）]$')

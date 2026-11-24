@@ -180,8 +180,8 @@ tiLabelDrawerKIT				= "Schubfach";
 tiPaletteLabelDrawerKIT			= "Schubfach";
 tiToolTipDrawerKIT				= "Schubfach ein-/ausblenden";
 
-tiLabelShowFullPath				= "Vollständiger Pfad";
-tiPaletteLabelShowFullPath		= "Vollständiger Pfad";
+tiLabelShowFullPath				= "Ganzer Pfad";
+tiPaletteLabelShowFullPath		= "Ganzer Pfad";
 tiToolTipShowFullPath			= "Vollständigen Pfad in der Titelleiste anzeigen";
 
 tiLabelProgramSplit				= "Programm";

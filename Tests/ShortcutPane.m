@@ -527,6 +527,48 @@ int main(int argc,char **argv){@autoreleasepool{
   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)duplicateRow] byExtendingSelection:NO];
   REQUIRE(pane.selectionButtons[0].enabled);
   [first.menu removeItem:saveAsItem];[first.menu removeItem:duplicateItem];[coordinator refreshMenuAndMacros];[pane reloadCommands];
+  // Enter Full Screen has Globe-F, which macOS gives only its own items: shown as AppKit 27 shows it (🌐︎F), dimmed,
+  // not recorded, no buttons, found by its name; Control-Command-F is Next Mark's, and a key saved for it before is left out.
+  const NSUInteger FSControl=NSEventModifierFlagControl,FSFunction=NSEventModifierFlagFunction;
+  NSMenuItem *fullScreen=[[NSMenuItem alloc]initWithTitle:@"Enter Full Screen" action:@selector(toggleFullScreen:) keyEquivalent:@""];fullScreen.identifier=@"TSShortcut.toggleFullScreen:.0";
+  NSMenuItem *nextMark=Item(@"NextMark",@"f",C|FSControl);
+  [first.menu addItem:fullScreen];[first.menu addItem:nextMark];TSGiveFullScreenGlobeKey(first.menu);
+  REQUIRE([fullScreen.keyEquivalent isEqual:@"f"] && fullScreen.keyEquivalentModifierMask==FSFunction);
+  [coordinator refreshMenuAndMacros];[pane reloadCommands];
+  TSShortcutCommand *fullScreenCommand=nil,*nextMarkCommand=nil;
+  for(TSShortcutCommand *command in store.commands){if(command.item==fullScreen)fullScreenCommand=command;if(command.item==nextMark)nextMarkCommand=command;}
+  NSInteger fullScreenRow=[pane rowForCommand:fullScreenCommand];
+  REQUIRE(fullScreenCommand.managedBySystem && !nextMarkCommand.managedBySystem && fullScreenRow>=0);
+  NSString *globeF=@"\U0001F310︎F";
+  for(NSInteger column=0;column<2;column++){
+   NSTextField *cell=(NSTextField *)[pane.table viewAtColumn:column row:fullScreenRow makeIfNecessary:YES];
+   REQUIRE(![cell isKindOfClass:TSShortcutKeyLabel.class] && [cell.textColor isEqual:NSColor.disabledControlTextColor]);
+   if(column==shortcutColumn)REQUIRE([cell.stringValue isEqual:globeF]);
+  }
+  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)fullScreenRow] byExtendingSelection:NO];
+  for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
+  REQUIRE([pane.statusText.stringValue containsString:globeF]);
+  [pane beginRecordingAtRow:fullScreenRow];REQUIRE(pane.editingCommand==nil);
+  [pane removeShortcut:nil];[pane restoreShortcut:nil];
+  REQUIRE([store setKey:@"j" modifiers:C|FSControl forCommand:fullScreenCommand]!=nil);
+  [coordinator refreshMenuAndMacros];
+  REQUIRE([fullScreen.keyEquivalent isEqual:@"f"] && fullScreen.keyEquivalentModifierMask==FSFunction);
+  // Control-Command-F recorded for another command meets Next Mark, as any key in use.
+  NSString *taken=[store setKey:@"f" modifiers:C|FSControl forCommand:firstCommand];
+  REQUIRE(taken!=nil && [taken containsString:nextMarkCommand.path] && ![taken containsString:fullScreenCommand.path]);
+  // Searching by name finds the row.
+  NSString *query=pane.search.stringValue;pane.search.stringValue=@"Full Screen";[pane reloadCommands];
+  REQUIRE([pane.visibleCommands containsObject:fullScreenCommand] && [store.settingsSearchCommandNames containsObject:fullScreenCommand.path]);
+  pane.search.stringValue=query;[pane reloadCommands];
+  // A key saved for Enter Full Screen by an earlier version is left out: the item keeps Globe-F.
+  {
+   TSMemoryDefaults *earlier=[TSMemoryDefaults new];
+   [earlier setObject:@{@"TSShortcut.toggleFullScreen:.0":@{@"key":@"f",@"modifiers":@(C|FSControl)}} forKey:TSMenuShortcutOverridesKey];
+   TSShortcutStore *earlierStore=[[TSShortcutStore alloc]initWithMenu:first.menu defaults:(NSUserDefaults *)earlier];
+   REQUIRE([fullScreen.keyEquivalent isEqual:@"f"] && fullScreen.keyEquivalentModifierMask==FSFunction && earlierStore.unavailableCommands.count==0);
+   REQUIRE([nextMark.keyEquivalent isEqual:@"f"] && (nextMark.keyEquivalentModifierMask&(C|FSControl))==(C|FSControl));
+  }
+  [first.menu removeItem:fullScreen];[first.menu removeItem:nextMark];[coordinator refreshMenuAndMacros];[pane reloadCommands];
  }
  puts("PASS: in-cell recording starts from the selected shortcut, double click, Return and VoiceOver; Escape, Tab and focus elsewhere end it; keys in use are refused under the list; free keys apply at once; macro keys confirm; Delete and the field button remove; Save As… under autosave is dimmed and kept");
  TSMacroTreeNode *tree=[TSMacroTreeNode submenuNodeWithName:@"root"],*group=[TSMacroTreeNode submenuNodeWithName:@"group"];

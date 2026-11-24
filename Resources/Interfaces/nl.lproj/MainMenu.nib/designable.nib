@@ -357,25 +357,25 @@
                                         <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Volgend markeerpunt" keyEquivalent="]" id="875" identifier="TSShortcut.doNextBullet:.0">
+                                        <menuItem title="Volgend markeerpunt" keyEquivalent="f" id="875" identifier="TSShortcut.doNextBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBullet:" target="-1" id="882"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Volgend markeerpunt (wis)" alternate="YES" keyEquivalent="]" id="877" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                        <menuItem title="Volgend markeerpunt (wis)" alternate="YES" keyEquivalent="f" id="877" identifier="TSShortcut.doNextBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBulletAndDelete:" target="-1" id="883"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Vorig markeerpunt" keyEquivalent="[" id="876" identifier="TSShortcut.doPreviousBullet:.0">
+                                        <menuItem title="Vorig markeerpunt" keyEquivalent="g" id="876" identifier="TSShortcut.doPreviousBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBullet:" target="-1" id="884"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Vorig markeerpunt (wis)" alternate="YES" keyEquivalent="[" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                        <menuItem title="Vorig markeerpunt (wis)" alternate="YES" keyEquivalent="g" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBulletAndDelete:" target="-1" id="885"/>
@@ -589,7 +589,7 @@
                                                 <action selector="normalizeSelectedString:" target="-1" id="I2Y-67-mYl"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Modified NFC" tag="2" id="7U1-xi-JUT" identifier="TSShortcut.normalizeSelectedString:.2">
+                                        <menuItem title="Gewijzigde NFC" tag="2" id="7U1-xi-JUT" identifier="TSShortcut.normalizeSelectedString:.2">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="normalizeSelectedString:" target="-1" id="hC0-Qj-uGQ"/>
@@ -601,7 +601,7 @@
                                                 <action selector="normalizeSelectedString:" target="-1" id="oJf-vh-Mu4"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Modified NFD" tag="4" id="7RH-F1-L76" identifier="TSShortcut.normalizeSelectedString:.4">
+                                        <menuItem title="Gewijzigde NFD" tag="4" id="7RH-F1-L76" identifier="TSShortcut.normalizeSelectedString:.4">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="normalizeSelectedString:" target="-1" id="ndn-b0-8M7"/>
@@ -836,18 +836,6 @@
                                                 <action selector="orderFrontFontPanel:" target="202" id="319"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Vet" tag="2" id="287" identifier="TSShortcut.addFontTrait:.2">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="202" id="318"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Cursief" tag="1" id="296" identifier="TSShortcut.addFontTrait:.1">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="202" id="333"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="823">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
@@ -859,113 +847,6 @@
                                         <menuItem title="Kleiner" tag="4" keyEquivalent="-" id="821" identifier="TSShortcut.modifyFont:.4">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="825"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="dje-7E-n5r">
-                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                                        </menuItem>
-                                        <menuItem title="Spatiëring" id="gSk-ga-PRl">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Spatiëring" id="gIF-Ow-MNv">
-                                                <items>
-                                                    <menuItem title="Standaard" id="x9o-M2-xyN" identifier="TSShortcut.useStandardKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardKerning:" target="-1" id="Gjt-L7-F94"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Geen" id="fD7-be-tu0" identifier="TSShortcut.turnOffKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffKerning:" target="-1" id="oR5-6N-hMC"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Versmald" id="NQv-bN-Sac" identifier="TSShortcut.tightenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="tightenKerning:" target="-1" id="Id6-ev-FKJ"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Uitgerekt" id="Qqm-2O-HtA" identifier="TSShortcut.loosenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="loosenKerning:" target="-1" id="aEt-hd-m27"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="Ligaturen" id="zzN-OM-lxC">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Ligaturen" id="8vV-Sq-7Dw">
-                                                <items>
-                                                    <menuItem title="Standaard" id="7zP-eV-d62" identifier="TSShortcut.useStandardLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardLigatures:" target="-1" id="X1O-ro-dyJ"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Geen" id="UoL-3p-7JF" identifier="TSShortcut.turnOffLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffLigatures:" target="-1" id="PSO-nx-JfY"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Alle" id="6sN-7Q-C7x" identifier="TSShortcut.useAllLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useAllLigatures:" target="-1" id="lG1-dp-1NX"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="Basislijn" id="i4p-mI-cHj">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Basislijn" id="4qO-Ep-8gg">
-                                                <items>
-                                                    <menuItem title="Standaard" id="HX3-Jv-o2c" identifier="TSShortcut.unscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="unscript:" target="-1" id="SMr-Zn-BuJ"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Superscript" id="4Cf-Fy-yVU" identifier="TSShortcut.superscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="superscript:" target="-1" id="Pi9-Mv-dPa"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Subscript" id="i6H-MC-ogQ" identifier="TSShortcut.subscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="subscript:" target="-1" id="VW0-Hx-yKc"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Omhoog" keyEquivalent="5" id="ZvS-E2-udk" identifier="TSShortcut.raiseBaseline:.0">
-                                                        <connections>
-                                                            <action selector="raiseBaseline:" target="-1" id="Cdi-tG-cw4"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Omlaag" keyEquivalent="6" id="DlE-gL-RI2" identifier="TSShortcut.lowerBaseline:.0">
-                                                        <connections>
-                                                            <action selector="lowerBaseline:" target="-1" id="xFO-K3-6Fj"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="Gp2-M4-QmZ"/>
-                                        <menuItem title="Kopieer stijl" keyEquivalent="c" id="Rob-dg-j2M" identifier="TSShortcut.copyFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="copyFont:" target="-1" id="Iw7-Hn-eRi"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Plak stijl" keyEquivalent="v" id="go5-6n-Ed9" identifier="TSShortcut.pasteFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="pasteFont:" target="-1" id="P1m-6n-S2e"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1247,7 +1128,7 @@
                                                 <action selector="changeImageCopyType:" target="-1" id="586"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="JPEG (gemiddelde kwaliteit)" tag="13" id="570" identifier="TSShortcut.changeImageCopyType:.13">
+                                        <menuItem title="JPEG (normale kwaliteit)" tag="13" id="570" identifier="TSShortcut.changeImageCopyType:.13">
                                             <connections>
                                                 <action selector="changeImageCopyType:" target="-1" id="587"/>
                                             </connections>
@@ -1315,8 +1196,7 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Schakel schermvullende weergave in" keyEquivalent="f" id="1061" identifier="TSShortcut.toggleFullScreen:.0">
-                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                            <menuItem title="Schakel schermvullende weergave in" id="1061" identifier="TSShortcut.toggleFullScreen:.0">
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="1062"/>
                                 </connections>

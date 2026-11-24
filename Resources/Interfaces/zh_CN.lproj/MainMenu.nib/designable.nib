@@ -357,25 +357,25 @@
                                         <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="下一个标记" keyEquivalent="]" id="881" identifier="TSShortcut.doNextBullet:.0">
+                                        <menuItem title="下一个标记" keyEquivalent="f" id="881" identifier="TSShortcut.doNextBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBullet:" target="-1" id="882"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="删除下一个标记" alternate="YES" keyEquivalent="]" id="879" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                        <menuItem title="删除下一个标记" alternate="YES" keyEquivalent="f" id="879" identifier="TSShortcut.doNextBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBulletAndDelete:" target="-1" id="883"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="上一个标记" keyEquivalent="[" id="880" identifier="TSShortcut.doPreviousBullet:.0">
+                                        <menuItem title="上一个标记" keyEquivalent="g" id="880" identifier="TSShortcut.doPreviousBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBullet:" target="-1" id="884"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="删除上一个标记" alternate="YES" keyEquivalent="[" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                        <menuItem title="删除上一个标记" alternate="YES" keyEquivalent="g" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBulletAndDelete:" target="-1" id="885"/>
@@ -589,7 +589,7 @@
                                                 <action selector="normalizeSelectedString:" target="-1" id="NiS-oJ-E4Q"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Modified NFC" tag="2" id="e8y-0k-Twy" identifier="TSShortcut.normalizeSelectedString:.2">
+                                        <menuItem title="修改NFC" tag="2" id="e8y-0k-Twy" identifier="TSShortcut.normalizeSelectedString:.2">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="normalizeSelectedString:" target="-1" id="GbY-tt-ann"/>
@@ -601,7 +601,7 @@
                                                 <action selector="normalizeSelectedString:" target="-1" id="AgB-Le-a4W"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Modified NFD" tag="4" id="70t-cC-TYw" identifier="TSShortcut.normalizeSelectedString:.4">
+                                        <menuItem title="修改NFD" tag="4" id="70t-cC-TYw" identifier="TSShortcut.normalizeSelectedString:.4">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="normalizeSelectedString:" target="-1" id="cu2-Hc-ZyR"/>
@@ -836,18 +836,6 @@
                                                 <action selector="orderFrontFontPanel:" target="202" id="319"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="粗体" tag="2" id="287" identifier="TSShortcut.addFontTrait:.2">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="202" id="318"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="斜体" tag="1" id="296" identifier="TSShortcut.addFontTrait:.1">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="202" id="333"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="805">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
@@ -859,113 +847,6 @@
                                         <menuItem title="调小" tag="4" keyEquivalent="-" id="803" identifier="TSShortcut.modifyFont:.4">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="815"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="Eia-tj-f1s">
-                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                                        </menuItem>
-                                        <menuItem title="字距调整" id="Ycb-gR-3JI">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="字距调整" id="Q4w-Cd-HEQ">
-                                                <items>
-                                                    <menuItem title="使用默认" id="mEe-r8-2jT" identifier="TSShortcut.useStandardKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardKerning:" target="-1" id="Fxc-Xz-Zaq"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="都不使用" id="VDW-ja-404" identifier="TSShortcut.turnOffKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffKerning:" target="-1" id="v3e-VQ-B8W"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="紧排" id="6Wb-Fh-BfK" identifier="TSShortcut.tightenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="tightenKerning:" target="-1" id="hvU-cl-Dt1"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="松排" id="yrM-fO-i1Q" identifier="TSShortcut.loosenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="loosenKerning:" target="-1" id="725-AH-p5v"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="连字" id="uJS-7D-Iij">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="连字" id="ZnT-1f-eMy">
-                                                <items>
-                                                    <menuItem title="使用默认" id="i7v-2c-xYk" identifier="TSShortcut.useStandardLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardLigatures:" target="-1" id="oIU-kK-xHM"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="都不使用" id="DfE-nx-9ro" identifier="TSShortcut.turnOffLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffLigatures:" target="-1" id="JMx-JZ-Yha"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="使用全部" id="zqH-AC-ivP" identifier="TSShortcut.useAllLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useAllLigatures:" target="-1" id="iPC-4Z-OBr"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="基线" id="FD4-hJ-tsT">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="基线" id="K5k-Dl-lm0">
-                                                <items>
-                                                    <menuItem title="使用默认" id="wuc-0W-d0N" identifier="TSShortcut.unscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="unscript:" target="-1" id="oSG-QW-ra3"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="上标" id="vJT-ua-Ghe" identifier="TSShortcut.superscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="superscript:" target="-1" id="WvO-46-h8t"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="下标" id="tO5-ge-U0S" identifier="TSShortcut.subscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="subscript:" target="-1" id="Ay5-iJ-Lsd"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="升高" keyEquivalent="5" id="D9M-kI-MaB" identifier="TSShortcut.raiseBaseline:.0">
-                                                        <connections>
-                                                            <action selector="raiseBaseline:" target="-1" id="IzQ-xe-6EK"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="降低" keyEquivalent="6" id="I4c-Fv-S4J" identifier="TSShortcut.lowerBaseline:.0">
-                                                        <connections>
-                                                            <action selector="lowerBaseline:" target="-1" id="nZC-h5-tsc"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="388-vH-qlg"/>
-                                        <menuItem title="拷贝样式" keyEquivalent="c" id="DCy-fL-BKj" identifier="TSShortcut.copyFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="copyFont:" target="-1" id="Anb-n4-UxI"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="粘贴样式" keyEquivalent="v" id="Wsr-Ue-Be4" identifier="TSShortcut.pasteFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="pasteFont:" target="-1" id="3cP-vb-f1f"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1316,8 +1197,7 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="进入全屏幕" keyEquivalent="f" id="1165" identifier="TSShortcut.toggleFullScreen:.0">
-                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                            <menuItem title="进入全屏幕" id="1165" identifier="TSShortcut.toggleFullScreen:.0">
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="1166"/>
                                 </connections>

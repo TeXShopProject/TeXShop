@@ -76,24 +76,6 @@
  {
   "nib": "MainMenu",
   "change": "extra",
-  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.3 action=doCommentOrIndent:>FirstResponder tag=3 key=]+1048576",
-  "languages": [
-   "pt"
-  ],
-  "reason": "key equivalents chosen for the keyboard of the language"
- },
- {
-  "nib": "MainMenu",
-  "change": "extra",
-  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.4 action=doCommentOrIndent:>FirstResponder tag=4 key=[+1048576",
-  "languages": [
-   "pt"
-  ],
-  "reason": "key equivalents chosen for the keyboard of the language"
- },
- {
-  "nib": "MainMenu",
-  "change": "extra",
   "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.hide:.0 action=hide:>FirstResponder key=h+1048576",
   "languages": [
    "ja",
@@ -345,24 +327,6 @@
   "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.2 action=doCommentOrIndent:>FirstResponder tag=2 key=}+1048576",
   "languages": [
    "de"
-  ],
-  "reason": "key equivalents chosen for the keyboard of the language"
- },
- {
-  "nib": "MainMenu",
-  "change": "missing",
-  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.3 action=doCommentOrIndent:>FirstResponder tag=3",
-  "languages": [
-   "pt"
-  ],
-  "reason": "key equivalents chosen for the keyboard of the language"
- },
- {
-  "nib": "MainMenu",
-  "change": "missing",
-  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.4 action=doCommentOrIndent:>FirstResponder tag=4",
-  "languages": [
-   "pt"
   ],
   "reason": "key equivalents chosen for the keyboard of the language"
  },

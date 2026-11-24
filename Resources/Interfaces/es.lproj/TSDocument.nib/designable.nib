@@ -1407,7 +1407,7 @@ DQ
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="558">
-                    <rect key="frame" x="6" y="42" width="81" height="17"/>
+                    <rect key="frame" x="6" y="42" width="88" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" id="3881">
                         <font key="font" metaFont="system"/>
@@ -2433,7 +2433,7 @@ Gw
                     </textFieldCell>
                 </textField>
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kpb-2E-u64">
-                    <rect key="frame" x="12" y="29" width="82" height="34"/>
+                    <rect key="frame" x="10" y="29" width="85" height="34"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" id="ytU-d9-UHQ">
                         <font key="font" metaFont="system"/>

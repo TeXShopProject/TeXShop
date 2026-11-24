@@ -4,15 +4,15 @@
 "Tags" = "Markierungen";
 "Typeset" = "Setzen";
 "Save" = "Sichern";
-"Print..." = "Drucken …";
-"Print Source..." = "Quelltext drucken …";
-"Set Project Root..." = "Hauptdatei festlegen …";
-"LaTeX Panel..." = "LaTeX-Palette …";
+"Print..." = "Drucken …";
+"Print Source..." = "Quelltext drucken …";
+"Set Project Root..." = "Hauptdatei festlegen …";
+"LaTeX Panel..." = "LaTeX-Palette …";
 "Close LaTeX Panel" = "LaTeX-Palette schließen";
-"Matrix Panel..." = "Matrix-Palette …";
+"Matrix Panel..." = "Matrix-Palette …";
 "Close Matrix Panel" = "Matrix-Palette schließen";
-"Open for Preview..." = "Zur Vorschau öffnen …";
-"Open for Editing..." = "Zum Bearbeiten öffnen …";
+"Open for Preview..." = "Zur Vorschau öffnen …";
+"Open for Editing..." = "Zum Bearbeiten öffnen …";
 "File" = "Ablage";
 "Goto Error" = "Gehe zu Fehler";
 "RotateClockwise" = "Drehen im Uhrzeigersinn";
@@ -22,10 +22,10 @@
 "Indent" = "Einrückung erhöhen";
 "Unindent" = "Einrückung reduzieren";
 "Macros" = "Makros";
-"Open Macro Editor..." = "Makro-Editor öffnen …";
+"Open Macro Editor..." = "Makro-Editor öffnen …";
 "Close Macro Editor" = "Makro-Editor schließen";
-"Add macros from file..." = "Makros aus Datei hinzufügen …";
-"Save selection to file..." = "Auswahl in Datei sichern …";
+"Add macros from file..." = "Makros aus Datei hinzufügen …";
+"Save selection to file..." = "Auswahl in Datei sichern …";
 "Edit" = "Bearbeiten";
 "Warning" = "Achtung";
 "Don't Save" = "Nicht sichern";
@@ -109,8 +109,8 @@
 "PDF File Has No Annotations" = "PDF-Datei hat keine Anmerkungen";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
-"Forget Learned Words…" = "Gelernte Wörter vergessen …";
-"Edit Spelling Exclusions…" = "Rechtschreib-Ausnahmen bearbeiten …";
+"Forget Learned Words…" = "Gelernte Wörter vergessen …";
+"Edit Spelling Exclusions…" = "Rechtschreib-Ausnahmen bearbeiten …";
 "Forget learned words" = "Gelernte Wörter vergessen";
 "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Diese Wörter in diesem Dokument wurden für %@ gelernt. Wählen Sie die Wörter aus, die vergessen werden sollen. Mit Umschalttaste oder Befehlstaste klicken wählt mehrere aus.";
 "Forget Selected" = "Auswahl vergessen";
@@ -149,7 +149,7 @@
 "Restore Default" = "Standard wiederherstellen";
 "Default shortcut: %@" = "Standardkurzbefehl: %@";
 "Default shortcut: None" = "Standardkurzbefehl: Keiner";
-"Restore All…" = "Alle zurücksetzen …";
+"Restore All…" = "Alle zurücksetzen …";
 "Restore All" = "Alle zurücksetzen";
 "Change Shortcut" = "Kurzbefehl ändern";
 "Shortcut Unavailable" = "Kurzbefehl nicht verfügbar";
@@ -206,7 +206,7 @@
 "Appearance" = "Erscheinungsbild";
 "Use LaTeX-aware spell checking (recommended)" = "LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)";
 "Key Bindings" = "Tastenbelegungen";
-"Edit Command Completion…" = "Befehlsvervollständigung bearbeiten …";
+"Edit Command Completion…" = "Befehlsvervollständigung bearbeiten …";
 "Command Completion" = "Befehlsvervollständigung";
 
 "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installieren Sie TeX Live oder MacTeX und wählen Sie dann „Pfade erkennen“ unter Einstellungen > Satz.";
@@ -295,7 +295,7 @@
 "Insert Mark with Note" = "Marke mit Notiz einfügen";
 "Insert Mark" = "Marke einfügen";
 "Delete Mark" = "Marke löschen";
-"How to Use Marks…" = "Marken verwenden …";
+"How to Use Marks…" = "Marken verwenden …";
 "Inserts a mark (•) to come back to later." = "Fügt eine Marke (•) ein, zu der Sie später zurückkehren.";
 "Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Fügt eine Marke mit Notiz (•‹Notiz›) ein. Ausgewählter Text wird zur Notiz.";
 "Selects the next mark, with its note; typing replaces it." = "Wählt die nächste Marke samt Notiz aus; Tippen ersetzt sie.";
@@ -375,12 +375,12 @@
 "Column" = "Spalte";
 
 /* Text Statistics, opened from the status bar */
-"Text Statistics…" = "Textstatistik …";
+"Text Statistics…" = "Textstatistik …";
 "Whole Document" = "Ganzes Dokument";
 "Selection" = "Auswahl";
 "Text" = "Text";
 "Refresh" = "Aktualisieren";
-"Counting…" = "Wird gezählt …";
+"Counting…" = "Wird gezählt …";
 "detex was not found." = "detex wurde nicht gefunden.";
 "detex failed." = "detex ist fehlgeschlagen.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Von detex ohne die TeX-Befehle gezählt, einschließlich der mit \\input und \\include gelesenen Dateien.";
@@ -421,13 +421,13 @@
 /* Annotation toolbar: opens the font panel */
 "Show Fonts" = "Schriften einblenden";
 /* Annotation toolbar and annotation menu: edits the text of a text annotation */
-"Edit Text…" = "Text bearbeiten …";
+"Edit Text…" = "Text bearbeiten …";
 /* Annotation toolbar: menu of the commands that are not shown */
 "More" = "Mehr";
 /* Annotation toolbar: removes the image streams of the annotations */
 "Remove Image Streams" = "Bild-Streams entfernen";
 /* Annotation toolbar: saves the annotated PDF */
-"Save Annotations…" = "Anmerkungen sichern …";
+"Save Annotations…" = "Anmerkungen sichern …";
 /* Annotation toolbar: Save Annotations saves every page */
 "All Pages" = "Alle Seiten";
 /* Alignment of the text of an annotation */

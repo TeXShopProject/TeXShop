@@ -2640,7 +2640,7 @@ Gw
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1bb-6b-jxR">
-                        <rect key="frame" x="4" y="17" width="34" height="16"/>
+                        <rect key="frame" x="4" y="17" width="38" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="URL :" id="JII-HO-wif">
                             <font key="font" usesAppearanceFont="YES"/>

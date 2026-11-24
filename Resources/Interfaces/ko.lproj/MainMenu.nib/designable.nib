@@ -360,25 +360,25 @@
                                         <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="다음 마크로 이동" keyEquivalent="]" id="109" identifier="TSShortcut.doNextBullet:.0">
+                                        <menuItem title="다음 마크로 이동" keyEquivalent="f" id="109" identifier="TSShortcut.doNextBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBullet:" target="-1" id="425"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="다음 마크로 이동하고 삭제" alternate="YES" keyEquivalent="]" id="110" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                        <menuItem title="다음 마크로 이동하고 삭제" alternate="YES" keyEquivalent="f" id="110" identifier="TSShortcut.doNextBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBulletAndDelete:" target="-1" id="427"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="이전 마크로 이동" keyEquivalent="[" id="111" identifier="TSShortcut.doPreviousBullet:.0">
+                                        <menuItem title="이전 마크로 이동" keyEquivalent="g" id="111" identifier="TSShortcut.doPreviousBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBullet:" target="-1" id="426"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="이전 마크로 이동하고 삭제" alternate="YES" keyEquivalent="[" id="112" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                        <menuItem title="이전 마크로 이동하고 삭제" alternate="YES" keyEquivalent="g" id="112" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBulletAndDelete:" target="-1" id="428"/>
@@ -592,7 +592,7 @@
                                                 <action selector="normalizeSelectedString:" target="-1" id="UXG-WR-Zaw"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Modified NFC" tag="2" id="FAJ-H8-Kpy" identifier="TSShortcut.normalizeSelectedString:.2">
+                                        <menuItem title="수정된 NFC" tag="2" id="FAJ-H8-Kpy" identifier="TSShortcut.normalizeSelectedString:.2">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="normalizeSelectedString:" target="-1" id="9Vd-Gi-QtH"/>
@@ -604,7 +604,7 @@
                                                 <action selector="normalizeSelectedString:" target="-1" id="SAh-fz-RRD"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Modified NFD" tag="4" id="G5S-tH-aLC" identifier="TSShortcut.normalizeSelectedString:.4">
+                                        <menuItem title="수정된 NFD" tag="4" id="G5S-tH-aLC" identifier="TSShortcut.normalizeSelectedString:.4">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="normalizeSelectedString:" target="-1" id="9ZS-sF-bSf"/>
@@ -839,18 +839,6 @@
                                                 <action selector="orderFrontFontPanel:" target="243" id="338"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="볼드체" tag="2" id="130" identifier="TSShortcut.addFontTrait:.2">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="243" id="337"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="이탤릭체" tag="1" id="131" identifier="TSShortcut.addFontTrait:.1">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="243" id="339"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="132">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
@@ -862,112 +850,6 @@
                                         <menuItem title="작게" tag="4" keyEquivalent="-" id="134" identifier="TSShortcut.modifyFont:.4">
                                             <connections>
                                                 <action selector="modifyFont:" target="243" id="413"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="A9a-nM-mxi">
-                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                                        </menuItem>
-                                        <menuItem title="자간" id="7zp-U0-dJ3">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="자간" id="sbA-tk-vd1">
-                                                <items>
-                                                    <menuItem title="기본값 사용" id="1i8-Eq-sAY" identifier="TSShortcut.useStandardKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardKerning:" target="-1" id="i66-Gd-9Ae"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="사용 안 함" id="KwN-fj-1xs" identifier="TSShortcut.turnOffKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffKerning:" target="-1" id="LBh-5F-jQQ"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="좁게" id="IEm-yd-Chb" identifier="TSShortcut.tightenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="tightenKerning:" target="-1" id="QEx-gw-FZO"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="넓게" id="rhH-Tp-haH" identifier="TSShortcut.loosenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="loosenKerning:" target="-1" id="W8y-6i-bYd"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="합자" id="hXn-zU-yjS">
-                                            <menu key="submenu" title="합자" id="fIv-js-11u">
-                                                <items>
-                                                    <menuItem title="기본값 사용" id="Msa-gh-CzZ" identifier="TSShortcut.useStandardLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardLigatures:" target="-1" id="tiQ-w2-HHM"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="사용 안 함" id="dNV-i9-zVH" identifier="TSShortcut.turnOffLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffLigatures:" target="-1" id="8gV-tD-AoI"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="모두 사용" id="LQu-bK-BZu" identifier="TSShortcut.useAllLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useAllLigatures:" target="-1" id="a2z-so-ABW"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="기준선" id="Uuk-uf-ezU">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="기준선" id="UjL-kd-byC">
-                                                <items>
-                                                    <menuItem title="기본값 사용" id="HZx-Uy-XZE" identifier="TSShortcut.unscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="unscript:" target="-1" id="anK-Kq-f9c"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="위 첨자" id="gSS-XP-M9R" identifier="TSShortcut.superscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="superscript:" target="-1" id="Lhl-mf-LNv"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="아래 첨자" id="cYt-kf-yj7" identifier="TSShortcut.subscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="subscript:" target="-1" id="xEy-XT-FXO"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="올리기" keyEquivalent="5" id="mUa-ge-Eny" identifier="TSShortcut.raiseBaseline:.0">
-                                                        <connections>
-                                                            <action selector="raiseBaseline:" target="-1" id="ppg-jk-gEW"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="내리기" keyEquivalent="6" id="hyI-cc-mEf" identifier="TSShortcut.lowerBaseline:.0">
-                                                        <connections>
-                                                            <action selector="lowerBaseline:" target="-1" id="O6s-ML-r1D"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="xZB-40-O6B"/>
-                                        <menuItem title="스타일 복사하기" keyEquivalent="c" id="aQd-SO-gm9" identifier="TSShortcut.copyFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="copyFont:" target="-1" id="02V-Ry-C2m"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="스타일 붙여넣기" keyEquivalent="v" id="19p-Y2-w19" identifier="TSShortcut.pasteFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="pasteFont:" target="-1" id="mpY-kS-FRv"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1135,7 +1017,8 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="TTE-uP-u3n"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="주석 도구 막대 보기" keyEquivalent="v" id="raC-2c-6Yx" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="주석 도구 막대 보기" id="raC-2c-6Yx" identifier="TSShortcut.displayChoicesPanel:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="0Di-6f-m36"/>
                                 </connections>
@@ -1316,8 +1199,7 @@
                                     <action selector="performZoom:" target="-1" id="333"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="전체 화면 시작" keyEquivalent="f" id="206" identifier="TSShortcut.toggleFullScreen:.0">
-                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                            <menuItem title="전체 화면 시작" id="206" identifier="TSShortcut.toggleFullScreen:.0">
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="463"/>
                                 </connections>

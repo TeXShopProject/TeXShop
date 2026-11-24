@@ -37,9 +37,9 @@ static NSMenuItem *TSItemWithAction(NSMenu *menu, SEL action)
         if (item.submenu && TSItemWithAction(item.submenu, @selector(undo:))) { editItem = item; break; }
     if (markItem == nil || editItem == nil) return;
     NSMenu *edit = editItem.submenu, *marks = markItem.submenu;
-    // The nibs place Mark in Edit, after Find. Moving it at run time could cost
-    // Next Mark its key (AppKit refused ⌃⌘F, its key before 6.00, for items added
-    // to the main menu), so this is only a fallback for a nib that still has the old place.
+    // The nibs place Mark in Edit, after Find. Moving it at run time would cost
+    // Next Mark its ⌃⌘F, which AppKit refuses for items added to the main menu,
+    // so this is only a fallback for a nib that still has the old place.
     if (markItem.menu != edit) {
         [markItem.menu removeItem:markItem];
         NSInteger index = edit.numberOfItems;

@@ -302,7 +302,6 @@ cancel
 cancels
 capabilities
 car
-carefully
 case
 cases
 categories
@@ -394,7 +393,6 @@ confirmed
 consequently
 conservative
 consider
-considered
 console
 constant
 constants
@@ -662,6 +660,7 @@ extensions
 extra
 extracted
 extreme
+f
 facility
 fact
 fail
@@ -1998,3 +1997,4 @@ zero
 zlib
 zoom
 ’s
+🌐

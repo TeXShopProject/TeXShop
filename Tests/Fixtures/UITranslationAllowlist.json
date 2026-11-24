@@ -43,8 +43,6 @@
   "MetaFont",
   "MetaPost",
   "Modal Sheet (title will be hidden)",
-  "Modified NFC",
-  "Modified NFD",
   "NFC",
   "NFD",
   "NFKC",
@@ -73,6 +71,7 @@
   "TeXShop Help",
   "Tex",
   "Texdoc",
+  "texdoc",
   "Text Cell",
   "ToolbarItems",
   "Try This",
@@ -182,7 +181,6 @@
    ],
    "MainMenu.nib": [
     "Description",
-    "Ligatures",
     "Macros",
     "OK",
     "Services",
@@ -251,7 +249,8 @@
     "Tab",
     "Updates",
     "Variant",
-    "Stop experiment"
+    "Stop experiment",
+    "Tags"
    ],
    "MacroEditor.nib": [
     "Submenu",
@@ -264,19 +263,20 @@
     "OK",
     "Open ~/Library/TeXShop",
     "Open...",
-    "Subscript",
-    "Superscript",
-    "Via DVI"
+    "Via DVI",
+    "Tags"
    ],
    "TSDocument.nib": [
     "Console",
     "Labels",
     "OK",
-    "Project"
+    "Project",
+    "Tags"
    ],
    "ToolbarItems.strings": [
     "Labels",
-    "Zoom in"
+    "Zoom in",
+    "Tags"
    ],
    "completionpanel1.2.nib": [
     "Matrix",
@@ -383,7 +383,10 @@
    "Operatoren"
   ],
   "es": [
-   "Variante"
+   "Variante",
+   "Zoom",
+   "Script personal",
+   "Anterior"
   ],
   "fr": [
    "PDF direct",
@@ -411,10 +414,13 @@
    "Formato:",
    "Principal:",
    "Variante",
-   "Pop-up"
+   "Pop-up",
+   "Anterior"
   ],
   "pt": [
-   "Variante"
+   "Variante",
+   "Zoom",
+   "Anterior"
   ],
   "ro": [
    "Extensie:",
@@ -426,7 +432,10 @@
    "Pagina %@",
    "Pop-up",
    "Delimitatori",
-   "Operatori"
+   "Operatori",
+   "Zoom",
+   "Script personal",
+   "Anterior"
   ]
  },
  "pending": {}

@@ -25,7 +25,9 @@ def escaped(text):
                     '_': r'\_', '~': r'\textasciitilde{}', '^': r'\textasciicircum{}',
                     '→': r'\(\rightarrow\)', '＋': '+', '〜': r'\textasciitilde{}',
                     '＼': r'\textbackslash{}', '•': r'\textbullet{}', '‹': r'\guilsinglleft{}',
-                    '›': r'\guilsinglright{}', '−': r'\textminus{}', '⊗': r'\(\otimes\)'}
+                    '›': r'\guilsinglright{}', '−': r'\textminus{}', '⊗': r'\(\otimes\)',
+                    # The Globe key (Globe-F of Enter Full Screen), as a plain globe like the one on the key.
+                    '🌐': r'\faGlobe{}'}
     return ''.join(replacements.get(c, c) for c in text)
 
 
@@ -116,6 +118,7 @@ def main():
 \usepackage[margin=1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{tgpagella}
+\usepackage{fontawesome5}
 \pdfinterwordspaceon
 \usepackage{enumitem}
 \setlist[itemize]{leftmargin=*,itemsep=.1em}

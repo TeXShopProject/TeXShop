@@ -49,11 +49,11 @@ tiLabelMetaFont				= "MetaFont";
 tiPaletteLabelMetaFont			= "MetaFont";
 tiToolTipMetaFont			= "Exécuter MetaFont";
 
-tiLabelPreviousPage			= "Précédent";
+tiLabelPreviousPage			= "Page précédente";
 tiPaletteLabelPreviousPage		= "Page précédente (variante)";
 tiToolTipPreviousPage			= "Afficher la page précédente";
 
-tiLabelNextPage				= "Suivant";
+tiLabelNextPage				= "Page suivante";
 tiPaletteLabelNextPage			= "Page suivante (variante)";
 tiToolTipNextPage			= "Afficher la page suivante";
 
@@ -77,11 +77,11 @@ tiLabelLabels                = "Labels";
 tiPaletteLabelLabels            = "Labels";
 tiToolTipLabels                = "Choisir un label à atteindre";
 
-tiLabelPreviousPageButton		= "Précédent";
+tiLabelPreviousPageButton		= "Page précédente";
 tiPaletteLabelPreviousPageButton	= "Page précédente";
 tiToolTipPreviousPageButton		= "Afficher la page précédente";
 
-tiLabelNextPageButton			= "Suivant";
+tiLabelNextPageButton			= "Page suivante";
 tiPaletteLabelNextPageButton		= "Page suivante";
 tiToolTipNextPageButton			= "Afficher la page suivante";
 
@@ -139,11 +139,11 @@ tiLabelProgramKIT				= "Programme";
 tiPaletteLabelProgramKIT		= "Programme";
 tiToolTipProgramKIT				= "Choisir le programme de composition";
 
-tiLabelPreviousPageButtonKIT		= "Précédent";
+tiLabelPreviousPageButtonKIT		= "Page précédente";
 tiPaletteLabelPreviousPageButtonKIT	= "Page précédente";
 tiToolTipPreviousPageButtonKIT		= "Affiche la page précédente";
 
-tiLabelNextPageButtonKIT			= "Suivant";
+tiLabelNextPageButtonKIT			= "Page suivante";
 tiPaletteLabelNextPageButtonKIT		= "Page suivante";
 tiToolTipNextPageButtonKIT			= "Affiche la page suivante";
 

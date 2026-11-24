@@ -82,13 +82,15 @@ for language in LANGUAGES:
         value = strings(language, table)[key]
         # The settings mark the Advanced Find panel as recommended; the help names the panel without that mark.
         value = RECOMMENDED.sub('', value)
+        # German writes a no-break space before the ellipsis in the application; the page may break the line there.
+        value = re.sub(r'\s+', ' ', value)
         if value.casefold() not in folded:
             failures.append(f'{language} {FIND_PAGE} lacks {table} {key} “{value}”')
     # The ? button of the Multiple Replace window opens the help at this anchor.
     anchored = re.search(r'<a name="multiplereplace"></a>\s*(.{0,80})',
                          html.unescape(raw_page(language, FIND_PAGE)), re.S)
-    edit_menu = strings(language, 'AdvancedFind')['MultipleReplace.EditMenu']
-    if not anchored or edit_menu not in anchored[1]:
+    edit_menu = re.sub(r'\s+', ' ', strings(language, 'AdvancedFind')['MultipleReplace.EditMenu'])
+    if not anchored or edit_menu not in re.sub(r'\s+', ' ', anchored[1]):
         failures.append(f'{language} {FIND_PAGE} lacks the anchor multiplereplace before “{edit_menu}”')
 
 if failures:

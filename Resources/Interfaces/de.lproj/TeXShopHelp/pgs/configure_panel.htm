@@ -24,7 +24,7 @@
 <main id="content">
 <h1>Die LaTeX-Palette anpassen</h1>
 
-<p>Die LaTeX-Palette (Fenster › LaTeX-Palette …) hat eine Seite „Eigene“ mit bis zu sechzehn eigenen Tasten. Die Namen der übrigen Tasten lassen sich nicht ändern, wohl aber der Text, den sie einfügen.</p>
+<p>Die LaTeX-Palette (Fenster › LaTeX-Palette …) hat eine Seite „Eigene“ mit bis zu sechzehn eigenen Tasten. Die Namen der übrigen Tasten lassen sich nicht ändern, wohl aber der Text, den sie einfügen.</p>
 <p>Beides wird in der Datei ~/Library/TeXShop/LatexPanel/completion.plist festgelegt. Öffnen Sie sie in TeXShop und lesen Sie die Kommentare am Anfang, die den Aufbau der Datei erklären. Jede Seite hat eine Liste der Texte, die ihre Tasten einfügen, in der Reihenfolge der Tasten. In diesen Texten steht #SEL# für den ausgewählten Text und #INS# für die Stelle, an die die Einfügemarke kommt.</p>
 <p>Die Tasten der Seite „Eigene“ stehen in der Liste namens Customized. Jede Taste ist ein Paar von Zeichenketten: ihr Name, dann der Text, den sie einfügt. Zum Beispiel ergibt</p>
 <pre>&lt;string&gt;Section&lt;/string&gt;

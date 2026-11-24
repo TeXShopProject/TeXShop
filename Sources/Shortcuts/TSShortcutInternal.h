@@ -37,6 +37,9 @@ FOUNDATION_EXPORT NSString * const TSShortcutLearningIdentifier;
 // A command's default as AppKit shows it on the current keyboard layout, and the key it shows now.
 - (TSShortcutBinding *)shownDefaultForCommand:(TSShortcutCommand *)command;
 - (TSShortcutBinding *)shownBindingForCommand:(TSShortcutCommand *)command;
+// The key a command and its default show in Settings › Keyboard: 🌐︎F for Enter Full Screen.
+- (NSString *)displayKeyForCommand:(TSShortcutCommand *)command;
+- (NSString *)displayDefaultKeyForCommand:(TSShortcutCommand *)command;
 // The default as given and as shown on the current keyboard layout.
 - (NSSet<TSShortcutBinding *> *)defaultBindingsForCommand:(TSShortcutCommand *)command;
 // AppKit shows, for one pass of the run loop, the keys of the current layout for every key

@@ -22,6 +22,9 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
     if (flags & NSEventModifierFlagShift) [text appendString:@"⇧"];
     if (flags & NSEventModifierFlagCommand) [text appendString:@"⌘"];
     unichar c = [key characterAtIndex:0];
+    // The Globe (fn) key, which only menu items macOS provides can have (Enter Full Screen), as AppKit shows it
+    // since macOS 27. Arrows and the function keys carry the flag of their own.
+    if ((flags & NSEventModifierFlagFunction) && c < 0xf700) [text appendString:@"\U0001F310︎"];
     NSDictionary *symbols = @{@(NSLeftArrowFunctionKey):@"←", @(NSRightArrowFunctionKey):@"→", @(NSUpArrowFunctionKey):@"↑", @(NSDownArrowFunctionKey):@"↓", @13:@"↩", @9:@"⇥", @27:@"⎋", @32:@"␣", @127:@"⌫", @(NSDeleteFunctionKey):@"⌦"};
     if (c >= NSF1FunctionKey && c <= NSF20FunctionKey) [text appendFormat:@"F%u", c - NSF1FunctionKey + 1];
     else [text appendString:symbols[@(c)] ?: key.uppercaseString];
@@ -50,7 +53,7 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
 @property (nonatomic, readonly, copy) NSString *defaultKey;
 @property (nonatomic, readonly) NSEventModifierFlags defaultModifiers;
 @property (nonatomic, readonly) BOOL defaultLocalization;
-/// macOS keeps this command's shortcut (Save As… while documents autosave); it is shown, not changed.
+/// macOS keeps this command's shortcut (Save As… while documents autosave, Enter Full Screen with Globe-F); it is shown, not changed.
 @property (nonatomic, readonly) BOOL managedBySystem;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -84,6 +87,12 @@ FOUNDATION_EXPORT NSString *TSMacroItemIdentifier(NSIndexPath *indexPath);
 + (BOOL)isAllowedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 + (BOOL)event:(NSEvent *)event matchesItem:(NSMenuItem *)item;
 @end
+
+/// Window › Enter Full Screen gets Globe-F (🌐F), as in Finder and Preview; the nibs give it no key. AppKit takes the
+/// Globe (fn) key only for its own items, and only once the item has its action, which a nib sets after the key. A nib
+/// key would also make AppKit add a hidden copy of the item that keeps it (Control-Command-F, Next Mark's key).
+/// Called at launch, after the main menu is loaded and before the shortcuts read the default keys; again does no harm.
+void TSGiveFullScreenGlobeKey(NSMenu * _Nullable menu);
 
 @class TSShortcutMacro;
 @interface TSKeyboardShortcuts : NSObject
