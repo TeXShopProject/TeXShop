@@ -33,6 +33,8 @@ static inline NSString *TSExternalPDFSignature(NSString *path)
 
 PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature);
 PDFDocument *TSInitialPDFSnapshot(NSString *path, NSString *signature);
+// The private clone file of a document opened from one, or nil.
+NSURL *TSExternalPDFCloneURL(PDFDocument *document);
 void TSRemoveStalePDFSnapshots(NSString *parent);
 
 // The PDF content on display, identified by a SHA-256 digest so that an in-place

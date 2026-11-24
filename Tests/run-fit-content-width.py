@@ -3,8 +3,8 @@
 in windows that are never shown.
 
 With pages one below the other, the content of all pages sets the magnification and the place
-sideways, which stay as the pages scroll by; pages not measured yet are measured a few at a time
-and the content is fitted again once all are known. One page or one row at a time, the widest
+sideways, which stay as the pages scroll by. The magnification stays as it is until every page
+is measured, then the content is fitted once. One page or one row at a time, the widest
 content of a page or row sets the magnification and the content of each page or row comes to
 the middle when it is shown. Going to a place, as the drawer, links, SyncTeX and Find do, keeps
 that place sideways, so that the margins stay in view (#62). The text at the top of the view stays; a
@@ -23,16 +23,16 @@ MUTATIONS = {
     'destination-not-told': ('view', '        TSContentPlaceSideways(self);\n    // A change of the size in the same turn of the event loop, as when Split Window with Link\n    // widens a narrow part, does not bring its text back (#53).\n    TSPreviewPlaceChosenByProgram(self);\n',
                              '        TSContentPlaceSideways(self);\n'),
     # TSContentZoom.h
-    'in-view-pages-only': ('zoom', '            if ([store objectForKey:page] || [current containsObject:page]) [pages addObject:page];',
-                           '            if ([current containsObject:page]) [pages addObject:page];'),
+    'fits-before-measured': ('view', '        [self measureContentLater];\n        return;\n    }\n    _fittingContentWidth = YES;',
+                             '        TSContentWidthMeasureAll(self.document, self.displayBox);\n    }\n    _fittingContentWidth = YES;'),
     'top-not-kept': ('zoom', '    top.page = topPage;\n    TSContentRestoreTop(view, top);', '    top.page = topPage;'),
     'not-centred-sideways': ('zoom', '        if (!NSIsEmptyRect(all)) TSContentScrollTo(view, all, NO, NO);', ''),
-    'first-group-only': ('zoom', '        for (NSArray<PDFPage *> *group in groups) width = MAX(width, NSWidth(TSContentRectInView(view, group)));',
-                         '        width = NSWidth(TSContentRectInView(view, groups.firstObject));'),
+    'first-group-only': ('zoom', '        for (NSArray<PDFPage *> *group in groups) width = MAX(width, NSWidth(TSContentFitRectInView(view, group)));',
+                         '        width = NSWidth(TSContentFitRectInView(view, groups.firstObject));'),
     'one-row-of-all': ('zoom', '    if (TSContentContinuous(view)) {\n        NSMutableArray *all', '    if (YES) {\n        NSMutableArray *all'),
     # MyPDFKitView.m
-    'not-measured': ('view', '    else if (TSContentMeasurePages(document, self.displayBox, 0.008))\n        [self fitContentWidth];',
-                     '    else if (YES)\n        [self fitContentWidth];'),
+    'not-measured': ('view', '        if (!TSContentWidthMeasureSlice(document, self.displayBox, 0.008, &failed)) {',
+                     '        if (YES) {'),
     'no-refit-on-resize': ('view', '    if (!refit) {', '    if (YES) {'),
     'top-after-resize': ('view', '    top.page = topPage;\n    [self fitContentWidthKeepingTop:top];', '    [self fitContentWidth];'),
     'same-scale-leaves': ('view', '        (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && fabs(scale - self.scaleFactor) < 1e-6);', '        NO;'),
@@ -41,9 +41,9 @@ MUTATIONS = {
                                    '    [super goToDestination:destination];'),
     'result-moves-sideways': ('view', '        [self keepContentWidthPlaceDuring:^{ [super scrollSelectionToVisible:sender]; }];',
                               '        [super scrollSelectionToVisible:sender];'),
-    'measured-pdf-waits': ('view', '        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))', '        if (preserveZoom)'),
-    'new-pdf-not-measured': ('view', '        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))\n            [self measureContentLater];',
-                             '        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))\n            ;'),
+    'measured-pdf-waits': ('view', '        if (preserveZoom && !TSContentWidthIsComplete(document, self.displayBox))', '        if (preserveZoom)'),
+    'new-pdf-not-measured': ('view', '        if (preserveZoom && !TSContentWidthIsComplete(document, self.displayBox))\n            [self measureContentLater];',
+                             '        if (preserveZoom && !TSContentWidthIsComplete(document, self.displayBox))\n            ;'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -54,7 +54,8 @@ view_source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='lati
 zoom_text = zoom_path.read_text().replace('#pragma once\n', '', 1)
 view_methods = [method(view_source, s) for s in (
     '- (void)setScaleFactor:(CGFloat)scale', '- (void)fitContentWidth\n{', '- (void)fitContentWidthKeepingTop:(TSContentTop)top',
-    '- (void)measureContentLater', '- (void)measureContentOf:(PDFDocument *)document', '- (void)centreContentRowLater',
+    '- (void)applyMeasuredContentWidth', '- (void)measureContentLater', '- (void)measureContentWithPDFKit',
+    '- (void)measureContentOf:(PDFDocument *)document token:(NSUInteger)token', '- (void)centreContentRowLater',
     '- (void)setFrameSize:(NSSize)newSize', '- (void)setDocument:(PDFDocument *)document',
     '- (void)keepContentWidthPlaceDuring:(void (NS_NOESCAPE ^)(void))navigation', '- (void)goToDestination:(PDFDestination *)destination',
     '- (void)keepHorizontalPositionDuring:(void (NS_NOESCAPE ^)(void))navigation', '- (void)goToPage:(PDFPage *)page', '- (void)layout\n{',
@@ -222,12 +223,12 @@ static void show(PDFView *view, NSUInteger index) {
     [view goToPage:[view.document pageAtIndex:index]];
     settle(view.window);
 }
-// Lets the pages be measured, a few at a time.
+// Lets every page reach the resolution-1.0 store. The magnification does not move until then.
 static void measureAll(MyPDFKitView *view) {
-    for (int i = 0; i < 300 && ([view measuring] || !TSContentAllMeasured(view.document, view.displayBox)); i++)
+    for (int i = 0; i < 400 && ([view measuring] || !TSContentWidthIsComplete(view.document, view.displayBox)); i++)
         [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
     settle(view.window);
-    check(TSContentAllMeasured(view.document, view.displayBox) && ![view measuring], @"all pages measured");
+    check(TSContentWidthIsComplete(view.document, view.displayBox) && ![view measuring], @"all pages measured");
 }
 static void fit(MyPDFKitView *view) {
     view.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH;
@@ -239,6 +240,28 @@ static void fit(MyPDFKitView *view) {
 static void edges(MyPDFKitView *view, NSUInteger index, CGFloat *left, CGFloat *right) {
     PDFPage *page = [view.document pageAtIndex:index];
     *left = shown(view, page, 0, .5).x; *right = shown(view, page, 1, .5).x;
+}
+// Moves stored raw ink. dx is added to the origin. leftGrow and rightGrow widen that side.
+static void nudgeInk(PDFView *view, CGFloat dx, CGFloat leftGrow, CGFloat rightGrow) {
+    PDFDocument *document = view.document;
+    PDFDisplayBox box = view.displayBox;
+    for (NSUInteger i = 0; i < document.pageCount; i++) {
+        PDFPage *page = [document pageAtIndex:i];
+        BOOL known = NO;
+        NSRect ink = TSContentWidthRawInk(document, box, page, &known);
+        if (!known || NSIsEmptyRect(ink)) continue;
+        ink.origin.x += dx - leftGrow;
+        ink.size.width += leftGrow + rightGrow;
+        TSContentWidthStoreRaw(document, box, page, ink);
+    }
+}
+static NSRect contentClip(PDFView *view) {
+    NSMutableArray<PDFPage *> *all = [NSMutableArray array];
+    for (NSUInteger i = 0; i < view.document.pageCount; i++) {
+        PDFPage *page = [view.document pageAtIndex:i];
+        if (page) [all addObject:page];
+    }
+    return [clipOf(view) convertRect:TSContentFitRectInView(view, all) fromView:view];
 }
 
 int main(int argc, char **argv) { @autoreleasepool {
@@ -254,14 +277,16 @@ int main(int argc, char **argv) { @autoreleasepool {
         Preview p = makePreview(document, (PDFDisplayMode)mode.integerValue);
         MyPDFKitView *view = p.view;
         show(view, 2);
+        CGFloat before = view.scaleFactor;
         view.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH;
         [view fitContentWidth];
-        // Right away, the page in view and the next one give the width.
+        // Nothing moves until every page is in the resolution-1.0 store (#62).
         CGFloat firstScale = view.scaleFactor;
-        check(view.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && !view.autoScales && [view measuring], @"the mode is set, the rest is being measured");
+        check(view.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && !view.autoScales && [view measuring] && fabs(firstScale - before) < 1e-6,
+              @"the mode is set and the magnification stays until every page is measured");
         measureAll(view);
         CGFloat scale = view.scaleFactor, left, right;
-        check(scale < firstScale - 0.01, [NSString stringWithFormat:@"the wide page, measured later, makes it smaller (%.3f, then %.3f)", firstScale, scale]);
+        check(fabs(scale - firstScale) > 0.01, [NSString stringWithFormat:@"measured pages set the magnification once (%.3f, was %.3f)", scale, firstScale]);
         // The content of every page, in view coordinates, fills the width.
         NSRect all = NSZeroRect;
         for (NSUInteger i = 0; i < Count; i++) {
@@ -451,7 +476,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         show(view, 3);
         fit(view); measureAll(view);
         CGFloat narrowScale = view.scaleFactor;
-        TSContentMeasurePages(wide, view.displayBox, 10);
+        check(TSContentWidthMeasureAll(wide, view.displayBox), @"the other PDF is measured before it is shown");
         view.document = wide;
         CGFloat wideScale = view.scaleFactor;
         check(view.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && wideScale < narrowScale - 0.01,
@@ -511,6 +536,114 @@ int main(int argc, char **argv) { @autoreleasepool {
         check(fabs(settled - atOnce) < 0.6, [NSString stringWithFormat:@"the place gone to stays (%.2f, then %.2f below the top edge)", atOnce, settled]);
         [p.window close];
     }
+    // One page at a time, before every page is stored: the current page must not move sideways.
+    context = @"unfinished single page";
+    {
+        PDFDocument *document = makeDocument(NO, NO);
+        Preview p = makePreview(document, kPDFDisplaySinglePage);
+        MyPDFKitView *view = p.view;
+        view.autoScales = NO;
+        view.scaleFactor = 2;
+        show(view, 0);
+        TSContentWidthStoreRaw(document, view.displayBox, [document pageAtIndex:0], NSUnionRect(OddBody, Number));
+        NSClipView *clip = clipOf(view);
+        NSRect bounds = clip.bounds;
+        bounds.origin.x = 50;
+        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+        [clip.enclosingScrollView reflectScrolledClipView:clip];
+        settle(p.window);
+        CGFloat x = NSMinX(clip.bounds);
+        check(!TSContentWidthIsComplete(document, view.displayBox) && fabs(x - 50) < 1, @"one stored page, scrolled sideways");
+        TSContentPlaceSideways(view);
+        settle(p.window);
+        check(fabs(NSMinX(clip.bounds) - x) < 0.5 && fabs(view.scaleFactor - 2) < 1e-6,
+              @"an unfinished document does not move sideways");
+        view.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH;
+        [view centreContentRowLater];
+        settle(p.window);
+        check(fabs(NSMinX(clip.bounds) - x) < 0.5 && fabs(view.scaleFactor - 2) < 1e-6,
+              @"a page change of an unfinished document does not move it");
+        [p.window close];
+    }
+    context = @"unfinished two-up";
+    {
+        PDFDocument *document = makeDocument(NO, NO);
+        Preview p = makePreview(document, kPDFDisplayTwoUp);
+        MyPDFKitView *view = p.view;
+        view.autoScales = NO;
+        view.scaleFactor = 2;
+        show(view, 0);
+        TSContentWidthStoreRaw(document, view.displayBox, [document pageAtIndex:0], NSUnionRect(OddBody, Number));
+        NSClipView *clip = clipOf(view);
+        NSRect bounds = clip.bounds;
+        bounds.origin.x = 50;
+        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+        [clip.enclosingScrollView reflectScrolledClipView:clip];
+        settle(p.window);
+        CGFloat x = NSMinX(clip.bounds);
+        check(!TSContentWidthIsComplete(document, view.displayBox) && fabs(x - 50) < 1, @"one stored page of a two-up row, scrolled sideways");
+        TSContentPlaceSideways(view);
+        settle(p.window);
+        check(fabs(NSMinX(clip.bounds) - x) < 0.5 && fabs(view.scaleFactor - 2) < 1e-6,
+              @"an unfinished two-up document does not move sideways");
+        view.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH;
+        [view centreContentRowLater];
+        settle(p.window);
+        check(fabs(NSMinX(clip.bounds) - x) < 0.5 && fabs(view.scaleFactor - 2) < 1e-6,
+              @"a page change of an unfinished two-up document does not move it");
+        [p.window close];
+    }
+
+    // The dead band is one screen point on an edge, not one clip-view unit and not the width.
+    context = @"screen point threshold";
+    {
+        PDFDocument *document = makeDocument(NO, NO);
+        Preview p = makePreview(document, kPDFDisplaySinglePageContinuous);
+        MyPDFKitView *view = p.view;
+        show(view, 2);
+        fit(view); measureAll(view);
+        check(!TSContentWidthShouldRefit(view), @"a view that already fits does not refit");
+        NSClipView *clip = clipOf(view);
+        CGFloat toScreen = NSWidth(clip.frame) / NSWidth(clip.bounds);
+        NSRect atRest = contentClip(view);
+        nudgeInk(view, 1, 0, 0);
+        CGFloat perPage = NSMinX(contentClip(view)) - NSMinX(atRest);
+        nudgeInk(view, -1, 0, 0);
+        check(fabs(perPage) > 0.01 && !TSContentWidthShouldRefit(view), @"a page unit of ink can be put back");
+        CGFloat over = 1.3 / toScreen / perPage;
+        nudgeInk(view, over, 0, 0);
+        check(TSContentWidthShouldRefit(view), @"more than one screen point refits");
+        nudgeInk(view, -over, 0, 0);
+        CGFloat under = 0.6 / toScreen / fabs(perPage);
+        nudgeInk(view, 0, under, under);
+        check(!TSContentWidthShouldRefit(view), @"each edge under one screen point does not refit");
+        nudgeInk(view, 0, -under, -under);
+        nudgeInk(view, 0, 0, 1.3 / toScreen / fabs(perPage));
+        check(TSContentWidthShouldRefit(view), @"one edge past one screen point refits");
+        [p.window close];
+    }
+
+    // The page in view is blank. Other pages have ink, so finishing the measurement sets the
+    // magnification. A document that is blank throughout still does not.
+    context = @"blank row still sets the magnification";
+    {
+        PDFDocument *document = makeDocument(NO, NO);
+        Preview p = makePreview(document, kPDFDisplaySinglePage);
+        MyPDFKitView *view = p.view;
+        view.autoScales = NO;
+        view.scaleFactor = 0.7;
+        show(view, BlankPage);
+        fit(view); measureAll(view);
+        CGFloat fitted = view.scaleFactor;
+        check(fitted > 1.0, [NSString stringWithFormat:@"a blank page still sets the magnification (%.3f)", fitted]);
+        show(view, 2);
+        NSRect content = [view convertRect:inkOf(2, NO) fromPage:[document pageAtIndex:2]];
+        NSRect area = [view convertRect:TSContentVisibleArea(view) fromView:clipOf(view)];
+        check(fabs(view.scaleFactor - fitted) < 1e-4 && fabs(NSMidX(content) - NSMidX(area)) < 2,
+              @"the next page keeps that magnification and is centred");
+        [p.window close];
+    }
+
     context = @"";
     printf("PASS: %lu checks\n", (unsigned long)checks);
     return 0;
@@ -524,6 +657,7 @@ with tempfile.TemporaryDirectory() as temp:
     (temp / 'test.m').write_text(program, encoding='utf-8')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'PDFKit',
                     '-I', str(root / 'Tests'), *include_args(root), str(temp / 'test.m'),
+                    str(root / 'Sources/Preview/TSContentWidth.m'), str(root / 'Sources/Preview/TSExternalPDFSnapshot.m'),
                     str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m'), '-o', str(temp / 'test')], check=True)
     result = subprocess.run([str(temp / 'test')], capture_output=True, text=True, timeout=600)
     output = result.stdout + result.stderr
