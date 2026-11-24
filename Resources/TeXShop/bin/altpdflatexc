@@ -7,8 +7,9 @@
 # altpdflatexc filename.tex
 #
 # Makes filename.pdf: latex, then dvips (with Type 1 fonts as far as possible), then ps2pdf of
-# Ghostscript. When a step fails, it stops with a message on standard error and exit status 1,
-# and an earlier filename.pdf is left as it was.
+# Ghostscript. Only files made by this run go on to the next step. When a step fails or makes
+# nothing (for example latex with no pages of output), it stops with a message on standard error
+# and exit status 1, and an earlier filename.pdf is left as it was.
 
 # TeX Live and Ghostscript as set in TeXShop's Settings (Typesetting > Paths), then the usual places.
 setting() {
@@ -43,13 +44,23 @@ command -v ps2pdf >/dev/null 2>&1 && command -v gs >/dev/null 2>&1 ||
 work=$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/altpdflatexc.XXXXXX") || fail "cannot make a temporary folder"
 trap '/bin/rm -rf "$work"' EXIT
 
+# An earlier filename.dvi is moved aside, so that dvips never takes a DVI file of the earlier
+# source. When this run makes no DVI file, the earlier one is put back.
+if [ -e "$name.dvi" ]; then
+    /bin/mv -f "$name.dvi" "$work/earlier.dvi" || fail "cannot move the earlier $name.dvi aside"
+fi
+put_back_dvi() {
+    [ ! -e "$name.dvi" ] && [ -e "$work/earlier.dvi" ] && /bin/mv -f "$work/earlier.dvi" "$name.dvi"
+}
+
 echo "### latex $file"
 latex --interaction=nonstopmode "$file" ||
-    fail "latex stopped with an error; see $name.log"
-[ -f "$name.dvi" ] || fail "latex made no $name.dvi; see $name.log"
+    { put_back_dvi; fail "latex stopped with an error; see $name.log"; }
+[ -s "$name.dvi" ] ||
+    { /bin/rm -f "$name.dvi"; put_back_dvi; fail "latex made no $name.dvi (no pages of output?); see $name.log"; }
 
 echo "### dvips -R -Poutline -o $name.ps $name.dvi"
-dvips -R -Poutline -o "$work/$name.ps" "$name.dvi" 2>"$work/dvips.err" ||
+dvips -R -Poutline -o "$work/$name.ps" "$name.dvi" 2>"$work/dvips.err" && [ -s "$work/$name.ps" ] ||
     fail "dvips could not make $name.ps: $(tail -n 5 "$work/dvips.err")"
 
 echo "### ps2pdf $name.ps $name.pdf"
