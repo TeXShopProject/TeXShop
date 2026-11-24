@@ -41,7 +41,7 @@ STRINGS = {  # Lines, Characters, Words, Location, Line, Column, item format, Sh
     'pt': ['Linhas', 'Caracteres', 'Palavras', 'Localização', 'Linha', 'Coluna', '%1$@: %2$@', 'Mostrar Barra de Estado'],
     'pt-PT': ['Linhas', 'Caracteres', 'Palavras', 'Posição', 'Linha', 'Coluna', '%1$@: %2$@', 'Mostrar barra de estado'],
     'ro': ['Linii', 'Caractere', 'Cuvinte', 'Poziție', 'Linie', 'Coloană', '%1$@: %2$@', 'Afișați bara de stare'],
-    'zh_CN': ['行', '字符', '字', '位置', '行', '列', '%1$@：%2$@', '显示状态栏'],
+    'zh_CN': ['行', '字符', '单词', '位置', '行', '列', '%1$@：%2$@', '显示状态栏'],
 }
 LOCALES = {'Base': 'en_US', 'de': 'de_DE', 'es': 'es_ES', 'fr': 'fr_FR', 'it': 'it_IT', 'ja': 'ja_JP', 'ko': 'ko_KR',
            'nl': 'nl_NL', 'pt': 'pt_BR', 'pt-PT': 'pt_PT', 'ro': 'ro_RO', 'zh_CN': 'zh_CN'}

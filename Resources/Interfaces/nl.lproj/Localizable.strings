@@ -73,8 +73,8 @@
 " does not exist." = " bestaat niet.";
 "failed to copy selection." = "kopiëren van selectie mislukt.";
 "failed to save selection to the file." = "bewaren van selectie in bestand mislukt.";
-"<a letter consisting of %d characters>" = "<een teken bestaande uit %d tekens>";
-"%d letters, %d words, %d lines" = "%d letters, %d woorden, %d regels";
+"<a character consisting of %1$@ code points>" = "<een teken bestaande uit %1$@ codepunten>";
+"%1$@ characters, %2$@ words, %3$@ lines" = "%1$@ tekens, %2$@ woorden, %3$@ regels";
 "Emoji Style" = "Emojistijl";
 "Text Style" = "Tekststijl";
 "Character Info" = "Tekeninfo";

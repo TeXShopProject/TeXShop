@@ -76,8 +76,8 @@
 " does not exist." = " が見つかりません。";
 "failed to copy selection." = "選択範囲をコピーできませんでした。";
 "failed to save selection to the file." = "選択範囲をファイルに保存できませんでした。";
-"<a letter consisting of %d characters>" = "<%d字からなる文字>";
-"%d letters, %d words, %d lines" = "%d文字，%d単語，%d行";
+"<a character consisting of %1$@ code points>" = "<%1$@個のコードポイントからなる文字>";
+"%1$@ characters, %2$@ words, %3$@ lines" = "%1$@文字，%2$@単語，%3$@行";
 "Emoji Style" = "絵文字スタイル";
 "Text Style" = "テキストスタイル";
 "Character Info" = "文字情報";

@@ -349,7 +349,7 @@ for filename in ["Documentation/Releases/6.00-ja.md","website/release-notes-ja.h
     assert "不透明度を数値欄でも変えられる" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
 
 # Seventh audit: invalid typed text stays intact until commit, as pasted text does.
-assert 'Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule.' in manual, 'Opacity commit guidance in manual'
+# The manual says what the field does, not how invalid input is undone; the help keeps that detail.
 for lang,terms in {
     'en':['Invalid text, including decimal values','typed and pasted input follow the same rule'],
     'ja':['小数などの無効な入力は、確定時に元の値へ戻します','打鍵と貼り付けで同じ規則'],

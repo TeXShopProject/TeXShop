@@ -76,8 +76,8 @@
 " does not exist." = "이(가) 존재하지 않습니다.";
 "failed to copy selection." = "선택 영역을 복사하지 못했습니다.";
 "failed to save selection to the file." = "선택 영역을 파일로 저장하지 못했습니다.";
-"<a letter consisting of %d characters>" = "<%d자로 이루어진 문자>";
-"%d letters, %d words, %d lines" = "글자 %d개, 단어 %d개, 줄 %d개";
+"<a character consisting of %1$@ code points>" = "<코드 포인트 %1$@개로 이루어진 문자>";
+"%1$@ characters, %2$@ words, %3$@ lines" = "문자 %1$@개, 단어 %2$@개, 줄 %3$@개";
 "Emoji Style" = "이모지 스타일";
 "Text Style" = "텍스트 스타일";
 "Character Info" = "문자 정보";

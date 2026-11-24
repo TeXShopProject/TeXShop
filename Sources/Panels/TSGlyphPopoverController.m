@@ -353,6 +353,20 @@ static NSString *StringOfCodePoint(UTF32Char c)
 
 #pragma mark - Building the views
 
+/// The locale for the counts and the plural forms: the current one, except when TeXShop runs in a localization
+/// for a region of its own, such as Portuguese of Portugal, and the region chosen in System Settings is another.
+/// Then the localization's region gives the plural forms ("0 palavras", not the Brazilian "0 palavra"). The counts
+/// are written by the status bar's formatter, in the current locale.
+static NSLocale *CountsLocale(void)
+{
+    NSLocale *current = NSLocale.currentLocale;
+    NSString *localization = NSBundle.mainBundle.preferredLocalizations.firstObject;
+    NSString *region = localization ? [NSLocale componentsFromLocaleIdentifier:localization][NSLocaleCountryCode] : nil;
+    if (region.length && ![region isEqualToString:current.countryCode ?: @""])
+        return [NSLocale localeWithLocaleIdentifier:localization];
+    return current;
+}
+
 static NSFont *SmallFont(void)
 {
     return [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
@@ -627,7 +641,9 @@ static TSGlyphPopoverGlyphView *GlyphView(NSString *text, CGFloat size, NSColor 
     NSTextField *nameField;
     NSString *name = ScalarName(first);
     if (complex) {
-        name = [NSString stringWithFormat:NSLocalizedString(@"<a letter consisting of %d characters>", nil), (int)codePoints.count];
+        // The number as the status bar writes it (%1$@), and again for the plural form (%2$#@…@ in Localizable.stringsdict).
+        NSString *consistingFormat = NSLocalizedString(@"<a character consisting of %1$@ code points>", @"Character Info: the name line of a character made of several code points, such as an accented letter or an emoji sequence");
+        name = [[NSString alloc] initWithFormat:consistingFormat locale:CountsLocale(), TSStatusBarFormattedNumber(codePoints.count), (int)codePoints.count];
         nameField = Label(name, [NSFont systemFontOfSize:NSFont.systemFontSize], NSColor.labelColor, kNameMaxWidth, YES, @"name");
     } else if (name) {
         if (variant)
@@ -663,8 +679,14 @@ static TSGlyphPopoverGlyphView *GlyphView(NSString *text, CGFloat size, NSColor 
 - (NSView *)multipleCharactersView
 {
     NSString *character = self.character;
-    NSString *counts = [NSString stringWithFormat:NSLocalizedString(@"%d letters, %d words, %d lines", nil),
-                        (int)self.counts.selectedCharacters, (int)self.counts.selectedWords, (int)self.counts.selectedLines];
+    // The numbers as the status bar writes them (%1$@ to %3$@), and the same numbers for the plural forms
+    // (%4$#@…@ to %6$#@…@ in Localizable.stringsdict), which the locale of the language chooses.
+    // The format names only the first three in languages without plural forms, so it is not a literal here.
+    TSStatusBarCounts selectedCounts = self.counts;
+    NSString *countsFormat = NSLocalizedString(@"%1$@ characters, %2$@ words, %3$@ lines", @"Character Info: the characters, words and lines of the selection, counted and written as the status bar does");
+    NSString *counts = [[NSString alloc] initWithFormat:countsFormat locale:CountsLocale(),
+                        TSStatusBarFormattedNumber(selectedCounts.selectedCharacters), TSStatusBarFormattedNumber(selectedCounts.selectedWords), TSStatusBarFormattedNumber(selectedCounts.selectedLines),
+                        (int)selectedCounts.selectedCharacters, (int)selectedCounts.selectedWords, (int)selectedCounts.selectedLines];
     NSTextField *countsField = Label(counts, [NSFont systemFontOfSize:NSFont.systemFontSize], NSColor.labelColor, kMultiWidth, YES, @"counts");
 
     NSMutableArray<NSString *> *list = [NSMutableArray array];

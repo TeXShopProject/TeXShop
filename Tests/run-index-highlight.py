@@ -140,9 +140,9 @@ check(defaults.get('IndexColorStart') in (False, 'NO'), 'IndexColorStart is off 
 # Documentation: no longer a hidden setting, and no toolbar tool.
 check('IndexColorStart' not in read(R / 'DocumentSources/CommentLinesRevised/CommentLines.tex'), 'the hidden settings document no longer lists IndexColorStart')
 manual = read(R / 'DocumentSources/Manual Source/Manual.tex')
-check(manual.count('IndexColorStart') == 1 and 'this was the hidden setting IndexColorStart.' in manual and 'ColorIndex' not in manual
-      and '{\\bf Highlight Index Entries}' in manual and '{\\bf Highlight Index Entries by Default}' in manual,
-      'the manual describes the menu item and the switch, not the tool; IndexColorStart is named only as the former hidden setting')
+check('IndexColorStart' not in manual and 'ColorIndex' not in manual
+      and '\\mnu{Source}\\To\\mnu{Highlight Index Entries}' in manual and 'Highlight Index Entries by Default' in manual,
+      'the manual describes the menu item and the switch by their names, not the tool or the former hidden setting')
 check('ColorIndex' not in read(UI / 'en.lproj/TeXShopHelp/pgs/basic_miscellaneous.htm'), 'the English help has no ColorIndex tool')
 
 # The production methods, on two documents.

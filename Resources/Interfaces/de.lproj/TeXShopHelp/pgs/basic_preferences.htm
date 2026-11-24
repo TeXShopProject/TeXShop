@@ -8,7 +8,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-Hilfe"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">Einführung</a></li>
@@ -54,7 +54,8 @@
 
 <h2>Dokumente und Sichern</h2>
 <p>„Codierung für neue Dokumente“ ist Unicode (UTF-8), für fast alle die richtige Wahl. Wird eine Datei ohne Codierungszeile geöffnet, erkennt TeXShop ihre Codierung; eine Zeile <code>% !TEX encoding = …</code> am Anfang einer Datei, die Makros › Encoding für Sie schreibt, legt die Codierung dieser Datei fest. „Codierung im Sichern-Dialog anzeigen“ fügt dem Dialog zum Sichern ein Codierungsmenü hinzu. Siehe <a href="advanced_encoding.htm">Codierungen</a>.</p>
-<p>„Automatisch sichern und Versionen aktivieren“ schaltet die Funktion von macOS ein, die Ihre Änderungen beim Arbeiten sichert und frühere Versionen aufbewahrt. »Beim Sichern die vorherige Datei als „Name~“ behalten« bewahrt bei jedem Sichern eine Sicherungskopie der Datei in ihrem vorherigen Zustand auf: für paper.tex die Datei paper~.tex. „UTF-8-MAC automatisch in UTF-8 umwandeln“ fügt beim Sichern Zeichen, die in getrennten Teilen gespeichert sind, etwa か + ゛, zu einzelnen Zeichen zusammen.</p>
+<p>„Automatisch sichern und Versionen aktivieren“ schaltet die Funktion von macOS ein, die Ihre Änderungen beim Arbeiten sichert und frühere Versionen aufbewahrt. »Beim Sichern die vorherige Datei als „Name~“ behalten« bewahrt bei jedem Sichern eine Sicherungskopie der Datei in ihrem vorherigen Zustand auf: für paper.tex die Datei paper~.tex. „UTF-8-MAC automatisch in UTF-8 umwandeln“ fügt beim Sichern Zeichen, die in getrennten Teilen gespeichert sind, etwa か (U+304B) gefolgt vom kombinierenden Dakuten (U+3099), zu einzelnen Zeichen zusammen, hier が (U+304C).</p>
+
 
 <h2>Editor</h2>
 <p>„Dokument-Schriftart“ legt die Schrift aller Quelltextfenster fest; eine Schrift mit fester Zeichenbreite hält Spalten im Quelltext bündig. In derselben Gruppe „Darstellung“ macht „Größe der Zeilennummern“ die Zeilennummern klein oder groß, und »Menü „Markierungen“ in der Menüleiste« blendet dieses Menü in der Menüleiste ein. Die Gruppe „Absatzstil“ legt die Breite eines Tabulators fest, ob „Einrückung erhöhen“ und „Einrückung reduzieren“ Tabulatorzeichen verwenden („Tabs für Einzugmenü verwenden“), den Einzug von Absätzen, die ohne Zeilenumbrüche geschrieben sind, und den Zeilenabstand; geöffnete Quelltextfenster zeigen die Änderung sofort. Die Gruppe „Eingabe“ enthält „Cursorstelle bei Fensterklick“, das festlegt, ob der Klick, der ein Quelltextfenster nach vorn holt, auch die Einfügemarke versetzt, „Ausgewählten Text beim Eingeben einer Klammer einschließen“ und „Rechts-nach-links-Sprachen (Arabisch, Hebräisch, Persisch)“, das Zeilen in diesen Sprachen rechtsbündig anzeigt; siehe <a href="advanced_encoding.htm">Codierungen</a>. „Syntaxhervorhebung“ hat Schalter für <code>@</code> in Befehlsnamen, expl3-Code, Zeichen voller Breite und Indexeinträge; die Farben werden unter „Themen“ eingestellt. „Suchen“ wählt die Suchoberfläche und legt fest, ob die Erweiterte Suchmaske vor anderen Fenstern bleibt („Erweiterte Suchmaske immer im Vordergrund halten“); siehe <a href="basic_find.htm">Suchen und Ersetzen</a>. »XML-Tags im Menü „Markierungen“« legt fest, welche Tags eines XML-Dokuments das Menü „Markierungen“ auflistet.</p>

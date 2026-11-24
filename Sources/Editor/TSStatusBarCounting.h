@@ -46,6 +46,9 @@ typedef struct {
 
 /// Counts with nothing counted yet.
 TSStatusBarCounts TSStatusBarCountsUnknown(void);
+
+/// A count as the status bar writes it, with the grouping of the current locale ("1,234").
+NSString *TSStatusBarFormattedNumber(NSUInteger value);
 /// Fills in the numbers of the whole text (`content`) and of the selection (`selection`). `ranges` are the selected
 /// ranges of a text view, the first one holding the insertion point. Returns NO when `cancel` stopped it.
 BOOL TSStatusBarCount(NSString *string, NSArray<NSValue *> *ranges, BOOL content, BOOL selection,

@@ -380,3 +380,15 @@ BOOL TSStatusBarCount(NSString *string, NSArray<NSValue *> *ranges, BOOL content
     }
     return YES;
 }
+
+NSString *TSStatusBarFormattedNumber(NSUInteger value)
+{
+    static NSNumberFormatter *formatter;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        formatter = [NSNumberFormatter new];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
+        formatter.locale = NSLocale.autoupdatingCurrentLocale;
+    });
+    return [formatter stringFromNumber:@(value)];
+}
