@@ -915,7 +915,7 @@ A sheet then lists, under \mnu{Values to Set}, the values the profile sets and m
 
 The menu shows the profile all of whose values are set now, or \mnu{Custom} as soon as any of these values is changed, in Settings or elsewhere. To return to the values of a profile, choose it again, even when the menu shows it.
 
-When TeXShop starts for the first time, it asks for the paths to \TeX\ and Ghostscript (see \cref{sec:typesetting-paths}) and then for an engine profile. It suggests upLaTeX + dvipdfmx when Japanese is the first preferred language of macOS, and pdfLaTeX otherwise.
+When TeXShop starts for the first time, it asks for the paths to \TeX\ and Ghostscript (see \cref{sec:typesetting-paths}) and then for an engine profile. It suggests LuaLaTeX (Japanese) when Japanese is the first preferred language of macOS, and pdfLaTeX otherwise.
 
 \subsection{What a Profile Sets}
 
@@ -4367,11 +4367,13 @@ The quickest way to set up TeXShop for Japanese documents is an engine profile (
 \begin{center}
 \begin{tabular}{lll}
 Profile & Typesetting & BibTeX, index, MetaPost \\ \hline
+LuaLaTeX (Japanese) & lualatex & upbibtex, upmendex, mpost \\
 upLaTeX + dvipdfmx & uplatex, then dvipdfmx & upbibtex, upmendex, upmpost \\
 pLaTeX + dvipdfmx & platex, then dvipdfmx & pbibtex, mendex, pmpost \\
-LuaLaTeX (Japanese) & lualatex & upbibtex, upmendex, mpost \\
 \end{tabular}
 \end{center}
+
+LuaLaTeX (Japanese) is the profile that TeXShop suggests when it starts for the first time on a Mac whose first preferred language is Japanese.
 
 The Japanese profiles also set UTF-8 as the encoding for new documents, set the spelling dictionary to automatic language detection, and turn on \mnu{Automatically convert UTF-8-MAC to UTF-8}. pLaTeX + dvipdfmx also turns on \mnu{Convert to otf Package \textbackslash UTF / \textbackslash CID}, and every other profile turns it off. A sheet lists the values the profile sets before you confirm.
 
