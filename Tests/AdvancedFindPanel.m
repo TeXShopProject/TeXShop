@@ -4,6 +4,7 @@
 // Built by Tests/run-advanced-find-panel.py; no window is ever shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
+#import <string.h>
 #import "TestAppKitIsolation.h"
 #import "AdvancedFindTaskWait.h"
 #import "TSLayoutManager.h"
@@ -727,6 +728,476 @@ static void TestPanelLevel(void)
     Check(!window.isVisible, @"nothing is shown");
 }
 
+#pragma mark Replace All keeps the scroll
+
+static CGFloat ScrollY(NSTextView *view)
+{
+    return view.enclosingScrollView.contentView.bounds.origin.y;
+}
+
+static CGFloat ScrollX(NSTextView *view)
+{
+    return view.enclosingScrollView.contentView.bounds.origin.x;
+}
+
+/// The line at the top of the viewport, or empty when the viewport is below the text.
+static NSString *VisibleTopLine(NSTextView *view)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0 || layout.numberOfGlyphs == 0)
+        return @"";
+    NSRect visible = view.visibleRect;
+    NSRect used = NSOffsetRect([layout usedRectForTextContainer:container], view.textContainerOrigin.x, view.textContainerOrigin.y);
+    if (!NSIntersectsRect(visible, used))
+        return @"";
+    NSPoint inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x, NSMinY(visible) + 1 - view.textContainerOrigin.y);
+    NSUInteger glyph = [layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (glyph >= layout.numberOfGlyphs)
+        glyph = layout.numberOfGlyphs - 1;
+    NSUInteger character = [layout characterIndexForGlyphAtIndex:glyph];
+    if (character >= view.string.length)
+        return @"";
+    return [view.string substringWithRange:[view.string lineRangeForRange:NSMakeRange(character, 0)]];
+}
+
+/// "line 047 alpha word" -> "line 047". The words on the line can change; the line number is the place.
+static NSString *LineNumberLabel(NSString *line)
+{
+    return line.length >= 8 ? [line substringToIndex:8] : line;
+}
+
+/// Where `caret` lands when every "alpha" before it becomes one character shorter.
+static NSUInteger CaretAfterShorterAlphas(NSString *text, NSRange caret)
+{
+    NSUInteger alphas = [[text substringToIndex:MIN(caret.location, text.length)] componentsSeparatedByString:@"alpha"].count - 1;
+    return caret.location - alphas * 4;
+}
+
+/// A split source, scrolled, as in a document window. Nothing is ordered on screen. The window is kept for the rest of the test.
+/// `clipping` is the source's no-wrap setting: the text view grows to the longest line and scrolls sideways. `clipX`
+/// is then the horizontal scroll, after the carets have been scrolled into view.
+static BOOL MakeScrolledSource(NSString *text, BOOL clipping, CGFloat clipX, NSTextView *_Nonnull *_Nonnull upperOut, NSTextView *_Nonnull *_Nonnull lowerOut, CGFloat *upperY, CGFloat *lowerY)
+{
+    static NSMutableArray<NSWindow *> *windows;
+    if (!windows)
+        windows = [NSMutableArray array];
+    NSFont *font = [NSFont userFixedPitchFontOfSize:13] ?: [NSFont systemFontOfSize:13];
+    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+    style.lineBreakMode = clipping ? NSLineBreakByClipping : NSLineBreakByWordWrapping;
+    NSTextStorage *storage = [[NSTextStorage alloc] initWithString:text attributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: style}];
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 420, 200) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+    window.releasedWhenClosed = NO;
+    [windows addObject:window];
+    NSMutableArray<NSTextView *> *views = [NSMutableArray array];
+    for (NSInteger i = 0; i < 2; i++) {
+        NSLayoutManager *layout = [NSLayoutManager new];
+        layout.allowsNonContiguousLayout = YES;
+        [storage addLayoutManager:layout];
+        NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:clipping ? NSMakeSize(FLT_MAX, FLT_MAX) : NSMakeSize(400, CGFLOAT_MAX)];
+        container.widthTracksTextView = !clipping;
+        [layout addTextContainer:container];
+        NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 100 * (1 - i), 420, 100)];
+        scroll.hasVerticalScroller = YES;
+        scroll.hasHorizontalScroller = clipping;
+        NSTextView *view = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 400, 100) textContainer:container];
+        view.minSize = NSMakeSize(0, 100);
+        view.maxSize = NSMakeSize(FLT_MAX, FLT_MAX);
+        view.verticallyResizable = YES;
+        view.horizontallyResizable = clipping;
+        view.autoresizingMask = clipping ? NSViewNotSizable : NSViewWidthSizable;
+        view.allowsUndo = YES;
+        view.richText = NO;
+        view.defaultParagraphStyle = style;
+        scroll.documentView = view;
+        [window.contentView addSubview:scroll];
+        [views addObject:view];
+    }
+    NSTextView *upper = views[0], *lower = views[1];
+    [window display];
+    [upper.layoutManager ensureLayoutForTextContainer:upper.textContainer];
+    [lower.layoutManager ensureLayoutForTextContainer:lower.textContainer];
+    if (clipping) {
+        [upper sizeToFit];
+        [lower sizeToFit];
+    }
+    CGFloat upperTop = ScrollY(upper), lowerTop = ScrollY(lower);
+    NSUInteger line = [text rangeOfString:@"\n"].location + 1;
+    upper.selectedRange = NSMakeRange(50 * line, 0);
+    lower.selectedRange = NSMakeRange(20 * line + 4, 0);
+    [upper scrollRangeToVisible:upper.selectedRange];
+    [lower scrollRangeToVisible:lower.selectedRange];
+    if (clipX > 0) {
+        for (NSTextView *view in views) {
+            NSClipView *clip = view.enclosingScrollView.contentView;
+            NSRect bounds = clip.bounds;
+            bounds.origin.x = clipX;
+            [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+            [view.enclosingScrollView reflectScrolledClipView:clip];
+        }
+    }
+    [window display];
+    *upperOut = upper;
+    *lowerOut = lower;
+    *upperY = ScrollY(upper);
+    *lowerY = ScrollY(lower);
+    return fabs(*upperY - upperTop) > 20 && fabs(*lowerY - lowerTop) > 20;
+}
+
+/// Refuses every change. A real document's delegate accepts them; this is the refused replacement.
+@interface ReplaceAllVeto : NSObject <NSTextViewDelegate>
+@end
+@implementation ReplaceAllVeto
+- (BOOL)textView:(NSTextView *)view shouldChangeTextInRanges:(NSArray<NSValue *> *)ranges replacementStrings:(NSArray<NSString *> *)strings
+{
+    return NO;
+}
+@end
+
+static void TestWrappedMiddleKeepsPlace(void);
+static void TestReplaceAllKeepsPlace(void)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSMutableString *text = [NSMutableString string];
+    for (int i = 0; i < 80; i++)
+        [text appendFormat:@"line %03d alpha word\n", i];
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat upperY = 0, lowerY = 0;
+    Check(MakeScrolledSource(text, NO, 0, &upper, &lower, &upperY, &lowerY), @"both parts of the split source are scrolled down");
+    NSString *upperLine = VisibleTopLine(upper), *lowerLine = VisibleTopLine(lower);
+    NSRange upperCaret = upper.selectedRange, lowerCaret = lower.selectedRange;
+    controller.settings.findString = @"alpha";
+    controller.settings.replaceString = @"X";
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper), @"Replace All in a scrolled source");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    NSString *replaced = [text stringByReplacingOccurrencesOfString:@"alpha" withString:@"X"];
+    NSString *upperKeptLine = [upperLine stringByReplacingOccurrencesOfString:@"alpha" withString:@"X"];
+    NSString *lowerKeptLine = [lowerLine stringByReplacingOccurrencesOfString:@"alpha" withString:@"X"];
+    Check([upper.string isEqualToString:replaced] && [VisibleTopLine(upper) isEqualToString:upperKeptLine] && [VisibleTopLine(lower) isEqualToString:lowerKeptLine],
+          [NSString stringWithFormat:@"Replace All leaves both parts on the lines they showed (%@ / %@)",
+           [VisibleTopLine(upper) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
+           [VisibleTopLine(lower) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
+    NSUInteger upperKept = CaretAfterShorterAlphas(text, upperCaret), lowerKept = CaretAfterShorterAlphas(text, lowerCaret);
+    Check(NSEqualRanges(upper.selectedRange, NSMakeRange(upperKept, 0)) && NSEqualRanges(lower.selectedRange, NSMakeRange(lowerKept, 0)),
+          [NSString stringWithFormat:@"the carets stay on the same character (%lu, %lu)", (unsigned long)upper.selectedRange.location, (unsigned long)lower.selectedRange.location]);
+
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([upper.string isEqualToString:text] && !upper.undoManager.canUndo
+          && [VisibleTopLine(upper) isEqualToString:upperLine] && [VisibleTopLine(lower) isEqualToString:lowerLine]
+          && NSEqualRanges(upper.selectedRange, upperCaret) && NSEqualRanges(lower.selectedRange, lowerCaret),
+          @"one undo puts the text, the carets and the lines back");
+    [upper.undoManager redo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([upper.string isEqualToString:replaced]
+          && [VisibleTopLine(upper) isEqualToString:upperKeptLine] && [VisibleTopLine(lower) isEqualToString:lowerKeptLine]
+          && NSEqualRanges(upper.selectedRange, NSMakeRange(upperKept, 0)) && NSEqualRanges(lower.selectedRange, NSMakeRange(lowerKept, 0)),
+          @"redo replaces again without moving the lines");
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([upper.string isEqualToString:text] && !upper.undoManager.canUndo
+          && [VisibleTopLine(upper) isEqualToString:upperLine] && [VisibleTopLine(lower) isEqualToString:lowerLine]
+          && NSEqualRanges(upper.selectedRange, upperCaret) && NSEqualRanges(lower.selectedRange, lowerCaret),
+          @"a second undo puts the lines and the carets back too");
+
+    // Every line becomes one character. The old scroll offset is below the text; both parts still show it.
+    NSTextView *shortUpper = nil, *shortLower = nil;
+    CGFloat shortUpperY = 0, shortLowerY = 0;
+    Check(MakeScrolledSource(text, NO, 0, &shortUpper, &shortLower, &shortUpperY, &shortLowerY), @"scrolled before a replacement that removes the lines");
+    controller.settings.findString = @".+\\n";
+    controller.settings.replaceString = @"x";
+    controller.settings.options = TSRegexFindRegularExpression;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, shortUpper), @"Replace All that removes the lines");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check(shortUpper.string.length == 80 && VisibleTopLine(shortUpper).length > 0 && VisibleTopLine(shortLower).length > 0,
+          [NSString stringWithFormat:@"a much shorter text stays in view (%lu, upper %@, lower %@)",
+           (unsigned long)shortUpper.string.length, VisibleTopLine(shortUpper), VisibleTopLine(shortLower)]);
+
+    // In the selection: the lines stay, and the selection becomes the replaced scope.
+    controller.settings.findString = @"alpha";
+    controller.settings.replaceString = @"X";
+    controller.settings.options = 0;
+    NSTextView *scopeUpper = nil, *scopeLower = nil;
+    CGFloat scopeUpperY = 0, scopeLowerY = 0;
+    Check(MakeScrolledSource(text, NO, 0, &scopeUpper, &scopeLower, &scopeUpperY, &scopeLowerY), @"scrolled again for Replace All in Selection");
+    NSUInteger line = [text rangeOfString:@"\n"].location + 1;
+    NSRange scope = NSMakeRange(40 * line, line); // one line, one "alpha"
+    scopeUpper.selectedRange = scope;
+    [scopeUpper.window display];
+    // The selection itself may scroll. What must stay is the line on screen when Replace All runs.
+    NSString *scopeUpperLabel = LineNumberLabel(VisibleTopLine(scopeUpper));
+    NSString *scopeLowerLabel = LineNumberLabel(VisibleTopLine(scopeLower));
+    controller.settings.inSelection = YES;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAllInSelection, scopeUpper), @"Replace All in Selection");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check(scopeUpperLabel.length > 0 && [LineNumberLabel(VisibleTopLine(scopeUpper)) isEqualToString:scopeUpperLabel]
+          && [LineNumberLabel(VisibleTopLine(scopeLower)) isEqualToString:scopeLowerLabel],
+          [NSString stringWithFormat:@"Replace All in Selection does not scroll (%@ / %@)",
+           LineNumberLabel(VisibleTopLine(scopeUpper)), LineNumberLabel(VisibleTopLine(scopeLower))]);
+    Check([scopeUpper.string containsString:@"alpha"] && [[scopeUpper.string substringWithRange:NSMakeRange(scope.location, line - 4)] containsString:@"X"],
+          @"only the selected line is replaced");
+
+    // No wrap, scrolled past the start of a long line. Shortening every line to a few characters used to leave both
+    // parts looking at the old horizontal offset, which is past the text, so both were blank.
+    NSMutableString *wide = [NSMutableString string];
+    NSString *chunk = [@"a" stringByPaddingToLength:360 withString:@"a" startingAtIndex:0];
+    for (int i = 0; i < 80; i++)
+        [wide appendFormat:@"line %03d %@ tail\n", i, chunk];
+    NSTextView *wideUpper = nil, *wideLower = nil;
+    CGFloat wideUpperY = 0, wideLowerY = 0;
+    Check(MakeScrolledSource(wide, YES, 1300, &wideUpper, &wideLower, &wideUpperY, &wideLowerY) && ScrollX(wideUpper) > 1000 && ScrollX(wideLower) > 1000,
+          @"both parts are scrolled across a long line");
+    NSString *wideUpperLabel = LineNumberLabel(VisibleTopLine(wideUpper));
+    NSString *wideLowerLabel = LineNumberLabel(VisibleTopLine(wideLower));
+    controller.settings.findString = chunk;
+    controller.settings.replaceString = @"x";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, wideUpper), @"Replace All that shortens the long lines");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check(wideUpperLabel.length > 0 && [LineNumberLabel(VisibleTopLine(wideUpper)) isEqualToString:wideUpperLabel]
+          && [LineNumberLabel(VisibleTopLine(wideLower)) isEqualToString:wideLowerLabel]
+          && ScrollX(wideUpper) < 50 && ScrollX(wideLower) < 50,
+          [NSString stringWithFormat:@"a shortened long line stays in view (%@ / %@, x %.0f / %.0f)",
+           LineNumberLabel(VisibleTopLine(wideUpper)), LineNumberLabel(VisibleTopLine(wideLower)), ScrollX(wideUpper), ScrollX(wideLower)]);
+    [wideUpper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([LineNumberLabel(VisibleTopLine(wideUpper)) isEqualToString:wideUpperLabel]
+          && [LineNumberLabel(VisibleTopLine(wideLower)) isEqualToString:wideLowerLabel]
+          && ScrollX(wideUpper) > 1000 && ScrollX(wideLower) > 1000,
+          [NSString stringWithFormat:@"undo scrolls back across the long line (%@ / %@, x %.0f / %.0f)",
+           LineNumberLabel(VisibleTopLine(wideUpper)), LineNumberLabel(VisibleTopLine(wideLower)), ScrollX(wideUpper), ScrollX(wideLower)]);
+
+    // The same horizontal offset stays when the lines are still wider than the window.
+    NSTextView *keptUpper = nil, *keptLower = nil;
+    CGFloat keptUpperY = 0, keptLowerY = 0;
+    Check(MakeScrolledSource(wide, YES, 1300, &keptUpper, &keptLower, &keptUpperY, &keptLowerY), @"scrolled across before a replacement that keeps the width");
+    NSString *keptUpperLabel = LineNumberLabel(VisibleTopLine(keptUpper));
+    NSString *keptLowerLabel = LineNumberLabel(VisibleTopLine(keptLower));
+    controller.settings.findString = @"tail";
+    controller.settings.replaceString = @"TAIL";
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, keptUpper), @"Replace All that keeps the long lines wide");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check(keptUpperLabel.length > 0 && [LineNumberLabel(VisibleTopLine(keptUpper)) isEqualToString:keptUpperLabel]
+          && [LineNumberLabel(VisibleTopLine(keptLower)) isEqualToString:keptLowerLabel]
+          && ScrollX(keptUpper) > 1000 && ScrollX(keptLower) > 1000,
+          [NSString stringWithFormat:@"a still-wide line keeps its horizontal place (%@ / %@, x %.0f / %.0f)",
+           LineNumberLabel(VisibleTopLine(keptUpper)), LineNumberLabel(VisibleTopLine(keptLower)), ScrollX(keptUpper), ScrollX(keptLower)]);
+
+    // A refused replacement must not drop a redo that was already there, nor end a group that was not begun.
+    controller.settings.findString = @"alpha";
+    controller.settings.replaceString = @"X";
+    controller.settings.options = 0;
+    NSTextView *vetoUpper = nil, *vetoLower = nil;
+    CGFloat vetoUpperY = 0, vetoLowerY = 0;
+    Check(MakeScrolledSource(text, NO, 0, &vetoUpper, &vetoLower, &vetoUpperY, &vetoLowerY), @"scrolled before a refused replacement");
+    [vetoUpper insertText:@"Z" replacementRange:vetoUpper.selectedRange];
+    [vetoUpper.undoManager undo];
+    Check(vetoUpper.undoManager.canRedo && [vetoUpper.string isEqualToString:text], @"an earlier edit can be redone");
+    ReplaceAllVeto *veto = [ReplaceAllVeto new];
+    vetoUpper.delegate = veto;
+    vetoLower.delegate = veto;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, vetoUpper), @"Replace All that the delegate refuses");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([vetoUpper.string isEqualToString:text] && vetoUpper.undoManager.canRedo && !vetoUpper.undoManager.canUndo,
+          @"a refused replacement leaves the text and the redo");
+    // The delegate would also refuse the redo of the earlier edit. It was only there for the replacement.
+    vetoUpper.delegate = nil;
+    vetoLower.delegate = nil;
+    [vetoUpper.undoManager redo];
+    Check([vetoUpper.string containsString:@"Z"], @"the redo still puts the earlier edit back");
+    [vetoUpper.undoManager undo];
+    Check(vetoUpper.undoManager.canRedo, @"the earlier edit can be redone again");
+    // The search starts while the source can be edited, then the source becomes read-only. The lock does not turn it
+    // back on, and the replacement is refused when it is about to be applied.
+    BOOL started = [controller performAction:TSAdvancedFindActionReplaceAll inTextView:vetoUpper];
+    vetoUpper.editable = YES;
+    vetoLower.editable = YES;
+    vetoUpper.editable = NO;
+    vetoLower.editable = NO;
+    Check(started && TSTestWaitForTask(controller, 60), @"Replace All that becomes read-only while searching");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([vetoUpper.string isEqualToString:text] && vetoUpper.undoManager.canRedo && !vetoUpper.undoManager.canUndo,
+          @"a source that became read-only leaves the text and the redo");
+    TestWrappedMiddleKeepsPlace();
+}
+
+/// The display line at the top of the viewport, not the whole logical line. A wrapped line has several.
+static NSString *VisibleTopFragment(NSTextView *view)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0 || layout.numberOfGlyphs == 0)
+        return @"";
+    NSRect visible = view.visibleRect;
+    NSPoint inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x, NSMinY(visible) + 1 - view.textContainerOrigin.y);
+    NSUInteger glyph = [layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (glyph >= layout.numberOfGlyphs)
+        glyph = layout.numberOfGlyphs - 1;
+    NSRange glyphs;
+    [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:&glyphs];
+    NSRange characters = [layout characterRangeForGlyphRange:glyphs actualGlyphRange:NULL];
+    if (characters.location == NSNotFound || characters.location >= view.string.length)
+        return @"";
+    if (NSMaxRange(characters) > view.string.length)
+        characters.length = view.string.length - characters.location;
+    return [view.string substringWithRange:characters];
+}
+
+/// Pixels of what is on screen, packed one row at a time. The bitmap's own row padding is not compared.
+static NSData *PackedPixels(NSView *view, NSAppearance *appearance)
+{
+    __block NSData *packed = [NSData data];
+    [appearance performAsCurrentDrawingAppearance:^{
+        [view layoutSubtreeIfNeeded];
+        [view displayIfNeeded];
+        NSBitmapImageRep *rep = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
+        if (!rep || !rep.bitmapData)
+            return;
+        [view cacheDisplayInRect:view.bounds toBitmapImageRep:rep];
+        NSInteger width = rep.pixelsWide, height = rep.pixelsHigh, bytesPerRow = rep.bytesPerRow, bytesPerPixel = rep.bitsPerPixel / 8;
+        if (width <= 0 || height <= 0 || bytesPerPixel <= 0)
+            return;
+        NSMutableData *data = [NSMutableData dataWithLength:(NSUInteger)(width * height * bytesPerPixel)];
+        unsigned char *destination = data.mutableBytes;
+        unsigned char *source = (unsigned char *)rep.bitmapData;
+        for (NSInteger y = 0; y < height; y++)
+            memcpy(destination + (NSUInteger)(y * width * bytesPerPixel), source + (NSUInteger)(y * bytesPerRow), (size_t)(width * bytesPerPixel));
+        packed = data;
+    }];
+    return packed;
+}
+
+/// Ask for the glyph at the top, then draw, so the next glyphIndexForPoint names the wrap on screen (#72).
+static void SyncDrawnLine(NSTextView *view)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || layout.numberOfGlyphs == 0)
+        return;
+    NSRect rect = view.visibleRect;
+    NSPoint point = NSMakePoint(NSMinX(rect) - view.textContainerOrigin.x, NSMinY(rect) + 1 - view.textContainerOrigin.y);
+    (void)[layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    [view display];
+}
+
+static void PlaceWrappedWord(NSTextView *view, NSString *word)
+{
+    [view.layoutManager ensureLayoutForTextContainer:view.textContainer];
+    NSRange target = [view.string rangeOfString:word];
+    NSUInteger glyph = target.location == NSNotFound ? NSNotFound : [view.layoutManager glyphIndexForCharacterAtIndex:target.location];
+    if (glyph == NSNotFound || glyph >= view.layoutManager.numberOfGlyphs)
+        return;
+    NSRect line = [view.layoutManager lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    NSRect bounds = clip.bounds;
+    bounds.origin.y += NSMinY(line) + view.textContainerOrigin.y + 3 - NSMinY(view.visibleRect);
+    [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+    [view.enclosingScrollView reflectScrolledClipView:clip];
+}
+
+/// `colorAfterScroll` is how a document sets the source color: both parts are already in place, then the upper color
+/// changes and then the lower one (TSDocument-Color.m). The other order sets each part's color, lays that part out
+/// and scrolls it, and the second color change leaves the first part's glyph index on another wrap.
+static void CheckWrappedPlace(NSString *text, BOOL colorAfterScroll)
+{
+    NSString *order = colorAfterScroll ? @"after the scroll" : @"on each part before its scroll";
+    NSAppearance *appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSTextView *upper = nil, *lower = nil, *pictureUpper = nil, *pictureLower = nil;
+    CGFloat upperY = 0, lowerY = 0, pictureUpperY = 0, pictureLowerY = 0;
+    Check(MakeScrolledSource(text, NO, 0, &upper, &lower, &upperY, &lowerY)
+          && MakeScrolledSource(text, NO, 0, &pictureUpper, &pictureLower, &pictureUpperY, &pictureLowerY),
+          [@"wrapped source scrolls, " stringByAppendingString:order]);
+    void (^arrange)(NSTextView *, NSTextView *) = ^(NSTextView *top, NSTextView *bottom) {
+        top.window.appearance = appearance;
+        top.appearance = appearance;
+        bottom.appearance = appearance;
+        if (colorAfterScroll) {
+            PlaceWrappedWord(top, @"x35.371");
+            PlaceWrappedWord(bottom, @"x25.126");
+            // The same order as a theme change on a split source.
+            top.textColor = NSColor.darkGrayColor;
+            bottom.textColor = NSColor.darkGrayColor;
+        } else {
+            for (NSTextView *view in @[top, bottom]) {
+                view.textColor = NSColor.textColor;
+                view.backgroundColor = NSColor.textBackgroundColor;
+                PlaceWrappedWord(view, view == top ? @"x35.371" : @"x25.126");
+            }
+        }
+    };
+    arrange(upper, lower);
+    arrange(pictureUpper, pictureLower);
+    // The picture is drawn now. The source under test is not, until Replace All has asked which line is showing.
+    NSData *pictureTop = PackedPixels(pictureUpper.enclosingScrollView, appearance);
+    NSData *pictureBottom = PackedPixels(pictureLower.enclosingScrollView, appearance);
+    SyncDrawnLine(pictureUpper);
+    SyncDrawnLine(pictureLower);
+    Check(pictureTop.length > 0 && pictureBottom.length > 0
+          && [VisibleTopFragment(pictureUpper) containsString:@"x35.371"]
+          && [VisibleTopFragment(pictureLower) containsString:@"x25.126"],
+          [NSString stringWithFormat:@"the picture shows the wrapped words (%@)", order]);
+    controller.settings.findString = @"line";
+    controller.settings.replaceString = @"LINE";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper),
+          [@"Replace All inside a wrapped line, color " stringByAppendingString:order]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    NSData *afterTop = PackedPixels(upper.enclosingScrollView, appearance);
+    NSData *afterBottom = PackedPixels(lower.enclosingScrollView, appearance);
+    SyncDrawnLine(upper);
+    SyncDrawnLine(lower);
+    Check([VisibleTopFragment(upper) containsString:@"x35.371"] && [VisibleTopFragment(lower) containsString:@"x25.126"],
+          [NSString stringWithFormat:@"a wrapped line stays on the same display line when the color is set %@ (%@ / %@)",
+           order,
+           [VisibleTopFragment(upper) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
+           [VisibleTopFragment(lower) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    NSData *undoTop = PackedPixels(upper.enclosingScrollView, appearance);
+    NSData *undoBottom = PackedPixels(lower.enclosingScrollView, appearance);
+    SyncDrawnLine(upper);
+    SyncDrawnLine(lower);
+    Check([undoTop isEqualToData:pictureTop] && [undoBottom isEqualToData:pictureBottom]
+          && [VisibleTopFragment(upper) containsString:@"x35.371"] && [VisibleTopFragment(lower) containsString:@"x25.126"],
+          [NSString stringWithFormat:@"undo puts the wrapped display lines back (%@, %@ / %@)", order,
+           [VisibleTopFragment(upper) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
+           [VisibleTopFragment(lower) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
+    [upper.undoManager redo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    NSData *redoTop = PackedPixels(upper.enclosingScrollView, appearance);
+    NSData *redoBottom = PackedPixels(lower.enclosingScrollView, appearance);
+    SyncDrawnLine(upper);
+    SyncDrawnLine(lower);
+    Check([redoTop isEqualToData:afterTop] && [redoBottom isEqualToData:afterBottom]
+          && [VisibleTopFragment(upper) containsString:@"x35.371"] && [VisibleTopFragment(lower) containsString:@"x25.126"],
+          [NSString stringWithFormat:@"redo keeps the wrapped display lines (%@)", order]);
+}
+
+/// A long logical line, wrapped, scrolled to a word in the middle of that line. Same-length Replace All must leave
+/// that display line at the top. The color is set in the two orders that leave the glyph index on another wrap until
+/// the view is drawn (#72).
+static void TestWrappedMiddleKeepsPlace(void)
+{
+    NSMutableString *mixed = [NSMutableString string];
+    for (int i = 0; i < 500; i++) {
+        [mixed appendFormat:@"line%03d ", i];
+        int words = i % 7 == 0 ? 75 : i % 3 == 0 ? 12 : 4;
+        for (int w = 0; w < words; w++)
+            [mixed appendFormat:@"x%02d.%03d ", w, i];
+        [mixed appendString:@"\n"];
+    }
+    CheckWrappedPlace(mixed, YES);
+    CheckWrappedPlace(mixed, NO);
+}
+
 #pragma mark Main
 
 int main(int argc, const char *argv[])
@@ -743,6 +1214,7 @@ int main(int argc, const char *argv[])
             TestRouting();
             TestHighlights();
             TestPanelLevel();
+            TestReplaceAllKeepsPlace();
         }
         if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"panel"])
             TestPanel(images);
