@@ -46,7 +46,7 @@
 
 <p>Misspelled words are underlined as you type while Edit › Spelling and Grammar › Check Spelling While Typing is on. To go through the document word by word, choose Edit › Spelling and Grammar › Show Spelling and Grammar (<kbd>⌘:</kbd>): the panel shows the first misspelled word after the insertion point. Click Find Next in the panel, or choose Check Document Now (<kbd>⌘;</kbd>), to go to the next one. Hold down Option while doing so to use the search of macOS, which skips no markup.</p>
 
-<p>To replace a word everywhere, type the replacement in the field Replacement for Change All of the panel, or select a suggestion, and click Change All; one Undo takes back the change. Forget Learned Words… in the Spelling and Grammar submenu lists the words of the document that were learned for the current language, and removes the ones you select from the dictionary. Correct Spelling Automatically in the same submenu changes words as you type; it is off at first, which suits TeX, where it would also change commands.</p>
+<p>To replace a word everywhere, type the replacement in the field Replacement for Change All of the panel, or select a suggestion, and click Change All; one Undo takes back the change. After you edit the document or select other text, click Find Next again before changing a word. If you have edited the field Replacement for Change All and want a suggestion that was selected, select another suggestion first and then that one; when there is only one suggestion, type it. Forget Learned Words… in the Spelling and Grammar submenu lists the words of the document that were learned for the current language, and removes the ones you select from the dictionary. Correct Spelling Automatically in the same submenu changes words as you type; it is off at first, which suits TeX, where it would also change commands.</p>
 
 <h2>Settings › Spell Checking</h2>
 
@@ -57,14 +57,14 @@
 <dt>“Legacy method”</dt>
 <dd>macOS checks everything, except what the three options below it leave out: “Do not check LaTeX commands”, “Do not check selected parameters”, which skips the parameters of some commands with special words, such as <code>\usepackage</code>, and “Do not check comments”. These options work only while syntax highlighting is on, and Check Document Now does not follow them.</dd>
 </dl>
-<p>Files that are not TeX source, such as Sweave files, are always checked with the legacy method.</p>
+<p>The LaTeX-aware method checks documents that have not been saved yet and files with the extensions tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx and lbx. Other files, such as Sweave files, are always checked with the legacy method.</p>
 
 <h2>Exclusion rules</h2>
 
 <p>The rules of LaTeX-aware spell checking are in the file ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Open it with “Edit LaTeX exclusion rules…” in Settings or with Edit › Spelling and Grammar › Edit Spelling Exclusions…; it opens in TeXShop, and its top explains the format. For example, these lines skip the first argument of a command <code>\mycommand</code> and the contents of the environment <code>proof</code>:</p>
 <pre>skip-args  1  mycommand
 skip-body  proof</pre>
-<p>Changes take effect the next time spelling is checked. If the file is deleted, TeXShop makes a new copy of the default file the next time it starts. Help › Spell Checking Help describes spell checking in more detail.</p>
+<p>Changes take effect the next time spelling is checked. If the file is deleted, TeXShop makes a new copy of the default file the next time it starts. To skip nothing at all, leave only comment lines in it.</p>
 
 <h2>Dictionaries</h2>
 

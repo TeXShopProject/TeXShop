@@ -836,84 +836,6 @@ static NSAlert *TSLearnedWordsAlert(NSString *language, id<NSTableViewDataSource
                                                                      completionHandler:^(NSDocument *document, BOOL wasOpen, NSError *error) {}];
 }
 
-// The help text for the first of the languages for which the directory holds a
-// SpellCheckingHelp-<language>.html (named like the Interfaces folders: de, pt-PT,
-// zh_CN, ...), otherwise the English SpellCheckingHelp.html. A language such as
-// pt-BR or zh-Hans-CN falls back to pt or zh_CN.
-+ (NSString *)helpPathInDirectory:(NSString *)directory forLanguages:(NSArray<NSString *> *)languages
-{
-    NSFileManager *fm = [NSFileManager defaultManager];
-    for (NSString *language in languages) {
-        NSString *code = [language stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
-        NSMutableArray<NSString *> *candidates = [NSMutableArray array];
-        for (NSString *c = code; c.length > 0; ) {
-            [candidates addObject:c];
-            NSRange r = [c rangeOfString:@"_" options:NSBackwardsSearch];
-            c = (r.location == NSNotFound) ? @"" : [c substringToIndex:r.location];
-        }
-        if ([code hasPrefix:@"zh"]) [candidates addObject:@"zh_CN"];
-        for (NSString *c in candidates) {
-            for (NSString *name in @[c, [c stringByReplacingOccurrencesOfString:@"_" withString:@"-"]]) {
-                NSString *path = [directory stringByAppendingPathComponent:
-                                  [NSString stringWithFormat:@"SpellCheckingHelp-%@.html", name]];
-                if ([fm fileExistsAtPath:path]) return path;
-            }
-        }
-        if ([code isEqualToString:@"en"] || [code hasPrefix:@"en_"]) break;
-    }
-    return [directory stringByAppendingPathComponent:@"SpellCheckingHelp.html"];
-}
-
-// Brief help for the spell checking, shown in a small window from the Help menu.
-// The text is SpellCheckingHelp.html, or a translation of it, in the application bundle.
-+ (void)showSpellCheckingHelp:(id)sender
-{
-    static NSWindow *helpWindow;
-    if (helpWindow) {
-        [helpWindow makeKeyAndOrderFront:nil];
-        return;
-    }
-    NSString *directory = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/SpellCheck"];
-    NSMutableArray<NSString *> *languages = [[[NSBundle mainBundle] preferredLocalizations] mutableCopy];
-    [languages addObjectsFromArray:[NSLocale preferredLanguages]];
-    NSString *path = [self helpPathInDirectory:directory forLanguages:languages];
-#ifdef TSSPELL_STANDALONE_TEST
-    if (getenv("TSSPELL_HELP")) path = [NSString stringWithUTF8String:getenv("TSSPELL_HELP")];
-#endif
-    NSData *data = path ? [NSData dataWithContentsOfFile:path] : nil;
-    NSAttributedString *text = data
-        ? [[NSAttributedString alloc] initWithData:data
-                                           options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                                                     NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding)}
-                                documentAttributes:NULL error:NULL]
-        : nil;
-    if (!text) {
-        NSAlert *alert = [[NSAlert alloc] init];
-        alert.messageText = NSLocalizedString(@"The spell checking help could not be found", @"");
-        [alert runModal];
-        return;
-    }
-    // The imported text is black; use the system text colour so dark mode works.
-    NSMutableAttributedString *shown = [text mutableCopy];
-    [shown addAttribute:NSForegroundColorAttributeName value:[NSColor textColor]
-                  range:NSMakeRange(0, shown.length)];
-
-    NSScrollView *scroll = [NSTextView scrollableTextView];
-    NSTextView *view = scroll.documentView;
-    view.editable = NO;
-    view.textContainerInset = NSMakeSize(16, 12);
-    [view.textStorage setAttributedString:shown];
-    helpWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 560, 640)
-                                             styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |
-                                                       NSWindowStyleMaskResizable | NSWindowStyleMaskMiniaturizable
-                                               backing:NSBackingStoreBuffered defer:NO];
-    helpWindow.title = NSLocalizedString(@"Spell Checking Help", @"");
-    helpWindow.releasedWhenClosed = NO;
-    helpWindow.contentView = scroll;
-    [helpWindow center];
-    [helpWindow makeKeyAndOrderFront:nil];
-}
-
 static NSMenuItem *FindMenuItemWithAction(NSMenu *menu, SEL action)
 {
     for (NSMenuItem *item in menu.itemArray) {
@@ -978,18 +900,6 @@ static NSMenuItem *FindMenuItemWithAction(NSMenu *menu, SEL action)
     edit.target = self;
     [menu insertItem:forget atIndex:at];
     [menu insertItem:edit atIndex:at + 1];
-
-    // A Help menu entry, after TeXShop's own "Getting Started" item. The item is
-    // found by its action so this works whatever language the menu is in.
-    NSMenuItem *anchor = FindMenuItemWithAction([NSApp mainMenu], NSSelectorFromString(@"displayGettingStartedTeXShop:"));
-    NSMenu *helpMenu = anchor.menu ?: NSApp.helpMenu;
-    if (helpMenu && [helpMenu indexOfItemWithTarget:self andAction:@selector(showSpellCheckingHelp:)] < 0) {
-        NSMenuItem *help = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Spell Checking Help", @"")
-                                                      action:@selector(showSpellCheckingHelp:) keyEquivalent:@""];
-        help.target = self;
-        NSInteger index = anchor ? [helpMenu indexOfItem:anchor] + 1 : (NSInteger)helpMenu.numberOfItems;
-        [helpMenu insertItem:help atIndex:index];
-    }
 }
 
 @end

@@ -1,17 +1,17 @@
 {
   "source": "Fixed command identity of commit 127ecbab90b1ad199c9d7e6adfa86258e3f36c6c, excluding the two intentionally removed editor actions, and Window > Fullscreen (Old Method) and Help > Short Course Supplements --> Desktop, removed in 6.00. The Italian File Encoding and TeXShop item calls displayFileEncoding: since 6.00; it called displayGettingStartedConTeXt: before. Update only after reviewing a deliberate command migration.",
   "languages": {
-    "Base": "4c33e5b191f4a9eec0d4de7ca053793e4af6294c196e9315198676383e5d4396",
-    "de": "88b80b9a62802aa49839db6c971b3a3cf85e175ce2e700b0f1ba5001aa8c366c",
-    "es": "4484f59b1b94fdcd10a557f5e7f6efb5053b64f68034f8e546ddb82f2bc59a32",
-    "fr": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
-    "it": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
-    "ja": "e256d5068912465d0d0301920f7e4c2e5d10b5e19932f730db23b49708329985",
-    "ko": "b28ab9ea6478d83e6019719b8d8ee450fa562661f532328c178a213c9e48b128",
-    "nl": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
-    "pt-PT": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
-    "pt": "07cc6e93df759dcc3c5fb320441687082e043a5e1cde4218c526fe868e0ff168",
-    "ro": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61",
-    "zh_CN": "0f89961008d9a6531cbd482aca02ce206d949371ee363900124ea8bf0d88eb61"
+    "Base": "d833a6af6d8fd0980171eeea856c0af30059fade0adc7d2f019088fe95abb67c",
+    "de": "be06afced21a7bb092aab29933c5c7b5d204c44985870c0e33a048c8474e89f5",
+    "es": "230a79fb4ead4691488a65e122dab8ff82d43186ad63c9d85ea8964f887c0a3b",
+    "fr": "44349d6bb09bd4a669ed1e8a51a71f9977d06614f5af2b28c56b5397e3b7dba8",
+    "it": "44349d6bb09bd4a669ed1e8a51a71f9977d06614f5af2b28c56b5397e3b7dba8",
+    "ja": "51a4bcaa64b266ca442b1d87bcdca3f8003064bcf7f22159dab132491ca9438d",
+    "ko": "7b832555cdadb38c9121cf9d42ef1c8faf30fb10b88561d4787cce828933ef15",
+    "nl": "44349d6bb09bd4a669ed1e8a51a71f9977d06614f5af2b28c56b5397e3b7dba8",
+    "pt-PT": "44349d6bb09bd4a669ed1e8a51a71f9977d06614f5af2b28c56b5397e3b7dba8",
+    "pt": "4fe523c6f822369428e1fef0a09d6a1eda2089dc9f81ff388ba0c9de8229af22",
+    "ro": "44349d6bb09bd4a669ed1e8a51a71f9977d06614f5af2b28c56b5397e3b7dba8",
+    "zh_CN": "44349d6bb09bd4a669ed1e8a51a71f9977d06614f5af2b28c56b5397e3b7dba8"
   }
 }
