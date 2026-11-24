@@ -46,10 +46,10 @@
 			<string>mots</string>
 		</dict>
 	</dict>
-	<key>&lt;a character consisting of %d code points&gt;</key>
+	<key>&lt;a character consisting of %1$@ code points&gt;</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@n@</string>
+		<string>&lt;un caractère composé de %1$@ %2$#@n@&gt;</string>
 		<key>n</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
@@ -57,11 +57,11 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>many</key>
-			<string>&lt;un caractère composé de %d points de code&gt;</string>
+			<string>points de code</string>
 			<key>one</key>
-			<string>&lt;un caractère composé de %d point de code&gt;</string>
+			<string>point de code</string>
 			<key>other</key>
-			<string>&lt;un caractère composé de %d points de code&gt;</string>
+			<string>points de code</string>
 		</dict>
 	</dict>
 </dict>

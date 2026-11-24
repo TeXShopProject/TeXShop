@@ -2,10 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>&lt;a character consisting of %d code points&gt;</key>
+	<key>&lt;a character consisting of %1$@ code points&gt;</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@n@</string>
+		<string>&lt;un caracter format din %1$@ %2$#@n@&gt;</string>
 		<key>n</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
@@ -13,11 +13,11 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>few</key>
-			<string>&lt;un caracter format din %d puncte de cod&gt;</string>
+			<string>puncte de cod</string>
 			<key>one</key>
-			<string>&lt;un caracter format din %d punct de cod&gt;</string>
+			<string>punct de cod</string>
 			<key>other</key>
-			<string>&lt;un caracter format din %d de puncte de cod&gt;</string>
+			<string>de puncte de cod</string>
 		</dict>
 	</dict>
 </dict>

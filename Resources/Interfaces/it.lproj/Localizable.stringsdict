@@ -46,10 +46,10 @@
 			<string>parole</string>
 		</dict>
 	</dict>
-	<key>&lt;a character consisting of %d code points&gt;</key>
+	<key>&lt;a character consisting of %1$@ code points&gt;</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@n@</string>
+		<string>&lt;un carattere composto da %1$@ %2$#@n@&gt;</string>
 		<key>n</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
@@ -57,11 +57,11 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>many</key>
-			<string>&lt;un carattere composto da %d punti di codice&gt;</string>
+			<string>punti di codice</string>
 			<key>one</key>
-			<string>&lt;un carattere composto da %d punto di codice&gt;</string>
+			<string>punto di codice</string>
 			<key>other</key>
-			<string>&lt;un carattere composto da %d punti di codice&gt;</string>
+			<string>punti di codice</string>
 		</dict>
 	</dict>
 </dict>

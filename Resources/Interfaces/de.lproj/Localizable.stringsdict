@@ -40,10 +40,10 @@
 			<string>Wörter</string>
 		</dict>
 	</dict>
-	<key>&lt;a character consisting of %d code points&gt;</key>
+	<key>&lt;a character consisting of %1$@ code points&gt;</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@n@</string>
+		<string>&lt;ein Zeichen aus %1$@ %2$#@n@&gt;</string>
 		<key>n</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
@@ -51,9 +51,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>&lt;ein Zeichen aus %d Codepunkt&gt;</string>
+			<string>Codepunkt</string>
 			<key>other</key>
-			<string>&lt;ein Zeichen aus %d Codepunkten&gt;</string>
+			<string>Codepunkten</string>
 		</dict>
 	</dict>
 </dict>

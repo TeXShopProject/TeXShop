@@ -322,7 +322,10 @@ int main(int argc, char **argv) { @autoreleasepool {
         // One character of several code points: a variation sequence, an emoji with a skin tone, a combining
         // sequence, a ZWJ sequence, CR LF. A variation sequence keeps the table of its base, with what the selector does.
         NSString *style = LocalizedStrings[@"Emoji Style"] ?: @"Emoji Style", *variant = LocalizedStrings[@"Variant"] ?: @"Variant", *tone = LocalizedStrings[@"Skin Tone IV"] ?: @"Skin Tone IV";
-        NSString *(^consisting)(int) = ^(int n) { return [NSString stringWithFormat:LocalizedStrings[@"<a character consisting of %d code points>"] ?: @"<a character consisting of %d code points>", n]; };
+        NSString *(^consisting)(int) = ^(int n) {
+            NSString *format = LocalizedStrings[@"<a character consisting of %1$@ code points>"] ?: @"<a character consisting of %1$@ code points>";
+            return [NSString stringWithFormat:format, TSStatusBarFormattedNumber((NSUInteger)n), n];
+        };
         struct { NSString *name, *text, *title, *codePoint; NSArray<NSString *> *rows; } multiples[] = {
             {@"variation", variation, [NSString stringWithFormat:@"CJK UNIFIED IDEOGRAPH-845B (%@)", variant], @"U+845B",
              @[@"U+845B|CJK UNIFIED IDEOGRAPH-845B", @"U+E0100|(U+DB40 U+DD00)|VARIATION SELECTOR-17"]},
@@ -498,6 +501,9 @@ int main(int argc, char **argv) { @autoreleasepool {
         // CR LF is one character, as in the status bar and in CotEditor.
         TSGlyphPopoverController *crlfController = [[TSGlyphPopoverController alloc] initWithCharacter:@"\r\n"];
         Expect(crlfController.view, [language stringByAppendingString:@" CR LF"], @"name", consisting(2));
+        // A long combining sequence is one character; its number of code points is written as the status bar writes numbers.
+        NSString *longCombining = [@"a" stringByPaddingToLength:1234 withString:@"\u0301" startingAtIndex:0];
+        Expect([[TSGlyphPopoverController alloc] initWithCharacter:longCombining].view, [language stringByAppendingString:@" long combining sequence"], @"name", consisting(1234));
         Expect(crlfController.view, [language stringByAppendingString:@" CR LF"], @"scalar.1.name", @"LINE FEED");
         if ([[TSGlyphPopoverController alloc] initWithText:document range:NSMakeRange(3, 0)]) Fail(@"an empty selection in a document makes a popover");
         NSString *many = [@"" stringByPaddingToLength:2000 withString:@"あ" startingAtIndex:0];

@@ -40,10 +40,10 @@
 			<string>woorden</string>
 		</dict>
 	</dict>
-	<key>&lt;a character consisting of %d code points&gt;</key>
+	<key>&lt;a character consisting of %1$@ code points&gt;</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@n@</string>
+		<string>&lt;een teken bestaande uit %1$@ %2$#@n@&gt;</string>
 		<key>n</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
@@ -51,9 +51,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>&lt;een teken bestaande uit %d codepunt&gt;</string>
+			<string>codepunt</string>
 			<key>other</key>
-			<string>&lt;een teken bestaande uit %d codepunten&gt;</string>
+			<string>codepunten</string>
 		</dict>
 	</dict>
 </dict>

@@ -21,7 +21,7 @@ from source_tree import source_file
 root = Path(__file__).resolve().parents[1]
 interfaces = root / 'Resources/Interfaces'
 COUNTS = '%1$@ characters, %2$@ words, %3$@ lines'
-COMPLEX = '<a character consisting of %d code points>'
+COMPLEX = '<a character consisting of %1$@ code points>'
 
 # (1, 1, 1), (2, 1, 3), then a character of 2 and of 20 code points.
 EXPECTED = {
@@ -53,7 +53,9 @@ MUTATIONS = {
     # The plural forms follow the region: Portuguese of Portugal in the United States says "0 palavra".
     'current-locale': ('    if (region.length && ![region isEqualToString:current.countryCode ?: @""])', '    if (NO)'),
     # The numbers are written in the locale of the plural forms, not as the status bar writes them: "12 345".
-    'language-numbers': ('TSStatusBarFormattedNumber(c.selectedCharacters)', '[[NSString alloc] initWithFormat:@"%ld" locale:CountsLocale(), (long)c.selectedCharacters]'),
+    # The code points of one character are written without the status bar's grouping: "1234".
+    'plain-code-points': ('TSStatusBarFormattedNumber(codePoints.count), (int)codePoints.count', '@(codePoints.count).stringValue, (int)codePoints.count'),
+    'language-numbers': ('TSStatusBarFormattedNumber(selectedCounts.selectedCharacters)', '[[NSString alloc] initWithFormat:@"%ld" locale:CountsLocale(), (long)selectedCounts.selectedCharacters]'),
     # The controller asks for the old key, which no language has.
     'old-key': ('@"%1$@ characters, %2$@ words, %3$@ lines"', '@"%d letters, %d words, %d lines"'),
     # The counts are formatted without the plural rules of the language.
@@ -69,7 +71,7 @@ assert sorted(languages) == sorted(EXPECTED), languages
 failures = []
 
 controller = source_file(root, 'TSGlyphPopoverController.m').read_text()
-if args.mutation in ('old-key', 'current-locale', 'language-numbers'):
+if args.mutation in ('old-key', 'current-locale', 'language-numbers', 'plain-code-points'):
     old, new = MUTATIONS[args.mutation]
     assert controller.count(old) == 1, args.mutation
     controller = controller.replace(old, new)
@@ -82,14 +84,15 @@ if args.mutation == 'plain-format':
 if not re.search(r'NSString \*countsFormat = NSLocalizedString\(@"' + re.escape(COUNTS) + r'", @"[^"]*"\);', controller) \
         or 'NSString *counts = [[NSString alloc] initWithFormat:countsFormat locale:CountsLocale(),' not in controller:
     failures.append(f'the controller does not format "{COUNTS}" with the locale of the counts')
-if not re.search(r'\[\[NSString alloc\] initWithFormat:NSLocalizedString\(@"' + re.escape(COMPLEX) + r'", @"[^"]*"\) locale:CountsLocale\(\)', controller):
+if not re.search(r'NSString \*consistingFormat = NSLocalizedString\(@"' + re.escape(COMPLEX) + r'", @"[^"]*"\);', controller) \
+        or 'name = [[NSString alloc] initWithFormat:consistingFormat locale:CountsLocale(), TSStatusBarFormattedNumber(codePoints.count), (int)codePoints.count];' not in controller:
     failures.append(f'the controller does not format "{COMPLEX}" with the locale of the counts')
 for language in languages:
     strings = (interfaces / f'{language}.lproj/Localizable.strings').read_text(encoding='utf-8')
     for key in (COUNTS, COMPLEX):
         if not re.search(r'^\s*"' + re.escape(key) + '" = ', strings, re.M):
             failures.append(f'{language}: Localizable.strings has no "{key}"')
-    for old in ('%d letters, %d words, %d lines', '%d characters, %d words, %d lines', '<a letter consisting of %d characters>'):
+    for old in ('%d letters, %d words, %d lines', '%d characters, %d words, %d lines', '<a letter consisting of %d characters>', '<a character consisting of %d code points>'):
         if f'"{old}"' in strings:
             failures.append(f'{language}: Localizable.strings still has "{old}"')
 
@@ -111,15 +114,16 @@ with tempfile.TemporaryDirectory(prefix='texshop-character-info-plurals-') as tm
 <key>CFBundleDevelopmentRegion</key><string>en</string></dict></plist>''')
     # The calls of the controller, with its keys and its way of formatting.
     counts_format = re.search(r'(NSString \*countsFormat = NSLocalizedString\(@"[^"]*", @"[^"]*"\);)', controller)
-    counts_call = re.search(r'NSString \*counts = (.*?),\s*\n\s*(TSStatusBarFormattedNumber\(c\.selectedCharacters\)|[^\n]*\(long\)c\.selectedCharacters\]), (TSStatusBarFormattedNumber\(c\.selectedWords\)), (TSStatusBarFormattedNumber\(c\.selectedLines\)),', controller, re.S)
-    complex_call = re.search(r'name = (\[[^;]*?NSLocalizedString\(@"<[^"]*"[^;]*?), \(int\)codePoints\.count\];', controller)
+    counts_call = re.search(r'NSString \*counts = (.*?),\s*\n\s*(TSStatusBarFormattedNumber\(selectedCounts\.selectedCharacters\)|[^\n]*\(long\)selectedCounts\.selectedCharacters\]), (TSStatusBarFormattedNumber\(selectedCounts\.selectedWords\)), (TSStatusBarFormattedNumber\(selectedCounts\.selectedLines\)),', controller, re.S)
+    complex_format = re.search(r'(NSString \*consistingFormat = NSLocalizedString\(@"[^"]*", @"[^"]*"\);)', controller)
+    complex_call = re.search(r'name = (\[\[NSString alloc\] initWithFormat:consistingFormat locale:CountsLocale\(\)), (.*?), \(int\)codePoints\.count\];', controller)
     locale_function = re.search(r'static NSLocale \*CountsLocale\(void\)\n\{.*?\n\}\n', controller, re.S)
     counting = source_file(root, 'TSStatusBarCounting.m').read_text()
     number_function = re.search(r'NSString \*TSStatusBarFormattedNumber\(NSUInteger value\)\n\{.*?\n\}\n', counting, re.S)
-    if not counts_format or not counts_call or not complex_call or not locale_function or not number_function:
+    if not counts_format or not complex_format or not counts_call or not complex_call or not locale_function or not number_function:
         failures.append('the calls of the controller are not found')
     else:
-        characters = counts_call.group(2).replace('c.selectedCharacters', 'c')
+        characters = counts_call.group(2).replace('selectedCounts.selectedCharacters', 'c')
         (tmp / 'probe.m').write_text(f'''#import <Foundation/Foundation.h>
 {number_function.group(0)}
 {locale_function.group(0)}
@@ -131,8 +135,12 @@ int main(int argc, char **argv) {{ @autoreleasepool {{
     int counts[6][3] = {{{{1, 1, 1}}, {{2, 1, 3}}, {{3, 2, 2}}, {{2, 0, 1}}, {{1234, 5, 6}}, {{12345, 0, 1}}}};
     for (int i = 0; i < 6; i++)
         printf("%s\\n", Counts(counts[i][0], counts[i][1], counts[i][2]).UTF8String);
-    for (int n = 2; n <= 20; n += 18)
-        printf("%s\\n", [{complex_call.group(1)}, n] description].UTF8String);
+    {complex_format.group(1)}
+    int consisting[3] = {{2, 20, 1234}};
+    for (int i = 0; i < 3; i++) {{
+        NSUInteger count = consisting[i];
+        printf("%s\\n", [{complex_call.group(1)}, {complex_call.group(2).replace('codePoints.count', 'count')}, (int)count] description].UTF8String);
+    }}
 }} }}
 ''')
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Foundation', str(tmp / 'probe.m'), '-o', str(app / 'Contents/MacOS/probe')], check=True)
@@ -142,12 +150,12 @@ int main(int argc, char **argv) {{ @autoreleasepool {{
             return out.stdout.splitlines()
         for language in languages:
             shown = run(language, {'pt': 'pt_BR', 'zh_CN': 'zh_CN'}.get(language, language.replace('-', '_') if '-' in language else f'{language}_{ {"en": "US", "ja": "JP", "ko": "KR"}.get(language, language.upper())}'))
-            got = shown[:2] + shown[6:8] if len(shown) == 8 else shown
+            got = shown[:2] + shown[6:8] if len(shown) == 9 else shown
             if got != EXPECTED[language]:
                 failures.append(f'{language}: {got} instead of {EXPECTED[language]}')
             # The counts use the status bar's words for characters, words and lines.
             strings = (interfaces / f'{language}.lproj/Localizable.strings').read_text(encoding='utf-8')
-            plural = shown[2].lower() if len(shown) == 8 else ''
+            plural = shown[2].lower() if len(shown) == 9 else ''
             for key, word in zip(('Characters', 'Words', 'Lines'), STATUS[language]):
                 status = re.search(r'^"' + key + '" = "(.*)";', strings, re.M).group(1)
                 if status != word:
@@ -162,7 +170,10 @@ int main(int argc, char **argv) {{ @autoreleasepool {{
                                              ('en', 'en_US', 4, '1,234 characters, 5 words, 6 lines'),
                                              ('fr', 'fr_FR', 3, '2 caractères, 0 mot, 1 ligne'),
                                              ('pt-PT', 'en_US', 5, '12,345 caracteres, 0 palavras, 1 linha'),
-                                             ('pt-PT', 'en_US', 4, '1,234 caracteres, 5 palavras, 6 linhas')):
+                                             ('pt-PT', 'en_US', 4, '1,234 caracteres, 5 palavras, 6 linhas'),
+                                             ('pt-PT', 'en_US', 8, '<um carácter composto por 1,234 pontos de código>'),
+                                             ('ro', 'ro_RO', 7, '<un caracter format din 20 de puncte de cod>'),
+                                             ('en', 'de_DE', 8, '<a character consisting of 1.234 code points>')):
             shown = run(language, locale)
             if len(shown) < 5 or shown[line] != want:
                 failures.append(f'{language} with {locale}: "{shown[line] if len(shown) > line else shown}" instead of "{want}"')
