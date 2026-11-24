@@ -64,6 +64,18 @@
 <h2><a name="labels"></a>Label and Citation Key Completion</h2>
 
 <p>Edit › Complete Label or Citation Key (<kbd>F5</kbd>) completes a label or a citation key from a list. Choose it right after <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> or <code>\autoref{</code>, or after the first letters of a label typed there, and the list shows the labels defined with <code>\label</code> in the file; choose one with the arrow keys and press Return. After <code>\cite{</code> and similar commands, the list shows citation keys from BibDesk when “Also offer BibDesk citation keys” in Settings › Keyboard is on. Elsewhere, it shows the word completions of macOS. On many keyboards, hold down the fn key (the Globe key) while pressing F5.</p>
+
+<h2><a name="compare"></a>Key Bindings, Macros and Command Completion</h2>
+
+<p>These three features all put text into the source and are easily mixed up. Each suits a different job:</p>
+<dl>
+<dt><a href="basic_autocompletion.htm">Key bindings</a></dt>
+<dd>Typing one key inserts text: <code>_</code> gives <code>_{}</code> around the selection, and ≤ (Option-comma on the U.S. layout) gives <code>\leq</code>. Settings › Keyboard turns them on for new documents and holds their list; Source › Key Bindings turns them on or off for the document in front. Type <code>\</code> first to keep the key as it is. A character typed with a dead key, such as é from Option-E and E, cannot have a key binding.</dd>
+<dt><a href="basic_macros.htm">Macros</a></dt>
+<dd>Items of the Macros menu insert text or run AppleScript programs, and can have a keyboard shortcut with the Command or Control key or a function key. Macros › Open Macro Editor... adds, edits and orders them. Text you want on a Command key, such as <code>\textbf</code> around the selection on ⌘B, is best made a macro.</dd>
+<dt>Command completion</dt>
+<dd>Type the start of a command or an abbreviation and press the trigger key: <code>\sec</code> gives <code>\section{•}</code>, the trigger again gives the next match, and <code>\benu</code> gives a whole enumerate environment with marks. Unlike key bindings and macros, command completion replaces selected text.</dd>
+</dl>
 </main>
 </body>
 </html>

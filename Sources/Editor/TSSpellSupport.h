@@ -54,7 +54,6 @@
 /*" Menu actions (the target is the class). "*/
 + (void)forgetLearnedWords:(id)sender;
 + (void)editSpellingExclusions:(id)sender;
-+ (void)showSpellCheckingHelp:(id)sender;
 /*" Whether a menu item of these commands is available: Edit Spelling Exclusions
     only while TeX-aware spell checking is on. "*/
 + (BOOL)validateMenuItem:(NSMenuItem *)item;
@@ -65,7 +64,6 @@
     range touches text that `mask` excludes, is next to an accent command, or is
     in another language than the document's. "*/
 + (BOOL)mask:(TSSpellMask *)mask excludesSpellingInRange:(NSRange)range;
-+ (NSString *)helpPathInDirectory:(NSString *)directory forLanguages:(NSArray<NSString *> *)languages;
 
 /*" The words in `text` that have been learned (Learn in the Spelling panel) for
     the spell checker's current language, sorted. macOS has no call that lists all
@@ -91,9 +89,8 @@
 + (NSUInteger)forgetWords:(NSArray<NSString *> *)words;
 
 /*" Add "Forget Learned Words…" and "Edit Spelling Exclusions…" next to Check
-    Spelling in the Edit > Spelling and Grammar menu, and "Spell Checking Help"
-    to the Help menu (after "TeXShop Help"/"Getting Started", found by its
-    action). "*/
+    Spelling in the Edit > Spelling and Grammar menu. Spell checking is described
+    in the TeXShop help (Checking Spelling). "*/
 + (void)installMenuItems;
 
 @end

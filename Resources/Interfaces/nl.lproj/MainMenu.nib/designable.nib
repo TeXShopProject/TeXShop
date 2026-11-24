@@ -1410,37 +1410,9 @@
                 <menuItem title="Help" id="136">
                     <menu key="submenu" title="Help" systemMenu="help" id="137">
                         <items>
-                            <menuItem title="Over deze versie (Engels)" id="888" identifier="TSShortcut.displayThisRelease:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="TeXShop Help" keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
                                 <connections>
-                                    <action selector="displayThisRelease:" target="692" id="890"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Wijzigingen (Engels)" id="dCc-MM-Ang" identifier="TSShortcut.displayChanges:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayChanges:" target="692" id="ZZK-DK-2il"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="jpt-9V-khn">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="TeX Live-documentatie (Engels)" id="Ifd-Ik-rvH" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTeXLiveDocumentation:" target="692" id="uiV-6e-fvR"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Toon documentatie voor pakket..." keyEquivalent="i" id="859" identifier="TSShortcut.displayHelpForPackage:.0">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="displayHelpForPackage:" target="692" id="860"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="889"/>
-                            <menuItem title="Eerste stappen met TeXShop (Engels)" id="684" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedTeXShop:" target="692" id="696"/>
+                                    <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="TeXShop-handleiding (Engels)" id="AkR-3a-53k" identifier="TSShortcut.displayManual:.0">
@@ -1449,16 +1421,18 @@
                                     <action selector="displayManual:" target="692" id="qxA-Mp-aWM"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="v01-to-wbf"/>
-                            <menuItem title="HTML-commando’s (Engels)" id="U0n-tp-AAZ" identifier="TSShortcut.displayHTMLHelp:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Eerste stappen met TeXShop (Engels)" id="684" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
-                                    <action selector="displayHTMLHelp:" target="692" id="eTD-z2-7sD"/>
+                                    <action selector="displayGettingStartedTeXShop:" target="692" id="696"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Help..." keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
+                            <menuItem isSeparatorItem="YES" id="jpt-9V-khn">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Commentaarregels en verborgen instellingen (Engels)" id="YbE-1q-gm9" identifier="TSShortcut.displayCommentLines:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="showHelp:" target="-1" id="144"/>
+                                    <action selector="displayCommentLines:" target="692" id="GfM-KV-9Gl"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Bestandscodering en TeXShop (Engels)" id="Xz3-2A-dmE" identifier="TSShortcut.displayFileEncoding:.0">
@@ -1467,20 +1441,24 @@
                                     <action selector="displayFileEncoding:" target="692" id="0Nl-JU-JD1"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Commentaarregels en verborgen instellingen (Engels)" id="YbE-1q-gm9" identifier="TSShortcut.displayCommentLines:.0">
+                            <menuItem title="HTML-commando’s (Engels)" id="U0n-tp-AAZ" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayCommentLines:" target="692" id="GfM-KV-9Gl"/>
+                                    <action selector="displayHTMLHelp:" target="692" id="eTD-z2-7sD"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Verwarrende TeXShop-functies (Engels)" id="Rpb-9Y-Kn7" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                            <menuItem isSeparatorItem="YES" id="889"/>
+                            <menuItem title="Toon documentatie voor pakket..." keyEquivalent="i" id="859" identifier="TSShortcut.displayHelpForPackage:.0">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="displayHelpForPackage:" target="692" id="860"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="TeX Live-documentatie (Engels)" id="Ifd-Ik-rvH" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayTeXShopConfusion:" target="692" id="lqy-xb-PUS"/>
+                                    <action selector="displayTeXLiveDocumentation:" target="692" id="uiV-6e-fvR"/>
                                 </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="700">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="George Grätzers korte handleiding (Engels)" id="GrC-Mn-Itm">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1602,6 +1580,22 @@
                                         </menuItem>
                                     </items>
                                 </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="v01-to-wbf"/>
+                            <menuItem title="Over deze versie (Engels)" id="888" identifier="TSShortcut.displayThisRelease:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayThisRelease:" target="692" id="890"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Wijzigingen (Engels)" id="dCc-MM-Ang" identifier="TSShortcut.displayChanges:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayChanges:" target="692" id="ZZK-DK-2il"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="700">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Oudere documenten" id="HlO-Dc-Mnu">
                                 <modifierMask key="keyEquivalentModifierMask"/>

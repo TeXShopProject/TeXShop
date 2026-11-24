@@ -120,7 +120,6 @@
 		401EF0760D0B3F8800203D7B /* MyDragView.h in Headers */ = {isa = PBXBuildFile; fileRef = 401EF0740D0B3F8800203D7B /* MyDragView.h */; };
 		401EF0770D0B3F8800203D7B /* MyDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 401EF0750D0B3F8800203D7B /* MyDragView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4020276525D06FD70039F253 /* TeX.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4020276425D06FD70039F253 /* TeX.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4020387D1AD5DC69001674DB /* TeXShop Feature Confusion.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4020387B1AD5DC69001674DB /* TeXShop Feature Confusion.pdf */; };
 		402613E52144902500DE43FB /* CommentLines.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 402613E32144902500DE43FB /* CommentLines.pdf */; };
 		40328ADC1340380800AD2EA7 /* TSToolbar.h in Headers */ = {isa = PBXBuildFile; fileRef = 40328ADA1340380800AD2EA7 /* TSToolbar.h */; };
 		40328ADD1340380800AD2EA7 /* TSToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 40328ADB1340380800AD2EA7 /* TSToolbar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -709,7 +708,6 @@
 		40496C2026067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with General Typesetting.pdf"; sourceTree = "<group>"; };
 		40496C2126067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = Base.lproj/RecentTexFonts.pdf; sourceTree = "<group>"; };
 		40496C2226067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/TeXShop Tips & Tricks.pdf"; sourceTree = "<group>"; };
-		40496C2326067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/TeXShop Feature Confusion.pdf"; sourceTree = "<group>"; };
 		40496C2426067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/File Encoding.pdf"; sourceTree = "<group>"; };
 		40496C2526067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with Mathematical Typesetting.pdf"; sourceTree = "<group>"; };
 		40496C2626067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/GPLv2 License.pdf"; sourceTree = "<group>"; };
@@ -818,7 +816,6 @@
 		4089E4362604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/Preferences.nib; sourceTree = "<group>"; };
 		4089E4372604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		4089E4382604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = fr.lproj/TeXLiveDocumentation.pdf; sourceTree = "<group>"; };
-		4089E4392604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = "fr.lproj/TeXShop Feature Confusion.pdf"; sourceTree = "<group>"; };
 		4089E43A2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = "fr.lproj/TeXShop Tips & Tricks.pdf"; sourceTree = "<group>"; };
 		4089E43B2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptTerminology; name = fr; path = fr.lproj/TeXShop.scriptTerminology; sourceTree = "<group>"; };
 		4089E43C2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
@@ -916,7 +913,6 @@
 		4089E4A42604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = "en.lproj/Notes on Applescript in TeXShop.pdf"; sourceTree = "<group>"; };
 		4089E4A52604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/RecentTexFonts.pdf; sourceTree = "<group>"; };
 		4089E4A62604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/TeXLiveDocumentation.pdf; sourceTree = "<group>"; };
-		4089E4A72604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = "en.lproj/TeXShop Feature Confusion.pdf"; sourceTree = "<group>"; };
 		4089E4A82604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = "en.lproj/TeXShop Tips & Tricks.pdf"; sourceTree = "<group>"; };
 		4089E4A92604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptTerminology; name = en; path = en.lproj/TeXShop.scriptTerminology; sourceTree = "<group>"; };
 		4089E4AA2604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = en.lproj/TeXShopHelp; sourceTree = "<group>"; };
@@ -1702,7 +1698,6 @@
 				52B13E5108A8183B00756E5E /* MacroEditor.nib */,
 				40DD042E1C23893C00422219 /* File Encoding.pdf */,
 				52B13E4708A8182F00756E5E /* MainMenu.nib */,
-				4020387B1AD5DC69001674DB /* TeXShop Feature Confusion.pdf */,
 				52B13E5308A8183B00756E5E /* matrixpanel.nib */,
 				52B13E4B08A8183B00756E5E /* Preferences.nib */,
 				40415E3B131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf */,
@@ -2153,7 +2148,6 @@
 				AD9114C58B8D73DBFEA212A9 /* AdvancedFindEngine.strings in Resources */,
 				C7F6713687BB0DFFCD1DBF8A /* MultipleReplaceSamples.strings in Resources */,
 				72E14521184DC77C8303BA1F /* MultipleReplaceSamples in Resources */,
-				4020387D1AD5DC69001674DB /* TeXShop Feature Confusion.pdf in Resources */,
 				4078807F0519249A006979EA /* InfoPlist.strings in Resources */,
 				4078813C0519249A006979EA /* ToolbarItems.strings in Resources */,
 				52A4037008AE1F6C0070F041 /* Encodings.strings in Resources */,
@@ -2600,16 +2594,6 @@
 				4089E4C12604156000B8A795 /* de */,
 			);
 			name = Credits.rtf;
-			sourceTree = "<group>";
-		};
-		4020387B1AD5DC69001674DB /* TeXShop Feature Confusion.pdf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4089E4392604153000B8A795 /* fr */,
-				4089E4A72604155B00B8A795 /* en */,
-				40496C2326067EDA005E885D /* Base */,
-			);
-			name = "TeXShop Feature Confusion.pdf";
 			sourceTree = "<group>";
 		};
 		402613E32144902500DE43FB /* CommentLines.pdf */ = {
