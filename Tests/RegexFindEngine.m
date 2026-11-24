@@ -460,6 +460,17 @@ int main(void)
         Check([none replacementInSelectionWithTemplate:[[TSRegexReplacementTemplate alloc] initWithString:@"" pattern:none.pattern syntax:TSRegexReplacementSyntaxICU]] == nil, @"no replacement without a match in the selection");
         TSRegexReplaceAllResult *unchanged = [none replaceAllWithTemplate:[[TSRegexReplacementTemplate alloc] initWithString:@"x" pattern:none.pattern syntax:TSRegexReplacementSyntaxICU] cancellation:nil];
         Check(unchanged.replacements.count == 0 && unchanged.numberOfMatches == 0 && unchanged.selectedRanges == nil, @"nothing to replace leaves the text alone");
+        // "alpha beta alpha" -> "X beta X". A caret just after the first match, at the start of the second, and inside it.
+        TSRegexTextFind *shorter = [[TSRegexTextFind alloc] initWithString:@"alpha beta alpha" pattern:Pattern(@"alpha", R)
+                                                            selectedRanges:@[[NSValue valueWithRange:NSMakeRange(0, 0)]] inSelection:NO error:NULL];
+        TSRegexReplaceAllResult *shortened = [shorter replaceAllWithTemplate:[[TSRegexReplacementTemplate alloc] initWithString:@"X" pattern:shorter.pattern syntax:TSRegexReplacementSyntaxICU] cancellation:nil];
+        Check([shortened locationByFollowingEdits:5] == 1 && [shortened locationByFollowingEdits:6] == 2, @"a caret after a shorter match keeps its place");
+        Check([shortened locationByFollowingEdits:11] == 7, @"a caret at the start of a match stays at its start");
+        Check([shortened locationByFollowingEdits:13] == 8 && [shortened locationByFollowingEdits:0] == 0, @"a caret inside a match goes to the end of its replacement");
+        TSRegexTextFind *same = [[TSRegexTextFind alloc] initWithString:@"alpha beta" pattern:Pattern(@"alpha", R)
+                                                         selectedRanges:@[[NSValue valueWithRange:NSMakeRange(0, 0)]] inSelection:NO error:NULL];
+        TSRegexReplaceAllResult *unmoved = [same replaceAllWithTemplate:[[TSRegexReplacementTemplate alloc] initWithString:@"AAAAA" pattern:same.pattern syntax:TSRegexReplacementSyntaxICU] cancellation:nil];
+        Check(unmoved.matchEdits.length == 0 && [unmoved locationByFollowingEdits:6] == 6, @"a match that keeps its length leaves a caret where it was");
 
         // Groups for Find All and cancellation.
         TSRegexTextFind *groups = [[TSRegexTextFind alloc] initWithString:@"ab b" pattern:Pattern(@"(a)?(b)", R)

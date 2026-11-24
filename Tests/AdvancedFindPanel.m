@@ -727,6 +727,126 @@ static void TestPanelLevel(void)
     Check(!window.isVisible, @"nothing is shown");
 }
 
+#pragma mark Replace All keeps the scroll
+
+static CGFloat ScrollY(NSTextView *view)
+{
+    return view.enclosingScrollView.contentView.bounds.origin.y;
+}
+
+/// Where `caret` lands when every "alpha" before it becomes one character shorter.
+static NSUInteger CaretAfterShorterAlphas(NSString *text, NSRange caret)
+{
+    NSUInteger alphas = [[text substringToIndex:MIN(caret.location, text.length)] componentsSeparatedByString:@"alpha"].count - 1;
+    return caret.location - alphas * 4;
+}
+
+static BOOL SameY(NSTextView *view, CGFloat y)
+{
+    return fabs(ScrollY(view) - y) < 0.5;
+}
+
+/// A split source, scrolled, as in a document window. Nothing is ordered on screen. The window is kept for the rest of the test.
+static BOOL MakeScrolledSource(NSString *text, NSTextView *_Nonnull *_Nonnull upperOut, NSTextView *_Nonnull *_Nonnull lowerOut, CGFloat *upperY, CGFloat *lowerY)
+{
+    static NSMutableArray<NSWindow *> *windows;
+    if (!windows)
+        windows = [NSMutableArray array];
+    NSFont *font = [NSFont userFixedPitchFontOfSize:13] ?: [NSFont systemFontOfSize:13];
+    NSTextStorage *storage = [[NSTextStorage alloc] initWithString:text attributes:@{NSFontAttributeName: font}];
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 420, 200) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+    window.releasedWhenClosed = NO;
+    [windows addObject:window];
+    NSMutableArray<NSTextView *> *views = [NSMutableArray array];
+    for (NSInteger i = 0; i < 2; i++) {
+        NSLayoutManager *layout = [NSLayoutManager new];
+        layout.allowsNonContiguousLayout = YES;
+        [storage addLayoutManager:layout];
+        NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(400, CGFLOAT_MAX)];
+        container.widthTracksTextView = YES;
+        [layout addTextContainer:container];
+        NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 100 * (1 - i), 420, 100)];
+        scroll.hasVerticalScroller = YES;
+        NSTextView *view = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 400, 100) textContainer:container];
+        view.minSize = NSMakeSize(0, 100);
+        view.maxSize = NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX);
+        view.verticallyResizable = YES;
+        view.horizontallyResizable = NO;
+        view.autoresizingMask = NSViewWidthSizable;
+        view.allowsUndo = YES;
+        view.richText = NO;
+        scroll.documentView = view;
+        [window.contentView addSubview:scroll];
+        [views addObject:view];
+    }
+    NSTextView *upper = views[0], *lower = views[1];
+    [window display];
+    [upper.layoutManager ensureLayoutForTextContainer:upper.textContainer];
+    [lower.layoutManager ensureLayoutForTextContainer:lower.textContainer];
+    CGFloat upperTop = ScrollY(upper), lowerTop = ScrollY(lower);
+    NSUInteger line = [text rangeOfString:@"\n"].location + 1;
+    upper.selectedRange = NSMakeRange(50 * line, 0);
+    lower.selectedRange = NSMakeRange(20 * line + 4, 0);
+    [upper scrollRangeToVisible:upper.selectedRange];
+    [lower scrollRangeToVisible:lower.selectedRange];
+    [window display];
+    *upperOut = upper;
+    *lowerOut = lower;
+    *upperY = ScrollY(upper);
+    *lowerY = ScrollY(lower);
+    return fabs(*upperY - upperTop) > 20 && fabs(*lowerY - lowerTop) > 20;
+}
+
+static void TestReplaceAllKeepsPlace(void)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSMutableString *text = [NSMutableString string];
+    for (int i = 0; i < 80; i++)
+        [text appendFormat:@"line %03d alpha word\n", i];
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat upperY = 0, lowerY = 0;
+    Check(MakeScrolledSource(text, &upper, &lower, &upperY, &lowerY), @"both parts of the split source are scrolled down");
+    NSRange upperCaret = upper.selectedRange, lowerCaret = lower.selectedRange;
+    controller.settings.findString = @"alpha";
+    controller.settings.replaceString = @"X";
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper), @"Replace All in a scrolled source");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    NSString *replaced = [text stringByReplacingOccurrencesOfString:@"alpha" withString:@"X"];
+    Check([upper.string isEqualToString:replaced] && SameY(upper, upperY) && SameY(lower, lowerY),
+          [NSString stringWithFormat:@"Replace All leaves both parts where they were scrolled (%.1f -> %.1f, %.1f -> %.1f)",
+           upperY, ScrollY(upper), lowerY, ScrollY(lower)]);
+    NSUInteger upperKept = CaretAfterShorterAlphas(text, upperCaret), lowerKept = CaretAfterShorterAlphas(text, lowerCaret);
+    Check(NSEqualRanges(upper.selectedRange, NSMakeRange(upperKept, 0)) && NSEqualRanges(lower.selectedRange, NSMakeRange(lowerKept, 0)),
+          [NSString stringWithFormat:@"the carets stay on the same character (%lu, %lu)", (unsigned long)upper.selectedRange.location, (unsigned long)lower.selectedRange.location]);
+
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([upper.string isEqualToString:text] && !upper.undoManager.canUndo && SameY(upper, upperY) && SameY(lower, lowerY)
+          && NSEqualRanges(upper.selectedRange, upperCaret) && NSEqualRanges(lower.selectedRange, lowerCaret),
+          @"one undo puts the text, the carets and the scroll back");
+    [upper.undoManager redo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([upper.string isEqualToString:replaced] && SameY(upper, upperY) && SameY(lower, lowerY)
+          && NSEqualRanges(upper.selectedRange, NSMakeRange(upperKept, 0)) && NSEqualRanges(lower.selectedRange, NSMakeRange(lowerKept, 0)),
+          @"redo replaces again without moving the text");
+
+    // In the selection: the scroll stays, and the selection becomes the replaced scope.
+    NSTextView *scopeUpper = nil, *scopeLower = nil;
+    CGFloat scopeUpperY = 0, scopeLowerY = 0;
+    Check(MakeScrolledSource(text, &scopeUpper, &scopeLower, &scopeUpperY, &scopeLowerY), @"scrolled again for Replace All in Selection");
+    NSUInteger line = [text rangeOfString:@"\n"].location + 1;
+    NSRange scope = NSMakeRange(40 * line, line); // one line, one "alpha"
+    scopeUpper.selectedRange = scope;
+    controller.settings.inSelection = YES;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAllInSelection, scopeUpper), @"Replace All in Selection");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check(SameY(scopeUpper, scopeUpperY) && SameY(scopeLower, scopeLowerY), @"Replace All in Selection does not scroll");
+    Check([scopeUpper.string containsString:@"alpha"] && [[scopeUpper.string substringWithRange:NSMakeRange(scope.location, line - 4)] containsString:@"X"],
+          @"only the selected line is replaced");
+}
+
 #pragma mark Main
 
 int main(int argc, const char *argv[])
@@ -743,6 +863,7 @@ int main(int argc, const char *argv[])
             TestRouting();
             TestHighlights();
             TestPanelLevel();
+            TestReplaceAllKeepsPlace();
         }
         if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"panel"])
             TestPanel(images);

@@ -109,6 +109,7 @@ MUTATIONS = {
     'numbers outside the BMP are ignored': ('TSRegexFindPattern.m', '[astralNumbers containsObject:scalar]', 'NO'),
     'other numbers are quick': ('TSRegexFindPattern.m', '        && ![TSNumbersButASCIIDigits() characterIsMember:c];', ';'),
     'equal lengths are taken as no change': ('TSRegexTextFind.m', '(scopeText.length != scope.length || [scopeText compare:[string substringWithRange:scope] options:NSLiteralSearch] != NSOrderedSame)', 'scopeText.length != scope.length'),
+    'a caret ignores shorter matches': ('TSRegexReplaceAllResult.m', '            shift += edit.delta;', '            shift += 0;'),
 }
 
 

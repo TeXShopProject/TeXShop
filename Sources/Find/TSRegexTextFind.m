@@ -208,6 +208,8 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
     };
     NSMutableArray<TSRegexFindReplacement *> *replacements = [NSMutableArray array];
     NSMutableArray<NSValue *> *selectedRanges = [NSMutableArray array];
+    // Only a match whose length changes moves the text after it. Kept so a caret can stay on the same character.
+    NSMutableData *edits = [NSMutableData data];
     __block NSUInteger total = 0;
     NSInteger offset = 0;
     for (NSValue *scopeValue in self.scopeRanges) {
@@ -218,7 +220,12 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
         __block NSUInteger count = 0;
         [self.pattern enumerateMatchesInString:string range:scope cancellation:cancellation usingBlock:^(NSRange matchRange, NSTextCheckingResult *result, BOOL *stop) {
             [scopeText appendString:[string substringWithRange:NSMakeRange(location, matchRange.location - location)]];
-            [scopeText appendString:[self normalizedLineEndings:[replacementTemplate replacementForMatchRange:matchRange result:result inString:string previousMatchEnd:location]]];
+            NSString *inserted = [self normalizedLineEndings:[replacementTemplate replacementForMatchRange:matchRange result:result inString:string previousMatchEnd:location]];
+            [scopeText appendString:inserted];
+            if (inserted.length != matchRange.length) {
+                TSRegexMatchEdit edit = {matchRange.location, matchRange.length, (NSInteger)inserted.length - (NSInteger)matchRange.length};
+                [edits appendBytes:&edit length:sizeof edit];
+            }
             location = NSMaxRange(matchRange);
             count++;
             if ((total + count) % 256 == 0)
@@ -243,7 +250,8 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
         progress(1.0, total);
     return [[TSRegexReplaceAllResult alloc] initWithReplacements:replacements
                                                   selectedRanges:self.inSelection ? selectedRanges : nil
-                                                 numberOfMatches:total];
+                                                 numberOfMatches:total
+                                                      matchEdits:edits];
 }
 
 @end
