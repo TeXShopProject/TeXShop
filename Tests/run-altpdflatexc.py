@@ -10,7 +10,11 @@ PostScript), it must stop with exit status 1 and a message naming the step on st
 be left as it was. Only a DVI file made by this run may go on to dvips: when the body is emptied after a good run
 ("No pages of output", latex exits 0) and when latex stops with an error (an undefined command, a missing \\input file),
 the script must stop with exit status 1 without running dvips, the earlier PDF must be left byte for byte, and the
-earlier DVI file must be put back. The macro must still call the script as before.
+earlier DVI file must be put back. This holds also when latex writes a page to the DVI file before it stops (a missing
+\\input file after \\newpage): the partial DVI file must not take the place of the earlier one, and with no earlier DVI
+file no DVI file may be left. When dvips or ps2pdf fails, the earlier DVI file is put back too. A folder (with a file in
+it) named "<name>.dvi", "<name>.ps" or "<name>.pdf", and a link named "<name>.dvi", must stop the script before latex
+with a message and a status other than 0, and be left as they were. The macro must still call the script as before.
 
 Mutated copies of the script (MUTATIONS) must each fail the test; --mutation NAME runs the whole test against one.
 
@@ -37,13 +41,22 @@ GOOD = r'''\documentclass{article}
 Hello, \textbf{world} and $x^2 + \sqrt{y}$.
 \end{document}
 '''
+# One page goes to the DVI file, then latex stops on the missing file (fatal in nonstop mode).
+PARTIAL = (r'\documentclass{article}\begin{document}PARTIAL PAGE\newpage' + '\n'
+           r'\input{no-such-file}\end{document}' + '\n')
 MUTATIONS = {
     # dvips takes the DVI file the earlier run left (the bug found in the third audit)
-    'stale-dvi': ('if [ -e "$name.dvi" ]; then\n'
-                  '    /bin/mv -f "$name.dvi" "$work/earlier.dvi" || fail "cannot move the earlier $name.dvi aside"\n'
-                  'fi\n', ''),
+    'stale-dvi': [('if [ -f "$n.dvi" ]; then\n'
+                   '    /bin/mv -f "$n.dvi" "$work/earlier.dvi" || fail "cannot move the earlier $name.dvi aside"\n'
+                   'fi\n', '')],
     # the earlier DVI file is lost when this run makes none
-    'no-put-back': ('[ ! -e "$name.dvi" ] && [ -e "$work/earlier.dvi" ] && /bin/mv -f "$work/earlier.dvi" "$name.dvi"', ':'),
+    'no-put-back': [('[ -n "$made" ] || put_back_dvi', ':')],
+    # the earlier DVI file is put back only when latex wrote none (the bug found in the fourth audit)
+    'restore-only-when-empty': [('        /bin/mv -f "$work/earlier.dvi" "$n.dvi" ||',
+                                 '        [ -e "$n.dvi" ] || /bin/mv -f "$work/earlier.dvi" "$n.dvi" ||')],
+    # whatever is at the DVI path is moved aside, a folder too (the other bug found in the fourth audit)
+    'move-directory': [('if [ -L "$path" ] || { [ -e "$path" ] && [ ! -f "$path" ]; }; then', 'if false; then'),
+                       ('if [ -f "$n.dvi" ]; then\n    /bin/mv -f "$n.dvi"', 'if [ -e "$n.dvi" ]; then\n    /bin/mv -f "$n.dvi"')],
 }
 failures = []
 
@@ -54,13 +67,14 @@ def check(ok, message):
 
 
 def mutated(name, top):
-    old, new = MUTATIONS[name]
     text = SCRIPT.read_text()
-    if text.count(old) != 1:
-        sys.exit(f'mutation {name} does not apply once to altpdflatexc')
+    for old, new in MUTATIONS[name]:
+        if text.count(old) != 1:
+            sys.exit(f'mutation {name} does not apply once to altpdflatexc: {old!r}')
+        text = text.replace(old, new)
     copy = top / f'bin-{name}' / 'altpdflatexc'
     copy.parent.mkdir()
-    copy.write_text(text.replace(old, new))
+    copy.write_text(text)
     shutil.copymode(SCRIPT, copy)
     return copy
 
@@ -144,6 +158,14 @@ def script_checks(script, top):
     good_pdf = pdf.read_bytes() if pdf.exists() else b''
     good_dvi = dvi.read_bytes() if dvi.exists() else b''
 
+    # A name that starts with - is not read as an option by basename, mv, rm or the TeX programs.
+    dash = top / 'dash'
+    dash.mkdir()
+    (dash / '-x.tex').write_text(GOOD)
+    result = run_macro_command(script, dash, '-x.tex', tmp)
+    check(result.returncode == 0 and (dash / '-x.pdf').exists(),
+          f'a document named -x.tex makes -x.pdf: {result.returncode} {result.stderr[-300:]}')
+
     # Reruns in which latex makes no new DVI file: the earlier a b.dvi must not reach dvips.
     reruns = [('empty body', r'\documentclass{article}\begin{document}\end{document}' + '\n', 'latex made no a b.dvi'),
               ('undefined command', r'\documentclass{article}\begin{document}\undefinedcommand\end{document}' + '\n',
@@ -177,12 +199,66 @@ def script_checks(script, top):
         check(result.returncode == 1, f'{step} failure stops with 1: {result.returncode}')
         check(result.stderr.startswith('altpdflatexc: ' + message), f'{step} failure says "{message}": {result.stderr[:300]!r}')
         check(pdf.read_bytes() == good_pdf, f'{step} failure leaves the earlier PDF as it was')
+        check(dvi.exists() and dvi.read_bytes() == good_dvi, f'{step} failure puts the earlier a b.dvi back')
         check(not any(tmp.iterdir()), f'{step} failure leaves nothing in TMPDIR: {list(tmp.iterdir())}')
+
+    # latex writes one page to the DVI file, then stops on a missing \input file (the fourth audit): the earlier
+    # DVI file must come back in place of the partial one; with no earlier DVI file, none may be left.
+    (folder / tex).write_text(PARTIAL)
+    for earlier in (True, False):
+        label = 'partial output ' + ('after a good run' if earlier else 'with no earlier DVI')
+        if not earlier and dvi.exists():
+            dvi.unlink()
+        result = run_macro_command(script, folder, tex, tmp)
+        log = (folder / 'a b.log').read_text(errors='replace')
+        check('Output written on "a b.dvi" (1 page' in log, f'{label}: latex writes one page before it stops (the case is real)')
+        check(result.returncode == 1, f'{label}: stops with 1: {result.returncode} {result.stderr[-300:]!r}')
+        check(result.stderr.startswith('altpdflatexc: latex stopped with an error'), f'{label}: says latex stopped: {result.stderr[:300]!r}')
+        check('### dvips' not in result.stdout, f'{label}: dvips is not run')
+        check(pdf.read_bytes() == good_pdf, f'{label}: the earlier PDF is left byte for byte')
+        if earlier:
+            check(dvi.exists() and dvi.read_bytes() == good_dvi, f'{label}: the earlier a b.dvi is put back byte for byte')
+        else:
+            check(not dvi.exists(), f'{label}: no partial a b.dvi is left')
+        check(not any(tmp.iterdir()), f'{label}: nothing is left in TMPDIR: {list(tmp.iterdir())}')
 
     # After the failures, the good source makes the PDF again.
     (folder / tex).write_text(GOOD)
     result = run_macro_command(script, folder, tex, tmp)
     check(result.returncode == 0 and pdf_facts(pdf)[0] == 1, f'the good file is made again: {result.returncode}')
+    check(dvi.exists() and dvi.read_bytes() != b'', 'the good run keeps its new a b.dvi')
+
+    # A folder or a link at the DVI, PostScript or PDF path stops the script before latex; nothing there is touched.
+    guard = top / 'guard "x" $HOME'
+    guard.mkdir()
+    (guard / tex).write_text(GOOD)
+    for ext, kind in [('dvi', 'folder'), ('ps', 'folder'), ('pdf', 'folder'), ('dvi', 'link')]:
+        label = f'a {kind} named a b.{ext}'
+        item = guard / f'a b.{ext}'
+        target = guard / 'target.bin'
+        if kind == 'folder':
+            item.mkdir()
+            (item / 'inside.txt').write_bytes(b'keep me\n')
+        else:
+            target.write_bytes(b'not a DVI file\n')
+            item.symlink_to(target.name)
+        result = run_macro_command(script, guard, tex, tmp)
+        check(result.returncode != 0, f'{label}: stops with a status other than 0: {result.returncode}')
+        check(result.stderr.startswith(f'altpdflatexc: a b.{ext} is a folder, a link'), f'{label}: says why: {result.stderr[:300]!r}')
+        check('### latex' not in result.stdout and not (guard / 'a b.log').exists(), f'{label}: latex is not run')
+        if kind == 'folder':
+            check(item.is_dir() and not item.is_symlink() and sorted(x.name for x in item.iterdir()) == ['inside.txt']
+                  and (item / 'inside.txt').read_bytes() == b'keep me\n', f'{label}: the folder and its file are left as they were')
+        else:
+            check(item.is_symlink() and os.readlink(item) == target.name and target.read_bytes() == b'not a DVI file\n',
+                  f'{label}: the link and the file it points to are left as they were')
+        check(sorted(x.name for x in guard.iterdir()) == sorted([tex, item.name] + ([target.name] if kind == 'link' else [])),
+              f'{label}: nothing else is made beside the document: {sorted(x.name for x in guard.iterdir())}')
+        check(not any(tmp.iterdir()), f'{label}: nothing is left in TMPDIR: {list(tmp.iterdir())}')
+        # A mutated script may have left anything here; clear the folder for the next case.
+        for x in guard.iterdir():
+            if x.name != tex:
+                shutil.rmtree(x) if x.is_dir() and not x.is_symlink() else x.unlink()
 
 
 def main(mutation):
@@ -208,7 +284,9 @@ def main(mutation):
           'with TeX Live and Ghostscript, leaves no temporary file, and stops with a message and the earlier PDF kept when '
           'latex, dvips or ps2pdf fails; reruns with an empty body, an undefined command and a missing input file stop with '
           'status 1 without passing the earlier DVI to dvips, keep the earlier PDF byte for byte and put the earlier DVI back; '
-          f'the macro calls the script as before; {len(MUTATIONS)} mutated copies are caught')
+          'a run that writes one page and then stops puts the earlier DVI back over the partial one, or leaves no DVI '
+          'when there was none; a folder named .dvi, .ps or .pdf and a link named .dvi stop the script and are left as '
+          f'they were; the macro calls the script as before; {len(MUTATIONS)} mutated copies are caught')
 
 
 if __name__ == '__main__':
