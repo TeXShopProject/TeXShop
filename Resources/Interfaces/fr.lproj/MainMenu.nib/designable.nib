@@ -357,25 +357,25 @@
                                         <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Repère suivant" keyEquivalent="f" id="840" identifier="TSShortcut.doNextBullet:.0">
+                                        <menuItem title="Repère suivant" keyEquivalent="]" id="840" identifier="TSShortcut.doNextBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBullet:" target="-1" id="847"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Repère suivant (Ôter)" alternate="YES" keyEquivalent="f" id="842" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                        <menuItem title="Repère suivant (Ôter)" alternate="YES" keyEquivalent="]" id="842" identifier="TSShortcut.doNextBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBulletAndDelete:" target="-1" id="848"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Repère précédent" keyEquivalent="g" id="841" identifier="TSShortcut.doPreviousBullet:.0">
+                                        <menuItem title="Repère précédent" keyEquivalent="[" id="841" identifier="TSShortcut.doPreviousBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBullet:" target="-1" id="849"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Repère précédent (Ôter)" alternate="YES" keyEquivalent="g" id="843" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                        <menuItem title="Repère précédent (Ôter)" alternate="YES" keyEquivalent="[" id="843" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBulletAndDelete:" target="-1" id="850"/>

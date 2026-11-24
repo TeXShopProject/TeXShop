@@ -356,25 +356,25 @@
                                         <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Next Mark" keyEquivalent="f" id="881" identifier="TSShortcut.doNextBullet:.0">
+                                        <menuItem title="Next Mark" keyEquivalent="]" id="881" identifier="TSShortcut.doNextBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBullet:" target="-1" id="882"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Next Mark (Del)" alternate="YES" keyEquivalent="f" id="879" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                        <menuItem title="Next Mark (Del)" alternate="YES" keyEquivalent="]" id="879" identifier="TSShortcut.doNextBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBulletAndDelete:" target="-1" id="883"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Previous Mark" keyEquivalent="g" id="880" identifier="TSShortcut.doPreviousBullet:.0">
+                                        <menuItem title="Previous Mark" keyEquivalent="[" id="880" identifier="TSShortcut.doPreviousBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBullet:" target="-1" id="884"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Previous Mark (Del)" alternate="YES" keyEquivalent="g" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                        <menuItem title="Previous Mark (Del)" alternate="YES" keyEquivalent="[" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBulletAndDelete:" target="-1" id="885"/>

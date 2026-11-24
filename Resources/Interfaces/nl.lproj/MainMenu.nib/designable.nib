@@ -357,25 +357,25 @@
                                         <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Volgend markeerpunt" keyEquivalent="f" id="875" identifier="TSShortcut.doNextBullet:.0">
+                                        <menuItem title="Volgend markeerpunt" keyEquivalent="]" id="875" identifier="TSShortcut.doNextBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBullet:" target="-1" id="882"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Volgend markeerpunt (wis)" alternate="YES" keyEquivalent="f" id="877" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                        <menuItem title="Volgend markeerpunt (wis)" alternate="YES" keyEquivalent="]" id="877" identifier="TSShortcut.doNextBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBulletAndDelete:" target="-1" id="883"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Vorig markeerpunt" keyEquivalent="g" id="876" identifier="TSShortcut.doPreviousBullet:.0">
+                                        <menuItem title="Vorig markeerpunt" keyEquivalent="[" id="876" identifier="TSShortcut.doPreviousBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBullet:" target="-1" id="884"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Vorig markeerpunt (wis)" alternate="YES" keyEquivalent="g" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                        <menuItem title="Vorig markeerpunt (wis)" alternate="YES" keyEquivalent="[" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBulletAndDelete:" target="-1" id="885"/>

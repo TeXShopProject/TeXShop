@@ -357,25 +357,25 @@
                                         <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Marcajul următor" keyEquivalent="f" id="834" identifier="TSShortcut.doNextBullet:.0">
+                                        <menuItem title="Marcajul următor" keyEquivalent="]" id="834" identifier="TSShortcut.doNextBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBullet:" target="-1" id="842"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Marcajul următor (șterge)" alternate="YES" keyEquivalent="f" id="836" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                        <menuItem title="Marcajul următor (șterge)" alternate="YES" keyEquivalent="]" id="836" identifier="TSShortcut.doNextBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBulletAndDelete:" target="-1" id="843"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Marcajul anterior" keyEquivalent="g" id="835" identifier="TSShortcut.doPreviousBullet:.0">
+                                        <menuItem title="Marcajul anterior" keyEquivalent="[" id="835" identifier="TSShortcut.doPreviousBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBullet:" target="-1" id="844"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Marcajul anterior (șterge)" alternate="YES" keyEquivalent="g" id="837" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                        <menuItem title="Marcajul anterior (șterge)" alternate="YES" keyEquivalent="[" id="837" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBulletAndDelete:" target="-1" id="845"/>
