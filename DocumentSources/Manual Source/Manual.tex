@@ -1904,6 +1904,25 @@ The status bar under the source (\cref{fig:StatusBar}) shows, from the left, the
 
 To count the text without the \LaTeX\ commands, click \mnu{Text Statistics\ldots} in the status bar, or choose \mnu{Edit}\To\mnu{Statistics\ldots}. A popover shows the numbers of \mnu{Characters}, \mnu{Words} and \mnu{Lines} of the \mnu{Whole Document}, or of the \mnu{Selection} when text is selected, in two columns. \mnu{Source} is counted as the status bar counts. \mnu{Text} is what remains after \cmd{detex}, a program in \TeX\ Live, removes the commands; the files read with \verb|\input| and \verb|\include| are counted too. The document need not be saved. The time at the top of the popover tells when the numbers were counted; click the refresh button beside it to count again after editing.
 
+\subsection{Character Count Options}\label{CharacterCountOptionsSection}
+
+The options button beside the refresh button shows how the characters are counted, under the numbers (\cref{fig:TextStatisticsOptions}); click it again to hide them. When an option changes, the \mnu{Characters} row of both columns is counted again at once, without running \cmd{detex}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=4.5in]{Graphics/manual-text-statistics.png}
+\caption{Text Statistics with its options shown: line endings and whitespace are not counted}
+\label{fig:TextStatisticsOptions}
+\end{figure}
+
+\begin{itemize}
+\item \mnu{Ignore line endings} leaves the line endings out of the count, and \mnu{Ignore whitespace} the spaces and tabs, the ideographic space among them. \mnu{Treat consecutive whitespace as one} counts a run of spaces and line endings as one character.
+\item \mnu{Normalization} converts the text to \mnu{NFC}, \mnu{NFD}, \mnu{NFKC}, \mnu{NFKD}, \mnu{NFKC Case-Fold}, \mnu{Modified NFC} or \mnu{Modified NFD} before counting (\cref{CharacterConversionSection}); NFKC Case-Fold also folds upper case to lower case and drops invisible characters such as soft hyphens. The source itself is not changed.
+\item \mnu{Unit} chooses what is counted: \mnu{Grapheme Cluster}, characters as they are seen, as the status bar counts them; \mnu{Unicode Scalar}, the Unicode code points; \mnu{UTF-16}, the UTF-16 code units; or \mnu{Byte}, the bytes of the text in the encoding chosen in \mnu{Encoding}, as TeXShop would save it. The first row is then named after the unit. A dash shows that some characters cannot be written in the encoding.
+\end{itemize}
+
+The options are the same for all documents and are kept when TeXShop quits; the encoding is the document's each time the popover opens. While the options are hidden, the options button is shown in color when the characters are not counted as the status bar counts them.
+
 % ===== 13-find.tex
 \chapter{Find and Replace}\label{FindChapter}
 
