@@ -22,11 +22,20 @@ static TSScrollAnchor TSAnchorForView(NSTextView *view)
         anchor.clipX = clip.bounds.origin.x;
     NSLayoutManager *layout = view.layoutManager;
     NSTextContainer *container = view.textContainer;
-    if (!layout || !container || view.string.length == 0 || layout.numberOfGlyphs == 0)
+    if (!layout || !container || view.string.length == 0)
         return anchor;
+    // setTextColor: leaves the first glyphIndexForPoint on another wrap of the line than the one on screen. A theme
+    // does that for each part of a split source. The next question returns the wrap that is painted (#72).
     NSRect visible = view.visibleRect;
     NSPoint inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x,
                                       NSMinY(visible) + 1 - view.textContainerOrigin.y);
+    if (layout.numberOfGlyphs > 0)
+        (void)[layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (layout.numberOfGlyphs == 0)
+        return anchor;
+    visible = view.visibleRect;
+    inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x,
+                              NSMinY(visible) + 1 - view.textContainerOrigin.y);
     NSUInteger glyph = [layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
     if (glyph >= layout.numberOfGlyphs)
         glyph = layout.numberOfGlyphs - 1;

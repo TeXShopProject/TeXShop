@@ -4,6 +4,7 @@
 // Built by Tests/run-advanced-find-panel.py; no window is ever shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
+#import <string.h>
 #import "TestAppKitIsolation.h"
 #import "AdvancedFindTaskWait.h"
 #import "TSLayoutManager.h"
@@ -1047,8 +1048,142 @@ static NSString *VisibleTopFragment(NSTextView *view)
     return [view.string substringWithRange:characters];
 }
 
+/// Pixels of what is on screen, packed one row at a time. The bitmap's own row padding is not compared.
+static NSData *PackedPixels(NSView *view, NSAppearance *appearance)
+{
+    __block NSData *packed = [NSData data];
+    [appearance performAsCurrentDrawingAppearance:^{
+        [view layoutSubtreeIfNeeded];
+        [view displayIfNeeded];
+        NSBitmapImageRep *rep = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
+        if (!rep || !rep.bitmapData)
+            return;
+        [view cacheDisplayInRect:view.bounds toBitmapImageRep:rep];
+        NSInteger width = rep.pixelsWide, height = rep.pixelsHigh, bytesPerRow = rep.bytesPerRow, bytesPerPixel = rep.bitsPerPixel / 8;
+        if (width <= 0 || height <= 0 || bytesPerPixel <= 0)
+            return;
+        NSMutableData *data = [NSMutableData dataWithLength:(NSUInteger)(width * height * bytesPerPixel)];
+        unsigned char *destination = data.mutableBytes;
+        unsigned char *source = (unsigned char *)rep.bitmapData;
+        for (NSInteger y = 0; y < height; y++)
+            memcpy(destination + (NSUInteger)(y * width * bytesPerPixel), source + (NSUInteger)(y * bytesPerRow), (size_t)(width * bytesPerPixel));
+        packed = data;
+    }];
+    return packed;
+}
+
+/// Ask for the glyph at the top, then draw, so the next glyphIndexForPoint names the wrap on screen (#72).
+static void SyncDrawnLine(NSTextView *view)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || layout.numberOfGlyphs == 0)
+        return;
+    NSRect rect = view.visibleRect;
+    NSPoint point = NSMakePoint(NSMinX(rect) - view.textContainerOrigin.x, NSMinY(rect) + 1 - view.textContainerOrigin.y);
+    (void)[layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    [view display];
+}
+
+static void PlaceWrappedWord(NSTextView *view, NSString *word)
+{
+    [view.layoutManager ensureLayoutForTextContainer:view.textContainer];
+    NSRange target = [view.string rangeOfString:word];
+    NSUInteger glyph = target.location == NSNotFound ? NSNotFound : [view.layoutManager glyphIndexForCharacterAtIndex:target.location];
+    if (glyph == NSNotFound || glyph >= view.layoutManager.numberOfGlyphs)
+        return;
+    NSRect line = [view.layoutManager lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    NSRect bounds = clip.bounds;
+    bounds.origin.y += NSMinY(line) + view.textContainerOrigin.y + 3 - NSMinY(view.visibleRect);
+    [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+    [view.enclosingScrollView reflectScrolledClipView:clip];
+}
+
+/// `colorAfterScroll` is how a document sets the source color: both parts are already in place, then the upper color
+/// changes and then the lower one (TSDocument-Color.m). The other order sets each part's color, lays that part out
+/// and scrolls it, and the second color change leaves the first part's glyph index on another wrap.
+static void CheckWrappedPlace(NSString *text, BOOL colorAfterScroll)
+{
+    NSString *order = colorAfterScroll ? @"after the scroll" : @"on each part before its scroll";
+    NSAppearance *appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSTextView *upper = nil, *lower = nil, *pictureUpper = nil, *pictureLower = nil;
+    CGFloat upperY = 0, lowerY = 0, pictureUpperY = 0, pictureLowerY = 0;
+    Check(MakeScrolledSource(text, NO, 0, &upper, &lower, &upperY, &lowerY)
+          && MakeScrolledSource(text, NO, 0, &pictureUpper, &pictureLower, &pictureUpperY, &pictureLowerY),
+          [@"wrapped source scrolls, " stringByAppendingString:order]);
+    void (^arrange)(NSTextView *, NSTextView *) = ^(NSTextView *top, NSTextView *bottom) {
+        top.window.appearance = appearance;
+        top.appearance = appearance;
+        bottom.appearance = appearance;
+        if (colorAfterScroll) {
+            PlaceWrappedWord(top, @"x35.371");
+            PlaceWrappedWord(bottom, @"x25.126");
+            // The same order as a theme change on a split source.
+            top.textColor = NSColor.darkGrayColor;
+            bottom.textColor = NSColor.darkGrayColor;
+        } else {
+            for (NSTextView *view in @[top, bottom]) {
+                view.textColor = NSColor.textColor;
+                view.backgroundColor = NSColor.textBackgroundColor;
+                PlaceWrappedWord(view, view == top ? @"x35.371" : @"x25.126");
+            }
+        }
+    };
+    arrange(upper, lower);
+    arrange(pictureUpper, pictureLower);
+    // The picture is drawn now. The source under test is not, until Replace All has asked which line is showing.
+    NSData *pictureTop = PackedPixels(pictureUpper.enclosingScrollView, appearance);
+    NSData *pictureBottom = PackedPixels(pictureLower.enclosingScrollView, appearance);
+    SyncDrawnLine(pictureUpper);
+    SyncDrawnLine(pictureLower);
+    Check(pictureTop.length > 0 && pictureBottom.length > 0
+          && [VisibleTopFragment(pictureUpper) containsString:@"x35.371"]
+          && [VisibleTopFragment(pictureLower) containsString:@"x25.126"],
+          [NSString stringWithFormat:@"the picture shows the wrapped words (%@)", order]);
+    controller.settings.findString = @"line";
+    controller.settings.replaceString = @"LINE";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper),
+          [@"Replace All inside a wrapped line, color " stringByAppendingString:order]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    NSData *afterTop = PackedPixels(upper.enclosingScrollView, appearance);
+    NSData *afterBottom = PackedPixels(lower.enclosingScrollView, appearance);
+    SyncDrawnLine(upper);
+    SyncDrawnLine(lower);
+    Check([VisibleTopFragment(upper) containsString:@"x35.371"] && [VisibleTopFragment(lower) containsString:@"x25.126"],
+          [NSString stringWithFormat:@"a wrapped line stays on the same display line when the color is set %@ (%@ / %@)",
+           order,
+           [VisibleTopFragment(upper) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
+           [VisibleTopFragment(lower) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    NSData *undoTop = PackedPixels(upper.enclosingScrollView, appearance);
+    NSData *undoBottom = PackedPixels(lower.enclosingScrollView, appearance);
+    SyncDrawnLine(upper);
+    SyncDrawnLine(lower);
+    Check([undoTop isEqualToData:pictureTop] && [undoBottom isEqualToData:pictureBottom]
+          && [VisibleTopFragment(upper) containsString:@"x35.371"] && [VisibleTopFragment(lower) containsString:@"x25.126"],
+          [NSString stringWithFormat:@"undo puts the wrapped display lines back (%@, %@ / %@)", order,
+           [VisibleTopFragment(upper) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
+           [VisibleTopFragment(lower) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
+    [upper.undoManager redo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    NSData *redoTop = PackedPixels(upper.enclosingScrollView, appearance);
+    NSData *redoBottom = PackedPixels(lower.enclosingScrollView, appearance);
+    SyncDrawnLine(upper);
+    SyncDrawnLine(lower);
+    Check([redoTop isEqualToData:afterTop] && [redoBottom isEqualToData:afterBottom]
+          && [VisibleTopFragment(upper) containsString:@"x35.371"] && [VisibleTopFragment(lower) containsString:@"x25.126"],
+          [NSString stringWithFormat:@"redo keeps the wrapped display lines (%@)", order]);
+}
+
 /// A long logical line, wrapped, scrolled to a word in the middle of that line. Same-length Replace All must leave
-/// that display line at the top (#72).
+/// that display line at the top. The color is set in the two orders that leave the glyph index on another wrap until
+/// the view is drawn (#72).
 static void TestWrappedMiddleKeepsPlace(void)
 {
     NSMutableString *mixed = [NSMutableString string];
@@ -1059,59 +1194,8 @@ static void TestWrappedMiddleKeepsPlace(void)
             [mixed appendFormat:@"x%02d.%03d ", w, i];
         [mixed appendString:@"\n"];
     }
-    NSUInteger beeps = 0;
-    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
-    NSTextView *upper = nil, *lower = nil;
-    CGFloat upperY = 0, lowerY = 0;
-    Check(MakeScrolledSource(mixed, NO, 0, &upper, &lower, &upperY, &lowerY), @"wrapped source scrolls");
-    NSArray<NSTextView *> *views = @[upper, lower];
-    upper.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-    for (NSTextView *view in views) {
-        view.appearance = upper.window.appearance;
-        view.textColor = NSColor.textColor;
-        view.backgroundColor = NSColor.textBackgroundColor;
-    }
-    NSArray<NSString *> *words = @[@"x35.371", @"x25.126"];
-    for (NSUInteger i = 0; i < views.count; i++) {
-        NSTextView *view = views[i];
-        [view.layoutManager ensureLayoutForTextContainer:view.textContainer];
-        NSRange target = [mixed rangeOfString:words[i]];
-        NSUInteger glyph = [view.layoutManager glyphIndexForCharacterAtIndex:target.location];
-        NSRect line = [view.layoutManager lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
-        NSClipView *clip = view.enclosingScrollView.contentView;
-        NSRect bounds = clip.bounds;
-        bounds.origin.y += NSMinY(line) + view.textContainerOrigin.y + 3 - NSMinY(view.visibleRect);
-        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
-        [view.enclosingScrollView reflectScrolledClipView:clip];
-    }
-    [upper.window display];
-    NSString *upperBefore = VisibleTopFragment(upper);
-    NSString *lowerBefore = VisibleTopFragment(lower);
-    Check([upperBefore containsString:words[0]] && [lowerBefore containsString:words[1]],
-          [NSString stringWithFormat:@"the wrapped words are on screen (%@ / %@)",
-           [upperBefore stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
-           [lowerBefore stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
-    controller.settings.findString = @"line";
-    controller.settings.replaceString = @"LINE";
-    controller.settings.options = 0;
-    controller.settings.inSelection = NO;
-    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper), @"Replace All inside a wrapped line");
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
-    [upper.window display];
-    Check([VisibleTopFragment(upper) isEqualToString:upperBefore] && [VisibleTopFragment(lower) isEqualToString:lowerBefore],
-          [NSString stringWithFormat:@"a wrapped line stays on the same display line (%@ / %@)",
-           [VisibleTopFragment(upper) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
-           [VisibleTopFragment(lower) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
-    [upper.undoManager undo];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
-    [upper.window display];
-    Check([VisibleTopFragment(upper) isEqualToString:upperBefore] && [VisibleTopFragment(lower) isEqualToString:lowerBefore],
-          @"undo puts the wrapped display lines back");
-    [upper.undoManager redo];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
-    [upper.window display];
-    Check([VisibleTopFragment(upper) isEqualToString:upperBefore] && [VisibleTopFragment(lower) isEqualToString:lowerBefore],
-          @"redo keeps the wrapped display lines");
+    CheckWrappedPlace(mixed, YES);
+    CheckWrappedPlace(mixed, NO);
 }
 
 #pragma mark Main
