@@ -48,7 +48,7 @@
 
 <p>Las palabras mal escritas se subrayan mientras escribe cuando está activado Edición › Ortografía y gramática › Comprobar ortografía mientras se escribe. Para revisar el documento palabra por palabra, elija Edición › Ortografía y gramática › Mostrar ortografía y gramática (<kbd>⌘:</kbd>): el panel muestra la primera palabra mal escrita después del punto de inserción. Haga clic en «Buscar siguiente» en el panel, o elija Comprobar documento ahora (<kbd>⌘;</kbd>), para ir a la siguiente. Mantenga pulsada la tecla Opción al hacerlo para usar la búsqueda de macOS, que no omite ninguna marca de formato.</p>
 
-<p>Para reemplazar una palabra en todas partes, escriba el reemplazo en el campo «Reemplazo para Cambiar todo» del panel, o seleccione una sugerencia, y haga clic en «Cambiar todo»; un solo Deshacer revierte el cambio. «Olvidar palabras aprendidas…», en el submenú Ortografía y gramática, enumera las palabras del documento que se han aprendido para el idioma actual y elimina del diccionario las que usted seleccione. «Corregir ortografía automáticamente», en el mismo submenú, cambia las palabras mientras escribe; está desactivado al principio, lo que conviene a TeX, donde también cambiaría los comandos.</p>
+<p>Para reemplazar una palabra en todas partes, escriba el reemplazo en el campo «Reemplazo para Cambiar todo» del panel, o seleccione una sugerencia, y haga clic en «Cambiar todo»; un solo Deshacer revierte el cambio. Después de editar el documento o seleccionar otro texto, haga clic de nuevo en «Buscar siguiente» antes de cambiar una palabra. «Olvidar palabras aprendidas…», en el submenú Ortografía y gramática, enumera las palabras del documento que se han aprendido para el idioma actual y elimina del diccionario las que usted seleccione. «Corregir ortografía automáticamente», en el mismo submenú, cambia las palabras mientras escribe; está desactivado al principio, lo que conviene a TeX, donde también cambiaría los comandos.</p>
 
 <h2>Ajustes › Ortografía</h2>
 
@@ -59,14 +59,14 @@
 <dt>«Método anterior»</dt>
 <dd>macOS lo comprueba todo, salvo lo que excluyen las tres opciones que hay debajo: «No comprobar comandos LaTeX», «No comprobar parámetros», que omite los parámetros de algunos comandos con palabras especiales, como <code>\usepackage</code>, y «No comprobar comentarios». Estas opciones solo funcionan mientras el resaltado de sintaxis está activado, y Comprobar documento ahora no las tiene en cuenta.</dd>
 </dl>
-<p>Los archivos que no son código TeX, como los archivos Sweave, se comprueban siempre con el método anterior.</p>
+<p>La corrección adaptada a LaTeX comprueba los documentos que aún no se han guardado y los archivos con las extensiones tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx y lbx. Los demás archivos, como los archivos Sweave, se comprueban siempre con el método anterior.</p>
 
 <h2>Reglas de exclusión</h2>
 
 <p>Las reglas de la revisión ortográfica adaptada a LaTeX están en el archivo ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Ábralo con «Editar exclusiones de LaTeX…» en Ajustes o con Edición › Ortografía y gramática › Editar excepciones de ortografía…; se abre en TeXShop, y su principio explica el formato. Por ejemplo, estas líneas omiten el primer argumento de un comando <code>\mycommand</code> y el contenido del entorno <code>proof</code>:</p>
 <pre>skip-args  1  mycommand
 skip-body  proof</pre>
-<p>Los cambios tienen efecto la próxima vez que se compruebe la ortografía. Si se borra el archivo, TeXShop crea una copia nueva del archivo por omisión la próxima vez que se abre. Ayuda › Ayuda de la revisión ortográfica describe la revisión ortográfica con más detalle.</p>
+<p>Los cambios tienen efecto la próxima vez que se compruebe la ortografía. Si se borra el archivo, TeXShop crea una copia nueva del archivo por omisión la próxima vez que se abre. Para no omitir nada, deje en él solo líneas de comentario.</p>
 
 <h2>Diccionarios</h2>
 

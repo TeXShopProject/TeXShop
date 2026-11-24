@@ -247,9 +247,7 @@
 
 "Shortcut" = "Shortcut";
 "Shortcut Unavailable" = "Shortcut Unavailable";
-"Spell Checking Help" = "Spell Checking Help";
 
-"The spell checking help could not be found" = "The spell checking help could not be found";
 "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several.";
 "This command is no longer available." = "This command is no longer available.";
 "This shortcut is already used by “%@”." = "This shortcut is already used by “%@”.";
