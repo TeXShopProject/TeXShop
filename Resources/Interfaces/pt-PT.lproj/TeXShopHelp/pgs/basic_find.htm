@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Procurar e substituir</title>
+<meta name="description" content="procurar e substituir; painel de pesquisa avançada; interface de pesquisa; expressões regulares; Procurar tudo; Destacar tudo; Substituir tudo; Substituição múltipla; barra de pesquisa Apple; painel de pesquisa OgreKit">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm" class="current">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Procurar e substituir</h1>
+
+<p>Os comandos de procura estão no submenu Procurar do menu Editar: Procurar… (<kbd>⌘F</kbd>), Procurar e substituir… (<kbd>⌥⌘F</kbd>), Procurar seguinte (<kbd>⌘G</kbd>), Procurar anterior (<kbd>⇧⌘G</kbd>), Usar seleção para procurar (<kbd>⌘E</kbd>) e Ir para a seleção (<kbd>⌘J</kbd>). Para procurar texto no documento composto, consulte <a href="basic_preview.htm#search">A janela de pré-visualização</a>.</p>
+
+<h2>Escolher a interface de pesquisa</h2>
+
+<p>Definições › Editor › «Interface de pesquisa» escolhe o que «Procurar» abre:</p>
+<dl>
+<dt>Painel de pesquisa avançada (recomendado)</dt>
+<dd>Um painel com expressões regulares, uma lista de todas as correspondências e substituição múltipla, descrito nesta página. É o painel com que todos os utilizadores começam.</dd>
+<dt>Barra de pesquisa Apple</dt>
+<dd>A barra de pesquisa do macOS, no topo do código-fonte, como no Safari e no Xcode.</dd>
+<dt>Painel de pesquisa Apple</dt>
+<dd>O painel de pesquisa básico do macOS.</dd>
+<dt>Painel de pesquisa OgreKit (legado)</dt>
+<dd>O painel de pesquisa do OgreKit, de Isao Sonobe, com expressões regulares próprias. Mudar para este painel, ou deixar de o usar, só produz efeito quando o TeXShop é reiniciado.</dd>
+</dl>
+
+<h2>O painel de pesquisa avançada</h2>
+
+<p>«Procurar» abre o painel com o campo de pesquisa selecionado, e «Procurar e substituir», com o campo de substituição selecionado. Num campo, Return procura a correspondência seguinte e Tab passa para o outro campo; Opção + Return e Opção + Tab inserem uma quebra de linha e uma tabulação. O ícone à esquerda de um campo enumera os textos recentes desse campo, e a extremidade direita do campo de pesquisa mostra a posição da correspondência atual, como «3 de 12».</p>
+
+<p>Por baixo dos campos estão «Expressão regular», «Ignorar maiúsculas/minúsculas» e «Na seleção». O botão com três pontos mostra mais opções: recomeçar no início, apenas palavras inteiras, ignorar os sinais diacríticos ou a diferença entre caracteres de largura total e de meia largura, opções para as expressões regulares, a sintaxe da substituição e «Tratar ¥ como \». As opções mantêm-se de uma sessão para a seguinte.</p>
+
+<p>Os botões na parte inferior são «Procurar tudo», «Substituir tudo», «Substituição múltipla…», «Substituir e procurar» e as setas para a correspondência anterior e a seguinte.</p>
+<ul>
+<li>«Procurar tudo» enumera todas as correspondências com o respetivo número de linha. Clique numa linha para selecionar a correspondência no código-fonte; faça duplo clique para trazer também a janela do código-fonte para a frente. Com «Atualização automática» ativada, a lista acompanha as suas edições. O menu de «Procurar tudo» tem ainda «Destacar tudo», que assinala todas as correspondências no texto, «Selecionar tudo», que as seleciona todas, e «Remover destaques».</li>
+<li>«Substituir tudo» substitui todas as correspondências, ou todas as correspondências da seleção quando «Na seleção» está ativado. Um único «Desfazer» anula a substituição inteira.</li>
+<li>«Substituir e procurar» substitui a correspondência selecionada e procura a seguinte; o seu menu tem também «Substituir» sozinho.</li>
+</ul>
+
+<p>Com o painel de pesquisa avançada, o submenu Procurar tem também os comandos do painel, que funcionam com o painel fechado: Procurar tudo (<kbd>⇧⌘F</kbd>), Selecionar todas as ocorrências, Usar seleção para substituir (<kbd>⇧⌘E</kbd>), Substituir, Substituir e procurar (<kbd>⌥⌘G</kbd>), Substituir tudo, Destacar tudo (<kbd>⇧⌘H</kbd>) e Remover destaques (<kbd>⌃⇧⌘H</kbd>). Os respetivos atalhos podem ser alterados em Definições › Teclado.</p>
+
+<p>«Substituir tudo», «Procurar tudo» e a substituição múltipla funcionam em segundo plano, e o documento não pode ser editado até terminarem. Quando uma destas operações demora, uma folha na janela do documento mostra o progresso; «Cancelar» na folha, ou a tecla Escape, interrompe-a e deixa o texto como estava.</p>
+
+<p>O painel também procura texto na consola, no registo e nas janelas da experiência. Não é possível substituir na consola, no registo nem na consola da experiência, que mostram a saída do TeX.</p>
+
+<p>O painel é uma das janelas de documento, por isso um clique no código-fonte coloca-o atrás dessa janela, e «Procurar» volta a trazê-lo. Para o manter à frente das janelas de documento, ative «Manter o painel de pesquisa avançada em primeiro plano» em Definições › Editor › Pesquisa.</p>
+
+<h2>Expressões regulares</h2>
+
+<p>Com «Expressão regular» ativada, o texto a procurar é um padrão na sintaxe do ICU, as expressões regulares do macOS. A maioria dos padrões escreve-se como noutras aplicações. Uma chaveta que não pertence a uma repetição tem de ser escrita <code>\{</code> ou <code>\}</code>, por isso procure <code>\\section\{</code> e não <code>\\section{</code>.</p>
+
+<p>Na substituição, <code>$0</code> é a correspondência inteira, <code>$1</code>, <code>$2</code>, … são os grupos, e <code>\$</code> é um cifrão, pelo que uma fórmula <code>$x$</code> se escreve <code>\$x\$</code>. Uma barra invertida escreve-se duas vezes: <code>\\section</code> dá <code>\section</code>. A sintaxe do OgreKit, com <code>\1</code>, <code>\2</code>, … para os grupos e <code>$</code> como carácter comum, pode ser escolhida nas opções; os utilizadores que vieram do painel de pesquisa OgreKit começam com ela.</p>
+
+<p>O pequeno botão ? junto a «Expressão regular» abre uma referência da sintaxe dos padrões e das substituições, e de onde difere do OgreKit. Os campos mostram as partes de um padrão nas cores do tema, um erro a vermelho e o que o OgreKit leria de outra forma a laranja; a linha por baixo das opções explica-os.</p>
+
+<p>Alguns exemplos:</p>
+<ul>
+<li>Para transformar <code>\section{Intro}</code> em <code>\section*{Intro}</code>, procure <code>\\section\{([^}]*)\}</code> e substitua por <code>\\section*{$1}</code>.</li>
+<li>Para encontrar todos os caracteres que não são ASCII, procure <code>[^[:ascii:]]</code> e depois clique em «Procurar tudo» ou escolha «Destacar tudo».</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>Substituição múltipla</h2>
+
+<p>«Editar substituição múltipla…», no submenu Procurar, ou o botão «Substituição múltipla…» do painel, abre a janela «Substituição múltipla». Esta guarda conjuntos de pares de procura e substituição, chamados regras, e aplica as regras de um conjunto por ordem, de cima para baixo. Os conjuntos aparecem à esquerda e as regras do conjunto selecionado à direita. Cada regra tem os seus próprios textos de procura e de substituição, a sua própria escolha de expressão regular (RE) e de ignorar maiúsculas/minúsculas (IC), e uma descrição; a caixa de verificação à esquerda desativa-a. Os botões + e − acrescentam e removem regras, e as regras reordenam-se arrastando. O botão com três pontos por baixo das regras contém as opções do conjunto inteiro. Uma regra que não pode ser usada, por exemplo por ter um padrão inválido, mostra um sinal de aviso e é ignorada.</p>
+
+<p>«Substituir tudo», na janela, aplica as regras ao texto inteiro, ou à seleção quando «Na seleção» está ativado; um único «Desfazer» anula-o. «Destacar tudo» assinala o que as regras encontram. Todas as alterações na janela são guardadas de imediato. O submenu «Substituição múltipla» do submenu Procurar enumera os conjuntos e aplica o que escolher ao texto inteiro do código-fonte que está à frente.</p>
+
+<p>Cada conjunto é um ficheiro em ~/Library/TeXShop/MultipleReplace, no formato JSON das definições de substituição do CotEditor. Os botões + e − por baixo da lista de conjuntos criam um novo conjunto e movem o conjunto selecionado para o Lixo; o menu com três pontos ao lado deles duplica, importa e exporta conjuntos. «Importar…» lê também definições de substituição do CotEditor e texto separado por tabulações com uma regra por linha. Dois conjuntos de exemplo convertem entre caracteres Unicode e os comandos do pacote ajmacros, tal como faz «Conversão do tipo de carácter»; só são criados quando a pasta MultipleReplace ainda não existe.</p>
+
+<h2>Procurar em todos os ficheiros de um projeto</h2>
+
+<p>Para procurar e substituir de uma só vez no ficheiro principal e em todos os ficheiros de capítulo de um documento, consulte <a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a>.</p>
+</main>
+</body>
+</html>

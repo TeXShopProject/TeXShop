@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Înțelegerea macrocomenzilor implicite</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macrocomenzi implicite; Insert Begin/End; #SEL#; #INS#; #PASTE#; marcaje; plasarea cursorului; macrocomenzi text">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor pentru macrocomenzi</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="macros_default.htm" class="current">Înțelegerea macrocomenzilor implicite</a></li>
+<li><a href="macros_rearrange.htm">Rearanjarea meniului Macro</a></li>
+<li><a href="macros_define.htm">Definirea macrocomenzilor noi</a></li>
+<li><a href="macros_applescript.htm">Macrocomenzi AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macrocomenzile AppleScript implicite</a></li>
+<li><a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crearea dialogurilor</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Înțelegerea macrocomenzilor implicite</h1>
+<p>Cel mai bun mod de a înțelege macrocomenzile implicite este să le priviți în Editorul de Macro (Macro › Deschide Editorul de Macro...): selectați o macrocomandă din listă, iar conținutul ei apare alături.</p>
+<p>De exemplu, să presupunem că doriți un mediu theorem. Tastați cuvântul theorem, selectați-l și alegeți Macro › Insert Begin/End. Cuvântul este înlocuit cu</p>
+<pre>\begin{theorem}
+
+\end{theorem}</pre>
+<p>iar punctul de inserare este plasat pe rândul dintre ele.</p>
+<p>Insert Begin/End este o macrocomandă AppleScript (consultați <a href="macros_applescript.htm">Macrocomenzi AppleScript</a>). O macrocomandă text care face același lucru când este selectat un cuvânt arată așa:</p>
+<pre>\begin{#SEL#}
+#INS#
+\end{#SEL#}</pre>
+
+<h2 id="placeholders">Substituenți în macrocomenzile text</h2>
+<p>Textul unei macrocomenzi text este inserat în sursă, cu aceste înlocuiri:</p>
+<dl>
+<dt>#SEL#</dt><dd>este înlocuit cu textul care era selectat când a fost aleasă macrocomanda sau cu nimic, dacă nu era selectat niciun text.</dd>
+<dt>#INS#</dt><dd>marchează locul în care ajunge punctul de inserare. Fără el, punctul de inserare este plasat la sfârșitul textului inserat.</dd>
+<dt>#PASTE#</dt><dd>este înlocuit cu textul din clipboard sau cu nimic, dacă în clipboard nu există text.</dd>
+<dt>•</dt><dd>este un marcaj, la care se poate ajunge cu Editare › Marcaje.</dd>
+</dl>
+<p>În Editorul de Macro, acești substituenți sunt afișați ca jetoane rotunjite; <a href="macros_define.htm">Definirea macrocomenzilor noi</a> explică cum le inserați. Cu aceste cunoștințe, macrocomenzile implicite sunt ușor de înțeles și de modificat.</p>
+</main>
+</body>
+</html>

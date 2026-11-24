@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Composizione in giapponese</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Giappone; giapponese; pLaTeX; upLaTeX; LuaLaTeX; dvipdfmx; pacchetto otf; \UTF; \CID; UTF-8-MAC; normalizzazione Unicode; yen; barra rovesciata">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codifiche</a></li>
+<li><a href="advanced_Japan.htm" class="current">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Composizione in giapponese</h1>
+<p>TeX Live include i motori TeX giapponesi pTeX e upTeX, con pLaTeX e upLaTeX, oltre a LuaLaTeX con il pacchetto LuaTeX-ja. L’aiuto giapponese di TeXShop descrive la composizione in giapponese in modo più dettagliato.</p>
+
+<h2>Profili del motore per il giapponese</h2>
+<p>Il modo più rapido per preparare TeXShop ai documenti giapponesi è un profilo del motore. In Impostazioni › Composizione › «Profilo del motore», scegli uno dei tre profili giapponesi:</p>
+<table>
+<tr><th>Profilo</th><th>Composizione</th><th>BibTeX, indice, MetaPost</th></tr>
+<tr><td>upLaTeX + dvipdfmx</td><td>uplatex, poi dvipdfmx</td><td>upbibtex, upmendex, upmpost</td></tr>
+<tr><td>pLaTeX + dvipdfmx</td><td>platex, poi dvipdfmx</td><td>pbibtex, mendex, pmpost</td></tr>
+<tr><td>LuaLaTeX (giapponese)</td><td>lualatex</td><td>upbibtex, upmendex, mpost</td></tr>
+</table>
+<p>I profili giapponesi impostano anche UTF-8 come codifica dei nuovi documenti, impostano il dizionario ortografico sul rilevamento automatico della lingua e attivano «Converti automaticamente UTF-8-MAC in UTF-8». pLaTeX + dvipdfmx attiva inoltre «Converti in \UTF / \CID del pacchetto otf», mentre tutti gli altri profili la disattivano. Prima della conferma, un foglio elenca i valori impostati dal profilo.</p>
+
+<h2>Caratteri esterni a JIS X 0208 con pLaTeX</h2>
+<p>pTeX legge sorgenti in UTF-8, ma internamente conosce solo i caratteri di JIS X 0208, quindi gli altri caratteri, come 鷗 in 森鷗外, vanno persi. Il pacchetto otf li stampa con comandi come <code>\UTF{9DD7}</code>. L’impostazione «Converti in \UTF / \CID del pacchetto otf» nel gruppo «pLaTeX giapponese» di Impostazioni › Composizione ti permette di digitare questi caratteri così come sono:</p>
+<ul>
+<li>Quando il documento viene salvato, ogni carattere esterno a JIS X 0208 viene scritto come <code>\UTF{XXXX}</code>, e una variante di glifo scelta nell’editor come <code>\CID{number}</code>. Se uno di questi comandi termina una riga, dopo di esso viene aggiunto <code>%</code>, così nell’output non compare uno spazio.</li>
+<li>Quando si apre un documento, questi comandi vengono riconvertiti nei caratteri, che l’impostazione sia attiva o no, quindi la finestra sorgente mostra sempre i caratteri stessi.</li>
+</ul>
+<p>Il documento deve contenere <code>\usepackage{otf}</code>. Per esempio, la finestra sorgente mostra</p>
+<pre>\documentclass{jsarticle}
+\usepackage{otf}
+\begin{document}
+森鷗外 was a famous novelist in Japan.
+\end{document}</pre>
+<p>mentre il file contiene <code>森\UTF{9DD7}外</code>. upLaTeX e LuaLaTeX gestiscono Unicode direttamente e non richiedono alcuna conversione.</p>
+<p>Per convertire a mano una parte del testo, selezionala e usa Modifica › Conversione tipo di carattere › Caratteri Unicode → \UTF / \CID, oppure \UTF / \CID → Caratteri Unicode. Lo stesso sottomenu converte tra hiragana e katakana, tra cifre e lettere a larghezza piena e a mezza larghezza, tra caratteri come i numeri cerchiati e i comandi del pacchetto ajmacros, e le virgolette tipografiche in virgolette TeX. Se non è selezionato nulla, TeXShop chiede se convertire l’intero documento; ogni conversione si può annullare.</p>
+
+<h2>Caratteri composti e scomposti</h2>
+<p>Alcuni caratteri giapponesi hanno due forme Unicode. が può essere un singolo carattere (U+304C), oppure か (U+304B) seguito dal segno di sonorizzazione combinante (U+3099). Le due forme hanno lo stesso aspetto, ma TeX le considera diverse, quindi un comando definito con una forma non viene trovato quando lo si usa con l’altra:</p>
+<pre>\def\が{GA}
+\が   % Undefined control sequence if this が is decomposed</pre>
+<p>Il testo scomposto proviene spesso dai nomi dei file, che i dischi HFS+ memorizzano in forma scomposta; questa forma si chiama UTF-8-MAC. Quando Impostazioni › Documenti e salvataggio › Salvataggio documenti › «Converti automaticamente UTF-8-MAC in UTF-8» è attivato, TeXShop unisce questi caratteri in caratteri singoli quando salva un documento. Lascia invariati gli ideogrammi di compatibilità CJK e gli altri caratteri che la composizione standard (NFC) sostituirebbe con caratteri diversi; questa forma si chiama Modified NFC.</p>
+<p>Il sottomenu Modifica › Normalizzazione Unicode converte una selezione, o l’intero documento, in NFC, Modified NFC, NFD, Modified NFD, NFKC o NFKD, e poi mostra il pannello «Info caratteri» per il risultato, perché il testo normalizzato di solito ha lo stesso aspetto di prima.</p>
+
+<h2>Il segno dello yen e la barra rovesciata</h2>
+<p>Sulle tastiere giapponesi il tasto che si trova al posto della barra rovesciata digita il segno dello yen ¥, mentre i comandi TeX iniziano con la barra rovesciata \.</p>
+<ul>
+<li>Con UTF-8, la codifica impostata dai profili giapponesi, ¥ e \ sono caratteri diversi e vengono mantenuti entrambi. Attiva Sorgente › Associazioni dei tasti per il documento: l’elenco delle associazioni dei tasti fornito con TeXShop trasforma un ¥ digitato in \ e, poiché la sua colonna «Incolla» è selezionata, anche il ¥ nel testo incollato nel sorgente. Consulta <a href="basic_autocompletion.htm">Associazioni dei tasti</a>.</li>
+<li>Quando la codifica dei nuovi documenti è una delle codifiche giapponesi, TeXShop converte tra ¥ e \ mentre digiti e incolli. Con Giapponese (Mac OS, ShiftJIS ¥) e Giapponese (Shift JIS X0213), la finestra sorgente mostra il carattere dei comandi TeX come ¥; con le altre codifiche giapponesi mostra \.</li>
+<li>Quando un file viene salvato in una codifica giapponese, la barra rovesciata e la tilde vengono sempre scritte come i byte 0x5C e 0x7E, che TeX si aspetta.</li>
+</ul>
+
+<h2>Altre impostazioni per il giapponese</h2>
+<ul>
+<li>Impostazioni › Editor › Invisibile › «Spazio giapponese» mostra lo spazio a larghezza piena quando sono visualizzati i caratteri invisibili.</li>
+<li>Impostazioni › Editor › Evidenziazione della sintassi › «Evidenzia lettere e simboli a larghezza piena» contrassegna con i colori «Larghezza piena» del tema le lettere, le cifre e i simboli a larghezza piena, che si confondono facilmente con i corrispondenti ASCII.</li>
+<li>Impostazioni › Anteprima › «Direzione delle pagine» mostra le pagine da destra a sinistra, come serve per il testo verticale. Le righe <code>% !TEX PageDirectionR2L</code> e <code>% !TEX PageDirectionL2R</code> impostano la direzione per un singolo documento.</li>
+</ul>
+<p>La conversione in <code>\UTF</code> / <code>\CID</code> e la normalizzazione Unicode sono spiegate in dettaglio nelle slide di Yusuke Terada per TUG 2013, <a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>.</p>
+</main>
+</body>
+</html>

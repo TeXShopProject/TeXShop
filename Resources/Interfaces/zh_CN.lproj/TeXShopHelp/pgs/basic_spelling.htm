@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>拼写检查</title>
+<meta name="description" content="拼写检查; 考虑LaTeX语法的拼写检查; 拼写排除规则; 传统方式; 词典; 显示拼写和语法; % !TEX spellcheck">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm" class="current">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>拼写检查</h1>
+
+<p>TeXShop 使用 macOS 的拼写检查器和词典检查拼写。考虑 LaTeX 语法的拼写检查从一开始就是打开的：它检查正文，跳过 TeX 命令、数学公式、注释，以及 <code>\label</code>、<code>\ref</code>、<code>\cite</code> 和 <code>\usepackage</code> 等命令的参数，还会跳过常用宏包中不属于正文的参数，例如键、颜色和单位。文稿中用 <code>\newcommand</code>、<code>\def</code> 等定义的命令也会被读取，因此定义中传给 <code>\ref</code> 或放入数学公式中的参数同样会被跳过。标记为其他语言的文本（例如用 <code>\foreignlanguage</code> 标记的文本）会按该语言检查，但键入时不会加下划线。</p>
+
+<h2>检查文稿</h2>
+
+<p>打开“编辑”>“拼写和语法”>“键入时检查拼写”时，拼写错误的单词会在键入时加上下划线。要逐词检查文稿，请选取“编辑”>“拼写和语法”>“显示拼写和语法”（<kbd>⌘:</kbd>）：面板会显示插入点之后第一个拼写错误的单词。点按面板中的“查找下一个”，或选取“立即检查文稿”（<kbd>⌘;</kbd>），即可转到下一个。执行这些操作时按住 Option 键，会使用 macOS 的查找方式，它不跳过任何标记。</p>
+
+<p>要在所有地方替换某个单词，请在面板的“全部更改的替换词”栏中输入替换词，或选择一个建议，然后点按“全部更改”；执行一次“撤销”即可撤回此更改。编辑文稿或选择其他文本后，请先再次点按“查找下一个”，然后再更改单词。如果你编辑过“全部更改的替换词”栏，又想使用之前选中的建议，请先选择另一个建议，再选择那个建议；如果只有一个建议，请直接输入它。“拼写和语法”子菜单中的“忘记已学习的单词…”会列出文稿中已为当前语言学习过的单词，并将你选择的单词从词典中移除。同一子菜单中的“自动纠正拼写”会在键入时更改单词；它一开始是关闭的，这适合 TeX，因为它也会更改命令。</p>
+
+<h2>“设置”>“拼写检查”</h2>
+
+<p>在“检查拼写”组中，“键入时检查拼写”用于设置打开文稿时是否为拼写错误的单词加下划线，“自动更正”用于设置打开文稿时是否打开“自动纠正拼写”，“词典”则在下文介绍。“方式”组用于选择检查 TeX 源代码的方式：</p>
+<dl>
+<dt>“使用考虑LaTeX语法的拼写检查（推荐）”</dt>
+<dd>上文介绍的方式。其所在行末尾的“编辑LaTeX排除规则…”会打开规定跳过哪些内容的规则。</dd>
+<dt>“传统方式”</dt>
+<dd>macOS 检查所有内容，只排除其下方三个选项指定的内容：“不检查LaTeX命令”、“不检查命令参数”（跳过 <code>\usepackage</code> 等一些含特殊词的命令的参数）和“不检查注释”。这些选项仅在语法高亮打开时有效，并且“立即检查文稿”不遵循它们。</dd>
+</dl>
+<p>考虑 LaTeX 语法的方式检查尚未存储的文稿，以及扩展名为 tex、ltx、latex、dtx、ins、sty、cls、clo、bbx、cbx 和 lbx 的文件。其他文件（例如 Sweave 文件）总是用传统方式检查。</p>
+
+<h2>排除规则</h2>
+
+<p>考虑 LaTeX 语法的拼写检查所用的规则位于文件 ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt 中。可以用“设置”中的“编辑LaTeX排除规则…”或“编辑”>“拼写和语法”>“编辑拼写例外…”打开它；它会在 TeXShop 中打开，文件开头说明了格式。例如，以下几行会跳过命令 <code>\mycommand</code> 的第一个参数和环境 <code>proof</code> 的内容：</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>更改在下次检查拼写时生效。如果删除了此文件，TeXShop 会在下次启动时重新创建默认文件的副本。要完全不跳过任何内容，请在其中只保留注释行。</p>
+
+<h2>词典</h2>
+
+<p>“设置”>“拼写检查”中的“词典”用于选择文稿使用的词典。新的选择也会应用于已打开的文稿，但通过 <code>% !TEX spellcheck</code> 行或在“拼写和语法”面板中选择了词典的文稿除外。菜单以各语言自己的名称显示每种语言，例如 Deutsch 或 Français，并以其代码（例如 de 或 fr_CA）作为帮助标签。“自动检测语言”让 macOS 根据文本选择语言。</p>
+
+<p>要让某份文稿使用其他词典，请在该文稿位于最前面时，从“拼写和语法”面板底部的弹出式菜单中选择词典。每份已打开的文稿都保留自己的词典，切换文稿时面板也会随之切换。关闭文稿后，这一选择不会保留。</p>
+
+<p>要让文稿每次打开时都使用某个词典，请在其前 20 行中加入如下一行：</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>其值是语言代码，与“词典”菜单的帮助标签中显示的相同：<code>fr</code> 表示法语，<code>fr_CA</code> 表示加拿大法语；也可以用连字符书写，如 <code>fr-CA</code>。此行在打开文稿时读取，因此添加后请存储、关闭并重新打开文稿。在含有章节文件的文稿中，请在每个文件中都加入此行。</p>
+
+<p>关于在“设置”窗口中查找设置，请参阅“<a href="basic_preferences.htm#settings-search">搜索设置</a>”。</p>
+</main>
+</body>
+</html>

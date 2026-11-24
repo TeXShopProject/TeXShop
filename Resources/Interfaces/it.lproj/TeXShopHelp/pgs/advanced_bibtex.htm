@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BibTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="BibTeX; bibliografia; citazione; file bib; biber; biblatex; upbibtex; pbibtex; % !BIB program; Motore BibTeX">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codifiche</a></li>
+<li><a href="advanced_Japan.htm">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm" class="current">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>BibTeX</h1>
+<p>BibTeX costruisce la bibliografia di un documento LaTeX a partire da un database di riferimenti, un file con estensione <code>.bib</code>. Il documento cita le voci tramite le loro chiavi, e BibTeX elenca solo le voci citate.</p>
+<p>Un database <code>mybibliography.bib</code> contiene voci come</p>
+<pre>@book{Knuth:TeXbook,
+  author    = {Donald E. Knuth},
+  title     = {The {\TeX}book},
+  publisher = {Addison-Wesley},
+  year      = {1986}
+}</pre>
+<p>e il documento le cita e indica lo stile e il database:</p>
+<pre>As explained in~\cite{Knuth:TeXbook}, …
+
+\bibliographystyle{plain}
+\bibliography{mybibliography}</pre>
+
+<h2>Eseguire BibTeX</h2>
+<ol>
+<li>Componi il documento. Le citazioni appaiono come [?] e la bibliografia manca.</li>
+<li>Scegli Compilatore › BibTeX (<kbd>⇧⌘B</kbd>), oppure scegli BibTeX nel menu a comparsa accanto al pulsante «Compila» e premi «Compila».</li>
+<li>Componi altre due volte: la prima esecuzione aggiunge la bibliografia, la seconda completa le citazioni.</li>
+</ol>
+<p>La composizione con latexmk, ad esempio con il motore pdflatexmk o con un profilo «Con latexmk», esegue da sola BibTeX e i passaggi aggiuntivi.</p>
+<p>Per creare un nuovo database in TeXShop, scegli il tipo bib nel menu «Tipo di file» della finestra di dialogo Salva, così che il file riceva l’estensione <code>.bib</code>. Un database può trovarsi anche nel tuo albero TeX personale, dove ogni documento lo trova; consulta <a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a>.</p>
+
+<h2>Scegliere il programma</h2>
+<p>Compilatore › BibTeX esegue il comando indicato in Impostazioni › Composizione › Strumenti correlati › Motore BibTeX, per impostazione predefinita <code>bibtex</code>. Inserisci lì un altro programma con le opzioni necessarie, ad esempio <code>biber</code> per i documenti che usano il pacchetto biblatex. I profili del motore impostano questo campo: <code>pbibtex</code> per pLaTeX + dvipdfmx, <code>upbibtex</code> per upLaTeX + dvipdfmx e LuaLaTeX (giapponese), e <code>bibtex</code> per gli altri profili.</p>
+<p>Per scegliere il programma per un solo documento, inserisci una riga come questa in una delle sue prime venti righe:</p>
+<pre>% !BIB program = biber</pre>
+<p>La riga ha la precedenza sull’impostazione. La forma <code>% !BIB TS-program =</code> viene letta allo stesso modo.</p>
+</main>
+</body>
+</html>

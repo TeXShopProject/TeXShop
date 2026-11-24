@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palette Matrice</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="palette Matrice; matrice; array; tabular; tableau; délimiteurs; matrice identité; tableur; matrixpanel_1.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm" class="current">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Palette Matrice</h1>
+<p>Fenêtre › Palette Matrice... ouvre une palette qui écrit pour vous des matrices et des tableaux. Remplissez les coefficients dans son tableau, choisissez l’aspect du résultat et insérez-le dans la source au point d’insertion.</p>
+
+<h2>Créer une matrice ou un tableau</h2>
+<ol>
+<li>Saisissez la taille dans « Lignes » et « Colonnes », jusqu’à 999 chacune.</li>
+<li>Sous « Environnement », choisissez matrix pour une matrice dans une formule (un environnement <code>array</code>) ou tabular pour un tableau de texte. Avec tabular, « Incorporer dans un environnement table » place le tableau dans un flottant <code>table</code> avec une légende et une étiquette.</li>
+<li>Pour une matrice, choisissez les délimiteurs gauche et droit. Le point laisse ce côté sans délimiteur, et le dernier bouton utilise le délimiteur saisi dans le champ voisin.</li>
+<li>Les deux boutons illustrés d’une matrice ajoutent un cadre autour des coefficients et des traits entre eux.</li>
+<li>Remplissez les coefficients. « Effacer » les vide tous ; « Matrice identité » et « Matrice nulle » les remplissent avec une matrice identité ou avec des zéros.</li>
+<li>Cliquez sur « Insérer » ou appuyez sur <kbd>⌘Return</kbd>.</li>
+</ol>
+
+<h2>Travailler dans le tableau</h2>
+<p>Le tableau fonctionne comme un tableur. Cliquez sur une cellule pour la choisir, faites glisser le pointeur ou cliquez en maintenant la touche Maj enfoncée pour en choisir plusieurs, et saisissez du texte pour remplacer la valeur ; double-cliquez, appuyez sur F2 ou appuyez sur Contrôle-U pour la modifier. Retour descend, Tab va à droite et les touches fléchées se déplacent dans toutes les directions ; Supprimer vide les cellules choisies. Copier et Coller échangent des cellules avec les applications de tableur. Faites glisser le numéro d’une ligne pour déplacer la ligne. Annuler et Rétablir agissent sur le tableau tant que la palette est active.</p>
+<p>Quand la matrice est réduite, les cellules qui se trouvent en dehors gardent leurs valeurs, affichées en gris, et reviennent quand elle est de nouveau agrandie. Agrandissez la palette pour voir une plus grande partie du tableau.</p>
+
+<h2>Personnaliser le code inséré</h2>
+<p>Le code que la palette écrit autour des coefficients est conservé dans <code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code> : le début et la fin des environnements, les délimiteurs, les séparateurs entre coefficients et entre lignes, les traits d’un cadre ou d’une grille, et la lettre <code>c</code> qui détermine l’alignement de chaque colonne. Par exemple, remplacez <code>c</code> par <code>r</code> pour aligner les colonnes à droite. Conservez le nombre et l’ordre des chaînes du fichier, et relancez TeXShop après l’avoir modifié. Voir <a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

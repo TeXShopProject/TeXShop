@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Controllo ortografico</title>
+<meta name="description" content="controllo ortografico; controllo adatto a LaTeX; regole di esclusione ortografiche; metodo precedente; dizionario; Mostra ortografia e grammatica; % !TEX spellcheck">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Comporre i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm" class="current">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Controllo ortografico</h1>
+
+<p>TeXShop controlla l’ortografia con il correttore e i dizionari di macOS. Il controllo adatto a LaTeX è attivo fin dall’inizio: controlla il testo e salta i comandi TeX, la matematica, i commenti e gli argomenti di comandi come <code>\label</code>, <code>\ref</code>, <code>\cite</code> e <code>\usepackage</code>, oltre agli argomenti dei pacchetti più comuni che non sono testo, come chiavi, colori e unità di misura. I comandi che il documento definisce con <code>\newcommand</code>, <code>\def</code> e simili vengono letti, quindi viene saltato anche un argomento che una definizione passa a <code>\ref</code> o all’interno della matematica. Il testo indicato come scritto in un’altra lingua, per esempio con <code>\foreignlanguage</code>, viene controllato in quella lingua, ma non viene sottolineato mentre scrivi.</p>
+
+<h2>Controllare un documento</h2>
+
+<p>Le parole scritte in modo errato vengono sottolineate mentre scrivi finché Modifica › Ortografia e grammatica › Controlla ortografia mentre scrivo è attivo. Per scorrere il documento parola per parola, scegli Modifica › Ortografia e grammatica › Mostra ortografia e grammatica (<kbd>⌘:</kbd>): il pannello mostra la prima parola errata dopo il punto di inserimento. Fai clic su «Trova successivo» nel pannello, oppure scegli «Controlla il documento adesso» (<kbd>⌘;</kbd>), per passare alla successiva. Tieni premuto Opzione mentre lo fai per usare la ricerca di macOS, che non salta alcun markup.</p>
+
+<p>Per sostituire una parola ovunque, scrivi la sostituzione nel campo «Sostituzione per Cambia tutto» del pannello, oppure seleziona un suggerimento, e fai clic su «Cambia tutto»; un solo Annulla ripristina la modifica. Dopo aver modificato il documento o selezionato altro testo, fai di nuovo clic su «Trova successivo» prima di cambiare una parola. Se hai modificato il campo «Sostituzione per Cambia tutto» e vuoi un suggerimento che era selezionato, seleziona prima un altro suggerimento e poi quello; quando c’è un solo suggerimento, scrivilo. «Dimentica parole apprese…» nel sottomenu Ortografia e grammatica elenca le parole del documento che sono state apprese per la lingua corrente e rimuove dal dizionario quelle che selezioni. «Correggi automaticamente ortografia» nello stesso sottomenu cambia le parole mentre scrivi; all’inizio è disattivato, il che si addice a TeX, dove cambierebbe anche i comandi.</p>
+
+<h2>Impostazioni › Ortografia</h2>
+
+<p>Nel gruppo «Controllo Ortografia», «Controllare l’ortografia durante la digitazione» stabilisce se le parole errate vengono sottolineate in un documento quando lo si apre, «Correzione ortografia» stabilisce se «Correggi automaticamente ortografia» è attivo in un documento quando lo si apre, e «Dizionario» è descritto più avanti. Il gruppo «Metodo» sceglie come viene controllato il sorgente TeX:</p>
+<dl>
+<dt>«Usa il controllo adatto a LaTeX (consigliato)»</dt>
+<dd>Il metodo descritto sopra. «Modifica esclusioni LaTeX…» alla fine della sua riga apre le regole che stabiliscono che cosa viene saltato.</dd>
+<dt>«Metodo precedente»</dt>
+<dd>macOS controlla tutto, tranne ciò che escludono le tre opzioni sottostanti: «Non controllare i comandi LaTeX», «Non controllare i parametri selezionati», che salta i parametri di alcuni comandi con parole particolari, come <code>\usepackage</code>, e «Non controllare i commenti». Queste opzioni funzionano solo quando l’evidenziazione della sintassi è attiva, e «Controlla il documento adesso» non ne tiene conto.</dd>
+</dl>
+<p>Il metodo adatto a LaTeX controlla i documenti non ancora salvati e i file con le estensioni tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx e lbx. Gli altri file, come i file Sweave, vengono sempre controllati con il metodo precedente.</p>
+
+<h2>Regole di esclusione</h2>
+
+<p>Le regole del controllo adatto a LaTeX si trovano nel file ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Aprilo con «Modifica esclusioni LaTeX…» nelle Impostazioni oppure con Modifica › Ortografia e grammatica › Modifica esclusioni ortografia…; si apre in TeXShop, e la sua parte iniziale ne spiega il formato. Per esempio, queste righe saltano il primo argomento di un comando <code>\mycommand</code> e il contenuto dell’ambiente <code>proof</code>:</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>Le modifiche hanno effetto al successivo controllo ortografico. Se il file viene eliminato, TeXShop crea una nuova copia del file predefinito al successivo avvio. Per non saltare nulla, lascia nel file solo righe di commento.</p>
+
+<h2>Dizionari</h2>
+
+<p>«Dizionario» in Impostazioni › Ortografia sceglie il dizionario dei documenti. Una nuova scelta vale anche per i documenti aperti, tranne quelli il cui dizionario è stato scelto con una riga <code>% !TEX spellcheck</code> o nel pannello Ortografia e grammatica. Il menu mostra ogni lingua con il suo nome nella lingua stessa, come Deutsch o Français, e il suo codice, come de o fr_CA, come suggerimento. «Rilevamento automatico della lingua» lascia che macOS scelga la lingua in base al testo.</p>
+
+<p>Per usare un altro dizionario per un solo documento, sceglilo nel menu a comparsa in fondo al pannello Ortografia e grammatica mentre quel documento è in primo piano. Ogni documento aperto conserva il proprio dizionario, e il pannello cambia quando passi da un documento all’altro. La scelta non viene conservata quando il documento viene chiuso.</p>
+
+<p>Per assegnare a un documento il suo dizionario ogni volta che viene aperto, metti una riga come questa tra le sue prime 20 righe:</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>Il valore è un codice di lingua, come nei suggerimenti del menu «Dizionario»: <code>fr</code> per il francese, oppure <code>fr_CA</code> per il francese del Canada; si può anche scrivere con un trattino, come <code>fr-CA</code>. La riga viene letta all’apertura del documento, quindi dopo averla aggiunta salva, chiudi e riapri il documento. In un documento con file dei capitoli, metti la riga in ogni file.</p>
+
+<p>Consulta <a href="basic_preferences.htm#settings-search">Cercare nelle impostazioni</a> per trovare le impostazioni nella finestra Impostazioni.</p>
+</main>
+</body>
+</html>

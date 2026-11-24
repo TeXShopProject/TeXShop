@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设置项目根文件</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="根文件；% !TEX root；项目；章文件；include；input；源代码 ⇔ 预览；项目主文件">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm" class="current">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>设置项目根文件</h1>
+<p>大型文稿通常拆分为多个文件：一个包含导言区的根文件，由它为每一章包含一个文件。例如，根文件 <code>Main.tex</code> 可以是</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p>编辑 <code>two.tex</code> 时，TeXShop 应该排版 <code>Main.tex</code>，而不是没有导言区的章文件。要让 TeXShop 知道这一点，请在每个章文件的前二十行之一中加入这一行：</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>根文件本身不需要这样的行。根文件的名称可以这样给出：</p>
+<ul>
+<li>当根文件与章文件位于同一文件夹中时，只写名称 <code>Main.tex</code>；</li>
+<li>相对于章文件所在文件夹的路径，<code>../Main.tex</code> 或 <code>../../Main.tex</code>；</li>
+<li>完整路径 <code>/Users/me/Book/Main.tex</code>，项目移动后必须更改。</li>
+</ul>
+<p>“宏”菜单中的“Root”宏会插入这一行：它会要求你选择根文件，并提供相对路径或绝对路径的写法，替换先前的 root 行。</p>
+
+<h2>root 行的作用</h2>
+<ul>
+<li>在章文件中排版会排版根文件，根文件的预览窗口显示整个文稿。<code>% !TEX program</code> 行或其他用于排版的魔法注释应放在根文件中。</li>
+<li>“转到错误”会打开包含错误的文件（如果它尚未打开），并跳到相应的行。</li>
+<li>从预览窗口同步时，会打开包含所点按位置的章文件；请参阅<a href="advanced_pdfsync.htm">同步源文件和预览</a>。</li>
+<li>“删除Aux文件”会移除根文件的辅助文件；请参阅<a href="advanced_removeaux.htm">删除辅助文件</a>。</li>
+<li>在章文件中使用“窗口”>“源代码 ⇔ 预览”（<kbd>⌘1</kbd>）会把根文件的预览窗口移到最前面。在预览窗口中再次按下它，会返回你来时的源代码窗口；如果你不是从源代码窗口过来的，则返回根文件。</li>
+</ul>
+
+<h2>打开章文件</h2>
+<p>打开带有 root 行的章文件时，TeXShop 也会打开根文件及其预览窗口。“设置”>“通用”>“项目主文件”中有两个项目控制这一行为：“打开文档时打开主文件”用于打开或关闭这一功能；“最小化打开的根窗口”会把根文件的源代码窗口最小化到程序坞中，因为在处理某一章时很少编辑根文件。</p>
+
+<h2>在整个项目中查找和替换</h2>
+<p>要一次搜索项目中的所有文件，请在某个章文件中选取“编辑”>“查找”>“在TEX root相同的TeX源文件中查找…”，或者在根文件中选取“在以此文件为TEX root的TeX源文件中查找…”。它会搜索根文件，以及根文件所在文件夹及其下层中在前 20 行用 root 行指定该根文件的 <code>.tex</code> 文件。请参阅<a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a>和<a href="basic_find.htm">查找和替换</a>。</p>
+
+<h2>在 .texshop 文件中指定根文件</h2>
+<p>章文件旁边扩展名为 <code>.texshop</code> 的文件（例如 <code>two.tex</code> 对应的 <code>two.texshop</code>）也可以指定根文件，TeXShop 仍然会读取它。没有任何菜单命令会创建这样的文件；请使用 <code>% !TEX root</code> 行，它会随源文件一起移动。</p>
+</main>
+</body>
+</html>

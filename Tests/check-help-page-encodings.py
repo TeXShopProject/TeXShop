@@ -2,8 +2,9 @@
 """Check that every help page is written in the character set it declares.
 
 Help Viewer reads a page in the charset of its <meta> tag. A page declared iso-8859-1 that holds
-UTF-8 text (curly quotes, accented names, Hangul) shows that text garbled. The Japanese help is
-UTF-8, like the rest of the source, so that it can be searched and edited with ordinary tools."""
+UTF-8 text (curly quotes, accented names, Hangul) shows that text garbled. Every help book is
+UTF-8, like the rest of the source, so that it can be searched and edited with ordinary tools; the
+Japanese book and the books of fr, it, nl, pt, pt-PT, ro and zh_CN must declare it."""
 from pathlib import Path
 import argparse
 import re
@@ -14,20 +15,36 @@ CHARSET = re.compile(br'charset\s*=\s*["\']?([A-Za-z0-9_\-]+)', re.I)
 CODECS = {'utf-8': 'utf-8', 'iso-8859-1': 'latin-1'}
 
 
+def relabel(text, charset):
+    """The page with its charset label changed; the mutation must change it."""
+    new, count = re.subn(r'charset\s*=\s*["\']?utf-8["\']?', f'charset="{charset}"', text, count=1, flags=re.I)
+    assert count == 1, 'no charset label to mutate'
+    return new
+
+
 def shift_jis_page(pages):
     """A Japanese page saved back in Shift_JIS, as the Japanese help was before 6.00."""
     path = next(p for p in pages if '/ja.lproj/' in str(p) and p.name == 'basic_edittricks.htm')
-    text = pages[path].decode('utf-8').replace('charset=UTF-8', 'charset=Shift_JIS', 1)
-    pages[path] = text.encode('cp932')
+    text = relabel(pages[path].decode('utf-8'), 'Shift_JIS')
+    pages[path] = text.encode('cp932', errors='xmlcharrefreplace')
 
 
 def utf8_labeled_latin1(pages):
     """An English page with curly quotes whose label says iso-8859-1 (5 pages in 6.00 beta 1)."""
     path = next(p for p in pages if '/en.lproj/' in str(p) and p.name == 'advanced_coloredtext.htm')
-    pages[path] = pages[path].replace(b'charset=UTF-8', b'charset=iso-8859-1', 1)
+    pages[path] = relabel(pages[path].decode('utf-8'), 'iso-8859-1').encode('utf-8')
 
 
-MUTATIONS = {'shift-jis-page': shift_jis_page, 'utf8-labeled-latin1': utf8_labeled_latin1}
+def latin1_translation(pages):
+    """A page of a translated book saved in Latin-1 under its own label."""
+    path = next(p for p in pages if '/fr.lproj/' in str(p) and p.name == 'basic_printing.htm')
+    text = relabel(pages[path].decode('utf-8'), 'iso-8859-1')
+    pages[path] = (text + '<!-- é -->').encode('latin-1', errors='replace')
+
+
+# Books that must declare UTF-8 (the others are UTF-8 today too; check-help-book-structure.py requires it of all).
+UTF8_BOOKS = ('ja', 'fr', 'it', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN')
+MUTATIONS = {'shift-jis-page': shift_jis_page, 'utf8-labeled-latin1': utf8_labeled_latin1, 'latin1-translation': latin1_translation}
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
 args = parser.parse_args()
@@ -47,8 +64,9 @@ for path, raw in pages.items():
         failures.append(f'{name}: declares {labels}')
         continue
     label = labels[0] if labels else None
-    if '/ja.lproj/' in name and label != 'utf-8':
-        failures.append(f'{name}: the Japanese help must declare UTF-8, not {label}')
+    book = path.relative_to(ROOT / 'Resources/Interfaces').parts[0][:-len('.lproj')]
+    if book in UTF8_BOOKS and label != 'utf-8':
+        failures.append(f'{name}: the {book} help must declare UTF-8, not {label}')
         continue
     if ascii_only:
         continue

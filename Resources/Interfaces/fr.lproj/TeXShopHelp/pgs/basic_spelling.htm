@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vérifier l’orthographe</title>
+<meta name="description" content="vérification orthographique; vérification adaptée à LaTeX; règles d’exclusion orthographiques; ancienne méthode; dictionnaire; Afficher l’orthographe et la grammaire; % !TEX spellcheck">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm" class="current">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Vérifier l’orthographe</h1>
+
+<p>TeXShop vérifie l’orthographe avec le correcteur orthographique et les dictionnaires de macOS. La vérification adaptée à LaTeX est activée d’emblée : elle vérifie le texte et ignore les commandes TeX, les mathématiques, les commentaires et les arguments de commandes comme <code>\label</code>, <code>\ref</code>, <code>\cite</code> et <code>\usepackage</code>, ainsi que les arguments qui ne sont pas de la prose, comme les clés, les couleurs et les unités, des paquets courants. Les commandes que le document définit avec <code>\newcommand</code>, <code>\def</code> et les commandes similaires sont lues ; un argument qu’une définition transmet à <code>\ref</code> ou place dans des mathématiques est donc ignoré lui aussi. Le texte marqué comme étant dans une autre langue, par exemple avec <code>\foreignlanguage</code>, est vérifié dans cette langue, mais n’est pas souligné pendant la saisie.</p>
+
+<h2>Vérifier un document</h2>
+
+<p>Les mots mal orthographiés sont soulignés pendant la saisie tant que Édition › Orthographe et grammaire › Vérifier l’orthographe lors de la saisie est activé. Pour parcourir le document mot par mot, choisissez Édition › Orthographe et grammaire › Afficher l’orthographe et la grammaire (<kbd>⌘:</kbd>) : la fenêtre montre le premier mot mal orthographié après le point d’insertion. Cliquez sur « Rechercher suivant » dans la fenêtre, ou choisissez « Vérifier le document maintenant » (<kbd>⌘;</kbd>), pour passer au suivant. Maintenez la touche Option enfoncée en le faisant pour utiliser la recherche de macOS, qui n’ignore aucun balisage.</p>
+
+<p>Pour remplacer un mot partout, saisissez le remplacement dans le champ « Remplacement pour Tout remplacer » de la fenêtre, ou sélectionnez une suggestion, puis cliquez sur « Tout remplacer » ; une seule annulation reprend la modification. Après avoir modifié le document ou sélectionné un autre texte, cliquez de nouveau sur « Rechercher suivant » avant de remplacer un mot. Si vous avez modifié le champ « Remplacement pour Tout remplacer » et voulez une suggestion qui était sélectionnée, sélectionnez d’abord une autre suggestion, puis celle-là ; quand il n’y a qu’une suggestion, saisissez-la. « Oublier des mots appris… », dans le sous-menu « Orthographe et grammaire », énumère les mots du document qui ont été appris pour la langue en cours, et retire du dictionnaire ceux que vous sélectionnez. « Corriger l’orthographe automatiquement », dans le même sous-menu, modifie les mots pendant la saisie ; cette option est désactivée au départ, ce qui convient à TeX, où elle modifierait aussi les commandes.</p>
+
+<h2>Réglages › Orthographe</h2>
+
+<p>Dans le groupe « Vérifier l'orthographe », « Vérifier l’orthographe lors de la saisie » détermine si les mots mal orthographiés sont soulignés dans un document à son ouverture, « Correction automatique » détermine si « Corriger l’orthographe automatiquement » est activé dans un document à son ouverture, et « Dictionnaire » est décrit plus bas. Le groupe « Méthode » choisit la façon dont la source TeX est vérifiée :</p>
+<dl>
+<dt>« Utiliser la vérification adaptée à LaTeX (recommandé) »</dt>
+<dd>La méthode décrite plus haut. « Modifier les exclusions LaTeX… », au bout de sa ligne, ouvre les règles qui indiquent ce qui est ignoré.</dd>
+<dt>« Ancienne méthode »</dt>
+<dd>macOS vérifie tout, sauf ce qu’excluent les trois options placées en dessous : « Ignorer les commandes LaTeX », « Ne pas vérifier les paramètres », qui ignore les paramètres de certaines commandes contenant des mots particuliers, comme <code>\usepackage</code>, et « Ne pas vérifier les commentaires ». Ces options ne fonctionnent que si le surlignage syntaxique est activé, et « Vérifier le document maintenant » n’en tient pas compte.</dd>
+</dl>
+<p>La méthode adaptée à LaTeX vérifie les documents qui n’ont pas encore été enregistrés et les fichiers dont l’extension est tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx ou lbx. Les autres fichiers, comme les fichiers Sweave, sont toujours vérifiés avec l’ancienne méthode.</p>
+
+<h2>Règles d’exclusion</h2>
+
+<p>Les règles de la vérification adaptée à LaTeX se trouvent dans le fichier ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Ouvrez-le avec « Modifier les exclusions LaTeX… » dans les Réglages, ou avec Édition › Orthographe et grammaire › Modifier les exclusions orthographiques… ; il s’ouvre dans TeXShop, et son en-tête explique le format. Par exemple, ces lignes ignorent le premier argument d’une commande <code>\mycommand</code> et le contenu de l’environnement <code>proof</code> :</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>Les modifications prennent effet à la vérification suivante. Si le fichier est supprimé, TeXShop crée une nouvelle copie du fichier par défaut à son prochain démarrage. Pour ne rien ignorer du tout, n’y laissez que des lignes de commentaire.</p>
+
+<h2>Dictionnaires</h2>
+
+<p>« Dictionnaire », dans Réglages › Orthographe, choisit le dictionnaire des documents. Un nouveau choix s’applique aussi aux documents ouverts, sauf à ceux dont le dictionnaire a été choisi par une ligne <code>% !TEX spellcheck</code> ou dans la fenêtre « Orthographe et grammaire ». Le menu présente chaque langue sous son propre nom, comme Deutsch ou Français, avec son code, comme de ou fr_CA, en bulle d’aide. « Détection automatique de la langue » laisse macOS choisir la langue d’après le texte.</p>
+
+<p>Pour utiliser un autre dictionnaire pour un document, choisissez-le dans le menu local en bas de la fenêtre « Orthographe et grammaire » pendant que ce document est au premier plan. Chaque document ouvert garde son propre dictionnaire, et la fenêtre change quand vous changez de document. Le choix n’est pas conservé à la fermeture du document.</p>
+
+<p>Pour qu’un document ait son dictionnaire à chaque ouverture, placez une ligne comme celle-ci parmi ses 20 premières lignes :</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>La valeur est un code de langue, comme dans les bulles d’aide du menu « Dictionnaire » : <code>fr</code> pour le français, ou <code>fr_CA</code> pour le français du Canada ; elle peut aussi s’écrire avec un trait d’union, comme <code>fr-CA</code>. La ligne est lue à l’ouverture du document ; après l’avoir ajoutée, enregistrez donc le document, fermez-le et rouvrez-le. Dans un document avec des fichiers de chapitre, placez la ligne dans chaque fichier.</p>
+
+<p>Voir <a href="basic_preferences.htm#settings-search">Rechercher dans les réglages</a> pour trouver des réglages dans la fenêtre Réglages.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Definições ocultas</title>
+<meta name="description" content="definições ocultas; defaults write; Terminal; Linhas de comentário e definições ocultas; OtherTrashExtensions; ConTeXtTags; RedConsoleAfterError; RefreshTime">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Como configurar o TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm">Alterações recomendadas às definições</a></li>
+<li><a href="configure_correctinstall.htm">Obter novos itens da Biblioteca</a></li>
+<li><a href="configure_hidden.htm" class="current">Definições ocultas</a></li>
+<li><a href="configure_panel.htm">Modificar o Painel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar as associações de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Definições ocultas</h1>
+<p>A janela Definições contém as definições de que a maioria das pessoas precisa. As menos comuns são definições ocultas: não têm nenhum controlo na janela Definições e alteram-se com um comando no Terminal. O documento de referência «Linhas de comentário e definições ocultas» enumera todas as definições ocultas com o respetivo comando, agrupadas por tema. Abra-o com Ajuda › Linhas de comentário e definições ocultas (em inglês) ou com «Abrir o manual de linhas de comentário e definições ocultas…» em Definições › Geral › Avançadas.</p>
+
+<h2 id="change">Alterar uma definição oculta</h2>
+<ol>
+<li>Saia do TeXShop.</li>
+<li>Abra o Terminal (em /Applications/Utilities), escreva o comando e prima Return.</li>
+<li>Volte a abrir o TeXShop.</li>
+</ol>
+<p>Cada comando tem a forma <code>defaults write TeXShop <var>name</var> <var>value</var></code>. Para voltar ao valor predefinido, use <code>defaults delete TeXShop <var>name</var></code>.</p>
+
+<h2 id="examples">Exemplos</h2>
+<dl>
+<dt><code>defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'</code></dt>
+<dd>Ficheiro › Apagar ficheiros auxiliares remove também os ficheiros com estas extensões. Indique as extensões sem o ponto. Consulte <a href="advanced_removeaux.htm">Remover ficheiros AUX</a>.</dd>
+<dt><code>defaults write TeXShop ConTeXtTags YES</code></dt>
+<dd>O menu Marcas enumera os comandos de secção do ConTeXt, como \title e \subject, em vez dos do LaTeX.</dd>
+<dt><code>defaults write TeXShop RedConsoleAfterError YES</code></dt>
+<dd>O texto escrito na consola para responder a um erro do TeX, e toda a saída posterior dessa execução, é apresentado a vermelho.</dd>
+<dt><code>defaults write TeXShop RefreshTime 2</code></dt>
+<dd>Enquanto a opção «Vigiar sempre as alterações ao PDF feitas por outras apps» estiver ativa em Definições › Pré-visualização, o TeXShop verifica a cada 2 segundos se um PDF foi alterado. O valor predefinido é 1 segundo e o mínimo 0,5.</dd>
+</dl>
+
+<p>As definições que estão na janela Definições não se repetem entre as definições ocultas. Por exemplo, a deslocação para a marca seguinte ou anterior de Editar › Marcas com Opção ou Controlo e a tecla de ativação da conclusão ativa-se e desativa-se com «Ir para a marca seguinte ou anterior com Option ou Controlo e a tecla de ativação» em Definições › Teclado. Para encontrar uma definição deste tipo, use «Pesquisar definições»; consulte <a href="basic_preferences.htm#settings-search">Usar as definições e «Pesquisar definições»</a>.</p>
+</main>
+</body>
+</html>

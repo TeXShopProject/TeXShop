@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>窗口和标签页</title>
+<meta name="copyright" content="Copyright (c) 2016 Richard Koch under the GNU FDL">
+<meta name="description" content="标签页; 窗口; 以标签页打开新窗口; 使用单一窗口; 使用分离窗口; useTabs; useTabsWithFiles; tabbedFile; TabsAlsoForInputFiles">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm" class="current">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>窗口和标签页</h1>
+<p>与其他 macOS 应用一样，TeXShop 的窗口可以合并为一个窗口中的标签页。在“设置”>“通用”中，“以标签页打开新窗口”用于选择何时这样做：“永不”、“自动”（遵循 macOS 的标签页设置）或“始终”。</p>
+<p>选择“始终”并且源代码和预览使用分离窗口时，你打开的每份文稿的源代码都会成为源代码窗口中的一个标签页，其预览则成为预览窗口中的一个标签页；控制台和日志也以同样的方式合并。在排版或同步时，选择一个窗口中的标签页会将另一个窗口中对应的标签页调到前面。如果源代码和预览显示在单一窗口中（“设置”>“通用”中的“源文件和预览”设为“单一窗口”），每个标签页包含一份完整的文稿。“窗口”>“使用单一窗口”和“窗口”>“使用分离窗口”可在两种方式之间切换当前文稿。</p>
+<p>同时显示源代码和预览的窗口，无论是否使用标签页，在全屏幕下都很好用：排版时控制台会浮在它上面。</p>
+
+<h2>以标签页打开项目</h2>
+<p>对于各章为单独文件的书，根文件可以要求 TeXShop 将各章作为其窗口中的标签页打开。请在根文件的前 20 行中加入这一行：</p>
+<pre>% !TEX useTabs</pre>
+<p>打开根文件时，其 <code>\include</code> 命令指定的文件会以标签页打开。可以在同一行中接着给出标签页的简短名称，放在括号中并用逗号分隔；两个逗号之间留空，则保留该文件的名称：</p>
+<pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
+<p>要让 <code>\input</code> 命令读入的文件也以标签页打开，请在“终端”中使用以下隐藏设置：</p>
+<pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
+<p>要自行选择文件，请在根文件的前 20 行中加入一行 <code>useTabsWithFiles</code>，并为每个标签页加入一行 <code>tabbedFile</code>，所有这些行都要位于前 50 行中。标签页的名称可以接在后面的括号中：</p>
+<pre>% !TEX useTabsWithFiles
+% !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
+% !TEX tabbedFile{Galois.log}
+% !TEX tabbedFile{~/Graphics/diagram.pdf}</pre>
+<p>路径可以是相对于根文件所在文件夹的路径、以 <code>~</code> 开头从个人文件夹算起的路径，或者完整路径。即使访达隐藏了扩展名，也务必写出扩展名：这些标签页也可以显示日志、PDF 文件和图形。每个文件的打开方式与你自己打开它时相同，因此源文件可能会连同其预览一起打开。</p>
+<p>其他魔法注释行请参阅“帮助”>“魔术行和隐藏设置（英文）”。</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modèles et papeterie</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="modèles; menu Modèle; ~/Library/TeXShop/Templates; More; Nouveau depuis la papeterie; papeterie; dossier Stationery">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm" class="current">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modèles et papeterie</h1>
+<h2>Modèles</h2>
+<p>Le menu « Modèle » de la barre d’outils de la fenêtre source insère un modèle au point d’insertion, indenté comme la ligne courante. TeXShop est fourni avec ces modèles :</p>
+<ul>
+<li>LatexTemplate, XeLaTeX Template, LatexSpanishTemplate et BeamerTemplate : le début d’un article LaTeX, d’un document XeLaTeX, d’un article LaTeX en espagnol et d’une présentation Beamer ;</li>
+<li>TexTemplate : le <code>\end</code> qui termine un document plain TeX ;</li>
+<li>GraphicsTemplate : le code pour inclure une image ;</li>
+<li>TeX4ht-Header et TeX4ht-Interactive : du code pour les documents convertis en HTML avec TeX4ht ;</li>
+<li>More : un sous-menu avec des préambules, des classes de document comme article, letter et memoir, des figures et des tableaux flottants, et des mises en page mathématiques comme <code>align</code> et les matrices.</li>
+</ul>
+<p>Les modèles sont des fichiers ordinaires de <code>~/Library/TeXShop/Templates</code> ; choisissez TeXShop › Ouvrir ~/Bibliothèque/TeXShop pour y accéder. Pour créer votre propre modèle, par exemple le préambule que vous utilisez pour chaque article, enregistrez dans ce dossier un fichier avec l’extension <code>.tex</code>, ou dupliquez un modèle et modifiez-le. Les sous-dossiers deviennent des sous-menus. Les modèles que vous ajoutez, renommez ou supprimez apparaissent dans le menu des fenêtres ouvertes ensuite.</p>
+<p>Les mises à jour de TeXShop ne modifient pas ce dossier ; vos modèles sont donc conservés. Pour retrouver les modèles d’origine, déplacez le dossier Templates hors de <code>~/Library/TeXShop</code>, par exemple sur le bureau, et relancez TeXShop : il recrée le dossier avec ses propres modèles.</p>
+
+<h2>Papeterie</h2>
+<p>Fichier › Nouveau depuis la papeterie... crée un nouveau document à partir d’un exemple complet : choisissez-en un dans la liste, qui affiche une description de chacun, et cliquez sur OK. Le nouveau document est sans titre ; enregistrez-le où vous voulez. TeXShop est fourni avec de la papeterie pour un article AMS, une présentation Beamer, une lettre, un document PreTeXt, un projet avec un fichier racine et un chapitre, et un document XeLaTeX.</p>
+<p>La papeterie est conservée dans <code>~/Library/TeXShop/Stationery</code>. Pour ajouter la vôtre, placez-y le fichier, par exemple <code>Report.tex</code>, avec un fichier <code>Report.comment</code> contenant une phrase qui le décrit.</p>
+</main>
+</body>
+</html>

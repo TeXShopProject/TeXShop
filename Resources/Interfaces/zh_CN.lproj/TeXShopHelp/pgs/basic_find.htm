@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>查找和替换</title>
+<meta name="description" content="查找和替换; 高级查找面板; 查找界面; 正则表达式; 全部查找; 全部高亮标记; 全部替换; 批量替换; Apple查找栏; OgreKit查找面板">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm" class="current">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>查找和替换</h1>
+
+<p>用于查找的命令位于“编辑”菜单的“查找”子菜单中：“查找...”（<kbd>⌘F</kbd>）、“查找和替换...”（<kbd>⌥⌘F</kbd>）、“查找下一个”（<kbd>⌘G</kbd>）、“查找上一个”（<kbd>⇧⌘G</kbd>）、“用所选内容查找”（<kbd>⌘E</kbd>）和“跳到所选内容”（<kbd>⌘J</kbd>）。要在排版后的文稿中查找文本，请参阅“<a href="basic_preview.htm#search">预览窗口</a>”。</p>
+
+<h2>选择查找界面</h2>
+
+<p>“设置”>“编辑器”>“查找界面”用于选择“查找”打开的界面：</p>
+<dl>
+<dt>“高级查找面板（推荐）”</dt>
+<dd>带有正则表达式、所有匹配项列表和批量替换的面板，本页介绍的就是它。所有用户一开始使用的都是它。</dd>
+<dt>“Apple查找栏”</dt>
+<dd>macOS 的查找栏，位于源代码顶部，与 Safari 浏览器和 Xcode 中的相同。</dd>
+<dt>“Apple查找面板”</dt>
+<dd>macOS 的基本查找面板。</dd>
+<dt>“OgreKit查找面板（旧版）”</dt>
+<dd>Isao Sonobe 开发的 OgreKit 查找面板，使用它自己的正则表达式。切换到此面板或从此面板切换走，需要重新启动 TeXShop 才会生效。</dd>
+</dl>
+
+<h2>高级查找面板</h2>
+
+<p>“查找”打开面板时选中查找栏，“查找和替换”打开面板时选中替换栏。在栏中，Return 键查找下一个匹配项，Tab 键移到另一栏；Option-Return 和 Option-Tab 分别插入换行符和制表符。栏左侧的图标列出该栏最近使用的字符串，查找栏右端显示当前匹配项的位置，例如“第3个，共12个”。</p>
+
+<p>两个栏下方是“正则表达式”“忽略大小写”和“所选内容”。带三个点的按钮显示更多选项：循环查找、仅完整词汇、忽略变音符号或全角与半角字符的差异、正则表达式的选项、替换语法，以及“将 ¥ 视为 \”。这些选项会保留到下次使用。</p>
+
+<p>底部的按钮依次为“全部查找”“全部替换”“批量替换…”“替换并查找”，以及用于上一个和下一个匹配项的箭头。</p>
+<ul>
+<li>“全部查找”列出每个匹配项及其行号。点按某一行即可在源代码中选中该匹配项；连按则同时将源代码窗口调到前面。打开“实时更新”时，列表会随你的编辑而更新。“全部查找”的菜单中还有“全部高亮标记”（在文本中标记所有匹配项）、“全选”（选中所有匹配项）和“移除高亮标记”。</li>
+<li>“全部替换”替换所有匹配项；打开“所选内容”时，则替换所选内容中的所有匹配项。执行一次“撤销”即可撤回整个替换。</li>
+<li>“替换并查找”替换所选的匹配项并查找下一个；它的菜单中还有单独的“替换”。</li>
+</ul>
+
+<p>使用高级查找面板时，“查找”子菜单中还有面板的命令，面板关闭时也能使用：“全部查找”（<kbd>⇧⌘F</kbd>）、“选择所有匹配项”、“用所选内容替换”（<kbd>⇧⌘E</kbd>）、“替换”、“替换并查找”（<kbd>⌥⌘G</kbd>）、“全部替换”、“全部高亮标记”（<kbd>⇧⌘H</kbd>）和“移除高亮标记”（<kbd>⌃⇧⌘H</kbd>）。它们的快捷键可以在“设置”>“键盘”中更改。</p>
+
+<p>“全部替换”“全部查找”和批量替换在后台运行，结束之前无法编辑文稿。如果耗时较长，文稿窗口上会出现一个对话框显示进度；点按对话框中的“取消”或按 Escape 键即可停止，文本保持原样。</p>
+
+<p>此面板也可以在控制台、日志和实验台窗口中查找文本。控制台、日志和实验台控制台显示的是 TeX 的输出，无法在其中替换。</p>
+
+<p>此面板属于文稿窗口之一，因此在源代码中点按会将它置于该窗口之后，“查找”则会将它调回。要让它保持在文稿窗口的前面，请在“设置”>“编辑器”>“查找”中打开“高级查找面板始终显示在最前面”。</p>
+
+<h2>正则表达式</h2>
+
+<p>打开“正则表达式”时，查找字符串是采用 ICU 语法的模式，ICU 也就是 macOS 的正则表达式。大多数模式的写法与其他应用中的相同。不属于重复次数的花括号必须写成 <code>\{</code> 或 <code>\}</code>，因此要查找 <code>\\section\{</code>，而不是 <code>\\section{</code>。</p>
+
+<p>在替换内容中，<code>$0</code> 表示整个匹配项，<code>$1</code>、<code>$2</code>、… 表示各个分组，<code>\$</code> 表示美元符号，因此公式 <code>$x$</code> 要写成 <code>\$x\$</code>。反斜杠要写两次：<code>\\section</code> 得到 <code>\section</code>。也可以在选项中选择 OgreKit 语法，它用 <code>\1</code>、<code>\2</code>、… 表示分组，<code>$</code> 则是普通字符；从 OgreKit 查找面板转过来的用户一开始使用的就是这种语法。</p>
+
+<p>“正则表达式”旁边的小 ? 按钮会打开模式和替换语法的速查表，其中也列出了与 OgreKit 的不同之处。查找栏和替换栏用主题的颜色显示模式的各个部分，错误显示为红色，OgreKit 会以不同方式理解的部分显示为橙色；选项下方的一行会加以说明。</p>
+
+<p>一些示例：</p>
+<ul>
+<li>要将 <code>\section{Intro}</code> 改为 <code>\section*{Intro}</code>，请查找 <code>\\section\{([^}]*)\}</code>，并替换为 <code>\\section*{$1}</code>。</li>
+<li>要查找所有非 ASCII 字符，请查找 <code>[^[:ascii:]]</code>，然后点按“全部查找”或选取“全部高亮标记”。</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>批量替换</h2>
+
+<p>“查找”子菜单中的“编辑批量替换…”或面板中的“批量替换…”按钮会打开“批量替换”窗口。它保存若干组查找与替换的对应关系（称为规则），并按从上到下的顺序应用一个规则集中的规则。左侧列出规则集，右侧列出所选规则集中的规则。每条规则都有自己的查找字符串和替换字符串、是否使用正则表达式（RE）和是否忽略大小写（IC）的选择，以及一段说明；规则左侧的复选框用于停用它。+ 和 − 按钮用于添加和移除规则，拖移即可重新排列规则。规则下方带三个点的按钮包含整个规则集的选项。无法使用的规则（例如模式无效）会显示警告标志，并被跳过。</p>
+
+<p>窗口中的“全部替换”会将规则应用于整个文本；打开“所选内容”时，则应用于所选内容；执行一次“撤销”即可撤回。“全部高亮标记”会标记规则找到的内容。窗口中的每项更改都会立即存储。“查找”子菜单中的“批量替换”子菜单列出各个规则集，并将你选择的规则集应用于最前面源代码的全部文本。</p>
+
+<p>每个规则集都是 ~/Library/TeXShop/MultipleReplace 中的一个文件，采用 CotEditor 替换定义的 JSON 格式。规则集列表下方的 + 和 − 按钮用于新建规则集和将所选规则集移到废纸篓；旁边带三个点的菜单用于复制、导入和导出规则集。“导入”还可以读取 CotEditor 的替换定义，以及每行一条规则的制表符分隔文本。有两个示例规则集用于在 Unicode 字符与 ajmacros 宏包的命令之间转换，作用与“字符类型转换”相同；只有在 MultipleReplace 文件夹尚不存在时，才会写入这两个示例。</p>
+
+<h2>在项目的所有文件中查找</h2>
+
+<p>要一次在根文件和文稿的所有章节文件中查找和替换，请参阅“<a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a>”。</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Căutare în sursele TeX</title>
+<meta name="copyright" content="Copyright (c) 2026 under the GNU FDL">
+<meta name="description" content="căutare și înlocuire în toate fișierele cu același fișier principal; căutare și înlocuire în toate fișierele unui document împărțit; TEX root; Căutați în sursele TeX; Înlocuiți tot; copii de rezervă">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm" class="current">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Căutare în sursele TeX</h1>
+
+<p><a name="texroot_search"></a>Un document împărțit într-un fișier principal și fișiere de capitol poate fi căutat, și se pot face înlocuiri în el, în toate fișierele sale deodată. Cu unul dintre fișierele sale în prim-plan, alegeți Editare › Găsiți › Căutați în sursele TeX cu aceeași TEX root…; când fișierul principal însuși este în prim-plan, articolul este „Căutați în sursele TeX cu acest fișier ca TEX root…”. Același articol se află în meniul butonului „Găsiți tot” din panoul de căutare avansată, iar „Aplicați surselor TeX cu aceeași TEX root…” din meniul butonului „Înlocuiți tot” din fereastra „Înlocuire multiplă” deschide fereastra cu setul ales acolo; pentru fișierul principal însuși, articolul este „Aplicați surselor TeX cu acest fișier ca TEX root…”. Articolele sunt estompate pentru un document fără titlu și pentru un fișier al cărui nume nu se termină în .tex (cu litere mici), iar articolul „Aplicați” și atunci când nu este ales niciun set în fereastra „Înlocuire multiplă”.</p>
+
+<h2>Ce fișiere se caută</h2>
+
+<p>Fereastra caută în fișierul principal și în fișierele .tex din dosarul lui și din dosarele de sub acesta care îl indică într-o linie <code>% !TEX root</code> printre primele lor 20 de linii; consultați <a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a>. Când configurarea ascunsă <code>UseOldHeadingCommands</code> este activată, se caută și fișierele care îl indică într-o linie veche <code>%SourceDoc</code>. Linia de sub moduri spune în ce fișier principal se caută, iar butonul ei ? repetă această regulă. Fișierele indicate în <code>\input</code> sau <code>\include</code> nu sunt urmărite, iar un fișier principal indicat într-un fișier .texshop nu este folosit. Legăturile simbolice către fișiere, dosarele la care se ajunge prin legături simbolice sau aliasuri și dosarul TeXShop Backups sunt omise.</p>
+
+<p>Lista din stânga afișează fișierele; dezactivați acolo un fișier sau un dosar pentru a-l omite. Dacă unele fișiere sau dosare nu au putut fi citite, butonul „Fișiere necitite” din partea de jos le enumeră împreună cu motivul.</p>
+
+<h2>Căutarea și înlocuirea</h2>
+
+<p>Câmpurile de căutare și de înlocuire și opțiunile sunt cele ale <a href="basic_find.htm">panoului de căutare avansată</a>. Alegeți un mod:</p>
+<ul>
+<li>„Găsiți” enumeră fiecare potrivire împreună cu numărul liniei.</li>
+<li>„Înlocuiți” afișează fiecare linie înainte și după înlocuire. Fiecare potrivire are o casetă de bifare; o potrivire dezactivată nu este înlocuită.</li>
+<li>„Înlocuire multiplă” aplică un set din fereastra „Înlocuire multiplă” și enumeră grupurile de linii modificate, fiecare cu o casetă de bifare. „Editați…” deschide setul în acea fereastră.</li>
+</ul>
+
+<p>Faceți clic pe un rând pentru a afișa potrivirea în documentul ei; faceți dublu clic pe el pentru a aduce acea fereastră în prim-plan. Lista urmează modificările dumneavoastră, iar butonul ↻ (<kbd>⌘R</kbd>) adună din nou fișierele. Butonul de oprire, tasta Escape sau <kbd>⌘.</kbd> oprește o căutare lungă.</p>
+
+<p>Un document deschis este căutat așa cum apare pe ecran, cu modificările nesalvate; un fișier care nu este deschis este citit în codificarea în care l-ar deschide TeXShop. Unele fișiere pot fi doar căutate, fără înlocuiri, de exemplu un fișier în care nu se poate scrie sau pe care codificarea lui nu îl poate salva înapoi neschimbat. Ele sunt marcate cu ⊘, iar marcajul arată motivul.</p>
+
+<h2>Înlocuiți tot</h2>
+
+<p>„Înlocuiți tot” cere confirmarea înainte de a înlocui. Dacă un fișier s-a modificat între timp, nu se înlocuiește nimic, iar lista este refăcută. Cu „Salvați copii de rezervă” activat, fiecare fișier care urmează să fie modificat este mai întâi copiat în dosarul TeXShop Backups, într-un dosar numit după dată și oră, lângă fișierul principal.</p>
+
+<p>Fișierele care nu sunt deschise sunt apoi scrise direct, în propria codificare și cu propriile terminații de linie și permisiuni; acest lucru nu poate fi anulat. Documentele deschise sunt modificate pe ecran și nu sunt salvate, iar o singură comandă „Infirmați” într-un document retrage înlocuirile din el. Oprirea comenzii „Înlocuiți tot” lasă înlocuite fișierele deja prelucrate și neschimbate pe celelalte. După aceea, fișierele sunt căutate din nou, iar linia din partea de jos spune câte potriviri au fost înlocuite. Dacă unele fișiere nu au putut fi modificate, o foaie le enumeră împreună cu motivul, iar „Afișați în Finder” deschide dosarul copiei de rezervă.</p>
+
+<p>Nu rulați „Înlocuiți tot” în timp ce altă aplicație scrie în continuare în aceste fișiere.</p>
+</main>
+</body>
+</html>

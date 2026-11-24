@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fereastra de previzualizare</title>
+<meta name="description" content="fereastra de previzualizare; formatul de afișare; dispunerea paginilor; aranjarea paginilor duble; mărire; Adaptează la Fereastră; lupă; Selectează PDF; copierea imaginilor; căutare în PDF; sertar; ferestre pop-up ale linkurilor; fereastră pop-up fixată; scindarea ferestrei; Comută vizualizările; pe tot ecranul; bara de instrumente pentru adnotări">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm" class="current">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Fereastra de previzualizare</h1>
+
+<p>Fereastra de previzualizare afișează fișierul PDF compilat. Este actualizată după fiecare compilare și rămâne la pagina pe care o citeați. Configurările ei se află în Configurări › Previzualizare: cele de la „La deschiderea unui document” se aplică la deschiderea unui document, iar meniul „Previzualizare” le schimbă pentru fereastra din prim-plan.</p>
+
+<h2>Deplasarea prin document</h2>
+
+<p>Previzualizare › Formatul de Afișare alege cum sunt așezate paginile: „Pagină Simplă” și „Pagină Dublă” afișează o pagină sau o pereche de pagini, iar „Pagină Multiplă” și „Pagină Dublă Multiplă” afișează toate paginile într-o singură coloană lungă. „Stilul Standard al Paginii” de la „La deschiderea unui document” stabilește formatul cu care pornește o fereastră. „Pagina anterioară” și „Pagina următoare” din meniul „Previzualizare” și din bara de instrumente întorc paginile, câmpul „Accesați pagina” din bara de instrumente merge la o pagină după numărul ei, iar cele două săgeți ale articolului „Înapoi/Înainte” din bara de instrumente revin la locurile din care ați venit, ca într-un browser web.</p>
+
+<p>În „Pagină Simplă” și „Pagină Dublă”, derularea dincolo de partea de sus sau de jos a unei pagini întoarce pagina; activați „Nu schimba pagina la derulare” în Configurări › Previzualizare › Afișare și navigare pentru a vă opri în schimb la marginea paginii. Tastele săgeată sus și jos derulează în interiorul paginii. Tastele săgeată stânga și dreapta derulează lateral când o pagină mărită este mai lată decât fereastra și, în rest, întorc pagina; „Schimbă mereu pagina cu tastele săgeată stânga și dreapta” le face să întoarcă întotdeauna pagina.</p>
+
+<p>Bara de instrumente are două meniuri pentru pagini; dacă au fost eliminate, Fereastră › Personalizare bară de instrumente... le readuce. „Dispunerea paginilor” alege formatul de afișare. „Aranjarea paginilor duble” alege, doar pentru acest document, dacă o pereche de pagini se citește de la stânga la dreapta sau de la dreapta la stânga și dacă prima pagină este afișată separat, ca o copertă; articolul său „Restaurați configurările documentului” revine la configurări. Configurările sunt „Direcția paginilor” și „Arată prima pagină separat, ca o copertă” de la „La deschiderea unui document”, iar liniile speciale <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> și <code>% !TEX standardDisplay</code> le stabilesc pentru un singur document.</p>
+
+<h2>Mărirea</h2>
+
+<p>Previzualizare › Mărire oferă aceste opțiuni:</p>
+<dl>
+<dt>Adaptează la Fereastră</dt>
+<dd>Pagina umple lățimea ferestrei, iar redimensionarea ferestrei schimbă mărirea.</dd>
+<dt>Adaptează la lățimea conținutului</dt>
+<dd>La fel ca „Adaptează la Fereastră”, dar fără marginile albe: partea compilată a paginilor umple lățimea ferestrei.</dd>
+<dt>Mărirea Fixată</dt>
+<dd>Mărirea rămâne cea stabilită în câmpul „Mărire” din bara de instrumente sau cu „Zoom înainte” (<kbd>⇧⌘+</kbd>) și „Zoom înapoi” (<kbd>⇧⌘_</kbd>).</dd>
+<dt>Dimensiune efectivă</dt>
+<dd>Paginile la dimensiunea hârtiei.</dd>
+</dl>
+
+<p>„Potrivește la conținut” și „Potrivește la lățimea conținutului”, de la sfârșitul aceluiași submeniu, stabilesc mărirea o singură dată, astfel încât partea compilată a paginii să încapă în fereastră sau să-i umple lățimea. Schimbarea măririi cu bara de instrumente, cu aceste comenzi sau prin ciupire pe trackpad trece fereastra la „Mărirea Fixată”; alegeți din nou „Adaptează la Fereastră” pentru a reveni. Un clic pe cuvântul de lângă câmpul „Mărire” deschide meniul „Mărire”. „După redimensionarea ferestrei” și „Mărire” de la „La deschiderea unui document” stabilesc mărirea cu care pornește o fereastră.</p>
+
+<h2>Instrumentele mausului</h2>
+
+<p>Articolul „Mod maus” din bara de instrumente alege ce face cursorul pe pagină. „Derulare” mută pagina. „Selectează textul” selectează text pentru copiere. „Lupă” și „Lupă (mare)” afișează o lupă cât timp butonul mausului este ținut apăsat: faceți dublu clic și țineți apăsat pentru o lupă mai mare, triplu clic și țineți apăsat pentru a mări întreaga fereastră, și apăsați Comandă, Opțiune sau Control pentru a mări mai mult; adăugați Shift la una dintre ele pentru a mări mai puțin. „Selectează PDF” selectează o zonă a paginii pentru a o copia ca imagine. „Mod maus implicit” de la „La deschiderea unui document” alege instrumentul cu care pornește o fereastră.</p>
+
+<p>Cu „Selectează PDF”, trageți peste o zonă a paginii, apoi copiați-o cu <kbd>⌘C</kbd> sau trageți-o în altă aplicație ori pe birou; Previzualizare › Salvează Selecția ca Fișier... o salvează într-un fișier. Previzualizare › Format de Copiere alege dacă copia este PDF sau o imagine, cum ar fi PNG, TIFF sau JPEG; „Tipul de Copiere a Imaginii” din Configurări › Previzualizare › Copiază imagini stabilește valoarea implicită. Consultați <a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a>.</p>
+
+<h2 id="search">Căutarea și sertarul</h2>
+
+<p>Introduceți un cuvânt în câmpul „Caută în PDF” din bara de instrumente și apăsați Return pentru a selecta prima lui apariție; <kbd>⌘G</kbd> trece la următoarea. Cât timp fereastra de previzualizare este în prim-plan, <kbd>⌘F</kbd> trece la acest câmp.</p>
+
+<p>Previzualizare › Sertar sau articolul „Sertar” din bara de instrumente afișează sertarul. Partea sa de sus este cuprinsul documentului, pe care pachetul hyperref îl creează din capitole și secțiuni; faceți clic pe o intrare pentru a merge acolo sau alegeți una cu tastele săgeată și apăsați Return. Partea sa de jos este un al doilea câmp de căutare, care enumeră fiecare apariție împreună cu pagina ei; faceți clic pe una pentru a merge acolo.</p>
+
+<h2>Linkuri și ferestre pop-up ale linkurilor</h2>
+
+<p>Linkurile create de pachetul hyperref funcționează în previzualizare: faceți clic pe o trimitere pentru a merge la teoremă sau la intrarea din bibliografie, iar săgeata din stânga a articolului „Înapoi/Înainte” vă readuce. O adresă web se deschide în browserul dumneavoastră web.</p>
+
+<p>Țineți cursorul deasupra unui link pentru a vedea locul legat într-o fereastră pop-up, cu numărul paginii în colțul din dreapta jos. Fereastra pop-up dispare după câteva secunde. Tastele ținute apăsate când apare fereastra pop-up o modifică:</p>
+<dl>
+<dt>Shift</dt>
+<dd>afișează fereastra pop-up deasupra linkului, nu dedesubt.</dd>
+<dt>Comandă</dt>
+<dd>afișează o fereastră pop-up mai mare.</dd>
+<dt>Opțiune</dt>
+<dd>fixează fereastra pop-up, astfel încât aceasta să rămână. Apăsarea tastei Opțiune cât timp este afișată o fereastră pop-up o fixează, de asemenea.</dd>
+<dt>Control</dt>
+<dd>inversează „Ferestre pop-up” pentru acest link: când „Ferestre pop-up” este activat, nu apare nicio fereastră pop-up, așa că niciuna nu stă în calea unui Control-clic; când este dezactivat, fereastra pop-up apare totuși.</dd>
+</dl>
+
+<p>O fereastră pop-up fixată poate fi mutată, redimensionată și derulată, iar textul ei poate fi selectat și copiat. Rămâne la locul ei pe pagina sa în timp ce faceți clic, derulați, măriți, urmați linkuri sau lucrați în alte ferestre, până când apăsați Escape în fereastra de previzualizare. Cât timp o fereastră pop-up este fixată, celelalte ferestre pop-up apar în continuare, iar Opțiune fixează în schimb una dintre ele.</p>
+
+<p>Previzualizare › Ferestre pop-up activează sau dezactivează ferestrele pop-up pentru fereastră, iar „Ferestre pop-up” de la „La deschiderea unui document” stabilește dacă sunt activate când se deschide un document. „Arată numărul paginii în ferestrele pop-up ale linkurilor” din Configurări › Previzualizare › Afișare și navigare afișează în fereastra pop-up numărul paginii destinației; dezactivați opțiunea pentru a-l omite. Nu apare nicio fereastră pop-up cât timp este ales instrumentul „Selectează PDF”.</p>
+
+<h2>Scindarea ferestrei</h2>
+
+<p>Fereastră › Scindează Fereastra (<kbd>⌃2</kbd>) sau articolul „Scindează Fereastra” din bara de instrumente a previzualizării împarte fereastra de previzualizare în două părți, care pot afișa locuri diferite din document; alegeți comanda din nou pentru a anula scindarea. Țineți apăsată tasta Opțiune pentru a scinda fereastra în două părți alăturate (Fereastră › Scindează fereastra vertical, <kbd>⌃⌥2</kbd>). Fiecare parte are propriul format de afișare și propria mărire. Partea pe care ați făcut clic ultima dată este partea activă, marcată cu o linie subțire în culoarea de accent: bara de instrumente, sertarul, SyncTeX și meniul „Previzualizare” acționează asupra ei, iar anularea scindării o păstrează.</p>
+
+<p>Faceți Control-clic pe un link intern sau faceți clic pe el cu butonul din dreapta al mausului și alegeți „Scindează Fereastra cu Legătura” pentru a afișa locul legat în cealaltă parte, în timp ce linkul rămâne vizibil; fereastra este mai întâi scindată, dacă e nevoie.</p>
+
+<p>Fereastră › Comută vizualizările (<kbd>⌥2</kbd>) schimbă între ele cele două părți ale unei ferestre scindate. Într-o fereastră care nu este scindată, comută între două vizualizări ale documentului, fiecare cu propriul loc, propriul format de afișare și propria mărire, astfel încât să puteți merge înainte și înapoi între două locuri.</p>
+
+<h2>Pe tot ecranul</h2>
+
+<p>Fereastră › Afișați pe tot ecranul (<kbd>⌃⌘F</kbd>) afișează previzualizarea pe întregul ecran. Scindarea ferestrei este atunci anulată, iar fereastra folosește mărirea și formatul de afișare folosite ultima dată pe tot ecranul; ieșirea de pe tot ecranul le readuce pe cele anterioare. Pentru a păstra scindarea, mărirea și formatul de afișare, activați „Păstrează mărirea, formatul de afișare și scindarea la trecerea pe tot ecranul” în Configurări › Previzualizare › Afișare și navigare. Pe tot ecranul, prima apăsare pe Escape închide o fereastră pop-up fixată, iar a doua iese de pe tot ecranul.</p>
+
+<h2>Adnotări</h2>
+
+<p>Previzualizare › Afișați bara de instrumente pentru adnotări afișează instrumentele de adnotare sub bara de instrumente a ferestrei. Faceți clic pe „Editare” la capătul din stânga al barei de instrumente pentru adnotări, apoi folosiți butoanele ei pentru a tăia, a evidenția sau a sublinia textul selectat ori pentru a adăuga forme, săgeți, text și note. Adnotările nu fac parte din sursă, iar următoarea compilare înlocuiește fișierul PDF, așa că salvați-le cu „Salvați adnotările…” din bara de instrumente pentru adnotări; aceasta salvează o copie a fișierului PDF, numită de exemplu Fourier-Annotated.pdf pentru Fourier.tex. După ce ați lucrat în modul „Editare”, TeXShop se oferă să salveze adnotările înainte de a compila din nou sau de a închide fereastra. Manualul TeXShop descrie adnotările în detaliu.</p>
+
+<h2>Altele</h2>
+
+<p>Faceți Comandă-clic în previzualizare pentru a merge la locul corespunzător din sursă; consultați <a href="basic_typesetting.htm">Compilarea documentelor</a>. „Rotește în Sensul Orar” și „Rotește în Sens Antiorar” din meniul „Previzualizare” rotesc paginile. Când altă aplicație, cum ar fi latexmk, rescrie fișierul PDF, previzualizarea îl reîncarcă la același loc când reveniți în TeXShop sau în fereastra de previzualizare; activați „Urmărește permanent modificările PDF-ului făcute de alte aplicații” în Configurări › Previzualizare › Actualizare pentru ca acesta să fie reîncărcat imediat, chiar și cât timp TeXShop este în fundal. Previzualizare › Salvează poziția previzualizării face ca ferestrele noi de previzualizare să se deschidă la locul și la dimensiunea ferestrei din prim-plan.</p>
+</main>
+</body>
+</html>

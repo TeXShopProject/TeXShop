@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XeLaTeX și LuaLaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="XeLaTeX; LuaLaTeX; XeTeX; LuaTeX; fontspec; fonturi de sistem; OpenType; Unicode; profilul motorului">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm" class="current">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>XeLaTeX și LuaLaTeX</h1>
+<p>XeLaTeX și LuaLaTeX sunt versiuni ale LaTeX care citesc direct surse UTF-8 și folosesc fonturile OpenType și TrueType instalate pe Mac, precum și fonturile din TeX Live. Orice scriere codificată de Unicode poate fi tastată în sursă și compilată, cu condiția ca un font să aibă caracterele ei. Ambele fac parte din TeX Live și ambele compilează fără modificări documentele LaTeX obișnuite.</p>
+
+<h2>Compilarea cu XeLaTeX sau LuaLaTeX</h2>
+<p>Există trei căi, de la cea mai generală la cea mai specifică:</p>
+<ul>
+<li><strong>Profilul motorului.</strong> În Configurări › Compunere › „Profilul motorului”, alegeți XeLaTeX sau LuaLaTeX. Profilul setează comenzile LaTeX și plain TeX din „PDF direct” la xelatex și xetex, respectiv lualatex și luatex, astfel încât alegerea LaTeX din bara de instrumente și Compilare › LaTeX să folosească acel motor. Înainte să confirmați, o foaie listează valorile pe care le setează profilul.</li>
+<li><strong>Fișierul de motor.</strong> Motoarele LuaLaTeX și XeLaTeX se află în meniul pop-up de lângă butonul „Compilare”. Pentru a compila documentele noi cu unul dintre ele, alegeți „Fișier de motor” în Configurări › Compunere › Motor › „Culege documentele noi cu”, iar motorul în meniul „Fișier de motor”; inițial acolo este ales LuaLaTeX.</li>
+<li><strong>Comentariul special.</strong> O linie la începutul sursei alege motorul pentru acel document, indiferent de celelalte setări:
+<pre>% !TEX program = LuaLaTeX</pre></li>
+</ul>
+<p>Pentru versiunea japoneză a LuaLaTeX, consultați <a href="advanced_Japan.htm">Compilarea textelor în japoneză</a>.</p>
+
+<h2>Folosirea fonturilor Mac-ului</h2>
+<p>Pachetul fontspec selectează fonturile după numele pe care le au în aplicația Font Book. De exemplu:</p>
+<pre>% !TEX program = XeLaTeX
+\documentclass{article}
+\usepackage{fontspec}
+\setmainfont{Palatino}
+\setsansfont{Helvetica Neue}
+\begin{document}
+Text in Palatino, \textsf{and in Helvetica Neue}.
+\end{document}</pre>
+<p>Fără fontspec sau fără o comandă de font, ambele motoare folosesc Latin Modern, fontul standard al LaTeX. Pachete precum polyglossia sau babel configurează despărțirea în silabe și convențiile altor limbi; documentația lor este disponibilă cu Ajutor › Afișează ajutorul pentru pachet....</p>
+
+<h2>Tastarea altor scrieri</h2>
+<p>Pentru a tasta în greacă, chirilică, arabă, ebraică sau alte scrieri, adăugați sursele de introducere ale acestora în Configurări sistem › Tastatură și comutați între ele cu meniul de introducere din bara de meniuri. TeXShop poate afișa aliniate la dreapta rândurile în arabă, ebraică și persană; consultați <a href="advanced_encoding.htm">Codificări</a>. Salvați astfel de documente în UTF-8, codificarea implicită pentru documentele noi.</p>
+</main>
+</body>
+</html>

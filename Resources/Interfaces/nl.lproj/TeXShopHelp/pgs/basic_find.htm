@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zoeken en vervangen</title>
+<meta name="description" content="zoeken en vervangen; geavanceerd zoekpaneel; zoekinterface; reguliere expressies; Zoek alles; Markeer alles; Vervang alles; meervoudige vervanging; Apple-zoekbalk; OgreKit zoekpaneel">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm" class="current">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Zoeken en vervangen</h1>
+
+<p>De commando’s om te zoeken staan in het submenu Zoek van het menu Wijzig: ‘Zoek…’ (<kbd>⌘F</kbd>), ‘Zoek en vervang…’ (<kbd>⌥⌘F</kbd>), ‘Zoek volgende’ (<kbd>⌘G</kbd>), ‘Zoek vorige’ (<kbd>⇧⌘G</kbd>), ‘Gebruik selectie voor zoekopdracht’ (<kbd>⌘E</kbd>) en ‘Ga naar selectie’ (<kbd>⌘J</kbd>). Om tekst in het gezette document te zoeken, zie <a href="basic_preview.htm#search">Het voorvertoningsvenster</a>.</p>
+
+<h2>De zoekinterface kiezen</h2>
+
+<p>Instellingen › Editor › ‘Zoekinterface’ bepaalt wat ‘Zoek’ opent:</p>
+<dl>
+<dt>Geavanceerd zoekpaneel (aanbevolen)</dt>
+<dd>Een paneel met reguliere expressies, een lijst van alle overeenkomsten en meervoudige vervanging, dat op deze pagina wordt beschreven. Elke gebruiker begint hiermee.</dd>
+<dt>Apple-zoekbalk</dt>
+<dd>De zoekbalk van macOS, bovenaan de bron, zoals in Safari en Xcode.</dd>
+<dt>Apple zoekpaneel</dt>
+<dd>Het eenvoudige zoekpaneel van macOS.</dd>
+<dt>OgreKit zoekpaneel (verouderd)</dt>
+<dd>Het zoekpaneel van OgreKit door Isao Sonobe, met eigen reguliere expressies. Overschakelen naar of van dit paneel werkt pas als TeXShop opnieuw is gestart.</dd>
+</dl>
+
+<h2>Het geavanceerde zoekpaneel</h2>
+
+<p>‘Zoek’ opent het paneel met het zoekveld geselecteerd, en ‘Zoek en vervang’ met het vervangveld geselecteerd. In een veld zoekt Return de volgende overeenkomst en gaat Tab naar het andere veld; Option-Return en Option-Tab voegen een regeleinde en een tab in. Het symbool links in een veld toont de recente invoer ervan, en rechts in het zoekveld staat de positie van de huidige overeenkomst, zoals ‘3 van 12’.</p>
+
+<p>Onder de velden staan ‘Reguliere expressie’, ‘Negeer hoofdletters’ en ‘In selectie’. De knop met drie puntjes toont meer opties: doorzoeken van het volledige document, alleen hele woorden, diakritische tekens of het verschil tussen tekens in volle en halve breedte negeren, opties voor reguliere expressies, de syntaxis van de vervanging, en ‘Behandel ¥ als \’. De opties blijven van de ene sessie tot de volgende bewaard.</p>
+
+<p>De knoppen onderaan zijn ‘Zoek alles’, ‘Vervang alles’, ‘Meervoudige vervanging…’, ‘Vervang en zoek’ en de pijlen voor de vorige en volgende overeenkomst.</p>
+<ul>
+<li>‘Zoek alles’ toont elke overeenkomst met het regelnummer. Klik op een rij om de overeenkomst in de bron te selecteren; klik er dubbel op om ook het bronvenster naar voren te halen. Met ‘Werk automatisch bij’ aan volgt de lijst uw wijzigingen. Het menu van ‘Zoek alles’ heeft ook ‘Markeer alles’, dat elke overeenkomst in de tekst markeert, ‘Selecteer alles’, dat ze allemaal selecteert, en ‘Verwijder markeringen’.</li>
+<li>‘Vervang alles’ vervangt elke overeenkomst, of elke overeenkomst in de selectie als ‘In selectie’ aan staat. Eén keer ‘Herstel’ maakt de hele vervanging ongedaan.</li>
+<li>‘Vervang en zoek’ vervangt de geselecteerde overeenkomst en zoekt de volgende; het menu ervan heeft ook ‘Vervang’ alleen.</li>
+</ul>
+
+<p>Met het geavanceerde zoekpaneel heeft het submenu Zoek ook de commando’s van het paneel, die werken terwijl het paneel gesloten is: ‘Zoek alles’ (<kbd>⇧⌘F</kbd>), ‘Selecteer alle overeenkomsten’, ‘Gebruik selectie voor vervanging’ (<kbd>⇧⌘E</kbd>), ‘Vervang’, ‘Vervang en zoek’ (<kbd>⌥⌘G</kbd>), ‘Vervang alles’, ‘Markeer alles’ (<kbd>⇧⌘H</kbd>) en ‘Verwijder markeringen’ (<kbd>⌃⇧⌘H</kbd>). Hun toetscombinaties kunt u wijzigen in Instellingen › Toetsenbord.</p>
+
+<p>‘Vervang alles’, ‘Zoek alles’ en meervoudige vervanging werken op de achtergrond, en het document kan pas worden bewerkt als ze klaar zijn. Als het lang duurt, toont een venster op het documentvenster de voortgang; ‘Annuleer’ in dat venster, of de Escape-toets, stopt het en laat de tekst zoals die was.</p>
+
+<p>Het paneel vindt ook tekst in de console, het logbestand en de Experiment-vensters. Vervangen is niet mogelijk in de console, het logbestand en de Experiment-console, die de uitvoer van TeX tonen.</p>
+
+<p>Het paneel is een van de documentvensters, dus met een klik in de bron komt het achter dat venster te staan, en ‘Zoek’ haalt het terug. Om het vóór de documentvensters te houden, schakelt u ‘Houd het geavanceerde zoekpaneel op de voorgrond’ in Instellingen › Editor › Zoeken in.</p>
+
+<h2>Reguliere expressies</h2>
+
+<p>Met ‘Reguliere expressie’ aan is de zoektekst een patroon in de syntaxis van ICU, de reguliere expressies van macOS. De meeste patronen schrijft u zoals in andere apps. Een accolade die niet bij een herhaling hoort, schrijft u als <code>\{</code> of <code>\}</code>, dus zoek naar <code>\\section\{</code> in plaats van <code>\\section{</code>.</p>
+
+<p>In de vervanging is <code>$0</code> de hele overeenkomst, zijn <code>$1</code>, <code>$2</code>, … de groepen en is <code>\$</code> een dollarteken, dus een formule <code>$x$</code> schrijft u als <code>\$x\$</code>. Een backslash schrijft u dubbel: <code>\\section</code> levert <code>\section</code> op. De syntaxis van OgreKit, met <code>\1</code>, <code>\2</code>, … voor de groepen en <code>$</code> als gewoon teken, kunt u bij de opties kiezen; gebruikers die van het OgreKit-zoekpaneel komen, beginnen daarmee.</p>
+
+<p>De kleine knop ? naast ‘Reguliere expressie’ opent een overzicht van de syntaxis van patronen en vervangingen, en van waar die afwijkt van OgreKit. De velden tonen de delen van een patroon in de kleuren van het thema, een fout in rood en wat OgreKit anders zou lezen in oranje; de regel onder de opties legt ze uit.</p>
+
+<p>Enkele voorbeelden:</p>
+<ul>
+<li>Om <code>\section{Intro}</code> te veranderen in <code>\section*{Intro}</code>, zoekt u naar <code>\\section\{([^}]*)\}</code> en vervangt u door <code>\\section*{$1}</code>.</li>
+<li>Om elk teken te vinden dat geen ASCII is, zoekt u naar <code>[^[:ascii:]]</code> en klikt u dan op ‘Zoek alles’ of kiest u ‘Markeer alles’.</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>Meervoudige vervanging</h2>
+
+<p>‘Wijzig meervoudige vervanging…’ in het submenu Zoek, of de knop ‘Meervoudige vervanging…’ van het paneel, opent het venster Meervoudige vervanging. Daarin worden sets van zoek- en vervangparen bewaard, regels genoemd, en worden de regels van een set van boven naar beneden toegepast. De sets staan links en de regels van de geselecteerde set rechts. Elke regel heeft een eigen zoek- en vervangtekst, een eigen keuze voor reguliere expressie (RE) en voor het negeren van hoofdletters (IC), en een beschrijving; met het aankruisvak links ervan schakelt u de regel uit. Met de knoppen + en − voegt u regels toe en verwijdert u ze, en door te slepen zet u ze in een andere volgorde. De knop met drie puntjes onder de regels bevat de opties van de hele set. Een regel die niet kan worden gebruikt, bijvoorbeeld met een ongeldig patroon, toont een waarschuwingsteken en wordt overgeslagen.</p>
+
+<p>‘Vervang alles’ in het venster past de regels toe op de hele tekst, of op de selectie als ‘In selectie’ aan staat; één keer ‘Herstel’ maakt het ongedaan. ‘Markeer alles’ markeert wat de regels vinden. Elke wijziging in het venster wordt meteen bewaard. Het submenu Meervoudige vervanging van het submenu Zoek toont de sets en past de set die u kiest toe op de hele tekst van de voorste bron.</p>
+
+<p>Elke set is een bestand in ~/Library/TeXShop/MultipleReplace, in de JSON-indeling van de vervangdefinities van CotEditor. Met de knoppen + en − onder de lijst van sets maakt u een nieuwe set en verplaatst u de geselecteerde set naar de prullenmand; met het menu met drie puntjes ernaast dupliceert, importeert en exporteert u sets. Importeren leest ook vervangdefinities van CotEditor en door tabs gescheiden tekst met één regel per tekstregel. Twee voorbeeldsets zetten om tussen Unicode-tekens en de commando’s van het pakket ajmacros, zoals ‘Tekensoort omzetten’ doet; ze worden alleen aangemaakt als de map MultipleReplace nog niet bestaat.</p>
+
+<h2>Zoeken in alle bestanden van een project</h2>
+
+<p>Om in één keer te zoeken en te vervangen in het hoofdbestand en alle hoofdstukbestanden van een document, zie <a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a>.</p>
+</main>
+</body>
+</html>

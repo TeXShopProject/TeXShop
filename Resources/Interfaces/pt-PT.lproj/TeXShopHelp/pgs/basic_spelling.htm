@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verificar a ortografia</title>
+<meta name="description" content="verificação ortográfica; verificação ortográfica adaptada ao LaTeX; regras de exclusão; método anterior; dicionário; Mostrar ortografia e gramática; % !TEX spellcheck">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm" class="current">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Verificar a ortografia</h1>
+
+<p>O TeXShop verifica a ortografia com o corretor ortográfico e os dicionários do macOS. A verificação ortográfica adaptada ao LaTeX está ativada desde o início: verifica o texto e ignora os comandos do TeX, a matemática, os comentários e os argumentos de comandos como <code>\label</code>, <code>\ref</code>, <code>\cite</code> e <code>\usepackage</code>, bem como os argumentos que não são texto corrido, como chaves, cores e unidades, dos pacotes mais comuns. Os comandos que o documento define com <code>\newcommand</code>, <code>\def</code> e semelhantes são lidos, pelo que um argumento que uma definição passa a <code>\ref</code> ou para a matemática também é ignorado. O texto assinalado como sendo de outro idioma, por exemplo com <code>\foreignlanguage</code>, é verificado nesse idioma, mas não é sublinhado enquanto escreve.</p>
+
+<h2>Verificar um documento</h2>
+
+<p>As palavras com erros são sublinhadas enquanto escreve, desde que Editar › Ortografia e gramática › Corrigir ortografia ao escrever esteja ativado. Para percorrer o documento palavra a palavra, escolha Editar › Ortografia e gramática › Mostrar ortografia e gramática (<kbd>⌘:</kbd>): o painel mostra a primeira palavra com erro a seguir ao ponto de inserção. Clique em «Procurar seguinte» no painel, ou escolha «Corrigir documento agora» (<kbd>⌘;</kbd>), para ir para a seguinte. Mantenha premida a tecla Opção ao fazê-lo para usar a procura do macOS, que não ignora nenhuma marcação.</p>
+
+<p>Para substituir uma palavra em todo o lado, escreva a substituição no campo «Substituição para Alterar tudo» do painel, ou selecione uma sugestão, e clique em «Alterar tudo»; um «Desfazer» anula a alteração. Depois de editar o documento ou de selecionar outro texto, clique novamente em «Procurar seguinte» antes de alterar uma palavra. Se tiver editado o campo «Substituição para Alterar tudo» e quiser uma sugestão que estava selecionada, selecione primeiro outra sugestão e depois essa; quando só há uma sugestão, escreva-a. «Esquecer palavras aprendidas…», no submenu «Ortografia e gramática», enumera as palavras do documento que foram aprendidas para o idioma atual e remove do dicionário as que selecionar. «Corrigir ortografia automaticamente», no mesmo submenu, altera as palavras enquanto escreve; está desativado de início, o que convém ao TeX, onde também alteraria comandos.</p>
+
+<h2>Definições › Ortografia</h2>
+
+<p>No grupo «Ortografia», «Verificar a ortografia ao escrever» define se as palavras com erros são sublinhadas num documento quando este é aberto, «Corrigir a ortografia» define se «Corrigir ortografia automaticamente» está ativado num documento quando este é aberto, e «Dicionário» é descrito mais abaixo. O grupo «Método» escolhe como o código-fonte TeX é verificado:</p>
+<dl>
+<dt>«Usar verificação adaptada ao LaTeX (recomendado)»</dt>
+<dd>O método descrito acima. «Editar exclusões de LaTeX…», no fim da respetiva linha, abre as regras que indicam o que é ignorado.</dd>
+<dt>«Método anterior»</dt>
+<dd>O macOS verifica tudo, exceto o que as três opções por baixo deixam de fora: «Ignorar comandos LaTeX», «Ignorar os parâmetros selecionados», que ignora os parâmetros de alguns comandos com palavras especiais, como <code>\usepackage</code>, e «Ignorar comentários». Estas opções só funcionam enquanto o destaque de sintaxe está ativado, e «Corrigir documento agora» não as respeita.</dd>
+</dl>
+<p>O método adaptado ao LaTeX verifica os documentos que ainda não foram guardados e os ficheiros com as extensões tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx e lbx. Os outros ficheiros, como os ficheiros Sweave, são sempre verificados com o método anterior.</p>
+
+<h2>Regras de exclusão</h2>
+
+<p>As regras da verificação ortográfica adaptada ao LaTeX estão no ficheiro ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Abra-o com «Editar exclusões de LaTeX…» nas Definições ou com Editar › Ortografia e gramática › Editar exceções de ortografia…; o ficheiro abre-se no TeXShop, e o seu início explica o formato. Por exemplo, estas linhas ignoram o primeiro argumento de um comando <code>\mycommand</code> e o conteúdo do ambiente <code>proof</code>:</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>As alterações produzem efeito na verificação ortográfica seguinte. Se o ficheiro for apagado, o TeXShop cria uma nova cópia do ficheiro predefinido no arranque seguinte. Para não ignorar nada, deixe nele apenas linhas de comentário.</p>
+
+<h2>Dicionários</h2>
+
+<p>«Dicionário», em Definições › Ortografia, escolhe o dicionário dos documentos. Uma nova escolha aplica-se também aos documentos abertos, exceto àqueles cujo dicionário foi escolhido com uma linha <code>% !TEX spellcheck</code> ou no painel «Ortografia e gramática». O menu mostra cada idioma com o seu próprio nome, como Deutsch ou Français, e o respetivo código, como de ou fr_CA, como dica. «Deteção automática do idioma» deixa o macOS escolher o idioma a partir do texto.</p>
+
+<p>Para usar outro dicionário num documento, escolha-o no menu pop-up na parte inferior do painel «Ortografia e gramática» enquanto esse documento está à frente. Cada documento aberto mantém o seu próprio dicionário, e o painel muda quando muda de documento. A escolha não é mantida quando o documento é fechado.</p>
+
+<p>Para dar a um documento o seu dicionário sempre que é aberto, coloque uma linha como esta entre as suas 20 primeiras linhas:</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>O valor é um código de idioma, como nas dicas do menu «Dicionário»: <code>fr</code> para francês, ou <code>fr_CA</code> para o francês do Canadá; também pode ser escrito com hífen, como <code>fr-CA</code>. A linha é lida quando o documento é aberto, por isso, depois de a acrescentar, guarde, feche e volte a abrir o documento. Num documento com ficheiros de capítulo, coloque a linha em cada ficheiro.</p>
+
+<p>Consulte <a href="basic_preferences.htm#settings-search">Pesquisar definições</a> para encontrar definições na janela Definições.</p>
+</main>
+</body>
+</html>

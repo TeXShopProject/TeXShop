@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bescherming tegen shell-escape</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="shell-escape; -shell-escape; --shell-escape; Bevestigen bij shell-escape; beveiliging; % !TEX parameter">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm" class="current">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Bescherming tegen shell-escape</h1>
+<p>Tijdens het zetten kan TeX andere programma’s uitvoeren. Standaard staat TeX Live alleen een korte lijst met vertrouwde programma’s toe, bijvoorbeeld om EPS-afbeeldingen naar PDF om te zetten. Pakketten die andere programma’s moeten uitvoeren, vragen om de optie <code>-shell-escape</code> (ook geschreven als <code>--shell-escape</code>).</p>
+<p>Met deze optie kan een document elk commando uitvoeren, bijvoorbeeld een commando dat alle bestanden in uw thuismap verwijdert. Gebruik de optie alleen voor documenten die u vertrouwt, en niet voor bestanden die u van anderen krijgt.</p>
+
+<h2>De optie toevoegen</h2>
+<ul>
+<li>In het commando voor LaTeX of plain TeX in Instellingen › Zetten › Direct PDF, voor elk document dat met Direct PDF wordt gezet.</li>
+<li>In een engine-bestand, voor elk document dat met die engine wordt gezet; zie <a href="advanced_addengine.htm">Zet-engines toevoegen</a>.</li>
+<li>Voor één document dat met een van de latexmk-engines wordt gezet, zoals pdflatexmk, met de regel <code>% !TEX parameter = -shell-escape</code> boven aan de bron.</li>
+</ul>
+<p>Eén engine heeft de optie al: sepdflatexmk, die bij TeXShop hoort en vanaf het begin in de map Engines staat, zet altijd met <code>--shell-escape</code>. Het is genoeg om deze engine te kiezen in de knoppenbalk van het bronvenster of met een regel <code>% !TEX program = sepdflatexmk</code>; gebruik hem dus alleen voor documenten die u vertrouwt.</p>
+
+<h2>Bevestigen bij shell-escape</h2>
+<p>Instellingen › Zetten › Direct PDF › ‘Bevestigen bij shell-escape’, standaard uit, bewaakt de commandoâs van de groep ‘Direct PDF’. Als deze optie aan staat en het commando voor plain TeX of LaTeX daar <code>-shell-escape</code> of <code>--shell-escape</code> bevat, vraagt TeXShop om bevestiging voordat het een document voor het eerst zet nadat het is geopend:</p>
+<ul>
+<li>‘OK’ zet met de optie.</li>
+<li>‘Zonder shell-escape’ zet zonder de optie.</li>
+<li>‘Annuleer’ zet niet.</li>
+</ul>
+<p>Zodra u ‘OK’ of ‘Zonder shell-escape’ kiest, geldt het antwoord voor dat document tot het wordt gesloten. Zo kunt u uw eigen documenten met de optie zetten en documenten van anderen zonder. Engine-bestanden worden niet gecontroleerd, ook niet als ze <code>-shell-escape</code> bevatten; sepdflatexmk zet dus zonder te vragen met de optie.</p>
+</main>
+</body>
+</html>

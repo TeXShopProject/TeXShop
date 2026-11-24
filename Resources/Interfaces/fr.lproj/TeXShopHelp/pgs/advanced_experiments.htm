@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expériences</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Expérimenter; essayer une formule; fragment; panneau source; panneau d’aperçu; console de l’expérience">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm" class="current">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Expériences</h1>
+<p>Édition › Expérimenter... vous permet d’essayer un morceau de LaTeX court mais délicat, comme une formule, un tableau ou une figure TikZ, avant de l’insérer dans le document. Cette commande est disponible lorsqu’une fenêtre source est active.</p>
+<p>La commande ouvre un panneau source. Si du texte est sélectionné dans la fenêtre source, il est copié dans le panneau ; sinon, le panneau affiche ce que vous y avez laissé la dernière fois. Saisissez ou modifiez le fragment, par exemple <code>$$\sqrt{x^2 + y^2}$$</code>, puis cliquez sur le bouton « Composer » en bas du panneau. Un panneau d’aperçu affiche le résultat. La première fois, il affiche le haut de la première page ; lorsque vous recomposez, il conserve la partie de la page que vous regardez. Le fragment peut aller d’une simple formule à plusieurs pages.</p>
+
+<h2>Comment le fragment est composé</h2>
+<p>TeXShop compose un fichier constitué du préambule du document, c’est-à-dire tout ce qui précède <code>\begin{document}</code>, suivi du fragment et de <code>\end{document}</code>. Dans un projet doté d’un fichier racine, c’est le préambule du fichier racine qui est utilisé. Votre document et son dossier ne sont pas modifiés :</p>
+<ul>
+<li>Le fichier est composé dans un dossier temporaire qui contient des copies des fichiers et dossiers situés à côté du document ; les images sont donc trouvées comme lors de la composition du document, y compris avec des chemins commençant par <code>./</code>. Si le dossier du document contient plus de 5000 éléments, en comptant ceux de ses sous-dossiers, rien n’est copié, et les éléments qui ne peuvent pas être copiés de cette façon, comme les fichiers situés sur un autre disque ou les fichiers d’un service en nuage disponibles uniquement en ligne, sont laissés de côté ; les fichiers situés à côté du document sont alors toujours trouvés, mais pas avec des chemins commençant par <code>./</code>.</li>
+<li>Une copie du fichier <code>.aux</code> de la dernière composition du document est lue ; <code>\ref</code>, <code>\pageref</code> et <code>\cite</code> affichent donc les numéros du document.</li>
+</ul>
+<p>Le moteur est celui qu’utilise le document : une ligne <code>% !TEX program</code> en haut du fichier source, ou sinon le choix fait dans la barre d’outils de la fenêtre source. Avec LaTeX, la méthode de composition du document est respectée : PDF direct, Via DVI ou Script personnel. Si BibTeX ou MakeIndex est choisi, pdfLaTeX est utilisé. ConTeXt, MetaPost et plain TeX ne peuvent pas servir à une expérience. Vos propres moteurs sont essayés, mais ils peuvent échouer s’ils n’attendent pas du LaTeX ou ne produisent pas de fichier PDF.</p>
+
+<h2>Les panneaux</h2>
+<p>Le panneau source affiche le texte comme la fenêtre source, avec les mêmes police, tabulations, interlignage, enroulement des lignes, couleurs syntaxiques, surbrillance de la ligne courante, curseur-bloc, caractères invisibles, numéros de ligne et correspondance des parenthèses, et il suit les modifications qui leur sont apportées dans les menus ou dans les réglages. Source › Police › Plus grand (<kbd>⌘=</kbd>) et Plus petit (<kbd>⌘-</kbd>) agrandissent ou réduisent le texte ; comme une police choisie dans la fenêtre Polices, ils modifient aussi la fenêtre source. Les raccourcis de saisie, la complétion des commandes et Édition › Compléter l’étiquette ou la clé de citation fonctionnent dans le panneau. La complétion des commandes utilise la touche choisie dans Réglages › Clavier › « Touche de déclenchement ».</p>
+<p>La barre d’outils du panneau d’aperçu comporte les outils de la fenêtre d’aperçu : « Dérouler », « Sélectionner le texte », « Agrandir » et « Sélectionner ». « Agrandir » affiche la page sous le pointeur à 150 % tant que le bouton de la souris est maintenu enfoncé, ou à 200 %, 250 % et 300 % avec Commande, Option et Contrôle ; double-cliquez pour obtenir une loupe plus grande. Avec « Sélectionner », tracez un rectangle et copiez-le dans le format choisi dans Page › Copier le format. Le panneau mémorise son outil indépendamment de la fenêtre d’aperçu. À côté des outils se trouvent « Zoom arrière », « Zoom avant », « Zoom sur le contenu », qui agrandit la partie composée de la page pour qu’elle remplisse le panneau, et « Zoom sur la largeur du contenu », qui donne à la partie composée la largeur du panneau. Le panneau défile et zoome aussi avec les gestes de la souris et du trackpad.</p>
+<p>Les messages de la composition apparaissent dans une console propre, la console de l’expérience. Elle passe au premier plan au début de la composition ; cliquez sur un panneau pour ramener ce panneau devant. <kbd>⌘0</kbd> (Fichier › Afficher la console) dans un panneau amène la console de l’expérience au premier plan, et un nouvel appui ramène au panneau. Si Réglages › Console › « Afficher la console » est réglé pour n’afficher la console qu’en cas d’erreur, la console de l’expérience reste masquée jusqu’à ce que TeX signale une erreur ou attende une saisie.</p>
+<p>Les panneaux et la console de l’expérience flottent au-dessus des fenêtres des documents. Ils peuvent être déplacés et redimensionnés, et TeXShop mémorise leur taille et leur position. Fermez un panneau avec son bouton de fermeture ou <kbd>⌘W</kbd>. La touche Échap ferme aussi le panneau d’aperçu, ainsi que le panneau source lorsque la complétion des commandes utilise la touche Tab ; lorsque Échap est la touche de déclenchement de la complétion, elle complète au contraire les commandes dans le panneau source.</p>
+
+<h2>Conserver le résultat</h2>
+<p>Lorsque le fragment est au point, copiez-le depuis le panneau source et collez-le dans le document. Les panneaux conservent leur contenu lorsqu’ils sont fermés puis rouverts, mais pas lorsque TeXShop quitte, et ils ne peuvent pas être enregistrés.</p>
+<p>Chaque document a ses propres panneaux, qui portent le nom du document dans leur barre de titre. Lorsque plusieurs documents sont ouverts, fermez les panneaux dont vous n’avez plus besoin, afin qu’il reste clair à quel document appartient une expérience.</p>
+</main>
+</body>
+</html>

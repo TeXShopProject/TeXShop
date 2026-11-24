@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aggiungere motori di composizione</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="motore; file del motore; .engine; cartella Engines; % !TEX program; % !TEX parameter; motore alternativo; Inactive; script di shell">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm" class="current">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codifiche</a></li>
+<li><a href="advanced_Japan.htm">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Aggiungere motori di composizione</h1>
+<p>Oltre che con plain TeX e LaTeX, TeXShop compone con i <em>motori</em>: piccoli script di shell con l’estensione <code>.engine</code> che si trovano nella cartella <code>~/Library/TeXShop/Engines</code>. Un motore può eseguire un solo programma o una catena di programmi, per esempio LuaLaTeX, poi Biber, poi altre due volte LuaLaTeX. TeXShop include motori come LuaLaTeX, XeLaTeX e pdflatexmk; la sottocartella <code>Inactive</code> ne contiene molti altri.</p>
+
+<h2>Scegliere un motore</h2>
+<p>Il menu a comparsa accanto al pulsante «Compila» nella barra strumenti della finestra sorgente elenca i motori. Scegline uno e premi «Compila» o <kbd>⌘T</kbd>. La scelta vale solo per quel documento.</p>
+<p>Per comporre i nuovi documenti con un motore, scegli «File del motore» in Impostazioni › Composizione › Motore › «Componi i nuovi documenti con», poi scegli il motore nel menu «File del motore» che si trova sotto. «Modifica l’elenco dei motori…» apre la cartella Engines nel Finder; il menu «File del motore» segue la cartella man mano che aggiungi, rimuovi o rinomini file. Se il file del motore scelto non è più nella cartella, il menu lo mostra come non trovato e i documenti vengono composti con LaTeX.</p>
+<p>Per legare un documento a un motore, scrivi una riga come questa in una delle sue prime venti righe:</p>
+<pre>% !TEX program = XeLaTeX</pre>
+<p>Il nome è quello del file del motore senza <code>.engine</code>; <code>tex</code> e <code>latex</code> compongono plain TeX e LaTeX tramite DVI, mentre <code>pdftex</code> e <code>pdflatex</code> li compongono con PDF diretto. La riga ha la precedenza sulla barra strumenti, sulle impostazioni e su «Composizione con motore alternativo». La forma <code>% !TEX TS-program =</code> viene letta allo stesso modo. Scrivi la riga esattamente come mostrato, con uno spazio su ciascun lato del segno di uguale; la macro Program del menu Macro inserisce la riga per te, con un elenco di nomi di motori tra cui scegliere. In un progetto con un file principale, solo il file principale ha bisogno della riga.</p>
+<p>Compilatore › Composizione con motore alternativo (<kbd>⌃⌥⌘T</kbd>) compone una volta con il motore indicato in Impostazioni › Composizione › Motore › «Motore alternativo», pdflatexmk come impostazione predefinita, senza cambiare la barra strumenti. Nel menu Compilatore, questa voce compare al posto di Compila mentre tieni premuti i tasti Controllo e Opzione. È adatta ai documenti che di solito si compongono in un solo passaggio veloce e ogni tanto per intero, con latexmk.</p>
+
+<h2>Scrivere un motore</h2>
+<p>Il modo più semplice per creare un motore è duplicarne uno nella cartella Engines nel Finder, rinominare la copia e aprirla in TeXShop per modificarla. Un file del motore deve avere l’estensione <code>.engine</code> e il permesso di esecuzione, che la copia conserva. I documenti aperti in seguito elencano il nuovo motore nella loro barra strumenti. Ecco XeLaTeX.engine:</p>
+<pre>#!/bin/tcsh
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+xelatex  -file-line-error -synctex=1 "$1"</pre>
+<p>La prima riga indica la shell o il linguaggio dello script; zsh, bash, tcsh, Perl e altri funzionano tutti, purché lo script sia scritto in quel linguaggio. TeXShop esegue il motore nella cartella del file sorgente e gli passa tre valori:</p>
+<dl>
+<dt><code>$1</code></dt><dd>Il nome del file sorgente con la sua estensione, senza la cartella, per esempio <code>main.tex</code>. Uno script che passa a un’altra cartella deve prima annotare il percorso completo, per esempio come <code>"$PWD/$1"</code>. In un progetto, è il file principale.</dd>
+<dt><code>$2</code></dt><dd>Il resto di una riga <code>% !TEX parameter = …</code> vicino all’inizio del sorgente (del file principale), con più opzioni separate da spazi, per esempio <code>% !TEX parameter = -shell-escape</code>. Senza una riga del genere è un singolo spazio.</dd>
+<dt><code>$3</code></dt><dd>La cartella indicata nel campo «Motori TeX» di Impostazioni › Composizione › Percorsi, oppure quella di «Secondi motori TeX» quando il documento contiene la riga <code>% !TEX useAlternatePath</code>.</dd>
+</dl>
+<p>Quando il motore termina, TeXShop apre nella finestra di anteprima il file PDF con il nome del sorgente e l’estensione <code>.pdf</code>, se esiste, e scorre fino al punto mostrato prima della composizione. Uno script che produce un altro tipo di output può indicare che cosa mostrare con le righe seguenti, scritte in un punto qualsiasi del motore all’interno di un commento del suo linguaggio:</p>
+<table>
+<tr><th>Riga</th><th>Effetto</th></tr>
+<tr><td><code>!TEX-noPreview</code></td><td>nessuna finestra di anteprima, anche se sono presenti altre righe tra quelle sotto</td></tr>
+<tr><td><code>!TEX-pdfPreview</code></td><td>mostra il file PDF</td></tr>
+<tr><td><code>!TEX-htmlPreview</code></td><td>mostra nella finestra HTML il file HTML con lo stesso nome</td></tr>
+<tr><td><code>!TEX-bothPreview</code></td><td>mostra sia il file PDF sia il file HTML</td></tr>
+<tr><td><code>!TEX-noConsole</code></td><td>non mostra la console</td></tr>
+</table>
+<p>Per esempio, un motore che esegue LuaLaTeX, Biber e altre due volte LuaLaTeX potrebbe essere scritto così in zsh, dove <code>${1:r}</code> è il nome senza estensione:</p>
+<pre>#!/bin/zsh
+export PATH="/Library/TeX/texbin:$PATH"
+lualatex -file-line-error -synctex=1 "$1"
+biber "${1:r}"
+lualatex -file-line-error -synctex=1 "$1"
+lualatex -file-line-error -synctex=1 "$1"</pre>
+
+<h2>La cartella Inactive</h2>
+<p>La sottocartella <code>Engines/Inactive</code> contiene motori per flussi di lavoro particolari, spesso con documentazione ed esempi, per esempio per latexmk, ConTeXt, Sage, PreTeXt, pythontex e Typst. Per usarne uno, spostalo dalla sua cartella nella cartella Engines stessa. Quando TeXShop viene aggiornato, la cartella Inactive viene sostituita con la versione attuale, mentre i file che si trovano direttamente nella cartella Engines non vengono mai toccati, quindi i motori che hai modificato vengono conservati.</p>
+<p>Per saperne di più sui motori, consulta il capitolo «Engines and latexmk» in Aiuto › Manuale di TeXShop (in inglese).</p>
+</main>
+</body>
+</html>

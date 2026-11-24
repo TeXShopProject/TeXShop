@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Een externe editor gebruiken</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="externe editor; Open alleen printvoorbeeld; Stel in voor externe editor; Pdf-wijzigingen door andere apps altijd volgen; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm" class="current">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Een externe editor gebruiken</h1>
+<p>U kunt in een andere editor schrijven en TeXShop gebruiken om te zetten en de PDF te tonen.</p>
+
+<h2>Alleen de voorvertoning openen</h2>
+<p>Archief › Open alleen printvoorbeeld... vraagt om een bronbestand en opent alleen het voorvertoningsvenster ervan. Als het bestand nog niet is gezet, of als de PDF ouder is dan de bron, zet TeXShop het eerst. Bewerk de bron in uw editor; om te zetten bewaart u hem daar en klikt u op ‘Zet’ in het voorvertoningsvenster of drukt u op <kbd>⌘T</kbd>. In deze modus opent of wijzigt TeXShop het bronbestand nooit. Als de knoppenbalk van het voorvertoningsvenster geen knop ‘Zet’ heeft, voegt u die toe met Venster › Pas knoppenbalk aan....</p>
+<p>Als u altijd zo werkt, schakelt u Instellingen › Algemeen › Opstarten › ‘Stel in voor externe editor’ in. Archief › Open... en ‘Open recente bestanden’ openen bronbestanden dan alleen voor de voorvertoning, en Archief › Open alleen printvoorbeeld... wordt ‘Open in TeXShop Editor’, waarmee u een bronbestand in de eigen editor van TeXShop opent wanneer u dat nodig hebt. Andere bestanden, zoals PDF’s, afbeeldingen en logbestanden, worden geopend zoals voorheen.</p>
+
+<h2>De voorvertoning actueel houden</h2>
+<p>Als de PDF door een ander programma wordt herschreven, bijvoorbeeld door uw editor of door latexmk in Terminal, laadt TeXShop hem opnieuw wanneer u terugkeert naar TeXShop of naar het voorvertoningsvenster, waarbij de pagina en de vergroting behouden blijven. Als Instellingen › Voorvertoning › Vernieuwen › ‘Pdf-wijzigingen door andere apps altijd volgen’ aan staat, laadt TeXShop de PDF opnieuw zodra die verandert, ook als TeXShop op de achtergrond staat, bijvoorbeeld wanneer de voorvertoning naast uw editor staat. Een voorvertoning met annotaties die nog niet zijn bewaard, wordt niet opnieuw geladen, zodat de annotaties niet verloren gaan.</p>
+<p>TeXShop houdt ook de bronbestanden in de gaten die in de eigen editor geopend zijn. Als een andere editor zo’n bestand wijzigt, laadt TeXShop het opnieuw, tenzij de kopie in TeXShop niet-bewaarde wijzigingen heeft.</p>
+
+<h2>Synchroniseren met de editor</h2>
+<p>Command-klik in het voorvertoningsvenster kan u naar de regel in uw editor brengen, en ‘Ga naar fout’ in de console kan de regel van een fout daar openen. Hiervoor zijn ‘Stel in voor externe editor’, een verborgen instelling en een opdrachtregelprogramma van de editor nodig:</p>
+<ul>
+<li>Voor TextMate, waarvan het commando <code>mate</code> in <code>/usr/local/bin</code> staat: <code>defaults write TeXShop TextMateSync YES</code>.</li>
+<li>Voor elke andere editor: <code>defaults write TeXShop OtherEditorSync YES</code>, en een uitvoerbaar script <code>/usr/local/bin/othereditor</code> dat het regelnummer als <code>$1</code> en het volledige pad van het bestand als <code>$2</code> krijgt. Voor BBEdit luidt het:
+<pre>#!/bin/sh
+/usr/local/bin/bbedit "$2:$1"</pre></li>
+</ul>
+<p>Voor de andere richting, van een regel in de editor naar het voorvertoningsvenster, roept de editor TeXShop via AppleScript aan met de commandoâs <code>sync_preview_line</code>, <code>sync_preview_index</code> en <code>sync_preview_name</code>. Het hoofdstuk ‘Using an External Editor’ in Help › TeXShop-handleiding (Engels) bevat een volledig script.</p>
+<p>De map <code>~/Library/TeXShop/ExternalEditorScripts</code> bevat kant-en-klare ondersteuning met documentatie: AppleScripts die een document van BBEdit in TeXShop zetten en tonen, en een plug-in voor Vim.</p>
+
+<h2>AppleScript-commandoâs voor editors</h2>
+<p>Een editor kan deze AppleScript-commandoâs van een TeXShop-document aanroepen:</p>
+<dl>
+<dt><code>typesetinteractive</code>, <code>texinteractive</code>, <code>latexinteractive</code>, <code>bibtexinteractive</code>, <code>makeindexinteractive</code>, <code>metapostinteractive</code></dt>
+<dd>Zetten, of plain TeX, LaTeX, BibTeX, MakeIndex of MetaPost uitvoeren. De aanroep keert direct terug, zonder te wachten tot het zetten klaar is; de voorvertoning wordt vernieuwd zodra het klaar is.</dd>
+<dt><code>taskdone</code></dt><dd>Geeft NO terug zolang er wordt gezet en YES als het zetten klaar is.</dd>
+<dt><code>refreshpdf</code></dt><dd>Laadt de PDF opnieuw en brengt het voorvertoningsvenster naar voren.</dd>
+<dt><code>refreshpdfbackground</code></dt><dd>Laadt de PDF opnieuw zonder TeXShop naar voren te brengen, als het voorvertoningsvenster al open is.</dd>
+<dt><code>refreshtext</code></dt><dd>Leest het bronbestand opnieuw van schijf.</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Opent een bronbestand zoals Archief › Open alleen printvoorbeeld... dat doet.</dd>
+</dl>
+<p>Als de editor via TeXShop zet, is ‘Pdf-wijzigingen door andere apps altijd volgen’ niet nodig. Zie ook <a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a>.</p>
+</main>
+</body>
+</html>

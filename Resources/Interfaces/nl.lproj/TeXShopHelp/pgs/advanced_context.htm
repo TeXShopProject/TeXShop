@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ConTeXt en MetaPost</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; nv-metafun; mfpic; luamplib">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm" class="current">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>ConTeXt en MetaPost</h1>
+<h2>ConTeXt</h2>
+<p>ConTeXt is een macropakket van Hans Hagen, een alternatief voor LaTeX met eigen commando’s en een sterke nadruk op typografische vormgeving. TeX Live bevat ConTeXt, en de ConTeXt Garden verspreidt een vaak bijgewerkte versie die in uw thuismap wordt geïnstalleerd.</p>
+<p>De engines voor ConTeXt staan in <code>~/Library/TeXShop/Engines/Inactive/ConTeXt</code>, samen met de handleiding <code>Setting-Up-ConTeXt.pdf</code> en voorbeelddocumenten:</p>
+<table>
+<tr><th>Engine</th><th>Zet met</th></tr>
+<tr><td><code>ConTeXt.engine</code></td><td>de ConTeXt van TeX Live die op LuaTeX draait</td></tr>
+<tr><td><code>ConTeXt-TL.engine</code></td><td>de ConTeXt van TeX Live die op luametatex draait</td></tr>
+<tr><td><code>ConTeXt-CG.engine</code></td><td>de versie van de ConTeXt Garden in uw thuismap</td></tr>
+</table>
+<p>Verplaats de engine die u nodig hebt naar <code>~/Library/TeXShop/Engines</code>, en zet magische regels bovenaan het hoofdbestand van het document, bijvoorbeeld:</p>
+<pre>% !TEX program = ConTeXt-TL
+% !TEX useConTeXtSyncParser</pre>
+<p>Voor ConTeXt-CG vult u de map met de programma’s van de ConTeXt Garden-installatie in bij het veld ‘Tweede TeX-engines’ van Instellingen › Zetten › Paden, en voegt u de regel <code>% !TEX useAlternatePath</code> toe; daardoor geeft TeXShop die map aan de engine door in plaats van TeX Live.</p>
+<p>Voor synchronisatie tussen bron en voorvertoning voegt u <code>\setupsynctex[state=start,method=min]</code> toe aan de instellingen van het document; de regel <code>% !TEX useConTeXtSyncParser</code> laat TeXShop de eigen synchronisatiecode van ConTeXt gebruiken. Het hoofdstuk over ConTeXt in Help › TeXShop-handleiding (Engels) beschrijft de installatie van de ConTeXt Garden-versie en elke engine in detail.</p>
+<p>Om sectiecommando’s van ConTeXt zoals <code>\title</code> en <code>\subject</code> in het menu Markeringen op te nemen, zet u de verborgen instelling ConTeXtTags aan; zie <a href="configure_hidden.htm">Verborgen instellingen</a>.</p>
+
+<h2>MetaPost</h2>
+<p>MetaPost, van John Hobby, tekent illustraties op basis van een beschrijving in een programmeertaal die is afgeleid van METAFONT van Knuth. De handleiding maakt deel uit van TeX Live: kies Help › Toon documentatie voor pakket… en typ <code>metapost</code>.</p>
+<p>Zet › MetaPost (<kbd>⇧⌘M</kbd>), of MetaPost in het venstermenu naast de knop ‘Zet’, voert MetaPost uit op het bestand met de naam van het actieve document en de extensie <code>.mp</code>: op het document zelf als het een <code>.mp</code>-bestand is, en anders op het <code>.mp</code>-bestand ernaast, zoals het bestand dat het pakket mfpic voor een <code>.tex</code>-document schrijft. Het voert het commando uit in Instellingen › Zetten › Verwante programma’s › ‘MetaPost’, standaard <code>mpost</code>. De engineprofielen stellen dit veld in: <code>pmpost</code> voor pLaTeX + dvipdfmx en <code>upmpost</code> voor upLaTeX + dvipdfmx, die Japanse tekst in labels zetten, en <code>mpost</code> voor de andere profielen. LuaLaTeX kan geen figuren opnemen waarvan pmpost of upmpost de labels in het Japans heeft gezet; teken zulke figuren bij LuaLaTeX in het document zelf met het pakket luamplib.</p>
+<p>Om een nieuw bestand als MetaPost-bestand te bewaren, kiest u in het bewaarvenster het type mp in het menu ‘Bestandstype’.</p>
+<p>De engines nv-metapost en nv-metafun, van Nicola Vitacolonna, maken het werken met MetaPost en MetaFun eenvoudiger en tonen de figuren van een bestand in het voorvertoningsvenster. Ze staan in <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>; het bestand <code>README.pdf</code> en de map <code>examples</code>, één niveau hoger in <code>MetaPostEngines-1.4.7</code>, leggen uit hoe u ze installeert en gebruikt, en bevatten voorbeeldbestanden. Een bestand dat begint met</p>
+<pre>% !TEX program = nv-metafun
+beginfig(1);
+  pickup pencircle scaled 2mm;
+  draw fullcircle scaled 2cm withcolor red;
+endfig;
+end</pre>
+<p>wordt bijvoorbeeld met nv-metafun gezet zodra die engine in de map Engines staat.</p>
+<p>MetaPost-tekeningen kunnen ook in een LaTeX-document worden geschreven, met het pakket luamplib voor LuaLaTeX, of met pakketten zoals mfpic, die de tekeningen naar een <code>.mp</code>-bestand schrijven dat MetaPost tussen twee zetrondes verwerkt.</p>
+</main>
+</body>
+</html>

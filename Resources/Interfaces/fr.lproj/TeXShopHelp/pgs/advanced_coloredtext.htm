@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Texte en couleur</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="texte en couleur; xcolor; couleur; textcolor; definecolor; dvipsnames; couleur des pages de l’aperçu; Pages claires">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm" class="current">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Texte en couleur</h1>
+<p>Le paquet xcolor colore le texte dans le document composé. Chargez-le dans le préambule :</p>
+<pre>\usepackage{xcolor}</pre>
+<p>Ensuite, <code>\color{blue}</code> passe au bleu jusqu’à la fin du groupe ou de l’environnement en cours, et <code>\textcolor{red}{This is very important!}</code> ne colore que son argument. Pour définir vos propres couleurs, utilisez par exemple</p>
+<pre>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</pre>
+<p>L’option <code>dvipsnames</code> ajoute une liste de couleurs nommées, comme BrickRed et ForestGreen :</p>
+<pre>\usepackage[dvipsnames]{xcolor}</pre>
+<p>La documentation de xcolor, que l’on ouvre avec Aide › Afficher l'aide pour le package..., liste toutes les couleurs et options.</p>
+
+<h2>La couleur des pages dans la fenêtre d’aperçu</h2>
+<p>Un texte en couleur peut être difficile à lire sur une page blanche. Les pages de la fenêtre d’aperçu peuvent recevoir une autre couleur dans Réglages › Thèmes : dans le groupe « Fenêtres », la couleur située sous « Pages claires » dans la ligne « Aperçu » remplit les pages lorsqu’elles sont affichées en clair. Chaque thème a sa propre couleur ; le « Thème pour Mode clair » et le « Thème pour Mode sombre » peuvent donc utiliser des couleurs différentes.</p>
+<p>Cette couleur ne sert qu’à l’affichage : elle n’est pas imprimée et n’apparaît pas lorsqu’une partie d’une page est copiée. Les pages affichées en sombre avec l’élément « Apparence » de la barre d’outils de la fenêtre d’aperçu ne sont pas remplies de cette couleur. La couleur du texte lui-même est fixée par le document, avec xcolor comme ci-dessus.</p>
+</main>
+</body>
+</html>

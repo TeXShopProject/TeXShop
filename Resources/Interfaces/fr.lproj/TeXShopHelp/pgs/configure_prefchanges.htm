@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modifications recommandées des réglages</title>
+<meta name="description" content="réglages recommandés; profil du moteur; latexmk; PDF direct; Via DVI; commandes de composition; interface de recherche; palette de recherche avancée; enregistrement automatique; position des fenêtres">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Comment configurer TeXShop ?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Préliminaires</a></li>
+<li><a href="configure_prefchanges.htm" class="current">Modifications recommandées des réglages</a></li>
+<li><a href="configure_correctinstall.htm">Obtenir les nouveaux éléments de la bibliothèque</a></li>
+<li><a href="configure_hidden.htm">Réglages cachés</a></li>
+<li><a href="configure_panel.htm">Modifier la palette LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modifier les raccourcis de saisie</a></li>
+<li><a href="configure_menushortcuts.htm">Redéfinir les raccourcis clavier des menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modifications recommandées des réglages</h1>
+<p>TeXShop fonctionne avec ses réglages par défaut, mais quelques-uns dépendent de votre installation de TeX, de votre écran et de vos habitudes. Il vaut la peine de les vérifier en premier. Choisissez TeXShop › Réglages… pour ouvrir la fenêtre Réglages ; <a href="basic_preferences.htm#settings-search">Modifier les réglages et rechercher dans les réglages</a> explique comment trouver un réglage.</p>
+
+<h2 id="engine-profile">Choisir un profil du moteur</h2>
+<p>Réglages › Composition › « Profil du moteur » configure la composition en une seule étape. Choisissez le profil du moteur que vous utilisez ; les moins courants se trouvent sous « Autre ». Une zone de dialogue liste les valeurs que le profil règle et signale celles qui changent. Décochez les valeurs que vous voulez conserver, puis cliquez sur « OK » ; « Annuler » ne modifie rien.</p>
+<p>Choisissez « Avec latexmk » pour que latexmk exécute BibTeX, le programme d’index et les passes supplémentaires selon les besoins ; sinon, chaque composition exécute le moteur une seule fois. Un profil règle la méthode de composition et ses commandes de composition, la commande kpsewhich, le moteur BibTeX, le programme d’index, MetaPost et « Convertir en \UTF / \CID du paquet otf ». Les profils japonais règlent aussi UTF-8 comme encodage des nouveaux documents, le dictionnaire d’orthographe et la conversion de UTF-8-MAC. Tous les autres réglages restent tels quels. Lorsque vous modifiez ensuite l’un de ces réglages, le menu affiche « Personnalisé » ; choisissez de nouveau le profil pour revenir à ses valeurs.</p>
+<p>Les chemins de TeX et de Ghostscript se règlent à part, avec « Détecter les chemins… » dans le groupe « Chemins » de la même catégorie. Au tout premier démarrage de TeXShop, celui-ci demande les chemins, puis un profil du moteur.</p>
+
+<h3 id="commands">Commandes de composition</h3>
+<p>Les commandes qu’un profil règle se trouvent dans les groupes « PDF direct » et « Via DVI » de Réglages › Composition, chacun avec une commande plain TeX et une commande LaTeX, et « Méthode de composition » choisit le groupe utilisé. Composition › PDF direct et Composition › Via DVI changent de méthode pour le document actif seulement. Les commandes par défaut contiennent déjà <code>-file-line-error</code>, qui permet à TeXShop de vous mener à la ligne d’une erreur, et <code>-synctex=1</code>, qui fait fonctionner la synchronisation entre la source et l’aperçu ; la plupart des utilisateurs ne les modifient donc jamais. Si un document a besoin de <code>-shell-escape</code>, consultez d’abord <a href="advanced_shellescape.htm">Protection contre le shell-escape</a>.</p>
+
+<h2 id="find">Choisir l’interface de recherche</h2>
+<p>Réglages › Éditeur › « Interface de recherche » choisit la fenêtre ou la barre qu’ouvre la recherche. « Palette de recherche avancée (recommandée) » recherche avec des expressions régulières, liste toutes les occurrences et remplace plusieurs paires de chaînes à la fois ; consultez <a href="basic_find.htm">Rechercher et remplacer</a>. « Palette Apple » et « Bannière de recherche Apple » sont la recherche standard de macOS, et « Palette OgreKit (ancienne) » reste disponible. Un nouveau choix prend effet immédiatement, sauf un passage vers ou depuis la palette OgreKit, qui prend effet après le redémarrage de TeXShop. Activez « Garder la palette de recherche avancée au premier plan » si la palette doit rester devant les fenêtres des documents.</p>
+
+<h2 id="autosave">Laisser l’enregistrement automatique activé</h2>
+<p>« Activer l’enregistrement automatique et les versions », dans Réglages › Documents et enregistrement, est activé par défaut, et il est recommandé de le laisser activé. macOS enregistre alors vos documents pendant que vous travaillez, et Fichier › Revenir à › Parcourir toutes les versions… permet de retrouver des versions antérieures. Si vous le désactivez, le fichier ne change que lorsque vous l’enregistrez ; « Conserver le fichier précédent sous « nom~ » » conserve alors la version précédente à côté de lui. Une modification de ce réglage prend effet après le redémarrage de TeXShop.</p>
+
+<h2 id="window-positions">Fixer la position des fenêtres</h2>
+<p>Par défaut, chaque fenêtre s’ouvre là où elle se trouvait lors de sa dernière fermeture. Si vous travaillez d’habitude sur un seul document à la fois, il vaut mieux ouvrir les fenêtres à un endroit fixe. Composez un court document et disposez sa fenêtre source et sa fenêtre d’aperçu, côte à côte si l’écran est assez large. Ensuite, dans Réglages › Général › « Position des fenêtres », choisissez « Choisir une position fixe » pour « Source » et pour « Aperçu », puis cliquez sur « Enregistrer la position » sur chacune des lignes. Les lignes « Console » et « HTML » fonctionnent de la même façon.</p>
+<p>Les commandes de menu Source › Enregistrer la position de la source et Page › Enregistrer la position de l'aperçu font la même chose depuis les fenêtres elles-mêmes. Si vous utilisez un Mac portable avec un grand écran, disposez les fenêtres pour l’écran intégré et choisissez aussi Source › Enregistrer la position de la source pour un portable et Page › Enregistrer la position de l'aperçu pour un portable ; TeXShop utilise alors ces positions lorsque le grand écran n’est pas connecté.</p>
+
+<h2 id="fonts-colors">Polices et couleurs</h2>
+<p>La police de la fenêtre source se règle dans Réglages › Éditeur › « Police du document », et celle de la console dans Réglages › Console. Réglages › Thèmes choisit et modifie les thèmes de couleurs des fenêtres source, d’aperçu et de console ; consultez <a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a>.</p>
+</main>
+</body>
+</html>

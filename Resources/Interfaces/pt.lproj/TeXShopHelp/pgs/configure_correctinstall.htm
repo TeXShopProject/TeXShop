@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obter novos itens da biblioteca</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop; atualização; pasta New; bin; Scripts; Engines Inactive; macros; arquivos danificados; Backups; conteúdo padrão das pastas">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Como configurar o TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm">Alterações recomendadas nos ajustes</a></li>
+<li><a href="configure_correctinstall.htm" class="current">Obter novos itens da biblioteca</a></li>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
+<li><a href="configure_panel.htm">Modificar o Painel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar as associações de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Obter novos itens da biblioteca</h1>
+<p>O TeXShop guarda os arquivos que você pode alterar, como modelos, macros, motores, associações de teclas, o arquivo do Painel LaTeX e os temas, em ~/Library/TeXShop, a pasta TeXShop dentro da pasta Library da sua pasta pessoal. TeXShop › Abrir pasta ~/Library/TeXShop abre-a no Finder. Quando o TeXShop é executado pela primeira vez, ele cria essa pasta com o conteúdo padrão.</p>
+
+<h2 id="updates">O que uma nova versão altera</h2>
+<p>Uma nova versão do TeXShop deixa a maior parte de ~/Library/TeXShop como está, de modo que as suas alterações são mantidas. Alguns lugares guardam arquivos de suporte do próprio TeXShop ou itens opcionais, e uma nova versão os atualiza:</p>
+<ul>
+<li>as pastas bin, Documents, ExternalEditorScripts e Scripts;</li>
+<li>Engines/Inactive e HTML/Inactive, que guardam motores e arquivos HTML que você pode pôr em uso;</li>
+<li>HTML/Help.html, a página mostrada por Ajuda › Comandos HTML (em inglês);</li>
+<li>a pasta New, que é substituída por inteiro.</li>
+</ul>
+<p>Nesses lugares, cada arquivo que vem com o TeXShop é substituído pela sua nova versão, e assim as alterações que você fez nesse arquivo se perdem; arquivos novos são acrescentados, e os arquivos que você acrescentou com outros nomes ficam como estão. Para manter a sua própria versão de um desses arquivos, salve-a com outro nome.</p>
+<p>Os motores em uso, na própria pasta Engines, não são alterados. Somente quando a pasta foi atualizada pela última vez por uma versão do TeXShop anterior à 6.00 é que o TeXShop acrescenta html.engine a Engines, uma única vez, e apenas se não houver ali nenhum arquivo com esse nome. Na pasta Macros, algumas macros que vieram com o TeXShop e nunca foram editadas, como a que abre o site do TeXShop, são atualizadas para o texto atual; as macros editadas e as suas próprias macros ficam como estão. Todo o resto mantém as suas alterações.</p>
+<p>O TeXShop registra a sua versão em um arquivo oculto <code>.Version</code> em ~/Library/TeXShop/New e só atualiza a pasta quando é mais recente que a versão registrada ali. Assim, ~/Library/TeXShop não é reescrita toda vez que o TeXShop é iniciado, e uma versão mais antiga do TeXShop pode ser executada sem alterá-la.</p>
+
+<h2 id="new">A pasta New</h2>
+<p>A pasta New contém itens que você talvez queira acrescentar por conta própria, por exemplo novos modelos. Mova esse item para a pasta certa, como Templates, e edite-o como quiser. Ajuda › Sobre esta versão (em inglês) informa quando há algo a buscar ali.</p>
+
+<h2 id="repair">Arquivos ausentes e danificados</h2>
+<p>Quando um arquivo de que o TeXShop precisa, como as macros, o arquivo do Painel LaTeX, as associações de teclas, KeyEquivalents.plist ou um tema, está ausente ou danificado, o TeXShop o substitui pela própria cópia ao ser iniciado, sem mostrar nenhuma mensagem. O arquivo danificado é guardado em ~/Library/TeXShop/Backups, para que você possa recuperar dele as suas alterações.</p>
+
+<h2 id="defaults">Obter o conteúdo padrão de uma pasta</h2>
+<p>Para obter o conteúdo padrão mais recente de uma pasta, por exemplo Templates, encerre o TeXShop, mova essa pasta para fora de ~/Library/TeXShop (para a Mesa, por exemplo) e abra o TeXShop de novo. Ele cria a pasta com o conteúdo padrão. Depois, copie da pasta movida de volta o que quiser manter.</p>
+</main>
+</body>
+</html>

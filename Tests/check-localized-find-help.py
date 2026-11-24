@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The English, Japanese, German, Spanish and Korean help describe the Advanced Find panel.
+"""Every help book (en, ja, de, es, ko, fr, it, nl, pt, pt-PT, ro, zh_CN) describes the Advanced Find panel.
 
 Their Find and Replace page (basic_find.htm) names the panel, the Settings row that
 chooses it and its commands with the words of the interface in that language, and has
@@ -16,7 +16,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 INTERFACES = ROOT / 'Resources/Interfaces'
-LANGUAGES = ('en', 'ja', 'de', 'es', 'ko')
+LANGUAGES = ('en', 'ja', 'de', 'es', 'ko', 'fr', 'it', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN')
 FIND_PAGE = 'basic_find.htm'
 
 # Each entry is a strings table and a key whose value the page must contain.
@@ -36,7 +36,8 @@ TERMS = (
 )
 # Words of the old pages: OgreKit as the new panel for Panther, and its web site.
 OLD_EDITING = re.compile(r'Panther|10\.3|sonobe/OgreKit|園部さんのOgreKit|新しい検索パネル|neuen Suchdialog|nuevo panel de B|new Find panel')
-RECOMMENDED = re.compile(r'\s*[(（](?:recommended|empfohlen|recomendado|推奨|권장)[)）]$')
+# The mark that the settings put after the name of the panel: (recommended), （推奨）, (recommandée), （推荐）, …
+RECOMMENDED = re.compile(r'\s*[(（][^()（）]+[)）]$')
 OLD_DEFAULTS = re.compile(r'1\.35.{0,40}?(?:検索パネル|Suchdialog|panel de B|Find panel)', re.I)
 
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configurări ascunse</title>
+<meta name="description" content="configurări ascunse; defaults write; Terminal; Linii de comentarii și configurări ascunse; OtherTrashExtensions; ConTeXtTags; RedConsoleAfterError; RefreshTime">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Cum configurez TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="configure_prefchanges.htm">Modificări recomandate ale configurărilor</a></li>
+<li><a href="configure_correctinstall.htm">Obținerea elementelor noi din Library</a></li>
+<li><a href="configure_hidden.htm" class="current">Configurări ascunse</a></li>
+<li><a href="configure_panel.htm">Modificarea Tabloului de comandă LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificarea asocierilor de taste</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinirea scurtăturilor de tastatură din meniuri</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Configurări ascunse</h1>
+<p>Fereastra Configurări conține configurările de care au nevoie cei mai mulți utilizatori. Cele mai puțin obișnuite sunt configurări ascunse: nu au niciun control în fereastra Configurări și se modifică printr-o comandă în Terminal. Documentul de referință „Linii de comentarii și configurări ascunse” listează fiecare configurare ascunsă cu comanda ei, grupate pe subiecte. Deschideți-l cu Ajutor › Linii de comentarii și configurări ascunse (în engleză) sau cu „Deschide manualul pentru linii de comentarii și configurări ascunse…” din Configurări › General › „Avansat”.</p>
+
+<h2 id="change">Modificarea unei configurări ascunse</h2>
+<ol>
+<li>Închideți TeXShop.</li>
+<li>Deschideți Terminal (în /Applications/Utilities), tastați comanda și apăsați Return.</li>
+<li>Porniți din nou TeXShop.</li>
+</ol>
+<p>Fiecare comandă are forma <code>defaults write TeXShop <var>nume</var> <var>valoare</var></code>. Pentru a reveni la valoarea implicită, folosiți <code>defaults delete TeXShop <var>nume</var></code>.</p>
+
+<h2 id="examples">Exemple</h2>
+<dl>
+<dt><code>defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'</code></dt>
+<dd>Fișier › Șterge fișierele aux elimină și fișierele cu aceste extensii. Dați extensiile fără punct. Consultați <a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a>.</dd>
+<dt><code>defaults write TeXShop ConTeXtTags YES</code></dt>
+<dd>Meniul „Etichete” listează comenzile de secționare ConTeXt, precum \title și \subject, în locul celor LaTeX.</dd>
+<dt><code>defaults write TeXShop RedConsoleAfterError YES</code></dt>
+<dd>Textul tastat în consolă ca răspuns la o eroare TeX și tot rezultatul ulterior al acelei rulări sunt afișate cu roșu.</dd>
+<dt><code>defaults write TeXShop RefreshTime 2</code></dt>
+<dd>Cât timp „Urmărește permanent modificările PDF-ului făcute de alte aplicații” este activată în Configurări › Previzualizare, TeXShop verifică la fiecare 2 secunde dacă un PDF s-a modificat. Valoarea implicită este 1 secundă, iar minimul este 0,5.</dd>
+</dl>
+
+<p>Configurările care se află în fereastra Configurări nu sunt repetate printre configurările ascunse. De exemplu, deplasarea la marcajul următor sau anterior din Editare › Marcaje cu Opțiune sau Control și tasta de activare a completării se activează și se dezactivează cu „Mergi la marcajul următor sau anterior cu Opțiune sau Control și tasta de activare” din Configurări › Tastatură. Pentru a găsi o astfel de configurare, folosiți „Caută în configurări”; consultați <a href="basic_preferences.htm#settings-search">Folosirea configurărilor și a căutării în configurări</a>.</p>
+</main>
+</body>
+</html>

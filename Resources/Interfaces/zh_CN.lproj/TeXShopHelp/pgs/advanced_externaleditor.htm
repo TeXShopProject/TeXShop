@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用外部编辑器</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="外部编辑器；打开以预览；配置为外部编辑器；始终监视其他应用对PDF的更改；AppleScript；refreshpdf；othereditor；OtherEditorSync；TextMateSync；BBEdit；Vim">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm" class="current">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>使用外部编辑器</h1>
+<p>你可以在其他编辑器中写作，而用 TeXShop 排版并显示 PDF。</p>
+
+<h2>只打开预览</h2>
+<p>“文件”>“打开以预览...”会要求你选择一个源文件，然后只打开它的预览窗口。如果该文件尚未排版，或者 PDF 比源文件旧，TeXShop 会先排版它。请在你的编辑器中编辑源文件；要排版时，先在编辑器中保存，然后点按预览窗口中的“排版”或按 <kbd>⌘T</kbd>。在这种模式下，TeXShop 从不打开或更改源文件。如果预览窗口的工具栏中没有“排版”按钮，请用“窗口”>“自定义工具栏...”添加一个。</p>
+<p>如果你总是这样工作，请打开“设置”>“通用”>“启动时”>“配置为外部编辑器”。这样，“文件”>“打开...”和“打开最近使用”会以仅预览的方式打开源文件，而“文件”>“打开以预览...”会变为“打开以编辑...”，需要时可以用它在 TeXShop 自己的编辑器中打开源文件。其他文件（例如 PDF、图形文件和日志文件）的打开方式与以前相同。</p>
+
+<h2>让预览保持最新</h2>
+<p>当 PDF 被其他程序（例如你的编辑器或终端中的 latexmk）重写时，TeXShop 会在你返回 TeXShop 或预览窗口时重新载入它，并保持页面和放大率不变。打开“设置”>“预览”>“刷新”>“始终监视其他应用对PDF的更改”后，PDF 一有变化就会重新载入，即使 TeXShop 在后台也是如此，例如当预览放在你的编辑器旁边时。带有未保存批注的预览不会重新载入，因此批注不会丢失。</p>
+<p>TeXShop 也会监视在它自己的编辑器中打开的源文件。当其他编辑器更改了这样的文件时，TeXShop 会重新载入它，除非 TeXShop 中的副本有未保存的更改。</p>
+
+<h2>与编辑器同步</h2>
+<p>在预览窗口中按住 Command 键点按，可以跳到编辑器中的相应行；控制台中的“转到错误”可以在编辑器中打开出错的行。这需要“配置为外部编辑器”、一项隐藏设置以及编辑器的命令行程序：</p>
+<ul>
+<li>对于 TextMate（其命令 <code>mate</code> 位于 <code>/usr/local/bin</code> 中）：<code>defaults write TeXShop TextMateSync YES</code>。</li>
+<li>对于任何其他编辑器：<code>defaults write TeXShop OtherEditorSync YES</code>，以及一个可执行脚本 <code>/usr/local/bin/othereditor</code>，它以 <code>$1</code> 接收行号，以 <code>$2</code> 接收文件的完整路径。对于 BBEdit，脚本如下：
+<pre>#!/bin/sh
+/usr/local/bin/bbedit "$2:$1"</pre></li>
+</ul>
+<p>对于另一个方向（从编辑器中的某一行到预览窗口），编辑器通过 AppleScript 用命令 <code>sync_preview_line</code>、<code>sync_preview_index</code> 和 <code>sync_preview_name</code> 调用 TeXShop。“帮助”>“TeXShop手册（英文）”的“Using an External Editor”一章中有完整的脚本。</p>
+<p>文件夹 <code>~/Library/TeXShop/ExternalEditorScripts</code> 中有现成的支持文件及说明文档：在 TeXShop 中排版和预览 BBEdit 文稿的 AppleScript，以及一个 Vim 插件。</p>
+
+<h2>供编辑器使用的 AppleScript 命令</h2>
+<p>编辑器可以调用 TeXShop 文稿的以下 AppleScript 命令：</p>
+<dl>
+<dt><code>typesetinteractive</code>、<code>texinteractive</code>、<code>latexinteractive</code>、<code>bibtexinteractive</code>、<code>makeindexinteractive</code>、<code>metapostinteractive</code></dt>
+<dd>排版，或者运行 plain TeX、LaTeX、BibTeX、MakeIndex 或 MetaPost。调用会立即返回，不等待排版结束；排版结束时会刷新预览。</dd>
+<dt><code>taskdone</code></dt><dd>排版正在进行时返回 NO，完成后返回 YES。</dd>
+<dt><code>refreshpdf</code></dt><dd>重新载入 PDF，并把预览窗口移到最前面。</dd>
+<dt><code>refreshpdfbackground</code></dt><dd>在预览窗口已打开时重新载入 PDF，而不把 TeXShop 移到最前面。</dd>
+<dt><code>refreshtext</code></dt><dd>从磁盘重新读取源文件。</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>以“文件”>“打开以预览...”的方式打开源文件。</dd>
+</dl>
+<p>当编辑器通过 TeXShop 排版时，不需要“始终监视其他应用对PDF的更改”。另请参阅<a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a>。</p>
+</main>
+</body>
+</html>

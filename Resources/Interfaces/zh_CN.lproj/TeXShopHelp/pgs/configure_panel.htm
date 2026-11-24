@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>修改 LaTeX 面板</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="LaTeX 面板；“自定义”标签；completion.plist；LatexPanel 文件夹；按钮">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">如何配置 TeXShop？</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">预备知识</a></li>
+<li><a href="configure_prefchanges.htm">建议更改的设置</a></li>
+<li><a href="configure_correctinstall.htm">获取资源库中的新项目</a></li>
+<li><a href="configure_hidden.htm">隐藏设置</a></li>
+<li><a href="configure_panel.htm" class="current">修改 LaTeX 面板</a></li>
+<li><a href="configure_autocompletion.htm">修改按键绑定</a></li>
+<li><a href="configure_menushortcuts.htm">重新定义菜单键盘快捷键</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>修改 LaTeX 面板</h1>
+<p>LaTeX 面板（“窗口”>“LaTeX面板...”）有一个“自定义”标签，最多可容纳十六个你自己的按钮。其他按钮的名称不能更改，但它们插入的文本可以更改。</p>
+<p>这两者都在文件 ~/Library/TeXShop/LatexPanel/completion.plist 中设置。请在 TeXShop 中打开它，并阅读文件开头的注释，其中说明了文件的组织方式。每个标签都有一个列表，按按钮的顺序列出各按钮插入的文本。在这些文本中，#SEL# 代表所选文本，#INS# 代表插入点所在的位置。</p>
+<p>“自定义”标签的按钮位于名为 Customized 的列表中。每个按钮是一对字符串：先是它的名称，然后是它插入的文本。例如，</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>会生成一个名为 Section 的按钮，它在所选文本两边插入 <code>\section{}</code>，并把插入点放在花括号内。</p>
+<p>请以 UTF-8 保存该文件。TeXShop 在 LaTeX 面板首次打开时读取它，因此要看到更改，请再次启动 TeXShop。请保留其他标签的列表中的每一项：如果该文件无法使用，TeXShop 会使用自带的副本，并在下次启动时替换该文件，同时把你的文件保留在 ~/Library/TeXShop/Backups 中。</p>
+</main>
+</body>
+</html>

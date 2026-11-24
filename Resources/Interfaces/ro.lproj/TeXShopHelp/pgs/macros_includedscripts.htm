@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macrocomenzile AppleScript implicite</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macrocomenzi AppleScript; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; sfârșit de rând; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor pentru macrocomenzi</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="macros_default.htm">Înțelegerea macrocomenzilor implicite</a></li>
+<li><a href="macros_rearrange.htm">Rearanjarea meniului Macro</a></li>
+<li><a href="macros_define.htm">Definirea macrocomenzilor noi</a></li>
+<li><a href="macros_applescript.htm">Macrocomenzi AppleScript</a></li>
+<li><a href="macros_includedscripts.htm" class="current">Macrocomenzile AppleScript implicite</a></li>
+<li><a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crearea dialogurilor</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Macrocomenzile AppleScript implicite</h1>
+<p>TeXShop vine cu o colecție de macrocomenzi AppleScript create de Will Robertson, Claus Gerhardt și alții. Unele dintre ele rulează o serie de comenzi de compilare una după alta. Copiindu-le și modificându-le, vă puteți construi scripturi pentru propria muncă. Această pagină descrie câteva dintre ele, sub numele pe care le au în meniul „Macro”.</p>
+
+<h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
+<p>Aceste macrocomenzi sunt create de Will Robertson. În submeniul Column macros, New tabular și New array inserează un mediu tabular sau array cu numărul de rânduri și coloane pe care îl introduceți, iar Add column și Delete column modifică rândurile pe care le selectați. Insert reference caută în fișierul curent comenzile <code>\label{…}</code> și vă lasă să alegeți o etichetă dintr-o listă; inserează eticheta încadrată în <code>\ref{…}</code>, o comandă pe care o puteți schimba în script. Dacă este selectat text, sunt listate doar etichetele care îl conțin. Open quickly… listează fișierele .tex, .sty și .pdf din dosarul fișierului sursă curent și le deschide pe cele pe care le alegeți.</p>
+
+<h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
+<p>Această macrocomandă, creată de Alan Munn, lipește celule dintr-o foaie de calcul în sursa LaTeX ca tabel. Selectați un interval de celule în Excel sau în altă aplicație de foi de calcul și copiați-l. Apoi alegeți Macro › Paste Spreadsheet Cells și alegeți un stil de tabel:</p>
+<dl>
+<dt>cells</dt><dd>convertește textul copiat doar în celule de tabel LaTeX.</dd>
+<dt>booktabs</dt><dd>consideră primul rând drept antet și plasează <code>\toprule</code>, <code>\midrule</code> și <code>\bottomrule</code> într-un mediu tabular.</dd>
+<dt>simple</dt><dd>pune un mediu tabular simplu în jurul celulelor.</dd>
+<dt>longtable</dt><dd>consideră primul rând drept antet, adaugă rândurile de antet ale unui longtable și pune celulele într-un mediu longtable.</dd>
+</dl>
+<p>Macrocomanda înlocuiește conținutul clipboardului cu textul LaTeX. Pentru a lipi aceleași celule în alt stil, copiați-le mai întâi din nou din foaia de calcul.</p>
+
+<h2 id="line-endings">Applescript › Convert to MAC, Convert to Unix, Convert to Windows</h2>
+<p>Fișierele text își încheie rândurile în moduri diferite: macOS și Unix cu un caracter de avans de linie (line feed), Windows cu un retur de car (carriage return) urmat de un avans de linie, iar fișierele Macintosh foarte vechi doar cu un retur de car. TeXShop le citește pe toate trei. Dacă editorul altcuiva nu le poate citi, folosiți aceste macrocomenzi. Pentru un fișier sursă MyFile.tex, Convert to Unix scrie o copie a fișierului salvat numită MyFile_Unix.tex, cu avansuri de linie; Convert to Windows scrie MyFile_Windows.tex, iar Convert to MAC scrie MyFile_Mac.tex. Macrocomenzile folosesc programul flip al lui Craig Stuart Sapp, din ~/Library/TeXShop/bin.</p>
+
+<h2 id="bibliography">Applescript › Bibliography</h2>
+<p>Un document cu bibliografie are nevoie de mai multe rulări: LaTeX scrie fișierul .aux, BibTeX îl folosește pentru a scrie fișierele .bbl și .blg, LaTeX rulează din nou pentru a adăuga bibliografia și încă o dată pentru a actualiza trimiterile la ea. Macrocomanda Bibliography rulează LaTeX, BibTeX, LaTeX și LaTeX una după alta. <a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a> explică modul în care funcționează.</p>
+
+<h2 id="gerhardt">Claus Gerhardt Macros</h2>
+<p>Majoritatea macrocomenzilor din acest submeniu apelează scripturile shell cu același nume din ~/Library/TeXShop/bin; bibtexcpl, mpostcpl și latex-makeindex-mpost apelează pe rând mai multe dintre ele, iar openpdf deschide PDF-ul documentului. Ele lucrează pe un fișier salvat. <a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a> explică pdflatexc ca exemplu.</p>
+<h3>htlatexc, htlatexr</h3>
+<p>TeX4ht convertește un document LaTeX într-o pagină web: o pagină HTML și fișiere imagine. htlatexc rulează htlatex pe document și deschide fișierul HTML rezultat în Safari. Pachetul tex4ht nu trebuie încărcat în document; htlatex îl încarcă. htlatexr rulează htlatex cu opțiunea <code>-r</code>, care creează din nou imaginile chiar dacă ele există deja.</p>
+<h3>pdfselectc</h3>
+<p>pdfselectc creează fișiere PDF care conțin pagini selectate din PDF-ul documentului. Întreabă mai întâi câte fișiere să creeze, apoi paginile fiecărui fișier, de exemplu <code>5:8</code> pentru paginile 5–8 sau <code>3:4,6,8:12</code>. Dacă documentul se numește MyFile, fișierele sunt salvate ca MyFile-1.pdf, MyFile-2.pdf și așa mai departe.</p>
+<h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
+<p>mpostc rulează MetaPost și apoi pdfLaTeX; mpostcpl rulează pdfLaTeX, MetaPost și din nou pdfLaTeX. latex-makeindex-mpost rulează pdfLaTeX, MakeIndex, MetaPost și din nou pdfLaTeX, deschizând pe parcurs fișierele jurnal. Pentru MetaPost, consultați <a href="advanced_context.htm">ConTeXt și MetaPost</a>.</p>
+</main>
+</body>
+</html>

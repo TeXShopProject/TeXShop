@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeX-formaten maken en gebruiken</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="formaat; fmt-bestand; initex; -ini; -fmt; dump; engine-bestand; preambule">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm" class="current">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeX-formaten maken en gebruiken</h1>
+<p>Een formaatbestand (extensie <code>.fmt</code>) is een momentopname van TeX nadat het een verzameling macro’s heeft gelezen. LaTeX zelf is een formaat: TeX laadt het in een oogwenk in plaats van telkens de bronnen van LaTeX te lezen. U kunt van een lange preambule een eigen formaat maken, zodat het zetten sneller begint, of een formaat gebruiken dat een project of een organisatie aanbiedt.</p>
+<p>Een formaat werkt alleen met de engine en de versie van TeX Live waarmee het is gemaakt. Een formaat dat met pdfLaTeX van TeX Live 2026 is gemaakt, kan niet door XeLaTeX of door een andere jaargang van TeX Live worden gebruikt; maak het opnieuw na het installeren van een nieuwe TeX Live.</p>
+
+<h2>Een formaat maken</h2>
+<p>Zet de regels die het formaat moet bevatten in een bestand, en eindig met <code>\dump</code>. Bijvoorbeeld <code>uo.tex</code>:</p>
+<pre>\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\dump</pre>
+<p>Ga in Terminal naar de map van dit bestand en typ</p>
+<pre>pdflatex -ini -jobname=uo "&amp;pdflatex" uo.tex</pre>
+<p>Dit laadt het LaTeX-formaat, leest <code>uo.tex</code> en schrijft <code>uo.fmt</code>. Een document dat met dit formaat wordt gezet, laat de regels weg die al in het formaat staan en begint met <code>\begin{document}</code>.</p>
+
+<h2>Een formaat in TeXShop gebruiken</h2>
+<ol>
+<li>Verplaats <code>uo.fmt</code> naar de map <code>~/Library/texmf/web2c</code>, en maak de mappen aan als dat nodig is, zodat TeX het vanuit elke map vindt.</li>
+<li>Open in de Finder <code>~/Library/TeXShop/Engines</code> (TeXShop › Open ~/Library/TeXShop), dupliceer een engine zoals <code>XeLaTeX.engine</code> en geef de kopie een andere naam, bijvoorbeeld <code>Oregon.engine</code>. Die naam verschijnt in TeXShop en hoeft niet overeen te komen met het formaat.</li>
+<li>Open de kopie in TeXShop en wijzig de laatste regel, zodat de engine luidt:
+<pre>#!/bin/tcsh
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
+</ol>
+<p>Documenten die u daarna opent, tonen Oregon in het venstermenu naast de knop ‘Zet’. Om het formaat voor één document te gebruiken, ongeacht wat daar is gekozen, voegt u deze regel bovenaan de bron toe:</p>
+<pre>% !TEX program = Oregon</pre>
+<p>Om het de standaard te maken, kiest u ‘Engine-bestand’ bij Instellingen › Zetten › Engine › ‘Nieuwe documenten zetten met’, en Oregon in het menu ‘Engine-bestand’. Zie <a href="advanced_addengine.htm">Zet-engines toevoegen</a>.</p>
+<p>Voor een formaat voor plain TeX gebruikt u in de engine <code>pdftex</code> in plaats van <code>pdflatex</code>. Voor een formaat dat via DVI wordt gebruikt, moet de engine het DVI-bestand ook naar pdf omzetten, bijvoorbeeld met <code>dvipdfmx "${1:r}.dvi"</code> in een zsh-script, omdat TeXShop het pdf-bestand met de naam van de bron toont.</p>
+</main>
+</body>
+</html>

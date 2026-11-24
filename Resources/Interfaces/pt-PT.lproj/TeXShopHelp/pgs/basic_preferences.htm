@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alterar as definições</title>
+<meta name="description" content="Definições; preferências; Pesquisar definições; perfil do motor; comandos de composição; Detetar caminhos; codificação; UTF-8; temas; opacidade; parênteses correspondentes; caracteres invisíveis; teclado; atualizações; ícone da Dock; definições ocultas">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm" class="current">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Alterar as definições</h1>
+<p>Escolha TeXShop › Definições… (<kbd>⌘,</kbd>) para alterar o funcionamento do TeXShop. A barra lateral das Definições enumera dez categorias: «Geral», «Documentos e gravação», «Editor», «Teclado», «Ortografia», «Temas», «Composição», «Consola», «Pré-visualização» e «Atualizações». Cada categoria começa com uma breve descrição geral e organiza as suas definições em grupos com nome. «Retroceder» e «Avançar», ou <kbd>⌘[</kbd> e <kbd>⌘]</kbd>, regressam às categorias que visitou enquanto as Definições estão abertas.</p>
+<p>As definições decidem como os documentos começam; os comandos de menu alteram apenas o documento ativo enquanto está aberto. Por exemplo, Código-fonte › Mostrar números de linha mostra ou oculta os números de linha da janela ativa, enquanto «Números de linha», em Definições › Editor, decide se os documentos abrem com números de linha. As definições deste tipo estão reunidas no grupo «Ao abrir um documento», no topo das categorias «Editor» e «Pré-visualização».</p>
+<p>As alterações são guardadas à medida que as faz; um campo de texto assume o valor quando prime Return ou sai do campo. «Ativar guardar automaticamente e versões», e a mudança para o painel de pesquisa OgreKit ou a partir dele, produzem efeito depois de o TeXShop ser reiniciado.</p>
+
+<h2 id="settings-search">Pesquisar definições</h2>
+<p>Escreva em «Pesquisar definições», no topo da barra lateral, para encontrar uma definição, uma opção ou um comando de menu. Cada resultado mostra o nome do item e a respetiva categoria. As palavras separadas por espaços têm de descrever todas o mesmo item, e o nome de uma categoria restringe a pesquisa. As maiúsculas e minúsculas, os acentos latinos, os caracteres de largura total e a diferença entre hiragana e katakana são ignorados. Selecione um resultado para ir para a definição, que fica destacada; «Retroceder» regressa então ao local onde estava. Limpar a pesquisa mantém a categoria no ecrã. Um comando de menu abre «Teclado» com o comando na respetiva lista, onde o seu atalho pode ser alterado.</p>
+
+<h2>Geral</h2>
+<p>«Ao iniciar» escolhe se o TeXShop abre um documento vazio quando arranca sem um ficheiro («Abrir um documento vazio»). «Usar editor externo» destina-se a escrever o código-fonte noutro editor: o TeXShop mostra então apenas a pré-visualização de um ficheiro do código-fonte; consulte <a href="advanced_externaleditor.htm">Usar um editor externo</a>.</p>
+<p>«Janelas» escolhe se o código-fonte e a pré-visualização de um documento abrem em janelas separadas ou numa só janela, em que lado dessa janela fica o código-fonte («Posição do código-fonte na janela combinada») e se as novas janelas abrem como separadores (consulte <a href="basic_miscellaneous.htm">Janelas e separadores</a>). «Posição das janelas» escolhe onde abrem as janelas do código-fonte, da pré-visualização, da consola e HTML; «Usar a posição atual» usa o local e o tamanho da janela que está aberta nesse momento. «Ficheiro principal do projeto» abre o ficheiro principal de um projeto quando um dos seus ficheiros de capítulo é aberto; consulte <a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a>.</p>
+<p>«Ícone da Dock durante a execução» escolhe o ícone que o TeXShop mostra na Dock: o atual ou um dos desenhos anteriores. «Avançadas» tem o botão «Abrir o manual de linhas de comentário e definições ocultas…», que abre o documento que enumera as linhas de comentário especiais e as definições que não são mostradas nesta janela; consulte <a href="configure_hidden.htm">Definições ocultas</a>.</p>
+
+<h2>Documentos e gravação</h2>
+<p>A codificação dos novos documentos é «Unicode (UTF-8)», a escolha certa para quase toda a gente. Quando é aberto um ficheiro sem linha de codificação, o TeXShop deteta a sua codificação; uma linha <code>% !TEX encoding = …</code> no início de um ficheiro, que Macros › Encoding escreve por si, fixa a codificação desse ficheiro. «Mostrar codificação no diálogo Guardar» acrescenta um menu de codificação ao diálogo Guardar. Consulte <a href="advanced_encoding.htm">Codificações</a>.</p>
+<p>«Ativar guardar automaticamente e versões» ativa a funcionalidade do macOS que guarda as suas edições enquanto trabalha e mantém versões anteriores. «Manter o ficheiro anterior como “nome~”» mantém uma cópia de segurança do ficheiro tal como estava antes de cada gravação. «Converter automaticamente UTF-8-MAC para UTF-8» combina caracteres armazenados em partes separadas, como か + ゛, em caracteres únicos ao guardar.</p>
+
+<h2>Editor</h2>
+<p>«Tipo para o documento» define o tipo de letra de todas as janelas do código-fonte; um tipo de letra monoespaçado mantém alinhadas as colunas do código-fonte. No mesmo grupo «Visualização», «Tamanho dos números de linha» torna os números de linha pequenos ou grandes, e «Menu de etiquetas na barra de menus» coloca o menu «Marcas» na barra de menus. O grupo «Estilo do editor» define a largura de uma tabulação, se «Recolher parágrafo» e «Não recolher» usam caracteres de tabulação («Usar tabulações no menu de indentação»), o avanço dos parágrafos escritos sem quebras de linha e o espaçamento entre linhas; as janelas do código-fonte abertas mostram a alteração de imediato. «Escrita» tem «Selecionar ao ativar», que decide se o clique que traz uma janela do código-fonte para a frente também move o ponto de inserção, «Envolver o texto selecionado ao escrever um parêntese» e «Idiomas da direita para a esquerda (árabe, hebraico, persa)», que alinha à direita as linhas nestes idiomas; consulte <a href="advanced_encoding.htm">Codificações</a>. «Destaque de sintaxe» tem opções para <code>@</code> nos nomes de comandos, para o código expl3, para os caracteres de largura total e para as entradas do índice; as cores definem-se em «Temas». «Pesquisa» escolhe a interface de pesquisa e se o painel de pesquisa avançada fica à frente das outras janelas («Manter o painel de pesquisa avançada em primeiro plano»); consulte <a href="basic_find.htm">Procurar e substituir</a>. «Etiquetas XML na lista de etiquetas» escolhe as etiquetas de um documento XML que o menu «Marcas» enumera.</p>
+<p>«Ao abrir um documento» decide se as novas janelas do código-fonte mostram números de linha, destacam a linha atual, ajustam as linhas, mostram caracteres invisíveis e usam o cursor em bloco. O menu Código-fonte altera estas opções para a janela ativa. O grupo «Ponto de inserção» define a cor do cursor em bloco, de que lado do ponto de inserção é desenhado e a sua largura.</p>
+<h3>Parênteses correspondentes</h3>
+<p>Quando escreve um parêntese de fecho, o TeXShop mostra o respetivo par, para que possa verificar se os pares de uma fórmula correspondem. O grupo «Correspondência de parênteses» escolhe que pares são verificados e como o par é mostrado: destacado por instantes («Equilibrar parentesis»), a piscar («Piscar o realce»), com o texto entre o par colorido («Realçar os carateres entre parênteses»), ou também quando o ponto de inserção se move para junto de um parêntese («Mostrar indicador ao mover»). «Emitir som para parênteses isolados» e «Fazer o fundo piscar para parênteses isolados» avisam quando um parêntese de fecho não tem par. Fazer duplo clique num parêntese seleciona tudo até ao respetivo par. As cores são «Texto entre parênteses» e «Chavetas», no grupo «Destaques» de «Temas», e «Clarão», no seu grupo «Código-fonte».</p>
+<h3>Caracteres invisíveis</h3>
+<p>Código-fonte › Mostrar caracteres invisíveis mostra os espaços, os espaços japoneses, as mudanças de linha e as tabulações na janela ativa, o que ajuda quando o texto se comporta de forma intrigante. O grupo «Carateres invisíveis» de «Editor» escolhe quais deles são mostrados e o símbolo usado para cada um; «Mostrar caracteres invisíveis», em «Ao abrir um documento», mostra-os em todos os documentos. A sua cor é «Carateres invisíveis», no grupo «Destaques» de «Temas».</p>
+
+<h2>Teclado</h2>
+<p>«Teclado» contém as associações de teclas, que substituem um carácter escrito por um texto como <code>{}</code> (consulte <a href="basic_autocompletion.htm">Associações de teclas</a>); a conclusão de comandos e a respetiva tecla de ativação, com «Editar conclusão de comandos…» para a lista de conclusões (consulte <a href="basic_commandcompletion.htm">Conclusão de comandos</a>); a conclusão de etiquetas e chaves de citação; e os atalhos de todos os comandos de menu, que podem ser alterados aqui (consulte <a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a>).</p>
+
+<h2>Ortografia</h2>
+<p>O grupo «Ortografia» define a verificação ortográfica durante a escrita, a correção automática e o dicionário. Em «Método», escolha «Usar verificação adaptada ao LaTeX (recomendado)», que ignora os comentários, a matemática, os comandos e os argumentos de comandos como <code>\label</code> e <code>\cite</code>; «Editar exclusões de LaTeX…» altera o que é deixado de fora. «Método anterior» tem três opções próprias. Consulte <a href="basic_spelling.htm">Verificar a ortografia</a>.</p>
+
+<h2>Temas</h2>
+<p>Um tema é um conjunto de cores para as janelas, o destaque de sintaxe, os parênteses correspondentes, os caracteres invisíveis e outros destaques. «Tema do modo claro» e «Tema do modo escuro» escolhem o tema usado em cada apresentação do macOS, tons claros ou tons escuros. Por baixo, a lista de temas permite acrescentar, duplicar, mudar o nome, apagar, restaurar, exportar e importar temas; selecione um tema para alterar as suas cores. As alterações a um tema são guardadas de imediato.</p>
+<p>Em «Temas», define as cores do fundo, do texto e do cursor e a opacidade («Opacidade») das janelas do código-fonte, da pré-visualização e da consola, e a cor da seleção no código-fonte. Por baixo das cores do cursor e da seleção, «Usar cor do sistema» usa, em vez delas, a cor de realce e a cor de destaque escolhidas em Definições do Sistema › Apresentação; quando a opção é desassinalada, a cor própria do tema volta. «Opacidade» usa um nivelador e um campo numérico de 0% a 100%. Introduza uma percentagem inteira e prima Return ou saia do campo para a aplicar. Os botões de seta junto ao campo aumentam-na ou diminuem-na um por cento. Os valores fora deste intervalo são ajustados ao limite mais próximo. Um texto inválido, incluindo valores decimais, repõe o valor anterior quando termina a edição; a introdução escrita e a colada seguem a mesma regra.</p>
+<p>Consulte <a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a> para as cores do código-fonte.</p>
+
+<h2>Composição</h2>
+<p>A forma mais rápida de preparar a composição é um perfil do motor. Escolha um perfil, como pdfLaTeX, LuaLaTeX ou upLaTeX + dvipdfmx, no menu «Perfil do motor», no topo do grupo «Motor». Uma folha enumera os valores que o perfil define; desative um valor para manter a definição atual, escolha se o LaTeX é executado com o latexmk e clique em OK. Um perfil define os comandos e o método de composição, o comando kpsewhich, o motor BibTeX, o programa de índice, o MetaPost e a conversão para o pacote otf; os perfis japoneses definem também a codificação dos novos documentos, o dicionário e a conversão de UTF-8-MAC. Todas as outras definições ficam como estão. Quando as definições não correspondem a nenhum perfil, o menu mostra «Personalizado».</p>
+<p>As outras definições do grupo «Motor» escolhem o que a barra de ferramentas seleciona junto ao botão «Compor» quando um documento é aberto («Compor documentos novos com»), o ficheiro de motor usado quando aí é escolhido «Ficheiro de motor», e o «Método de composição»: «PDF direto», «Via DVI» ou «Script pessoal». Uma linha <code>% !TEX program</code> no início de um documento tem prioridade. «Motor alternativo» é o motor que Compor › Compor com motor alternativo usa; consulte <a href="advanced_addengine.htm">Adicionar motores de composição</a>. «Após a composição» escolhe a janela que passa para a frente quando a composição termina: «Trazer a pré-visualização para a frente», «Continuar a editar» ou «Mostrar a pré-visualização e voltar à janela original». «Sincronização do código-fonte e da pré-visualização» escolhe o «Método de sincronização» e se os ficheiros encontrados pela sincronização abrem como separadores na janela do ficheiro principal; consulte <a href="advanced_pdfsync.htm">Sincronizar o código-fonte e a pré-visualização</a>.</p>
+<p>Os grupos «PDF direto» e «Via DVI» contêm os comandos plain TeX e LaTeX que cada método executa, com as respetivas opções. Se acrescentar <code>-shell-escape</code> a um comando, ative «Confirmar shell-escape» para que lhe seja perguntado antes de um documento destes ser composto; consulte <a href="advanced_shellescape.htm">Proteção contra shell-escape</a>. O grupo «Script pessoal» contém os comandos do método «Script pessoal». «Ferramentas relacionadas» contém os comandos do BibTeX, do índice e do MetaPost. Consulte <a href="basic_typesetting.htm">Compor documentos</a> e <a href="basic_alternatetypeset.htm">Modo de composição alternativo</a>.</p>
+<p>«Caminhos» contém as pastas dos programas do TeX («Motores TeX», normalmente <code>/Library/TeX/texbin</code>) e do Ghostscript, e «Segundos motores TeX», uma segunda pasta de programas do TeX usada para os documentos que contêm a linha <code>% !TEX useAlternatePath</code>. «Detetar caminhos…» procura o TeX Live e o Ghostscript nos locais habituais, enumera as instalações que encontra com as respetivas versões, da mais recente para a mais antiga, e define a que escolher. O TeXShop também faz isto quando é usado pela primeira vez. O grupo «pLaTeX japonês» é descrito em <a href="advanced_Japan.htm">Composição em japonês</a>.</p>
+
+<h2>Consola</h2>
+<p>«Consola» define o tipo de letra da consola, também para o editor de macros se o desejar, e quando a consola aparece: sempre durante a composição, ou apenas quando ocorre um erro. «Redimensionar a consola» escolhe se a janela da consola pode ser redimensionada nas duas direções ou apenas na vertical.</p>
+
+<h2>Pré-visualização</h2>
+<p>«Ao abrir um documento» define como as novas janelas de pré-visualização mostram um documento: a disposição das páginas, a ampliação, o modo do rato, os pop-ups de links e a direção das disposições de duas páginas. Os outros grupos definem a mudança de página e os pop-ups de links, a atualização quando outra aplicação altera o PDF, o formato das imagens copiadas e a página inicial da janela HTML. Consulte <a href="basic_preview.htm">A janela de pré-visualização</a>.</p>
+
+<h2>Atualizações</h2>
+<p>O TeXShop pode procurar novas versões automaticamente, diária, semanal ou mensalmente. Ative «Atualizar para versões preliminares quando disponíveis» para receber também versões beta. «Procurar atualizações...» procura agora.</p>
+</main>
+</body>
+</html>

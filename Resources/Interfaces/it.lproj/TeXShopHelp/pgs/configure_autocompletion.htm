@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modificare le associazioni dei tasti</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="associazioni dei tasti; Elenco delle associazioni dei tasti; modificare le associazioni dei tasti; Carattere digitato; Testo prodotto; Incolla; cartella Keyboard; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Come configuro TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminari</a></li>
+<li><a href="configure_prefchanges.htm">Modifiche consigliate alle impostazioni</a></li>
+<li><a href="configure_correctinstall.htm">Ottenere i nuovi elementi della libreria</a></li>
+<li><a href="configure_hidden.htm">Impostazioni nascoste</a></li>
+<li><a href="configure_panel.htm">Modificare il Pannello LaTeX</a></li>
+<li><a href="configure_autocompletion.htm" class="current">Modificare le associazioni dei tasti</a></li>
+<li><a href="configure_menushortcuts.htm">Ridefinire le abbreviazioni da tastiera dei menu</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modificare le associazioni dei tasti</h1>
+<p>Le associazioni dei tasti sostituiscono un carattere digitato con un testo, per esempio ^ con ^{} e il punto di inserimento tra le parentesi graffe; <a href="basic_autocompletion.htm">Associazioni dei tasti</a> spiega come usarle. Questa pagina spiega come modificare l’elenco.</p>
+
+<h2 id="on-off">Attivare le associazioni dei tasti</h2>
+<p>«Usare le associazioni dei tasti (valore iniziale per i nuovi documenti)» in Impostazioni › Tastiera decide se le associazioni dei tasti sono attive quando si apre un documento; all’inizio è disattivato. Sorgente › Associazioni dei tasti le attiva o le disattiva solo per il documento attivo, e l’elemento facoltativo Associazioni dei tasti della barra strumenti fa lo stesso.</p>
+
+<h2 id="edit">Modificare l’elenco</h2>
+<p>«Elenco delle associazioni dei tasti» in Impostazioni › Tastiera mostra ogni carattere digitato con il relativo testo prodotto. Fai doppio clic su una cella per modificarla direttamente. Fai clic su + sotto l’elenco per aggiungere un’associazione e su − per eliminare quelle selezionate; trascina le righe per cambiarne l’ordine. Un carattere digitato è un singolo carattere. Le modifiche vengono salvate subito e si applicano immediatamente, anche nei documenti già aperti; Modifica › Annulla le annulla.</p>
+<p>Un testo prodotto può contenere questi simboli, che l’elenco mostra come piccole etichette:</p>
+<dl>
+<dt>#SEL#</dt><dd>il testo selezionato quando è stato digitato il tasto</dd>
+<dt>#INS#</dt><dd>il punto in cui va il punto di inserimento</dd>
+<dt>#PASTE#</dt><dd>il testo negli appunti</dd>
+<dt>•</dt><dd>un marcatore, a cui Modifica › Marcatori può spostarsi</dd>
+</dl>
+<p>Aggiungili con il menu Inserisci sotto l’elenco oppure digitali come sono scritti qui sopra; Opzione-A capo digita un’interruzione di riga e Opzione-Tab una tabulazione. Il pulsante ? accanto all’elenco li mostra tutti. Copiando un testo prodotto, i simboli vengono copiati come sono scritti qui sopra.</p>
+<p>Un segno di spunta nella colonna Incolla applica un’associazione anche al testo incollato: finché le associazioni dei tasti sono attive per il documento, ogni occorrenza del suo carattere digitato nel testo incollato o trascinato nel sorgente viene sostituita dal suo testo prodotto. Le associazioni il cui testo prodotto contiene #SEL#, #INS#, #PASTE# o un marcatore non si possono spuntare.</p>
+
+<h2 id="reset">Tornare all’elenco predefinito</h2>
+<p>L’elenco è conservato nella cartella ~/Library/TeXShop/Keyboard. Per tornare all’elenco fornito con TeXShop, esci da TeXShop, sposta la cartella Keyboard sulla scrivania e avvia di nuovo TeXShop; TeXShop crea la cartella con il suo contenuto predefinito.</p>
+</main>
+</body>
+</html>

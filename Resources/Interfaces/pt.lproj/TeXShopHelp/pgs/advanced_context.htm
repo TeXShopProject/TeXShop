@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ConTeXt e MetaPost</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; nv-metafun; mfpic; luamplib">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar arquivos pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivência com outras distribuições de TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm" class="current">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o arquivo principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar código-fonte e pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover arquivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros arquivos com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto colorido</a></li>
+<li><a href="advanced_plist.htm">Arquivos em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>ConTeXt e MetaPost</h1>
+<h2>ConTeXt</h2>
+<p>O ConTeXt é um pacote de macros de Hans Hagen, uma alternativa ao LaTeX com comandos próprios e grande ênfase no design tipográfico. O TeX Live inclui o ConTeXt, e o ConTeXt Garden distribui uma versão, atualizada com frequência, que se instala na sua pasta pessoal.</p>
+<p>Os motores para o ConTeXt estão em <code>~/Library/TeXShop/Engines/Inactive/ConTeXt</code>, junto com o guia <code>Setting-Up-ConTeXt.pdf</code> e documentos de exemplo:</p>
+<table>
+<tr><th>Motor</th><th>Compõe com</th></tr>
+<tr><td><code>ConTeXt.engine</code></td><td>o ConTeXt do TeX Live que roda sobre o LuaTeX</td></tr>
+<tr><td><code>ConTeXt-TL.engine</code></td><td>o ConTeXt do TeX Live que roda sobre o luametatex</td></tr>
+<tr><td><code>ConTeXt-CG.engine</code></td><td>a versão do ConTeXt Garden na sua pasta pessoal</td></tr>
+</table>
+<p>Mova o motor de que precisar para <code>~/Library/TeXShop/Engines</code> e coloque linhas mágicas no início do arquivo principal do documento, por exemplo:</p>
+<pre>% !TEX program = ConTeXt-TL
+% !TEX useConTeXtSyncParser</pre>
+<p>Para o ConTeXt-CG, digite a pasta dos programas da instalação do ConTeXt Garden no campo “Segundos motores TeX” de Ajustes › Composição › Caminhos e acrescente a linha <code>% !TEX useAlternatePath</code>, que faz o TeXShop passar essa pasta ao motor em vez da do TeX Live.</p>
+<p>Para a sincronização entre o código-fonte e a pré-visualização, acrescente <code>\setupsynctex[state=start,method=min]</code> à configuração do documento; a linha <code>% !TEX useConTeXtSyncParser</code> faz o TeXShop usar o código de sincronização do próprio ConTeXt. O capítulo sobre o ConTeXt em Ajuda › Manual do TeXShop (em inglês) descreve em detalhe a instalação da versão do ConTeXt Garden e cada motor.</p>
+<p>Para listar no menu Marcas comandos de seção do ConTeXt como <code>\title</code> e <code>\subject</code>, ative o ajuste oculto ConTeXtTags; consulte <a href="configure_hidden.htm">Ajustes ocultos</a>.</p>
+
+<h2>MetaPost</h2>
+<p>O MetaPost, de John Hobby, desenha ilustrações a partir de uma descrição em uma linguagem de programação derivada do METAFONT de Knuth. O seu manual faz parte do TeX Live: escolha Ajuda › Exibir ajuda para o pacote... e digite <code>metapost</code>.</p>
+<p>Compor › MetaPost (<kbd>⇧⌘M</kbd>), ou MetaPost no menu local ao lado do botão Compor, executa o MetaPost no arquivo que tem o nome do documento ativo e a extensão <code>.mp</code>: no próprio documento, se ele for um arquivo <code>.mp</code>, e, caso contrário, no arquivo <code>.mp</code> ao lado dele, como o que o pacote mfpic grava para um documento <code>.tex</code>. Ele executa o comando de Ajustes › Composição › Ferramentas relacionadas › MetaPost, <code>mpost</code> por padrão. Os perfis do motor definem esse campo: <code>pmpost</code> para pLaTeX + dvipdfmx e <code>upmpost</code> para upLaTeX + dvipdfmx, que compõem texto em japonês nos rótulos, e <code>mpost</code> para os outros perfis. O LuaLaTeX não consegue incluir figuras cujos rótulos o pmpost ou o upmpost compuseram em japonês; com o LuaLaTeX, desenhe essas figuras no documento com o pacote luamplib.</p>
+<p>Para salvar um arquivo novo como arquivo MetaPost, escolha o tipo mp no menu Formato do diálogo Salvar.</p>
+<p>Os motores nv-metapost e nv-metafun, de Nicola Vitacolonna, facilitam o trabalho com o MetaPost e o MetaFun e mostram as figuras de um arquivo na janela de pré-visualização. Eles estão em <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>; o arquivo <code>README.pdf</code> e a pasta <code>examples</code>, um nível acima, em <code>MetaPostEngines-1.4.7</code>, explicam como instalá-los e usá-los e trazem arquivos de exemplo. Por exemplo, um arquivo que começa com</p>
+<pre>% !TEX program = nv-metafun
+beginfig(1);
+  pickup pencircle scaled 2mm;
+  draw fullcircle scaled 2cm withcolor red;
+endfig;
+end</pre>
+<p>é composto com o nv-metafun quando esse motor estiver na pasta Engines.</p>
+<p>Os desenhos do MetaPost também podem ser escritos dentro de um documento LaTeX, com o pacote luamplib para o LuaLaTeX, ou com pacotes como o mfpic, que gravam os desenhos em um arquivo <code>.mp</code> que o MetaPost processa entre duas composições.</p>
+</main>
+</body>
+</html>

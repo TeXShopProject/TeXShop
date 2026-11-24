@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arquivos em ~/Library/TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop; arquivos plist; arquivos de configuração; completion.plist; autocompletion.plist; KeyEquivalents.plist; Macros_Latex.plist; matrixpanel; temas; CommandCompletion.txt; backups">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar arquivos pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivência com outras distribuições de TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o arquivo principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar código-fonte e pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover arquivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros arquivos com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto colorido</a></li>
+<li><a href="advanced_plist.htm" class="current">Arquivos em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Arquivos em ~/Library/TeXShop</h1>
+<p>O TeXShop guarda os arquivos que você pode personalizar na pasta <code>~/Library/TeXShop</code>, que ele cria na primeira vez que é executado. TeXShop › Abrir pasta ~/Library/TeXShop abre a pasta no Finder. Para levar as suas personalizações para outro Mac, copie essa pasta para lá.</p>
+
+<h2>O que a pasta contém</h2>
+<p>A maioria desses arquivos é editada no próprio TeXShop, e não há necessidade de abri-los:</p>
+<table>
+<tr><th>Arquivo ou pasta</th><th>Conteúdo</th><th>Onde alterar</th></tr>
+<tr><td><code>Keyboard/autocompletion.plist</code>, com <code>autocompletionPaste.plist</code> e <code>autocompletionDisplayOrder.plist</code></td><td>Associações de teclas</td><td>Ajustes › Teclado › Lista de associações de teclas</td></tr>
+<tr><td><code>CommandCompletion/CommandCompletion.txt</code></td><td>Lista de conclusão de comandos</td><td>Ajustes › Teclado › Editar conclusão de comandos…</td></tr>
+<tr><td><code>Menus/KeyEquivalents.plist</code></td><td>Atalhos padrão dos menus</td><td>Ajustes › Teclado, lista de atalhos dos menus</td></tr>
+<tr><td><code>Macros/Macros_Latex.plist</code></td><td>Menu Macros</td><td>Macros › Abrir editor de macros...</td></tr>
+<tr><td><code>Themes/</code></td><td>Temas de cores</td><td>Ajustes › Temas</td></tr>
+<tr><td><code>SpellCheck/SpellingExclusions.txt</code></td><td>O que a verificação ortográfica adaptada ao LaTeX ignora</td><td>Ajustes › Ortografia › Editar exclusões de LaTeX…</td></tr>
+<tr><td><code>Engines/</code></td><td>Motores de composição</td><td>Ajustes › Composição › Editar a lista de motores…</td></tr>
+<tr><td><code>LatexPanel/completion.plist</code></td><td>Textos do Painel LaTeX</td><td>À mão; consulte <a href="configure_panel.htm">Modificar o Painel LaTeX</a></td></tr>
+<tr><td><code>MatrixPanel/matrixpanel_1.plist</code></td><td>Textos do Painel Matriz</td><td>À mão</td></tr>
+<tr><td><code>Templates/</code>, <code>Stationery/</code></td><td>Menu Modelos, Arquivo › Novo a partir de modelo</td><td>No Finder; consulte <a href="basic_templates.htm">Modelos e documentos-modelo</a></td></tr>
+</table>
+<p>Os atalhos dos menus em <code>KeyEquivalents.plist</code> passam a ser os padrões da lista de atalhos de Ajustes › Teclado; os atalhos alterados nos ajustes têm prioridade. Consulte <a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a>.</p>
+
+<h2>Editar um arquivo à mão</h2>
+<p>Os arquivos com a extensão <code>.plist</code> são texto XML. Eles podem ser abertos e editados no TeXShop, em outro editor de texto ou no Xcode. Vários deles começam com comentários que explicam o seu formato. Mantenha-os em UTF-8, a codificação em que estão escritos. Edite as cores dos temas em Ajustes › Temas, e não nos arquivos deles.</p>
+<p>Se um arquivo que você editou deixar de funcionar, mova-o para fora da pasta, ou mova a pasta dele para a Mesa, e reinicie o TeXShop: ele cria de novo o arquivo com o conteúdo original.</p>
+
+<h2>Arquivos ausentes ou danificados</h2>
+<p>Quando um dos arquivos de que o TeXShop precisa, como as macros, as associações de teclas, os textos do Painel LaTeX e do Painel Matriz, os atalhos dos menus, a lista de conclusão de comandos, as exclusões da verificação ortográfica ou os temas padrão, está ausente, ou é encontrado danificado quando o TeXShop é iniciado, o TeXShop coloca a própria cópia no lugar dele sem mostrar nenhuma mensagem de erro. Um arquivo danificado é movido para a pasta <code>~/Library/TeXShop/Backups</code>, dentro de uma pasta com o nome da data e da hora, para que você possa recuperar dele as suas alterações.</p>
+<p>Os arquivos que você pode apagar de propósito, como modelos, documentos-modelo, motores e os seus próprios temas, não são restaurados.</p>
+</main>
+</body>
+</html>

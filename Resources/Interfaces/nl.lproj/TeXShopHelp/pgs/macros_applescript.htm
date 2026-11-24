@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppleScript-macro’s</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macro’s; AppleScript; --AppleScript; --AppleScript direct; ScriptRunner; View pdf with Preview">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hulp bij macro’s</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Inleiding</a></li>
+<li><a href="macros_default.htm">De standaardmacro’s</a></li>
+<li><a href="macros_rearrange.htm">Het menu Macro's herschikken</a></li>
+<li><a href="macros_define.htm">Nieuwe macro’s definiëren</a></li>
+<li><a href="macros_applescript.htm" class="current">AppleScript-macro’s</a></li>
+<li><a href="macros_includedscripts.htm">Standaard-AppleScript-macro’s</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a></li>
+<li><a href="macros_dialogs.htm">Dialoogvensters maken</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>AppleScript-macro’s</h1>
+<p>Een macro waarvan de inhoud begint met</p>
+<pre>--AppleScript</pre>
+<p>of</p>
+<pre>--AppleScript direct</pre>
+<p>wordt als AppleScript uitgevoerd wanneer hij wordt gekozen; hoofdletters en kleine letters maken daarbij niet uit. Macro's › Applescript › View pdf with Preview opent bijvoorbeeld de pdf van het actieve document in Voorvertoning, zodra de pdf is gezet. De inhoud ervan is</p>
+<pre>--AppleScript direct
+
+tell application "Preview"
+  activate
+  open POSIX file #PDFPATH#
+end tell</pre>
+<p>Voordat het script wordt uitgevoerd, vervangt TeXShop #PDFPATH# door het pad van de pdf; <a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a> geeft een overzicht van al zulke tekenreeksen. ‘View pdf with Adobe Acrobat Reader DC’ in hetzelfde submenu doet hetzelfde met Adobe Acrobat.</p>
+
+<h2 id="direct">--AppleScript direct en --AppleScript</h2>
+<p>Een script dat begint met <code>--AppleScript direct</code> wordt door TeXShop zelf uitgevoerd. Zolang het loopt, reageert TeXShop nergens anders op, zodat het script TeXShop niet kan vragen iets te doen waarvoor mogelijk uw invoer nodig is. Het kan TeXShop bijvoorbeeld niet vragen LaTeX uit te voeren: als het bestand een fout bevatte, zou de console op uw invoer wachten, die TeXShop niet zou kunnen ontvangen.</p>
+<p>Een script dat begint met <code>--AppleScript</code> wordt uitgevoerd door ScriptRunner, een klein programma in TeXShop. Zo’n script kan TeXShop vragen dingen te doen waarvoor mogelijk uw invoer nodig is, omdat ScriptRunner wacht terwijl TeXShop actief blijft.</p>
+<p><code>--AppleScript direct</code> is dus geschikt voor eenvoudige macro’s, terwijl <code>--AppleScript</code> nodig is voor scripts die zetten of op een andere manier met TeXShop werken.</p>
+</main>
+</body>
+</html>

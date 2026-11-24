@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用 TeXShop 排版命令编写脚本</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript；Bibliography 宏；latexinteractive；bibtex；taskdone；排版命令序列">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">宏帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">预备知识</a></li>
+<li><a href="macros_default.htm">了解默认宏</a></li>
+<li><a href="macros_rearrange.htm">重新排列“宏”菜单</a></li>
+<li><a href="macros_define.htm">定义新宏</a></li>
+<li><a href="macros_applescript.htm">AppleScript 宏</a></li>
+<li><a href="macros_includedscripts.htm">默认 AppleScript 宏</a></li>
+<li><a href="macros_defapplescript.htm">定义 AppleScript 宏</a></li>
+<li><a href="macros_dialogs.htm">创建对话框</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">用 TeXShop 排版命令编写脚本</a></li>
+<li><a href="macros_writingcommandscripts.htm">用 Shell 命令编写脚本</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>用 TeXShop 排版命令编写脚本</h1>
+<p>带有参考文献列表的文稿需要依次进行多次排版：LaTeX 写出 .aux 文件，BibTeX 用它写出 .bbl 和 .blg 文件，LaTeX 再次运行以把参考文献列表加入文稿，然后再运行一次以更新对它的引用。你的项目可能也需要类似的排版顺序，AppleScript 宏可以替你执行。</p>
+<p>TeXShop 附带的宏“宏”>“Applescript”>“Bibliography”演示了如何做到这一点。它的内容如下：</p>
+<pre>--Applescript
+
+set fileName to #FILEPATH#
+if fileName is equal to  ""
+activate
+display dialog "Please save the file first"  buttons {"OK"} default button "OK"
+return
+end if
+
+set frontName to #DOCUMENTNAME#
+
+tell document frontName of application "TeXShop"
+
+    latexinteractive
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    bibtex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+end tell</pre>
+<p>第一行使它成为由 ScriptRunner 运行的 AppleScript 宏，因此它可以要求 TeXShop 排版（请参阅 <a href="macros_applescript.htm">AppleScript 宏</a>）。接下来几行检查 #FILEPATH#，即源文件的完整路径。文稿尚未保存时，它是空字符串；这时脚本会要求你先保存文稿，然后停止。</p>
+<p>然后，脚本用 #DOCUMENTNAME# 指向该文稿。排版命令开始时，TeXShop 会自行保存文稿，因此脚本不需要保存它。</p>
+<p>其余的命令依次运行 latexinteractive、bibtex、latex 和 latex。排版命令会立即返回脚本，不等排版完成，因此每个命令之后都有一个 <code>repeat</code> 循环，一直等到 <code>taskdone</code> 报告作业已完成。<code>delay 2</code> 这一行让脚本在两次检查之间暂停，而不是不停地询问而拖慢电脑。这些命令列在<a href="macros_defapplescript.htm">定义 AppleScript 宏</a>中。</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Janelas e abas</title>
+<meta name="copyright" content="Copyright (c) 2016 Richard Koch under the GNU FDL">
+<meta name="description" content="abas; janelas; Abrir novas janelas como abas; Usar uma única janela; Usar janelas separadas; useTabs; useTabsWithFiles; tabbedFile; TabsAlsoForInputFiles">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composição</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Buscar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matriz</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar os ajustes</a></li>
+<li><a href="basic_templates.htm">Modelos e documentos-modelo</a></li>
+<li><a href="basic_miscellaneous.htm" class="current">Janelas e abas</a></li>
+<li><a href="basic_bugs.htm">Enviar relatórios de erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Janelas e abas</h1>
+<p>As janelas do TeXShop podem ser reunidas como abas de uma janela, como em outros apps do macOS. Em Ajustes › Geral, “Abrir novas janelas como abas” escolhe quando isso acontece: Nunca, Automaticamente, que segue o ajuste de abas do macOS, ou Sempre.</p>
+<p>Com Sempre e janelas separadas de código-fonte e de pré-visualização, o código-fonte de cada documento que você abre se torna uma aba da janela do código-fonte, e a pré-visualização dele, uma aba da janela de pré-visualização; os consoles e os logs são reunidos da mesma forma. Selecionar uma aba de uma janela traz para a frente a aba correspondente da outra quando você compõe ou sincroniza. Se o código-fonte e a pré-visualização são mostrados em uma única janela (“Código-fonte e pré-visualização”, em Ajustes › Geral, definido como “Usar uma única janela”), cada aba contém um documento inteiro. Janela › Usar uma única janela e Janela › Usar janelas separadas alternam o documento ativo entre as duas formas.</p>
+<p>Uma janela que mostra o código-fonte e a pré-visualização juntos, com ou sem abas, funciona bem em tela cheia: o console então flutua sobre ela enquanto você compõe.</p>
+
+<h2>Abrir um projeto em abas</h2>
+<p>Para um livro cujos capítulos são arquivos separados, o arquivo principal pode pedir ao TeXShop que abra os capítulos como abas da sua janela. Coloque esta linha entre as 20 primeiras linhas do arquivo principal:</p>
+<pre>% !TEX useTabs</pre>
+<p>Quando o arquivo principal é aberto, os arquivos indicados pelos seus comandos <code>\include</code> se abrem como abas. Nomes curtos para as abas podem vir na mesma linha, entre parênteses e separados por vírgulas; um espaço em branco entre duas vírgulas mantém o nome daquele arquivo:</p>
+<pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
+<p>Para que os arquivos dos comandos <code>\input</code> também ganhem abas, use este ajuste oculto no Terminal:</p>
+<pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
+<p>Para escolher você mesmo os arquivos, coloque uma linha <code>useTabsWithFiles</code> entre as 20 primeiras linhas do arquivo principal e acrescente uma linha <code>tabbedFile</code> para cada aba, todas entre as suas 50 primeiras linhas. Um nome para a aba pode vir entre parênteses:</p>
+<pre>% !TEX useTabsWithFiles
+% !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
+% !TEX tabbedFile{Galois.log}
+% !TEX tabbedFile{~/Graphics/diagram.pdf}</pre>
+<p>Um caminho é relativo à pasta do arquivo principal, começa na sua pasta pessoal com <code>~</code> ou é um caminho completo. Escreva sempre a extensão, mesmo quando o Finder a oculta: essas abas também podem mostrar logs, arquivos PDF e gráficos. Cada arquivo se abre como se você mesmo o abrisse; assim, um arquivo de código-fonte pode trazer junto a sua pré-visualização.</p>
+<p>Consulte Ajuda › Linhas Especiais e Ajustes Ocultos (em inglês) para os outros comentários mágicos.</p>
+</main>
+</body>
+</html>

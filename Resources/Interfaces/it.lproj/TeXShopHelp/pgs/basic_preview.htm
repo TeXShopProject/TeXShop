@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La finestra di anteprima</title>
+<meta name="description" content="finestra di anteprima; vista documento; modalità pagine affiancate; ingrandimento; Adatta alla finestra; lente di ingrandimento; Selezione PDF; copiare immagini; cercare nel PDF; cassetto; popup dei collegamenti; popup fissato; dividere la finestra; Cambia visualizzazione; tutto schermo; barra strumenti annotazioni">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Comporre i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a></li>
+<li><a href="basic_preview.htm" class="current">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>La finestra di anteprima</h1>
+
+<p>La finestra di anteprima mostra il file PDF composto. Viene aggiornata dopo ogni composizione e resta alla pagina che stavi leggendo. Le sue impostazioni si trovano in Impostazioni › Anteprima: quelle del gruppo «All’apertura di un documento» valgono quando si apre un documento, e il menu Anteprima le cambia per la finestra in primo piano.</p>
+
+<h2>Muoversi nel documento</h2>
+
+<p>Anteprima › Vista documento sceglie come sono disposte le pagine: «Pagina singola» e «Pagine affiancate» mostrano una pagina o una coppia di pagine, mentre «Continuo» e «Continuo con pagine affiancate» mostrano tutte le pagine in un’unica lunga colonna. «Vista documento» nel gruppo «All’apertura di un documento» imposta la vista con cui si apre una finestra. «Pagina Precedente» e «Pagina Successiva» nel menu Anteprima e nella barra strumenti cambiano pagina, il campo «Vai alla pagina» della barra strumenti va a una pagina in base al numero, e le due frecce di «Indietro/Avanti» nella barra strumenti riportano ai punti da cui sei passato, come in un browser web.</p>
+
+<p>In «Pagina singola» e «Pagine affiancate», scorrendo oltre l’inizio o la fine di una pagina si cambia pagina; attiva «Non cambiare pagina scorrendo» in Impostazioni › Anteprima › «Visualizzazione e navigazione» per fermarti invece al bordo della pagina. I tasti Freccia su e Freccia giù scorrono all’interno della pagina. I tasti Freccia sinistra e Freccia destra scorrono in orizzontale quando una pagina ingrandita è più larga della finestra, altrimenti cambiano pagina; «Cambia sempre pagina con i tasti freccia sinistra e destra» fa sì che cambino sempre pagina.</p>
+
+<p>La barra strumenti ha due menu per le pagine; se sono stati rimossi, Finestra › Personalizza la barra strumenti... li rimette al loro posto. «Vista documento» sceglie la disposizione delle pagine. «Modalità pagine affiancate» sceglie, solo per questo documento, se una coppia di pagine si legge da sinistra a destra o da destra a sinistra, e se la prima pagina viene mostrata da sola come copertina; la sua voce «Ripristina impostazioni del documento» torna alle impostazioni. Le impostazioni sono «Direzione delle pagine» e «Mostra la prima pagina da sola come copertina» nel gruppo «All’apertura di un documento», e le righe speciali <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> e <code>% !TEX standardDisplay</code> le impostano per un singolo documento.</p>
+
+<h2>Ingrandimento</h2>
+
+<p>Anteprima › Ingrandimento offre queste scelte:</p>
+<dl>
+<dt>Adatta alla finestra</dt>
+<dd>La pagina occupa tutta la larghezza della finestra, e ridimensionando la finestra cambia l’ingrandimento.</dd>
+<dt>Adatta alla larghezza del contenuto</dt>
+<dd>Come «Adatta alla finestra», ma senza i margini bianchi: la parte composta delle pagine occupa tutta la larghezza della finestra.</dd>
+<dt>Ingrandimento fisso</dt>
+<dd>L’ingrandimento resta quello impostato nel campo «Ingrandimento» della barra strumenti, oppure con «Ingrandisci» (<kbd>⇧⌘+</kbd>) e «Riduci» (<kbd>⇧⌘_</kbd>).</dd>
+<dt>Dimensioni reali</dt>
+<dd>Le pagine alla dimensione della carta.</dd>
+</dl>
+
+<p>«Zoom sul contenuto» e «Zoom sulla larghezza del contenuto», alla fine dello stesso sottomenu, impostano l’ingrandimento una sola volta, in modo che la parte composta della pagina entri nella finestra o ne occupi tutta la larghezza. Cambiando l’ingrandimento con la barra strumenti, con questi comandi o pizzicando sul trackpad, la finestra passa a «Ingrandimento fisso»; scegli di nuovo «Adatta alla finestra» per tornare indietro. Facendo clic sulla parola accanto al campo «Ingrandimento» si apre il menu Ingrandimento. «Dopo il ridimensionamento della finestra» e «Ingrandimento» nel gruppo «All’apertura di un documento» impostano l’ingrandimento con cui si apre una finestra.</p>
+
+<h2>Gli strumenti del mouse</h2>
+
+<p>L’elemento «Funzione mouse» della barra strumenti sceglie che cosa fa il puntatore sulla pagina. «Scorrimento» sposta la pagina. «Selezione testo» seleziona il testo da copiare. «Ingrandimento» e «Ingrandimento (maggiore)» mostrano una lente di ingrandimento finché tieni premuto il pulsante del mouse: fai doppio clic e tieni premuto per una lente più grande, triplo clic e tieni premuto per ingrandire tutta la finestra, e premi Comando, Opzione o Controllo per ingrandire di più; aggiungi Maiuscole a uno di questi tasti per ingrandire di meno. «Selezione PDF» seleziona un’area della pagina da copiare come immagine. «Funzione predefinita del mouse» nel gruppo «All’apertura di un documento» sceglie lo strumento con cui si apre una finestra.</p>
+
+<p>Con «Selezione PDF», trascina su un’area della pagina, poi copiala con <kbd>⌘C</kbd> oppure trascinala in un’altra applicazione o sulla Scrivania; Anteprima › Salva la Selezione... la salva in un file. Anteprima › Formato di copia sceglie se la copia è in PDF o un’immagine come PNG, TIFF o JPEG; «Copia immagine usando il formato» in Impostazioni › Anteprima › «Copia delle immagini» imposta il formato predefinito. Consulta <a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a>.</p>
+
+<h2 id="search">La ricerca e il cassetto</h2>
+
+<p>Scrivi una parola nel campo «Ricerca» della barra strumenti e premi A capo per selezionarne la prima occorrenza; <kbd>⌘G</kbd> va a quella successiva. Quando la finestra di anteprima è in primo piano, <kbd>⌘F</kbd> porta in questo campo.</p>
+
+<p>Anteprima › Cassetto, oppure l’elemento «Cassetto» della barra strumenti, mostra il cassetto. La sua parte superiore è l’indice del documento, che il pacchetto hyperref ricava dai capitoli e dalle sezioni; fai clic su una voce per andarci, oppure sceglila con i tasti freccia e premi A capo. La parte inferiore è un secondo campo di ricerca, che elenca ogni occorrenza con la sua pagina; fai clic su una di esse per andarci.</p>
+
+<h2>Collegamenti e popup dei collegamenti</h2>
+
+<p>I collegamenti creati dal pacchetto hyperref funzionano nell’anteprima: fai clic su un riferimento per andare al teorema o alla voce della bibliografia, e la freccia sinistra di «Indietro/Avanti» ti riporta indietro. Un indirizzo web si apre nel tuo browser.</p>
+
+<p>Tieni il puntatore su un collegamento per vedere il punto collegato in un popup, con il numero di pagina nell’angolo in basso a destra. Il popup scompare dopo qualche secondo. I tasti tenuti premuti quando compare il popup lo modificano:</p>
+<dl>
+<dt>Maiuscole</dt>
+<dd>mostra il popup sopra il collegamento invece che sotto.</dd>
+<dt>Comando</dt>
+<dd>mostra un popup più grande.</dd>
+<dt>Opzione</dt>
+<dd>fissa il popup, così che resti. Anche premere Opzione mentre un popup è visibile lo fissa.</dd>
+<dt>Controllo</dt>
+<dd>inverte «Collegamento popup» per questo collegamento: se «Collegamento popup» è attivo, non compare alcun popup, così nessuno intralcia un Controllo-clic; se è disattivato, il popup compare comunque.</dd>
+</dl>
+
+<p>Un popup fissato si può spostare, ridimensionare e scorrere, e il suo testo si può selezionare e copiare. Resta al suo posto sulla sua pagina mentre fai clic, scorri, ingrandisci, segui collegamenti o lavori in altre finestre, finché non premi Esc nella finestra di anteprima. Mentre un popup è fissato, gli altri popup continuano a comparire, e Opzione fissa invece uno di questi.</p>
+
+<p>Anteprima › Collegamento popup attiva o disattiva i popup per la finestra, e «Collegamento popup» nel gruppo «All’apertura di un documento» stabilisce se sono attivi quando si apre un documento. «Mostra il numero di pagina nei popup dei collegamenti» in Impostazioni › Anteprima › «Visualizzazione e navigazione» mostra nel popup il numero di pagina della destinazione; disattivalo per ometterlo. Quando è scelto lo strumento «Selezione PDF» non compare alcun popup.</p>
+
+<h2>Dividere la finestra</h2>
+
+<p>Finestra › Dividi finestra (<kbd>⌃2</kbd>), oppure l’elemento «Dividi finestra» della barra strumenti, divide la finestra di anteprima in due parti che possono mostrare punti diversi del documento; sceglilo di nuovo per annullare la divisione. Tieni premuto Opzione per dividere la finestra in due parti affiancate (Finestra › Dividi finestra verticalmente, <kbd>⌃⌥2</kbd>). Ogni parte ha la propria vista documento e il proprio ingrandimento. La parte su cui hai fatto clic per ultima è la parte attiva, contrassegnata da una linea sottile nel colore accento: la barra strumenti, il cassetto, SyncTeX e il menu Anteprima agiscono su di essa, e annullando la divisione resta questa.</p>
+
+<p>Fai Controllo-clic su un collegamento interno, oppure fai clic con il pulsante destro del mouse, e scegli «Dividi finestra con collegamento» per mostrare il punto collegato nell’altra parte mentre il collegamento resta visibile; se necessario, la finestra viene prima divisa.</p>
+
+<p>Finestra › Cambia visualizzazione (<kbd>⌥2</kbd>) scambia le due parti di una finestra divisa. In una finestra non divisa, passa da una all’altra di due viste del documento, ciascuna con la propria posizione, vista documento e ingrandimento, così puoi passare avanti e indietro tra due punti.</p>
+
+<h2>Tutto schermo</h2>
+
+<p>Finestra › Attiva Modalità a Tutto Schermo (<kbd>⌃⌘F</kbd>) mostra l’anteprima su tutto lo schermo. La finestra viene allora riunita e usa l’ingrandimento e la vista documento usati l’ultima volta a tutto schermo, e uscendo dalla modalità a tutto schermo tornano quelli precedenti. Per mantenere la divisione, l’ingrandimento e la vista documento, attiva «Mantieni ingrandimento, vista documento e divisione passando a tutto schermo» in Impostazioni › Anteprima › «Visualizzazione e navigazione». A tutto schermo, il primo Esc chiude un popup fissato e il secondo esce dalla modalità a tutto schermo.</p>
+
+<h2>Annotazioni</h2>
+
+<p>Anteprima › Mostra barra strumenti annotazioni mostra gli strumenti di annotazione sotto la barra strumenti della finestra. Fai clic su «Modifica» all’estremità sinistra della barra strumenti annotazioni, poi usa i suoi pulsanti per barrare, evidenziare o sottolineare il testo selezionato, oppure per aggiungere forme, frecce, testo e note. Le annotazioni non fanno parte del sorgente, e la composizione successiva sostituisce il file PDF, quindi salvale con «Salva annotazioni…» nella barra strumenti annotazioni; questo comando salva una copia del file PDF, chiamata per esempio Fourier-Annotated.pdf per Fourier.tex. Dopo che hai lavorato in modalità «Modifica», TeXShop propone di salvare le annotazioni prima di comporre di nuovo o di chiudere la finestra. Il Manuale di TeXShop descrive le annotazioni in dettaglio.</p>
+
+<h2>Altro</h2>
+
+<p>Fai Comando-clic nell’anteprima per andare al punto corrispondente del sorgente; consulta <a href="basic_typesetting.htm">Comporre i documenti</a>. «Ruota in Senso Orario» e «Ruota in Senso Antiorario» nel menu Anteprima ruotano le pagine. Quando un’altra applicazione, come latexmk, riscrive il file PDF, l’anteprima lo ricarica nella stessa posizione quando torni a TeXShop o alla finestra di anteprima; attiva «Controlla sempre le modifiche al PDF fatte da altre app» in Impostazioni › Anteprima › «Aggiornamento» per ricaricarlo subito, anche mentre TeXShop è in secondo piano. Anteprima › Salva Posizione Anteprima fa aprire le nuove finestre di anteprima nella posizione e con le dimensioni della finestra in primo piano.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日语排版</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="日本；日语；pLaTeX；upLaTeX；LuaLaTeX；dvipdfmx；otf 宏包；\UTF；\CID；UTF-8-MAC；Unicode 规范化；日元符号；反斜杠">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm" class="current">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>日语排版</h1>
+<p>TeX Live 包含日语 TeX 引擎 pTeX 和 upTeX（以及 pLaTeX 和 upLaTeX），还包含带有 LuaTeX-ja 宏包的 LuaLaTeX。TeXShop 的日语帮助对日语排版有更详细的说明。</p>
+
+<h2>日语引擎配置</h2>
+<p>为日语文稿设置 TeXShop 最快的方法是使用引擎配置。在“设置”>“排版”>“引擎配置”中，选择以下三个日语配置之一：</p>
+<table>
+<tr><th>配置</th><th>排版</th><th>BibTeX、索引、MetaPost</th></tr>
+<tr><td>upLaTeX + dvipdfmx</td><td>uplatex，然后 dvipdfmx</td><td>upbibtex、upmendex、upmpost</td></tr>
+<tr><td>pLaTeX + dvipdfmx</td><td>platex，然后 dvipdfmx</td><td>pbibtex、mendex、pmpost</td></tr>
+<tr><td>LuaLaTeX（日语）</td><td>lualatex</td><td>upbibtex、upmendex、mpost</td></tr>
+</table>
+<p>日语配置还会将新文稿的编码设为 UTF-8，将拼写检查词典设为自动检测语言，并打开“自动将UTF-8-MAC转换为UTF-8”。pLaTeX + dvipdfmx 还会打开“自动转换为otf宏包的\UTF / \CID”，其他所有配置则会关闭它。在你确认之前，会有一个对话框列出该配置要设置的值。</p>
+
+<h2>在 pLaTeX 中使用 JIS X 0208 以外的字符</h2>
+<p>pTeX 能读取 UTF-8 源文件，但它内部只认识 JIS X 0208 中的字符，因此其他字符（例如“森鷗外”中的“鷗”）会丢失。otf 宏包可以用 <code>\UTF{9DD7}</code> 这样的命令输出这些字符。“设置”>“排版”的“日语pLaTeX”组中的“自动转换为otf宏包的\UTF / \CID”设置，让你可以直接键入这些字符：</p>
+<ul>
+<li>保存文稿时，JIS X 0208 以外的每个字符都会写成 <code>\UTF{XXXX}</code>，在编辑器中选择的字形变体则写成 <code>\CID{编号}</code>。如果这样的命令位于行尾，会在其后加上 <code>%</code>，使输出中不出现空格。</li>
+<li>打开文稿时，无论此设置是否打开，这些命令都会转换回字符，因此源代码窗口中显示的始终是字符本身。</li>
+</ul>
+<p>文稿中需要有 <code>\usepackage{otf}</code>。例如，源代码窗口中显示的是</p>
+<pre>\documentclass{jsarticle}
+\usepackage{otf}
+\begin{document}
+森鷗外 was a famous novelist in Japan.
+\end{document}</pre>
+<p>而文件中存储的是 <code>森\UTF{9DD7}外</code>。upLaTeX 和 LuaLaTeX 直接处理 Unicode，不需要转换。</p>
+<p>要手动转换部分文本，请选择这些文本，然后使用“编辑”>“字符类型转换”>“Unicode字符 → \UTF / \CID”或“\UTF / \CID → Unicode字符”。同一子菜单还可以在平假名和片假名之间、全角和半角的数字和字母之间、带圈数字等字符和 ajmacros 宏包的命令之间进行转换，并可将弯引号转换为 TeX 引号。如果没有选择任何文本，TeXShop 会询问是否转换整个文稿；每次转换都可以撤销。</p>
+
+<h2>合成字符和分解字符</h2>
+<p>有些日文字符有两种 Unicode 形式。“が”可以是单个字符（U+304C），也可以是“か”（U+304B）后跟组合用浊音符号（U+3099）。两者看起来一样，但 TeX 把它们视为不同的字符，因此用一种形式定义的命令，用另一种形式调用时找不到：</p>
+<pre>\def\が{GA}
+\が   % 如果这个 が 是分解形式，就会出现 Undefined control sequence</pre>
+<p>分解形式的文本通常来自文件名，因为 HFS+ 磁盘以分解形式存储文件名；这种形式称为 UTF-8-MAC。当“设置”>“文稿与保存”>“保存文稿”>“自动将UTF-8-MAC转换为UTF-8”打开时，TeXShop 会在保存文稿时把这类字符合成为单个字符。对于 CJK 兼容表意文字，以及其他会被标准合成（NFC）替换为不同字符的字符，它会保持不变；这种形式称为 Modified NFC。</p>
+<p>子菜单“编辑”>“Unicode规范化”可将所选内容或整个文稿转换为 NFC、Modified NFC、NFD、Modified NFD、NFKC 或 NFKD，然后为结果显示“字符信息”面板，因为规范化后的文本通常看起来与之前相同。</p>
+
+<h2>日元符号和反斜杠</h2>
+<p>在日文键盘上，位于反斜杠位置的按键会键入日元符号 ¥，而 TeX 命令以反斜杠 \ 开头。</p>
+<ul>
+<li>使用 UTF-8（日语配置所设置的编码）时，¥ 和 \ 是不同的字符，两者都会保留。请为该文稿打开“源代码”>“按键绑定”：TeXShop 自带的按键绑定列表会把键入的 ¥ 转换为 \；由于它的“粘贴”列已勾选，粘贴到源文件中的文本里的 ¥ 也会被转换。请参阅<a href="basic_autocompletion.htm">按键绑定</a>。</li>
+<li>当新文稿的编码是某种日文编码时，TeXShop 会在你键入和粘贴时在 ¥ 和 \ 之间转换。使用“日文 (Mac OS, ShiftJIS ¥)”和“日文 (Shift JIS X0213)”时，源代码窗口把 TeX 的命令字符显示为 ¥；使用其他日文编码时则显示为 \。</li>
+<li>以日文编码保存文件时，反斜杠和波浪号总是写成字节 0x5C 和 0x7E，这正是 TeX 所期望的。</li>
+</ul>
+
+<h2>其他日语相关设置</h2>
+<ul>
+<li>“设置”>“编辑器”>“不可见符号”>“全角空格”会在显示不可见字符时显示全角空格。</li>
+<li>“设置”>“编辑器”>“语法高亮”>“高亮全角字母数字符号”会用主题中的“全角字母数字符号”颜色标出全角字母、数字和符号，它们很容易被误认为对应的 ASCII 字符。</li>
+<li>“设置”>“预览”>“页面方向”可从右到左显示页面，这是竖排文本所需要的。<code>% !TEX PageDirectionR2L</code> 和 <code>% !TEX PageDirectionL2R</code> 这两行可为单个文稿设置方向。</li>
+</ul>
+<p>转换为 <code>\UTF</code> / <code>\CID</code> 以及 Unicode 规范化，在 Yusuke Terada 的 TUG 2013 幻灯片中有详细说明：<a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>。</p>
+</main>
+</body>
+</html>

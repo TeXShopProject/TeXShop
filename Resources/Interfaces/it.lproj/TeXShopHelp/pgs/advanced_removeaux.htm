@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eliminare i file ausiliari</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Butta i File Ausiliari nel Cestino; Butta i File Ausiliari nel Cestino &amp; Compila; aux; log; file ausiliari; OtherTrashExtensions; AggressiveTrashAUX">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codifiche</a></li>
+<li><a href="advanced_Japan.htm">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm" class="current">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Eliminare i file ausiliari</h1>
+<p>Quando LaTeX compone <code>Galois.tex</code>, scrive file ausiliari come <code>Galois.aux</code>, <code>Galois.toc</code> e <code>Galois.log</code>, che l’esecuzione successiva legge per i riferimenti incrociati, l’indice generale e simili. Se la composizione si interrompe a metà, per esempio dopo un errore, questi file possono restare danneggiati, e l’esecuzione successiva segnala errori che non sono nel sorgente, spesso subito prima di <code>\begin{document}</code>. Spostare i file ausiliari nel Cestino e comporre di nuovo risolve il problema.</p>
+
+<h2>Spostare i file nel Cestino</h2>
+<ul>
+<li>File › Butta i File Ausiliari nel Cestino (<kbd>⌃⌘A</kbd>), o il pulsante «Cestina file aux» nella console, sposta nel Cestino i file ausiliari del documento.</li>
+<li>Compilatore › Butta i File Ausiliari nel Cestino &amp; Compila (<kbd>⌥⌘T</kbd>) fa lo stesso e poi compone. Nel menu Compilatore, questa voce compare al posto di Compila mentre tieni premuto il tasto Opzione.</li>
+</ul>
+<p>Vengono spostati nel Cestino i file che si trovano nella cartella del sorgente, hanno il suo nome e una di queste estensioni:</p>
+<pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
+gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
+lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
+ttt  wrm  xref</pre>
+<p>Vengono spostati nel Cestino anche i file che SyncTeX lascia con <code>(busy)</code> alla fine del nome quando la composizione viene interrotta. Il file <code>.bbl</code> di BibTeX viene conservato.</p>
+<p>In un progetto i cui file di capitolo indicano un file principale con <code>% !TEX root</code>, vengono spostati nel Cestino i file del file principale, anche quando il comando viene dato in un file di capitolo.</p>
+
+<h2>Varianti</h2>
+<ul>
+<li>Tieni premuto Maiuscole mentre scegli Butta i File Ausiliari nel Cestino o fai clic sul pulsante per spostare nel Cestino anche il file PDF del documento. Di solito il vecchio PDF viene conservato, così la finestra di anteprima ha qualcosa da mostrare quando la composizione non riesce.</li>
+<li>Tieni premuto Opzione mentre scegli Butta i File Ausiliari nel Cestino o fai clic sul pulsante per ripulire un intero progetto: ogni file con una delle estensioni sopra elencate nella cartella del file principale e in tutte le cartelle sottostanti viene spostato nel Cestino, qualunque sia il suo nome. In questo modo vengono eliminati anche i file <code>.aux</code> che <code>\include</code> scrive per i capitoli nelle sottocartelle.</li>
+</ul>
+<p>Due impostazioni nascoste modificano il comportamento. Per aggiungere estensioni all’elenco, per esempio <code>dvi</code>, digita nel Terminale</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
+<p>e per tornare all’elenco standard</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array</pre>
+<p>Per rendere il comportamento con Opzione quello standard di Butta i File Ausiliari nel Cestino:</p>
+<pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
+</main>
+</body>
+</html>

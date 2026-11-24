@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用 Shell 命令编写脚本</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript；shell 脚本；do shell script；pdflatexc；setname.scpt；Claus Gerhardt；~/Library/TeXShop/bin">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">宏帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">预备知识</a></li>
+<li><a href="macros_default.htm">了解默认宏</a></li>
+<li><a href="macros_rearrange.htm">重新排列“宏”菜单</a></li>
+<li><a href="macros_define.htm">定义新宏</a></li>
+<li><a href="macros_applescript.htm">AppleScript 宏</a></li>
+<li><a href="macros_includedscripts.htm">默认 AppleScript 宏</a></li>
+<li><a href="macros_defapplescript.htm">定义 AppleScript 宏</a></li>
+<li><a href="macros_dialogs.htm">创建对话框</a></li>
+<li><a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a></li>
+<li><a href="macros_writingcommandscripts.htm" class="current">用 Shell 命令编写脚本</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>用 Shell 命令编写脚本</h1>
+<p>本页以 Claus Gerhardt 编写的宏 pdflatexc（位于“宏”>“Claus Gerhardt Macros”中）为例，说明 AppleScript 如何调用 shell 脚本。这个 shell 脚本本身很简单：它把 TeX 程序所在的文件夹添加到搜索路径中，然后用 <code>--shell-escape</code> 运行 pdflatex。你自己的脚本可能会做更多的事情，例如依次运行多个程序；这时这些技巧就会派上用场。</p>
+
+<h2 id="shell-script">shell 脚本</h2>
+<p>这个 shell 脚本是 ~/Library/TeXShop/bin/pdflatexc。它不依赖于 TeXShop：如果它所在的文件夹在你的搜索路径中，在终端中键入 <code>pdflatexc myfile.tex</code> 就能运行它。脚本如下：</p>
+<pre>#!/bin/tcsh
+# pdflatexc
+# Claus Gerhardt
+#
+# Usage
+# pdflatexc filename.tex
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+
+pdflatex --shell-escape "$1"</pre>
+
+<h2 id="applescript">AppleScript</h2>
+<p>调用这个 shell 脚本的宏更值得一看：</p>
+<pre>--Applescript
+-- Apply only to an already saved file.
+
+set scriptPath to (do shell script "dirname " &amp; "~/Library/TeXShop/Scripts/ex")
+set scriptPath to scriptPath &amp; "/setname.scpt"
+set scriptName to POSIX file scriptPath as alias
+set scriptLiB to (load script scriptName)
+tell scriptLib
+set frontName to setname(#NAMEPATH#,#TEXPATH#)
+end tell
+
+set fileName to  #TEXPATH#
+set n to (number of characters of contents of fileName)
+set fileNamequoted to quoted form of fileName
+set baseName to do shell script "basename " &amp; fileNamequoted
+set m to (number of characters of contents of baseName)
+set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
+
+set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName
+do shell script shellScript
+
+tell document frontName of application "TeXShop"
+    refreshpdf
+end tell</pre>
+<p>注释之后的前七行是 Claus Gerhardt 的一个方法，用于保存源文件并找出其文稿的名称，该名称存入 <code>frontName</code>。实际工作由 ~/Library/TeXShop/Scripts 中的已编译脚本 setname.scpt 完成：这几行找出路径 ~/Library/TeXShop/Scripts/setname.scpt，载入该脚本，并以 #NAMEPATH# 和 #TEXPATH# 调用它。</p>
+<p>通常，同样的事情可以更简单地这样完成：</p>
+<pre>set frontName to #DOCUMENTNAME#
+tell document frontName of application "TeXShop"
+    save
+end tell</pre>
+<p>这个方法有两个优点。即使最前面的文稿并不是后续命令应作用的那个文稿（例如 /Users/name/Examples/myfile.log 这样的日志文件），它也能正常工作。而且，如果文件从未保存过，这个方法会返回错误，而 <code>save</code> 命令则会让脚本停在保存对话框后面一直等待。</p>
+<p>接下来的六行设置变量 <code>dirName</code> 和 <code>baseName</code>。如果源文件是 /Users/name/My Papers/Stuff/myfile.tex，那么 <code>dirName</code> 是 <code>'/Users/name/My Papers/Stuff'</code>，由于文件夹名称中有空格，它为 shell 加上了引号；<code>baseName</code> 是 <code>myfile.tex</code>。文件名传给 shell 脚本时也以同样的方式加上引号，因此两者都可以包含空格。</p>
+<p>接下来的三行调用 shell 脚本。其结果与在终端中键入 <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code> 相同。最后三行更新预览窗口。</p>
+<p>这些行中有几行比较复杂，但可以原样拷贝到新脚本中。</p>
+
+<h2 id="do-shell-script">从 AppleScript 运行 shell 命令</h2>
+<p>AppleScript 以如下形式运行 shell 命令：</p>
+<pre>do shell script "cmd input"</pre>
+<p>要用几部分拼成一条命令，请写成如下等价形式：</p>
+<pre>do shell script "cmd " &amp; "input"</pre>
+<p>注意 <code>cmd</code> 后面的空格。“&amp;”符号用于连接两个字符串：</p>
+<pre>"cmd " &amp; "input" = "cmd input"</pre>
+<p>由 AppleScript 启动的 shell 从根文件夹开始。命令</p>
+<pre>do shell script "cd " &amp; dirName</pre>
+<p>会切换到 <code>dirName</code> 中的文件夹，该名称已经加上了引号，因此不需要再加引号。</p>
+<p>每个 <code>do shell script</code> 都会启动一个新的 shell，因此后面的命令不会位于那个文件夹中。要在同一文件夹中运行更多命令，请像在终端中一样，用分号把它们连成一条命令：</p>
+<pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
+<p>上面的脚本就是这样做的，其中 cmd1 = <code>cd</code>，input1 = <code>dirName</code>，cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code>，input2 = <code>baseName</code>。以下两行</p>
+<pre>set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName</pre>
+<p>只是把这一系列命令放进一个变量的简便方法。</p>
+</main>
+</body>
+</html>

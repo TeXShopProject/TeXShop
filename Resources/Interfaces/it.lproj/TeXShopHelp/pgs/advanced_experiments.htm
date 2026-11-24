@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Esperimenti</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Sperimenta; provare una formula; frammento; pannello sorgente; pannello di anteprima; console dell’esperimento">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codifiche</a></li>
+<li><a href="advanced_Japan.htm">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm" class="current">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Esperimenti</h1>
+<p>Modifica › Sperimenta... ti permette di provare un pezzo di LaTeX breve ma delicato, come una formula, una tabella o una figura TikZ, prima di inserirlo nel documento. È disponibile quando è attiva una finestra sorgente.</p>
+<p>Il comando apre un pannello sorgente. Se nella finestra sorgente è selezionato del testo, questo viene copiato nel pannello; altrimenti il pannello mostra ciò che vi hai lasciato l’ultima volta. Scrivi o modifica il frammento, per esempio <code>$$\sqrt{x^2 + y^2}$$</code>, e premi il pulsante «Compila» in fondo al pannello. Un pannello di anteprima mostra il risultato. La prima volta mostra l’inizio della prima pagina; quando componi di nuovo, mantiene la parte della pagina che stai guardando. Il frammento può essere qualunque cosa, da una formula a diverse pagine.</p>
+
+<h2>Come viene composto il frammento</h2>
+<p>TeXShop compone un file formato dal preambolo del documento, cioè tutto ciò che precede <code>\begin{document}</code>, seguito dal frammento e da <code>\end{document}</code>. In un progetto con un file principale, si usa il preambolo del file principale. Il documento e la sua cartella non vengono modificati:</p>
+<ul>
+<li>Il file viene composto in una cartella temporanea che contiene copie dei file e delle cartelle che si trovano accanto al documento, così le immagini vengono trovate come quando si compone il documento, anche con percorsi che iniziano con <code>./</code>. Se la cartella del documento contiene più di 5000 elementi, contando anche quelli delle sottocartelle, non viene copiato nulla, e gli elementi che non si possono copiare in questo modo, come i file su un altro disco o i file solo online di un servizio cloud, vengono tralasciati; i file accanto al documento vengono comunque trovati, ma non con percorsi che iniziano con <code>./</code>.</li>
+<li>Viene letta una copia del file <code>.aux</code> dell’ultima composizione del documento, così <code>\ref</code>, <code>\pageref</code> e <code>\cite</code> mostrano i numeri del documento.</li>
+</ul>
+<p>Il motore è quello usato dal documento: una riga <code>% !TEX program</code> all’inizio del sorgente, oppure la scelta nella barra strumenti della finestra sorgente. Con LaTeX si segue il metodo di composizione del documento: PDF diretto, Tramite DVI o Script personale. Se è scelto BibTeX o MakeIndex, si usa pdfLaTeX. ConTeXt, MetaPost e plain TeX non si possono usare per un esperimento. I motori tuoi vengono provati, ma possono non riuscire se non si aspettano LaTeX o non producono un file PDF.</p>
+
+<h2>I pannelli</h2>
+<p>Il pannello sorgente mostra il testo come la finestra sorgente, con gli stessi font, tabulazioni, interlinea, ritorno a capo, colori della sintassi, evidenziazione della linea corrente, cursore a blocco, caratteri invisibili, numeri di linea e corrispondenza delle parentesi, e segue le modifiche fatte a queste impostazioni dai menu o dalle Impostazioni. Sorgente › Font › Più Grande (<kbd>⌘=</kbd>) e Più Piccolo (<kbd>⌘-</kbd>) ingrandiscono o riducono il testo; come un font scelto con il pannello Font, modificano anche la finestra sorgente. Le associazioni dei tasti, il completamento dei comandi e Modifica › Completa etichetta o chiave di citazione funzionano nel pannello. Il completamento dei comandi usa il tasto scelto in Impostazioni › Tastiera › «Tasto di attivazione».</p>
+<p>La barra strumenti del pannello di anteprima ha gli strumenti della finestra di anteprima: Scorrimento, Selezione testo, Ingrandimento e Selezione. Ingrandimento mostra la pagina sotto il puntatore al 150% mentre tieni premuto il pulsante del mouse, oppure al 200%, 250% e 300% con Comando, Opzione e Controllo; fai doppio clic per una lente più grande. Con Selezione, disegna un rettangolo e copialo nel formato scelto in Anteprima › Formato di copia. Il pannello ricorda il suo strumento separatamente dalla finestra di anteprima. Accanto agli strumenti ci sono Riduci, Ingrandisci, Zoom sul contenuto, che ingrandisce la parte composta della pagina fino a riempire il pannello, e Zoom sulla larghezza del contenuto, che rende la parte composta larga quanto il pannello. Il pannello scorre e si ingrandisce anche con i gesti del mouse e del trackpad.</p>
+<p>L’output della composizione compare in una console propria, la console dell’esperimento. Questa passa in primo piano quando inizia la composizione; fai clic su un pannello per riportarlo davanti. <kbd>⌘0</kbd> (File › Mostra Console) in un pannello porta in primo piano la console dell’esperimento, e premendolo di nuovo si torna al pannello. Se Impostazioni › Console › «Mostrare la console» è impostato in modo da mostrare la console solo in caso di errore, la console dell’esperimento resta nascosta finché TeX non segnala un errore o non attende un input.</p>
+<p>I pannelli e la console dell’esperimento restano sopra le finestre dei documenti. Si possono spostare e ridimensionare, e TeXShop ne ricorda dimensioni e posizioni. Chiudi un pannello con il suo pulsante di chiusura o con <kbd>⌘W</kbd>. Anche Esc chiude il pannello di anteprima, e il pannello sorgente quando il completamento dei comandi usa il tasto Tab; quando Esc è il tasto di attivazione del completamento, nel pannello sorgente completa invece i comandi.</p>
+
+<h2>Conservare il risultato</h2>
+<p>Quando il frammento è corretto, copialo dal pannello sorgente e incollalo nel documento. I pannelli conservano il loro contenuto quando vengono chiusi e riaperti, ma non quando esci da TeXShop, e non si possono salvare.</p>
+<p>Ogni documento ha i suoi pannelli, che portano il nome del documento nella barra del titolo. Con più documenti aperti, chiudi i pannelli che non ti servono più, così resta chiaro a quale documento appartiene un esperimento.</p>
+</main>
+</body>
+</html>

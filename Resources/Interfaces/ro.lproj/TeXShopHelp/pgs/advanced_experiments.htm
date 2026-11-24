@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experimente</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Experiment; încercarea unei formule; fragment; panoul sursă; panoul de previzualizare; consola experimentului">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm" class="current">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Experimente</h1>
+<p>Editare › Experiment... vă permite să încercați o bucată de LaTeX scurtă, dar dificilă, precum o formulă, un tabel sau o figură TikZ, înainte de a o pune în document. Comanda este disponibilă când este activă o fereastră sursă.</p>
+<p>Comanda deschide un panou sursă. Dacă în fereastra sursă este selectat text, acesta este copiat în panou; altfel panoul arată ce ați lăsat în el ultima dată. Tastați sau editați fragmentul, de exemplu <code>$$\sqrt{x^2 + y^2}$$</code>, și apăsați butonul „Compilare” din partea de jos a panoului. Un panou de previzualizare arată rezultatul. Prima dată arată partea de sus a primei pagini; când compilați din nou, păstrează porțiunea de pagină la care vă uitați. Fragmentul poate fi orice, de la o formulă la mai multe pagini.</p>
+
+<h2>Cum este compilat fragmentul</h2>
+<p>TeXShop compilează un fișier format din preambulul documentului, adică tot ce se află până la <code>\begin{document}</code>, urmat de fragment și de <code>\end{document}</code>. Într-un proiect cu fișier principal, se folosește preambulul fișierului principal. Documentul dvs. și dosarul lui nu sunt modificate:</p>
+<ul>
+<li>Fișierul este compilat într-un dosar temporar care conține copii ale fișierelor și dosarelor de lângă document, astfel încât imaginile sunt găsite ca la compilarea documentului, inclusiv cu căi care încep cu <code>./</code>. Dacă dosarul documentului conține mai mult de 5000 de elemente, socotindu-le și pe cele din subdosare, nu se copiază nimic, iar elementele care nu pot fi copiate astfel, precum fișierele de pe alt disc sau fișierele disponibile doar online ale unui serviciu cloud, sunt omise; fișierele de lângă document sunt găsite și atunci, dar nu cu căi care încep cu <code>./</code>.</li>
+<li>Se citește o copie a fișierului <code>.aux</code> de la ultima compilare a documentului, astfel încât <code>\ref</code>, <code>\pageref</code> și <code>\cite</code> arată numerele din document.</li>
+</ul>
+<p>Motorul este cel pe care îl folosește documentul: o linie <code>% !TEX program</code> la începutul sursei sau, în lipsa ei, alegerea din bara de instrumente a ferestrei sursă. Cu LaTeX, se urmează metoda de compilare a documentului: „PDF direct”, „Prin DVI” sau „Script personal”. Dacă este ales BibTeX sau MakeIndex, se folosește pdfLaTeX. ConTeXt, MetaPost și plain TeX nu pot fi folosite pentru un experiment. Motoarele proprii sunt încercate, dar pot eșua dacă nu se așteaptă la LaTeX sau dacă nu produc un fișier PDF.</p>
+
+<h2>Panourile</h2>
+<p>Panoul sursă afișează textul așa cum îl afișează fereastra sursă, cu același font, aceleași tabulatoare, aceeași spațiere a rândurilor, aceeași împărțire a rândurilor, culori de sintaxă, evidențiere a rândului curent, cursor bloc, caractere invizibile, numere de linie și potrivire a parantezelor, și urmează modificările acestora făcute din meniuri sau din Configurări. Sursă › Font › Mai mare (<kbd>⌘=</kbd>) și „Mai mic” (<kbd>⌘-</kbd>) măresc sau micșorează textul; la fel ca un font ales în panoul Fonturi, modifică și fereastra sursă. Asocierile de taste, completarea comenzilor și Editare › Completează eticheta sau cheia de citare funcționează în panou. Completarea comenzilor folosește tasta aleasă în Configurări › Tastatură › „Tastă de activare”.</p>
+<p>Bara de instrumente a panoului de previzualizare are instrumentele ferestrei de previzualizare: „Derulare”, „Selectează textul”, „Lupă” și „Selectează PDF”. „Lupă” afișează pagina de sub cursor la 150% cât timp butonul mausului este ținut apăsat, sau la 200%, 250% și 300% cu Comandă, Opțiune și Control; faceți dublu clic pentru o lupă mai mare. Cu „Selectează PDF”, desenați un dreptunghi și copiați-l în formatul ales în Previzualizare › Format de Copiere. Panoul își reține instrumentul separat de fereastra de previzualizare. Lângă instrumente se află „Zoom înapoi”, „Zoom înainte”, „Potrivește la conținut”, care mărește partea culeasă a paginii astfel încât să umple panoul, și „Potrivește la lățimea conținutului”, care face partea culeasă la fel de lată ca panoul. Panoul se derulează și se mărește și cu gesturile mausului și ale trackpadului.</p>
+<p>Rezultatul compilării apare într-o consolă proprie, consola experimentului. Aceasta vine în față când începe compilarea; faceți clic pe un panou pentru a-l aduce din nou în față. <kbd>⌘0</kbd> (Fișier › Afișează consola) într-un panou aduce în față consola experimentului, iar dacă îl apăsați din nou reveniți la panou. Dacă în Configurări › Consolă › „Arată consola” este setat să afișeze consola doar la apariția unei erori, consola experimentului rămâne ascunsă până când TeX raportează o eroare sau așteaptă date de intrare.</p>
+<p>Panourile și consola experimentului plutesc deasupra ferestrelor documentelor. Pot fi mutate și redimensionate, iar TeXShop le reține dimensiunile și pozițiile. Închideți un panou cu butonul lui de închidere sau cu <kbd>⌘W</kbd>. Tasta Escape închide și panoul de previzualizare, iar panoul sursă atunci când completarea comenzilor folosește tasta Tab; când Escape este tasta de activare a completării, ea completează în schimb comenzile în panoul sursă.</p>
+
+<h2>Păstrarea rezultatului</h2>
+<p>Când fragmentul este corect, copiați-l din panoul sursă și lipiți-l în document. Panourile își păstrează conținutul când sunt închise și redeschise, dar nu și când TeXShop se închide, și nu pot fi salvate.</p>
+<p>Fiecare document are propriile panouri, care poartă numele documentului în bara de titlu. Când sunt deschise mai multe documente, închideți panourile de care nu mai aveți nevoie, pentru a fi clar căruia îi aparține un experiment.</p>
+</main>
+</body>
+</html>

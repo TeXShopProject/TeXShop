@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """The help books share one page structure, one page set and working links.
 
-Every page of the English, Japanese, German, Spanish and Korean help books is HTML5 in
-UTF-8 with the language of its book, uses the shared header, side menu and content area,
+Every page of the help books (English, Japanese, German, Spanish, Korean, French, Italian,
+Dutch, Portuguese, Portuguese (Portugal), Romanian and Simplified Chinese) is HTML5 in
+UTF-8 with the language of its book (<html lang>, see HTML_LANG), uses the shared header, side menu and content area,
 and names no file that does not exist (links, images, anchors). The side menus match the
 chapter contents pages (Scripts/update-help-navigation.py --check). Each translated book
 has the pages of the English book: the Japanese book has its own pages on pTeX and
 encodings instead of the English page on Japan, the Spanish book has a page on its
 translation, and only the English book has the release notes (whatisnew.htm), to which
 the other books link. Every page is listed in a chapter or is one of credits, hlpIndex
-and whatisnew. Reads the help files only.
+and whatisnew. No page of a translated book has the content area of the English page, that is, every
+page is translated (the books of fr, it, nl, pt, pt-PT, ro and zh_CN fail here until they are).
+Reads the help files only.
 With --mutation NAME the check runs on a mutated copy and must fail; --mutations runs them all.
 """
 from pathlib import Path
@@ -20,7 +23,10 @@ import urllib.parse
 
 ROOT = Path(__file__).resolve().parents[1]
 INTERFACES = ROOT / 'Resources/Interfaces'
-LANGUAGES = ['en', 'ja', 'de', 'es', 'ko']
+LANGUAGES = ['en', 'ja', 'de', 'es', 'ko', 'fr', 'it', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
+# The <html lang> of each book: the .lproj name, as a BCP 47 tag where the two differ (pt.lproj is
+# Brazilian Portuguese, zh_CN.lproj Simplified Chinese).
+HTML_LANG = {'pt': ('pt-BR', 'pt'), 'zh_CN': ('zh-Hans', 'zh-CN')}
 CHAPTERS = ['basic', 'advanced', 'configure', 'macros']
 UNLISTED = {'credits.htm', 'hlpIndex.htm', 'whatisnew.htm'}
 OWN = {'ja': ({'basic_j_ptex.htm', 'basic_j_encoding.htm'}, {'advanced_Japan.htm'}),
@@ -40,10 +46,19 @@ MUTATIONS = {
         ('ko', 'pgs/basic.htm'), files[('ko', 'pgs/basic.htm')].replace('</ul>', '<li><a href="basic_missing.htm">x</a></li>\n</ul>', 1)),
     # A translated book misses a page of the English book.
     'missing-page': lambda files: files.pop(('es', 'pgs/basic_printing.htm')),
+    # A Japanese page with the English text in its content area.
+    'untranslated': lambda files: files.__setitem__(
+        ('ja', 'pgs/basic_printing.htm'), re.sub(r'<main id="content".*?</main>', lambda m: content(files[('en', 'pgs/basic_printing.htm')]) or '',
+                                                files[('ja', 'pgs/basic_printing.htm')], count=1, flags=re.S)),
     # A link to an anchor that no page defines.
     'broken-anchor': lambda files: files.__setitem__(
         ('ja', 'pgs/basic.htm'), files[('ja', 'pgs/basic.htm')].replace('href="basic_printing.htm"', 'href="basic_printing.htm#nowhere"', 1)),
 }
+
+
+def content(text):
+    match = re.search(r'<main id="content".*?</main>', text, re.S)
+    return match.group(0) if match else None
 
 
 def strict_utf8(path):
@@ -69,8 +84,9 @@ def check(files, menus_current):
             failures.append(f'{where}: does not start with <!DOCTYPE html>')
         if '<meta charset="utf-8">' not in text:
             failures.append(f'{where}: does not declare UTF-8')
-        if f'<html lang="{language}">' not in text:
-            failures.append(f'{where}: <html lang> is not {language}')
+        langs = HTML_LANG.get(language, (language,))
+        if not any(f'<html lang="{lang}">' in text for lang in langs):
+            failures.append(f'{where}: <html lang> is not {" or ".join(langs)}')
         if name.startswith('pgs/') and name != 'pgs/whatisnew.htm':
             for part in ('<header id="header">', '<main id="content"'):
                 if part not in text:
@@ -108,6 +124,12 @@ def check(files, menus_current):
             failures.append(f'{language}: no {page} (the English book has it)')
         for page in sorted(pages[language] - expected):
             failures.append(f'{language}: {page} is not a page of the English book')
+    for (language, name), text in sorted(files.items()):
+        if language == 'en' or not name.startswith('pgs/'):
+            continue
+        mine, english = content(text), content(files.get(('en', name), ''))
+        if mine is not None and english is not None and re.sub(r'\s+', ' ', mine) == re.sub(r'\s+', ' ', english):
+            failures.append(f'{language}.lproj/TeXShopHelp/{name}: the content area is the English text')
     for language in LANGUAGES:
         listed = set()
         for chapter in CHAPTERS:
@@ -156,9 +178,11 @@ def run(mutation=None):
 def main():
     args = sys.argv[1:]
     if args == ['--mutations']:
+        # A mutation must add a failure of its own, also while a book still waits for its translation.
+        baseline = set(run())
         survived = []
         for name in MUTATIONS:
-            if not run(name):
+            if not set(run(name)) - baseline:
                 survived.append(name)
             print(f'mutation {name}: {"survived" if name in survived else "caught"}')
         sys.exit(1 if survived else 0)

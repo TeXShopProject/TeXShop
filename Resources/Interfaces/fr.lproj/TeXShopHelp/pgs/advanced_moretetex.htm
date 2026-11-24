@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>En savoir plus sur TeX Live</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeX Live; MacTeX; BasicTeX; /usr/local/texlive; /Library/TeX/texbin; chemin des moteurs TeX; documentation">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm" class="current">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>En savoir plus sur TeX Live</h1>
+<h2>Où TeX Live est installé</h2>
+<p>MacTeX installe TeX Live dans <code>/usr/local/texlive/2026</code>, et BasicTeX dans <code>/usr/local/texlive/2026basic</code>. TeX Live paraît une fois par an, et chaque année s’installe dans son propre dossier, par exemple <code>2027</code> ; plusieurs années peuvent donc cohabiter sur le Mac. Pour en supprimer une, faites glisser son dossier dans la Corbeille.</p>
+<p>Le dossier <code>/usr/local</code> est masqué dans le Finder. Pour en voir le contenu, choisissez Aller › Aller au dossier… dans le Finder et tapez le chemin.</p>
+
+<h2>Comment TeXShop trouve TeX</h2>
+<p>TeXShop exécute TeX depuis le dossier indiqué dans le champ « Moteurs TeX » de Réglages › Composition › Chemins. La valeur par défaut est <code>/Library/TeX/texbin</code>, un lien que les programmes d’installation de MacTeX et de BasicTeX font pointer vers les programmes du TeX Live qu’ils viennent d’installer. Quand une nouvelle année de TeX Live est installée, le lien la suit, et TeXShop utilise le nouveau TeX sans aucune modification des réglages.</p>
+<p>Pour utiliser une autre installation, saisissez le dossier de ses programmes dans « Moteurs TeX », par exemple <code>/usr/local/texlive/2026/bin/universal-darwin</code>, ou cliquez sur « Détecter les chemins… » pour choisir parmi les installations que TeXShop trouve ; consultez <a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a>.</p>
+
+<h2>Laisser TeX Live tel quel</h2>
+<p>Les dossiers de TeX Live appartiennent au système, et une mise à jour ou une nouvelle année de TeX Live les remplace. N’y ajoutez ni n’y modifiez aucun fichier. Placez plutôt vos propres fichiers de style, classes et bibliographies dans votre arborescence personnelle, où TeX les trouve en premier et où les mises à jour ne les touchent pas ; consultez <a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a>.</p>
+
+<h2>Documentation</h2>
+<p>TeX Live contient la documentation de presque tous les paquets. Aide › Afficher l'aide pour le package... ouvre la documentation d’un paquet d’après son nom, par exemple <code>hyperref</code> ou <code>tikz</code>. Aide › Documentation de TeX Live indique où trouver en ligne le guide de TeX Live et d’autres documentations.</p>
+</main>
+</body>
+</html>

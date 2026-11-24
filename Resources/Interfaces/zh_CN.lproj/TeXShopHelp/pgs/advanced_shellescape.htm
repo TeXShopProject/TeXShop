@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shell Escape 保护</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="shell escape；-shell-escape；--shell-escape；shell-escape时确认；安全；% !TEX parameter">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm" class="current">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Shell Escape 保护</h1>
+<p>在排版过程中，TeX 可以运行其他程序。默认情况下，TeX Live 只允许运行一小组受信任的程序，例如用于把 EPS 图形转换为 PDF 的程序。需要运行其他程序的宏包会要求使用选项 <code>-shell-escape</code>（也写作 <code>--shell-escape</code>）。</p>
+<p>使用这个选项时，文稿可以运行任何命令，例如删除个人文件夹中所有文件的命令。请只对你信任的文稿使用它，不要对从别人那里收到的文件使用。</p>
+
+<h2>添加选项</h2>
+<ul>
+<li>加在“设置”>“排版”>“直接生成PDF”的 LaTeX 或 plain TeX 命令中：适用于以直接生成 PDF 方式排版的所有文稿。</li>
+<li>加在引擎文件中：适用于用该引擎排版的所有文稿；请参阅<a href="advanced_addengine.htm">添加排版引擎</a>。</li>
+<li>对于用某个 latexmk 引擎（例如 pdflatexmk）排版的单个文稿，在源文件开头加入 <code>% !TEX parameter = -shell-escape</code> 一行。</li>
+</ul>
+<p>有一个引擎已经带有这个选项：TeXShop 自带、一开始就位于 Engines 文件夹中的 sepdflatexmk 总是使用 <code>--shell-escape</code> 排版。只要在源代码窗口的工具栏中选择它，或者使用 <code>% !TEX program = sepdflatexmk</code> 一行，就会这样排版，因此请只对你信任的文稿使用它。</p>
+
+<h2>shell-escape时确认</h2>
+<p>“设置”>“排版”>“直接生成PDF”>“shell-escape时确认”默认关闭，用于保护“直接生成PDF”组中的命令。此项打开时，如果那里的 plain TeX 或 LaTeX 命令中含有 <code>-shell-escape</code> 或 <code>--shell-escape</code>，TeXShop 会在文稿打开后第一次排版之前询问：</p>
+<ul>
+<li>“好”：使用该选项排版。</li>
+<li>“忽略Shell Escape”：不使用该选项排版。</li>
+<li>“取消”：不排版。</li>
+</ul>
+<p>一旦你选择了“好”或“忽略Shell Escape”，这一回答会对该文稿一直有效，直到文稿关闭，因此你可以用该选项排版自己的文稿，而不用它排版别人的文稿。引擎文件不会被检查，即使其中含有 <code>-shell-escape</code> 也是如此，因此 sepdflatexmk 会不经询问就使用该选项排版。</p>
+</main>
+</body>
+</html>

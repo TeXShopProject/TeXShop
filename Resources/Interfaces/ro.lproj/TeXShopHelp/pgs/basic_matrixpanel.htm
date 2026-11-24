@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabloul de comandă Matrix</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Tablou de Comandă Matrix; matrice; array; tabular; tabel; delimitatori; matrice unitate; foaie de calcul; matrixpanel_1.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm" class="current">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Tabloul de comandă Matrix</h1>
+<p>Fereastră › Tablou de Comandă Matrix… deschide un panou care scrie matrice și tabele în locul dumneavoastră. Completați elementele în tabelul lui, alegeți cum trebuie să arate rezultatul și inserați-l în sursă la punctul de inserare.</p>
+
+<h2>Crearea unei matrice sau a unui tabel</h2>
+<ol>
+<li>Introduceți dimensiunea în „Rânduri” și „Coloane”, până la 999 fiecare.</li>
+<li>La „Mediu”, alegeți matrix pentru o matrice dintr-o formulă (un mediu <code>array</code>) sau tabular pentru un tabel de text. Cu tabular, „Include în mediul table” pune tabelul într-un mediu flotant <code>table</code> cu o legendă și o etichetă.</li>
+<li>Pentru o matrice, alegeți delimitatorii din stânga și din dreapta. Punctul lasă partea respectivă fără delimitator, iar ultimul buton folosește delimitatorul tastat în câmpul de lângă el.</li>
+<li>Cele două butoane cu imaginea unei matrice adaugă un chenar în jurul elementelor și linii între ele.</li>
+<li>Completați elementele. „Ștergeți” le golește pe toate; „Matrice unitate” și „Matrice nulă” le completează cu o matrice unitate sau cu zerouri.</li>
+<li>Faceți clic pe „Inserați” sau apăsați <kbd>⌘Return</kbd>.</li>
+</ol>
+
+<h2>Lucrul în tabel</h2>
+<p>Tabelul funcționează ca o foaie de calcul. Faceți clic pe o celulă pentru a o alege, trageți sau faceți Shift-clic pentru a alege mai multe și tastați pentru a înlocui valoarea; faceți dublu clic, apăsați F2 sau apăsați Control-U pentru a o edita. Return trece în jos, Tab trece la dreapta, iar tastele săgeată se deplasează în orice direcție; Delete golește celulele alese. Copierea și lipirea schimbă celule cu aplicațiile de foi de calcul. Trageți numărul unui rând pentru a muta rândul. „Infirmați” și „Refaceți” funcționează în tabel cât timp panoul este activ.</p>
+<p>Când matricea este micșorată, celulele din afara ei își păstrează valorile, afișate cu gri, și revin când matricea este mărită din nou. Măriți panoul pentru a vedea o parte mai mare din tabel.</p>
+
+<h2>Personalizarea codului inserat</h2>
+<p>Codul pe care panoul îl scrie în jurul elementelor este păstrat în <code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code>: începutul și sfârșitul mediilor, delimitatorii, separatorii dintre elemente și dintre rânduri, liniile unui chenar sau ale unei grile și litera <code>c</code>, care stabilește alinierea fiecărei coloane. De exemplu, schimbați <code>c</code> în <code>r</code> pentru a alinia coloanele la dreapta. Păstrați numărul și ordinea șirurilor din fișier și reporniți TeXShop după ce îl modificați. Consultați <a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

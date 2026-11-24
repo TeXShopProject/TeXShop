@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>排版文稿</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="排版; 第一份文稿; 开始排版; 控制台; 错误; 转到错误; 中断; 删除Aux文件; 引擎配置; % !TEX program; 根文件; SyncTeX; 使用单一窗口">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm" class="current">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>排版文稿</h1>
+
+<h2>第一份文稿</h2>
+
+<p>选取“文件”>“新建”。在新窗口的工具栏中，从“模板”菜单中选择 LatexTemplate；窗口中会填入每份 LaTeX 文稿都需要的几行。在 <code>\begin{document}</code> 和 <code>\end{document}</code> 之间书写正文。空一行即开始新段落。</p>
+
+<p>点按工具栏中的“排版”，或按下 <kbd>⌘T</kbd>（“排版”>“开始排版”）。第一次排版时，TeXShop 会询问文稿的存储位置。TeX 会在源文件旁边写出若干文件，因此请为每份文稿准备单独的文件夹。随后 TeXShop 运行 TeX，并打开显示排版结果的预览窗口。</p>
+
+<p>此后就是反复书写、排版、查看结果。每次排版前 TeXShop 都会保存源文件，预览则停留在你正在阅读的页面。<kbd>⌘T</kbd> 在源代码窗口、预览窗口和控制台中都可使用，<kbd>⌘1</kbd>（“窗口”>“源代码 ⇔ 预览”）可在源代码与其预览之间切换。TeX 结束时哪个窗口来到前面，由“设置”>“排版”>“排版后”选择。</p>
+
+<p>打开 .tex 文件时，如果有同名的 PDF 文件，也会一并打开。关闭预览窗口后源代码仍保持打开，下次排版时预览会再次出现；关闭源代码窗口则会关闭文稿。</p>
+
+<h2>控制台</h2>
+
+<p>TeX 运行时，其信息显示在控制台中。“设置”>“控制台”>“显示控制台”用于选择控制台是每次排版都来到前面（“一直显示”），还是仅在 TeX 报告错误时才出现（“出现错误时显示”）。“文件”>“显示控制台”（<kbd>⌘0</kbd>）会将当前文稿的控制台调到前面，在控制台中按 <kbd>⌘0</kbd> 则返回原来的窗口。控制台中的文本随时可以选择和拷贝。</p>
+
+<p>TeX 发现错误时，会在控制台末尾显示信息并等待回应。在控制台底部的栏中输入回应并按下 Return 键；只按 Return 键会继续到下一个错误，该栏中列出了 TeX 接受的其他回应。要停止 TeX，请点按控制台中的“中断”，或选取“文件”>“中断排版”（<kbd>⌃⌥⌘A</kbd>）。</p>
+
+<h2>查找错误</h2>
+
+<p>控制台中的“转到错误”或“编辑”>“转到错误”（<kbd>⌃⌘E</kbd>）会将源代码滚动到第一个错误所在的行并高亮显示；再次选取则转到下一个错误。如果错误位于项目的其他文件中，会打开该文件。由于一个错误可能引发其他多个错误，修正几个错误后重新排版往往最快。“转到错误”依赖 TeX 在使用 <code>-file-line-error</code> 时写出的文件名和行号，TeXShop 的命令和引擎文件都使用了此选项。</p>
+
+<p>LaTeX 会将下次运行所需的信息（例如目录和交叉引用）写入 .aux 文件和其他辅助文件，因此一份文稿可能需要运行两三次，所有引用才会正确。错误可能会损坏这些文件，即使修正了错误，文稿也可能仍无法排版。此时请选取“排版”>“删除Aux文件 & 开始排版”（<kbd>⌥⌘T</kbd>），将辅助文件移到废纸篓并重新排版；或者选取“文件”>“删除Aux文件”（<kbd>⌃⌘A</kbd>），控制台中也有此按钮。请参阅“<a href="advanced_removeaux.htm">删除辅助文件</a>”。</p>
+
+<h2 id="engine">选择引擎</h2>
+
+<p>“设置”>“排版”>“引擎配置”可一步完成针对某个引擎的排版设置。选择你所用引擎的配置后，会出现一个对话框列出它要设置的值，点按“好”即可设置这些值。在对话框中，可以将“运行LaTeX”设为“使用latexmk”，让 latexmk 根据需要运行 BibTeX、生成索引并进行后续排版。这些值中的任何一个被更改后，菜单会显示“自定”。各配置设置的内容列在 TeXShop 手册（英文）中。</p>
+
+<p>如果只针对一份文稿，请在工具栏中“排版”旁边的“程序”弹出式菜单中选择引擎。其中列出了 plain TeX、LaTeX、BibTeX、MakeIndex 和 MetaPost，后面是 ~/Library/TeXShop/Engines 中的引擎文件，例如 LuaLaTeX 和 XeLaTeX；所做选择对该窗口有效。要将引擎写入文稿，请在源代码的前 20 行中加入如下一行：</p>
+
+<pre>% !TEX program = LuaLaTeX</pre>
+
+<p>之后 <kbd>⌘T</kbd> 总是使用该引擎排版此文件。指定的名称是引擎文件的名称，或者是 <code>pdflatex</code>、<code>latex</code>、<code>pdftex</code> 和 <code>tex</code> 之一，表示内置的 LaTeX 和 plain TeX（请参阅“<a href="basic_alternatetypeset.htm">替代排版方式</a>”）。“宏”>“Program”可插入这样的一行，引擎从列表中选择；它写出的是 <code>% !TEX TS-program =</code>，意思相同。“设置”>“排版”>“新文稿的排版”用于设置没有这一行的文稿所用的引擎。关于引擎文件，请参阅“<a href="advanced_addengine.htm">添加排版引擎</a>”。</p>
+
+<p>“排版”菜单还可以对文稿运行 BibTeX、MakeIndex 和 MetaPost；请参阅“<a href="advanced_bibtex.htm">BibTeX</a>”和“<a href="advanced_makeindex.htm">MakeIndex</a>”。</p>
+
+<h2>由多个文件组成的文稿</h2>
+
+<p>一本书通常拆分为一个根文件和若干章节文件：根文件包含导言区，并用 <code>\include</code> 或 <code>\input</code> 读入章节文件。请在每个章节文件的开头加入 <code>% !TEX root = ../Book.tex</code> 这样的一行，用从章节文件出发的路径指定根文件。这样，在章节文件中按 <kbd>⌘T</kbd> 就会排版根文件，“转到错误”和 SyncTeX 也能找到正确的章节文件。请参阅“<a href="advanced_root.htm">设置项目根文件</a>”。</p>
+
+<h2>在源代码与预览之间往返</h2>
+
+<p>在源代码中按住 Command 键点按某个词，预览就会滚动到排版后的文本并加以标记。在预览中按住 Command 键点按，源代码就会来到前面并标记对应的文本；在含有章节文件的文稿中，必要时会打开相应的章节文件。对应并不总是精确的，请在标记位置附近查看。标记的颜色在“设置”>“主题”>“SyncTeX”中设置。</p>
+
+<p>此功能使用 SyncTeX。各引擎在以 <code>-synctex=1</code> 运行时支持 SyncTeX，TeXShop 的命令和引擎文件都是这样运行的；“设置”>“排版”>“同步方式”应为“SyncTeX（推荐）”。文稿的 SyncTeX 文件记录了其中各文件的位置，因此移动项目文件夹后，请先重新排版一次再进行同步。</p>
+
+<h2>排列窗口</h2>
+
+<p>“窗口”>“使用单一窗口”会将源代码及其预览并排放在一个窗口中，“窗口”>“使用分离窗口”则会再次将它们分开。要以这种方式打开每份文稿，请将“设置”>“通用”>“窗口”>“源文件和预览”设为“单一窗口”；“合并窗口中源文件的位置”用于将源代码放在左侧或右侧。拖移分隔线可以给源代码更多或更少的空间；TeXShop 打开每个合并窗口时都使用相同的比例。含有 <code>% !TEX root</code> 行的章节文件保持使用分离窗口；根文件本身可以使用单一窗口。“文件”>“新建”只会打开源代码窗口：请先排版新文稿，然后再选取“使用单一窗口”。</p>
+
+<p>使用分离窗口时，可以随意放置源代码窗口和预览窗口并调整其大小，然后选取“源代码”>“记住源代码窗口位置”和“预览”>“记住预览窗口位置”；新窗口将在这些位置打开。</p>
+</main>
+</body>
+</html>

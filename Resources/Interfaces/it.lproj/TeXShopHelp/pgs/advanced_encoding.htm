@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codifiche</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="codifica; UTF-8; Unicode; % !TEX encoding; rilevamento automatico; finestra di dialogo Apri; finestra di dialogo Salva; IsoLatin9; da destra a sinistra; arabo; ebraico; persiano; sorgenti di input">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm" class="current">Codifiche</a></li>
+<li><a href="advanced_Japan.htm">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Codifiche</h1>
+<p>TeXShop modifica il testo in Unicode, quindi la finestra sorgente accetta qualunque carattere di qualunque lingua. La <em>codifica</em> stabilisce come questo testo viene scritto nel file su disco e riletto. UTF-8 può memorizzare ogni carattere, e LaTeX, XeLaTeX e LuaLaTeX lo leggono per impostazione predefinita. I file meno recenti e i file provenienti da altri sistemi possono usare un’altra codifica, come ISO Latin 9 o Shift JIS.</p>
+
+<h2>Nuovi documenti</h2>
+<p>I nuovi documenti vengono salvati nella codifica scelta in Impostazioni › Documenti e salvataggio › Codifica › «Codifica dei nuovi documenti». Il valore predefinito è Unicode (UTF-8); mantienilo, a meno che tu non scambi file con persone che hanno bisogno di un’altra codifica.</p>
+<p>Un documento viene salvato nella codifica con cui è stato aperto, quindi un file meno recente mantiene la sua codifica. I caratteri che la codifica di un file non può rappresentare vanno persi quando il file viene salvato.</p>
+
+<h2>Aprire i file</h2>
+<p>Quando si apre un file senza riga di codifica (vedi sotto), TeXShop ne rileva la codifica. Un indicatore dell’ordine dei byte (BOM) identifica i file UTF-8 e UTF-16. Un file composto solo da caratteri ASCII viene letto nella codifica dei nuovi documenti. Altrimenti TeXShop usa la codifica che il programma che ha salvato il file ha registrato insieme al file, se macOS ha conservato questa informazione, poi prova UTF-8 e poi le codifiche delle tue lingue e la codifica dei nuovi documenti. Una codifica dichiarata nel sorgente, per esempio con <code>\usepackage[latin9]{inputenc}</code>, viene usata come indizio.</p>
+<p>Il rilevamento è una stima e funziona meglio con file che contengono una buona quantità di testo. Se sceglie la codifica sbagliata, chiudi il file senza salvarlo, aprilo di nuovo con File › Apri..., premi «Opzioni» nella finestra di dialogo Apri e scegli la codifica nel suo menu; la codifica scelta lì viene usata per i file aperti in quel momento, e il documento la mantiene. Il menu mostra all’inizio la codifica dei nuovi documenti; se lo lasci su quella codifica, non conta come scelta e la codifica viene rilevata come di consueto. Poi aggiungi al file una riga di codifica, così si aprirà sempre correttamente. Il rilevamento si può disattivare con l’impostazione nascosta</p>
+<pre>defaults write TeXShop EncodingAutoDetection NO</pre>
+<p>I file vengono allora letti nella codifica dei nuovi documenti.</p>
+
+<h2>La riga di codifica</h2>
+<p>Una riga posta in una delle prime venti righe di un file sorgente ne fissa la codifica per la lettura e per il salvataggio, con precedenza su tutto il resto:</p>
+<pre>% !TEX encoding = UTF-8 Unicode</pre>
+<p>Scrivi la riga come mostrato, con uno spazio prima del segno di uguale; viene letta anche <code>%!TEX encoding =</code>, senza lo spazio dopo <code>%</code>. Il nome deve essere scritto esattamente come nella tabella qui sotto. La macro Encoding del menu Macro inserisce la riga per te, con un elenco di codifiche tra cui scegliere. Vengono riconosciuti anche i nomi usati da TeXworks, come <code>UTF-8</code> o <code>ISO 8859-1</code>.</p>
+<p>Se la riga indica una codifica che TeXShop non conosce, TeXShop legge il file come UTF-8 e lo segnala. Se la riga indica UTF-8 ma il file non è UTF-8 valido, TeXShop lo segnala e apre il file in ISO Latin 9, che legge qualunque file; salvandolo senza modificare la riga si riscrivono gli stessi byte, quindi non si perde nulla. Per aprire un file senza applicare la sua riga di codifica, tieni premuto Opzione mentre si apre.</p>
+<table>
+<tr><th>Nome nella riga di codifica</th><th>Nome nei menu</th></tr>
+<tr><td><code>UTF-8 Unicode</code></td><td>Unicode (UTF-8)</td></tr>
+<tr><td><code>Standard Unicode</code></td><td>Unicode (UTF-16)</td></tr>
+<tr><td><code>MacOSRoman</code></td><td>Occidentale (Mac OS Roman)</td></tr>
+<tr><td><code>IsoLatin</code></td><td>Occidentale (ISO Latin 1)</td></tr>
+<tr><td><code>IsoLatin9</code></td><td>Occidentale (ISO Latin 9)</td></tr>
+<tr><td><code>Windows Latin 1</code></td><td>Occidentale (Windows Latin 1)</td></tr>
+<tr><td><code>IsoLatin2</code></td><td>Centro-Europa (ISO Latin 2)</td></tr>
+<tr><td><code>Mac Central European Roman</code></td><td>Centro-Europa (Mac OS)</td></tr>
+<tr><td><code>WindowsCentralEurRoman</code></td><td>Centro-Europa (Windows Latin 2)</td></tr>
+<tr><td><code>IsoLatin5</code></td><td>Turco (ISO Latin 5)</td></tr>
+<tr><td><code>IsoLatinGreek</code></td><td>Greco (ISO 8859-7)</td></tr>
+<tr><td><code>Mac Cyrillic</code></td><td>Cirillico (Mac OS)</td></tr>
+<tr><td><code>DOS Cyrillic</code></td><td>Cirillico (DOS)</td></tr>
+<tr><td><code>Windows Cyrillic</code></td><td>Cirillico (Windows)</td></tr>
+<tr><td><code>DOS Russian</code></td><td>Russo (DOS)</td></tr>
+<tr><td><code>KOI8_R</code></td><td>Russo (KOI8-R)</td></tr>
+<tr><td><code>MacJapanese</code></td><td>Giapponese (Mac OS, ShiftJIS ¥)</td></tr>
+<tr><td><code>DOSJapanese</code></td><td>Giapponese (Windows, DOS, ShiftJIS \)</td></tr>
+<tr><td><code>SJIS_X0213</code></td><td>Giapponese (Shift JIS X0213)</td></tr>
+<tr><td><code>EUC_JP</code></td><td>Giapponese (EUC)</td></tr>
+<tr><td><code>JISJapanese</code></td><td>Giapponese (ISO 2022-JP)</td></tr>
+<tr><td><code>MacKorean</code></td><td>Coreano (Mac OS)</td></tr>
+<tr><td><code>DOSKorean</code></td><td>Coreano (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Traditional</code></td><td>Cinese tradizionale (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Traditional</code></td><td>Cinese tradizionale (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Simplified</code></td><td>Cinese semplificato (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Simplified</code></td><td>Cinese semplificato (Windows, DOS)</td></tr>
+<tr><td><code>GB 2312</code></td><td>Cinese semplificato (GB 2312)</td></tr>
+<tr><td><code>GBK</code></td><td>Cinese (GBK)</td></tr>
+<tr><td><code>GB 18030</code></td><td>Cinese (GB 18030)</td></tr>
+<tr><td><code>Ascii</code></td><td>Occidentale (ASCII)</td></tr>
+</table>
+
+<h2>Salvare in un’altra codifica</h2>
+<p>Per scegliere la codifica al momento del salvataggio, attiva Impostazioni › Documenti e salvataggio › Codifica › «Mostra la codifica nel dialogo Salva»; la finestra di dialogo Salva ha allora un menu delle codifiche. Modifica › Trasformazioni › Nuova Codifica sceglie la codifica in cui il documento aperto verrà salvato da quel momento in poi. Se il file ha una riga di codifica, decide la riga; modifica invece la riga. TeXShop conserva l’indicatore dell’ordine dei byte di un file UTF-8 e l’ordine dei byte di un file UTF-16.</p>
+<p>Convertire un file in un’altra codifica fa perdere ogni carattere che la nuova codifica non può rappresentare, e leggere un file nella codifica sbagliata e poi salvarlo ne sostituisce i caratteri definitivamente. Conserva una copia dell’originale. Il programma da riga di comando <code>iconv</code> converte i file senza modificare l’originale. Il documento «Codifica dei file e TeXShop» (in inglese) nel menu Aiuto tratta queste questioni più in dettaglio.</p>
+
+<h2>Lingue da destra a sinistra</h2>
+<p>L’arabo, l’ebraico e il persiano si scrivono da destra a sinistra nella finestra sorgente. Quando Impostazioni › Editor › Digitazione › «Lingue da destra a sinistra (arabo, ebraico, persiano)» è attivato e l’evidenziazione della sintassi è attiva, le righe che iniziano con caratteri arabi o ebraici sono allineate a destra, e le altre righe, per esempio quelle che iniziano con un comando LaTeX, a sinistra. Con l’impostazione nascosta</p>
+<pre>defaults write TeXShop RightJustifyIfAny YES</pre>
+<p>ogni riga che contiene questi caratteri in qualunque punto viene allineata a destra. L’allineamento serve solo per la modifica; TeX impagina il testo composto secondo i propri comandi. Per comporre queste lingue, usa XeLaTeX o LuaLaTeX; consulta <a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a>.</p>
+
+<h2>Scrivere in altri sistemi di scrittura</h2>
+<p>Per scrivere in un altro sistema di scrittura, aggiungi una sorgente di input in Impostazioni di Sistema › Tastiera, nella sezione «Immetti testo», e passa da una sorgente di input all’altra con il menu delle sorgenti di input nella barra dei menu.</p>
+</main>
+</body>
+</html>

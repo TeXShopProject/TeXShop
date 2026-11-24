@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pannello Matrici</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Pannello Matrici; matrice; array; tabular; tabella; delimitatori; matrice identità; foglio di calcolo; matrixpanel_1.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Comporre i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm" class="current">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Pannello Matrici</h1>
+<p>Finestra › Pannello Matrici... apre un pannello che scrive matrici e tabelle al posto tuo. Compila le voci nella sua tabella, scegli l’aspetto del risultato e inseriscilo nel sorgente nel punto di inserimento.</p>
+
+<h2>Creare una matrice o una tabella</h2>
+<ol>
+<li>Inserisci le dimensioni in «Righe» e «Colonne», fino a 999 ciascuna.</li>
+<li>In «Ambiente», scegli matrix per una matrice in una formula (un ambiente <code>array</code>) oppure tabular per una tabella di testo. Con tabular, «Includi in ambiente table» mette la tabella in un oggetto flottante <code>table</code> con una didascalia e un’etichetta.</li>
+<li>Per una matrice, scegli i delimitatori sinistro e destro. Il punto lascia quel lato senza delimitatore, e l’ultimo pulsante usa il delimitatore scritto nel campo accanto.</li>
+<li>I due pulsanti con l’immagine di una matrice aggiungono un bordo intorno alle voci e linee tra di esse.</li>
+<li>Compila le voci. «Cancella» le svuota tutte; «Matrice identità» e «Matrice nulla» le riempiono con una matrice identità o con zeri.</li>
+<li>Fai clic su «Inserisci» oppure premi <kbd>⌘Return</kbd>.</li>
+</ol>
+
+<h2>Lavorare nella tabella</h2>
+<p>La tabella funziona come un foglio di calcolo. Fai clic su una cella per sceglierla, trascina o fai Maiuscole-clic per sceglierne diverse, e digita per sostituirne il valore; fai doppio clic, premi F2 oppure premi Controllo-U per modificarla. A capo sposta in basso, Tab sposta a destra e i tasti freccia spostano in qualsiasi direzione; Elimina svuota le celle scelte. Copia e Incolla scambiano celle con le applicazioni per fogli di calcolo. Trascina il numero di una riga per spostare la riga. Annulla e Ripristina agiscono sulla tabella mentre il pannello è attivo.</p>
+<p>Quando la matrice viene rimpicciolita, le celle che restano fuori conservano i loro valori, mostrati in grigio, e ricompaiono quando la matrice viene di nuovo ingrandita. Ingrandisci il pannello per vedere una parte maggiore della tabella.</p>
+
+<h2>Personalizzare il codice inserito</h2>
+<p>Il codice che il pannello scrive intorno alle voci è conservato in <code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code>: l’inizio e la fine degli ambienti, i delimitatori, i separatori tra le voci e tra le righe, le linee di un bordo o di una griglia, e la lettera <code>c</code> che imposta l’allineamento di ogni colonna. Per esempio, cambia <code>c</code> in <code>r</code> per allineare le colonne a destra. Mantieni il numero e l’ordine delle stringhe nel file, e riavvia TeXShop dopo averlo modificato. Consulta <a href="advanced_plist.htm">File in ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

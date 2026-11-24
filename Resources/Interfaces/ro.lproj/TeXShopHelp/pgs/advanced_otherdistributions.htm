@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coexistența cu alte distribuții TeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="alte distribuții TeX; Detectați căile; Motoare TeX; Ghostscript; Homebrew; MacPorts; Fink; texbin">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm" class="current">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Coexistența cu alte distribuții TeX</h1>
+<p>Pe un Mac pot exista mai multe instalări TeX: ani de TeX Live instalați de MacTeX sau BasicTeX, un TeX Live instalat cu propriul program de instalare sau TeX din Homebrew ori MacPorts. TeXShop o folosește pe cea din câmpul „Motoare TeX” din Configurări › Compunere › Căi, iar Ghostscript din câmpul „Ghostscript” de sub el.</p>
+
+<h2>Detectați căile</h2>
+<p>TeXShop poate completa ambele câmpuri în locul dvs. Când TeXShop este folosit prima dată și ori de câte ori apăsați „Detectați căile…” în grupul „Căi” din Configurări › Compunere, el caută TeX și Ghostscript în locurile obișnuite: dosarele listate în <code>/etc/paths</code> și <code>/etc/paths.d</code> și în <code>PATH</code>-ul lui TeXShop, <code>/Library/TeX/texbin</code>, dosarele TeX Live din <code>/usr/local/texlive</code>, <code>/opt/texlive</code> și <code>/Applications/TeXLive</code>, dosarele TeX ale UpTeX.app și pTeX.app, <code>/usr/local/teTeX/bin</code> și dosarele Homebrew, MacPorts și Fink. Verifică dacă programele rulează și listează instalările găsite, cu versiunile lor, cele mai noi primele. Cea mai nouă este selectată, dar puteți alege alta, separat pentru TeX și pentru Ghostscript. Căile se schimbă doar când apăsați OK. O instalare aflată în alt loc poate fi introdusă în continuare manual în câmpuri.</p>
+<p>„Detectați căile…” modifică doar „Motoare TeX” și „Ghostscript”. Fișierele de motor care își indică propriile dosare și câmpul „Al doilea set de motoare TeX” rămân neschimbate.</p>
+
+<h2>TeX Live fără MacTeX</h2>
+<p>Programele de instalare MacTeX și BasicTeX îndreaptă <code>/Library/TeX/texbin</code> spre TeX Live-ul pe care îl instalează, astfel încât programele care folosesc această cale urmează instalarea cea mai nouă. Un TeX Live instalat cu programul de instalare al TeX Live însuși nu modifică această legătură. Pentru a folosi o astfel de instalare, alegeți-o cu „Detectați căile…” sau introduceți în „Motoare TeX” dosarul programelor ei, de exemplu <code>/usr/local/texlive/2026/bin/universal-darwin</code>.</p>
+
+<h2>Variabile de mediu</h2>
+<p>Unele distribuții setează variabile de mediu precum <code>TEXINPUTS</code> sau <code>TEXMFHOME</code> în fișierele de pornire ale shellului. TeX citește atunci fișiere din alte dosare decât v-ați aștepta, iar același document poate fi compilat diferit în Terminal și în TeXShop. Dacă TeX folosește o versiune greșită a unui fișier, verificați mai întâi aceste variabile; în Terminal, <code>kpsewhich</code> urmat de numele fișierului arată ce copie găsește TeX.</p>
+</main>
+</body>
+</html>

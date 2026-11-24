@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le macro predefinite</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macro predefinite; Insert Begin/End; #SEL#; #INS#; #PASTE#; marcatori; posizionare il cursore; macro di testo">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto sulle macro</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminari</a></li>
+<li><a href="macros_default.htm" class="current">Le macro predefinite</a></li>
+<li><a href="macros_rearrange.htm">Riordinare il menu Macro</a></li>
+<li><a href="macros_define.htm">Definire nuove macro</a></li>
+<li><a href="macros_applescript.htm">Macro AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macro AppleScript predefinite</a></li>
+<li><a href="macros_defapplescript.htm">Definire macro AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Creare finestre di dialogo</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di composizione di TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Le macro predefinite</h1>
+<p>Il modo migliore per capire le macro predefinite è guardarle nell’Editor delle macro (Macro › Apri Editor delle Macro...): seleziona una macro nell’elenco e il suo contenuto compare accanto.</p>
+<p>Supponiamo per esempio che ti serva un ambiente theorem. Digita la parola theorem, selezionala e scegli Macro › Insert Begin/End. La parola viene sostituita da</p>
+<pre>\begin{theorem}
+
+\end{theorem}</pre>
+<p>e il punto di inserimento viene collocato sulla riga intermedia.</p>
+<p>Insert Begin/End è una macro AppleScript (consulta <a href="macros_applescript.htm">Macro AppleScript</a>). Una macro di testo che fa la stessa cosa quando è selezionata una parola è questa:</p>
+<pre>\begin{#SEL#}
+#INS#
+\end{#SEL#}</pre>
+
+<h2 id="placeholders">Segnaposto nelle macro di testo</h2>
+<p>Il testo di una macro di testo viene inserito nel sorgente con queste sostituzioni:</p>
+<dl>
+<dt>#SEL#</dt><dd>viene sostituito dal testo che era selezionato quando è stata scelta la macro, oppure da niente se non era selezionato alcun testo.</dd>
+<dt>#INS#</dt><dd>indica dove va il punto di inserimento. Senza di esso, il punto di inserimento viene collocato alla fine del testo inserito.</dd>
+<dt>#PASTE#</dt><dd>viene sostituito dal testo negli appunti, oppure da niente se gli appunti non contengono testo.</dd>
+<dt>•</dt><dd>è un marcatore, che Modifica › Marcatori permette di raggiungere.</dd>
+</dl>
+<p>Nell’Editor delle macro questi segnaposto sono mostrati come etichette arrotondate; <a href="macros_define.htm">Definire nuove macro</a> spiega come inserirli. Sapendo questo, le macro predefinite sono facili da capire e da modificare.</p>
+</main>
+</body>
+</html>

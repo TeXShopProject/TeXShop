@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finestre e pannelli</title>
+<meta name="copyright" content="Copyright (c) 2016 Richard Koch under the GNU FDL">
+<meta name="description" content="pannelli; finestre; Apri finestre come pannelli; Usa un’unica finestra; Usa finestre separate; useTabs; useTabsWithFiles; tabbedFile; TabsAlsoForInputFiles">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Comporre i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm" class="current">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Finestre e pannelli</h1>
+<p>Le finestre di TeXShop si possono raccogliere come pannelli di un’unica finestra, come nelle altre app di macOS. In Impostazioni › Generali, «Apri finestre come pannelli» sceglie quando ciò avviene: «Mai», «Automaticamente», che segue l’impostazione dei pannelli di macOS, oppure «Sempre».</p>
+<p>Con «Sempre» e con finestre separate per sorgente e anteprima, il sorgente di ogni documento che apri diventa un pannello della finestra sorgente e la sua anteprima un pannello della finestra di anteprima; le console e i log vengono raccolti allo stesso modo. Selezionando un pannello di una finestra, il pannello corrispondente dell’altra viene in primo piano quando componi o sincronizzi. Se sorgente e anteprima sono mostrati in un’unica finestra («Sorgente e anteprima» in Impostazioni › Generali impostato su «Usa un’unica finestra»), ogni pannello contiene un intero documento. Finestra › Usa un'unica finestra e Finestra › Usa finestre separate passano il documento attivo da un modo all’altro.</p>
+<p>Una finestra che mostra insieme sorgente e anteprima, con o senza pannelli, funziona bene a tutto schermo: la console resta allora sospesa sopra di essa mentre componi.</p>
+
+<h2>Aprire un progetto in pannelli</h2>
+<p>Per un libro i cui capitoli sono file separati, il file principale può chiedere a TeXShop di aprire i capitoli come pannelli della sua finestra. Metti questa riga tra le prime 20 righe del file principale:</p>
+<pre>% !TEX useTabs</pre>
+<p>Quando si apre il file principale, i file indicati dai suoi comandi <code>\include</code> si aprono come pannelli. Sulla stessa riga possono seguire dei nomi brevi per i pannelli, tra parentesi e separati da virgole; un elemento vuoto tra due virgole mantiene il nome di quel file:</p>
+<pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
+<p>Per dare un pannello anche ai file dei comandi <code>\input</code>, usa questa impostazione nascosta nel Terminale:</p>
+<pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
+<p>Per scegliere tu i file, metti una riga <code>useTabsWithFiles</code> tra le prime 20 righe del file principale e aggiungi una riga <code>tabbedFile</code> per ogni pannello, tutte tra le sue prime 50 righe. Un nome per il pannello può seguire tra parentesi:</p>
+<pre>% !TEX useTabsWithFiles
+% !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
+% !TEX tabbedFile{Galois.log}
+% !TEX tabbedFile{~/Graphics/diagram.pdf}</pre>
+<p>Un percorso è relativo alla cartella del file principale, parte dalla tua cartella Inizio con <code>~</code>, oppure è un percorso completo. Scrivi sempre l’estensione, anche quando il Finder la nasconde: questi pannelli possono mostrare anche log, file PDF e immagini. Ogni file si apre come se lo aprissi tu, quindi un file sorgente può portare con sé la sua anteprima.</p>
+<p>Consulta Aiuto › Linee di commento e impostazioni nascoste per le altre righe di commento speciali.</p>
+</main>
+</body>
+</html>

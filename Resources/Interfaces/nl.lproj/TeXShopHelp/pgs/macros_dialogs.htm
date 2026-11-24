@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialoogvensters maken</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; dialoogvensters; display dialog; activate; ScriptRunner">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hulp bij macro’s</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Inleiding</a></li>
+<li><a href="macros_default.htm">De standaardmacro’s</a></li>
+<li><a href="macros_rearrange.htm">Het menu Macro's herschikken</a></li>
+<li><a href="macros_define.htm">Nieuwe macro’s definiëren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-macro’s</a></li>
+<li><a href="macros_includedscripts.htm">Standaard-AppleScript-macro’s</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a></li>
+<li><a href="macros_dialogs.htm" class="current">Dialoogvensters maken</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Dialoogvensters maken</h1>
+<p>Een AppleScript kan dialoogvensters tonen en reageren op wat u invoert. Maak bijvoorbeeld een macro met de volgende inhoud en probeer hem uit:</p>
+<pre>-- AppleScript
+-- Use a dialog to enter user defined information into an AppleScript.
+-- There are two feedbacks possible 'text' and "choice of buttons".
+-- The returned information can be used to define corresponding
+-- variables.
+-- The number of buttons may not exceed three.
+-- In the three examples below it is shown how to use text return,
+-- button return, and both.
+
+activate
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set theText to (the text returned of the result)
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set theButton to (the button returned of the result)
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set {theText, theButton} to ¬
+  {the text returned of the result, the button returned of the result}</pre>
+<p>Het commando <code>activate</code> verdient een woord van uitleg. Een macro die begint met <code>-- AppleScript</code> wordt uitgevoerd door ScriptRunner, een apart programma in TeXShop, zodat de dialoogvensters door ScriptRunner worden getoond en niet door TeXShop. <code>activate</code> haalt ScriptRunner naar voren, zodat de dialoogvensters vóór andere vensters verschijnen.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surlignage syntaxique</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="surlignage syntaxique; couleurs syntaxiques; couleurs; thème; expl3; entrées d’index; note en bas de page; marqueur; délimiteurs; pleine chasse; SyntaxColoringEnabled">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm" class="current">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Surlignage syntaxique</h1>
+<p>La fenêtre source affiche TeX en couleurs : les commentaires, les commandes, les notes en bas de page, les marqueurs <code>$</code> et <code>&amp;</code>, ainsi que les délimiteurs <code>( )</code>, <code>{ }</code> et <code>[ ]</code> ont chacun leur couleur. Source › Surlignage syntaxique active ou désactive le surlignage pour le document actif. Les documents s’ouvrent avec le surlignage activé ; pour les ouvrir avec le surlignage désactivé, utilisez le réglage caché</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
+
+<h2>Ce qui est surligné</h2>
+<ul>
+<li>Les commandes sont une barre oblique inverse suivie de lettres. Réglages › Éditeur › Surlignage syntaxique › « @ fait partie des noms de commande » compte aussi <code>@</code> comme une lettre, comme dans les commandes internes des paquets.</li>
+<li>Le texte de <code>\footnote</code>, <code>\footcite</code> et <code>\autocite</code>, ainsi que celui des commandes qui commencent par <code>\cite</code> ou <code>\Cite</code>, comme <code>\citep</code> et <code>\citeauthor</code>, s’affiche dans la couleur « Note en bas de page ». Le réglage caché <code>defaults write TeXShop SyntaxColorFootnote NO</code> ne colore que la commande.</li>
+<li>Source › Surligner les entrées d'index affiche les arguments de <code>\index</code> et de <code>\esindex</code> dans la couleur « Index ». Réglages › Éditeur › Surlignage syntaxique › « Surligner les entrées d'index par défaut » l’active à l’ouverture des documents.</li>
+<li>Source › Surligner le code expl3 colore aussi les fonctions, les variables et les autres éléments du code expl3, la couche de programmation de LaTeX, à l’intention de ceux qui écrivent des paquets. « Surligner le code expl3 par défaut », dans le même groupe, l’active à l’ouverture des documents.</li>
+<li>« Surligner les lettres et symboles pleine chasse », dans le même groupe, affiche dans les couleurs « Pleine chasse » les lettres, chiffres et symboles pleine chasse, faciles à confondre avec des caractères ASCII dans un texte japonais.</li>
+</ul>
+<p>« Surligner les entrées d'index » et « Surligner le code expl3 » s’appliquent au document actif ; chaque fenêtre source a son propre choix. Les fichiers qui ne sont pas des sources TeX, comme les fichiers log, ne sont pas surlignés ; consultez <a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a> pour la liste des extensions et la façon d’en ajouter une.</p>
+
+<h2>Modifier les couleurs</h2>
+<p>Les couleurs font partie du thème. Choisissez-les dans Réglages › Thèmes :</p>
+<ul>
+<li>le groupe « Surlignage syntaxique » comporte « Commentaire », « Commande », « Note en bas de page », « Marqueur » et « Index » ;</li>
+<li>le groupe « Délimiteurs » comporte les couleurs de <code>( )</code>, <code>{ }</code> et <code>[ ]</code> ;</li>
+<li>le groupe « expl3 » comporte function, __function, key, variable, __variable, argument et msg ;</li>
+<li>le groupe « Surlignage » comporte, entre autres, les couleurs « Pleine chasse » ;</li>
+<li>le groupe « Syntaxe XML » comporte les couleurs des fichiers HTML et XML.</li>
+</ul>
+<p>Chaque thème a ses propres couleurs ; le « Thème pour Mode clair » et le « Thème pour Mode sombre » peuvent donc différer.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XeLaTeX e LuaLaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="XeLaTeX; LuaLaTeX; XeTeX; LuaTeX; fontspec; fontes do sistema; OpenType; Unicode; perfil do motor">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar arquivos pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivência com outras distribuições de TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm" class="current">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o arquivo principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar código-fonte e pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover arquivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros arquivos com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto colorido</a></li>
+<li><a href="advanced_plist.htm">Arquivos em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>XeLaTeX e LuaLaTeX</h1>
+<p>O XeLaTeX e o LuaLaTeX são versões do LaTeX que leem diretamente código-fonte em UTF-8 e usam as fontes OpenType e TrueType instaladas no Mac, além das fontes do TeX Live. Qualquer escrita que o Unicode codifica pode ser digitada no código-fonte e composta, desde que uma fonte tenha os seus caracteres. Ambos fazem parte do TeX Live, e ambos compõem documentos LaTeX comuns sem alterações.</p>
+
+<h2>Compor com o XeLaTeX ou o LuaLaTeX</h2>
+<p>Há três maneiras, da mais geral à mais específica:</p>
+<ul>
+<li><strong>Perfil do motor.</strong> Em Ajustes › Composição › Perfil do motor, escolha XeLaTeX ou LuaLaTeX. O perfil define os comandos LaTeX e plain TeX de PDF direto como xelatex e xetex, ou lualatex e luatex, de modo que a opção LaTeX da barra de ferramentas e Compor › LaTeX usem esse motor. Uma folha lista os valores que o perfil define antes de você confirmar.</li>
+<li><strong>Arquivo de motor.</strong> Os motores LuaLaTeX e XeLaTeX estão no menu local ao lado do botão Compor. Para compor os documentos novos com um deles, escolha “Arquivo de motor” em Ajustes › Composição › Motor › “Compor documentos novos com” e o motor no menu “Arquivo de motor”; no início, o LuaLaTeX está escolhido ali.</li>
+<li><strong>Comentário mágico.</strong> Uma linha no início do código-fonte escolhe o motor para esse documento, independentemente de qualquer outro ajuste:
+<pre>% !TEX program = LuaLaTeX</pre></li>
+</ul>
+<p>Para a versão japonesa do LuaLaTeX, consulte <a href="advanced_Japan.htm">Composição em japonês</a>.</p>
+
+<h2>Usar as fontes do Mac</h2>
+<p>O pacote fontspec seleciona as fontes pelos nomes que elas têm no aplicativo Catálogo de Fontes. Por exemplo:</p>
+<pre>% !TEX program = XeLaTeX
+\documentclass{article}
+\usepackage{fontspec}
+\setmainfont{Palatino}
+\setsansfont{Helvetica Neue}
+\begin{document}
+Text in Palatino, \textsf{and in Helvetica Neue}.
+\end{document}</pre>
+<p>Sem o fontspec, ou sem um comando de fonte, os dois motores usam a Latin Modern, a fonte padrão do LaTeX. Pacotes como o polyglossia ou o babel configuram a hifenização e as convenções de outros idiomas; Ajuda › Exibir ajuda para o pacote... abre a documentação deles.</p>
+
+<h2>Digitar em outras escritas</h2>
+<p>Para digitar em grego, cirílico, árabe, hebraico ou outras escritas, acrescente os layouts de teclado delas em Teclado, no app Ajustes do macOS, e alterne entre eles com o menu de Layouts de Teclado da barra de menus. O TeXShop pode mostrar alinhadas à direita as linhas em árabe, hebraico e persa; consulte <a href="advanced_encoding.htm">Codificações</a>. Salve esses documentos em UTF-8, a codificação padrão dos novos documentos.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Definir o arquivo principal de um projeto</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="arquivo principal; arquivo raiz; % !TEX root; projeto; arquivos de capítulo; include; input; Código ⇔ Visualizar; Arquivo principal do projeto">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar arquivos pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivência com outras distribuições de TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm" class="current">Definir o arquivo principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar código-fonte e pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover arquivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros arquivos com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto colorido</a></li>
+<li><a href="advanced_plist.htm">Arquivos em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Definir o arquivo principal de um projeto</h1>
+<p>Documentos grandes costumam ser divididos em vários arquivos: um arquivo principal com o preâmbulo, que inclui um arquivo para cada capítulo. Por exemplo, um arquivo principal <code>Main.tex</code> poderia ser assim:</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p>Quando você edita <code>two.tex</code>, o TeXShop deve compor <code>Main.tex</code>, e não o capítulo, que não tem preâmbulo. Para indicar isso, coloque esta linha em uma das vinte primeiras linhas de cada arquivo de capítulo:</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>O próprio arquivo principal não precisa dessa linha. O nome do arquivo principal pode ser indicado</p>
+<ul>
+<li>só pelo nome, <code>Main.tex</code>, quando ele está na mesma pasta que o arquivo de capítulo;</li>
+<li>em relação à pasta do arquivo de capítulo, <code>../Main.tex</code> ou <code>../../Main.tex</code>;</li>
+<li>pelo caminho completo, <code>/Users/me/Book/Main.tex</code>, que precisa ser alterado quando o projeto muda de lugar.</li>
+</ul>
+<p>A macro Root do menu Macros insere a linha: ela pede o arquivo principal e oferece uma linha relativa ou absoluta, substituindo uma linha root anterior.</p>
+
+<h2>O que a linha root faz</h2>
+<ul>
+<li>Compor em um arquivo de capítulo compõe o arquivo principal, e a janela de pré-visualização do arquivo principal mostra o documento inteiro. Uma linha <code>% !TEX program</code> ou outras linhas mágicas para a composição devem ficar no arquivo principal.</li>
+<li>Mostrar erro abre o arquivo que contém um erro, se ele não estiver aberto, e vai para a linha.</li>
+<li>A sincronização a partir da janela de pré-visualização abre o arquivo de capítulo que contém o ponto clicado; consulte <a href="advanced_pdfsync.htm">Sincronizar código-fonte e pré-visualização</a>.</li>
+<li>Limpar arquivos auxiliares remove os arquivos auxiliares do arquivo principal; consulte <a href="advanced_removeaux.htm">Remover arquivos AUX</a>.</li>
+<li>Janela › Código ⇔ Visualizar (<kbd>⌘1</kbd>) em um arquivo de capítulo traz para a frente a janela de pré-visualização do arquivo principal. Usá-lo de novo na janela de pré-visualização volta à janela do código-fonte de onde você veio, ou ao arquivo principal se você não veio de uma janela do código-fonte.</li>
+</ul>
+
+<h2>Abrir um arquivo de capítulo</h2>
+<p>Quando um arquivo de capítulo com uma linha root é aberto, o TeXShop também abre o arquivo principal e a sua janela de pré-visualização. Dois itens de Ajustes › Geral › Arquivo principal do projeto controlam isso: “Abrir o arquivo principal ao abrir um documento” ativa ou desativa esse comportamento, e “Minimizar a janela do arquivo raiz” envia a janela do código-fonte do arquivo principal para o Dock, já que ela raramente é editada enquanto você trabalha em um capítulo.</p>
+
+<h2>Buscar e substituir no projeto inteiro</h2>
+<p>Para buscar em todos os arquivos de um projeto de uma só vez, escolha Editar › Procurar › Buscar nas Fontes TeX com a Mesma TEX root… em um dos seus arquivos de capítulo, ou Buscar nas Fontes TeX com Este Arquivo como TEX root… no arquivo principal. A busca abrange o arquivo principal e os arquivos <code>.tex</code> da sua pasta e das subpastas que o indicam em uma linha root nas suas 20 primeiras linhas. Consulte <a href="basic_texrootsearch.htm">Buscar nas fontes TeX</a> e <a href="basic_find.htm">Buscar e substituir</a>.</p>
+
+<h2>Arquivos principais indicados em arquivos .texshop</h2>
+<p>Um arquivo com a extensão <code>.texshop</code> ao lado de um arquivo de capítulo, como <code>two.texshop</code> para <code>two.tex</code>, também pode indicar o arquivo principal, e o TeXShop ainda o lê. Nenhum comando de menu cria esses arquivos; use uma linha <code>% !TEX root</code>, que acompanha o código-fonte.</p>
+</main>
+</body>
+</html>

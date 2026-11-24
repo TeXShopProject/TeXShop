@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alterações recomendadas nos ajustes</title>
+<meta name="description" content="ajustes recomendados; perfil do motor; latexmk; PDF direto; Via DVI; comandos de composição; interface de busca; painel de localizar avançado; salvamento automático; posição das janelas">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Como configurar o TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm" class="current">Alterações recomendadas nos ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obter novos itens da biblioteca</a></li>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
+<li><a href="configure_panel.htm">Modificar o Painel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar as associações de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Alterações recomendadas nos ajustes</h1>
+<p>O TeXShop funciona com os ajustes padrão, mas alguns deles dependem da sua instalação do TeX, da sua tela e dos seus hábitos. Vale a pena verificá-los primeiro. Escolha TeXShop › Ajustes… para abrir a janela Ajustes; <a href="basic_preferences.htm#settings-search">Alterar os ajustes e Buscar ajustes</a> explica como encontrar um ajuste.</p>
+
+<h2 id="engine-profile">Escolher um perfil do motor</h2>
+<p>Ajustes › Composição › Perfil do motor configura a composição em um único passo. Escolha o perfil do motor que você usa; os menos comuns estão em Outro. Uma folha lista os valores que o perfil define e marca os que mudam. Desmarque os valores que quiser manter e clique em OK; Cancelar não altera nada.</p>
+<p>Escolha “Com latexmk” para que o latexmk execute o BibTeX, o programa de índice e as passagens adicionais conforme necessário; caso contrário, cada composição executa o motor uma única vez. Um perfil define o método de composição e os seus comandos de composição, o comando kpsewhich, o motor BibTeX, o programa de índice, o MetaPost e “Converter para \UTF / \CID do pacote otf”. Os perfis japoneses também definem UTF-8 como codificação dos novos documentos, o dicionário ortográfico e a conversão de UTF-8-MAC. Todos os outros ajustes permanecem como estão. Quando você altera depois um desses ajustes, o menu mostra Personalizado; escolha o perfil de novo para voltar aos seus valores.</p>
+<p>Os caminhos do TeX e do Ghostscript são definidos à parte, com “Detectar caminhos…” no grupo Caminhos da mesma categoria. Quando o TeXShop é iniciado pela primeira vez, ele pede os caminhos e depois um perfil do motor.</p>
+
+<h3 id="commands">Comandos de composição</h3>
+<p>Os comandos que um perfil define ficam nos grupos PDF direto e Via DVI de Ajustes › Composição, cada um com um comando plain TeX e um comando LaTeX, e “Método de composição” escolhe qual grupo é usado. Compor › PDF direto e Compor › Via DVI trocam o método somente para o documento ativo. Os comandos padrão já contêm <code>-file-line-error</code>, que permite ao TeXShop levar você à linha de um erro, e <code>-synctex=1</code>, que faz funcionar a sincronização entre o código-fonte e a pré-visualização; por isso, a maioria das pessoas nunca os edita. Se um documento precisar de <code>-shell-escape</code>, consulte primeiro <a href="advanced_shellescape.htm">Proteção contra shell escape</a>.</p>
+
+<h2 id="find">Escolher a interface de busca</h2>
+<p>Ajustes › Editor › “Interface de busca” escolhe a janela ou a barra que a busca abre. “Painel de localizar avançado (recomendado)” busca com expressões regulares, lista todas as ocorrências e substitui vários pares de textos de uma só vez; consulte <a href="basic_find.htm">Buscar e substituir</a>. “Painel de localizar da Apple” e “Barra de localizar da Apple” são a busca padrão do macOS, e “Painel de localizar OgreKit (legado)” continua disponível. Uma nova escolha passa a valer imediatamente, exceto a troca para o painel de localizar OgreKit ou a partir dele, que passa a valer depois de reiniciar o TeXShop. Ative “Manter o painel de localizar avançado em primeiro plano” se o painel deve ficar na frente das janelas dos documentos.</p>
+
+<h2 id="autosave">Manter o salvamento automático ativado</h2>
+<p>“Ativar Salvar Automaticamente e Versões”, em Ajustes › Documentos e salvamento, vem ativado por padrão, e é recomendável mantê-lo assim. O macOS então salva os seus documentos enquanto você trabalha, e Arquivo › Reverter Para › Explorar Todas as Versões… recupera versões anteriores. Se você o desativar, o arquivo só muda quando você o salva; “Manter o arquivo anterior como “nome~” ao salvar” então guarda a versão anterior ao lado dele. Uma alteração deste ajuste passa a valer depois de reiniciar o TeXShop.</p>
+
+<h2 id="window-positions">Fixar a posição das janelas</h2>
+<p>Por padrão, cada janela se abre onde estava da última vez que foi fechada. Se você costuma trabalhar em um documento de cada vez, é melhor abrir as janelas em um lugar fixo. Componha um documento curto e organize a janela do código-fonte e a janela de pré-visualização, lado a lado se a tela for larga o bastante. Depois, em Ajustes › Geral › Posição das janelas, escolha “Abrir sempre em uma posição fixa” para Fonte e para Pré-visualização e clique em “Escolher a posição atual” em cada linha. As linhas Console e HTML funcionam da mesma forma.</p>
+<p>Os comandos de menu Fonte › Salvar posição no fonte e Página › Salvar posição de visualização fazem o mesmo a partir das próprias janelas. Se você usa um Mac portátil com um monitor grande, organize as janelas para a tela integrada e escolha também Fonte › Salvar posição no fonte para portável e Página › Salvar posição de visualização para portável; o TeXShop então usa essas posições quando o monitor grande não está conectado.</p>
+
+<h2 id="fonts-colors">Fontes e cores</h2>
+<p>A fonte da janela do código-fonte é definida em Ajustes › Editor › “Fonte para o documento”, e a fonte do console em Ajustes › Console. Ajustes › Temas escolhe e edita os temas de cores das janelas do código-fonte, da pré-visualização e do console; consulte <a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a>.</p>
+</main>
+</body>
+</html>

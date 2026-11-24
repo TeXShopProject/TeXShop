@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>De standaardmacro’s</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="standaardmacro’s; Insert Begin/End; #SEL#; #INS#; #PASTE#; markeerpunten; de cursor plaatsen; tekstmacro’s">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hulp bij macro’s</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Inleiding</a></li>
+<li><a href="macros_default.htm" class="current">De standaardmacro’s</a></li>
+<li><a href="macros_rearrange.htm">Het menu Macro's herschikken</a></li>
+<li><a href="macros_define.htm">Nieuwe macro’s definiëren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-macro’s</a></li>
+<li><a href="macros_includedscripts.htm">Standaard-AppleScript-macro’s</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a></li>
+<li><a href="macros_dialogs.htm">Dialoogvensters maken</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>De standaardmacro’s</h1>
+<p>De beste manier om de standaardmacro’s te begrijpen, is ze te bekijken in de macro-editor (Macro's › Open macro-editor...): selecteer een macro in de lijst, en de inhoud verschijnt ernaast.</p>
+<p>Stel bijvoorbeeld dat u een theorem-omgeving wilt. Typ het woord theorem, selecteer het en kies Macro's › Insert Begin/End. Het woord wordt vervangen door</p>
+<pre>\begin{theorem}
+
+\end{theorem}</pre>
+<p>en het invoegpunt wordt op de regel ertussen geplaatst.</p>
+<p>Insert Begin/End is een AppleScript-macro (zie <a href="macros_applescript.htm">AppleScript-macro’s</a>). Een tekstmacro die hetzelfde doet wanneer een woord is geselecteerd, luidt:</p>
+<pre>\begin{#SEL#}
+#INS#
+\end{#SEL#}</pre>
+
+<h2 id="placeholders">Plaatshouders in tekstmacro’s</h2>
+<p>De tekst van een tekstmacro wordt in de bron ingevoegd, met deze vervangingen:</p>
+<dl>
+<dt>#SEL#</dt><dd>wordt vervangen door de tekst die geselecteerd was toen de macro werd gekozen, of door niets als er geen tekst was geselecteerd.</dd>
+<dt>#INS#</dt><dd>geeft aan waar het invoegpunt komt. Zonder deze plaatshouder wordt het invoegpunt aan het eind van de ingevoegde tekst geplaatst.</dd>
+<dt>#PASTE#</dt><dd>wordt vervangen door de tekst op het klembord, of door niets als het klembord geen tekst bevat.</dd>
+<dt>•</dt><dd>is een markeerpunt, waarnaar Wijzig › Markeerpunten kan gaan.</dd>
+</dl>
+<p>In de macro-editor worden deze plaatshouders als afgeronde labels getoond; <a href="macros_define.htm">Nieuwe macro’s definiëren</a> legt uit hoe u ze invoegt. Met deze kennis zijn de standaardmacro’s gemakkelijk te begrijpen en te wijzigen.</p>
+</main>
+</body>
+</html>

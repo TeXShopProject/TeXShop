@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adăugarea fișierelor personale în TeX Live</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="arbore texmf personal; ~/Library/texmf; TEXMFHOME; adăugarea unui fișier sty; adăugarea unei clase; fișier bib; fișier bst; kpsewhich">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm" class="current">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Adăugarea fișierelor personale în TeX Live</h1>
+<p>Fișierele de stil, clasele, bazele de date bibliografice și alte fișiere care nu fac parte din TeX Live se pun în arborele TeX personal, dosarul <code>texmf</code> din dosarul Bibliotecă al dosarului de reședință: <code>~/Library/texmf</code>. Toate programele din TeX Live găsesc fișierele de acolo, iar acestea au prioritate față de fișierele cu același nume din TeX Live. După ce adăugați un fișier, nu trebuie să înregistrați nimic; următoarea compilare îl găsește.</p>
+<p>Dosarul Bibliotecă este ascuns în Finder. Pentru a-l deschide, alegeți Accesare › Accesare dosar… în Finder și tastați <code>~/Library</code>. Creați acolo dosarul <code>texmf</code> dacă nu există încă.</p>
+
+<h2>Înainte de a adăuga un pachet</h2>
+<p>Majoritatea pachetelor de pe CTAN fac deja parte din TeX Live, iar MacTeX le instalează pe toate. Pentru a vedea dacă TeX are deja un fișier, alegeți Fișier › Deschide fișierul de stil... în TeXShop și tastați numele lui, de exemplu <code>hyperref.sty</code>; TeXShop deschide fișierul pe care l-ar folosi TeX. Adăugați un pachet în arborele personal numai dacă TeX Live nu îl are sau dacă aveți nevoie de o versiune proprie. Deoarece copia dvs. are prioritate, ștergeți-o când TeX Live a ajuns din urmă versiunea respectivă; altfel veți folosi în continuare versiunea veche.</p>
+
+<h2>Unde se pun fișierele</h2>
+<p>Dosarele din <code>texmf</code> urmează aceeași structură ca TeX Live. Creați dosarele de care aveți nevoie:</p>
+<table>
+<tr><th>Dosar</th><th>Conținut</th></tr>
+<tr><td><code>tex/latex/</code></td><td>pachete și clase LaTeX (.sty, .cls), fiecare pachet în propriul dosar</td></tr>
+<tr><td><code>tex/plain/</code></td><td>fișiere pentru plain TeX</td></tr>
+<tr><td><code>tex/generic/</code></td><td>fișiere care funcționează cu orice format</td></tr>
+<tr><td><code>bibtex/bib/</code></td><td>baze de date bibliografice (.bib)</td></tr>
+<tr><td><code>bibtex/bst/</code></td><td>stiluri bibliografice (.bst)</td></tr>
+<tr><td><code>doc/</code></td><td>documentația pachetelor pe care le-ați adăugat; Ajutor › Afișează ajutorul pentru pachet... o găsește acolo</td></tr>
+</table>
+<p>De exemplu, un pachet cu macrocomenzile dvs. și baza de date bibliografică ar fi stocate ca</p>
+<pre>~/Library/texmf/tex/latex/mymacros/mymacros.sty
+~/Library/texmf/bibtex/bib/mybibliography.bib</pre>
+<p>Apoi <code>\usepackage{mymacros}</code> și <code>\bibliography{mybibliography}</code> funcționează în orice document, oriunde ar fi salvat.</p>
+
+<h2>Verificarea dosarului</h2>
+<p>Pentru a vedea ce dosar folosește TeX-ul dvs. ca arbore personal, tastați în Terminal</p>
+<pre>kpsewhich -var-value TEXMFHOME</pre>
+<p>Pe un Mac acesta este <code>~/Library/texmf</code>, cu excepția cazului în care instalarea a fost configurată altfel. Pentru a vedea ce copie a unui fișier va citi TeX, tastați de exemplu <code>kpsewhich mymacros.sty</code>.</p>
+<p>Nu adăugați fișiere în dosarele TeX Live propriu-zise; consultați <a href="advanced_moretetex.htm">Mai multe despre TeX Live</a>.</p>
+</main>
+</body>
+</html>

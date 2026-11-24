@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adicionar ficheiros pessoais ao TeX Live</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="árvore texmf pessoal; ~/Library/texmf; TEXMFHOME; adicionar ficheiro sty; adicionar classe; ficheiro bib; ficheiro bst; kpsewhich">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm" class="current">Adicionar ficheiros pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistir com outras distribuições TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar o código-fonte e a pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover ficheiros AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experiências</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e largar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros ficheiros com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto a cores</a></li>
+<li><a href="advanced_plist.htm">Ficheiros em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Adicionar ficheiros pessoais ao TeX Live</h1>
+<p>Os ficheiros de estilo, as classes, as bases de dados bibliográficas e outros ficheiros que não fazem parte do TeX Live vão para a sua árvore TeX pessoal, a pasta <code>texmf</code> na pasta Biblioteca da sua pasta pessoal: <code>~/Library/texmf</code>. Todos os programas do TeX Live encontram aí os ficheiros, e estes têm prioridade sobre os ficheiros com o mesmo nome do próprio TeX Live. Não é preciso registar nada depois de adicionar um ficheiro; a composição seguinte encontra-o.</p>
+<p>A pasta Biblioteca está oculta no Finder. Para a abrir, escolha Ir › Ir para a pasta… no Finder e escreva <code>~/Library</code>. Crie aí a pasta <code>texmf</code> se ainda não existir.</p>
+
+<h2>Antes de adicionar um pacote</h2>
+<p>A maioria dos pacotes do CTAN já faz parte do TeX Live, e o MacTeX instala-os todos. Para ver se o TeX já tem um ficheiro, escolha Ficheiro › Abrir ficheiro de estilo… no TeXShop e escreva o nome, como <code>hyperref.sty</code>; o TeXShop abre o ficheiro que o TeX usaria. Adicione um pacote à sua árvore pessoal apenas quando o TeX Live não o tiver, ou quando precisar de uma versão própria. Como a sua cópia tem prioridade, remova-a quando o TeX Live estiver atualizado, caso contrário continuará a usar a versão antiga.</p>
+
+<h2>Onde colocar os ficheiros</h2>
+<p>As pastas dentro de <code>texmf</code> seguem a mesma estrutura do TeX Live. Crie as pastas de que precisar:</p>
+<table>
+<tr><th>Pasta</th><th>Conteúdo</th></tr>
+<tr><td><code>tex/latex/</code></td><td>pacotes e classes LaTeX (.sty, .cls), cada pacote numa pasta própria</td></tr>
+<tr><td><code>tex/plain/</code></td><td>ficheiros para plain TeX</td></tr>
+<tr><td><code>tex/generic/</code></td><td>ficheiros que funcionam com qualquer formato</td></tr>
+<tr><td><code>bibtex/bib/</code></td><td>bases de dados bibliográficas (.bib)</td></tr>
+<tr><td><code>bibtex/bst/</code></td><td>estilos bibliográficos (.bst)</td></tr>
+<tr><td><code>doc/</code></td><td>documentação dos pacotes que adicionou; Ajuda › Mostrar ajuda do pacote… encontra-a aí</td></tr>
+</table>
+<p>Por exemplo, um pacote com as suas próprias macros e a sua base de dados bibliográfica seriam guardados como</p>
+<pre>~/Library/texmf/tex/latex/mymacros/mymacros.sty
+~/Library/texmf/bibtex/bib/mybibliography.bib</pre>
+<p>Assim, <code>\usepackage{mymacros}</code> e <code>\bibliography{mybibliography}</code> funcionam em todos os documentos, onde quer que estejam guardados.</p>
+
+<h2>Verificar a pasta</h2>
+<p>Para ver que pasta o seu TeX usa como árvore pessoal, escreva no Terminal</p>
+<pre>kpsewhich -var-value TEXMFHOME</pre>
+<p>Num Mac, é <code>~/Library/texmf</code>, a menos que a instalação tenha sido configurada de outra forma. Para ver que cópia de um ficheiro o TeX vai ler, escreva, por exemplo, <code>kpsewhich mymacros.sty</code>.</p>
+<p>Não adicione ficheiros às pastas do próprio TeX Live; consulte <a href="advanced_moretetex.htm">Mais sobre o TeX Live</a>.</p>
+</main>
+</body>
+</html>

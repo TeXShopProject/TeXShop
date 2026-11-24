@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Procurar nas fontes TeX</title>
+<meta name="copyright" content="Copyright (c) 2026 under the GNU FDL">
+<meta name="description" content="procurar e substituir em todos os ficheiros com o mesmo ficheiro principal; procurar e substituir em todos os ficheiros de um documento dividido; TEX root; Procurar nas fontes TeX; Substituir tudo; cópias de segurança">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm" class="current">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Procurar nas fontes TeX</h1>
+
+<p><a name="texroot_search"></a>Num documento dividido num ficheiro principal e em ficheiros de capítulo, é possível procurar, e substituir, em todos os ficheiros de uma só vez. Com um desses ficheiros à frente, escolha Editar › Procurar › Procurar nas fontes TeX com a mesma TEX root…; quando o próprio ficheiro principal está à frente, o item é «Procurar nas fontes TeX com este ficheiro como TEX root…». O mesmo item está no menu de «Procurar tudo» do painel de pesquisa avançada, e «Aplicar às fontes TeX com a mesma TEX root…», no menu de «Substituir tudo» da janela «Substituição múltipla», abre a janela com o conjunto aí escolhido; para o próprio ficheiro principal, o item é «Aplicar às fontes TeX com este ficheiro como TEX root…». Os itens ficam esbatidos num documento sem nome e num ficheiro cujo nome não termina em .tex (em minúsculas), e o item «Aplicar» também quando não há nenhum conjunto escolhido na janela «Substituição múltipla».</p>
+
+<h2>Que ficheiros são procurados</h2>
+
+<p>A janela procura no ficheiro principal e nos ficheiros .tex da sua pasta e das pastas abaixo dela que o indicam numa linha <code>% !TEX root</code> entre as suas 20 primeiras linhas; consulte <a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a>. Quando a definição oculta <code>UseOldHeadingCommands</code> está ativada, também são procurados os ficheiros que o indicam numa linha antiga <code>%SourceDoc</code>. A linha por baixo dos modos indica o ficheiro principal em que se procura, e o respetivo botão ? repete esta regra. Os ficheiros indicados em <code>\input</code> ou <code>\include</code> não são seguidos, e um ficheiro principal indicado num ficheiro .texshop não é usado. As ligações simbólicas a ficheiros, as pastas alcançadas através de ligações simbólicas ou de alias, e a pasta TeXShop Backups são deixadas de fora.</p>
+
+<p>A lista à esquerda mostra os ficheiros; desative aí um ficheiro ou uma pasta para o deixar de fora. Se alguns ficheiros ou pastas não puderem ser lidos, o botão «Ficheiros não lidos», na parte inferior, enumera-os com o motivo.</p>
+
+<h2>Procurar e substituir</h2>
+
+<p>Os campos de procura e de substituição e as opções são os do <a href="basic_find.htm">painel de pesquisa avançada</a>. Escolha um modo:</p>
+<ul>
+<li>«Procurar» enumera todas as correspondências com o respetivo número de linha.</li>
+<li>«Substituir» mostra cada linha antes e depois da substituição. Cada correspondência tem uma caixa de verificação; uma correspondência desativada não é substituída.</li>
+<li>«Substituição múltipla» aplica um conjunto da janela «Substituição múltipla» e enumera os grupos de linhas alteradas, cada um com uma caixa de verificação. «Editar…» abre o conjunto nessa janela.</li>
+</ul>
+
+<p>Clique numa linha para mostrar a correspondência no respetivo documento; faça duplo clique para trazer essa janela para a frente. A lista acompanha as suas alterações, e o botão ↻ (<kbd>⌘R</kbd>) reúne de novo os ficheiros. O botão de parar, a tecla Escape ou <kbd>⌘.</kbd> interrompem uma procura longa.</p>
+
+<p>Um documento aberto é procurado tal como está no ecrã, com as alterações não guardadas; um ficheiro que não está aberto é lido na codificação com que o TeXShop o abriria. Em alguns ficheiros só é possível procurar, e não substituir, por exemplo num ficheiro que não pode ser escrito ou que a sua codificação não consegue guardar de volta sem alterações. Estes ficheiros estão assinalados com ⊘, e a marca indica o motivo.</p>
+
+<h2>Substituir tudo</h2>
+
+<p>«Substituir tudo» pergunta antes de substituir. Se um ficheiro tiver sido alterado entretanto, nada é substituído e a lista é refeita. Com «Guardar cópias de segurança» ativado, cada ficheiro a alterar é primeiro copiado para a pasta TeXShop Backups, numa pasta com o nome da data e da hora, junto ao ficheiro principal.</p>
+
+<p>Os ficheiros que não estão abertos são então escritos diretamente, na sua própria codificação e com os seus fins de linha e permissões; isto não pode ser anulado. Os documentos abertos são alterados no ecrã e não são guardados, e um «Desfazer» num documento anula as respetivas substituições. Interromper «Substituir tudo» deixa substituídos os ficheiros já tratados e os outros inalterados. Em seguida, os ficheiros são procurados de novo, e a linha na parte inferior indica quantas correspondências foram substituídas. Se alguns ficheiros não puderem ser alterados, uma folha enumera-os com o motivo, e «Mostrar no Finder» abre a pasta da cópia de segurança.</p>
+
+<p>Não execute «Substituir tudo» enquanto outra aplicação estiver constantemente a escrever nestes ficheiros.</p>
+</main>
+</body>
+</html>

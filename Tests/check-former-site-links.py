@@ -74,7 +74,7 @@ for path in files:
 # The help sends bug reports to GitHub issues in every language.
 issues = 'https://github.com/TeXShopProject/TeXShop/issues'
 bug_pages = sorted((root/'Resources/Interfaces').glob('*.lproj/TeXShopHelp/pgs/basic_bugs.htm'))
-assert len(bug_pages) == 5, bug_pages
+assert len(bug_pages) == 12, bug_pages  # en, ja, de, es, ko, fr, it, nl, pt, pt-PT, ro, zh_CN
 for page in bug_pages:
     text = page.read_bytes().decode('utf-8')
     if args.mutation == 'bug-contact' and page.parent.parent.parent.name == 'de.lproj':

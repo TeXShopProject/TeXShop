@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工具栏和 AppleScript</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="工具栏; 自定义工具栏; 页面布局; 双页模式; 放大; 批注工具栏; 完整路径; 在窗口标题中显示完整路径; AppleScript">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm" class="current">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>工具栏和 AppleScript</h1>
+<h2>更改工具栏</h2>
+<p>源代码窗口、预览窗口以及同时显示两者的窗口各有自己的工具栏。要更改其中一个，请先激活该窗口，然后选取“窗口”>“自定义工具栏...”，或者按住 Control 键点按工具栏并在其中选取“自定义工具栏…”。将项目拖入或拖出工具栏，或者将默认项目组拖到工具栏以重新开始。“窗口”>“隐藏工具栏”会隐藏当前窗口的工具栏。</p>
+
+<h2>源代码窗口的项目</h2>
+<p>“排版”及其旁边的“程序”菜单用于以在那里选择的程序排版文稿；此外还有 BibTeX、MakeIndex 等单个程序的按钮。“模板”和“宏”用于插入文本（请参阅“<a href="basic_templates.htm">模板和样板</a>”和“<a href="basic_macros.htm">宏</a>”）。“标签”（Tags）和“标签”（Labels）用于将源代码滚动到某一节或某个标签。“按键绑定”用于为文稿打开或关闭按键绑定，“分割窗口”用于分割窗口（按住 Option 键点按可左右分割）。</p>
+<p>“完整路径”会在窗口标题中显示文件的完整路径，而不是只显示文件名；再次点按即可显示文件名。此选择会保留到之后打开的窗口。</p>
+
+<h2>预览窗口的项目</h2>
+<p>预览窗口中的项目包括“上一页”和“下一页”、“转到页”、“返回/前进”、“放大”、“鼠标模式”、“搜索”、“辅助面板”、“同步标记”、“分割窗口”以及“外观”（以浅色或深色显示页面）等。点按放大栏旁边的文字会打开“放大”菜单。</p>
+<p>“页面布局”用于为文稿选择“单页”“双页”“多页”或“对开多页”。“双页模式”在文稿打开期间为其选择两页是从左到右还是从右到左排列，以及是否将第一页单独显示为封面；此菜单中的“恢复文稿设置”会恢复为“设置”和文稿中的魔法注释行所设的值。“缩放到内容”和“缩放到内容宽度”会一次性更改放大率，使页面上排版的部分（不含白色边距）适合窗口或其宽度。请参阅“<a href="basic_preview.htm">预览窗口</a>”。</p>
+<p>“预览”>“显示批注工具栏”会在工具栏下方显示第二个工具栏，其中有为 PDF 添加注释、高亮和形状的工具。点按其右端的关闭按钮，或选取“预览”>“隐藏批注工具栏”，即可将其移除。TeXShop 手册中介绍了批注（“帮助”>“TeXShop手册（英文）”）。</p>
+
+<h2>AppleScript</h2>
+<p>TeXShop 可以用 AppleScript 控制：脚本可以排版文稿、运行 BibTeX 和 MakeIndex，以及处理源代码的文本。“宏”菜单中的 AppleScript 宏用于运行这样的脚本；请参阅“<a href="macros_applescript.htm">AppleScript 宏</a>”。TeXShop 能理解的命令在“帮助”>“早期文档”>“在TeXShop中使用AppleScript（英文）”中有说明，并列在 TeXShop 的脚本词典中；用“脚本编辑器”的“文件”>“打开词典…”即可打开该词典。</p>
+</main>
+</body>
+</html>

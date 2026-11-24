@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Réglages cachés</title>
+<meta name="description" content="réglages cachés; defaults write; Terminal; Commentaires spéciaux et réglages cachés; OtherTrashExtensions; ConTeXtTags; RedConsoleAfterError; RefreshTime">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Comment configurer TeXShop ?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Préliminaires</a></li>
+<li><a href="configure_prefchanges.htm">Modifications recommandées des réglages</a></li>
+<li><a href="configure_correctinstall.htm">Obtenir les nouveaux éléments de la bibliothèque</a></li>
+<li><a href="configure_hidden.htm" class="current">Réglages cachés</a></li>
+<li><a href="configure_panel.htm">Modifier la palette LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modifier les raccourcis de saisie</a></li>
+<li><a href="configure_menushortcuts.htm">Redéfinir les raccourcis clavier des menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Réglages cachés</h1>
+<p>La fenêtre Réglages contient les réglages dont la plupart des utilisateurs ont besoin. Les réglages moins courants sont des réglages cachés : ils n’ont pas de commande dans la fenêtre Réglages et se modifient avec une commande dans Terminal. Le document de référence « Commentaires spéciaux et réglages cachés », en anglais, liste tous les réglages cachés avec leur commande, classés par thème. Ouvrez-le avec Aide › Commentaires spéciaux et réglages cachés (en anglais), ou avec « Ouvrir le manuel des commentaires spéciaux et réglages cachés… » dans Réglages › Général › Avancé.</p>
+
+<h2 id="change">Modifier un réglage caché</h2>
+<ol>
+<li>Quittez TeXShop.</li>
+<li>Ouvrez Terminal (dans Applications › Utilitaires), tapez la commande et appuyez sur Retour.</li>
+<li>Relancez TeXShop.</li>
+</ol>
+<p>Chaque commande a la forme <code>defaults write TeXShop <var>nom</var> <var>valeur</var></code>. Pour revenir à la valeur par défaut, utilisez <code>defaults delete TeXShop <var>nom</var></code>.</p>
+
+<h2 id="examples">Exemples</h2>
+<dl>
+<dt><code>defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'</code></dt>
+<dd>Fichier › Fichiers .aux vers corbeille supprime aussi les fichiers portant ces extensions. Indiquez les extensions sans le point. Consultez <a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a>.</dd>
+<dt><code>defaults write TeXShop ConTeXtTags YES</code></dt>
+<dd>Le menu Étiquettes liste les commandes de section de ConTeXt, comme \title et \subject, au lieu de celles de LaTeX.</dd>
+<dt><code>defaults write TeXShop RedConsoleAfterError YES</code></dt>
+<dd>Le texte saisi dans la console pour répondre à une erreur de TeX, ainsi que toute la suite des messages de cette composition, s’affiche en rouge.</dd>
+<dt><code>defaults write TeXShop RefreshTime 2</code></dt>
+<dd>Tant que « Toujours surveiller les modifications du PDF par d’autres apps » est activé dans Réglages › Aperçu, TeXShop vérifie toutes les 2 secondes si un PDF a changé. La valeur par défaut est de 1 seconde et le minimum de 0,5.</dd>
+</dl>
+
+<p>Les réglages présents dans la fenêtre Réglages ne sont pas repris parmi les réglages cachés. Par exemple, le passage au repère suivant ou précédent d’Édition › Repères avec Option ou Contrôle et la touche de déclenchement de la complétion s’active et se désactive avec « Aller au repère suivant ou précédent avec Option ou Contrôle et la touche de déclenchement » dans Réglages › Clavier. Pour trouver un tel réglage, utilisez la recherche dans les réglages ; consultez <a href="basic_preferences.htm#settings-search">Modifier les réglages et rechercher dans les réglages</a>.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>宏</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="宏; 宏菜单; 宏编辑器; 宏快捷键; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm" class="current">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>宏</h1>
+<p>“宏”菜单和工具栏中的“宏”项目包含一些命令，用于将 LaTeX 代码插入源代码或运行 AppleScript 脚本。TeXShop 附带的部分宏如下：</p>
+<ul>
+<li>Program、Encoding 和 Root 写出 <code>% !TEX</code> 行，用于选择文稿的排版引擎、编码和根文件。从 Program 或 Encoding 显示的列表中选择引擎或编码，或在 Root 打开的对话框中选择根文件；这一行会被正确地写到源代码的开头。</li>
+<li>Insert Begin/End 将插入点处的单词或所选单词（例如 <code>theorem</code>）变为一对 <code>\begin{theorem}</code> … <code>\end{theorem}</code>，插入点位于两者之间。</li>
+<li>Headings、Mathematics、Lists、Tables 和 Figures 等子菜单用于插入常用的 LaTeX 代码。</li>
+</ul>
+
+<h2>宏编辑器</h2>
+<p>选取“宏”>“打开宏编辑器...”，即可查看每个宏的定义、更改宏，或添加你自己的宏。左侧的列表就是“宏”菜单：拖移项目即可重新排列，使用列表下方的按钮栏可添加项目、子菜单和分隔线。宏的文本会被插入源代码。在此文本中，圆角标记代表所选文本、剪贴板上的文本和插入点的位置；可以从文本下方的“插入”菜单中选择它们。</p>
+<p>要为宏指定键盘快捷键，请在列表中选择它，点按（或连按）它的快捷键，然后按下按键。快捷键使用 Command 或 Control 键，或者是一个功能键。如果某个菜单命令或其他宏已使用该快捷键，宏编辑器会提示你。</p>
+<p>宏保存在 <code>~/Library/TeXShop/Macros/Macros_Latex.plist</code> 中。要将宏分享给他人，请在宏编辑器中选择它们，然后选取“宏”>“保存选区到文件...”；要从这样的文件中添加宏，请选取“宏”>“从文件添加宏...”。</p>
+<p>“<a href="macros.htm">宏帮助</a>”一章详细介绍了宏，包括 <a href="macros_applescript.htm">AppleScript 宏</a>。</p>
+</main>
+</body>
+</html>

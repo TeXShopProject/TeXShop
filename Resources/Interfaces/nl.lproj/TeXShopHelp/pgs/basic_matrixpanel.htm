@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matrix-venster</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Matrix-venster; matrix; array; tabular; tabel; scheidingstekens; eenheidsmatrix; spreadsheet; matrixpanel_1.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm" class="current">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Matrix-venster</h1>
+<p>Venster › Matrix-venster... opent een paneel dat matrices en tabellen voor u schrijft. Vul de elementen in de tabel ervan in, kies hoe het resultaat eruit moet zien en voeg het bij het invoegpunt in de bron in.</p>
+
+<h2>Een matrix of tabel maken</h2>
+<ol>
+<li>Voer de grootte in bij ‘Rijen’ en ‘Kolommen’, elk tot 999.</li>
+<li>Kies onder ‘Omgeving’ matrix voor een matrix in een formule (een omgeving <code>array</code>) of tabular voor een tabel met tekst. Bij tabular zet ‘In table-omgeving plaatsen’ de tabel in een zwevende <code>table</code> met een bijschrift en een label.</li>
+<li>Kies voor een matrix het linker- en rechterscheidingsteken. De punt laat die kant zonder scheidingsteken, en de laatste knop gebruikt het scheidingsteken dat in het veld ernaast is getypt.</li>
+<li>De twee knoppen met afbeeldingen van een matrix voegen een rand rond de elementen en lijnen ertussen toe.</li>
+<li>Vul de elementen in. ‘Wis’ maakt ze allemaal leeg; ‘Eenheidsmatrix’ en ‘Nulmatrix’ vullen ze met een eenheidsmatrix of met nullen.</li>
+<li>Klik op ‘Voeg in’ of druk op <kbd>⌘Return</kbd>.</li>
+</ol>
+
+<h2>Werken in de tabel</h2>
+<p>De tabel werkt als een spreadsheet. Klik op een cel om die te kiezen, sleep of Shift-klik om er meerdere te kiezen, en typ om de waarde te vervangen; klik dubbel, druk op F2 of druk op Control-U om de waarde te bewerken. Return gaat omlaag, Tab gaat naar rechts en de pijltoetsen gaan alle kanten op; Delete maakt de gekozen cellen leeg. Kopiëren en plakken wisselen cellen uit met spreadsheet-apps. Sleep het nummer van een rij om de rij te verplaatsen. Herstel en Opnieuw werken op de tabel zolang het paneel actief is.</p>
+<p>Als de matrix kleiner wordt gemaakt, houden de cellen erbuiten hun waarden, grijs weergegeven, en komen ze terug als de matrix weer groter wordt gemaakt. Maak het paneel groter om meer van de tabel te zien.</p>
+
+<h2>De ingevoegde code aanpassen</h2>
+<p>De code die het paneel rond de elementen schrijft, staat in <code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code>: het begin en eind van de omgevingen, de scheidingstekens, de scheidingen tussen elementen en tussen rijen, de lijnen van een rand of raster, en de letter <code>c</code> die de uitlijning van elke kolom bepaalt. Verander bijvoorbeeld <code>c</code> in <code>r</code> om de kolommen rechts uit te lijnen. Houd het aantal en de volgorde van de strings in het bestand gelijk, en start TeXShop opnieuw nadat u het hebt gewijzigd. Zie <a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

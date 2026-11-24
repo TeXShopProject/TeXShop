@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ștergerea fișierelor AUX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Șterge fișierele aux; Trash Aux &amp; Compilare; aux; log; fișiere auxiliare; OtherTrashExtensions; AggressiveTrashAUX">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm" class="current">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Ștergerea fișierelor AUX</h1>
+<p>Când LaTeX compilează <code>Galois.tex</code>, scrie fișiere auxiliare precum <code>Galois.aux</code>, <code>Galois.toc</code> și <code>Galois.log</code>, pe care rularea următoare le citește pentru trimiteri, cuprins și altele asemenea. Dacă compilarea este oprită la jumătate, de exemplu după o eroare, aceste fișiere pot rămâne deteriorate, iar rularea următoare raportează erori care nu sunt în sursă, adesea chiar înainte de <code>\begin{document}</code>. Mutarea fișierelor auxiliare în Coș și compilarea din nou rezolvă problema.</p>
+
+<h2>Mutarea fișierelor în Coș</h2>
+<ul>
+<li>Fișier › Șterge fișierele aux (<kbd>⌃⌘A</kbd>) sau butonul „Ștergeți fișierele aux” din consolă mută în Coș fișierele auxiliare ale documentului.</li>
+<li>Compilare › Trash Aux &amp; Compilare (<kbd>⌥⌘T</kbd>) face acest lucru și apoi compilează. În meniul „Compilare”, articolul apare în locul articolului „Compilare” cât timp țineți apăsată tasta Opțiune.</li>
+</ul>
+<p>Sunt mutate în Coș fișierele din dosarul sursei care au numele ei și una dintre aceste extensii:</p>
+<pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
+gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
+lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
+ttt  wrm  xref</pre>
+<p>Sunt mutate în Coș și fișierele pe care SyncTeX le lasă cu <code>(busy)</code> la sfârșitul numelui când compilarea este întreruptă. Fișierul <code>.bbl</code> al BibTeX se păstrează.</p>
+<p>Într-un proiect ale cărui fișiere de capitol indică un fișier principal cu <code>% !TEX root</code>, sunt mutate în Coș fișierele fișierului principal, chiar și când comanda este dată într-un fișier de capitol.</p>
+
+<h2>Variante</h2>
+<ul>
+<li>Țineți apăsată tasta Shift când alegeți „Șterge fișierele aux” sau când faceți clic pe buton pentru a muta în Coș și fișierul PDF al documentului. De obicei PDF-ul vechi se păstrează, pentru ca fereastra de previzualizare să aibă ce afișa când compilarea eșuează.</li>
+<li>Țineți apăsată tasta Opțiune când alegeți „Șterge fișierele aux” sau când faceți clic pe buton pentru a curăța un întreg proiect: orice fișier cu una dintre extensiile de mai sus din dosarul fișierului principal și din toate dosarele de sub el este mutat în Coș, oricare i-ar fi numele. Astfel se elimină și fișierele <code>.aux</code> pe care <code>\include</code> le scrie pentru capitolele din subdosare.</li>
+</ul>
+<p>Două configurări ascunse modifică acest comportament. Pentru a adăuga extensii la listă, de exemplu <code>dvi</code>, tastați în Terminal</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
+<p>iar pentru a reveni la lista standard</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array</pre>
+<p>Pentru ca acțiunea cu tasta Opțiune să devină comportamentul standard al comenzii „Șterge fișierele aux”:</p>
+<pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
+</main>
+</body>
+</html>

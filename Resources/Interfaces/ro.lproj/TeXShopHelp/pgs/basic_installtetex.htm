@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instalarea TeX Live</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="instalarea TeX Live; MacTeX; BasicTeX; /usr/local/texlive; /Library/TeX/texbin; TeX Live Utility; Detectați căile; alte distribuții">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm" class="current">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Instalarea TeX Live</h1>
+
+<p>TeXShop are nevoie de o distribuție TeX. Cea standard este TeX Live, pe care grupurile de utilizatori TeX o realizează în fiecare an pentru macOS, Windows, Linux și alte sisteme. Pe Mac se instalează cu MacTeX, un pachet de instalare realizat de TeX Users Group (TUG):</p>
+
+<p><a href="https://tug.org/mactex/">https://tug.org/mactex/</a></p>
+
+<p>Pagina oferă două pachete. Faceți dublu clic pe cel descărcat și urmați programul de instalare; când acesta se termină, TeX este gata de folosire.</p>
+
+<dl>
+<dt>MacTeX</dt>
+<dd>TeX Live complet, de aproximativ 7 GB, cu Ghostscript, precum și TeXShop și alte aplicații în /Applications/TeX. Aproape orice exemplu dintr-o carte despre TeX sau LaTeX funcționează fără să adăugați nimic. Alegeți acest pachet pentru munca propriu-zisă.</dd>
+<dt>BasicTeX</dt>
+<dd>O mică parte din TeX Live, de aproximativ 140 MB, suficientă pentru a încerca TeX și pentru a compila multe documente LaTeX. Nu instalează TeXShop; consultați <a href="basic_installtexshop.htm">Instalarea TeXShop</a>.</dd>
+</dl>
+
+<h2>Unde se instalează TeX Live</h2>
+
+<p>MacTeX instalează TeX Live în <code>/usr/local/texlive/2026</code>, iar BasicTeX în <code>/usr/local/texlive/2026basic</code>. Cele două pot fi instalate una lângă alta. Un nou TeX Live apare în fiecare an, în jurul lunii aprilie, într-un dosar care poartă numele anului. Pentru a elimina o instalare, trageți dosarul ei în Coș.</p>
+
+<p>Programul de instalare creează și <code>/Library/TeX/texbin</code>, care duce la programele instalării TeX Live în uz și urmează noul TeX Live atunci când acesta este instalat. TeXShop rulează TeX de acolo (Configurări › Compunere › Căi › Motoare TeX), așa că pentru un an nou nu trebuie schimbat nimic. Butonul „Detectați căile…” din același grup caută instalările TeX și Ghostscript de pe Mac și vă permite să alegeți una.</p>
+
+<p>Între versiunile anuale, pachetele din TeX Live primesc actualizări. MacTeX instalează TeX Live Utility în /Applications/TeX pentru a le instala.</p>
+
+<h2>Alte distribuții TeX</h2>
+
+<p>TeXShop funcționează și cu TeX instalat prin MacPorts sau Homebrew, ori cu MiKTeX. Programele acestora se află în alte dosare: folosiți „Detectați căile…” sau introduceți dosarul în Configurări › Compunere › Căi › Motoare TeX. Consultați <a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a>.</p>
+</main>
+</body>
+</html>

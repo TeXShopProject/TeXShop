@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ridefinire le abbreviazioni da tastiera dei menu</title>
+<meta name="description" content="abbreviazioni dei menu; abbreviazioni da tastiera; Impostazioni Tastiera; Cerca per funzione; Cerca per tasto; Ripristina predefinita; abbreviazioni delle macro; KeyEquivalents.plist; Scorciatoie app">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Come configuro TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminari</a></li>
+<li><a href="configure_prefchanges.htm">Modifiche consigliate alle impostazioni</a></li>
+<li><a href="configure_correctinstall.htm">Ottenere i nuovi elementi della libreria</a></li>
+<li><a href="configure_hidden.htm">Impostazioni nascoste</a></li>
+<li><a href="configure_panel.htm">Modificare il Pannello LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificare le associazioni dei tasti</a></li>
+<li><a href="configure_menushortcuts.htm" class="current">Ridefinire le abbreviazioni da tastiera dei menu</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Ridefinire le abbreviazioni da tastiera dei menu</h1>
+<p>A qualsiasi comando di menu di TeXShop puoi assegnare un’abbreviazione a tua scelta, oppure togliere quella che ha, in Impostazioni › Tastiera. Le abbreviazioni delle macro si impostano nell’Editor delle macro.</p>
+
+<h2 id="settings">Cambiare un’abbreviazione di menu</h2>
+<p>Scegli TeXShop › Impostazioni… e seleziona Tastiera. Il gruppo Abbreviazioni dei menu elenca i comandi di menu con le loro abbreviazioni. Seleziona un comando e fai clic sulla sua abbreviazione (oppure fai doppio clic sul comando o premi A capo), poi premi la nuova abbreviazione. Esc o A capo mantiene quella precedente, e Tab passa oltre. Un’abbreviazione deve usare il tasto Comando o Controllo, oppure essere uno dei tasti funzione F1–F20. Se un altro comando usa già l’abbreviazione, TeXShop lo segnala sotto l’elenco e non cambia nulla; premi un’altra abbreviazione. Per togliere un’abbreviazione, fai clic su «Rimuovi abbreviazione» (⊖) nel campo o premi Elimina.</p>
+<p>Le modifiche hanno effetto subito e vengono mantenute al riavvio di TeXShop. La riga sotto l’elenco mostra l’abbreviazione predefinita del comando selezionato. «Ripristina predefinita» restituisce al comando selezionato la sua abbreviazione predefinita, e «Ripristina tutte…» lo fa per tutti i comandi. Se un altro comando usa ora l’abbreviazione predefinita, «Ripristina predefinita» non la ripristina; cambia prima l’altro comando.</p>
+<p>Quando «Attiva salvataggio automatico e versioni» è attivo in Impostazioni › Documenti e salvataggio, macOS aggiunge Duplica e Chiudi tutto al menu File; le loro abbreviazioni si possono cambiare come quelle degli altri comandi. Salva col nome… mantiene allora l’abbreviazione che gli assegna macOS ed è disattivato nell’elenco; con il salvataggio automatico disattivato, si può cambiare anche questa.</p>
+
+<h2 id="search">Trovare un comando o un tasto</h2>
+<p>«Cerca per funzione» trova un comando dal nome o dal percorso nel menu. «Cerca per tasto» trova che cosa fa un tasto: premi un’abbreviazione, e l’elenco mostra i comandi di menu e le macro che la usano, quale è in vigore e perché gli altri sono inattivi. Facendo clic su un risultato la registrazione resta attiva; premendo solo Esc, facendo di nuovo clic sulla modalità di ricerca, scegliendo un’altra categoria, passando a un’altra finestra o chiudendo Impostazioni la registrazione termina. Per una macro, scegli «Mostra nell’editor di macro» per modificarla. Un comando di menu trovato con la ricerca nelle impostazioni apre Tastiera con il comando in «Cerca per funzione»; consulta <a href="basic_preferences.htm#settings-search">Usare le impostazioni e la ricerca nelle impostazioni</a>.</p>
+
+<h2 id="macros">Abbreviazioni delle macro</h2>
+<p>Le abbreviazioni delle macro si impostano nell’elenco dell’Editor delle macro, come descritto in <a href="macros_define.htm">Definire nuove macro</a>. A parità di tasto e modificatori, un comando di menu ha la precedenza su una macro e, tra le macro, l’abbreviazione va alla prima che usa il tasto. Assegnare a un comando di menu un’abbreviazione usata da una macro richiede una conferma; la macro resta nel menu Macro, ma la sua abbreviazione diventa inattiva. L’Editor delle macro contrassegna le abbreviazioni inattive e mostra quale comando usa il tasto. Quando salvi macro le cui nuove abbreviazioni sono usate da comandi di menu, l’Editor delle macro ti permette di tornare alla modifica, di salvare con quelle abbreviazioni inattive oppure di rimuoverle e salvare.</p>
+<p>Nella finestra di anteprima, Comando-F e Comando-G seguono Trova e Trova successivo, comprese le abbreviazioni che assegni loro. Le associazioni dei tasti, che inseriscono un testo quando si digita un singolo carattere, si impostano in «Elenco delle associazioni dei tasti» di Impostazioni › Tastiera; consulta <a href="configure_autocompletion.htm">Modificare le associazioni dei tasti</a>.</p>
+
+<h2 id="legacy">Metodi precedenti</h2>
+<p>Funzionano ancora altri due modi per impostare le abbreviazioni. Impostazioni › Tastiera è più semplice ed è consigliato.</p>
+<h3 id="keyequivalents">KeyEquivalents.plist</h3>
+<p>TeXShop legge il file ~/Library/TeXShop/Menus/KeyEquivalents.plist all’avvio. Le abbreviazioni impostate lì diventano le abbreviazioni predefinite in Impostazioni › Tastiera, quindi «Ripristina predefinita» torna a quelle. I commenti all’inizio del file ne spiegano il formato; modificalo con TeXShop, salvalo in UTF-8 e avvia di nuovo TeXShop.</p>
+<h3 id="app-shortcuts">Scorciatoie app di macOS</h3>
+<p>In Impostazioni di Sistema di macOS, Tastiera › Scorciatoie da tastiera… › Scorciatoie app può assegnare un’abbreviazione a un comando di menu di TeXShop tramite il suo titolo esatto, nella lingua dei tuoi menu. Un’abbreviazione di questo tipo smette di funzionare quando TeXShop rinomina il comando di menu, quindi imposta piuttosto le abbreviazioni in Impostazioni › Tastiera.</p>
+</main>
+</body>
+</html>

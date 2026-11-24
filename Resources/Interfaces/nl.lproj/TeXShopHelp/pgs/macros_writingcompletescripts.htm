@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scripts schrijven met zetcommando’s van TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; reeks zetcommando’s">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hulp bij macro’s</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Inleiding</a></li>
+<li><a href="macros_default.htm">De standaardmacro’s</a></li>
+<li><a href="macros_rearrange.htm">Het menu Macro's herschikken</a></li>
+<li><a href="macros_define.htm">Nieuwe macro’s definiëren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-macro’s</a></li>
+<li><a href="macros_includedscripts.htm">Standaard-AppleScript-macro’s</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a></li>
+<li><a href="macros_dialogs.htm">Dialoogvensters maken</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">Scripts schrijven met zetcommando’s van TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Scripts schrijven met zetcommando’s van TeXShop</h1>
+<p>Een document met een literatuurlijst heeft een reeks zetrondes nodig: LaTeX schrijft het .aux-bestand, BibTeX gebruikt dat om de .bbl- en .blg-bestanden te schrijven, LaTeX wordt opnieuw uitgevoerd om de literatuurlijst aan het document toe te voegen, en nog een keer om de verwijzingen ernaar bij te werken. Uw projecten hebben misschien vergelijkbare reeksen nodig, en een AppleScript-macro kan ze voor u uitvoeren.</p>
+<p>De macro Macro's › Applescript › Bibliography, die bij TeXShop wordt geleverd, laat zien hoe dat gaat. Dit is de inhoud ervan:</p>
+<pre>--Applescript
+
+set fileName to #FILEPATH#
+if fileName is equal to  ""
+activate
+display dialog "Please save the file first"  buttons {"OK"} default button "OK"
+return
+end if
+
+set frontName to #DOCUMENTNAME#
+
+tell document frontName of application "TeXShop"
+
+    latexinteractive
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    bibtex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+end tell</pre>
+<p>De eerste regel maakt hiervan een AppleScript-macro die door ScriptRunner wordt uitgevoerd, zodat hij TeXShop kan vragen te zetten (zie <a href="macros_applescript.htm">AppleScript-macro’s</a>). De volgende regels controleren #FILEPATH#, het volledige pad van het bronbestand. Dat is een lege tekenreeks als het document nog niet is bewaard; in dat geval vraagt het script u het te bewaren en stopt het.</p>
+<p>Daarna verwijst het script naar het document met #DOCUMENTNAME#. TeXShop bewaart het document zelf wanneer een zetcommando begint, zodat het script het niet hoeft te bewaren.</p>
+<p>De overige commando’s voeren latexinteractive, bibtex, latex en latex uit. Een zetcommando keert meteen naar het script terug, voordat het zetten klaar is; daarom wacht na elk commando een <code>repeat</code>-lus totdat <code>taskdone</code> meldt dat de taak klaar is. De regel <code>delay 2</code> laat het script tussen de controles even pauzeren, in plaats van voortdurend te vragen en de computer te vertragen. De commando’s staan in <a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a>.</p>
+</main>
+</body>
+</html>

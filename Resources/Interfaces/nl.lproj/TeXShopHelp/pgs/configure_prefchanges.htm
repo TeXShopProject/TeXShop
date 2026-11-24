@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aanbevolen wijzigingen in de instellingen</title>
+<meta name="description" content="aanbevolen instellingen; engineprofiel; latexmk; Direct PDF; Via DVI; zetcommando’s; zoekinterface; geavanceerd zoekpaneel; automatisch bewaren; vensterposities">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hoe configureer ik TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Inleiding</a></li>
+<li><a href="configure_prefchanges.htm" class="current">Aanbevolen wijzigingen in de instellingen</a></li>
+<li><a href="configure_correctinstall.htm">Nieuwe bestanden in de bibliotheek krijgen</a></li>
+<li><a href="configure_hidden.htm">Verborgen instellingen</a></li>
+<li><a href="configure_panel.htm">Het LaTeX-venster aanpassen</a></li>
+<li><a href="configure_autocompletion.htm">Toetsbindingen aanpassen</a></li>
+<li><a href="configure_menushortcuts.htm">Toetscombinaties van menu’s wijzigen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Aanbevolen wijzigingen in de instellingen</h1>
+<p>TeXShop werkt met de standaardinstellingen, maar enkele daarvan hangen af van uw TeX-installatie, uw scherm en uw gewoonten. Die zijn het waard om eerst te controleren. Kies TeXShop › Instellingen… om het venster Instellingen te openen; <a href="basic_preferences.htm#settings-search">Instellingen en ‘Zoek in instellingen’ gebruiken</a> legt uit hoe u een instelling vindt.</p>
+
+<h2 id="engine-profile">Kies een engineprofiel</h2>
+<p>Instellingen › Zetten › ‘Engineprofiel’ stelt het zetten in één stap in. Kies het profiel van de engine die u gebruikt; de minder gebruikelijke staan onder ‘Overige’. Een venster toont de waarden die het profiel instelt en markeert de waarden die veranderen. Zet elke waarde uit die u wilt behouden en klik daarna op ‘OK’; ‘Annuleer’ wijzigt niets.</p>
+<p>Kies ‘Met latexmk’ om latexmk zo nodig BibTeX, het indexprogramma en extra rondes te laten uitvoeren; anders voert elke keer zetten de engine één keer uit. Een profiel stelt de zetmethode en de bijbehorende zetcommando’s in, het kpsewhich-commando, de BibTeX-engine, het indexprogramma, MetaPost en ‘Omzetten naar \UTF / \CID van het otf-pakket’. De Japanse profielen stellen ook UTF-8 in als codering voor nieuwe documenten, en het woordenboek en de omzetting van UTF-8-MAC. Alle andere instellingen blijven zoals ze zijn. Wanneer u later een van deze instellingen wijzigt, toont het menu ‘Aangepast’; kies het profiel opnieuw om terug te gaan naar de waarden ervan.</p>
+<p>De paden naar TeX en Ghostscript worden apart ingesteld, met ‘Paden detecteren…’ in de groep ‘Paden’ van dezelfde categorie. Wanneer TeXShop voor het eerst start, vraagt het naar de paden en daarna naar een engineprofiel.</p>
+
+<h3 id="commands">Zetcommando’s</h3>
+<p>De commando’s die een profiel instelt, staan in de groepen ‘Direct PDF’ en ‘Via DVI’ van Instellingen › Zetten, elk met een commando voor plain TeX en een voor LaTeX, en ‘Zetmethode’ kiest welke groep wordt gebruikt. Zet › Direct PDF en Zet › Via DVI wisselen de methode alleen voor het actieve document. De standaardcommando’s bevatten al <code>-file-line-error</code>, waarmee TeXShop u naar de regel van een fout kan brengen, en <code>-synctex=1</code>, waardoor synchronisatie tussen bron en voorvertoning werkt; de meeste mensen hoeven ze daarom nooit te bewerken. Als een document <code>-shell-escape</code> nodig heeft, lees dan eerst <a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a>.</p>
+
+<h2 id="find">Kies de zoekinterface</h2>
+<p>Instellingen › Editor › Zoeken › ‘Zoekinterface’ kiest het venster of de balk die Zoek opent. ‘Geavanceerd zoekpaneel (aanbevolen)’ zoekt met reguliere expressies, toont alle overeenkomsten en vervangt meerdere paren tekenreeksen tegelijk; zie <a href="basic_find.htm">Zoeken en vervangen</a>. ‘Apple zoekpaneel’ en ‘Apple-zoekbalk’ zijn de standaardzoekfunctie van macOS, en ‘OgreKit zoekpaneel (verouderd)’ blijft beschikbaar. Een nieuwe keuze werkt meteen, behalve een overstap naar of van het OgreKit-zoekpaneel, die pas werkt nadat TeXShop opnieuw is gestart. Zet ‘Houd het geavanceerde zoekpaneel op de voorgrond’ aan als het paneel vóór de documentvensters moet blijven.</p>
+
+<h2 id="autosave">Laat automatisch bewaren aan</h2>
+<p>‘Automatisch bewaren en versies inschakelen’ in Instellingen › Documenten en bewaren staat standaard aan, en het wordt aanbevolen het zo te laten. macOS bewaart uw documenten dan terwijl u werkt, en Archief › Vorige versie › Blader door alle versies… haalt eerdere versies terug. Als u het uitzet, verandert het bestand alleen wanneer u het bewaart; “Vorig bestand bewaren als ‘naam~’” bewaart dan de vorige versie ernaast. Een wijziging van deze instelling werkt pas nadat TeXShop opnieuw is gestart.</p>
+
+<h2 id="window-positions">Leg de vensterposities vast</h2>
+<p>Standaard opent elk venster op de plaats waar het stond toen het voor het laatst werd gesloten. Als u meestal aan één document tegelijk werkt, kunt u de vensters beter op een vaste plaats laten openen. Zet een kort document en schik het bronvenster en het voorvertoningsvenster, naast elkaar als het scherm breed genoeg is. Kies daarna in Instellingen › Algemeen › Vensterposities bij ‘Brontekst’ ‘Alle vensters starten op vaste plaats’ en bij ‘Voorvertoning’ ‘Alle vensters op vaste positie openen’, en klik in elke rij op ‘Huidige positie gebruiken’. De rijen ‘Console’ en ‘HTML’ werken op dezelfde manier.</p>
+<p>De menucommando’s Bron › Bewaar positie in bron en Pagina › Bewaar positie voorvertoning doen hetzelfde vanuit de vensters zelf. Als u een draagbare Mac met een groot beeldscherm gebruikt, schikt u de vensters voor het ingebouwde scherm en kiest u ook Bron › Bewaar bronpositie voor laptop en Pagina › Save Portable Preview Position; TeXShop gebruikt die posities dan wanneer het grote beeldscherm niet is aangesloten.</p>
+
+<h2 id="fonts-colors">Lettertypen en kleuren</h2>
+<p>Het lettertype van het bronvenster stelt u in bij Instellingen › Editor › ‘Documentlettertype’, en het lettertype van de console bij Instellingen › Console. Instellingen › Thema’s kiest en bewerkt de kleurthema’s van het bronvenster, het voorvertoningsvenster en de console; zie <a href="advanced_syntaxcolor.htm">Syntaxmarkering</a>.</p>
+</main>
+</body>
+</html>

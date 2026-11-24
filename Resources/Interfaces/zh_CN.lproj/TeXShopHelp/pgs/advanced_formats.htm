@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>制作和使用 TeX 格式</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="格式；fmt 文件；initex；-ini；-fmt；dump；引擎文件；导言区">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm" class="current">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>制作和使用 TeX 格式</h1>
+<p>格式文件（扩展名为 <code>.fmt</code>）是 TeX 读取一组宏之后的快照。LaTeX 本身就是一种格式：TeX 能瞬间载入它，而不必每次都读取 LaTeX 的源文件。你可以用较长的导言区制作自己的格式，使排版更快开始，也可以使用某个项目或机构提供的格式。</p>
+<p>格式只能用于制作它的引擎和 TeX Live 版本。用 TeX Live 2026 的 pdfLaTeX 制作的格式，不能用于 XeLaTeX，也不能用于其他年份的 TeX Live；安装新的 TeX Live 后，请重新制作格式。</p>
+
+<h2>制作格式</h2>
+<p>把格式应包含的各行放进一个文件，并以 <code>\dump</code> 结尾。例如 <code>uo.tex</code>：</p>
+<pre>\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\dump</pre>
+<p>在终端中切换到该文件所在的文件夹，然后键入</p>
+<pre>pdflatex -ini -jobname=uo "&amp;pdflatex" uo.tex</pre>
+<p>这会载入 LaTeX 格式，读取 <code>uo.tex</code>，并写出 <code>uo.fmt</code>。用这个格式排版的文稿要省略格式中已有的各行，直接以 <code>\begin{document}</code> 开头。</p>
+
+<h2>在 TeXShop 中使用格式</h2>
+<ol>
+<li>把 <code>uo.fmt</code> 移到文件夹 <code>~/Library/texmf/web2c</code> 中（如有必要，请创建这些文件夹），这样 TeX 在任何文件夹中都能找到它。</li>
+<li>在访达中打开 <code>~/Library/TeXShop/Engines</code>（“TeXShop”>“打开 ~/Library/TeXShop”），复制一个引擎（例如 <code>XeLaTeX.engine</code>），并给副本重新命名，例如 <code>Oregon.engine</code>。这个名称会显示在 TeXShop 中，不必与格式的名称一致。</li>
+<li>在 TeXShop 中打开该副本，修改最后一行，使引擎内容如下：
+<pre>#!/bin/tcsh
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
+</ol>
+<p>此后打开的文稿会在“排版”按钮旁边的弹出式菜单中列出 Oregon。无论那里选择的是什么，要让某个文稿使用该格式，请在源文件开头加入这一行：</p>
+<pre>% !TEX program = Oregon</pre>
+<p>要将它设为默认，请在“设置”>“排版”>“引擎”>“新文稿的排版”中选择“引擎文件”，并在“引擎文件”菜单中选择 Oregon。请参阅<a href="advanced_addengine.htm">添加排版引擎</a>。</p>
+<p>对于 plain TeX 格式，请在引擎中使用 <code>pdftex</code> 而不是 <code>pdflatex</code>。对于以经由 DVI 方式使用的格式，引擎还必须把 DVI 文件转换为 PDF，例如在 zsh 脚本中使用 <code>dvipdfmx "${1:r}.dvi"</code>，因为 TeXShop 显示的是与源文件同名的 PDF 文件。</p>
+</main>
+</body>
+</html>

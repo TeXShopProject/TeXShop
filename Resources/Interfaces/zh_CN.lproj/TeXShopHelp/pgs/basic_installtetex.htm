@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安装 TeX Live</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="安装 TeX Live; MacTeX; BasicTeX; /usr/local/texlive; /Library/TeX/texbin; TeX Live Utility; 自动检测路径; 其他发行版">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm" class="current">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>安装 TeX Live</h1>
+
+<p>TeXShop 需要一个 TeX 发行版。标准的发行版是 TeX Live，由各地的 TeX 用户组每年为 macOS、Windows、Linux 及其他系统制作。在 Mac 上，使用 MacTeX 安装 TeX Live。MacTeX 是 TeX 用户组（TUG）制作的安装器软件包：</p>
+
+<p><a href="https://tug.org/mactex/">https://tug.org/mactex/</a></p>
+
+<p>该页面提供两个软件包。连按下载的软件包并按照安装器的提示操作；安装结束后，TeX 即可使用。</p>
+
+<dl>
+<dt>MacTeX</dt>
+<dd>完整的 TeX Live，约 7 GB，附带 Ghostscript，并将 TeXShop 和其他应用安装到 /Applications/TeX 中。几乎所有 TeX 或 LaTeX 书籍中的示例无需添加任何东西即可使用。实际工作请选择此软件包。</dd>
+<dt>BasicTeX</dt>
+<dd>TeX Live 的一小部分，约 140 MB，足以试用 TeX 并排版许多 LaTeX 文稿。它不会安装 TeXShop；请参阅“<a href="basic_installtexshop.htm">安装 TeXShop</a>”。</dd>
+</dl>
+
+<h2>TeX Live 的安装位置</h2>
+
+<p>MacTeX 将 TeX Live 安装在 <code>/usr/local/texlive/2026</code> 中，BasicTeX 则安装在 <code>/usr/local/texlive/2026basic</code> 中。两者可以并存。每年 4 月前后会发布新的 TeX Live，安装在以年份命名的文件夹中。要移除某个安装，将其文件夹拖到废纸篓即可。</p>
+
+<p>安装器还会创建 <code>/Library/TeX/texbin</code>，它指向当前使用的 TeX Live 中的程序，并在安装新的 TeX Live 时随之切换。TeXShop 从这里运行 TeX（“设置”>“排版”>“路径”>“TeX引擎”），因此新的年度版本无需更改任何设置。同一组中的“自动检测路径…”会查找 Mac 上安装的 TeX 和 Ghostscript，并让你从中选择一个。</p>
+
+<p>在两次年度发布之间，TeX Live 中的宏包会不断更新。MacTeX 会在 /Applications/TeX 中安装 TeX Live Utility，用于安装这些更新。</p>
+
+<h2>其他 TeX 发行版</h2>
+
+<p>TeXShop 也可以使用 MacPorts 或 Homebrew 安装的 TeX，或者 MiKTeX。它们的程序位于其他文件夹中：请使用“自动检测路径…”，或在“设置”>“排版”>“路径”>“TeX引擎”中输入文件夹。请参阅“<a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a>”。</p>
+</main>
+</body>
+</html>

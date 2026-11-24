@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>了解默认宏</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="默认宏；Insert Begin/End；#SEL#；#INS#；#PASTE#；标记；放置光标；文本宏">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">宏帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">预备知识</a></li>
+<li><a href="macros_default.htm" class="current">了解默认宏</a></li>
+<li><a href="macros_rearrange.htm">重新排列“宏”菜单</a></li>
+<li><a href="macros_define.htm">定义新宏</a></li>
+<li><a href="macros_applescript.htm">AppleScript 宏</a></li>
+<li><a href="macros_includedscripts.htm">默认 AppleScript 宏</a></li>
+<li><a href="macros_defapplescript.htm">定义 AppleScript 宏</a></li>
+<li><a href="macros_dialogs.htm">创建对话框</a></li>
+<li><a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a></li>
+<li><a href="macros_writingcommandscripts.htm">用 Shell 命令编写脚本</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>了解默认宏</h1>
+<p>了解默认宏的最好方法，是在宏编辑器（“宏”>“打开宏编辑器...”）中查看它们：在列表中选择一个宏，它的内容就会显示在旁边。</p>
+<p>例如，假设你需要一个 theorem 环境。键入单词 theorem，选择它，然后选取“宏”>“Insert Begin/End”。这个单词会被替换为</p>
+<pre>\begin{theorem}
+
+\end{theorem}</pre>
+<p>并且插入点会放在中间的那一行。</p>
+<p>Insert Begin/End 是一个 AppleScript 宏（请参阅 <a href="macros_applescript.htm">AppleScript 宏</a>）。在选择了单词时执行同样操作的文本宏如下：</p>
+<pre>\begin{#SEL#}
+#INS#
+\end{#SEL#}</pre>
+
+<h2 id="placeholders">文本宏中的占位符</h2>
+<p>文本宏的文本会插入源文件，并进行以下替换：</p>
+<dl>
+<dt>#SEL#</dt><dd>替换为选取该宏时所选的文本；如果没有选择文本，则替换为空。</dd>
+<dt>#INS#</dt><dd>标出插入点所在的位置。没有它时，插入点会放在插入的文本末尾。</dd>
+<dt>#PASTE#</dt><dd>替换为剪贴板上的文本；如果剪贴板中没有文本，则替换为空。</dd>
+<dt>•</dt><dd>是一个标记，可用“编辑”>“标记”移到这里。</dd>
+</dl>
+<p>在宏编辑器中，这些占位符显示为圆角标记；<a href="macros_define.htm">定义新宏</a>说明了如何插入它们。了解这些之后，默认宏就很容易理解和更改了。</p>
+</main>
+</body>
+</html>

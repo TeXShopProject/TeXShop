@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>矩阵面板</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="矩阵面板; 矩阵; array; tabular; 表格; 定界符; 单位矩阵; 电子表格; matrixpanel_1.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm" class="current">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>矩阵面板</h1>
+<p>“窗口”>“矩阵面板...”会打开一个为你编写矩阵和表格的面板。在其表格中填写各项，选择结果的样式，然后将其插入源代码的插入点处。</p>
+
+<h2>制作矩阵或表格</h2>
+<ol>
+<li>在“行”和“列”中输入大小，各自最多 999。</li>
+<li>在“环境”下，选择 matrix 以在公式中制作矩阵（<code>array</code> 环境），或选择 tabular 以制作文本表格。选择 tabular 时，“嵌入table环境”会将表格放入带标题和标签的 <code>table</code> 浮动体中。</li>
+<li>对于矩阵，请选择左右定界符。句点表示该侧不加定界符，最后一个按钮使用在其旁边的栏中键入的定界符。</li>
+<li>两个带有矩阵图样的按钮用于在各项周围加边框，以及在各项之间加线。</li>
+<li>填写各项。“清除”会清空所有项；“单位矩阵”和“零矩阵”会以单位矩阵或零填充各项。</li>
+<li>点按“插入”或按下 <kbd>⌘Return</kbd>。</li>
+</ol>
+
+<h2>在表格中操作</h2>
+<p>表格的用法与电子表格相同。点按单元格即可选择它，拖移或按住 Shift 键点按可选择多个单元格，键入即可替换其值；连按、按 F2 或按 Control-U 可编辑单元格。Return 键向下移动，Tab 键向右移动，方向键可向任意方向移动；Delete 键清空所选的单元格。“拷贝”和“粘贴”可与电子表格应用交换单元格。拖移行号即可移动该行。面板处于活跃状态时，“撤销”和“重做”作用于表格。</p>
+<p>缩小矩阵时，矩阵之外的单元格会保留其值并显示为灰色，再次放大矩阵时会恢复。放大面板即可看到更多的表格内容。</p>
+
+<h2>自定插入的代码</h2>
+<p>面板在各项周围写出的代码保存在 <code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code> 中：环境的开头和结尾、定界符、各项之间和各行之间的分隔符、边框或网格的线，以及设定各列对齐方式的字母 <code>c</code>。例如，将 <code>c</code> 改为 <code>r</code> 即可使各列右对齐。请保持文件中字符串的数量和顺序不变，更改后重新启动 TeXShop。请参阅“<a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a>”。</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zoeken in TeX-bronnen</title>
+<meta name="copyright" content="Copyright (c) 2026 under the GNU FDL">
+<meta name="description" content="zoeken en vervangen in alle bestanden met hetzelfde hoofdbestand; zoeken en vervangen in alle bestanden van een opgesplitst document; TEX root; Zoek in TeX-bronnen; Vervang alles; reservekopieën">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm" class="current">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Zoeken in TeX-bronnen</h1>
+
+<p><a name="texroot_search"></a>In een document dat is opgesplitst in een hoofdbestand en hoofdstukbestanden, kunt u in één keer in alle bestanden zoeken en vervangen. Kies, met een van de bestanden vooraan, Wijzig › Zoek › Zoek in TeX-bronnen met dezelfde TEX root…; als het hoofdbestand zelf vooraan staat, heet het onderdeel ‘Zoek in TeX-bronnen met dit bestand als TEX root…’. Hetzelfde onderdeel staat in het menu van ‘Zoek alles’ in het geavanceerde zoekpaneel, en ‘Pas toe op TeX-bronnen met dezelfde TEX root…’ in het menu van ‘Vervang alles’ in het venster Meervoudige vervanging opent het venster met de set die daar is gekozen; voor het hoofdbestand zelf is dat ‘Pas toe op TeX-bronnen met dit bestand als TEX root…’. De onderdelen zijn grijs voor een naamloos document en voor een bestand waarvan de naam niet op .tex (in kleine letters) eindigt, en het onderdeel ‘Pas toe op’ ook als er in het venster Meervoudige vervanging geen set is gekozen.</p>
+
+<h2>Welke bestanden worden doorzocht</h2>
+
+<p>Het venster doorzoekt het hoofdbestand en de .tex-bestanden in de map ervan en de mappen daaronder die het in een regel <code>% !TEX root</code> in hun eerste 20 regels noemen; zie <a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a>. Als de verborgen instelling <code>UseOldHeadingCommands</code> aan staat, worden ook bestanden doorzocht die het in een oude regel <code>%SourceDoc</code> noemen. De regel onder de modi zegt welk hoofdbestand wordt doorzocht, en de knop ? ervan herhaalt deze regel. Bestanden die in <code>\input</code> of <code>\include</code> worden genoemd, worden niet gevolgd, en een hoofdbestand dat in een .texshop-bestand wordt genoemd, wordt niet gebruikt. Symbolische links naar bestanden, mappen die via symbolische links of aliassen worden bereikt en de map TeXShop Backups worden overgeslagen.</p>
+
+<p>De lijst links toont de bestanden; schakel daar een bestand of map uit om die over te slaan. Als sommige bestanden of mappen niet konden worden gelezen, toont de knop ‘Niet gelezen bestanden’ onderaan ze met de reden.</p>
+
+<h2>Zoeken en vervangen</h2>
+
+<p>De zoek- en vervangvelden en de opties zijn die van het <a href="basic_find.htm">geavanceerde zoekpaneel</a>. Kies een modus:</p>
+<ul>
+<li>‘Zoek’ toont elke overeenkomst met het regelnummer.</li>
+<li>‘Vervang’ toont elke regel vóór en na de vervanging. Elke overeenkomst heeft een aankruisvak; een overeenkomst die is uitgeschakeld, wordt niet vervangen.</li>
+<li>‘Meervoudige vervanging’ past een set van het venster Meervoudige vervanging toe en toont de groepen gewijzigde regels, elk met één aankruisvak. ‘Wijzig…’ opent de set in dat venster.</li>
+</ul>
+
+<p>Klik op een rij om de overeenkomst in het document te tonen; klik er dubbel op om dat venster naar voren te halen. De lijst volgt uw wijzigingen, en de knop ↻ (<kbd>⌘R</kbd>) verzamelt de bestanden opnieuw. De stopknop, de Escape-toets of <kbd>⌘.</kbd> stopt een lange zoekopdracht.</p>
+
+<p>Een geopend document wordt doorzocht zoals het op het scherm staat, met de wijzigingen die nog niet zijn bewaard; een bestand dat niet open is, wordt gelezen in de codering waarin TeXShop het zou openen. In sommige bestanden kan alleen worden gezocht, niet vervangen, bijvoorbeeld in een bestand waarnaar niet kan worden geschreven of dat in zijn codering niet ongewijzigd kan worden teruggeschreven. Ze zijn gemarkeerd met ⊘, en het teken geeft de reden.</p>
+
+<h2>Vervang alles</h2>
+
+<p>‘Vervang alles’ vraagt om bevestiging voordat het vervangt. Als een bestand intussen is gewijzigd, wordt er niets vervangen en wordt de lijst opnieuw gemaakt. Met ‘Bewaar reservekopieën’ aan wordt elk bestand dat wordt gewijzigd eerst gekopieerd naar de map TeXShop Backups naast het hoofdbestand, in een map die naar de datum en het tijdstip is genoemd.</p>
+
+<p>Bestanden die niet open zijn, worden daarna direct geschreven, in hun eigen codering en met hun eigen regeleinden en rechten; dit kan niet ongedaan worden gemaakt. Geopende documenten worden op het scherm gewijzigd en niet bewaard, en één keer ‘Herstel’ in een document maakt de vervangingen daarin ongedaan. Als u ‘Vervang alles’ stopt, blijven de bestanden die al klaar zijn vervangen en blijven de andere ongewijzigd. Daarna worden de bestanden opnieuw doorzocht, en de regel onderaan zegt hoeveel overeenkomsten er zijn vervangen. Als sommige bestanden niet konden worden gewijzigd, toont een venster ze met de reden, en ‘Toon in Finder’ opent de map met de reservekopie.</p>
+
+<p>Voer ‘Vervang alles’ niet uit terwijl een andere app deze bestanden blijft schrijven.</p>
+</main>
+</body>
+</html>

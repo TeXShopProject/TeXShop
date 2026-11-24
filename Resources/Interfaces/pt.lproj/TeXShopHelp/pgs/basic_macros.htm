@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macros</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macros; menu Macros; editor de macros; atalho de macro; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composição</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Buscar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matriz</a></li>
+<li><a href="basic_macros.htm" class="current">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar os ajustes</a></li>
+<li><a href="basic_templates.htm">Modelos e documentos-modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e abas</a></li>
+<li><a href="basic_bugs.htm">Enviar relatórios de erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Macros</h1>
+<p>O menu Macros, e o item Macros da barra de ferramentas, contêm comandos que inserem código LaTeX no código-fonte ou executam scripts AppleScript. Algumas das macros que acompanham o TeXShop:</p>
+<ul>
+<li>Program, Encoding e Root escrevem as linhas <code>% !TEX</code> que escolhem o motor de composição, a codificação e o arquivo principal de um documento. Escolha o motor ou a codificação na lista que Program ou Encoding mostra, ou o arquivo principal no diálogo que Root abre; a linha é escrita corretamente no início do código-fonte.</li>
+<li>Insert Begin/End transforma a palavra no ponto de inserção ou a palavra selecionada, como <code>theorem</code>, em um par <code>\begin{theorem}</code> … <code>\end{theorem}</code>, com o ponto de inserção entre eles.</li>
+<li>Submenus como Headings, Mathematics, Lists, Tables e Figures inserem código LaTeX comum.</li>
+</ul>
+
+<h2>O editor de macros</h2>
+<p>Escolha Macros › Abrir editor de macros... para ver como cada macro está definida, alterá-la ou acrescentar macros suas. A lista à esquerda é o menu Macros: arraste os itens para reorganizá-los e use a barra abaixo da lista para acrescentar itens, submenus e separadores. O texto de uma macro é inserido no código-fonte. Nesse texto, fichas arredondadas representam o texto selecionado, o texto da área de transferência e o lugar do ponto de inserção; escolha-as no menu Inserir, abaixo do texto.</p>
+<p>Para dar um atalho de teclado a uma macro, selecione-a na lista, clique no atalho dela (ou clique duas vezes nele) e pressione as teclas. Um atalho usa a tecla Command ou Control, ou é uma tecla de função. Se um comando de menu ou outra macro já o usa, o editor de macros avisa.</p>
+<p>As macros ficam guardadas em <code>~/Library/TeXShop/Macros/Macros_Latex.plist</code>. Para passar macros a outras pessoas, selecione-as no editor de macros e escolha Macros › Salvar seleção em um arquivo...; para acrescentar macros de um arquivo assim, escolha Macros › Adicionar macros de um arquivo....</p>
+<p>O capítulo <a href="macros.htm">Ajuda para macros</a> explica as macros em detalhe, incluindo as <a href="macros_applescript.htm">macros AppleScript</a>.</p>
+</main>
+</body>
+</html>

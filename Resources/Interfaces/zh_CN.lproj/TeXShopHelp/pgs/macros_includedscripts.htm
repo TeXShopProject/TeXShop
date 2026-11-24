@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>默认 AppleScript 宏</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript 宏；Column macros；Insert reference；Open quickly；Paste Spreadsheet Cells；Convert to Unix；换行符；Bibliography；Claus Gerhardt Macros；htlatexc；pdfselectc；mpostc">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">宏帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">预备知识</a></li>
+<li><a href="macros_default.htm">了解默认宏</a></li>
+<li><a href="macros_rearrange.htm">重新排列“宏”菜单</a></li>
+<li><a href="macros_define.htm">定义新宏</a></li>
+<li><a href="macros_applescript.htm">AppleScript 宏</a></li>
+<li><a href="macros_includedscripts.htm" class="current">默认 AppleScript 宏</a></li>
+<li><a href="macros_defapplescript.htm">定义 AppleScript 宏</a></li>
+<li><a href="macros_dialogs.htm">创建对话框</a></li>
+<li><a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a></li>
+<li><a href="macros_writingcommandscripts.htm">用 Shell 命令编写脚本</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>默认 AppleScript 宏</h1>
+<p>TeXShop 附带一组由 Will Robertson、Claus Gerhardt 等人编写的 AppleScript 宏。其中一些会依次运行一系列排版命令。通过拷贝和修改它们，你可以为自己的工作编写脚本。本页按它们在“宏”菜单中的名称介绍其中的一部分。</p>
+
+<h2 id="robertson">Column macros、Insert reference、Open quickly…</h2>
+<p>这些宏由 Will Robertson 编写。在 Column macros 子菜单中，New tabular 和 New array 会按你输入的行数和列数插入 tabular 或 array 环境，Add column 和 Delete column 会更改你所选的行。Insert reference 在当前文件中搜索 <code>\label{…}</code> 命令，让你从列表中选择一个标签；它插入用 <code>\ref{…}</code> 包围的标签，这个命令可以在脚本中更改。如果选择了文本，则只列出包含该文本的标签。Open quickly… 列出当前源文件所在文件夹中的 .tex、.sty 和 .pdf 文件，并打开你所选的文件。</p>
+
+<h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
+<p>这个宏由 Alan Munn 编写，它把电子表格中的单元格作为表格粘贴到你的 LaTeX 源文件中。在 Excel 或其他电子表格应用中选择一个单元格范围并拷贝。然后选取“宏”>“Paste Spreadsheet Cells”，并选择一种表格样式：</p>
+<dl>
+<dt>cells</dt><dd>只把拷贝的文本转换为 LaTeX 表格单元格。</dd>
+<dt>booktabs</dt><dd>把第一行作为表头，并在 tabular 环境中放入 <code>\toprule</code>、<code>\midrule</code> 和 <code>\bottomrule</code>。</dd>
+<dt>simple</dt><dd>在单元格外围加上简单的 tabular 环境。</dd>
+<dt>longtable</dt><dd>把第一行作为表头，添加 longtable 的表头行，并把单元格放入 longtable 环境。</dd>
+</dl>
+<p>该宏会把剪贴板的内容替换为 LaTeX 文本。要以另一种样式粘贴同样的单元格，请先在电子表格中重新拷贝它们。</p>
+
+<h2 id="line-endings">Applescript › Convert to MAC、Convert to Unix、Convert to Windows</h2>
+<p>文本文件以不同的方式结束各行：macOS 和 Unix 使用换行符，Windows 使用回车符加换行符，非常旧的 Macintosh 文件则只使用回车符。TeXShop 能读取这三种格式。如果别人的编辑器无法读取，请使用这些宏。对于源文件 MyFile.tex，Convert to Unix 会把已保存的文件拷贝为使用换行符、名为 MyFile_Unix.tex 的文件；Convert to Windows 写出 MyFile_Windows.tex，Convert to MAC 写出 MyFile_Mac.tex。这些宏使用 ~/Library/TeXShop/bin 中 Craig Stuart Sapp 编写的程序 flip。</p>
+
+<h2 id="bibliography">Applescript › Bibliography</h2>
+<p>带有参考文献列表的文稿需要运行多次：LaTeX 写出 .aux 文件，BibTeX 用它写出 .bbl 和 .blg 文件，LaTeX 再次运行以加入参考文献列表，然后再运行一次以更新对它的引用。Bibliography 宏会依次运行 LaTeX、BibTeX、LaTeX 和 LaTeX。<a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a>说明了它的工作原理。</p>
+
+<h2 id="gerhardt">Claus Gerhardt Macros</h2>
+<p>这个子菜单中的大多数宏会调用 ~/Library/TeXShop/bin 中同名的 shell 脚本；bibtexcpl、mpostcpl 和 latex-makeindex-mpost 会依次调用其中的几个，openpdf 会打开文稿的 PDF。它们作用于已保存的文件。<a href="macros_writingcommandscripts.htm">用 Shell 命令编写脚本</a>以 pdflatexc 为例进行了说明。</p>
+<h3>htlatexc、htlatexr</h3>
+<p>TeX4ht 把 LaTeX 文稿转换为网页：一个 HTML 页面和一些图像文件。htlatexc 对文稿运行 htlatex，并在 Safari 浏览器中打开生成的 HTML 文件。文稿中不需要载入 tex4ht 宏包；htlatex 会载入它。htlatexr 以选项 <code>-r</code> 运行 htlatex，即使图像已经存在，也会重新生成。</p>
+<h3>pdfselectc</h3>
+<p>pdfselectc 生成包含文稿 PDF 中所选页面的 PDF 文件。它先询问要生成几个文件，然后询问每个文件的页面，例如 <code>5:8</code> 表示第 5 页到第 8 页，或者 <code>3:4,6,8:12</code>。如果文稿名为 MyFile，这些文件会保存为 MyFile-1.pdf、MyFile-2.pdf 等。</p>
+<h3>mpostc、mpostcpl、latex-makeindex-mpost</h3>
+<p>mpostc 先运行 MetaPost，再运行 pdfLaTeX；mpostcpl 运行 pdfLaTeX、MetaPost，再运行一次 pdfLaTeX。latex-makeindex-mpost 运行 pdfLaTeX、MakeIndex、MetaPost，再运行一次 pdfLaTeX，并在过程中打开日志文件。有关 MetaPost，请参阅 <a href="advanced_context.htm">ConTeXt 和 MetaPost</a>。</p>
+</main>
+</body>
+</html>

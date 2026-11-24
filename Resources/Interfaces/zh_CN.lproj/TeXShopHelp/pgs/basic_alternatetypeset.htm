@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>替代排版方式</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="经由DVI; 直接生成PDF; dvips; Ghostscript; PostScript; pstricks; 排版方式; % !TEX program; 个性化脚本">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm" class="current">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>替代排版方式</h1>
+
+<p>TeXShop 通常使用“直接生成PDF”方式排版：pdfLaTeX 或 pdfTeX 直接写出 PDF 文件。替代方式“经由DVI”则运行 LaTeX 或 TeX 生成 DVI 文件，用 dvips 将其转换为 PostScript，再用 Ghostscript 将 PostScript 转换为 PDF。这些步骤由 TeX Live 的脚本 simpdftex 完成。</p>
+
+<p>如果文稿要在输出中加入 PostScript 代码（例如使用 pstricks 宏包），就需要“经由DVI”。EPS 图片则不需要：使用“直接生成PDF”排版时，TeX Live 会将它们转换为 PDF。</p>
+
+<h2>选择排版方式</h2>
+
+<p>“排版”>“经由DVI”和“排版”>“直接生成PDF”用于切换当前文稿的排版方式；其他已打开的文稿保持各自的方式。“设置”>“排版”>“排版方式”用于设置文稿开始时使用的方式。它的第三个选项“个性化脚本”会改为运行“个性化脚本”组中的命令。“经由DVI”的命令（plain TeX 和 LaTeX 各一个）位于“设置”>“排版”的“经由DVI”组中。“引擎配置”菜单中“其他”下的引擎配置 LaTeX + dvips + Ghostscript 会设置为“经由DVI”排版。</p>
+
+<h2>在文稿中选择排版方式</h2>
+
+<p>源代码前 20 行中的一行可以为该文稿设置程序和排版方式，而不管设置如何：</p>
+
+<table>
+<tr><th>行</th><th>排版程序和方式</th></tr>
+<tr><td><code>% !TEX program = pdflatex</code></td><td>LaTeX，直接生成 PDF</td></tr>
+<tr><td><code>% !TEX program = latex</code></td><td>LaTeX，经由 DVI</td></tr>
+<tr><td><code>% !TEX program = pdftex</code></td><td>plain TeX，直接生成 PDF</td></tr>
+<tr><td><code>% !TEX program = tex</code></td><td>plain TeX，经由 DVI</td></tr>
+<tr><td><code>% !TEX program = personallatex</code></td><td>LaTeX，个性化脚本</td></tr>
+<tr><td><code>% !TEX program = personaltex</code></td><td>plain TeX，个性化脚本</td></tr>
+</table>
+
+<h2>“经由DVI”的选项</h2>
+
+<p>Ghostscript 默认会忽略 PostScript 的透明效果。要保留透明效果，请在“经由DVI”组中命令的末尾加上 <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code>。要保留中间生成的 PostScript 文件，请加上 <code>--keep-psfile</code>。Ghostscript 从“设置”>“排版”>“路径”>“Ghostscript”中设置的文件夹运行。</p>
+</main>
+</body>
+</html>

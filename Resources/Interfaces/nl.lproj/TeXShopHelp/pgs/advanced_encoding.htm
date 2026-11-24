@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coderingen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="codering; UTF-8; Unicode; % !TEX encoding; automatische herkenning; openvenster; bewaarvenster; IsoLatin9; van rechts naar links; Arabisch; Hebreeuws; Perzisch; invoerbronnen">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm" class="current">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Coderingen</h1>
+<p>TeXShop bewerkt tekst in Unicode, zodat het bronvenster elk teken van elke taal accepteert. De <em>codering</em> bepaalt hoe deze tekst naar het bestand op schijf wordt geschreven en weer wordt ingelezen. UTF-8 kan elk teken opslaan, en LaTeX, XeLaTeX en LuaLaTeX lezen het standaard. Oudere bestanden en bestanden van andere systemen gebruiken mogelijk een andere codering, zoals ISO Latin 9 of Shift JIS.</p>
+
+<h2>Nieuwe documenten</h2>
+<p>Nieuwe documenten worden bewaard in de codering die is gekozen bij Instellingen › Documenten en bewaren › Tekstencodering › ‘Codering voor nieuwe documenten’. Standaard is dat Unicode (UTF-8); laat dat zo, tenzij u bestanden uitwisselt met mensen die een andere codering nodig hebben.</p>
+<p>Een document wordt bewaard in de codering waarmee het is geopend, zodat een ouder bestand zijn codering behoudt. Tekens die de codering van een bestand niet kan weergeven, gaan verloren wanneer het bestand wordt bewaard.</p>
+
+<h2>Bestanden openen</h2>
+<p>Wanneer een bestand zonder coderingsregel (zie hieronder) wordt geopend, herkent TeXShop de codering ervan. Een byte order mark kenmerkt UTF-8- en UTF-16-bestanden. Een bestand met alleen ASCII-tekens wordt gelezen in de codering voor nieuwe documenten. Anders gebruikt TeXShop de codering die het programma dat het bestand heeft bewaard erbij heeft vastgelegd, als macOS die informatie heeft behouden, en probeert het daarna UTF-8, en vervolgens de coderingen van uw talen en de codering voor nieuwe documenten. Een codering die de bron vermeldt, bijvoorbeeld met <code>\usepackage[latin9]{inputenc}</code>, wordt als aanwijzing gebruikt.</p>
+<p>Herkenning is een gok en werkt het best bij bestanden met een behoorlijke hoeveelheid tekst. Als de verkeerde codering wordt gekozen, sluit u het bestand zonder te bewaren, opent u het opnieuw met Archief › Open…, klikt u in het openvenster op ‘Opties’ en kiest u de codering in het menu daar; de daar gekozen codering wordt gebruikt voor de bestanden die u op dat moment opent, en het document behoudt haar. Het menu toont eerst de codering voor nieuwe documenten; laat u die staan, dan telt dat niet als keuze en wordt de codering zoals gewoonlijk herkend. Voeg daarna een coderingsregel aan het bestand toe, zodat het altijd goed opent. Herkenning kan worden uitgeschakeld met de verborgen instelling</p>
+<pre>defaults write TeXShop EncodingAutoDetection NO</pre>
+<p>Bestanden worden dan gelezen in de codering voor nieuwe documenten.</p>
+
+<h2>De coderingsregel</h2>
+<p>Een regel in een van de eerste twintig regels van een bronbestand legt de codering vast voor het lezen en het bewaren, en gaat voor al het andere:</p>
+<pre>% !TEX encoding = UTF-8 Unicode</pre>
+<p>Schrijf de regel zoals hierboven, met één spatie vóór het isgelijkteken; <code>%!TEX encoding =</code>, zonder spatie na <code>%</code>, wordt ook gelezen. De naam moet precies zo worden geschreven als in de tabel hieronder. De macro Encoding in het menu Macro's voegt de regel voor u in, met een lijst van coderingen om uit te kiezen. De namen die TeXworks gebruikt, zoals <code>UTF-8</code> of <code>ISO 8859-1</code>, worden ook begrepen.</p>
+<p>Als de regel een codering noemt die TeXShop niet kent, leest TeXShop het bestand als UTF-8 en meldt het dat. Als de regel UTF-8 noemt maar het bestand geen geldige UTF-8 is, meldt TeXShop dat en opent het het bestand in ISO Latin 9, waarmee elk bestand kan worden gelezen; bewaart u het zonder de regel te wijzigen, dan worden dezelfde bytes teruggeschreven en gaat er niets verloren. Om een bestand te openen zonder de coderingsregel toe te passen, houdt u Option ingedrukt terwijl het opent.</p>
+<table>
+<tr><th>Naam in de coderingsregel</th><th>Naam in menu’s</th></tr>
+<tr><td><code>UTF-8 Unicode</code></td><td>Unicode (UTF-8)</td></tr>
+<tr><td><code>Standard Unicode</code></td><td>Unicode (UTF-16)</td></tr>
+<tr><td><code>MacOSRoman</code></td><td>Westers (Mac OS Roman)</td></tr>
+<tr><td><code>IsoLatin</code></td><td>Westers (ISO Latin 1)</td></tr>
+<tr><td><code>IsoLatin9</code></td><td>Westers (ISO Latin 9)</td></tr>
+<tr><td><code>Windows Latin 1</code></td><td>Westers (Windows Latin 1)</td></tr>
+<tr><td><code>IsoLatin2</code></td><td>Midden-Europees (ISO Latin 2)</td></tr>
+<tr><td><code>Mac Central European Roman</code></td><td>Midden-Europees (Mac OS)</td></tr>
+<tr><td><code>WindowsCentralEurRoman</code></td><td>Midden-Europees (Windows Latin 2)</td></tr>
+<tr><td><code>IsoLatin5</code></td><td>Turks (ISO Latin 5)</td></tr>
+<tr><td><code>IsoLatinGreek</code></td><td>Grieks (ISO 8859-7)</td></tr>
+<tr><td><code>Mac Cyrillic</code></td><td>Cyrillisch (Mac OS)</td></tr>
+<tr><td><code>DOS Cyrillic</code></td><td>Cyrillisch (DOS)</td></tr>
+<tr><td><code>Windows Cyrillic</code></td><td>Cyrillisch (Windows)</td></tr>
+<tr><td><code>DOS Russian</code></td><td>Russisch (DOS)</td></tr>
+<tr><td><code>KOI8_R</code></td><td>Cyrillisch (KOI8-R)</td></tr>
+<tr><td><code>MacJapanese</code></td><td>Japans (Mac OS, ShiftJIS ¥)</td></tr>
+<tr><td><code>DOSJapanese</code></td><td>Japans (Windows, DOS, ShiftJIS \)</td></tr>
+<tr><td><code>SJIS_X0213</code></td><td>Japans (Shift JIS X0213)</td></tr>
+<tr><td><code>EUC_JP</code></td><td>Japans (EUC)</td></tr>
+<tr><td><code>JISJapanese</code></td><td>Japans (ISO 2022-JP)</td></tr>
+<tr><td><code>MacKorean</code></td><td>Koreaans (Mac OS)</td></tr>
+<tr><td><code>DOSKorean</code></td><td>Koreaans (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Traditional</code></td><td>Traditioneel Chinees (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Traditional</code></td><td>Traditioneel Chinees (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Simplified</code></td><td>Vereenvoudigd Chinees (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Simplified</code></td><td>Vereenvoudigd Chinees (Windows, DOS)</td></tr>
+<tr><td><code>GB 2312</code></td><td>Vereenvoudigd Chinees (GB 2312)</td></tr>
+<tr><td><code>GBK</code></td><td>Chinees (GBK)</td></tr>
+<tr><td><code>GB 18030</code></td><td>Chinees (GB 18030)</td></tr>
+<tr><td><code>Ascii</code></td><td>Westers (ASCII)</td></tr>
+</table>
+
+<h2>Bewaren in een andere codering</h2>
+<p>Om bij het bewaren de codering te kiezen, zet u Instellingen › Documenten en bewaren › Tekstencodering › ‘Tekstencodering tonen in bewaarvenster’ aan; het bewaarvenster heeft dan een coderingsmenu. Wijzig › Omzetting › New Encoding kiest de codering waarin het geopende document vanaf dat moment wordt bewaard. Als het bestand een coderingsregel heeft, beslist die regel; pas dan de regel aan. TeXShop behoudt de byte order mark van een UTF-8-bestand en de bytevolgorde van een UTF-16-bestand.</p>
+<p>Wanneer u een bestand naar een andere codering omzet, gaat elk teken verloren dat de nieuwe codering niet kan weergeven, en wanneer u een bestand in de verkeerde codering leest en bewaart, worden de tekens ervan definitief vervangen. Bewaar een kopie van het origineel. Het opdrachtregelprogramma <code>iconv</code> zet bestanden om zonder het origineel te wijzigen. Het document ‘Bestandscodering en TeXShop (Engels)’ in het menu Help gaat uitgebreider op deze vragen in.</p>
+
+<h2>Talen van rechts naar links</h2>
+<p>Arabisch, Hebreeuws en Perzisch worden in het bronvenster van rechts naar links getypt. Als Instellingen › Editor › Typen › ‘Talen van rechts naar links (Arabisch, Hebreeuws, Perzisch)’ aan staat en syntaxmarkering aan staat, worden regels die beginnen met Arabisch of Hebreeuws schrift rechts uitgelijnd, en andere regels, bijvoorbeeld regels die met een LaTeX-commando beginnen, links. Met de verborgen instelling</p>
+<pre>defaults write TeXShop RightJustifyIfAny YES</pre>
+<p>wordt elke regel die ergens zulke tekens bevat rechts uitgelijnd. De uitlijning dient alleen voor het bewerken; TeX deelt de gezette tekst in volgens zijn eigen commando’s. Gebruik XeLaTeX of LuaLaTeX om deze talen te zetten; zie <a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a>.</p>
+
+<h2>Andere schriften typen</h2>
+<p>Om in een ander schrift te typen, voegt u er een invoerbron voor toe in Systeeminstellingen › Toetsenbord, onder ‘Tekstinvoer’, en wisselt u van invoerbron met het invoermenu in de menubalk.</p>
+</main>
+</body>
+</html>

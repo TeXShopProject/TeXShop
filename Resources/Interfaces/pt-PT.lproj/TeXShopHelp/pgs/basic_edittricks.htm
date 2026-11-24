@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Truques de edição</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="truques de edição; parênteses correspondentes; selecionar linhas; comentar; avanço; menu Marcas; Fechar ambiente atual; dividir o código-fonte; arrastar e largar; barra de estado; estatísticas; Trocar com a área de transferência; Copiar com estilo; Conversão do tipo de carácter; ficheiro de cópia de segurança">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm" class="current">Truques de edição</a></li>
+<li><a href="basic_find.htm">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Truques de edição</h1>
+
+<h2>Selecionar</h2>
+
+<p>Faça duplo clique num parêntese, como ( ou }, para selecionar tudo o que está entre ele e o parêntese correspondente; isto ajuda a encontrar uma chaveta em falta. Faça duplo clique com a tecla Opção premida para selecionar apenas o parêntese. Clique ou arraste sobre os números de linha para selecionar linhas inteiras. O grupo «Correspondência de parênteses» de Definições › Editor define como os parênteses correspondentes são mostrados enquanto escreve.</p>
+
+<h2>Comentários e avanço</h2>
+
+<p>Código-fonte › Comentar (<kbd>⌘{</kbd>) coloca % no início das linhas selecionadas, e Código-fonte › Não comentar (<kbd>⌘}</kbd>) remove-o. Código-fonte › Recolher parágrafo e Código-fonte › Não recolher deslocam as linhas selecionadas para a direita ou para a esquerda, uma tabulação quando «Usar tabulações no menu de indentação» está ativado em Definições › Editor › Estilo do editor e, caso contrário, tantos espaços como a «Largura da tabulação». Uma nova linha começa com as mesmas tabulações e espaços da linha anterior; prima Delete para os remover.</p>
+
+<h2>Percorrer o código-fonte</h2>
+
+<p>O menu «Marcas» da barra de ferramentas enumera os capítulos, as secções e as outras divisões do documento; escolha uma para ir até lá. Uma linha que começa com <code>%:</code> acrescenta o resto da linha ao menu como uma entrada sua. «Menu de etiquetas na barra de menus», em Definições › Editor › Visualização, coloca o mesmo menu na barra de menus. O item «Rótulos» da barra de ferramentas enumera as etiquetas do documento. Editar › Mostrar linha... (<kbd>⌘L</kbd>) vai para uma linha pelo seu número.</p>
+
+<p>Janela › Dividir janela (<kbd>⌃2</kbd>), ou o item «Dividir janela» da barra de ferramentas, divide a janela do código-fonte em duas partes que mostram o mesmo texto, para que possa ler uma parte do documento enquanto escreve outra. Mantenha premida a tecla Opção para a dividir lado a lado. O que escreve numa parte aparece também na outra.</p>
+
+<h2>Escrever menos</h2>
+
+<p>Código-fonte › Fechar ambiente atual (<kbd>⌃⌘C</kbd>) acrescenta a linha <code>\end</code> do ambiente que ainda está aberto, por exemplo <code>\end{itemize}</code> depois de uma lista. A conclusão de comandos termina comandos e ambientes que começou a escrever; consulte <a href="basic_commandcompletion.htm">Conclusão de comandos</a>. As associações de teclas substituem um carácter escrito por texto; consulte <a href="basic_autocompletion.htm">Associações de teclas</a>. O painel LaTeX, o painel Matrix e o menu Macros inserem trechos de texto mais longos.</p>
+
+<h2>Largar ficheiros no código-fonte</h2>
+
+<p>Arraste um ficheiro do Finder para o código-fonte para inserir um comando para ele:</p>
+
+<table>
+<tr><th>Ficheiro</th><th>Comando inserido</th></tr>
+<tr><td>.pdf, .png, .jpg, .jpeg, .tif, .tiff, .eps, .ps</td><td><code>\includegraphics[]{<var>caminho</var>}</code></td></tr>
+<tr><td>.bib</td><td><code>\bibliography{<var>nome</var>}</code></td></tr>
+<tr><td>.bst</td><td><code>\bibliographystyle{<var>nome</var>}</code></td></tr>
+<tr><td>.sty</td><td><code>\usepackage{<var>nome</var>}</code></td></tr>
+<tr><td>.cls</td><td><code>\documentclass{<var>nome</var>}</code></td></tr>
+<tr><td>outros ficheiros, como .tex</td><td><code>\input{<var>caminho</var>}</code></td></tr>
+</table>
+
+<p>Aqui, <var>caminho</var> é o caminho do ficheiro a partir da pasta do ficheiro do código-fonte, e <var>nome</var> é o nome do ficheiro sem a extensão. Um alias largado é substituído pelo ficheiro que representa, que o TeX não conseguiria encontrar sozinho. Um ficheiro cujo caminho contém um espaço não é inserido; em vez disso, o TeXShop mostra um aviso.</p>
+
+<p>Para inserir outra coisa para um tipo de ficheiro, abra o editor de macros (Macros › Abrir editor de macros...) e acrescente um submenu chamado <code>Drag &amp; Drop</code>. Nele, acrescente um item com o nome da extensão, como <code>.pdf</code>, cujo conteúdo seja o texto a inserir, por exemplo <code>\includegraphics[#INS#]{%r}</code>; um item chamado <code>.*</code> é usado para todas as outras extensões, isto é, as que não têm item próprio nem constam da tabela acima. O conteúdo pode usar estas abreviaturas:</p>
+
+<dl>
+<dt><code>%F</code></dt><dd>o caminho completo do ficheiro largado</dd>
+<dt><code>%f</code></dt><dd>o nome do ficheiro</dd>
+<dt><code>%r</code></dt><dd>o caminho do ficheiro a partir da pasta do ficheiro do código-fonte</dd>
+<dt><code>%n</code></dt><dd>o nome do ficheiro sem a extensão</dd>
+<dt><code>%e</code></dt><dd>a extensão</dd>
+</dl>
+
+<h2>A barra de estado e as estatísticas do texto</h2>
+
+<p>A barra de estado por baixo do código-fonte mostra as linhas, os caracteres e as palavras do documento, com os números da seleção entre parênteses, e a posição, a linha e a coluna do ponto de inserção. Os caracteres são contados tal como se veem, pelo que uma letra acentuada ou um emoji conta como um, e os comandos do TeX são contados tal como estão escritos; um emoji também conta como uma palavra. O tamanho do ficheiro guardado é mostrado à direita. Código-fonte › Mostrar barra de estado mostra ou oculta a barra de estado em todas as janelas.</p>
+
+<p>«Estatísticas do texto…» na barra de estado, ou Editar › Estatísticas..., conta o texto sem os comandos do TeX. O programa detex do TeX Live remove-os do documento, ou da seleção, e acrescenta os ficheiros lidos com <code>\input</code> e <code>\include</code>; o TeXShop conta o que resta da mesma forma que a barra de estado. Não é necessário que o documento esteja guardado. A contagem é feita quando o popover se abre e quando se clica no respetivo botão de atualização.</p>
+
+<h2>A área de transferência</h2>
+
+<p>Editar › Trocar com a área de transferência substitui a seleção pelo texto da área de transferência e coloca a seleção na área de transferência. Para trocar dois trechos de texto, copie o primeiro, selecione o segundo e escolha «Trocar com a área de transferência»; depois selecione o local do primeiro e cole. Quando nada está selecionado, este comando cola.</p>
+
+<p>Editar › Copiar com estilo copia a seleção com o tipo de letra do código-fonte e com as cores do tema do modo claro ou do modo escuro, com ou sem a cor de fundo, para colar num processador de texto, numa apresentação ou num e-mail. Cada um dos seus quatro itens pode receber um atalho em Definições › Teclado.</p>
+
+<h2>Converter caracteres</h2>
+
+<p>Os submenus «Conversão do tipo de carácter» e «Normalização Unicode» do menu Editar, que estão também no menu de contexto do código-fonte, reescrevem a seleção; se nada estiver selecionado, o TeXShop pergunta se deve reescrever o documento inteiro. «Conversão do tipo de carácter» destina-se sobretudo a documentos em japonês. Converte entre hiragana e katakana, entre dígitos e letras de largura total e de meia largura, entre caracteres como os números dentro de círculos e os comandos do pacote ajmacros, e entre caracteres fora de JIS X 0208 e os comandos <code>\UTF</code> e <code>\CID</code> do pacote otf. Também transforma aspas tipográficas em aspas do TeX. «Normalização Unicode» converte a seleção para NFC, NFD, NFKC ou NFKD, ou para Modified NFC ou Modified NFD, que deixam inalterados os ideogramas de compatibilidade CJK. Ambas as conversões podem ser anuladas.</p>
+
+<h2>Ficheiros de cópia de segurança</h2>
+
+<p>Quando «Ativar guardar automaticamente e versões» está desativado em Definições › Documentos e gravação, ative aí «Manter o ficheiro anterior como “nome~”» para manter a versão anterior de um ficheiro sempre que é guardado. A cópia de segurança tem um til depois do nome do ficheiro, antes da extensão: a cópia de segurança de paper.tex é paper~.tex.</p>
+
+<p>A procura e a substituição, com expressões regulares e substituição múltipla, são descritas em <a href="basic_find.htm">Procurar e substituir</a>.</p>
+</main>
+</body>
+</html>

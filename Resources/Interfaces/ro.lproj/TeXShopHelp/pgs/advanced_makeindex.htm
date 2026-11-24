@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MakeIndex</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="index; makeindex; makeidx; mendex; upmendex; Program pentru index; fișier idx">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm" class="current">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>MakeIndex</h1>
+<p>MakeIndex sortează intrările de index ale unui document LaTeX și scrie indexul. Pentru a adăuga un index la un document:</p>
+<ol>
+<li>Puneți <code>\usepackage{makeidx}</code> și <code>\makeindex</code> în preambul.</li>
+<li>Puneți <code>\printindex</code> acolo unde trebuie să apară indexul, adesea chiar înainte de <code>\end{document}</code>.</li>
+<li>Marcați intrările în text:
+<pre>There are many animals in the world\index{animal}.
+Examples include bears\index{animal!bear}
+and tigers\index{animal!tiger}.</pre></li>
+</ol>
+<p>Pentru a crea indexul, compilați documentul, apoi alegeți Compilare › MakeIndex (<kbd>⇧⌘I</kbd>) sau alegeți MakeIndex în meniul pop-up de lângă butonul „Compilare” și apăsați „Compilare”, iar apoi compilați din nou. Compilarea cu latexmk rulează singură MakeIndex.</p>
+<p>MakeIndex rulează programul din Configurări › Compunere › „Instrumente asociate” › „Program pentru index”, urmat de numele fișierului idx. Valoarea implicită este <code>makeindex</code>. Completați alt program, de exemplu <code>mendex</code> sau <code>upmendex</code> pentru documentele în japoneză, cu opțiunile de care are nevoie, de exemplu <code>upmendex -s mystyle.ist</code>. Profilurile motorului setează acest câmp: <code>makeindex</code> pentru profilurile occidentale, <code>mendex</code> pentru pLaTeX + dvipdfmx și <code>upmendex</code> pentru upLaTeX + dvipdfmx și LuaLaTeX (japoneză).</p>
+<p>Sursă › Evidențiază intrările de index afișează argumentele lui <code>\index</code> în culoarea „Index” a temei; consultați <a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a>.</p>
+</main>
+</body>
+</html>

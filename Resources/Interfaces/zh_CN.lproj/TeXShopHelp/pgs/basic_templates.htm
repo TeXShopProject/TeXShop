@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>模板和样板</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="模板; 模板菜单; ~/Library/TeXShop/Templates; More; 从模板新建; 样板; Stationery 文件夹">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm" class="current">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>模板和样板</h1>
+<h2>模板</h2>
+<p>源代码窗口工具栏中的“模板”菜单会在插入点处插入模板，并按当前行缩进。TeXShop 附带以下模板：</p>
+<ul>
+<li>LatexTemplate、XeLaTeX Template、LatexSpanishTemplate 和 BeamerTemplate：分别是 LaTeX 文章、XeLaTeX 文稿、西班牙语 LaTeX 文章和 Beamer 演示文稿的开头部分；</li>
+<li>TexTemplate：结束 plain TeX 文稿的 <code>\end</code>；</li>
+<li>GraphicsTemplate：插入图形的代码；</li>
+<li>TeX4ht-Header 和 TeX4ht-Interactive：用于以 TeX4ht 转换为 HTML 的文稿的代码；</li>
+<li>More：一个子菜单，包含导言区、article、letter 和 memoir 等文档类、浮动图和浮动表格，以及 <code>align</code> 和矩阵等数学排版结构。</li>
+</ul>
+<p>模板是 <code>~/Library/TeXShop/Templates</code> 中的普通文件；选取“TeXShop”>“打开 ~/Library/TeXShop”即可前往。要制作你自己的模板（例如每篇文章都使用的导言区），请在此文件夹中存储一个扩展名为 <code>.tex</code> 的文件，或者复制一个模板后加以修改。子文件夹会成为子菜单。你添加、重新命名或移除的模板，会显示在之后打开的窗口的菜单中。</p>
+<p>TeXShop 的更新不会更改此文件夹，因此你的模板会被保留。要恢复原始模板，请将 Templates 文件夹移出 <code>~/Library/TeXShop</code>（例如移到桌面），然后重新启动 TeXShop：它会重新创建该文件夹，并放入自己的模板。</p>
+
+<h2>样板</h2>
+<p>“文件”>“从模板新建...”会从一个完整的示例开始新文稿：在列表中选择一个（列表会显示每个样板的说明），然后点按“好”。新文稿是未命名的；请将它存储到你想要的位置。TeXShop 附带的样板有 AMS 文章、Beamer 演示文稿、信函、PreTeXt 文稿、带根文件和一个章节的项目，以及 XeLaTeX 文稿。</p>
+<p>样板保存在 <code>~/Library/TeXShop/Stationery</code> 中。要添加你自己的样板，请将文件（例如 <code>Report.tex</code>）放到该文件夹中，并同时放入一个文件 <code>Report.comment</code>，其中用一句话描述该样板。</p>
+</main>
+</body>
+</html>

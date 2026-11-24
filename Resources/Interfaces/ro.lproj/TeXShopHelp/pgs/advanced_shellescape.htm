@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protecția față de shell escape</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="shell escape; -shell-escape; --shell-escape; Confirmare la shell-escape; securitate; % !TEX parameter">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm" class="current">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Protecția față de shell escape</h1>
+<p>În timpul compilării, TeX poate rula alte programe. Implicit, TeX Live permite doar o listă scurtă de programe de încredere, de exemplu pentru a converti grafica EPS în PDF. Pachetele care trebuie să ruleze alte programe cer opțiunea <code>-shell-escape</code> (scrisă și <code>--shell-escape</code>).</p>
+<p>Cu această opțiune, un document poate rula orice comandă, de exemplu una care șterge toate fișierele din dosarul de reședință. Folosiți-o numai pentru documente în care aveți încredere, nu și pentru fișiere primite de la alții.</p>
+
+<h2>Adăugarea opțiunii</h2>
+<ul>
+<li>În comanda LaTeX sau plain TeX din Configurări › Compunere › „PDF direct”, pentru toate documentele compilate „PDF direct”.</li>
+<li>Într-un fișier de motor, pentru toate documentele compilate cu acel motor; consultați <a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a>.</li>
+<li>Pentru un singur document compilat cu unul dintre motoarele latexmk, precum pdflatexmk, cu linia <code>% !TEX parameter = -shell-escape</code> la începutul sursei.</li>
+</ul>
+<p>Un motor are deja opțiunea: sepdflatexmk, care vine cu TeXShop și se află de la început în dosarul Engines, compilează întotdeauna cu <code>--shell-escape</code>. Este suficient să-l alegeți în bara de instrumente a ferestrei sursă sau cu o linie <code>% !TEX program = sepdflatexmk</code>, așa că folosiți-l numai pentru documente în care aveți încredere.</p>
+
+<h2>Confirmare la shell-escape</h2>
+<p>Configurări › Compunere › „PDF direct” › „Confirmare la shell-escape”, dezactivată implicit, protejează comenzile din grupul „PDF direct”. Când este activată și comanda plain TeX sau LaTeX de acolo conține <code>-shell-escape</code> sau <code>--shell-escape</code>, TeXShop întreabă înainte de a compila un document pentru prima dată după deschiderea lui:</p>
+<ul>
+<li>„OK” compilează cu opțiunea.</li>
+<li>„Omiteți shell escape” compilează fără ea.</li>
+<li>„Anulați” nu compilează.</li>
+</ul>
+<p>După ce alegeți „OK” sau „Omiteți shell escape”, răspunsul rămâne valabil pentru acel document până când este închis, astfel încât puteți compila documentele proprii cu opțiunea, iar documentele altora fără ea. Fișierele de motor nu sunt verificate, chiar dacă conțin <code>-shell-escape</code>, așa că sepdflatexmk compilează cu opțiunea fără să întrebe.</p>
+</main>
+</body>
+</html>

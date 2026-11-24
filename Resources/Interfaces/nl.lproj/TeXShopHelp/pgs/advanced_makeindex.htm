@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MakeIndex</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="index; register; makeindex; makeidx; mendex; upmendex; Indexprogramma; idx-bestand">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm" class="current">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>MakeIndex</h1>
+<p>MakeIndex sorteert de indexitems van een LaTeX-document en schrijft de index. Zo voegt u een index aan een document toe:</p>
+<ol>
+<li>Zet <code>\usepackage{makeidx}</code> en <code>\makeindex</code> in de preambule.</li>
+<li>Zet <code>\printindex</code> op de plaats waar de index moet komen, vaak vlak voor <code>\end{document}</code>.</li>
+<li>Markeer de items in de tekst:
+<pre>There are many animals in the world\index{animal}.
+Examples include bears\index{animal!bear}
+and tigers\index{animal!tiger}.</pre></li>
+</ol>
+<p>Om de index te maken, zet u het document, kiest u Zet › MakeIndex (<kbd>⇧⌘I</kbd>), of kiest u MakeIndex in het venstermenu naast de knop ‘Zet’ en klikt u op ‘Zet’, en zet u het document daarna opnieuw. Bij het zetten met latexmk wordt MakeIndex vanzelf uitgevoerd.</p>
+<p>MakeIndex voert het programma uit dat is ingesteld in Instellingen › Zetten › Verwante programma’s › ‘Indexprogramma’, gevolgd door de naam van het idx-bestand. Standaard is dat <code>makeindex</code>. Vul een ander programma in, zoals <code>mendex</code> of <code>upmendex</code> voor Japanse documenten, met de opties die het nodig heeft, bijvoorbeeld <code>upmendex -s mystyle.ist</code>. De engineprofielen vullen dit veld in: <code>makeindex</code> voor de westerse profielen, <code>mendex</code> voor pLaTeX + dvipdfmx en <code>upmendex</code> voor upLaTeX + dvipdfmx en LuaLaTeX (Japans).</p>
+<p>Bron › Indexitems markeren toont de argumenten van <code>\index</code> in de kleur ‘Index’ van het thema; zie <a href="advanced_syntaxcolor.htm">Syntaxmarkering</a>.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proteção contra shell-escape</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="shell escape; -shell-escape; --shell-escape; Confirmar shell-escape; segurança; % !TEX parameter">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar ficheiros pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistir com outras distribuições TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar o código-fonte e a pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover ficheiros AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm" class="current">Proteção contra shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experiências</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e largar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros ficheiros com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto a cores</a></li>
+<li><a href="advanced_plist.htm">Ficheiros em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Proteção contra shell-escape</h1>
+<p>Durante a composição, o TeX pode executar outros programas. Por predefinição, o TeX Live permite apenas uma pequena lista de programas de confiança, por exemplo para converter gráficos EPS em PDF. Os pacotes que precisam de executar outros programas pedem a opção <code>-shell-escape</code> (também escrita <code>--shell-escape</code>).</p>
+<p>Com esta opção, um documento pode executar qualquer comando, por exemplo um que apague todos os ficheiros da sua pasta pessoal. Use-a apenas em documentos em que confia, e não em ficheiros que receba de outras pessoas.</p>
+
+<h2>Adicionar a opção</h2>
+<ul>
+<li>No comando LaTeX ou plain TeX de Definições › Composição › «PDF direto», para todos os documentos compostos em PDF direto.</li>
+<li>Num ficheiro de motor, para todos os documentos compostos com esse motor; consulte <a href="advanced_addengine.htm">Adicionar motores de composição</a>.</li>
+<li>Para um documento composto com um dos motores latexmk, como o pdflatexmk, com a linha <code>% !TEX parameter = -shell-escape</code> no início do código-fonte.</li>
+</ul>
+<p>Há um motor que já tem a opção: o sepdflatexmk, fornecido com o TeXShop e presente na pasta Engines desde o início, compõe sempre com <code>--shell-escape</code>. Basta escolhê-lo na barra de ferramentas da janela do código-fonte ou com uma linha <code>% !TEX program = sepdflatexmk</code>, por isso use-o apenas em documentos em que confia.</p>
+
+<h2>Confirmar shell-escape</h2>
+<p>Definições › Composição › «PDF direto» › «Confirmar shell-escape», desativada por predefinição, protege os comandos do grupo «PDF direto». Quando está ativa e o comando plain TeX ou LaTeX desse grupo contém <code>-shell-escape</code> ou <code>--shell-escape</code>, o TeXShop pergunta antes de compor um documento pela primeira vez depois de o documento ser aberto:</p>
+<ul>
+<li>«OK» compõe com a opção.</li>
+<li>«Omitir shell escape» compõe sem ela.</li>
+<li>«Cancelar» não compõe.</li>
+</ul>
+<p>Depois de escolher «OK» ou «Omitir shell escape», a resposta mantém-se para esse documento até ser fechado, pelo que pode compor os seus próprios documentos com a opção e os documentos de outras pessoas sem ela. Os ficheiros de motor não são verificados, mesmo que contenham <code>-shell-escape</code>, pelo que o sepdflatexmk compõe com a opção sem perguntar.</p>
+</main>
+</body>
+</html>

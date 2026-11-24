@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modificarea Tabloului de comandă LaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Tablou de Comandă LaTeX; fila Personalizat; completion.plist; dosarul LatexPanel; butoane">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Cum configurez TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="configure_prefchanges.htm">Modificări recomandate ale configurărilor</a></li>
+<li><a href="configure_correctinstall.htm">Obținerea elementelor noi din Library</a></li>
+<li><a href="configure_hidden.htm">Configurări ascunse</a></li>
+<li><a href="configure_panel.htm" class="current">Modificarea Tabloului de comandă LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificarea asocierilor de taste</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinirea scurtăturilor de tastatură din meniuri</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modificarea Tabloului de comandă LaTeX</h1>
+<p>Tabloul de comandă LaTeX (Fereastră › Tablou de Comandă LaTeX...) are o filă „Personalizat” cu până la șaisprezece butoane proprii. Numele celorlalte butoane nu pot fi modificate, dar textul pe care îl inserează poate fi modificat.</p>
+<p>Ambele se stabilesc în fișierul ~/Library/TeXShop/LatexPanel/completion.plist. Deschideți-l în TeXShop și citiți comentariile de la început, care explică modul în care este organizat fișierul. Fiecare filă are o listă a textelor pe care le inserează butoanele ei, în ordinea butoanelor. În aceste texte, #SEL# reprezintă textul selectat, iar #INS# locul în care ajunge punctul de inserare.</p>
+<p>Butoanele filei „Personalizat” se află în lista numită Customized. Fiecare buton este o pereche de șiruri: numele lui, apoi textul pe care îl inserează. De exemplu,</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>creează un buton numit Section care inserează <code>\section{}</code> în jurul textului selectat, cu punctul de inserare între acolade.</p>
+<p>Salvați fișierul în UTF-8. TeXShop îl citește când Tabloul de comandă LaTeX se deschide prima dată, așa că porniți din nou TeXShop pentru a vedea modificările. Păstrați fiecare intrare din listele celorlalte file: dacă fișierul nu poate fi folosit, TeXShop folosește propria copie, iar la următoarea pornire înlocuiește fișierul și îl păstrează pe al dvs. în ~/Library/TeXShop/Backups.</p>
+</main>
+</body>
+</html>

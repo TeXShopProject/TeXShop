@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mode de composition alternatif</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Via DVI; PDF direct; dvips; Ghostscript; PostScript; pstricks; Méthode de composition; % !TEX program; Script personnel">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm" class="current">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Mode de composition alternatif</h1>
+
+<p>TeXShop compose normalement avec la méthode « PDF direct » : pdfLaTeX ou pdfTeX écrit directement le fichier PDF. La méthode alternative, « Via DVI », exécute LaTeX ou TeX pour produire un fichier DVI, le convertit en PostScript avec dvips, puis convertit le PostScript en PDF avec Ghostscript. Le script simpdftex de TeX Live effectue ces étapes.</p>
+
+<p>« Via DVI » est nécessaire pour les documents qui placent du code PostScript dans le résultat, par exemple avec le paquet pstricks. Les images EPS n’en ont pas besoin : TeX Live les convertit en PDF pendant la composition en « PDF direct ».</p>
+
+<h2>Choisir la méthode</h2>
+
+<p>Composition › Via DVI et Composition › PDF direct changent la méthode du document actif ; les autres documents ouverts gardent la leur. Réglages › Composition › Méthode de composition détermine la méthode avec laquelle les documents commencent. Son troisième choix, « Script personnel », exécute à la place les commandes du groupe « Script personnel ». Les commandes de « Via DVI », l’une pour plain TeX et l’autre pour LaTeX, se trouvent dans le groupe « Via DVI » de Réglages › Composition. Le profil du moteur LaTeX + dvips + Ghostscript, sous « Autre » dans le menu « Profil du moteur », prépare la composition « Via DVI ».</p>
+
+<h2>Choisir la méthode dans le document</h2>
+
+<p>Une ligne placée parmi les 20 premières lignes de la source détermine le programme et la méthode de ce document, quels que soient les réglages :</p>
+
+<table>
+<tr><th>Ligne</th><th>Compose avec</th></tr>
+<tr><td><code>% !TEX program = pdflatex</code></td><td>LaTeX, PDF direct</td></tr>
+<tr><td><code>% !TEX program = latex</code></td><td>LaTeX, Via DVI</td></tr>
+<tr><td><code>% !TEX program = pdftex</code></td><td>plain TeX, PDF direct</td></tr>
+<tr><td><code>% !TEX program = tex</code></td><td>plain TeX, Via DVI</td></tr>
+<tr><td><code>% !TEX program = personallatex</code></td><td>LaTeX, Script personnel</td></tr>
+<tr><td><code>% !TEX program = personaltex</code></td><td>plain TeX, Script personnel</td></tr>
+</table>
+
+<h2>Options de « Via DVI »</h2>
+
+<p>Par défaut, Ghostscript ignore la transparence PostScript. Pour la conserver, ajoutez <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code> à la fin de la commande du groupe « Via DVI ». Pour conserver le fichier PostScript intermédiaire, ajoutez <code>--keep-psfile</code>. Ghostscript est exécuté depuis le dossier indiqué dans Réglages › Composition › Chemins › Ghostscript.</p>
+</main>
+</body>
+</html>

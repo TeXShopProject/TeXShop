@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BibTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="BibTeX；参考文献；引用；bib 文件；biber；biblatex；upbibtex；pbibtex；% !BIB program；BibTeX引擎">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm" class="current">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>BibTeX</h1>
+<p>BibTeX 根据参考文献数据库（扩展名为 <code>.bib</code> 的文件）为 LaTeX 文稿生成参考文献列表。文稿用条目的键引用条目，BibTeX 只列出被引用的条目。</p>
+<p>数据库 <code>mybibliography.bib</code> 中包含如下条目：</p>
+<pre>@book{Knuth:TeXbook,
+  author    = {Donald E. Knuth},
+  title     = {The {\TeX}book},
+  publisher = {Addison-Wesley},
+  year      = {1986}
+}</pre>
+<p>文稿引用这些条目，并指定样式和数据库：</p>
+<pre>As explained in~\cite{Knuth:TeXbook}, …
+
+\bibliographystyle{plain}
+\bibliography{mybibliography}</pre>
+
+<h2>运行 BibTeX</h2>
+<ol>
+<li>排版文稿。引用显示为 [?]，参考文献列表不存在。</li>
+<li>选取“排版”>“BibTeX”（<kbd>⇧⌘B</kbd>），或者在“排版”按钮旁边的弹出式菜单中选择 BibTeX，然后点按“排版”。</li>
+<li>再排版两次：第一次加入参考文献列表，第二次填入引用编号。</li>
+</ol>
+<p>用 latexmk 排版时（例如使用 pdflatexmk 引擎，或使用以“使用latexmk”设置的引擎配置），latexmk 会自行运行 BibTeX 和额外的排版遍次。</p>
+<p>要在 TeXShop 中新建数据库，请在保存对话框的“文件格式”菜单中选择 bib 类型，使文件获得扩展名 <code>.bib</code>。数据库也可以放在你的个人 TeX 目录树中，这样每个文稿都能找到它；请参阅<a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a>。</p>
+
+<h2>选择程序</h2>
+<p>“排版”>“BibTeX”运行“设置”>“排版”>“相关工具”>“BibTeX引擎”中的命令，默认为 <code>bibtex</code>。可以在那里输入其他程序及其所需的选项，例如对使用 biblatex 宏包的文稿输入 <code>biber</code>。引擎配置会设置这一栏：pLaTeX + dvipdfmx 设为 <code>pbibtex</code>，upLaTeX + dvipdfmx 和 LuaLaTeX（日语）设为 <code>upbibtex</code>，其他配置设为 <code>bibtex</code>。</p>
+<p>要为单个文稿选择程序，请在文稿的前二十行之一中加入如下一行：</p>
+<pre>% !BIB program = biber</pre>
+<p>这一行优先于该设置。<code>% !BIB TS-program =</code> 这种形式也以同样方式读取。</p>
+</main>
+</body>
+</html>

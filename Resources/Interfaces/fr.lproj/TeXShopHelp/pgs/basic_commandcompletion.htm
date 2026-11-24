@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Complétion des commandes</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="complétion des commandes; touche Échap; touche de déclenchement; repères; Repère suivant; étiquettes et clés de citation">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Complétion des commandes</h1>
+
+<p>Saisissez les premières lettres d’une commande ou d’un environnement et appuyez sur Échap : TeXShop les complète d’après son fichier de complétion. Appuyez de nouveau sur Échap pour parcourir les autres complétions qui commencent par les mêmes lettres, du bas du fichier vers le haut ; Maj-Échap va dans l’autre sens. L’une d’elles est le texte que vous avez saisi. Par exemple, <code>\begin{th</code> suivi d’Échap propose <code>\begin{theorem}</code> et d’autres environnements.</p>
+
+<p>Une complétion peut faire plus que terminer le mot. La complétion de <code>\begin{theorem}</code> écrit aussi la ligne <code>\end{theorem}</code>, et place des repères (•) là où vous écrirez : le premier repère est sélectionné, de sorte que ce que vous saisissez le remplace. Appuyer plusieurs fois sur Échap donne souvent la même commande avec davantage d’arguments, comme le fait <code>\newc</code> pour <code>\newcommand</code>. Une complétion n’a pas besoin de commencer par une barre oblique inverse : en début de ligne ou après une espace, <code>sec</code> donne la même chose que <code>\sec</code>.</p>
+
+<p>Lorsque le fichier de complétion n’a rien pour le texte, Échap affiche à la place les complétions de mots de macOS.</p>
+
+<h2>Réglages</h2>
+
+<p>Dans Réglages › Clavier, « Touche de déclenchement » choisit Échap ou Tab comme touche de complétion. Le panneau source d’Édition › Expérimenter... utilise la même touche que la fenêtre source.</p>
+
+<p>Pour ajouter un mot au fichier de complétion, sélectionnez-le et choisissez Source › Ajouter à la liste de complétion des commandes. Pour modifier le fichier, cliquez sur « Modifier la complétion des commandes… » dans Réglages › Clavier. Étudier les complétions qui s’y trouvent est le meilleur moyen d’apprendre à en écrire de nouvelles ; le dossier ~/Library/TeXShop/CommandCompletion contient aussi un document détaillé à leur sujet.</p>
+
+<h2><a name="marks"></a>Repères</h2>
+
+<p>Un repère (•) est un endroit où revenir ; un repère avec note (•‹note›) indique aussi ce qui doit y figurer. Les complétions de commandes, les macros et les raccourcis de saisie peuvent contenir des repères, et vous pouvez en insérer vous-même avec Édition › Repères › Insérer un repère (<kbd>⌘8</kbd>) et « Insérer un repère avec note » (<kbd>⌃⌘8</kbd>). « Insérer un repère avec note » insère •‹› avec le point d’insertion entre les chevrons, ou transforme le texte sélectionné en note.</p>
+
+<p>« Repère suivant » (<kbd>⌃⌘F</kbd>) et « Repère précédent » (<kbd>⌃⌘G</kbd>) sélectionnent le repère suivant ou précédent avec sa note, de sorte que la saisie le remplace. Maintenez la touche Option enfoncée pour supprimer seulement le • et sélectionner plutôt la note (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+
+<p>La touche de déclenchement permet aussi de passer d’un repère à l’autre : avec Échap comme touche de déclenchement, Option-Échap va au repère suivant et Contrôle-Échap au précédent ; avec Tab, Option-Tab et Contrôle-Tab. Si une autre application a besoin de ces touches, désactivez « Aller au repère suivant ou précédent avec Option ou Contrôle et la touche de déclenchement » dans Réglages › Clavier.</p>
+
+<h2><a name="labels"></a>Complétion des étiquettes et des clés de citation</h2>
+
+<p>Édition › Compléter l’étiquette ou la clé de citation (<kbd>F5</kbd>) complète une étiquette ou une clé de citation à partir d’une liste. Choisissez-le juste après <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> ou <code>\autoref{</code>, ou après les premières lettres d’une étiquette saisies à cet endroit : la liste montre les étiquettes définies avec <code>\label</code> dans le fichier ; choisissez-en une avec les touches fléchées et appuyez sur Retour. Après <code>\cite{</code> et les commandes similaires, la liste montre les clés de citation de BibDesk lorsque « Proposer aussi les clés de citation de BibDesk » est activé dans Réglages › Clavier. Ailleurs, elle montre les complétions de mots de macOS. Sur de nombreux claviers, maintenez la touche fn (la touche Globe) enfoncée en appuyant sur F5.</p>
+
+<h2><a name="compare"></a>Raccourcis de saisie, macros et complétion des commandes</h2>
+
+<p>Ces trois fonctions placent toutes du texte dans la source et sont faciles à confondre. Chacune convient à une tâche différente :</p>
+<dl>
+<dt><a href="basic_autocompletion.htm">Raccourcis de saisie</a></dt>
+<dd>Saisir une seule touche insère du texte : <code>_</code> donne <code>_{}</code> autour de la sélection, et ≤ (Option-virgule sur la disposition de clavier américaine) donne <code>\leq</code>. Réglages › Clavier les active pour les nouveaux documents et contient leur liste ; Source › Raccourcis de saisie les active ou les désactive pour le document au premier plan. Saisissez d’abord <code>\</code> pour garder telle quelle une touche comme <code>_</code> ou <code>^</code>. Un caractère saisi avec une touche morte, comme é obtenu avec Option-E puis E, ne peut pas avoir de raccourci de saisie.</dd>
+<dt><a href="basic_macros.htm">Macros</a></dt>
+<dd>Les éléments du menu Macros insèrent du texte ou exécutent des programmes AppleScript, et peuvent avoir un raccourci clavier avec la touche Commande ou Contrôle, ou une touche de fonction. Macros › Ouvrir l'éditeur de macros... les ajoute, les modifie et les ordonne. Le texte que vous voulez associer à une touche Commande, comme <code>\textbf</code> autour de la sélection avec ⌘B, a intérêt à devenir une macro.</dd>
+<dt>Complétion des commandes</dt>
+<dd>Saisissez le début d’une commande ou une abréviation et appuyez sur la touche de déclenchement : <code>\sec</code> donne <code>\section{•}</code>, appuyer de nouveau sur la touche de déclenchement donne la complétion suivante, et <code>\benu</code> donne tout un environnement enumerate avec des repères. Contrairement aux raccourcis de saisie et aux macros, la complétion des commandes remplace le texte sélectionné.</dd>
+</dl>
+</main>
+</body>
+</html>

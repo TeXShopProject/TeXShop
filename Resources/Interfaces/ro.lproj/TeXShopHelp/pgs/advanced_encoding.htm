@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codificări</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="codificare; UTF-8; Unicode; % !TEX encoding; detectare automată; dialogul de deschidere; dialogul de salvare; IsoLatin9; de la dreapta la stânga; arabă; ebraică; persană; surse de introducere">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm" class="current">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Codificări</h1>
+<p>TeXShop editează textul în Unicode, astfel încât fereastra sursă acceptă orice caracter din orice limbă. <em>Codificarea</em> stabilește cum este scris acest text în fișierul de pe disc și cum este citit înapoi. UTF-8 poate stoca orice caracter, iar LaTeX, XeLaTeX și LuaLaTeX îl citesc implicit. Fișierele mai vechi și fișierele din alte sisteme pot folosi altă codificare, de exemplu ISO Latin 9 sau Shift JIS.</p>
+
+<h2>Documente noi</h2>
+<p>Documentele noi sunt salvate în codificarea aleasă în Configurări › Documente și salvare › Codificare › „Codificarea documentelor noi”. Valoarea implicită este Unicode (UTF-8); păstrați-o, cu excepția cazului în care schimbați fișiere cu persoane care au nevoie de altă codificare.</p>
+<p>Un document este salvat în codificarea cu care a fost deschis, astfel încât un fișier mai vechi își păstrează codificarea. Caracterele pe care codificarea unui fișier nu le poate reprezenta se pierd la salvarea fișierului.</p>
+
+<h2>Deschiderea fișierelor</h2>
+<p>Când este deschis un fișier fără linie de codificare (vezi mai jos), TeXShop îi detectează codificarea. Un marcaj de ordine a octeților (BOM) identifică fișierele UTF-8 și UTF-16. Un fișier care conține numai caractere ASCII este citit în codificarea documentelor noi. Altfel, TeXShop folosește codificarea pe care programul care a salvat fișierul a înregistrat-o împreună cu el, dacă macOS a păstrat această informație, apoi încearcă UTF-8, apoi codificările limbilor dvs. și codificarea documentelor noi. O codificare declarată în sursă, de exemplu cu <code>\usepackage[latin9]{inputenc}</code>, este folosită ca indiciu.</p>
+<p>Detectarea este o presupunere și funcționează cel mai bine cu fișiere care conțin destul de mult text. Dacă alege codificarea greșită, închideți fișierul fără să-l salvați, deschideți-l din nou cu Fișier › Deschideți..., apăsați „Opțiuni” în dialogul de deschidere și alegeți codificarea în meniul acestuia; codificarea aleasă acolo este folosită pentru fișierele deschise în acel moment, iar documentul o păstrează. Meniul arată la început codificarea documentelor noi; dacă rămâne la această codificare, nu contează ca alegere, iar codificarea este detectată ca de obicei. Apoi adăugați în fișier o linie de codificare, pentru ca el să se deschidă mereu corect. Detectarea poate fi dezactivată cu configurarea ascunsă</p>
+<pre>defaults write TeXShop EncodingAutoDetection NO</pre>
+<p>Fișierele sunt citite atunci în codificarea documentelor noi.</p>
+
+<h2>Linia de codificare</h2>
+<p>O linie aflată într-una dintre primele douăzeci de linii ale unui fișier sursă îi fixează codificarea la citire și la salvare, având prioritate față de orice altceva:</p>
+<pre>% !TEX encoding = UTF-8 Unicode</pre>
+<p>Scrieți linia ca mai sus, cu un spațiu înaintea semnului egal; este citită și forma <code>%!TEX encoding =</code>, fără spațiu după <code>%</code>. Numele trebuie scris exact ca în tabelul de mai jos. Macrocomanda Encoding din meniul „Macro” inserează linia în locul dvs., cu o listă de codificări din care să alegeți. Sunt înțelese și numele folosite de TeXworks, precum <code>UTF-8</code> sau <code>ISO 8859-1</code>.</p>
+<p>Dacă linia indică o codificare pe care TeXShop nu o cunoaște, TeXShop citește fișierul ca UTF-8 și vă anunță. Dacă linia indică UTF-8, dar fișierul nu este UTF-8 valid, TeXShop semnalează acest lucru și deschide fișierul în ISO Latin 9, care poate citi orice fișier; dacă îl salvați fără să modificați linia, se scriu înapoi aceiași octeți, deci nu se pierde nimic. Pentru a deschide un fișier fără să i se aplice linia de codificare, țineți apăsată tasta Opțiune în timp ce se deschide.</p>
+<table>
+<tr><th>Numele din linia de codificare</th><th>Numele din meniuri</th></tr>
+<tr><td><code>UTF-8 Unicode</code></td><td>Unicode (UTF-8)</td></tr>
+<tr><td><code>Standard Unicode</code></td><td>Unicode (UTF-16)</td></tr>
+<tr><td><code>MacOSRoman</code></td><td>Vest-europeană (Mac OS Roman)</td></tr>
+<tr><td><code>IsoLatin</code></td><td>Vest-europeană (ISO Latin 1)</td></tr>
+<tr><td><code>IsoLatin9</code></td><td>Vest-europeană (ISO Latin 9)</td></tr>
+<tr><td><code>Windows Latin 1</code></td><td>Vest-europeană (Windows Latin 1)</td></tr>
+<tr><td><code>IsoLatin2</code></td><td>Central-europeană (ISO Latin 2)</td></tr>
+<tr><td><code>Mac Central European Roman</code></td><td>Central-europeană (Mac OS)</td></tr>
+<tr><td><code>WindowsCentralEurRoman</code></td><td>Central-europeană (Windows Latin 2)</td></tr>
+<tr><td><code>IsoLatin5</code></td><td>Turcă (ISO Latin 5)</td></tr>
+<tr><td><code>IsoLatinGreek</code></td><td>Greacă (ISO 8859-7)</td></tr>
+<tr><td><code>Mac Cyrillic</code></td><td>Chirilică (Mac OS)</td></tr>
+<tr><td><code>DOS Cyrillic</code></td><td>Chirilică (DOS)</td></tr>
+<tr><td><code>Windows Cyrillic</code></td><td>Chirilică (Windows)</td></tr>
+<tr><td><code>DOS Russian</code></td><td>Rusă (DOS)</td></tr>
+<tr><td><code>KOI8_R</code></td><td>Rusă (KOI8-R)</td></tr>
+<tr><td><code>MacJapanese</code></td><td>Japoneză (Mac OS, ShiftJIS ¥)</td></tr>
+<tr><td><code>DOSJapanese</code></td><td>Japoneză (Windows, DOS, ShiftJIS \)</td></tr>
+<tr><td><code>SJIS_X0213</code></td><td>Japoneză (Shift JIS X0213)</td></tr>
+<tr><td><code>EUC_JP</code></td><td>Japoneză (EUC)</td></tr>
+<tr><td><code>JISJapanese</code></td><td>Japoneză (ISO 2022-JP)</td></tr>
+<tr><td><code>MacKorean</code></td><td>Coreeană (Mac OS)</td></tr>
+<tr><td><code>DOSKorean</code></td><td>Coreeană (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Traditional</code></td><td>Chineză tradițională (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Traditional</code></td><td>Chineză tradițională (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Simplified</code></td><td>Chineză simplificată (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Simplified</code></td><td>Chineză simplificată (Windows, DOS)</td></tr>
+<tr><td><code>GB 2312</code></td><td>Chineză simplificată (GB 2312)</td></tr>
+<tr><td><code>GBK</code></td><td>Chineză (GBK)</td></tr>
+<tr><td><code>GB 18030</code></td><td>Chineză (GB 18030)</td></tr>
+<tr><td><code>Ascii</code></td><td>Vest-europeană (ASCII)</td></tr>
+</table>
+
+<h2>Salvarea în altă codificare</h2>
+<p>Pentru a alege codificarea la salvare, activați Configurări › Documente și salvare › Codificare › „Afișează codificarea în dialogul de salvare”; dialogul de salvare are atunci un meniu de codificări. Editare › Transformări › New Encoding alege codificarea în care documentul deschis va fi salvat de atunci încolo. Dacă fișierul are o linie de codificare, decide linia; modificați în schimb linia. TeXShop păstrează marcajul de ordine a octeților unui fișier UTF-8 și ordinea octeților unui fișier UTF-16.</p>
+<p>Conversia unui fișier în altă codificare pierde orice caracter pe care noua codificare nu îl poate reprezenta, iar citirea unui fișier în codificarea greșită urmată de salvare îi înlocuiește caracterele definitiv. Păstrați o copie a originalului. Programul în linie de comandă <code>iconv</code> convertește fișierele fără să modifice originalul. Documentul „Codificarea fișierelor și TeXShop (în engleză)” din meniul „Ajutor” tratează aceste chestiuni mai detaliat.</p>
+
+<h2>Limbi de la dreapta la stânga</h2>
+<p>Araba, ebraica și persana se tastează de la dreapta la stânga în fereastra sursă. Când Configurări › Editor › Tastare › „Limbi de la dreapta la stânga (arabă, ebraică, persană)” este activată și evidențierea sintaxei este activată, rândurile care încep cu scriere arabă sau ebraică sunt aliniate la dreapta, iar celelalte rânduri, de exemplu cele care încep cu o comandă LaTeX, la stânga. Cu configurarea ascunsă</p>
+<pre>defaults write TeXShop RightJustifyIfAny YES</pre>
+<p>orice rând care conține astfel de caractere oriunde este aliniat la dreapta. Alinierea servește doar la editare; TeX așază textul cules după propriile comenzi. Pentru a compila aceste limbi, folosiți XeLaTeX sau LuaLaTeX; consultați <a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a>.</p>
+
+<h2>Tastarea altor scrieri</h2>
+<p>Pentru a tasta într-o altă scriere, adăugați o sursă de introducere pentru ea în Configurări sistem › Tastatură, la „Introducere text”, și comutați între sursele de introducere cu meniul de introducere din bara de meniuri.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testo colorato</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="testo colorato; xcolor; colore; textcolor; definecolor; dvipsnames; colore delle pagine dell’anteprima; Pagine chiare">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di composizione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codifiche</a></li>
+<li><a href="advanced_Japan.htm">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm" class="current">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Testo colorato</h1>
+<p>Il pacchetto xcolor colora il testo nel documento composto. Caricalo nel preambolo:</p>
+<pre>\usepackage{xcolor}</pre>
+<p>A quel punto <code>\color{blue}</code> passa al blu fino alla fine del gruppo o dell’ambiente corrente, e <code>\textcolor{red}{This is very important!}</code> colora solo il suo argomento. Per definire colori propri, usa ad esempio</p>
+<pre>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</pre>
+<p>L’opzione <code>dvipsnames</code> aggiunge un elenco di colori con nome, come BrickRed e ForestGreen:</p>
+<pre>\usepackage[dvipsnames]{xcolor}</pre>
+<p>La documentazione di xcolor, che si apre con Aiuto › Mostra aiuto per il pacchetto..., elenca tutti i colori e le opzioni.</p>
+
+<h2>Il colore delle pagine nella finestra di anteprima</h2>
+<p>Il testo colorato può essere difficile da leggere su una pagina bianca. Alle pagine della finestra di anteprima si può dare un altro colore in Impostazioni › Temi: nel gruppo «Finestre», il colore sotto «Pagine chiare» nella riga «Anteprima» riempie le pagine finché sono mostrate chiare. Ogni tema ha un proprio colore, quindi il tema «A sfondo chiaro» e il tema «A sfondo scuro» possono usare colori diversi.</p>
+<p>Il colore serve solo alla visualizzazione: non viene stampato e non compare quando si copia una parte di una pagina. Le pagine mostrate scure con l’elemento «Aspetto» nella barra strumenti della finestra di anteprima non vengono riempite con questo colore. Il colore del testo stesso è stabilito dal documento, con xcolor come sopra.</p>
+</main>
+</body>
+</html>

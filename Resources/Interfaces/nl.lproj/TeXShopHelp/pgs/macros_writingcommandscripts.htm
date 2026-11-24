@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scripts schrijven met shell-commando’s</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; shellscript; do shell script; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hulp bij macro’s</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Inleiding</a></li>
+<li><a href="macros_default.htm">De standaardmacro’s</a></li>
+<li><a href="macros_rearrange.htm">Het menu Macro's herschikken</a></li>
+<li><a href="macros_define.htm">Nieuwe macro’s definiëren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-macro’s</a></li>
+<li><a href="macros_includedscripts.htm">Standaard-AppleScript-macro’s</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a></li>
+<li><a href="macros_dialogs.htm">Dialoogvensters maken</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm" class="current">Scripts schrijven met shell-commando’s</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Scripts schrijven met shell-commando’s</h1>
+<p>Deze pagina gebruikt de macro pdflatexc van Claus Gerhardt, in Macro's › Claus Gerhardt Macros, om te laten zien hoe een AppleScript een shellscript aanroept. Het shellscript zelf is eenvoudig: het voegt de mappen van de TeX-programma’s aan het zoekpad toe en voert pdflatex uit met <code>--shell-escape</code>. Uw eigen scripts doen waarschijnlijk meer, bijvoorbeeld meerdere programma’s na elkaar uitvoeren; juist dan komen deze technieken van pas.</p>
+
+<h2 id="shell-script">Het shellscript</h2>
+<p>Het shellscript is ~/Library/TeXShop/bin/pdflatexc. Het is niet afhankelijk van TeXShop: als de map ervan in uw zoekpad staat, voert u het uit door in Terminal <code>pdflatexc myfile.tex</code> te typen. Dit is het script:</p>
+<pre>#!/bin/tcsh
+# pdflatexc
+# Claus Gerhardt
+#
+# Usage
+# pdflatexc filename.tex
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+
+pdflatex --shell-escape "$1"</pre>
+
+<h2 id="applescript">Het AppleScript</h2>
+<p>De macro die dit shellscript aanroept, is interessanter:</p>
+<pre>--Applescript
+-- Apply only to an already saved file.
+
+set scriptPath to (do shell script "dirname " &amp; "~/Library/TeXShop/Scripts/ex")
+set scriptPath to scriptPath &amp; "/setname.scpt"
+set scriptName to POSIX file scriptPath as alias
+set scriptLiB to (load script scriptName)
+tell scriptLib
+set frontName to setname(#NAMEPATH#,#TEXPATH#)
+end tell
+
+set fileName to  #TEXPATH#
+set n to (number of characters of contents of fileName)
+set fileNamequoted to quoted form of fileName
+set baseName to do shell script "basename " &amp; fileNamequoted
+set m to (number of characters of contents of baseName)
+set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
+
+set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName
+do shell script shellScript
+
+tell document frontName of application "TeXShop"
+    refreshpdf
+end tell</pre>
+<p>Na het commentaar vormen de eerste zeven regels een recept van Claus Gerhardt om het bronbestand te bewaren en de naam van het document te vinden, die in <code>frontName</code> wordt gezet. Het werk wordt gedaan door het gecompileerde script setname.scpt in ~/Library/TeXShop/Scripts: deze regels bepalen het pad ~/Library/TeXShop/Scripts/setname.scpt, laden het script en roepen het aan met #NAMEPATH# en #TEXPATH#.</p>
+<p>Vaak kan hetzelfde eenvoudiger met</p>
+<pre>set frontName to #DOCUMENTNAME#
+tell document frontName of application "TeXShop"
+    save
+end tell</pre>
+<p>Het recept heeft twee voordelen. Het werkt ook als het voorste document niet het document is dat de latere commando’s moet ontvangen, bijvoorbeeld een logbestand zoals /Users/name/Examples/myfile.log. En als het bestand nog nooit is bewaard, geeft het recept een fout terug, terwijl het commando <code>save</code> het script zou laten wachten achter een bewaarvenster.</p>
+<p>De volgende zes regels stellen de variabelen <code>dirName</code> en <code>baseName</code> in. Als het bronbestand /Users/name/My Papers/Stuff/myfile.tex is, is <code>dirName</code> gelijk aan <code>'/Users/name/My Papers/Stuff'</code>, tussen aanhalingstekens gezet voor de shell vanwege de spatie in een mapnaam, en is <code>baseName</code> gelijk aan <code>myfile.tex</code>. De bestandsnaam wordt op dezelfde manier tussen aanhalingstekens gezet wanneer hij aan het shellscript wordt doorgegeven, zodat beide spaties mogen bevatten.</p>
+<p>De volgende drie regels roepen het shellscript aan. Het resultaat is hetzelfde als wanneer u in Terminal <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code> typt. De laatste drie regels werken het voorvertoningsvenster bij.</p>
+<p>Verscheidene van deze regels zijn ingewikkeld, maar ze kunnen ongewijzigd naar nieuwe scripts worden gekopieerd.</p>
+
+<h2 id="do-shell-script">Shell-commando’s uitvoeren vanuit AppleScript</h2>
+<p>AppleScript voert een shell-commando uit in de vorm</p>
+<pre>do shell script "cmd input"</pre>
+<p>Om een commando uit delen op te bouwen, schrijft u het in de gelijkwaardige vorm</p>
+<pre>do shell script "cmd " &amp; "input"</pre>
+<p>Let op de spatie na <code>cmd</code>. Het en-teken voegt twee tekenreeksen samen:</p>
+<pre>"cmd " &amp; "input" = "cmd input"</pre>
+<p>Een shell die door AppleScript wordt gestart, begint in de rootmap. Het commando</p>
+<pre>do shell script "cd " &amp; dirName</pre>
+<p>gaat naar de map in <code>dirName</code>, die al tussen aanhalingstekens staat, zodat er geen extra aanhalingstekens nodig zijn.</p>
+<p>Elke <code>do shell script</code> start een nieuwe shell, zodat een later commando niet in die map zou staan. Om verdere commando’s in dezelfde map uit te voeren, voegt u ze met puntkomma’s samen tot één commando, zoals in Terminal:</p>
+<pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
+<p>Het script hierboven doet dat met cmd1 = <code>cd</code>, input1 = <code>dirName</code>, cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code> en input2 = <code>baseName</code>. De regels</p>
+<pre>set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName</pre>
+<p>zijn gewoon een handige manier om deze reeks in één variabele te zetten.</p>
+</main>
+</body>
+</html>

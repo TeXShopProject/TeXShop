@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>预备知识</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="宏；宏编辑器；Macros_Latex.plist；Macros 文件夹；保存选区到文件；从文件添加宏；Shishikura">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">宏帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm" class="current">预备知识</a></li>
+<li><a href="macros_default.htm">了解默认宏</a></li>
+<li><a href="macros_rearrange.htm">重新排列“宏”菜单</a></li>
+<li><a href="macros_define.htm">定义新宏</a></li>
+<li><a href="macros_applescript.htm">AppleScript 宏</a></li>
+<li><a href="macros_includedscripts.htm">默认 AppleScript 宏</a></li>
+<li><a href="macros_defapplescript.htm">定义 AppleScript 宏</a></li>
+<li><a href="macros_dialogs.htm">创建对话框</a></li>
+<li><a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a></li>
+<li><a href="macros_writingcommandscripts.htm">用 Shell 命令编写脚本</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>预备知识</h1>
+<p>TeXShop 的宏和宏编辑器由 Mitsuhiro Shishikura 开发；默认的 LaTeX 宏由 Mitsuhiro Shishikura 和 Hirokazu Ogawa 创建。</p>
+<p>宏列在“宏”菜单以及源代码窗口工具栏的“宏”弹出式菜单中。宏有两种。文本宏像 LaTeX 面板的按钮一样，把文本插入源文件。AppleScript 宏运行一段 AppleScript；请参阅 <a href="macros_applescript.htm">AppleScript 宏</a>。</p>
+
+<h2 id="files">宏的存储位置</h2>
+<p>宏存储在</p>
+<pre>~/Library/TeXShop/Macros/Macros_Latex.plist</pre>
+<p>中，“宏”菜单对每种排版引擎都显示这些宏。对于内建引擎 plain TeX、BibTeX、MakeIndex 和 MetaPost，可以另外保留一组宏：当文稿选择了其中之一时，宏编辑器会把宏保存在单独的文件中（例如 Macros_Tex.plist），而不更改 Macros_Latex.plist。</p>
+<p>宏文件是普通的文本文件，但最好用宏编辑器更改它们：选取“宏”>“打开宏编辑器...”。<a href="macros_define.htm">定义新宏</a>说明了如何添加、删除和命名宏，以及如何为宏指定快捷键。</p>
+
+<h2 id="missing">如果 Macros 文件夹丢失</h2>
+<p>如果 TeXShop 启动时 Macros 文件夹丢失，TeXShop 会用默认的宏重新创建它。如果 Macros_Latex.plist 已损坏，TeXShop 会在启动时用自带的副本替换它，且不显示任何信息，并把损坏的文件保留在 ~/Library/TeXShop/Backups 中。要从默认的宏重新开始，请退出 TeXShop，将 Macros 文件夹移到桌面，然后再次启动 TeXShop；移走的文件夹中保留着你原来的宏。</p>
+
+<h2 id="sharing">分享宏</h2>
+<p>宏编辑器打开时，“宏”菜单中多出两个命令。“保存选区到文件...”把所选的宏保存到单独的文件中，你可以把这个文件交给别人。“从文件添加宏...”把这样的文件中的宏添加到你的列表中；然后可以在宏编辑器中随意排列它们。</p>
+</main>
+</body>
+</html>

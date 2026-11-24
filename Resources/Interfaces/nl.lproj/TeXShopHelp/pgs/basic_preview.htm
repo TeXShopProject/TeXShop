@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Het voorvertoningsvenster</title>
+<meta name="description" content="voorvertoningsvenster; weergavetype; pagina-indeling; indeling dubbele pagina’s; vergroting; Aan venster aanpassen; loep; PDF selecteren; afbeeldingen kopiëren; PDF doorzoeken; navigatiekolom; pop-ups van links; vastgezette pop-up; venster splitsen; Wissel weergaven; schermvullende weergave; annotatieknoppenbalk">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm" class="current">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Het voorvertoningsvenster</h1>
+
+<p>Het voorvertoningsvenster toont het gezette PDF-bestand. Het wordt na elke keer zetten bijgewerkt en blijft op de pagina die u aan het lezen was. De instellingen ervan staan in Instellingen › Voorvertoning: die onder ‘Bij het openen van een document’ gelden als een document wordt geopend, en het menu Pagina wijzigt ze voor het voorste venster.</p>
+
+<h2>Door het document bewegen</h2>
+
+<p>Pagina › Weergavetype bepaalt hoe de pagina’s worden weergegeven: ‘Enkele pagina’ en ‘Dubbele pagina’ tonen één pagina of één paar pagina’s, en ‘Doorlopend’ en ‘Dubbel doorlopend’ tonen alle pagina’s in één lange kolom. ‘Standaard weergavetype’ onder ‘Bij het openen van een document’ bepaalt met welk weergavetype een venster begint. ‘Vorige pagina’ en ‘Volgende pagina’ in het menu Pagina en in de knoppenbalk bladeren door de pagina’s, het veld ‘Ga naar pagina’ in de knoppenbalk gaat naar een pagina met een bepaald nummer, en de twee punthaken van ‘Terug/Vooruit’ in de knoppenbalk brengen u terug naar de plaatsen waar u vandaan kwam, zoals in een webbrowser.</p>
+
+<p>Bij ‘Enkele pagina’ en ‘Dubbele pagina’ bladert u door voorbij de boven- of onderkant van een pagina te scrollen; schakel ‘Niet bladeren door te scrollen’ in Instellingen › Voorvertoning › Weergave en navigatie in om in plaats daarvan bij de rand van de pagina te stoppen. De pijltoetsen omhoog en omlaag scrollen binnen de pagina. De pijltoetsen naar links en rechts scrollen zijwaarts als een vergrote pagina breder is dan het venster, en bladeren anders naar de volgende of vorige pagina; met ‘Altijd bladeren met de pijltoetsen links en rechts’ bladeren ze altijd.</p>
+
+<p>De knoppenbalk heeft twee menu’s voor de pagina’s; als ze zijn verwijderd, zet Venster › Pas knoppenbalk aan... ze terug. ‘Pagina-indeling’ kiest het weergavetype. ‘Indeling dubbele pagina’s’ kiest, alleen voor dit document, of een paar pagina’s van links naar rechts of van rechts naar links leest, en of de eerste pagina apart als omslag wordt getoond; het onderdeel ‘Herstel documentinstellingen’ ervan gaat terug naar de instellingen. Die instellingen zijn ‘Paginarichting’ en ‘Eerste pagina apart als omslag tonen’ onder ‘Bij het openen van een document’, en de magische regels <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> en <code>% !TEX standardDisplay</code> stellen ze in voor één document.</p>
+
+<h2>Vergroting</h2>
+
+<p>Pagina › Zoomen biedt deze keuzes:</p>
+<dl>
+<dt>Aan venster aanpassen</dt>
+<dd>De pagina vult de breedte van het venster, en als u het venster groter of kleiner maakt, verandert de vergroting mee.</dd>
+<dt>Aan inhoudsbreedte aanpassen</dt>
+<dd>Zoals ‘Aan venster aanpassen’, maar zonder de witte marges: het gezette deel van de pagina’s vult de breedte van het venster.</dd>
+<dt>Vast zoomniveau</dt>
+<dd>De vergroting blijft zoals ingesteld in het veld ‘Zoomen’ van de knoppenbalk, of met ‘Zoom in’ (<kbd>⇧⌘+</kbd>) en ‘Zoom uit’ (<kbd>⇧⌘_</kbd>).</dd>
+<dt>Werkelijke grootte</dt>
+<dd>De pagina’s op het formaat van het papier.</dd>
+</dl>
+
+<p>‘Zoom naar inhoud’ en ‘Zoom naar inhoudsbreedte’, aan het eind van hetzelfde submenu, stellen de vergroting één keer in, zodat het gezette deel van de pagina in het venster past of de breedte ervan vult. Als u de vergroting wijzigt met de knoppenbalk, met deze commando’s of door op het trackpad te knijpen, schakelt het venster over op ‘Vast zoomniveau’; kies opnieuw ‘Aan venster aanpassen’ om terug te gaan. Klik op het woord naast het veld ‘Zoomen’ om het menu Zoomen te openen. ‘Na wijziging van de venstergrootte’ en ‘Vergroting’ onder ‘Bij het openen van een document’ bepalen met welke vergroting een venster begint.</p>
+
+<h2>De muisgereedschappen</h2>
+
+<p>Het onderdeel ‘Muismodus’ van de knoppenbalk bepaalt wat de aanwijzer op de pagina doet. ‘Scrollen’ verplaatst de pagina. ‘Tekst selecteren’ selecteert tekst om te kopiëren. ‘Vergroten’ en ‘Vergroten (groter)’ tonen een loep zolang de muisknop is ingedrukt: klik dubbel en houd vast voor een grotere loep, klik driemaal en houd vast om het hele venster te vergroten, en druk op Command, Option of Control om sterker te vergroten; houd daarbij ook Shift ingedrukt om minder sterk te vergroten. ‘PDF selecteren’ selecteert een gebied van de pagina om als afbeelding te kopiëren. ‘Standaard muismodus’ onder ‘Bij het openen van een document’ bepaalt met welk gereedschap een venster begint.</p>
+
+<p>Sleep met ‘PDF selecteren’ over een gebied van de pagina en kopieer het dan met <kbd>⌘C</kbd>, of sleep het naar een andere app of naar het bureaublad; Pagina › Sla selectie op als bestand... bewaart het in een bestand. Pagina › Formaat kopiëren bepaalt of de kopie PDF is of een afbeelding zoals PNG, TIFF of JPEG; ‘Kopieer selectie als’ in Instellingen › Voorvertoning › Afbeeldingen kopiëren stelt de standaard in. Zie <a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a>.</p>
+
+<h2 id="search">Zoeken en de navigatiekolom</h2>
+
+<p>Typ een woord in het zoekveld ‘Zoek’ van de knoppenbalk en druk op Return om het eerste voorkomen ervan te selecteren; <kbd>⌘G</kbd> gaat naar het volgende. Zolang het voorvertoningsvenster vooraan staat, gaat <kbd>⌘F</kbd> naar dit veld.</p>
+
+<p>Pagina › Navigatiekolom, of het onderdeel ‘Navigatiekolom’ van de knoppenbalk, toont de navigatiekolom. Het bovenste deel ervan is de inhoudsopgave van het document, die het pakket hyperref maakt uit de hoofdstukken en secties; klik op een onderdeel om erheen te gaan, of kies er een met de pijltoetsen en druk op Return. Het onderste deel is een tweede zoekveld, dat elk voorkomen met de bijbehorende pagina toont; klik op een voorkomen om erheen te gaan.</p>
+
+<h2>Links en pop-ups van links</h2>
+
+<p>Links die het pakket hyperref maakt, werken in de voorvertoning: klik op een verwijzing om naar de stelling of het item in de literatuurlijst te gaan, en de linkerpunthaak van ‘Terug/Vooruit’ brengt u terug. Een webadres wordt in uw webbrowser geopend.</p>
+
+<p>Houd de aanwijzer boven een link om de plaats waarnaar die verwijst in een pop-up te zien, met het paginanummer in de rechterbenedenhoek. De pop-up verdwijnt na een paar seconden. Toetsen die u ingedrukt houdt als de pop-up verschijnt, veranderen die:</p>
+<dl>
+<dt>Shift</dt>
+<dd>toont de pop-up boven de link in plaats van eronder.</dd>
+<dt>Command</dt>
+<dd>toont een grotere pop-up.</dd>
+<dt>Option</dt>
+<dd>zet de pop-up vast, zodat die blijft staan. Als u op Option drukt terwijl een pop-up wordt getoond, wordt die ook vastgezet.</dd>
+<dt>Control</dt>
+<dd>keert ‘Beweeg pop-ups’ voor deze link om: als ‘Beweeg pop-ups’ aan staat, verschijnt er geen pop-up, zodat er niets in de weg zit bij een Control-klik; als het uit staat, verschijnt de pop-up toch.</dd>
+</dl>
+
+<p>Een vastgezette pop-up kunt u verplaatsen, groter of kleiner maken en scrollen, en de tekst erin kunt u selecteren en kopiëren. De pop-up blijft op zijn plaats op zijn pagina terwijl u klikt, scrolt, zoomt, links volgt of in andere vensters werkt, totdat u op Escape drukt in het voorvertoningsvenster. Terwijl een pop-up is vastgezet, verschijnen andere pop-ups nog steeds, en met Option zet u dan een van die pop-ups vast in plaats daarvan.</p>
+
+<p>Pagina › Beweeg pop-ups schakelt de pop-ups voor het venster in of uit, en ‘Beweeg pop-ups’ onder ‘Bij het openen van een document’ bepaalt of ze aan staan als een document wordt geopend. ‘Paginanummer in pop-ups van links tonen’ in Instellingen › Voorvertoning › Weergave en navigatie toont het paginanummer van het doel in de pop-up; schakel het uit om het weg te laten. Er verschijnen geen pop-ups zolang het gereedschap ‘PDF selecteren’ is gekozen.</p>
+
+<h2>Het venster splitsen</h2>
+
+<p>Venster › Splits venster (<kbd>⌃2</kbd>), of het onderdeel ‘Splits venster’ van de knoppenbalk, verdeelt het voorvertoningsvenster in twee delen die verschillende plaatsen in het document kunnen tonen; kies het opnieuw om de splitsing op te heffen. Houd Option ingedrukt om het venster in twee delen naast elkaar te splitsen (Venster › Splits venster verticaal, <kbd>⌃⌥2</kbd>). Elk deel heeft een eigen weergavetype en vergroting. Het deel waarin u het laatst hebt geklikt, is het actieve deel, gemarkeerd met een dunne lijn in de accentkleur: de knoppenbalk, de navigatiekolom, SyncTeX en het menu Pagina werken op dat deel, en bij het opheffen van de splitsing blijft dat deel over.</p>
+
+<p>Klik met Control ingedrukt of met de rechtermuisknop op een interne link en kies ‘Splits venster met link’ om de plaats waarnaar de link verwijst in het andere deel te tonen, terwijl de link zelf in beeld blijft; het venster wordt zo nodig eerst gesplitst.</p>
+
+<p>Venster › Wissel weergaven (<kbd>⌥2</kbd>) verwisselt de twee delen van een gesplitst venster. In een venster dat niet is gesplitst, wisselt het tussen twee weergaven van het document, elk met een eigen plaats, weergavetype en vergroting, zodat u heen en weer kunt gaan tussen twee plaatsen.</p>
+
+<h2>Schermvullende weergave</h2>
+
+<p>Venster › Schakel schermvullende weergave in (<kbd>⌃⌘F</kbd>) toont de voorvertoning over het hele scherm. De splitsing van het venster wordt dan opgeheven en het venster gebruikt de vergroting en het weergavetype die het laatst in de schermvullende weergave zijn gebruikt; als u de schermvullende weergave verlaat, komen de vorige terug. Om de splitsing, de vergroting en het weergavetype te behouden, schakelt u ‘Vergroting, weergavetype en splitsing behouden bij overschakelen naar schermvullende weergave’ in Instellingen › Voorvertoning › Weergave en navigatie in. In de schermvullende weergave sluit de eerste Escape een vastgezette pop-up en verlaat de tweede de schermvullende weergave.</p>
+
+<h2>Annotaties</h2>
+
+<p>Pagina › Toon annotatieknoppenbalk toont de annotatiegereedschappen onder de knoppenbalk van het venster. Klik op ‘Wijzig’ links op de annotatieknoppenbalk en gebruik dan de knoppen ervan om geselecteerde tekst door te halen, te markeren of te onderstrepen, of om vormen, pijlen, tekst en notities toe te voegen. Annotaties maken geen deel uit van de bron, en de volgende keer zetten vervangt het PDF-bestand, dus bewaar ze met ‘Bewaar annotaties…’ in de annotatieknoppenbalk; dat bewaart een kopie van het PDF-bestand, voor Fourier.tex bijvoorbeeld met de naam Fourier-Annotated.pdf. Nadat u met ‘Wijzig’ hebt gewerkt, biedt TeXShop aan om de annotaties te bewaren voordat het opnieuw zet of het venster sluit. De TeXShop-handleiding (Engels) beschrijft annotaties in detail.</p>
+
+<h2>Meer</h2>
+
+<p>Klik met Command ingedrukt in de voorvertoning om naar de overeenkomende plaats in de bron te gaan; zie <a href="basic_typesetting.htm">Documenten zetten</a>. ‘Roteer met klok mee’ en ‘Roteer tegen klok in’ in het menu Pagina draaien de pagina’s. Als een andere app, zoals latexmk, het PDF-bestand herschrijft, laadt de voorvertoning het opnieuw op dezelfde plaats zodra u terugkomt in TeXShop of in het voorvertoningsvenster; schakel ‘Pdf-wijzigingen door andere apps altijd volgen’ in Instellingen › Voorvertoning › Vernieuwen in om het meteen opnieuw te laden, ook als TeXShop op de achtergrond staat. Met Pagina › Bewaar positie voorvertoning openen nieuwe voorvertoningsvensters op de plaats en met de grootte van het voorste venster.</p>
+</main>
+</body>
+</html>

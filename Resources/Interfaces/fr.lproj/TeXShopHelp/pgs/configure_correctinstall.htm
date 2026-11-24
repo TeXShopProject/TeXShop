@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obtenir les nouveaux éléments de la bibliothèque</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop; mise à jour; dossier New; bin; Scripts; Engines Inactive; macros; fichiers endommagés; Backups; contenu par défaut d’un dossier">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Comment configurer TeXShop ?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Préliminaires</a></li>
+<li><a href="configure_prefchanges.htm">Modifications recommandées des réglages</a></li>
+<li><a href="configure_correctinstall.htm" class="current">Obtenir les nouveaux éléments de la bibliothèque</a></li>
+<li><a href="configure_hidden.htm">Réglages cachés</a></li>
+<li><a href="configure_panel.htm">Modifier la palette LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modifier les raccourcis de saisie</a></li>
+<li><a href="configure_menushortcuts.htm">Redéfinir les raccourcis clavier des menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Obtenir les nouveaux éléments de la bibliothèque</h1>
+<p>TeXShop conserve les fichiers que vous pouvez modifier, comme les modèles, les macros, les moteurs, les raccourcis de saisie, le fichier de la palette LaTeX et les thèmes, dans ~/Library/TeXShop, le dossier TeXShop du dossier Bibliothèque de votre dossier de départ. TeXShop › Ouvrir ~/Bibliothèque/TeXShop l’ouvre dans le Finder. Lors de sa première exécution, TeXShop crée ce dossier avec un contenu par défaut.</p>
+
+<h2 id="updates">Ce que modifie une nouvelle version</h2>
+<p>Une nouvelle version de TeXShop laisse la plus grande partie de ~/Library/TeXShop intacte ; vos modifications sont donc conservées. Quelques emplacements contiennent les fichiers d’assistance propres à TeXShop ou des éléments facultatifs, et une nouvelle version les met à jour :</p>
+<ul>
+<li>les dossiers bin, Documents, ExternalEditorScripts et Scripts ;</li>
+<li>Engines/Inactive et HTML/Inactive, qui contiennent des moteurs et des fichiers HTML que vous pouvez mettre en service ;</li>
+<li>HTML/Help.html, la page affichée par Aide › Commandes HTML (en anglais) ;</li>
+<li>le dossier New, qui est remplacé dans son ensemble.</li>
+</ul>
+<p>À ces emplacements, chaque fichier fourni avec TeXShop est remplacé par sa nouvelle version ; les modifications que vous avez apportées à un tel fichier sont donc perdues. Les nouveaux fichiers sont ajoutés, et les fichiers que vous avez ajoutés sous d’autres noms restent tels quels. Pour conserver votre propre version de l’un de ces fichiers, enregistrez-la sous un autre nom.</p>
+<p>Les moteurs en service, dans le dossier Engines lui-même, ne sont pas modifiés. Ce n’est que si le dossier a été mis à jour en dernier par une version de TeXShop antérieure à 6.00 que TeXShop ajoute html.engine à Engines, une seule fois, et seulement si aucun fichier de ce nom ne s’y trouve. Dans le dossier Macros, quelques macros fournies avec TeXShop et jamais modifiées, comme celle qui ouvre le site web de TeXShop, sont mises à jour avec leur texte actuel ; les macros modifiées et vos propres macros restent telles quelles. Tout le reste conserve vos modifications.</p>
+<p>TeXShop enregistre sa version dans un fichier masqué <code>.Version</code> de ~/Library/TeXShop/New et ne met le dossier à jour que si sa version est plus récente que celle qui y est enregistrée. Ainsi, ~/Library/TeXShop n’est pas réécrit à chaque démarrage de TeXShop, et une version plus ancienne de TeXShop peut être exécutée sans le modifier.</p>
+
+<h2 id="new">Le dossier New</h2>
+<p>Le dossier New contient des éléments que vous voudrez peut-être ajouter vous-même, par exemple de nouveaux modèles. Déplacez un tel élément dans le dossier approprié, par exemple Templates, et modifiez-le à votre guise. Aide › À propos de cette version (en anglais) indique s’il y a quelque chose à récupérer.</p>
+
+<h2 id="repair">Fichiers manquants et endommagés</h2>
+<p>Lorsqu’un fichier dont TeXShop a besoin, comme les macros, le fichier de la palette LaTeX, les raccourcis de saisie, KeyEquivalents.plist ou un thème, est manquant ou endommagé, TeXShop le remplace par sa propre copie au démarrage, sans message. Le fichier endommagé est conservé dans ~/Library/TeXShop/Backups, afin que vous puissiez y récupérer vos modifications.</p>
+
+<h2 id="defaults">Retrouver le contenu par défaut d’un dossier</h2>
+<p>Pour obtenir le contenu par défaut le plus récent d’un dossier, par exemple Templates, quittez TeXShop, sortez ce dossier de ~/Library/TeXShop (sur le bureau, par exemple) et relancez TeXShop. Celui-ci recrée le dossier avec son contenu par défaut. Recopiez ensuite depuis le dossier déplacé tout ce que vous voulez conserver.</p>
+</main>
+</body>
+</html>

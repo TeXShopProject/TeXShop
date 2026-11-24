@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comporre i documenti</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="composizione; primo documento; Compila; console; errori; Vai all’errore; Interrompi; Butta i file ausiliari nel Cestino; profilo del motore; % !TEX program; file principale; SyncTeX; Usa un’unica finestra">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm" class="current">Comporre i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Comporre i documenti</h1>
+
+<h2>Un primo documento</h2>
+
+<p>Scegli File › Nuovo. Nella barra strumenti della nuova finestra, scegli LatexTemplate nel menu «Modelli»; la finestra si riempie delle righe che servono a ogni documento LaTeX. Scrivi il testo tra <code>\begin{document}</code> e <code>\end{document}</code>. Una riga vuota inizia un nuovo paragrafo.</p>
+
+<p>Fai clic su «Compila» nella barra strumenti, oppure premi <kbd>⌘T</kbd> (Compilatore › Compila). La prima volta, TeXShop chiede dove salvare il documento. TeX scrive diversi file accanto al sorgente, quindi dai a ogni documento una cartella tutta sua. Poi TeXShop esegue TeX e apre una finestra di anteprima con il documento composto.</p>
+
+<p>Da quel momento scrivi, componi e guarda il risultato. TeXShop salva il sorgente prima di ogni composizione, e l’anteprima resta alla pagina che stavi leggendo. <kbd>⌘T</kbd> funziona nel sorgente, nell’anteprima e nella console, e <kbd>⌘1</kbd> (Finestra › Sorgente ⇔ Anteprima) passa dal sorgente alla sua anteprima e viceversa. Impostazioni › Composizione › «Dopo la composizione» sceglie quale finestra viene in primo piano quando TeX termina.</p>
+
+<p>Aprendo un file .tex si apre anche il file PDF con lo stesso nome, se esiste. Chiudendo la finestra di anteprima il sorgente resta aperto, e l’anteprima ricompare alla composizione successiva; chiudendo la finestra sorgente si chiude il documento.</p>
+
+<h2>La console</h2>
+
+<p>Mentre TeX è in esecuzione, i suoi messaggi compaiono nella console. Impostazioni › Console › «Mostrare la console» sceglie se la console viene in primo piano a ogni composizione («Sempre») o solo quando TeX segnala un errore («In caso di errore»). File › Mostra Console (<kbd>⌘0</kbd>) porta in primo piano la console del documento attivo, e <kbd>⌘0</kbd> nella console torna alla finestra da cui provenivi. Il testo della console si può selezionare e copiare in qualsiasi momento.</p>
+
+<p>Quando TeX trova un errore, scrive un messaggio alla fine della console e attende una risposta. Scrivila nel campo in fondo alla console e premi A capo; A capo da solo passa all’errore successivo, e il campo elenca le altre risposte che TeX accetta. Per fermare TeX, fai clic su «Interrompi» nella console oppure scegli File › Interrompi Compilazione (<kbd>⌃⌥⌘A</kbd>).</p>
+
+<h2>Trovare gli errori</h2>
+
+<p>«Vai all’errore» nella console, oppure Modifica › Vai all'Errore (<kbd>⌃⌘E</kbd>), fa scorrere il sorgente fino alla riga del primo errore e la evidenzia; sceglilo di nuovo per l’errore successivo. Se l’errore si trova in un altro file del progetto, quel file viene aperto. Spesso la cosa più rapida è correggere alcuni errori e comporre di nuovo, perché un errore può causarne diversi altri. «Vai all’errore» si basa sui nomi dei file e sui numeri di riga che TeX scrive con <code>-file-line-error</code>, opzione usata dai comandi e dai file dei motori di TeXShop.</p>
+
+<p>LaTeX scrive informazioni per l’esecuzione successiva, come l’indice e i riferimenti incrociati, in un file .aux e in altri file ausiliari, quindi un documento può richiedere due o tre esecuzioni prima che tutti i riferimenti siano giusti. Un errore può lasciare questi file danneggiati, e allora il documento può non comporsi nemmeno dopo aver corretto l’errore. Scegli Compilatore › Butta i File Ausiliari nel Cestino &amp; Compila (<kbd>⌥⌘T</kbd>) per spostare i file ausiliari nel Cestino e comporre di nuovo, oppure File › Butta i File Ausiliari nel Cestino (<kbd>⌃⌘A</kbd>), disponibile anche come pulsante «Cestina file aux» nella console. Consulta <a href="advanced_removeaux.htm">Eliminare i file ausiliari</a>.</p>
+
+<h2 id="engine">Scegliere il motore</h2>
+
+<p>Impostazioni › Composizione › «Profilo del motore» imposta in un solo passaggio la composizione per un motore. Scegli il profilo del motore che usi; un foglio elenca i valori che imposta, e OK li applica. Nel foglio, «Esecuzione di LaTeX» si può impostare su «Con latexmk», così che latexmk esegua BibTeX, l’indice analitico e le passate aggiuntive quando servono. Non appena uno di questi valori viene cambiato, il menu mostra «Personalizzato». Il Manuale di TeXShop elenca che cosa impostano i profili.</p>
+
+<p>Per un solo documento, scegli il motore nel menu a comparsa «Programma» accanto a «Compila» nella barra strumenti. Elenca plain TeX, LaTeX, BibTeX, MakeIndex e MetaPost, seguiti dai file dei motori in ~/Library/TeXShop/Engines, come LuaLaTeX e XeLaTeX, e la scelta vale per quella finestra. Per renderla parte del documento, metti una riga come questa tra le prime 20 righe del sorgente:</p>
+
+<pre>% !TEX program = LuaLaTeX</pre>
+
+<p>A quel punto <kbd>⌘T</kbd> compone sempre il file con quel motore. Il nome è quello di un file del motore, oppure uno tra <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> e <code>tex</code> per LaTeX e plain TeX integrati (consulta <a href="basic_alternatetypeset.htm">Modalità di composizione alternativa</a>). Macro › Program inserisce una riga di questo tipo, con il motore scelto da un elenco; scrive <code>% !TEX TS-program =</code>, che ha lo stesso significato. Impostazioni › Composizione › «Componi i nuovi documenti con» imposta il motore dei documenti che non hanno una riga del genere. Per i file dei motori consulta <a href="advanced_addengine.htm">Aggiungere motori di composizione</a>.</p>
+
+<p>Il menu Compilatore esegue anche BibTeX, MakeIndex e MetaPost sul documento; consulta <a href="advanced_bibtex.htm">BibTeX</a> e <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
+
+<h2>Documenti in più file</h2>
+
+<p>Un libro viene spesso diviso in un file principale, che contiene il preambolo, e in file dei capitoli che il file principale legge con <code>\include</code> o <code>\input</code>. Metti una riga come <code>% !TEX root = ../Book.tex</code> all’inizio di ogni file di capitolo, indicando il file principale con il suo percorso a partire dal file del capitolo. A quel punto <kbd>⌘T</kbd> in un file di capitolo compone il file principale, e «Vai all’errore» e SyncTeX trovano il file di capitolo giusto. Consulta <a href="advanced_root.htm">Impostare il file principale di un progetto</a>.</p>
+
+<h2>Passare dal sorgente all’anteprima</h2>
+
+<p>Fai Comando-clic su una parola del sorgente, e l’anteprima scorre fino al testo composto e lo contrassegna. Fai Comando-clic nell’anteprima, e il sorgente viene in primo piano con il testo corrispondente contrassegnato; in un documento con file dei capitoli, il file del capitolo si apre se necessario. La corrispondenza non è sempre esatta, quindi guarda anche intorno al punto contrassegnato. I colori dei contrassegni si impostano in Impostazioni › Temi › SyncTeX.</p>
+
+<p>Questa funzione usa SyncTeX, che i motori supportano quando vengono eseguiti con <code>-synctex=1</code>, come fanno i comandi e i file dei motori di TeXShop; Impostazioni › Composizione › «Metodo di sincronizzazione» deve essere «SyncTeX (consigliato)». Il file SyncTeX di un documento registra dove si trovano i suoi file, quindi dopo aver spostato la cartella di un progetto componi ancora una volta prima di sincronizzare.</p>
+
+<h2>Disporre le finestre</h2>
+
+<p>Finestra › Usa un'unica finestra mette il sorgente e la sua anteprima uno accanto all’altra in una sola finestra, e Finestra › Usa finestre separate li separa di nuovo. Per aprire ogni documento in questo modo, imposta Impostazioni › Generali › Finestre › «Sorgente e anteprima» su «Usa un’unica finestra»; «Posizione del sorgente nella finestra combinata» mette il sorgente a sinistra o a destra. Trascina il divisore per dare al sorgente più o meno spazio; TeXShop apre ogni finestra combinata con la stessa proporzione. Un file di capitolo con una riga <code>% !TEX root</code> resta in finestre separate; il file principale invece può usare un’unica finestra. File › Nuovo apre solo una finestra sorgente: componi prima il nuovo documento, poi scegli «Usa un'unica finestra».</p>
+
+<p>Con finestre separate, disponi e ridimensiona come preferisci le finestre sorgente e dell’anteprima, poi scegli Sorgente › Salva Posizione Sorgente e Anteprima › Salva Posizione Anteprima; le nuove finestre si apriranno in quella posizione.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ferestre și file</title>
+<meta name="copyright" content="Copyright (c) 2016 Richard Koch under the GNU FDL">
+<meta name="description" content="file; ferestre; Deschide ferestrele noi ca file; Folosește o singură fereastră; Folosește ferestre separate; useTabs; useTabsWithFiles; tabbedFile; TabsAlsoForInputFiles">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Tabloul de comandă LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Tabloul de comandă Matrix</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm" class="current">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Ferestre și file</h1>
+<p>Ferestrele TeXShop pot fi grupate ca file ale unei singure ferestre, ca în alte aplicații macOS. În Configurări › General, „Deschide ferestrele noi ca file” alege când se întâmplă acest lucru: „Niciodată”, „Automat”, care urmează configurarea filelor din macOS, sau „Întotdeauna”.</p>
+<p>Cu „Întotdeauna” și cu ferestre separate pentru sursă și previzualizare, sursa fiecărui document pe care îl deschideți devine o filă a ferestrei sursă, iar previzualizarea ei o filă a ferestrei de previzualizare; consolele și jurnalele sunt grupate în același mod. Selectarea unei file dintr-o fereastră aduce în prim-plan fila corespunzătoare din cealaltă când compilați sau sincronizați. Dacă sursa și previzualizarea sunt afișate într-o singură fereastră („Sursă și previzualizare” din Configurări › General setat la „Unește într-o singură fereastră”), fiecare filă conține un document întreg. Fereastră › Folosește o singură fereastră și Fereastră › Folosește ferestre separate trec documentul activ de la un mod la celălalt.</p>
+<p>O fereastră care afișează împreună sursa și previzualizarea, cu sau fără file, funcționează bine pe tot ecranul: consola plutește atunci deasupra ei în timp ce compilați.</p>
+
+<h2>Deschiderea unui proiect în file</h2>
+<p>Pentru o carte ale cărei capitole sunt fișiere separate, fișierul principal poate cere TeXShop să deschidă capitolele ca file ale ferestrei sale. Puneți această linie printre primele 20 de linii ale fișierului principal:</p>
+<pre>% !TEX useTabs</pre>
+<p>Când se deschide fișierul principal, fișierele indicate de comenzile sale <code>\include</code> se deschid ca file. Pe aceeași linie pot urma nume scurte pentru file, între paranteze și separate prin virgule; un spațiu gol între două virgule păstrează numele fișierului respectiv:</p>
+<pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
+<p>Pentru a da file și fișierelor din comenzile <code>\input</code>, folosiți această configurare ascunsă în Terminal:</p>
+<pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
+<p>Pentru a alege singur fișierele, puneți o linie <code>useTabsWithFiles</code> printre primele 20 de linii ale fișierului principal și adăugați câte o linie <code>tabbedFile</code> pentru fiecare filă, toate printre primele lui 50 de linii. Între paranteze poate urma un nume pentru filă:</p>
+<pre>% !TEX useTabsWithFiles
+% !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
+% !TEX tabbedFile{Galois.log}
+% !TEX tabbedFile{~/Graphics/diagram.pdf}</pre>
+<p>O cale este relativă la dosarul fișierului principal, începe din dosarul dumneavoastră de început cu <code>~</code> sau este o cale completă. Scrieți întotdeauna extensia, chiar și atunci când Finder o ascunde: aceste file pot afișa și jurnale, fișiere PDF și imagini. Fiecare fișier se deschide așa cum s-ar deschide dacă l-ați deschide singur, astfel încât un fișier sursă își poate aduce și previzualizarea.</p>
+<p>Pentru celelalte linii de comentariu speciale, consultați Ajutor › Linii de comentarii și configurări ascunse.</p>
+</main>
+</body>
+</html>

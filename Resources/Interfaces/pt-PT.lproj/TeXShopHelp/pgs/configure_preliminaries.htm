@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preliminares</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="configurar o TeXShop; janela Definições; Pesquisar definições; ~/Library/TeXShop; ficheiros danificados; Backups; definições ocultas; comentários especiais">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Como configurar o TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm" class="current">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm">Alterações recomendadas às definições</a></li>
+<li><a href="configure_correctinstall.htm">Obter novos itens da Biblioteca</a></li>
+<li><a href="configure_hidden.htm">Definições ocultas</a></li>
+<li><a href="configure_panel.htm">Modificar o Painel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar as associações de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Preliminares</h1>
+<p>Este capítulo explica como adaptar o TeXShop à sua forma de trabalhar: as definições que vale a pena verificar primeiro, como o TeXShop mantém atualizados os ficheiros em ~/Library/TeXShop, as definições ocultas e como alterar o Painel LaTeX, as associações de teclas e os atalhos dos menus.</p>
+
+<h2 id="settings">A janela Definições</h2>
+<p>Escolha TeXShop › Definições… para abrir a janela Definições. A barra lateral tem dez categorias: Geral, Documentos e gravação, Editor, Teclado, Ortografia, Temas, Composição, Consola, Pré-visualização e Atualizações. Para encontrar uma definição sem saber a categoria, escreva uma palavra no campo «Pesquisar definições» no topo da barra lateral e escolha um resultado: a janela Definições mostra a definição e destaca-a. Consulte <a href="basic_preferences.htm#settings-search">Usar as definições e «Pesquisar definições»</a>.</p>
+<p>Muitas definições têm um comando de menu correspondente, como Código-fonte › Mostrar números de linha e a definição «Números de linha» em Editor. O comando de menu altera apenas o documento ativo enquanto está aberto; a definição decide o aspeto e o comportamento dos documentos quando são abertos.</p>
+<p>A maior parte do que é guardado em ficheiros pode ser alterada no próprio TeXShop. Definições › Teclado contém as associações de teclas, a lista de conclusão de comandos («Editar conclusão de comandos…») e os atalhos dos menus; as macros editam-se no editor de macros (Macros › Abrir editor de macros…) e os temas de cores em Definições › Temas.</p>
+
+<h2 id="library">A pasta ~/Library/TeXShop</h2>
+<p>As minutas, as macros, os motores, o ficheiro do Painel LaTeX, as associações de teclas, a lista de conclusão de comandos, os temas e outros ficheiros que pode alterar são guardados em ~/Library/TeXShop, a pasta TeXShop da pasta Biblioteca da sua pasta pessoal. TeXShop › Abrir ~/Library/TeXShop abre-a no Finder. Uma nova versão do TeXShop mantém aí as suas alterações; <a href="configure_correctinstall.htm">Obter novos itens da Biblioteca</a> explica que ficheiros atualiza.</p>
+<p>Quando um ficheiro de que o TeXShop precisa, como as macros, o ficheiro do Painel LaTeX, as associações de teclas ou um tema, está em falta ou danificado, o TeXShop substitui-o pela sua própria cópia ao ser aberto, sem qualquer mensagem. O ficheiro danificado é guardado em ~/Library/TeXShop/Backups, para que possa recuperar dele as suas alterações.</p>
+<p>Para voltar ao conteúdo predefinido de uma pasta, saia do TeXShop, mova a pasta (Templates, por exemplo) para fora de ~/Library/TeXShop, por exemplo para a secretária, e volte a abrir o TeXShop. O TeXShop cria de novo a pasta com o conteúdo predefinido; copie de volta da pasta movida tudo o que quiser manter.</p>
+
+<h2 id="more">Definições ocultas e comentários especiais</h2>
+<p>Algumas definições não estão na janela Definições; alteram-se com um comando no Terminal. Consulte <a href="configure_hidden.htm">Definições ocultas</a>. Os comentários especiais, como <code>% !TEX program = lualatex</code> no início de um ficheiro de código-fonte, definem o motor, a codificação, o ficheiro principal e outros aspetos apenas para esse ficheiro. Ajuda › Linhas de comentário e definições ocultas (em inglês) enumera todos os comentários especiais e definições ocultas.</p>
+</main>
+</body>
+</html>

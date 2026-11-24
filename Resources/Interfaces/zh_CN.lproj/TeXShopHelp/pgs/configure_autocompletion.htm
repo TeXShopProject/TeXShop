@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>修改按键绑定</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="按键绑定；按键绑定列表；编辑按键绑定；输入字符；输出文本；粘贴；Keyboard 文件夹；autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">如何配置 TeXShop？</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">预备知识</a></li>
+<li><a href="configure_prefchanges.htm">建议更改的设置</a></li>
+<li><a href="configure_correctinstall.htm">获取资源库中的新项目</a></li>
+<li><a href="configure_hidden.htm">隐藏设置</a></li>
+<li><a href="configure_panel.htm">修改 LaTeX 面板</a></li>
+<li><a href="configure_autocompletion.htm" class="current">修改按键绑定</a></li>
+<li><a href="configure_menushortcuts.htm">重新定义菜单键盘快捷键</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>修改按键绑定</h1>
+<p>按键绑定会把键入的字符替换为一段文本，例如把 ^ 替换为 ^{}，并把插入点放在花括号之间；<a href="basic_autocompletion.htm">按键绑定</a>介绍了它的用法。本页说明如何更改按键绑定列表。</p>
+
+<h2 id="on-off">打开按键绑定</h2>
+<p>“设置”>“键盘”中的“使用按键绑定（新文档的默认值）”决定文稿打开时是否打开按键绑定；此项起初是关闭的。“源代码”>“按键绑定”只为当前文稿打开或关闭按键绑定，可选的“按键绑定”工具栏项目的作用相同。</p>
+
+<h2 id="edit">编辑列表</h2>
+<p>“设置”>“键盘”中的“按键绑定列表”列出每个输入字符及其输出文本。连按两次单元格即可就地编辑。点按列表下方的 + 可添加按键绑定，点按 − 可删除所选的按键绑定；拖移行可更改它们的顺序。输入字符是单个字符。更改会立即保存并立即生效，对已经打开的文稿也有效；“编辑”>“撤销”可撤销这些更改。</p>
+<p>输出文本中可以包含以下符号，列表会将它们显示为小标签：</p>
+<dl>
+<dt>#SEL#</dt><dd>键入该键时所选的文本</dd>
+<dt>#INS#</dt><dd>插入点所在的位置</dd>
+<dt>#PASTE#</dt><dd>剪贴板上的文本</dd>
+<dt>•</dt><dd>标记，可用“编辑”>“标记”移到这里</dd>
+</dl>
+<p>可以用列表下方的“插入”菜单添加这些符号，也可以按上面的写法直接键入；按 Option-Return 键入换行，按 Option-Tab 键入制表符。列表旁边的 ? 按钮会显示所有符号。拷贝输出文本时，符号会按上面的写法拷贝。</p>
+<p>在“粘贴”列中勾选某个按键绑定后，它也会应用于粘贴的文本：当该文稿的按键绑定打开时，粘贴或拖放到源文件中的文本里出现的每个该输入字符，都会被替换为它的输出文本。输出文本中包含 #SEL#、#INS#、#PASTE# 或标记的按键绑定不能勾选。</p>
+
+<h2 id="reset">恢复默认列表</h2>
+<p>该列表保存在文件夹 ~/Library/TeXShop/Keyboard 中。要恢复为 TeXShop 自带的列表，请退出 TeXShop，将 Keyboard 文件夹移到桌面，然后再次启动 TeXShop；它会重新创建该文件夹并放入默认内容。</p>
+</main>
+</body>
+</html>

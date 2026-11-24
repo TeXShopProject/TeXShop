@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>预备知识</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="配置 TeXShop；“设置”窗口；搜索设置；~/Library/TeXShop；损坏的文件；Backups；隐藏设置；魔法注释">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">如何配置 TeXShop？</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm" class="current">预备知识</a></li>
+<li><a href="configure_prefchanges.htm">建议更改的设置</a></li>
+<li><a href="configure_correctinstall.htm">获取资源库中的新项目</a></li>
+<li><a href="configure_hidden.htm">隐藏设置</a></li>
+<li><a href="configure_panel.htm">修改 LaTeX 面板</a></li>
+<li><a href="configure_autocompletion.htm">修改按键绑定</a></li>
+<li><a href="configure_menushortcuts.htm">重新定义菜单键盘快捷键</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>预备知识</h1>
+<p>本章介绍如何让 TeXShop 适应你的工作方式：首先值得检查的设置、TeXShop 如何让 ~/Library/TeXShop 中的文件保持最新、隐藏设置，以及如何更改 LaTeX 面板、按键绑定和菜单快捷键。</p>
+
+<h2 id="settings">“设置”窗口</h2>
+<p>选取“TeXShop”>“设置…”可打开“设置”窗口。它的边栏中有十个类别：“通用”“文稿与保存”“编辑器”“键盘”“拼写检查”“主题”“排版”“控制台”“预览”和“更新”。如果不知道某项设置在哪个类别中，可在边栏顶部的“搜索设置”栏中键入一个词，然后选择一个结果：“设置”会显示该设置并将其高亮。请参阅<a href="basic_preferences.htm#settings-search">使用“设置”和“搜索设置”</a>。</p>
+<p>许多设置都有对应的菜单命令，例如“源代码”>“显示行号”和“编辑器”中的“显示行号”设置。菜单命令只在当前文稿打开期间更改该文稿；设置则决定文稿打开时的外观和行为。</p>
+<p>保存在文件中的内容大多可以在 TeXShop 中直接更改。“设置”>“键盘”中有按键绑定、命令补全列表（“编辑命令补全文件…”）和菜单快捷键；宏在宏编辑器（“宏”>“打开宏编辑器...”）中编辑，配色主题在“设置”>“主题”中编辑。</p>
+
+<h2 id="library">文件夹 ~/Library/TeXShop</h2>
+<p>模板、宏、引擎、LaTeX 面板文件、按键绑定、命令补全列表、主题以及其他可以更改的文件都保存在 ~/Library/TeXShop 中，即个人文件夹内“资源库”文件夹中的 TeXShop 文件夹。“TeXShop”>“打开 ~/Library/TeXShop”会在访达中打开它。新版本的 TeXShop 会保留你在其中所做的更改；<a href="configure_correctinstall.htm">获取资源库中的新项目</a>说明了它会更新哪些文件。</p>
+<p>当 TeXShop 需要的文件（例如宏、LaTeX 面板文件、按键绑定或主题）丢失或损坏时，TeXShop 会在启动时用自带的副本替换它，且不显示任何信息。损坏的文件保留在 ~/Library/TeXShop/Backups 中，你可以从中恢复所做的更改。</p>
+<p>要将某个文件夹恢复为默认内容，请退出 TeXShop，将该文件夹（例如 Templates）移出 ~/Library/TeXShop（比如移到桌面），然后再次启动 TeXShop。TeXShop 会重新创建该文件夹并放入默认内容；再从移走的文件夹中拷贝回你想保留的内容。</p>
+
+<h2 id="more">隐藏设置和魔法注释</h2>
+<p>有几项设置不在“设置”窗口中，需要在终端中用命令更改。请参阅<a href="configure_hidden.htm">隐藏设置</a>。源文件开头的魔法注释（例如 <code>% !TEX program = lualatex</code>）只为该文件设置引擎、编码、根文件等。“帮助”>“魔术行和隐藏设置（英文）”列出了所有魔法注释和隐藏设置。</p>
+</main>
+</body>
+</html>

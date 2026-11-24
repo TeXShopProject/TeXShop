@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gekleurde tekst</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="gekleurde tekst; xcolor; kleur; textcolor; definecolor; dvipsnames; paginakleur voorvertoning; Lichte pagina's">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm" class="current">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Gekleurde tekst</h1>
+<p>Het pakket xcolor kleurt tekst in het gezette document. Laad het in de preambule:</p>
+<pre>\usepackage{xcolor}</pre>
+<p>Daarna schakelt <code>\color{blue}</code> over op blauw tot het einde van de huidige groep of omgeving, en kleurt <code>\textcolor{red}{This is very important!}</code> alleen het argument. Om eigen kleuren te definiëren, gebruikt u bijvoorbeeld</p>
+<pre>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</pre>
+<p>De optie <code>dvipsnames</code> voegt een lijst met kleuren met een naam toe, zoals BrickRed en ForestGreen:</p>
+<pre>\usepackage[dvipsnames]{xcolor}</pre>
+<p>De documentatie van xcolor, die u opent met Help › Toon documentatie voor pakket..., vermeldt alle kleuren en opties.</p>
+
+<h2>De kleur van de pagina’s in het voorvertoningsvenster</h2>
+<p>Gekleurde tekst kan op een witte pagina moeilijk leesbaar zijn. De pagina’s in het voorvertoningsvenster kunnen in Instellingen › Thema’s een andere kleur krijgen: in de groep ‘Vensters’ vult de kleur onder ‘Lichte pagina's’ in de rij ‘Voorvertoning’ de pagina’s zolang ze licht worden getoond. Elk thema heeft een eigen kleur, zodat het ‘Thema voor lichte modus’ en het ‘Thema voor donkere modus’ verschillende kleuren kunnen gebruiken.</p>
+<p>De kleur is alleen bedoeld voor de weergave: hij wordt niet afgedrukt en verschijnt niet als een deel van een pagina wordt gekopieerd. Pagina’s die met het onderdeel ‘Weergave’ in de knoppenbalk van het voorvertoningsvenster donker worden getoond, worden niet met deze kleur gevuld. De kleur van de tekst zelf wordt door het document bepaald, met xcolor zoals hierboven.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vensters en tabbladen</title>
+<meta name="copyright" content="Copyright (c) 2016 Richard Koch under the GNU FDL">
+<meta name="description" content="tabbladen; vensters; Nieuwe vensters als tabbladen openen; Gebruik één venster; Gebruik aparte vensters; useTabs; useTabsWithFiles; tabbedFile; TabsAlsoForInputFiles">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm" class="current">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Vensters en tabbladen</h1>
+<p>Vensters van TeXShop kunnen als tabbladen in één venster worden samengebracht, zoals in andere macOS-apps. In Instellingen › Algemeen bepaalt ‘Nieuwe vensters als tabbladen openen’ wanneer dit gebeurt: ‘Nooit’, ‘Automatisch’, dat de tabbladinstelling van macOS volgt, of ‘Altijd’.</p>
+<p>Met ‘Altijd’ en aparte bron- en voorvertoningsvensters wordt de bron van elk document dat u opent een tabblad van het bronvenster en de voorvertoning ervan een tabblad van het voorvertoningsvenster; consoles en logbestanden worden op dezelfde manier samengebracht. Als u een tabblad van het ene venster selecteert, komt het overeenkomende tabblad van het andere naar voren als u zet of synchroniseert. Als bron en voorvertoning in één venster worden getoond (‘Bron en voorvertoning’ in Instellingen › Algemeen ingesteld op ‘Samenvoegen in één venster’), bevat elk tabblad één heel document. Venster › Gebruik één venster en Venster › Gebruik aparte vensters wisselen het actieve document tussen de twee manieren.</p>
+<p>Een venster dat bron en voorvertoning samen toont, met of zonder tabbladen, werkt goed in de schermvullende weergave: de console zweeft dan boven het venster terwijl u zet.</p>
+
+<h2>Een project in tabbladen openen</h2>
+<p>Voor een boek waarvan de hoofdstukken aparte bestanden zijn, kan het hoofdbestand TeXShop vragen de hoofdstukken als tabbladen van zijn venster te openen. Zet deze regel in de eerste 20 regels van het hoofdbestand:</p>
+<pre>% !TEX useTabs</pre>
+<p>Als het hoofdbestand wordt geopend, openen de bestanden die de <code>\include</code>-commando’s ervan noemen als tabbladen. Korte namen voor de tabbladen kunnen op dezelfde regel volgen, tussen haakjes en gescheiden door komma’s; een lege plaats tussen twee komma’s behoudt de naam van dat bestand:</p>
+<pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
+<p>Om ook de bestanden van <code>\input</code>-commando’s een tabblad te geven, gebruikt u deze verborgen instelling in Terminal:</p>
+<pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
+<p>Om de bestanden zelf te kiezen, zet u een regel <code>useTabsWithFiles</code> in de eerste 20 regels van het hoofdbestand en voegt u voor elk tabblad een regel <code>tabbedFile</code> toe, alles in de eerste 50 regels. Een naam voor het tabblad kan tussen haakjes volgen:</p>
+<pre>% !TEX useTabsWithFiles
+% !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
+% !TEX tabbedFile{Galois.log}
+% !TEX tabbedFile{~/Graphics/diagram.pdf}</pre>
+<p>Een pad gaat uit van de map van het hoofdbestand, begint met <code>~</code> bij uw thuismap, of is een volledig pad. Schrijf altijd de extensie, ook als de Finder die verbergt: deze tabbladen kunnen ook logbestanden, PDF-bestanden en afbeeldingen tonen. Elk bestand opent zoals het zou openen als u het zelf opende, dus een bronbestand kan zijn voorvertoning meebrengen.</p>
+<p>Zie Help › Commentaarregels en verborgen instellingen (Engels) voor de andere magische commentaarregels.</p>
+</main>
+</body>
+</html>

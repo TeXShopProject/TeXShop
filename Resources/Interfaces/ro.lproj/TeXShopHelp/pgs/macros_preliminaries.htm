@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Noțiuni preliminare</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macrocomenzi; Editorul de Macro; Macros_Latex.plist; dosarul Macros; salvarea macrocomenzilor într-un fișier; adăugarea macrocomenzilor dintr-un fișier; Shishikura">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor pentru macrocomenzi</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm" class="current">Noțiuni preliminare</a></li>
+<li><a href="macros_default.htm">Înțelegerea macrocomenzilor implicite</a></li>
+<li><a href="macros_rearrange.htm">Rearanjarea meniului Macro</a></li>
+<li><a href="macros_define.htm">Definirea macrocomenzilor noi</a></li>
+<li><a href="macros_applescript.htm">Macrocomenzi AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macrocomenzile AppleScript implicite</a></li>
+<li><a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crearea dialogurilor</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Noțiuni preliminare</h1>
+<p>Macrocomenzile TeXShop și Editorul de Macro sunt create de Mitsuhiro Shishikura; macrocomenzile LaTeX implicite au fost create de Mitsuhiro Shishikura și Hirokazu Ogawa.</p>
+<p>Macrocomenzile sunt listate în meniul „Macro” și în meniul pop-up „Macro” din bara de instrumente a ferestrei sursă. Există două tipuri. Macrocomenzile text inserează text în sursă, la fel ca butoanele Tabloului de comandă LaTeX. Macrocomenzile AppleScript rulează un script AppleScript; consultați <a href="macros_applescript.htm">Macrocomenzi AppleScript</a>.</p>
+
+<h2 id="files">Unde sunt păstrate macrocomenzile</h2>
+<p>Macrocomenzile sunt stocate în</p>
+<pre>~/Library/TeXShop/Macros/Macros_Latex.plist</pre>
+<p>iar meniul „Macro” le arată pentru orice motor de compilare. Pentru motoarele încorporate plain TeX, BibTeX, MakeIndex și MetaPost se poate păstra un set separat: când unul dintre acestea este ales pentru document, Editorul de Macro salvează macrocomenzile într-un fișier propriu, de exemplu Macros_Tex.plist, și lasă Macros_Latex.plist neschimbat.</p>
+<p>Fișierele de macrocomenzi sunt fișiere text obișnuite, dar este mai bine să le modificați cu Editorul de Macro: alegeți Macro › Deschide Editorul de Macro.... <a href="macros_define.htm">Definirea macrocomenzilor noi</a> explică cum adăugați, ștergeți și denumiți macrocomenzi și cum le dați scurtături.</p>
+
+<h2 id="missing">Dacă dosarul Macros lipsește</h2>
+<p>Dacă dosarul Macros lipsește când pornește TeXShop, TeXShop îl creează din nou cu macrocomenzile implicite. Dacă Macros_Latex.plist este deteriorat, TeXShop îl înlocuiește cu propria copie la pornire, fără niciun mesaj, și păstrează fișierul deteriorat în ~/Library/TeXShop/Backups. Pentru a o lua de la capăt cu macrocomenzile implicite, închideți TeXShop, mutați dosarul Macros pe desktop și porniți din nou TeXShop; dosarul mutat vă păstrează macrocomenzile vechi.</p>
+
+<h2 id="sharing">Partajarea macrocomenzilor</h2>
+<p>Cât timp Editorul de Macro este deschis, meniul „Macro” are două comenzi în plus. „Salvează Selecția ca Fișier...” salvează macrocomenzile selectate într-un fișier propriu, pe care îl puteți da altora. „Adaugă Macro din Fișier...” adaugă macrocomenzile dintr-un astfel de fișier la lista dvs.; apoi aranjați-le în Editorul de Macro după cum doriți.</p>
+</main>
+</body>
+</html>

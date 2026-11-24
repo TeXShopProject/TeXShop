@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macro AppleScript predefinite</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macro AppleScript; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; fine riga; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto sulle macro</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminari</a></li>
+<li><a href="macros_default.htm">Le macro predefinite</a></li>
+<li><a href="macros_rearrange.htm">Riordinare il menu Macro</a></li>
+<li><a href="macros_define.htm">Definire nuove macro</a></li>
+<li><a href="macros_applescript.htm">Macro AppleScript</a></li>
+<li><a href="macros_includedscripts.htm" class="current">Macro AppleScript predefinite</a></li>
+<li><a href="macros_defapplescript.htm">Definire macro AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Creare finestre di dialogo</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di composizione di TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Macro AppleScript predefinite</h1>
+<p>TeXShop include una raccolta di macro AppleScript di Will Robertson, Claus Gerhardt e altri. Alcune eseguono in sequenza una serie di comandi di composizione. Copiandole e modificandole, puoi costruire script per il tuo lavoro. Questa pagina ne descrive alcune, con i nomi che hanno nel menu Macro.</p>
+
+<h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
+<p>Queste macro sono di Will Robertson. Nel sottomenu Column macros, New tabular e New array inseriscono un ambiente tabular o array con il numero di righe e di colonne che inserisci, e Add column e Delete column modificano le righe che selezioni. Insert reference cerca nel file corrente i comandi <code>\label{…}</code> e ti permette di scegliere un’etichetta da un elenco; inserisce l’etichetta racchiusa in <code>\ref{…}</code>, un comando che puoi cambiare nello script. Se è selezionato del testo, vengono elencate solo le etichette che lo contengono. Open quickly… elenca i file .tex, .sty e .pdf nella cartella del file sorgente corrente e apre quelli che scegli.</p>
+
+<h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
+<p>Questa macro, di Alan Munn, incolla nel sorgente LaTeX celle di un foglio di calcolo sotto forma di tabella. Seleziona un intervallo di celle in Excel o in un’altra applicazione per fogli di calcolo e copiale. Poi scegli Macro › Paste Spreadsheet Cells e scegli uno stile di tabella:</p>
+<dl>
+<dt>cells</dt><dd>converte il testo copiato soltanto in celle di tabella LaTeX.</dd>
+<dt>booktabs</dt><dd>prende la prima riga come intestazione e colloca <code>\toprule</code>, <code>\midrule</code> e <code>\bottomrule</code> in un ambiente tabular.</dd>
+<dt>simple</dt><dd>racchiude le celle in un semplice ambiente tabular.</dd>
+<dt>longtable</dt><dd>prende la prima riga come intestazione, aggiunge le righe di intestazione di una longtable e mette le celle in un ambiente longtable.</dd>
+</dl>
+<p>La macro sostituisce il contenuto degli appunti con il testo LaTeX. Per incollare le stesse celle in un altro stile, copiale prima di nuovo nel foglio di calcolo.</p>
+
+<h2 id="line-endings">Applescript › Convert to MAC, Convert to Unix, Convert to Windows</h2>
+<p>I file di testo terminano le righe in modi diversi: macOS e Unix con un avanzamento di riga (line feed), Windows con un ritorno a capo (carriage return) seguito da un avanzamento di riga, e i file Macintosh molto vecchi con un solo ritorno a capo. TeXShop li legge tutti e tre. Se l’editor di qualcun altro non ci riesce, usa queste macro. Per un file sorgente MyFile.tex, Convert to Unix scrive una copia del file salvato chiamata MyFile_Unix.tex con avanzamenti di riga; Convert to Windows scrive MyFile_Windows.tex e Convert to MAC scrive MyFile_Mac.tex. Le macro usano il programma flip di Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
+
+<h2 id="bibliography">Applescript › Bibliography</h2>
+<p>Un documento con una bibliografia richiede diverse esecuzioni: LaTeX scrive il file .aux, BibTeX lo usa per scrivere i file .bbl e .blg, LaTeX viene eseguito di nuovo per aggiungere la bibliografia e un’altra volta ancora per aggiornarne i riferimenti. La macro Bibliography esegue LaTeX, BibTeX, LaTeX e LaTeX uno dopo l’altro. <a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di composizione di TeXShop</a> spiega come funziona.</p>
+
+<h2 id="gerhardt">Claus Gerhardt Macros</h2>
+<p>La maggior parte delle macro di questo sottomenu richiama gli script della shell con lo stesso nome in ~/Library/TeXShop/bin; bibtexcpl, mpostcpl e latex-makeindex-mpost ne richiamano diversi in successione, e openpdf apre il PDF del documento. Funzionano su un file salvato. <a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a> prende come esempio pdflatexc.</p>
+<h3>htlatexc, htlatexr</h3>
+<p>TeX4ht converte un documento LaTeX in una pagina web: una pagina HTML e alcuni file di immagine. htlatexc esegue htlatex sul documento e apre in Safari il file HTML risultante. Non è necessario caricare il pacchetto tex4ht nel documento; lo carica htlatex. htlatexr esegue htlatex con l’opzione <code>-r</code>, che crea di nuovo le immagini anche quando esistono già.</p>
+<h3>pdfselectc</h3>
+<p>pdfselectc crea file PDF che contengono pagine scelte del PDF del documento. Prima chiede quanti file creare, poi le pagine di ciascun file, per esempio <code>5:8</code> per le pagine da 5 a 8 oppure <code>3:4,6,8:12</code>. Se il documento si chiama MyFile, i file vengono salvati come MyFile-1.pdf, MyFile-2.pdf e così via.</p>
+<h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
+<p>mpostc esegue MetaPost e poi pdfLaTeX; mpostcpl esegue pdfLaTeX, MetaPost e di nuovo pdfLaTeX. latex-makeindex-mpost esegue pdfLaTeX, MakeIndex, MetaPost e di nuovo pdfLaTeX, aprendo strada facendo i file di log. Per MetaPost consulta <a href="advanced_context.htm">ConTeXt e MetaPost</a>.</p>
+</main>
+</body>
+</html>

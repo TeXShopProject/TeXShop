@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Syntaxmarkering</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="syntaxmarkering; syntaxkleuren; kleuren; thema; expl3; indexitems; voetnoot; markering; haakjes; volle breedte; SyntaxColoringEnabled">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm" class="current">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Syntaxmarkering</h1>
+<p>Het bronvenster toont TeX in kleuren: commentaar, commando’s, voetnoten, de markeringen <code>$</code> en <code>&amp;</code>, en de haakjes <code>( )</code>, <code>{ }</code> en <code>[ ]</code> hebben elk hun eigen kleur. Bron › Syntaxmarkering zet de markering aan of uit voor het actieve document. Documenten worden geopend met de markering aan; om ze met de markering uit te openen, gebruikt u de verborgen instelling</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
+
+<h2>Wat wordt gemarkeerd</h2>
+<ul>
+<li>Commando’s zijn een backslash gevolgd door letters. Instellingen › Editor › Syntaxmarkering › ‘@ in opdrachtnamen’ telt ook <code>@</code> als letter, zoals in de interne commando’s van pakketten.</li>
+<li>De tekst van <code>\footnote</code>, <code>\footcite</code> en <code>\autocite</code>, en van de commando’s die met <code>\cite</code> of <code>\Cite</code> beginnen, zoals <code>\citep</code> en <code>\citeauthor</code>, wordt in de kleur ‘Voetnoot’ getoond. Met de verborgen instelling <code>defaults write TeXShop SyntaxColorFootnote NO</code> wordt alleen het commando gekleurd.</li>
+<li>Bron › Indexitems markeren toont de argumenten van <code>\index</code> en <code>\esindex</code> in de kleur ‘Index’. Instellingen › Editor › Syntaxmarkering › ‘Indexitems standaard markeren’ zet dit aan wanneer documenten worden geopend.</li>
+<li>Bron › expl3-code markeren kleurt ook de functies, variabelen en andere delen van expl3-code, de programmeerlaag van LaTeX, voor wie pakketten schrijft. ‘expl3-code standaard markeren’ in dezelfde groep zet dit aan wanneer documenten worden geopend.</li>
+<li>‘Letters en symbolen in volle breedte markeren’ in dezelfde groep toont letters, cijfers en symbolen in volle breedte, die in Japanse tekst makkelijk voor ASCII-tekens worden aangezien, in de kleuren voor volle breedte.</li>
+</ul>
+<p>‘Indexitems markeren’ en ‘expl3-code markeren’ gelden voor het actieve document; elk bronvenster heeft een eigen keuze. Bestanden die geen TeX-bron zijn, zoals logbestanden, worden niet gemarkeerd; zie <a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a> voor de lijst met extensies en hoe u er een toevoegt.</p>
+
+<h2>De kleuren wijzigen</h2>
+<p>De kleuren horen bij het thema. Kies ze in Instellingen › Thema’s:</p>
+<ul>
+<li>de groep ‘Syntaxmarkering’ heeft ‘Commentaar’, ‘Commando’, ‘Voetnoot’, ‘Markering’ en ‘Index’;</li>
+<li>de groep ‘Haakjes’ heeft de kleuren van <code>( )</code>, <code>{ }</code> en <code>[ ]</code>;</li>
+<li>de groep ‘expl3’ heeft function, __function, key, variable, __variable, argument en msg;</li>
+<li>de groep ‘Markeringen’ heeft onder meer de kleuren ‘Volle breedte’;</li>
+<li>de groep ‘XML-syntaxis’ heeft de kleuren voor HTML- en XML-bestanden.</li>
+</ul>
+<p>Elk thema heeft eigen kleuren, zodat het ‘Thema voor lichte modus’ en het ‘Thema voor donkere modus’ kunnen verschillen.</p>
+</main>
+</body>
+</html>

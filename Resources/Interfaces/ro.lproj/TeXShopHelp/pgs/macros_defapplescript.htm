@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Definirea macrocomenzilor AppleScript</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; #FILEPATH#; #PDFPATH#; #TEXPATH#; #FOLDERPATH#; #NAMEPATH#; #DOCUMENTNAME#; typeset; latexinteractive; taskdone; refreshpdf; goto line">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor pentru macrocomenzi</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="macros_default.htm">Înțelegerea macrocomenzilor implicite</a></li>
+<li><a href="macros_rearrange.htm">Rearanjarea meniului Macro</a></li>
+<li><a href="macros_define.htm">Definirea macrocomenzilor noi</a></li>
+<li><a href="macros_applescript.htm">Macrocomenzi AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macrocomenzile AppleScript implicite</a></li>
+<li><a href="macros_defapplescript.htm" class="current">Definirea macrocomenzilor AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crearea dialogurilor</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Definirea macrocomenzilor AppleScript</h1>
+<p>AppleScript este un limbaj de sine stătător. <cite>AppleScript Language Guide</cite> de la Apple, aflat pe site-ul web Apple pentru dezvoltatori, îl descrie complet.</p>
+
+<h2 id="paths">Căile și numele documentului</h2>
+<p>Înainte de a rula o macrocomandă AppleScript, TeXShop înlocuiește șirurile următoare cu calea unui fișier al documentului activ, între ghilimele duble:</p>
+<dl>
+<dt>#FILEPATH#</dt><dd>fișierul sursă</dd>
+<dt>#TEXPATH#</dt><dd>fișierul .tex</dd>
+<dt>#NAMEPATH#</dt><dd>fișierul sursă fără extensie</dd>
+<dt>#FOLDERPATH#</dt><dd>dosarul care conține sursa, terminat cu o bară oblică</dd>
+<dt>#PDFPATH#, #DVIPATH#, #PSPATH#, #LOGPATH#, #AUXPATH#</dt><dd>fișierele .pdf, .dvi, .ps, .log și .aux</dd>
+<dt>#INDPATH#, #BBLPATH#, #HTMLPATH#</dt><dd>fișierele .ind, .bbl și .html</dd>
+</dl>
+<p>De exemplu, dacă #FILEPATH# dă /Users/name/Projects/Fourier/Fourier.tex, #FOLDERPATH# dă /Users/name/Projects/Fourier/. Dacă documentul nu a fost salvat niciodată, #FILEPATH# este un șir gol.</p>
+<p>#DOCUMENTNAME# este înlocuit cu numele documentului așa cum îl arată titlul ferestrei sursă: cu extensia lui sau fără ea, dacă extensia este ascunsă. Un script îl folosește pentru a se adresa documentului care l-a apelat:</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  latex
+end tell</pre>
+
+<h2 id="commands">Comenzile TeXShop</h2>
+<p>Un script AppleScript își poate face treaba în două moduri: poate rula comenzi shell, așa cum se descrie în <a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a>, sau poate apela comenzile proprii ale TeXShop, așa cum se descrie în <a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a>. Printre altele, TeXShop înțelege aceste comenzi:</p>
+<pre>typeset
+latex
+tex
+bibtex
+makeindex
+metapost
+typesetinteractive
+latexinteractive
+texinteractive
+bibtexinteractive
+makeindexinteractive
+metapostinteractive
+taskdone
+refreshpdf
+refreshtext
+goto line</pre>
+<p>Primele șase comenzi compilează continuu, fără să se oprească la erori. Următoarele șase compilează și ele, dar se opresc la o eroare, pentru ca dvs. să puteți răspunde în consolă. O comandă de compilare revine imediat, înainte ca compilarea să se termine. <code>taskdone</code> returnează NO cât timp compilarea încă rulează și YES după ce s-a terminat. <code>refreshpdf</code> și <code>refreshtext</code> fac ferestrele PDF și text să arate cea mai recentă versiune a fișierelor lor. <code>goto line</code> selectează o linie din sursă:</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  goto line 37
+end tell</pre>
+</main>
+</body>
+</html>

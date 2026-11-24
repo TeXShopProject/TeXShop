@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ouvrir d’autres fichiers avec TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="types de fichiers; extensions; sty; cls; bib; log; aux; dtx; ins; Rnw; mp; md; dvi; ps; eps; pdf; OtherTeXExtensions; Format de fichier">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm" class="current">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Ouvrir d’autres fichiers avec TeXShop</h1>
+<p>TeXShop ouvre n’importe quel fichier texte ; vous pouvez donc lire les fichiers log, les fichiers aux et les autres fichiers de TeX situés à côté de vos documents. Il ouvre aussi les fichiers PDF et les images.</p>
+
+<h2>Fichiers traités comme des sources TeX</h2>
+<p>Les fichiers portant les extensions suivantes, ainsi que les fichiers sans extension, sont des sources TeX pour TeXShop : ils s’affichent avec le surlignage syntaxique et peuvent être composés.</p>
+<pre>asy  bbx  bib  cbx  clo  cls  ctx  def  dtx  fd  fdd  gabc  gtex
+htx  html  ins  lbx  lhs  ltx  lua  lytex  ly  md  mf  mp  ptx
+Rnw  sk  skt  Stex  sty  tex  typ  xml</pre>
+<p>Les autres fichiers texte, comme les fichiers <code>.log</code>, <code>.aux</code>, <code>.bst</code>, <code>.engine</code> ou <code>.txt</code>, s’ouvrent en texte brut, sans surlignage syntaxique.</p>
+<p>Pour que TeXShop traite comme des sources TeX les fichiers portant une autre extension, ajoutez cette extension avec un réglage caché dans Terminal ; par exemple, pour des fichiers ConTeXt d’extension <code>mkiv</code> :</p>
+<pre>defaults write TeXShop OtherTeXExtensions -array-add "mkiv"</pre>
+
+<h2>Fichiers PDF et images</h2>
+<p>Les fichiers PDF et les images portant les extensions <code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.tif</code>, <code>.tiff</code> et <code>.eps</code> s’ouvrent dans leur propre fenêtre. Les fichiers DVI et PostScript (<code>.dvi</code>, <code>.ps</code>) sont convertis en PDF et affichés.</p>
+
+<h2>Enregistrer avec une autre extension</h2>
+<p>Un fichier conserve son extension lorsque TeXShop l’enregistre. Un nouveau document est enregistré en tant que fichier <code>.tex</code>, sauf si vous choisissez un autre type dans le menu « Format de fichier » de la zone de dialogue d’enregistrement, comme sty, bib ou mp.</p>
+<p>TeXShop enregistre un fichier dans l’encodage avec lequel il a été ouvert. Il est conçu pour TeX et les fichiers associés ; un fichier dans un format inhabituel peut être modifié s’il est enregistré après avoir été modifié dans TeXShop. Consultez <a href="advanced_encoding.htm">Encodages</a>.</p>
+</main>
+</body>
+</html>

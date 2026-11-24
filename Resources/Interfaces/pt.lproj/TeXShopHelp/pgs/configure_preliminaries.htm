@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preliminares</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="configurar o TeXShop; janela Ajustes; Buscar ajustes; ~/Library/TeXShop; arquivos danificados; Backups; ajustes ocultos; comentários mágicos">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Como configurar o TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm" class="current">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm">Alterações recomendadas nos ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obter novos itens da biblioteca</a></li>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
+<li><a href="configure_panel.htm">Modificar o Painel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar as associações de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Preliminares</h1>
+<p>Este capítulo explica como adaptar o TeXShop à sua forma de trabalhar: os ajustes que convém verificar primeiro, como o TeXShop mantém atualizados os arquivos de ~/Library/TeXShop, os ajustes ocultos e como alterar o Painel LaTeX, as associações de teclas e os atalhos dos menus.</p>
+
+<h2 id="settings">A janela Ajustes</h2>
+<p>Escolha TeXShop › Ajustes… para abrir a janela Ajustes. A barra lateral tem dez categorias: Geral, Documentos e salvamento, Editor, Teclado, Ortografia, Temas, Composição, Console, Pré-visualização e Atualizações. Para encontrar um ajuste sem saber a sua categoria, digite uma palavra no campo “Buscar ajustes”, no alto da barra lateral, e escolha um resultado: a janela Ajustes mostra o ajuste e o destaca. Consulte <a href="basic_preferences.htm#settings-search">Alterar os ajustes e Buscar ajustes</a>.</p>
+<p>Muitos ajustes têm um comando de menu correspondente, como Fonte › Exibir número de linhas e o ajuste “Número de linhas” em Editor. O comando de menu altera apenas o documento ativo enquanto ele está aberto; o ajuste decide como os documentos aparecem e se comportam ao serem abertos.</p>
+<p>A maior parte do que fica guardado em arquivos pode ser alterada no próprio TeXShop. Ajustes › Teclado contém as associações de teclas, a lista de conclusão de comandos (“Editar conclusão de comandos…”) e os atalhos dos menus; as macros são editadas no editor de macros (Macros › Abrir editor de macros...) e os temas de cores em Ajustes › Temas.</p>
+
+<h2 id="library">A pasta ~/Library/TeXShop</h2>
+<p>Modelos, macros, motores, o arquivo do Painel LaTeX, as associações de teclas, a lista de conclusão de comandos, os temas e outros arquivos que você pode alterar ficam em ~/Library/TeXShop, a pasta TeXShop dentro da pasta Library da sua pasta pessoal. TeXShop › Abrir pasta ~/Library/TeXShop abre-a no Finder. Uma nova versão do TeXShop mantém as suas alterações nessa pasta; <a href="configure_correctinstall.htm">Obter novos itens da biblioteca</a> explica quais arquivos ela atualiza.</p>
+<p>Quando um arquivo de que o TeXShop precisa, como as macros, o arquivo do Painel LaTeX, as associações de teclas ou um tema, está ausente ou danificado, o TeXShop o substitui pela própria cópia ao ser iniciado, sem mostrar nenhuma mensagem. O arquivo danificado é guardado em ~/Library/TeXShop/Backups, para que você possa recuperar dele as suas alterações.</p>
+<p>Para voltar ao conteúdo padrão de uma pasta, encerre o TeXShop, mova a pasta (Templates, por exemplo) para fora de ~/Library/TeXShop, por exemplo para a Mesa, e abra o TeXShop de novo. O TeXShop cria outra vez a pasta com o conteúdo padrão; copie da pasta movida de volta o que quiser manter.</p>
+
+<h2 id="more">Ajustes ocultos e comentários mágicos</h2>
+<p>Alguns ajustes não estão na janela Ajustes; eles são alterados com um comando no Terminal. Consulte <a href="configure_hidden.htm">Ajustes ocultos</a>. Comentários mágicos como <code>% !TEX program = lualatex</code> no início de um arquivo de código-fonte definem o motor, a codificação, o arquivo principal e outras coisas somente para esse arquivo. Ajuda › Linhas Especiais e Ajustes Ocultos (em inglês) lista todos os comentários mágicos e ajustes ocultos.</p>
+</main>
+</body>
+</html>

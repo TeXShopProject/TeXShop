@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redefinir os atalhos de teclado dos menus</title>
+<meta name="description" content="atalhos dos menus; atalhos de teclado; Ajustes Teclado; Buscar por função; Buscar por tecla; Restaurar padrão; atalhos de macros; KeyEquivalents.plist; Atalhos de Apps">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Como configurar o TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm">Alterações recomendadas nos ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obter novos itens da biblioteca</a></li>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
+<li><a href="configure_panel.htm">Modificar o Painel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar as associações de teclas</a></li>
+<li><a href="configure_menushortcuts.htm" class="current">Redefinir os atalhos de teclado dos menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Redefinir os atalhos de teclado dos menus</h1>
+<p>Qualquer comando de menu do TeXShop pode receber um atalho à sua escolha, ou ter o atalho removido, em Ajustes › Teclado. Os atalhos das macros são definidos no editor de macros.</p>
+
+<h2 id="settings">Alterar um atalho de menu</h2>
+<p>Escolha TeXShop › Ajustes… e selecione Teclado. O grupo “Atalhos dos menus” lista os comandos de menu com os seus atalhos. Selecione um comando e clique no seu atalho (ou clique duas vezes no comando, ou pressione Return) e, em seguida, pressione o novo atalho. Escape ou Return mantém o anterior, e Tab passa para o seguinte. Um atalho deve usar a tecla Command ou Control, ou ser uma das teclas de função F1–F20. Se outro comando já usa o atalho, o TeXShop avisa abaixo da lista e não altera nada; pressione outro atalho. Para remover um atalho, clique em “Remover atalho” (⊖) no campo ou pressione Delete.</p>
+<p>As alterações passam a valer imediatamente e são mantidas quando o TeXShop é reiniciado. A linha abaixo da lista mostra o atalho padrão do comando selecionado. “Restaurar padrão” devolve ao comando selecionado o seu atalho padrão, e “Restaurar todos…” faz isso para todos os comandos. Se outro comando agora usa o atalho padrão, “Restaurar padrão” não o restaura; altere primeiro o outro comando.</p>
+<p>Quando “Ativar Salvar Automaticamente e Versões” está ativado em Ajustes › Documentos e salvamento, o macOS acrescenta Duplicar e Fechar Todas ao menu Arquivo; os atalhos deles podem ser alterados como os dos outros comandos. Salvar como... então mantém o atalho que o macOS lhe dá e aparece esmaecido na lista; com o salvamento automático desativado, ele também pode ser alterado.</p>
+
+<h2 id="search">Encontrar um comando ou uma tecla</h2>
+<p>“Buscar por função” encontra um comando pelo nome ou pelo caminho no menu. “Buscar por tecla” encontra o que uma tecla faz: pressione um atalho, e a lista mostra os comandos de menu e as macros que o usam, qual deles está em vigor e por que os outros estão inativos. Clicar em um resultado mantém a gravação ativa; pressionar só Escape, clicar de novo no modo de busca, escolher outra categoria, mudar de janela ou fechar os ajustes a encerra. Para uma macro, escolha “Mostrar no editor de macros” para editá-la. Um comando de menu encontrado com “Buscar ajustes” abre Teclado com o comando em “Buscar por função”; consulte <a href="basic_preferences.htm#settings-search">Alterar os ajustes e Buscar ajustes</a>.</p>
+
+<h2 id="macros">Atalhos das macros</h2>
+<p>Os atalhos das macros são definidos na lista do editor de macros, como descrito em <a href="macros_define.htm">Definir novas macros</a>. Para a mesma tecla e os mesmos modificadores, um comando de menu tem prioridade sobre uma macro e, entre as macros, a primeira que tem a tecla fica com ela. Dar a um comando de menu um atalho que uma macro usa pede confirmação; a macro continua no menu Macros, mas o seu atalho fica inativo. O editor de macros marca os atalhos inativos e mostra qual comando usa a tecla. Quando você salva macros cujos novos atalhos são usados por comandos de menu, o editor de macros permite voltar a editar, salvar com esses atalhos inativos ou removê-los e salvar.</p>
+<p>Na janela de pré-visualização, Command-F e Command-G seguem Buscar… e Buscar seguinte, incluindo os atalhos que você der a eles. As associações de teclas, que inserem texto quando um único caractere é digitado, são definidas na “Lista de associações de teclas” de Ajustes › Teclado; consulte <a href="configure_autocompletion.htm">Modificar as associações de teclas</a>.</p>
+
+<h2 id="legacy">Métodos antigos</h2>
+<p>Duas outras maneiras de definir atalhos ainda funcionam. Ajustes › Teclado é mais fácil e é o recomendado.</p>
+<h3 id="keyequivalents">KeyEquivalents.plist</h3>
+<p>O TeXShop lê o arquivo ~/Library/TeXShop/Menus/KeyEquivalents.plist ao ser iniciado. Os atalhos definidos ali passam a ser os atalhos padrão em Ajustes › Teclado, e assim “Restaurar padrão” volta a eles. Os comentários no início do arquivo explicam o seu formato; edite-o com o TeXShop, salve-o em UTF-8 e abra o TeXShop de novo.</p>
+<h3 id="app-shortcuts">Atalhos de Apps do macOS</h3>
+<p>No app Ajustes do macOS, Teclado › Atalhos de Teclado… › Atalhos de Apps pode dar um atalho a um comando de menu do TeXShop pelo seu título exato, no idioma dos seus menus. Esse atalho deixa de funcionar quando o TeXShop renomeia o comando de menu; por isso, defina os atalhos em Ajustes › Teclado.</p>
+</main>
+</body>
+</html>

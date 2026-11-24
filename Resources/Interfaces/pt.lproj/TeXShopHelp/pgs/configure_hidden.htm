@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ajustes ocultos</title>
+<meta name="description" content="ajustes ocultos; defaults write; Terminal; Linhas Especiais e Ajustes Ocultos; OtherTrashExtensions; ConTeXtTags; RedConsoleAfterError; RefreshTime">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Como configurar o TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm">Alterações recomendadas nos ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obter novos itens da biblioteca</a></li>
+<li><a href="configure_hidden.htm" class="current">Ajustes ocultos</a></li>
+<li><a href="configure_panel.htm">Modificar o Painel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificar as associações de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Ajustes ocultos</h1>
+<p>A janela Ajustes tem os ajustes de que a maioria das pessoas precisa. Os menos comuns são ajustes ocultos: não têm nenhum controle na janela Ajustes e são alterados com um comando no Terminal. A referência “Linhas Especiais e Ajustes Ocultos” lista todos os ajustes ocultos com o respectivo comando, agrupados por assunto. Abra-a com Ajuda › Linhas Especiais e Ajustes Ocultos (em inglês) ou com “Abrir o manual de linhas especiais e ajustes ocultos…” em Ajustes › Geral › Avançado.</p>
+
+<h2 id="change">Alterar um ajuste oculto</h2>
+<ol>
+<li>Encerre o TeXShop.</li>
+<li>Abra o Terminal (em /Applications/Utilities), digite o comando e pressione Return.</li>
+<li>Abra o TeXShop de novo.</li>
+</ol>
+<p>Cada comando tem a forma <code>defaults write TeXShop <var>nome</var> <var>valor</var></code>. Para voltar ao valor padrão, use <code>defaults delete TeXShop <var>nome</var></code>.</p>
+
+<h2 id="examples">Exemplos</h2>
+<dl>
+<dt><code>defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'</code></dt>
+<dd>Arquivo › Limpar arquivos auxiliares remove também os arquivos com essas extensões. Indique as extensões sem o ponto. Consulte <a href="advanced_removeaux.htm">Remover arquivos AUX</a>.</dd>
+<dt><code>defaults write TeXShop ConTeXtTags YES</code></dt>
+<dd>O menu Marcas lista os comandos de seção do ConTeXt, como \title e \subject, em vez dos do LaTeX.</dd>
+<dt><code>defaults write TeXShop RedConsoleAfterError YES</code></dt>
+<dd>O texto digitado no console para responder a um erro do TeX, e toda a saída posterior dessa execução, aparece em vermelho.</dd>
+<dt><code>defaults write TeXShop RefreshTime 2</code></dt>
+<dd>Enquanto “Sempre monitorar alterações no PDF feitas por outros apps” estiver ativado em Ajustes › Pré-visualização, o TeXShop verifica a cada 2 segundos se um PDF mudou. O padrão é 1 segundo e o mínimo, 0,5.</dd>
+</dl>
+
+<p>Os ajustes que estão na janela Ajustes não se repetem entre os ajustes ocultos. Por exemplo, ir para a marca seguinte ou anterior de Editar › Marcas com Option ou Control e a tecla de ativação da conclusão é ativado e desativado com “Ir para a marca seguinte ou anterior com Option ou Controle e a tecla de ativação” em Ajustes › Teclado. Para encontrar um ajuste desses, use “Buscar ajustes”; consulte <a href="basic_preferences.htm#settings-search">Alterar os ajustes e Buscar ajustes</a>.</p>
+</main>
+</body>
+</html>

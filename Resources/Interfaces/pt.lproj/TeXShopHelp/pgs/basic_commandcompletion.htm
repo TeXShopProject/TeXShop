@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conclusão de comandos</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="conclusão de comandos; tecla Escape; tecla de ativação; marcas; Próxima marca; rótulos e chaves de citação">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composição</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Buscar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matriz</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar os ajustes</a></li>
+<li><a href="basic_templates.htm">Modelos e documentos-modelo</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e abas</a></li>
+<li><a href="basic_bugs.htm">Enviar relatórios de erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Conclusão de comandos</h1>
+
+<p>Digite as primeiras letras de um comando ou de um ambiente e pressione Escape: o TeXShop o completa a partir do seu arquivo de conclusão. Pressione Escape de novo para percorrer as outras conclusões que começam com as mesmas letras, do fim do arquivo para o início; Shift-Escape vai no sentido contrário. Uma delas é o texto que você digitou. Por exemplo, <code>\begin{th</code> seguido de Escape oferece <code>\begin{theorem}</code> e outros ambientes.</p>
+
+<p>Uma conclusão pode fazer mais do que terminar a palavra. A conclusão de <code>\begin{theorem}</code> também escreve a linha <code>\end{theorem}</code> e coloca marcas (•) onde você vai digitar: a primeira marca fica selecionada, então o que você digita a substitui. Pressionar Escape várias vezes muitas vezes dá o mesmo comando com mais argumentos, como acontece com <code>\newc</code> para <code>\newcommand</code>. Uma conclusão não precisa começar com barra invertida: no início de uma linha ou depois de um espaço, <code>sec</code> dá o mesmo que <code>\sec</code>.</p>
+
+<p>Quando o arquivo de conclusão não tem nada para o texto, Escape mostra em vez disso as conclusões de palavras do macOS.</p>
+
+<h2>Ajustes</h2>
+
+<p>Em Ajustes › Teclado, “Tecla de ativação” escolhe Escape ou Tab como a tecla que completa. O painel de código-fonte de Editar › Experimentar... usa a mesma tecla que a janela do código-fonte.</p>
+
+<p>Para acrescentar uma palavra ao arquivo de conclusão, selecione-a e escolha Fonte › Adicionar à lista de conclusão de comandos. Para editar o arquivo, clique em “Editar conclusão de comandos…” em Ajustes › Teclado. Estudar as conclusões que já estão lá é a melhor maneira de aprender a escrever novas; a pasta ~/Library/TeXShop/CommandCompletion também tem um documento detalhado sobre elas.</p>
+
+<h2><a name="marks"></a>Marcas</h2>
+
+<p>Uma marca (•) é um lugar para onde voltar; uma marca com nota (•‹nota›) também diz o que deve ir ali. As conclusões de comandos, as macros e as associações de teclas podem conter marcas, e você mesmo pode inseri-las com Editar › Marcas › Inserir Marca (<kbd>⌘8</kbd>) e Inserir marca com nota (<kbd>⌃⌘8</kbd>). Inserir marca com nota insere •‹› com o ponto de inserção entre os sinais, ou transforma o texto selecionado na nota.</p>
+
+<p>Próxima marca (<kbd>⌃⌘F</kbd>) e Marca anterior (<kbd>⌃⌘G</kbd>) selecionam a marca seguinte ou a anterior junto com a nota dela, para que digitar a substitua. Mantenha a tecla Option pressionada para apagar apenas o • e selecionar a nota (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+
+<p>A tecla de ativação também se move entre as marcas: com Escape como tecla de ativação, Option-Escape vai para a próxima marca e Control-Escape para a anterior; com Tab, Option-Tab e Control-Tab. Se outro aplicativo precisar dessas teclas, desative “Ir para a marca seguinte ou anterior com Option ou Controle e a tecla de ativação” em Ajustes › Teclado.</p>
+
+<h2><a name="labels"></a>Conclusão de rótulos e chaves de citação</h2>
+
+<p>Editar › Completar rótulo ou chave de citação (<kbd>F5</kbd>) completa um rótulo ou uma chave de citação a partir de uma lista. Escolha-o logo depois de <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> ou <code>\autoref{</code>, ou depois das primeiras letras de um rótulo digitadas ali, e a lista mostra os rótulos definidos com <code>\label</code> no arquivo; escolha um com as teclas de seta e pressione Return. Depois de <code>\cite{</code> e comandos semelhantes, a lista mostra chaves de citação do BibDesk quando “Oferecer também chaves de citação do BibDesk” está ativado em Ajustes › Teclado. Em outros lugares, ela mostra as conclusões de palavras do macOS. Em muitos teclados, mantenha pressionada a tecla fn (a tecla Globo) ao pressionar F5.</p>
+
+<h2><a name="compare"></a>Associações de teclas, macros e conclusão de comandos</h2>
+
+<p>Esses três recursos inserem texto no código-fonte e são facilmente confundidos. Cada um serve para uma tarefa diferente:</p>
+<dl>
+<dt><a href="basic_autocompletion.htm">Associações de teclas</a></dt>
+<dd>Digitar uma tecla insere texto: <code>_</code> produz <code>_{}</code> em volta da seleção, e ≤ (Option-vírgula no layout americano) produz <code>\leq</code>. Ajustes › Teclado as ativa para novos documentos e guarda a lista delas; Fonte › Associações de teclas as ativa ou desativa para o documento em primeiro plano. Digite <code>\</code> antes para manter uma tecla como <code>_</code> ou <code>^</code> como ela é. Um caractere digitado com uma tecla morta, como é a partir de Option-E e E, não pode ter uma associação de teclas.</dd>
+<dt><a href="basic_macros.htm">Macros</a></dt>
+<dd>Os itens do menu Macros inserem texto ou executam programas AppleScript e podem ter um atalho de teclado com a tecla Command ou Control ou com uma tecla de função. Macros › Abrir editor de macros... os acrescenta, edita e ordena. O texto que você quer em uma tecla Command, como <code>\textbf</code> em volta da seleção com ⌘B, deve preferencialmente virar uma macro.</dd>
+<dt>Conclusão de comandos</dt>
+<dd>Digite o início de um comando ou uma abreviação e pressione a tecla de ativação: <code>\sec</code> produz <code>\section{•}</code>, a tecla de ativação de novo dá a correspondência seguinte, e <code>\benu</code> produz um ambiente enumerate inteiro com marcas. Diferentemente das associações de teclas e das macros, a conclusão de comandos substitui o texto selecionado.</dd>
+</dl>
+</main>
+</body>
+</html>

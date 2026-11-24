@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>命令补全</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="命令补全; Escape 键; 触发按键; 标记; 下一个标记; 补全标签和引用键">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>命令补全</h1>
+
+<p>键入命令或环境的前几个字母，然后按下 Escape 键：TeXShop 会根据其补全文件进行补全。再次按 Escape 键，会从文件底部向顶部依次给出以相同字母开头的其他补全；Shift-Escape 则按相反方向。其中之一就是你键入的文本。例如，<code>\begin{th</code> 之后按 Escape 键，会给出 <code>\begin{theorem}</code> 及其他环境。</p>
+
+<p>补全不只是补完单词。<code>\begin{theorem}</code> 的补全还会写出 <code>\end{theorem}</code> 行，并在你要键入的地方放上标记（•）：第一个标记处于选中状态，因此你键入的内容会替换它。多次按 Escape 键常常会得到带有更多参数的同一命令，例如 <code>\newc</code> 补全为 <code>\newcommand</code> 时就是这样。补全不必以反斜杠开头：在行首或空格之后，<code>sec</code> 与 <code>\sec</code> 得到的结果相同。</p>
+
+<p>补全文件中没有与文本对应的内容时，Escape 键会改为显示 macOS 的单词补全。</p>
+
+<h2>设置</h2>
+
+<p>在“设置”>“键盘”中，“触发按键”用于选择 Escape 或 Tab 作为补全键。“编辑”>“实验台...”的源代码面板使用与源代码窗口相同的键。</p>
+
+<p>要将某个词添加到补全文件中，请选中它，然后选取“源代码”>“添加到命令补全列表”。要编辑该文件，请点按“设置”>“键盘”中的“编辑命令补全文件…”。研究已有的补全是学习编写新补全的最佳方法；~/Library/TeXShop/CommandCompletion 文件夹中也有一份关于补全的详细文档。</p>
+
+<h2><a name="marks"></a>标记</h2>
+
+<p>标记（•）是一个以后要回来的位置；带注释的标记（•‹注释›）还会说明那里应填写什么。命令补全、宏和按键绑定中都可以含有标记，你也可以用“编辑”>“标记”>“插入标记”（<kbd>⌘8</kbd>）和“插入带注释的标记”（<kbd>⌃⌘8</kbd>）自行插入标记。“插入带注释的标记”会插入 •‹›，插入点位于尖括号之间；或者将所选文本变为注释。</p>
+
+<p>“下一个标记”（<kbd>⌃⌘F</kbd>）和“上一个标记”（<kbd>⌃⌘G</kbd>）会连同注释一起选中下一个或上一个标记，这样键入的内容就会替换它。按住 Option 键则只删除 •，并改为选中注释（<kbd>⌃⌥⌘F</kbd>、<kbd>⌃⌥⌘G</kbd>）。</p>
+
+<p>触发按键也可以在标记之间移动：以 Escape 键为触发按键时，Option-Escape 转到下一个标记，Control-Escape 转到上一个标记；以 Tab 键为触发按键时，则是 Option-Tab 和 Control-Tab。如果其他应用需要使用这些键，请在“设置”>“键盘”中关闭“用Option或Control加触发按键，移到下一个或上一个标记”。</p>
+
+<h2><a name="labels"></a>补全标签和引用键</h2>
+
+<p>“编辑”>“补全标签或引用键”（<kbd>F5</kbd>）会从列表中补全标签或引用键。在 <code>\ref{</code>、<code>\pageref{</code>、<code>\eqref{</code> 或 <code>\autoref{</code> 之后，或者在其后键入的标签的前几个字母之后选取此项，列表就会显示文件中用 <code>\label</code> 定义的标签；用方向键选择一个，然后按下 Return 键。在 <code>\cite{</code> 及类似命令之后，如果打开了“设置”>“键盘”中的“同时提供BibDesk中的引用键”，列表会显示 BibDesk 中的引用键。在其他位置，它会显示 macOS 的单词补全。在许多键盘上，需要按住 fn 键（地球仪键）再按 F5。</p>
+
+<h2><a name="compare"></a>按键绑定、宏和命令补全</h2>
+
+<p>这三项功能都会将文本放入源代码，容易混淆。它们各自适合不同的用途：</p>
+<dl>
+<dt><a href="basic_autocompletion.htm">按键绑定</a></dt>
+<dd>按一个键即可插入文本：<code>_</code> 会在所选内容两侧得到 <code>_{}</code>，≤（在美式键盘布局上为 Option-逗号）会得到 <code>\leq</code>。“设置”>“键盘”用于为新文稿打开按键绑定并保存其列表；“源代码”>“按键绑定”用于为最前面的文稿打开或关闭它们。先键入 <code>\</code>，可以让 <code>_</code> 或 <code>^</code> 等键保持原样。用死键键入的字符（例如用 Option-E 再按 E 键入的 é）不能设置按键绑定。</dd>
+<dt><a href="basic_macros.htm">宏</a></dt>
+<dd>“宏”菜单中的项目插入文本或运行 AppleScript 程序，并可以设置使用 Command 或 Control 键或功能键的键盘快捷键。“宏”>“打开宏编辑器...”用于添加、编辑宏并调整其顺序。想要用 Command 键完成的文本操作，例如用 ⌘B 在所选内容两侧加上 <code>\textbf</code>，最好做成宏。</dd>
+<dt>命令补全</dt>
+<dd>键入命令的开头或缩写，然后按下触发按键：<code>\sec</code> 会得到 <code>\section{•}</code>，再按触发按键会得到下一个匹配项，<code>\benu</code> 则会得到带有标记的完整 enumerate 环境。与按键绑定和宏不同，命令补全会替换所选文本。</dd>
+</dl>
+</main>
+</body>
+</html>

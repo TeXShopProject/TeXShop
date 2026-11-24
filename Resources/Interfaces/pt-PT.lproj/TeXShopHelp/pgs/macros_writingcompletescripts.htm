@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escrever scripts com os comandos de composição do TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; macro Bibliography; latexinteractive; bibtex; taskdone; sequência de comandos de composição">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda das macros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminares</a></li>
+<li><a href="macros_default.htm">Compreender as macros predefinidas</a></li>
+<li><a href="macros_rearrange.htm">Reorganizar o menu Macros</a></li>
+<li><a href="macros_define.htm">Definir novas macros</a></li>
+<li><a href="macros_applescript.htm">Macros AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macros AppleScript predefinidas</a></li>
+<li><a href="macros_defapplescript.htm">Definir macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Criar caixas de diálogo</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">Escrever scripts com os comandos de composição do TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Escrever scripts com comandos da shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Escrever scripts com os comandos de composição do TeXShop</h1>
+<p>Um documento com bibliografia precisa de uma sequência de execuções de composição: o LaTeX escreve o ficheiro .aux, o BibTeX usa-o para escrever os ficheiros .bbl e .blg, o LaTeX é executado de novo para adicionar a bibliografia ao documento e mais uma vez para atualizar as referências a ela. Os seus projetos podem precisar de sequências semelhantes, e uma macro AppleScript pode executá-las por si.</p>
+<p>A macro Macros › Applescript › Bibliography, fornecida com o TeXShop, mostra como. Este é o seu conteúdo:</p>
+<pre>--Applescript
+
+set fileName to #FILEPATH#
+if fileName is equal to  ""
+activate
+display dialog "Please save the file first"  buttons {"OK"} default button "OK"
+return
+end if
+
+set frontName to #DOCUMENTNAME#
+
+tell document frontName of application "TeXShop"
+
+    latexinteractive
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    bibtex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+end tell</pre>
+<p>A primeira linha faz desta uma macro AppleScript executada pelo ScriptRunner, pelo que pode pedir ao TeXShop que componha (consulte <a href="macros_applescript.htm">Macros AppleScript</a>). As linhas seguintes verificam #FILEPATH#, o caminho completo do ficheiro de código-fonte. É uma cadeia vazia quando o documento ainda não foi guardado; nesse caso, o script pede-lhe que o guarde e termina.</p>
+<p>Em seguida, o script refere-se ao documento através de #DOCUMENTNAME#. O próprio TeXShop guarda o documento quando um comando de composição começa, pelo que o script não precisa de o guardar.</p>
+<p>Os restantes comandos executam latexinteractive, bibtex, latex e latex. Um comando de composição regressa de imediato ao script, antes de a composição terminar, por isso, depois de cada comando, um ciclo <code>repeat</code> espera até que <code>taskdone</code> indique que o trabalho está concluído. A linha <code>delay 2</code> faz o script pausar entre as verificações, em vez de perguntar continuamente e tornar o computador mais lento. Os comandos estão enumerados em <a href="macros_defapplescript.htm">Definir macros AppleScript</a>.</p>
+</main>
+</body>
+</html>
