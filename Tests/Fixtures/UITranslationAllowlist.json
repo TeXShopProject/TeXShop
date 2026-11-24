@@ -119,6 +119,8 @@
   "de": {
    "Localizable.strings": [
     "Block:",
+    "Byte",
+    "Bytes",
     "Drag && Drop",
     "Editor",
     "Info: %@",
@@ -152,6 +154,8 @@
   },
   "es": {
    "Localizable.strings": [
+    "Byte",
+    "Bytes",
     "Editor",
     "Error",
     "General",
@@ -215,6 +219,7 @@
   },
   "it": {
    "Localizable.strings": [
+    "Byte",
     "Console",
     "Editor",
     "File",
@@ -243,15 +248,17 @@
   },
   "nl": {
    "Localizable.strings": [
+    "Byte",
+    "Bytes",
     "Console",
     "Editor",
     "Help",
     "Info: %@",
     "Labels",
+    "Stop experiment",
     "Tab",
     "Updates",
-    "Variant",
-    "Stop experiment"
+    "Variant"
    ],
    "MacroEditor.nib": [
     "Submenu",
@@ -289,6 +296,8 @@
   },
   "pt": {
    "Localizable.strings": [
+    "Byte",
+    "Bytes",
     "Console",
     "Editor",
     "Macros"
@@ -316,6 +325,8 @@
   },
   "pt-PT": {
    "Localizable.strings": [
+    "Byte",
+    "Bytes",
     "Editor",
     "Macros"
    ],

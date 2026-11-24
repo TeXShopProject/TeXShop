@@ -382,6 +382,24 @@
 "detex failed." = "detex失败。";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "由detex去除TeX命令后统计，包括用\\input和\\include读取的文件。";
 
+/* Text Statistics: how the characters are counted */
+"Character Count Options" = "字符计数选项";
+"Whitespace:" = "空格：";
+"Ignore line endings" = "忽略行尾";
+"Ignore whitespace" = "忽略空格";
+"Treat consecutive whitespace as one" = "将连续空格视作一个";
+"Normalization:" = "标准化：";
+"Normalization: None" = "无";
+"Unit:" = "单位：";
+"Grapheme Cluster" = "字位簇";
+"Unicode Scalar" = "Unicode标量";
+"Byte" = "字节";
+"What the reader sees as one character, an emoji of several code points among them." = "读者视为一个字符的单位，包括由多个码位组成的表情符号。";
+"Encoding:" = "字符编码：";
+"Unicode Scalars" = "Unicode标量";
+"Bytes" = "字节";
+"Some characters cannot be written in %@." = "某些字符无法以%@写入。";
+
 /* Issue #49: the annotation toolbar of the Preview */
 /* Annotation tool: the name the annotation menu gives it */
 "Strikeout" = "删除线";

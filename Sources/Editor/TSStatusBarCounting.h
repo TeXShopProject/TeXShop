@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// Returns YES when the count should stop because a newer one is wanted. Called now and then from the loops.
 typedef BOOL (^TSStatusBarCancel)(void);
 
+/// The end of the character (grapheme cluster) that starts at `location`, within [location, end).
+NSUInteger TSStatusBarCharacterEnd(NSString *string, NSUInteger location, NSUInteger end);
 /// The number of characters in `range` of `string`. A cluster that starts before the range counts once, from where the range starts.
 NSUInteger TSStatusBarCharacterCount(NSString *string, NSRange range, TSStatusBarCancel _Nullable cancel);
 /// The number of words in `range` of `string`.

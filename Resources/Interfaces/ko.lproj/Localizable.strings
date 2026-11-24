@@ -385,6 +385,24 @@
 "detex failed." = "detex가 실패했습니다.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "detex로 TeX 명령을 제외하고 센 수입니다. \\input과 \\include로 읽는 파일도 포함합니다.";
 
+/* Text Statistics: how the characters are counted */
+"Character Count Options" = "문자 개수 옵션";
+"Whitespace:" = "공백:";
+"Ignore line endings" = "줄바꿈 무시";
+"Ignore whitespace" = "공백 무시";
+"Treat consecutive whitespace as one" = "연속적인 공백을 한 개로 취급";
+"Normalization:" = "정규화:";
+"Normalization: None" = "없음";
+"Unit:" = "단위:";
+"Grapheme Cluster" = "문자소 클러스터";
+"Unicode Scalar" = "유니코드 스칼라";
+"Byte" = "바이트";
+"What the reader sees as one character, an emoji of several code points among them." = "독자가 한 문자로 보는 단위로, 여러 코드 포인트로 된 이모지도 한 문자입니다.";
+"Encoding:" = "문자 인코딩:";
+"Unicode Scalars" = "유니코드 스칼라";
+"Bytes" = "바이트";
+"Some characters cannot be written in %@." = "%@(으)로 쓸 수 없는 문자가 있습니다.";
+
 /* Issue #49: the annotation toolbar of the Preview */
 /* Annotation tool: the name the annotation menu gives it */
 "Strikeout" = "취소선";

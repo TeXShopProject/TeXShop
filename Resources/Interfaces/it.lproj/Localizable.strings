@@ -385,6 +385,24 @@
 "detex failed." = "detex non è riuscito.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Contato da detex senza i comandi TeX, inclusi i file letti con \\input e \\include.";
 
+/* Text Statistics: how the characters are counted */
+"Character Count Options" = "Opzioni del conteggio caratteri";
+"Whitespace:" = "Spazi bianchi:";
+"Ignore line endings" = "Ignora i fine riga";
+"Ignore whitespace" = "Ignora gli spazi bianchi";
+"Treat consecutive whitespace as one" = "Tratta spazi bianchi consecutivi come uno solo";
+"Normalization:" = "Normalizzazione:";
+"Normalization: None" = "Nessuna";
+"Unit:" = "Unità:";
+"Grapheme Cluster" = "Cluster di grafemi";
+"Unicode Scalar" = "Scalare Unicode";
+"Byte" = "Byte";
+"What the reader sees as one character, an emoji of several code points among them." = "Ciò che il lettore vede come un carattere, anche un'emoji di più punti di codice.";
+"Encoding:" = "Codifica:";
+"Unicode Scalars" = "Scalari Unicode";
+"Bytes" = "Byte";
+"Some characters cannot be written in %@." = "Alcuni caratteri non possono essere scritti in %@.";
+
 /* Issue #49: the annotation toolbar of the Preview */
 /* Annotation tool: the name the annotation menu gives it */
 "Strikeout" = "Cancellato";

@@ -42,6 +42,20 @@ static NSUInteger TSClusterEnd(NSString *string, NSUInteger location, NSUInteger
     return found.location == location && found.length ? NSMaxRange(found) : location + 1;
 }
 
+NSUInteger TSStatusBarCharacterEnd(NSString *string, NSUInteger location, NSUInteger end)
+{
+    end = MIN(end, string.length);
+    if (location >= end)
+        return location;
+    unichar c = [string characterAtIndex:location];
+    unichar next = location + 1 < end ? [string characterAtIndex:location + 1] : 0;
+    if (c == '\r')
+        return location + (next == '\n' ? 2 : 1);
+    if (TSIsSimple(c) && (location + 1 >= end || TSIsSimple(next)))
+        return location + 1;
+    return MAX(location + 1, TSClusterEnd(string, location, end));
+}
+
 NSUInteger TSStatusBarCharacterCount(NSString *string, NSRange range, TSStatusBarCancel cancel)
 {
     NSUInteger length = string.length;
