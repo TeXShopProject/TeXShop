@@ -144,6 +144,34 @@ static NSColor *ColorAt(NSTextView *view, NSRange range)
     return color;
 }
 
+/// The color drawn at the middle of `range` when the layout manager draws the background of the line of `range` only,
+/// as when a part of the text is drawn again.
+static NSColor *ColorDrawingLineOnly(NSTextView *view, NSRange range)
+{
+    __block NSColor *color = nil;
+    [view.effectiveAppearance performAsCurrentDrawingAppearance:^{
+        NSLayoutManager *layout = view.layoutManager;
+        [layout ensureLayoutForTextContainer:view.textContainer];
+        NSRange glyphs = [layout glyphRangeForCharacterRange:range actualCharacterRange:NULL];
+        NSRange lineGlyphs;
+        NSRect line = [layout lineFragmentRectForGlyphAtIndex:glyphs.location effectiveRange:&lineGlyphs];
+        NSRect rect = [layout boundingRectForGlyphRange:glyphs inTextContainer:view.textContainer];
+        NSPoint origin = view.textContainerOrigin;
+        NSColor *background = view.backgroundColor;
+        NSImage *image = [NSImage imageWithSize:view.bounds.size flipped:YES drawingHandler:^BOOL(NSRect bounds) {
+            [background setFill];
+            NSRectFill(bounds);
+            [layout drawBackgroundForGlyphRange:lineGlyphs atPoint:origin];
+            return YES;
+        }];
+        NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithCGImage:(CGImageRef _Nonnull)[image CGImageForProposedRect:NULL context:nil hints:nil]];
+        CGFloat scale = rep.pixelsWide / NSWidth(view.bounds);
+        color = [[rep colorAtX:(NSInteger)((NSMidX(rect) + origin.x) * scale) y:(NSInteger)((NSMaxY(line) + origin.y - 1) * scale)]
+                 colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    }];
+    return color;
+}
+
 /// `colors`, translucent, painted in turn over `background` in a bitmap like the one the view is drawn into.
 static NSColor *Over(NSTextView *view, NSColor *background, NSArray<NSColor *> *colors)
 {
@@ -177,6 +205,121 @@ static NSRange Of(NSString *part, NSString *string, NSUInteger occurrence)
     for (NSUInteger i = 0; i <= occurrence; i++)
         found = [string rangeOfString:part options:0 range:NSMakeRange(NSMaxRange(found), string.length - NSMaxRange(found))];
     return found;
+}
+
+/// A TSLayoutManager that notes the character ranges whose display it invalidates.
+@interface RecordingLayoutManager : TSLayoutManager
+@property NSMutableArray<NSValue *> *invalidated;
+@end
+
+@implementation RecordingLayoutManager
+- (void)invalidateDisplayForCharacterRange:(NSRange)range
+{
+    [self.invalidated addObject:[NSValue valueWithRange:range]];
+    [super invalidateDisplayForCharacterRange:range];
+}
+@end
+
+/// Whether the display of `range` was invalidated, in the edited text.
+static BOOL Invalidated(RecordingLayoutManager *layout, NSRange range)
+{
+    NSMutableIndexSet *all = [NSMutableIndexSet indexSet];
+    for (NSValue *value in layout.invalidated)
+        if (value.rangeValue.location != NSNotFound)
+            [all addIndexesInRange:value.rangeValue];
+    return [all containsIndexesInRange:range];
+}
+
+/// An edit that takes a highlight away redraws all of it, also where it lies beyond the edited line: the first line
+/// of a match over lines, or the match of a group on another line. Two views of the text (a split window). The text is
+/// never drawn in full by the test: what the layout managers are asked to draw again is noted.
+static void TestHighlightRedisplay(void)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController(&beeps);
+    controller.settings.options = TSRegexFindDefaultOptions | TSRegexFindRegularExpression;
+    for (NSString *pattern in @[@"(abc)(?=[\\s\\S]*(zzz))", @"abc[\\s\\S]*zzz"]) {
+        NSString *text = @"abc first line\nsecond line\nthird line zzz\n";
+        NSTextStorage *storage = [[NSTextStorage alloc] initWithString:text attributes:@{NSFontAttributeName: [NSFont userFixedPitchFontOfSize:14] ?: [NSFont systemFontOfSize:14]}];
+        NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 420, 400) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+        window.releasedWhenClosed = NO;
+        NSMutableArray<RecordingLayoutManager *> *layouts = [NSMutableArray array];
+        NSMutableArray<NSTextView *> *views = [NSMutableArray array];
+        for (NSInteger i = 0; i < 2; i++) {
+            RecordingLayoutManager *layout = [RecordingLayoutManager new];
+            [storage addLayoutManager:layout];
+            NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(400, 1e7)];
+            [layout addTextContainer:container];
+            NSTextView *view = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 200 - 200 * i, 400, 200) textContainer:container];
+            view.allowsUndo = YES;
+            [window.contentView addSubview:view];
+            [layout ensureLayoutForTextContainer:container];
+            [layouts addObject:layout];
+            [views addObject:view];
+        }
+        controller.settings.findString = pattern;
+        Check(TSTestPerform(controller, TSAdvancedFindActionHighlight, views[0])
+              && [TSAdvancedFindHighlights existingHighlightsForTextStorage:storage].ranges.count == 1, [NSString stringWithFormat:@"%@: one highlight", pattern]);
+        for (RecordingLayoutManager *layout in layouts)
+            layout.invalidated = [NSMutableArray array];
+        NSRange z = [text rangeOfString:@"zzz"];
+        Edit(views[1], NSMakeRange(z.location + 2, 1), @"X");
+        Check([TSAdvancedFindHighlights existingHighlightsForTextStorage:storage].ranges.count == 0, [NSString stringWithFormat:@"%@: the edit takes it away", pattern]);
+        // Once the edit is done, before the window is drawn: one pass of the run loop
+        [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+        for (NSUInteger i = 0; i < 2; i++)
+            Check(Invalidated(layouts[i], NSMakeRange(0, 3)) && Invalidated(layouts[i], NSMakeRange(z.location, 3)),
+                  [NSString stringWithFormat:@"%@: view %lu draws again the first line as well as the edited one (%@)", pattern, (unsigned long)i, layouts[i].invalidated]);
+        // An edit that takes nothing away redraws no more than the layout manager does itself.
+        Edit(views[1], NSMakeRange(z.location + 2, 1), @"z");
+        Check(TSTestPerform(controller, TSAdvancedFindActionHighlight, views[0]), [NSString stringWithFormat:@"%@: highlighted again", pattern]);
+        for (RecordingLayoutManager *layout in layouts)
+            layout.invalidated = [NSMutableArray array];
+        Edit(views[0], NSMakeRange(storage.length, 0), @"x");
+        [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+        Check([TSAdvancedFindHighlights existingHighlightsForTextStorage:storage].ranges.count == 1 && !Invalidated(layouts[0], NSMakeRange(0, 3)),
+              [NSString stringWithFormat:@"%@: an edit after the highlight keeps it and does not redraw it", pattern]);
+        [window close];
+    }
+}
+
+/// Drawing a part of the text visits only the matches that may show there: with 100 times as many matches, the first
+/// and the last lines take about as long to draw (before, every match and its groups were visited on every drawing).
+static void TestHighlightScale(void)
+{
+    double (^drawTime)(NSUInteger, NSString *, BOOL) = ^double(NSUInteger lines, NSString *pattern, BOOL atEnd) {
+        NSMutableString *text = [NSMutableString stringWithCapacity:lines * 12];
+        for (NSUInteger i = 0; i < lines; i++)
+            [text appendString:@"foo123 bar\n"];
+        TestDocument *document = [[TestDocument alloc] initWithText:text];
+        NSUInteger beeps = 0;
+        TSAdvancedFindController *controller = MakeController(&beeps);
+        controller.settings.options = TSRegexFindDefaultOptions | TSRegexFindRegularExpression;
+        controller.settings.findString = pattern;
+        TSTestPerform(controller, TSAdvancedFindActionHighlight, document.upper);
+        NSLayoutManager *layout = document.upper.layoutManager;
+        layout.allowsNonContiguousLayout = YES;
+        NSUInteger length = text.length;
+        NSRange characters = atEnd ? NSMakeRange(length - 256, 256) : NSMakeRange(0, 256);
+        NSRange glyphs = [layout glyphRangeForCharacterRange:characters actualCharacterRange:NULL];
+        [layout ensureLayoutForGlyphRange:glyphs];
+        NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(400, 400)];
+        double best = INFINITY;
+        [image lockFocus];
+        for (int run = 0; run < 30; run++) {
+            NSDate *start = NSDate.date;
+            [layout drawBackgroundForGlyphRange:glyphs atPoint:NSZeroPoint];
+            best = MIN(best, -start.timeIntervalSinceNow);
+        }
+        [image unlockFocus];
+        return best;
+    };
+    for (NSString *pattern in @[@"(foo)(\\d+)", @"foo\\d+"])
+        for (NSNumber *end in @[@NO, @YES]) {
+            double few = drawTime(2000, pattern, end.boolValue), many = drawTime(200000, pattern, end.boolValue);
+            Check(many < few * 8 + 0.0005, [NSString stringWithFormat:@"%@: drawing the %@ lines with 200000 matches takes %.3f ms, with 2000 %.3f ms",
+                                             pattern, end.boolValue ? @"last" : @"first", many * 1000, few * 1000]);
+        }
 }
 
 static void TestHighlightGroups(void)
@@ -244,6 +387,21 @@ static void TestHighlightGroups(void)
           @"a group after the match has its color");
     Edit(view, NSMakeRange(2, 1), @"z");
     Check(highlights.ranges.count == 0 && SameColor(ColorAt(view, NSMakeRange(0, 1)), plain), @"an edit in that group drops the match");
+
+    // A group on another line than its match shows when only its line is drawn: before its match (lookbehind) and
+    // after it (lookahead)
+    document = [[TestDocument alloc] initWithText:@"ab\ncd\nzz\n"];
+    view = document.upper;
+    NSColor *linePlain = ColorDrawingLineOnly(view, NSMakeRange(6, 1));
+    settings.findString = @"(?<=(ab)\n)cd";
+    Check(TSTestPerform(controller, TSAdvancedFindActionHighlight, view)
+          && SameColor(ColorDrawingLineOnly(view, NSMakeRange(0, 1)), Over(view, linePlain, @[groupColors[0]])),
+          [NSString stringWithFormat:@"a group on the line before its match is drawn with that line alone (%@)", ColorDrawingLineOnly(view, NSMakeRange(0, 1))]);
+    settings.findString = @"ab(?=\n(cd))";
+    Check(TSTestPerform(controller, TSAdvancedFindActionHighlight, view)
+          && SameColor(ColorDrawingLineOnly(view, NSMakeRange(3, 1)), Over(view, linePlain, @[groupColors[0]])),
+          [NSString stringWithFormat:@"a group on the line after its match is drawn with that line alone (%@)", ColorDrawingLineOnly(view, NSMakeRange(3, 1))]);
+    Check(SameColor(ColorDrawingLineOnly(view, NSMakeRange(6, 1)), linePlain), @"the line after them is not highlighted");
 
     // Without groups, and when the ranges are set alone, the matches have the highlight color only
     document = [[TestDocument alloc] initWithText:@"cat cat"];
@@ -929,10 +1087,13 @@ int main(int argc, const char *argv[])
             TestTypingInDocument();
             TestFindAllAction();
             TestHighlightGroups();
+            TestHighlightRedisplay();
             TestPanelList();
         }
-        if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"large"])
+        if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"large"]) {
             TestLargeDocument();
+            TestHighlightScale();
+        }
         if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"layout"])
             TestListLayout(images);
         if (failures)

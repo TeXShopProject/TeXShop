@@ -88,6 +88,30 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
     return matches;
 }
 
+- (nullable NSArray<NSValue *> *)matchRangesWithGroupRanges:(NSData *_Nullable *_Nonnull)groupRanges
+                                               cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
+{
+    // The groups as plain ranges: there may be hundreds of thousands of matches.
+    NSUInteger groupCount = self.pattern.numberOfCaptureGroups;
+    NSMutableArray<NSValue *> *matches = [NSMutableArray array];
+    NSMutableData *groups = [NSMutableData data];
+    for (NSValue *scope in self.scopeRanges) {
+        [self.pattern enumerateMatchesInString:self.string range:scope.rangeValue cancellation:isCancelled usingBlock:^(NSRange matchRange, NSTextCheckingResult *result, BOOL *stop) {
+            [matches addObject:[NSValue valueWithRange:matchRange]];
+            for (NSUInteger k = 1; k <= groupCount; k++) {
+                NSRange group = k < result.numberOfRanges ? [result rangeAtIndex:k] : NSMakeRange(NSNotFound, 0);
+                [groups appendBytes:&group length:sizeof group];
+            }
+        }];
+        if (isCancelled && isCancelled()) {
+            *groupRanges = nil;
+            return nil;
+        }
+    }
+    *groupRanges = groups;
+    return matches;
+}
+
 - (void)enumerateMatchesWithCancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
                               usingBlock:(void (NS_NOESCAPE ^)(NSArray<NSValue *> *, BOOL *))block
 {
