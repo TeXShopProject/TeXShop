@@ -79,7 +79,7 @@ lualatex -file-line-error -synctex=1 "$1"
 lualatex -file-line-error -synctex=1 "$1"</pre>
 
 <h2>The Inactive folder</h2>
-<p>The subfolder <code>Engines/Inactive</code> contains engines for special workflows, often with documentation and samples, for instance for latexmk, ConTeXt, Sage, PreTeXt and Typst. To use one, move it from its folder to the Engines folder itself. When TeXShop is updated, the Inactive folder is replaced with the current version, while the files directly in the Engines folder are never touched, so engines you edited are kept.</p>
+<p>The subfolder <code>Engines/Inactive</code> contains engines for special workflows, often with documentation and samples, for instance for latexmk, ConTeXt, Sage, PreTeXt and Typst. To use one, move it from its folder to the Engines folder itself. When TeXShop is updated, every file in the Inactive folder that comes with TeXShop is replaced by its new version, so changes you made to such a file are lost; files you added, and files that no longer come with TeXShop, stay as they are. The files directly in the Engines folder are never touched, so engines you moved there and edited are kept.</p>
 <p>For more about engines, see the chapter “Engines and latexmk” in Help › TeXShop Manual.</p>
 </main>
 </body>
