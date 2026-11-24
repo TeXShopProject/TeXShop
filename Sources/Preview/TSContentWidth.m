@@ -187,8 +187,10 @@ static BOOL TSContentWidthFastPathDocument(PDFDocument *document, PDFDisplayBox 
     return TSExternalPDFCloneURL(document) != nil;
 }
 
-// The walk is the slow part on a long PDF. A slice stops between annotations, not only
-// between pages: one page of links can take longer than the slice by itself. A direct
+// The walk is the slow part on a long PDF. A slice stops before the next page is opened
+// and again between annotations. A page with no annotations never reaches the inner check,
+// and opening every such page in one turn held the main thread for seconds (#62). One page
+// of links can take longer than the slice by itself, so the inner check stays. A direct
 // caller that does not slice gets one long walk, and the result is kept for this generation.
 static TSContentWidthScan TSContentWidthAdvanceAnnotationScan(PDFDocument *document, NSTimeInterval seconds)
 {
@@ -203,6 +205,11 @@ static TSContentWidthScan TSContentWidthAdvanceAnnotationScan(PDFDocument *docum
     TSContentWidthSuppressNotes = YES;
     @try {
         for (; index < document.pageCount; index++) {
+            if (end.timeIntervalSinceNow < 0) {
+                state[@"noteIndex"] = @(index);
+                state[@"noteAnnot"] = @(annotationIndex);
+                return TSContentWidthScanPending;
+            }
             PDFPage *page = [document pageAtIndex:index];
             NSArray<PDFAnnotation *> *annotations = page.annotations;
             NSUInteger count = annotations.count;
@@ -521,6 +528,14 @@ BOOL TSContentWidthMeasureSlice(PDFDocument *document, PDFDisplayBox box, NSTime
             return NO;
         }
         PDFPage *page = [document pageAtIndex:index];
+        // Inserting, deleting or reordering during the draw advances the generation and
+        // clears the store. The ink of that draw belongs to the generation that was current
+        // when the draw started, so it is not written into the new one, and the new one is
+        // not recorded as a failure either (#62).
+        if (TSContentWidthGeneration(document) != generation) {
+            TSContentWidthClearScanIndex(document, box);
+            return NO;
+        }
         if (!page) {
             TSContentWidthClearBox(document, box);
             if (failed) *failed = YES;
@@ -531,6 +546,10 @@ BOOL TSContentWidthMeasureSlice(PDFDocument *document, PDFDisplayBox box, NSTime
         if (known) continue;
         NSRect ink = NSZeroRect;
         TSContentInkStatus status = TSContentInkMeasure(page, box, 1.0, &ink);
+        if (TSContentWidthGeneration(document) != generation) {
+            TSContentWidthClearScanIndex(document, box);
+            return NO;
+        }
         if (status == TSContentInkFailed) {
             TSContentWidthClearBox(document, box);
             if (failed) *failed = YES;

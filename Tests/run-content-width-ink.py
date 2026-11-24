@@ -25,6 +25,7 @@ root = Path(__file__).resolve().parents[1]
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
+#import <objc/runtime.h>
 #import "TSContentWidth.h"
 #import "TSContentZoom.h"
 
@@ -160,6 +161,23 @@ static void checkInk(NSString *name, PDFPage *page, CGPDFPageRef cg, PDFDisplayB
 @end
 @implementation ProbeView
 - (void)measureContentLater { self.later++; }
+@end
+
+static BOOL drawDiverges = NO;
+@interface PDFPage (SliceGeneration)
+- (void)ts_test_drawWithBox:(PDFDisplayBox)box toContext:(CGContextRef)context;
+@end
+@implementation PDFPage (SliceGeneration)
+- (void)ts_test_drawWithBox:(PDFDisplayBox)box toContext:(CGContextRef)context
+{
+    [self ts_test_drawWithBox:box toContext:context];
+    if (!drawDiverges) return;
+    drawDiverges = NO;
+    PDFAnnotation *mark = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(100, 60, 25, 25) forType:PDFAnnotationSubtypeSquare withProperties:nil];
+    mark.color = NSColor.blackColor;
+    [self addAnnotation:mark];
+    [self.document insertPage:[[PDFPage alloc] init] atIndex:self.document.pageCount];
+}
 @end
 
 static PDFDocument *cloneAt(NSString *root, NSString *name, NSData *data, NSMutableArray *keep) {
@@ -401,6 +419,41 @@ int main(int argc, char **argv) {
         known = NO;
         TSContentWidthRawInk(longDocument, kPDFDisplayBoxCropBox, [longDocument pageAtIndex:prefix - 1], &known);
         check(!sliceFailed && done && known, @"later short slices reach the page that was not measured");
+
+        // No annotations: the deadline has to be reached before the next page is opened.
+        PDFDocument *quiet = cloneAt(root, @"quiet", manyBlankPages(2000), keep);
+        NSDate *quietStart = [NSDate date];
+        TSContentWidthScan quietScan = TSContentWidthPrepareFast(quiet, kPDFDisplayBoxCropBox, 0.008);
+        NSTimeInterval quietElapsed = -quietStart.timeIntervalSinceNow;
+        check(quietScan == TSContentWidthScanPending && quietElapsed < 0.2,
+              [NSString stringWithFormat:@"a long document with no annotations yields (%.3f s)", quietElapsed]);
+        for (int i = 0; i < 100 && quietScan == TSContentWidthScanPending; i++)
+            quietScan = TSContentWidthPrepareFast(quiet, kPDFDisplayBoxCropBox, 0.008);
+        check(quietScan == TSContentWidthScanAllow, @"the walk resumes and still allows a document with no annotations");
+
+        // A page inserted during the draw advances the generation. The ink of that draw stays out.
+        PDFDocument *edited = [[PDFDocument alloc] initWithData:pdfPages(@[
+            @{@"media": @"[0 0 200 100]", @"rotate": @0, @"stream": @""},
+        ])];
+        check(edited.pageCount == 1, @"the page that will change during the draw opens");
+        Method draw = class_getInstanceMethod(PDFPage.class, @selector(drawWithBox:toContext:));
+        Method hooked = class_getInstanceMethod(PDFPage.class, @selector(ts_test_drawWithBox:toContext:));
+        method_exchangeImplementations(draw, hooked);
+        drawDiverges = YES;
+        NSInteger generationBefore = TSContentWidthGeneration(edited);
+        sliceFailed = NO;
+        BOOL editedSlice = TSContentWidthMeasureSlice(edited, kPDFDisplayBoxCropBox, 5, &sliceFailed);
+        method_exchangeImplementations(draw, hooked);
+        known = NO;
+        TSContentWidthRawInk(edited, kPDFDisplayBoxCropBox, [edited pageAtIndex:0], &known);
+        check(!editedSlice && !sliceFailed && TSContentWidthGeneration(edited) == generationBefore + 1 && !known,
+              @"ink drawn before a generation change is not stored");
+        sliceFailed = NO;
+        editedSlice = TSContentWidthMeasureSlice(edited, kPDFDisplayBoxCropBox, 5, &sliceFailed);
+        known = NO;
+        NSRect editedInk = TSContentWidthRawInk(edited, kPDFDisplayBoxCropBox, [edited pageAtIndex:0], &known);
+        check(!sliceFailed && editedSlice && known && !NSIsEmptyRect(editedInk),
+              [NSString stringWithFormat:@"the retry stores the ink added during the draw %@", rectString(editedInk)]);
         printf("PASS: %lu checks\n", (unsigned long)checks);
         return 0;
     }
