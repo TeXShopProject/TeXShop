@@ -45,6 +45,13 @@
 - (TSLinkPreviewView *)copyWithFrame:(NSRect)frame;
 - (BOOL)returnToPlaceOnPage;
 - (BOOL)returnToPlaceIfAway;
+// What the popup shows, kept for the next launch of TeXShop (#71): its pages, the part of them
+// in view and its label, under keys starting with prefix.
+- (void)encodeContentWithCoder:(NSCoder *)coder prefix:(NSString *)prefix;
+// A popup showing the same part of the same pages of document, drawn again; nil when the coder
+// holds none or the pages are no longer there.
++ (TSLinkPreviewView *)linkPreviewWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
+                                    document:(PDFDocument *)document frame:(NSRect)frame;
 
 @end
 

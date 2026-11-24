@@ -454,6 +454,61 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     return copy;
 }
 
+- (void)encodeContentWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
+{
+    PDFDocument *document = _pageCount ? _pages[0].document : nil;
+    if (!document) return;
+    NSMutableArray<NSNumber *> *indices = [NSMutableArray array];
+    for (NSUInteger i = 0; i < _pageCount; i++) {
+        NSUInteger index = [document indexForPage:_pages[i]];
+        if (index == NSNotFound) return;
+        [indices addObject:@(index)];
+    }
+    [coder encodeObject:indices forKey:[prefix stringByAppendingString:@"Pages"]];
+    [coder encodeRect:_source forKey:[prefix stringByAppendingString:@"Source"]];
+    if (self.pageLabel)
+        [coder encodeObject:self.pageLabel forKey:[prefix stringByAppendingString:@"Label"]];
+}
+
++ (TSLinkPreviewView *)linkPreviewWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
+                                    document:(PDFDocument *)document frame:(NSRect)frame
+{
+    NSArray *indices = [coder decodeObjectOfClasses:[NSSet setWithObjects:[NSArray class], [NSNumber class], nil]
+                                             forKey:[prefix stringByAppendingString:@"Pages"]];
+    if (![indices isKindOfClass:[NSArray class]] || indices.count < 1 || indices.count > TSLinkPreviewMaximumPages)
+        return nil;
+    NSMutableArray<PDFPage *> *pages = [NSMutableArray array];
+    NSSize sizes[TSLinkPreviewMaximumPages];
+    for (id index in indices) {
+        if (![index isKindOfClass:[NSNumber class]] || [index integerValue] < 0 || (NSUInteger)[index integerValue] >= document.pageCount)
+            return nil;
+        PDFPage *page = [document pageAtIndex:[index integerValue]];
+        CGAffineTransform transform;
+        if (!TSLinkPreviewPageGeometry(page, &sizes[pages.count], &transform)) return nil;
+        [pages addObject:page];
+    }
+    // Drawn as when the popup first appeared: the linked page, or it above the next one.
+    NSRect rects[TSLinkPreviewMaximumPages] = {NSZeroRect, NSZeroRect};
+    NSSize size;
+    NSImage *image;
+    if (pages.count == 2) {
+        size = TSLinkPreviewStrip(sizes[0], sizes[1], &rects[0], &rects[1]);
+        image = TSLinkPreviewStripImage(pages, rects, size);
+    } else {
+        size = sizes[0];
+        rects[0] = NSMakeRect(0, 0, size.width, size.height);
+        image = TSLinkPreviewImage(pages[0], size);
+    }
+    // The pages may have changed size since; the part in view stays within them.
+    NSRect source = NSIntersectionRect([coder decodeRectForKey:[prefix stringByAppendingString:@"Source"]],
+                                       NSMakeRect(0, 0, size.width, size.height));
+    if (!image || NSIsEmptyRect(source)) return nil;
+    TSLinkPreviewView *preview = [[self alloc] initWithFrame:frame image:image source:source pageSize:size
+                                                       pages:pages pageRects:rects];
+    preview.pageLabel = [coder decodeObjectOfClass:[NSString class] forKey:[prefix stringByAppendingString:@"Label"]];
+    return preview;
+}
+
 - (BOOL)returnToPlaceIfAway
 {
     return _awayFromPlace && [self returnToPlaceOnPage];
@@ -653,6 +708,8 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // A click that moved nothing clears the selection, as in the preview.
     if (_drag == TSLinkPreviewDragMove && NSEqualRects(self.frame, _startFrame)) self.selection = nil;
     _drag = TSLinkPreviewDragNone;
+    // Its place, size and the part in view are kept for the next launch of TeXShop (#71).
+    [self.window invalidateRestorableState];
     // A drag can end outside the popup, as when its edge stops below the toolbar and the
     // pointer goes on: the drag's cursor must not stay there (#14).
     NSCursor *cursor = [self cursorAtPoint:[self locationOfEvent:event]];
@@ -674,6 +731,7 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // Positive deltas move content right and down, as in a scroll view.
     _source = TSLinkPreviewPan(_source, NSMakeSize(dx * factor, -dy * factor), _pageSize);
     [self setNeedsDisplay:YES];
+    [self.window invalidateRestorableState];
 }
 
 @end

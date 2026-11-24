@@ -1799,6 +1799,7 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
     MyPDFKitView *first = (MyPDFKitView *)self.myPDFKitView, *second = (MyPDFKitView *)self.myPDFKitView2;
     if (![[first document] pageCount]) return;
     [first encodePreviewStateWithCoder:coder prefix:@"TSPreviewFirst"];
+    [coder encodeInteger:[first previewRotation] forKey:@"TSPreviewRotation"];
     [coder encodeInteger:TSPreviewOverrideCode(self.myDocument.previewDirectionOverride) forKey:@"TSPreviewDirection"];
     [coder encodeInteger:TSPreviewOverrideCode(self.myDocument.previewBookOverride) forKey:@"TSPreviewBook"];
     NSSplitView *splitView = self.pdfKitSplitView;
@@ -1806,7 +1807,8 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
     [coder encodeBool:split forKey:@"TSPreviewSplit"];
     if (!split) return;
     [coder encodeBool:self.horizontal forKey:@"TSPreviewSplitHorizontal"];
-    // The share of the first part, so that the divider keeps its place in a window of another size.
+    // The share of the first part, so that the divider keeps its place in a window of another size;
+    // 0 and 1 when it was pushed to an end.
     NSRect a = splitView.subviews[0].frame, b = splitView.subviews[1].frame;
     CGFloat one = splitView.isVertical ? NSWidth(a) : NSHeight(a);
     CGFloat two = splitView.isVertical ? NSWidth(b) : NSHeight(b);
@@ -1828,9 +1830,11 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
         [first applyPreviewArrangement];
         [second applyPreviewArrangement];
     }
-    TSPreviewPanePlace firstPlace = [first restorePreviewDisplayWithCoder:coder prefix:@"TSPreviewFirst"];
-    TSPreviewPanePlace secondPlace = {0};
-    BOOL secondInUse = NO;
+    // The pages turned as they were, before any place on them is put back.
+    if ([coder containsValueForKey:@"TSPreviewRotation"])
+        [first restorePreviewRotation:[coder decodeIntegerForKey:@"TSPreviewRotation"]];
+    [first restorePreviewDisplayWithCoder:coder prefix:@"TSPreviewFirst"];
+    BOOL secondRestoring = NO, secondInUse = NO;
     if ([coder decodeBoolForKey:@"TSPreviewSplit"] && second) {
         if (!self.windowIsSplit) {
             BOOL horizontal = [coder decodeBoolForKey:@"TSPreviewSplitHorizontal"];
@@ -1842,31 +1846,45 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
         NSSplitView *splitView = self.pdfKitSplitView;
         if (self.windowIsSplit && splitView.subviews.count >= 2) {
             double share = [coder decodeDoubleForKey:@"TSPreviewSplitShare"];
-            if (share > 0 && share < 1) {
+            if ([coder containsValueForKey:@"TSPreviewSplitShare"] && share >= 0 && share <= 1) {
                 CGFloat whole = (splitView.isVertical ? NSWidth(splitView.bounds) : NSHeight(splitView.bounds)) - splitView.dividerThickness;
                 [splitView setPosition:round(whole * share) ofDividerAtIndex:0];
                 [splitView adjustSubviews];
             }
-            secondPlace = [second restorePreviewDisplayWithCoder:coder prefix:@"TSPreviewSecond"];
+            secondRestoring = [second restorePreviewDisplayWithCoder:coder prefix:@"TSPreviewSecond"];
+            [second layoutDocumentView];
             secondInUse = [coder decodeBoolForKey:@"TSPreviewSecondInUse"];
         }
     }
-    // The places are put back once the window and its parts are laid out.
+    // The places and pinned popups are put back once the window and its parts are laid out.
     __weak TSPreviewWindow *weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         TSPreviewWindow *window = weakSelf;
         if (!window) return;
         [window layoutIfNeeded];
         MyPDFKitView *one = (MyPDFKitView *)window.myPDFKitView, *two = (MyPDFKitView *)window.myPDFKitView2;
-        [one restorePreviewPlace:firstPlace];
+        [one finishRestoringPreview];
         if (window.windowIsSplit) {
-            [two restorePreviewPlace:secondPlace];
+            if (secondRestoring)
+                [two finishRestoringPreview];
             [(secondInUse ? two : one) becomeActiveView];
             [window showActivePart];
         }
         [window.myDocument updatePreviewLayoutControls];
     });
     return YES;
+}
+
+// The state of a source's Preview is kept with the source: whatever renews the window's state
+// renews the document's as well.
+- (void)invalidateRestorableState
+{
+    static BOOL forwarding = NO;
+    [super invalidateRestorableState];
+    if (forwarding) return;
+    forwarding = YES;
+    [self.myDocument invalidateRestorableState];
+    forwarding = NO;
 }
 
 // The Preview window of a PDF opened by itself is the PDF's only window: macOS keeps it, with the
