@@ -353,6 +353,20 @@ static NSString *StringOfCodePoint(UTF32Char c)
 
 #pragma mark - Building the views
 
+/// The locale for the counts and the plural forms: the current one, except when TeXShop runs in a localization
+/// for a region of its own, such as Portuguese of Portugal, and the region chosen in System Settings is another.
+/// Then the localization's region gives the plural forms ("0 palavras", not the Brazilian "0 palavra"), and its
+/// way of writing numbers, since one locale gives both.
+static NSLocale *CountsLocale(void)
+{
+    NSLocale *current = NSLocale.currentLocale;
+    NSString *localization = NSBundle.mainBundle.preferredLocalizations.firstObject;
+    NSString *region = localization ? [NSLocale componentsFromLocaleIdentifier:localization][NSLocaleCountryCode] : nil;
+    if (region.length && ![region isEqualToString:current.countryCode ?: @""])
+        return [NSLocale localeWithLocaleIdentifier:localization];
+    return current;
+}
+
 static NSFont *SmallFont(void)
 {
     return [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
@@ -627,7 +641,7 @@ static TSGlyphPopoverGlyphView *GlyphView(NSString *text, CGFloat size, NSColor 
     NSTextField *nameField;
     NSString *name = ScalarName(first);
     if (complex) {
-        name = [NSString localizedStringWithFormat:NSLocalizedString(@"<a character consisting of %d code points>", @"Character Info: the name line of a character made of several code points, such as an accented letter or an emoji sequence"), (int)codePoints.count];
+        name = [[NSString alloc] initWithFormat:NSLocalizedString(@"<a character consisting of %d code points>", @"Character Info: the name line of a character made of several code points, such as an accented letter or an emoji sequence") locale:CountsLocale(), (int)codePoints.count];
         nameField = Label(name, [NSFont systemFontOfSize:NSFont.systemFontSize], NSColor.labelColor, kNameMaxWidth, YES, @"name");
     } else if (name) {
         if (variant)
@@ -663,7 +677,7 @@ static TSGlyphPopoverGlyphView *GlyphView(NSString *text, CGFloat size, NSColor 
 - (NSView *)multipleCharactersView
 {
     NSString *character = self.character;
-    NSString *counts = [NSString localizedStringWithFormat:NSLocalizedString(@"%d characters, %d words, %d lines", @"Character Info: the characters, words and lines of the selection, counted as the status bar counts them"),
+    NSString *counts = [[NSString alloc] initWithFormat:NSLocalizedString(@"%d characters, %d words, %d lines", @"Character Info: the characters, words and lines of the selection, counted as the status bar counts them") locale:CountsLocale(),
                         (int)self.counts.selectedCharacters, (int)self.counts.selectedWords, (int)self.counts.selectedLines];
     NSTextField *countsField = Label(counts, [NSFont systemFontOfSize:NSFont.systemFontSize], NSColor.labelColor, kMultiWidth, YES, @"counts");
 

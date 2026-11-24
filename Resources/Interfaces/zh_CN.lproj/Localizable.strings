@@ -368,7 +368,7 @@
 "%1$@: %2$@" = "%1$@：%2$@";
 "Lines" = "行";
 "Characters" = "字符";
-"Words" = "字";
+"Words" = "单词";
 "Location" = "位置";
 "Line" = "行";
 "Column" = "列";
