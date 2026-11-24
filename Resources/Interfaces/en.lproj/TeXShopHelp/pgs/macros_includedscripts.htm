@@ -48,7 +48,7 @@
 <p>A document with a bibliography needs several runs: LaTeX writes the .aux file, BibTeX uses it to write the .bbl and .blg files, LaTeX runs again to add the bibliography, and once more to update the references to it. The Bibliography macro runs LaTeX, BibTeX, LaTeX and LaTeX one after another. <a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a> explains how it works.</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
-<p>The macros of this submenu call shell scripts of the same names in ~/Library/TeXShop/bin. They work on a saved file. <a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a> explains pdflatexc as an example.</p>
+<p>Most macros of this submenu call shell scripts of the same names in ~/Library/TeXShop/bin; bibtexcpl, mpostcpl and latex-makeindex-mpost call several of them in turn, and openpdf opens the PDF of the document. They work on a saved file. <a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a> explains pdflatexc as an example.</p>
 <h3>htlatexc, htlatexr</h3>
 <p>TeX4ht converts a LaTeX document into a web page: an HTML page and image files. htlatexc runs htlatex on the document and opens the resulting HTML file in Safari. The package tex4ht does not need to be loaded in the document; htlatex loads it. htlatexr runs htlatex with the option <code>-r</code>, which makes the images again even when they already exist.</p>
 <h3>pdfselectc</h3>

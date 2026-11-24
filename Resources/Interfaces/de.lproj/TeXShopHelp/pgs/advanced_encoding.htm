@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-Hilfe"></a><span class="chapter">Erweitert</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
@@ -47,14 +47,14 @@
 
 <h2>Dateien öffnen</h2>
 <p>Wird eine Datei ohne Kodierungszeile (siehe unten) geöffnet, erkennt TeXShop ihre Kodierung. Ein Byte Order Mark kennzeichnet UTF-8- und UTF-16-Dateien. Eine Datei nur aus ASCII-Zeichen wird in der Kodierung für neue Dokumente gelesen. Andernfalls verwendet TeXShop die Kodierung, die das Programm, das die Datei gesichert hat, mit ihr vermerkt hat, sofern macOS diese Information bewahrt hat, und versucht dann UTF-8, danach die Kodierungen Ihrer Sprachen und die Kodierung für neue Dokumente. Eine Kodierung, die der Quelltext angibt, etwa mit <code>\usepackage[latin9]{inputenc}</code>, dient als Hinweis.</p>
-<p>Die Erkennung ist eine Vermutung und gelingt am besten bei Dateien mit einer gewissen Menge Text. Wählt sie die falsche Kodierung, schließen Sie die Datei ohne zu sichern, öffnen Sie sie erneut mit Ablage › Öffnen…, klicken Sie im Öffnen-Dialog auf „Optionen“ und wählen Sie die Kodierung in dessen Menü; die dort gewählte Kodierung gilt für die dabei geöffneten Dateien, und das Dokument behält sie. Fügen Sie der Datei dann eine Kodierungszeile hinzu, damit sie immer richtig geöffnet wird. Die Erkennung lässt sich mit der versteckten Einstellung</p>
+<p>Die Erkennung ist eine Vermutung und gelingt am besten bei Dateien mit einer gewissen Menge Text. Wählt sie die falsche Kodierung, schließen Sie die Datei ohne zu sichern, öffnen Sie sie erneut mit Ablage › Öffnen..., klicken Sie im Öffnen-Dialog auf „Optionen“ und wählen Sie die Kodierung in dessen Menü; die dort gewählte Kodierung gilt für die dabei geöffneten Dateien, und das Dokument behält sie. Das Menü zeigt zunächst die Kodierung für neue Dokumente; bleibt diese stehen, gilt sie nicht als Wahl, und die Kodierung wird wie üblich erkannt. Fügen Sie der Datei dann eine Kodierungszeile hinzu, damit sie immer richtig geöffnet wird. Die Erkennung lässt sich mit der versteckten Einstellung</p>
 <pre>defaults write TeXShop EncodingAutoDetection NO</pre>
 <p>ausschalten. Dateien werden dann in der Kodierung für neue Dokumente gelesen.</p>
 
 <h2>Die Kodierungszeile</h2>
 <p>Eine Zeile in einer der ersten zwanzig Zeilen einer Quelltextdatei legt ihre Kodierung für das Lesen und das Sichern fest und hat Vorrang vor allem anderen:</p>
 <pre>% !TEX encoding = UTF-8 Unicode</pre>
-<p>Die Zeile muss am linken Rand beginnen, mit einem Leerzeichen nach <code>%</code> und je einem Leerzeichen vor und nach dem Gleichheitszeichen, und der Name muss genau wie in der folgenden Tabelle geschrieben werden. Das Makro „Encoding“ im Menü „Makros“ listet die Kodierungen auf und fügt die Zeile für Sie ein. Auch die Namen, die TeXworks verwendet, etwa <code>UTF-8</code> oder <code>ISO 8859-1</code>, werden verstanden.</p>
+<p>Schreiben Sie die Zeile wie gezeigt, mit einem Leerzeichen vor dem Gleichheitszeichen; <code>%!TEX encoding =</code> ohne das Leerzeichen nach <code>%</code> wird ebenfalls gelesen. Der Name muss genau wie in der folgenden Tabelle geschrieben werden. Das Makro „Encoding“ im Menü „Makros“ fügt die Zeile für Sie ein, mit einer Liste von Kodierungen zur Auswahl. Auch die Namen, die TeXworks verwendet, etwa <code>UTF-8</code> oder <code>ISO 8859-1</code>, werden verstanden.</p>
 <p>Nennt die Zeile eine Kodierung, die TeXShop nicht kennt, liest TeXShop die Datei als UTF-8 und weist darauf hin. Nennt die Zeile UTF-8, ist die Datei aber kein gültiges UTF-8, meldet TeXShop dies und öffnet die Datei in ISO Latin 9, das jede Datei lesen kann; wird sie gesichert, ohne die Zeile zu ändern, werden dieselben Bytes zurückgeschrieben, sodass nichts verloren geht. Um eine Datei zu öffnen, ohne ihre Kodierungszeile anzuwenden, halten Sie beim Öffnen die Wahltaste gedrückt.</p>
 <table>
 <tr><th>Name in der Kodierungszeile</th><th>Name in Menüs</th></tr>
@@ -88,6 +88,7 @@
 <tr><td><code>GB 2312</code></td><td>Vereinfachtes Chinesisch (GB 2312)</td></tr>
 <tr><td><code>GBK</code></td><td>Chinesisch (GBK)</td></tr>
 <tr><td><code>GB 18030</code></td><td>Chinesisch (GB 18030)</td></tr>
+<tr><td><code>Ascii</code></td><td>Westeuropäisch (ASCII)</td></tr>
 </table>
 
 <h2>In einer anderen Kodierung sichern</h2>
@@ -95,7 +96,7 @@
 <p>Beim Umwandeln einer Datei in eine andere Kodierung geht jedes Zeichen verloren, das die neue Kodierung nicht darstellen kann, und wird eine Datei in der falschen Kodierung gelesen und gesichert, sind ihre Zeichen endgültig ersetzt. Bewahren Sie eine Kopie des Originals auf. Das Befehlszeilenprogramm <code>iconv</code> wandelt Dateien um, ohne das Original zu ändern. Das Dokument „Dateikodierung und TeXShop (Englisch)“ im Menü „Hilfe“ behandelt diese Fragen ausführlicher.</p>
 
 <h2>Sprachen mit Schreibrichtung von rechts nach links</h2>
-<p>Arabisch, Hebräisch und Persisch werden im Quelltextfenster von rechts nach links eingegeben. Ist Einstellungen › Editor › Eingabe › „Rechts-nach-links-Sprachen (Arabisch, Hebräisch, Persisch)“ eingeschaltet und die Syntaxhervorhebung aktiv, werden Zeilen, die mit arabischer oder hebräischer Schrift beginnen, rechtsbündig angezeigt und andere Zeilen, etwa solche, die mit einem LaTeX-Befehl beginnen, linksbündig. Mit der versteckten Einstellung</p>
+<p>Arabisch, Hebräisch und Persisch werden im Quelltextfenster von rechts nach links eingegeben. Ist Einstellungen › Editor › Eingabe › „Rechts-nach-links-Sprachen (Arabisch, Hebräisch, Persisch)“ eingeschaltet (in der ersten der beiden Gruppen „Eingabe“, gleich nach „Absatzstil“) und die Syntaxhervorhebung aktiv, werden Zeilen, die mit arabischer oder hebräischer Schrift beginnen, rechtsbündig angezeigt und andere Zeilen, etwa solche, die mit einem LaTeX-Befehl beginnen, linksbündig. Mit der versteckten Einstellung</p>
 <pre>defaults write TeXShop RightJustifyIfAny YES</pre>
 <p>wird jede Zeile rechtsbündig angezeigt, die solche Zeichen an irgendeiner Stelle enthält. Die Ausrichtung dient nur dem Bearbeiten; den gesetzten Text ordnet TeX nach seinen eigenen Befehlen an. Um diese Sprachen zu setzen, verwenden Sie XeLaTeX oder LuaLaTeX; siehe <a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a>.</p>
 

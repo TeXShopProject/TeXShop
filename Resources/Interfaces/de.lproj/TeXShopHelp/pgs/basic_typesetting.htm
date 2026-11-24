@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-Hilfe"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">Einführung</a></li>
@@ -67,11 +67,11 @@
 
 <p>Einstellungen › Satz › Engine-Profil richtet den Satz für eine Engine in einem Schritt ein. Wählen Sie das Profil der Engine, die Sie verwenden; ein Dialog listet die Werte auf, die es setzt, und „OK“ übernimmt sie. Im Dialog können Sie „LaTeX ausführen:“ auf „Mit latexmk“ stellen; latexmk ruft dann BibTeX, den Index und weitere Durchläufe nach Bedarf auf. Sobald Sie einen dieser Werte ändern, zeigt das Menü „Eigene“. Das TeXShop Handbuch führt auf, was die Profile setzen.</p>
 
-<p>Für ein einzelnes Dokument wählen Sie die Engine im Einblendmenü „Programm“ neben „Setzen“ in der Symbolleiste. Es enthält LaTeX, plain TeX und die Engine-Dateien in ~/Library/TeXShop/Engines, etwa LuaLaTeX und XeLaTeX, und die Wahl gilt für dieses Fenster. Um sie zum Teil des Dokuments zu machen, schreiben Sie eine Zeile wie diese in die ersten 20 Zeilen des Quelltexts:</p>
+<p>Für ein einzelnes Dokument wählen Sie die Engine im Einblendmenü „Programm“ neben „Setzen“ in der Symbolleiste. Es enthält plain TeX, LaTeX, BibTeX, MakeIndex und MetaPost, gefolgt von den Engine-Dateien in ~/Library/TeXShop/Engines, etwa LuaLaTeX und XeLaTeX, und die Wahl gilt für dieses Fenster. Um sie zum Teil des Dokuments zu machen, schreiben Sie eine Zeile wie diese in die ersten 20 Zeilen des Quelltexts:</p>
 
 <pre>% !TEX program = LuaLaTeX</pre>
 
-<p><kbd>⌘T</kbd> setzt die Datei dann immer mit dieser Engine. Der Name ist der einer Engine-Datei oder einer von <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> und <code>tex</code> für das eingebaute LaTeX und plain TeX (siehe <a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a>). Makros › Program fügt die Zeile ein, wobei Sie die Engine aus einer Liste wählen. Einstellungen › Satz › Neue Dokumente setzen mit legt die Engine für Dokumente ohne eine solche Zeile fest. Zu Engine-Dateien siehe <a href="advanced_addengine.htm">Satz-Engines hinzufügen</a>.</p>
+<p><kbd>⌘T</kbd> setzt die Datei dann immer mit dieser Engine. Der Name ist der einer Engine-Datei oder einer von <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> und <code>tex</code> für das eingebaute LaTeX und plain TeX (siehe <a href="basic_alternatetypeset.htm">Alternativer Satzmodus</a>). Makros › Program fügt eine solche Zeile ein, wobei Sie die Engine aus einer Liste wählen; es schreibt <code>% !TEX TS-program =</code>, was dasselbe bedeutet. Einstellungen › Satz › Neue Dokumente setzen mit legt die Engine für Dokumente ohne eine solche Zeile fest. Zu Engine-Dateien siehe <a href="advanced_addengine.htm">Satz-Engines hinzufügen</a>.</p>
 
 <p>Das Menü „Setzen“ ruft außerdem BibTeX, MakeIndex und MetaPost für das Dokument auf; siehe <a href="advanced_bibtex.htm">BibTeX</a> und <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
 
@@ -87,7 +87,7 @@
 
 <h2>Die Fenster anordnen</h2>
 
-<p>Fenster › Ein gemeinsames Fenster stellt den Quelltext und seine Vorschau nebeneinander in ein einziges Fenster, und Fenster › Separate Fenster verwenden trennt sie wieder. Um jedes Dokument so zu öffnen, stellen Sie Einstellungen › Allgemein › Fenster › Quelltext und Vorschau auf „Ein gemeinsames Fenster“; „Quelltextposition im gemeinsamen Fenster“ setzt den Quelltext nach links oder rechts. Ziehen Sie die Trennlinie, um dem Quelltext mehr oder weniger Platz zu geben; TeXShop öffnet jedes gemeinsame Fenster mit derselben Aufteilung. Dokumente mit Kapiteldateien funktionieren nicht in einem einzigen Fenster; verwenden Sie für sie getrennte Fenster. Ablage › Neu öffnet nur ein Quelltextfenster: Setzen Sie das neue Dokument zuerst und wählen Sie dann „Ein gemeinsames Fenster“.</p>
+<p>Fenster › Ein gemeinsames Fenster stellt den Quelltext und seine Vorschau nebeneinander in ein einziges Fenster, und Fenster › Separate Fenster verwenden trennt sie wieder. Um jedes Dokument so zu öffnen, stellen Sie Einstellungen › Allgemein › Fenster › Quelltext und Vorschau auf „Ein gemeinsames Fenster“; „Quelltextposition im gemeinsamen Fenster“ setzt den Quelltext nach links oder rechts. Ziehen Sie die Trennlinie, um dem Quelltext mehr oder weniger Platz zu geben; TeXShop öffnet jedes gemeinsame Fenster mit derselben Aufteilung. Eine Kapiteldatei mit einer Zeile <code>% !TEX root</code> bleibt in getrennten Fenstern; die Hauptdatei selbst kann ein gemeinsames Fenster verwenden. Ablage › Neu öffnet nur ein Quelltextfenster: Setzen Sie das neue Dokument zuerst und wählen Sie dann „Ein gemeinsames Fenster“.</p>
 
 <p>Bei getrennten Fenstern ordnen Sie Quelltext- und Vorschaufenster nach Belieben an und wählen dann Quelltext › Position des Quelltext-Fensters sichern und Vorschau › Position des Vorschau-Fensters sichern; neue Fenster öffnen sich dort.</p>
 </main>

@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-Hilfe"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">Einführung</a></li>
@@ -41,11 +41,11 @@
 <main id="content">
 <h1>In TeX-Quellen suchen</h1>
 
-<p><a name="texroot_search"></a>In einem Dokument, das in eine Hauptdatei und Kapiteldateien aufgeteilt ist, können Sie in allen Dateien zugleich suchen und ersetzen. Wählen Sie, während eine seiner Dateien vorn ist, Bearbeiten › Suchen › In TeX-Quellen mit derselben TEX root suchen …; ist die Hauptdatei selbst vorn, heißt der Eintrag „In TeX-Quellen mit dieser Datei als TEX root suchen …“. Derselbe Eintrag steht im Menü von „Alle suchen“ in der Erweiterten Suchmaske, und „Auf TeX-Quellen mit derselben TEX root anwenden …“ im Menü von „Alles ersetzen“ im Fenster „Mehrfach ersetzen“ öffnet das Fenster mit dem dort gewählten Regelsatz. Bei einem Dokument ohne Titel und bei einer Datei, deren Name nicht auf .tex endet, sind die Einträge abgeblendet.</p>
+<p><a name="texroot_search"></a>In einem Dokument, das in eine Hauptdatei und Kapiteldateien aufgeteilt ist, können Sie in allen Dateien zugleich suchen und ersetzen. Wählen Sie, während eine seiner Dateien vorn ist, Bearbeiten › Suchen › In TeX-Quellen mit derselben TEX root suchen …; ist die Hauptdatei selbst vorn, heißt der Eintrag „In TeX-Quellen mit dieser Datei als TEX root suchen …“. Derselbe Eintrag steht im Menü von „Alle suchen“ in der Erweiterten Suchmaske, und „Auf TeX-Quellen mit derselben TEX root anwenden …“ im Menü von „Alles ersetzen“ im Fenster „Mehrfach ersetzen“ öffnet das Fenster mit dem dort gewählten Regelsatz; für die Hauptdatei selbst heißt er „Auf TeX-Quellen mit dieser Datei als TEX root anwenden …“. Bei einem Dokument ohne Titel und bei einer Datei, deren Name nicht auf .tex (in Kleinbuchstaben) endet, sind die Einträge abgeblendet, der Eintrag zum Anwenden außerdem, wenn im Fenster „Mehrfach ersetzen“ kein Regelsatz gewählt ist.</p>
 
 <h2>Welche Dateien durchsucht werden</h2>
 
-<p>Das Fenster durchsucht die Hauptdatei und die .tex-Dateien in ihrem Ordner und den Ordnern darunter, die sie in einer Zeile <code>% !TEX root</code> unter ihren ersten 20 Zeilen nennen; siehe <a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a>. Die Zeile unter den Modi gibt an, welche Hauptdatei durchsucht wird, und ihre Taste „?“ wiederholt diese Regel. Dateien, die in <code>\input</code> oder <code>\include</code> genannt sind, werden nicht verfolgt, und eine in einer .texshop-Datei genannte Hauptdatei wird nicht verwendet. Symbolische Links auf Dateien, Ordner, die über symbolische Links oder Aliasse erreicht werden, und der Ordner TeXShop Backups bleiben außen vor.</p>
+<p>Das Fenster durchsucht die Hauptdatei und die .tex-Dateien in ihrem Ordner und den Ordnern darunter, die sie in einer Zeile <code>% !TEX root</code> unter ihren ersten 20 Zeilen nennen; siehe <a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a>. Ist die versteckte Einstellung <code>UseOldHeadingCommands</code> eingeschaltet, werden auch Dateien durchsucht, die sie in einer alten Zeile <code>%SourceDoc</code> nennen. Die Zeile unter den Modi gibt an, welche Hauptdatei durchsucht wird, und ihre Taste „?“ wiederholt diese Regel. Dateien, die in <code>\input</code> oder <code>\include</code> genannt sind, werden nicht verfolgt, und eine in einer .texshop-Datei genannte Hauptdatei wird nicht verwendet. Symbolische Links auf Dateien, Ordner, die über symbolische Links oder Aliasse erreicht werden, und der Ordner TeXShop Backups bleiben außen vor.</p>
 
 <p>Die Liste links zeigt die Dateien; schalten Sie dort eine Datei oder einen Ordner aus, um sie auszulassen. Konnten einige Dateien oder Ordner nicht gelesen werden, listet die Taste „Nicht gelesene Dateien“ unten sie mit dem Grund auf.</p>
 
@@ -60,7 +60,7 @@
 
 <p>Klicken Sie auf eine Zeile, um den Treffer in seinem Dokument zu zeigen; doppelklicken Sie, um dieses Fenster nach vorn zu holen. Die Liste folgt Ihren Änderungen, und die Taste ↻ (<kbd>⌘R</kbd>) sammelt die Dateien neu. Die Stopptaste, die Escape-Taste oder <kbd>⌘.</kbd> hält eine lange Suche an.</p>
 
-<p>Ein geöffnetes Dokument wird so durchsucht, wie es auf dem Bildschirm steht, mit seinen ungesicherten Änderungen; eine nicht geöffnete Datei wird in der Kodierung gelesen, in der TeXShop sie öffnen würde. Manche Dateien lassen sich nur durchsuchen, aber nicht ersetzen, etwa eine Datei, die nicht geschrieben werden kann oder die ihre Kodierung nicht unverändert zurücksichern kann. Sie sind mit ⊘ markiert, und die Markierung nennt den Grund.</p>
+<p>Ein geöffnetes Dokument wird so durchsucht, wie es auf dem Bildschirm steht, mit seinen ungesicherten Änderungen; eine nicht geöffnete Datei wird in der Kodierung gelesen, in der TeXShop sie öffnen würde. Manche Dateien lassen sich nur durchsuchen, aber nicht ersetzen, etwa eine Datei, die nicht geschrieben werden kann oder die sich in ihrer Kodierung nicht unverändert zurücksichern lässt. Sie sind mit ⊘ markiert, und die Markierung nennt den Grund.</p>
 
 <h2>Alles ersetzen</h2>
 

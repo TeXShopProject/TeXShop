@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
@@ -40,23 +40,24 @@
 <main id="content">
 <h1>Protección ante shell-escape</h1>
 <p>Durante la composición, TeX puede ejecutar otros programas. Por omisión, TeX Live solo permite una breve lista de programas de confianza, por ejemplo para convertir gráficos EPS a PDF. Los paquetes que necesitan ejecutar otros programas piden la opción <code>-shell-escape</code> (también escrita <code>--shell-escape</code>).</p>
-<p>Con esta opción, un documento puede ejecutar cualquier orden, por ejemplo una que borre todos los archivos de su carpeta de inicio. Úsela solo con documentos de confianza, y no con archivos que reciba de otras personas.</p>
+<p>Con esta opción, un documento puede ejecutar cualquier comando, por ejemplo uno que borre todos los archivos de su carpeta de inicio. Úsela solo con documentos de confianza, y no con archivos que reciba de otras personas.</p>
 
 <h2>Añadir la opción</h2>
 <ul>
-<li>En la orden LaTeX o plain TeX de Ajustes › Composición › PDF directo, para todos los documentos que se componen en PDF directo.</li>
+<li>En el comando LaTeX o plain TeX de Ajustes › Composición › PDF directo, para todos los documentos que se componen en PDF directo.</li>
 <li>En un archivo de motor, para todos los documentos que se componen con ese motor; consulte <a href="advanced_addengine.htm">Añadir motores de composición</a>.</li>
 <li>Para un documento que se compone con uno de los motores de latexmk, como pdflatexmk, con la línea <code>% !TEX parameter = -shell-escape</code> al principio del archivo fuente.</li>
 </ul>
+<p>Un motor ya lleva la opción: sepdflatexmk, que viene con TeXShop y está en la carpeta Engines desde el principio, compone siempre con <code>--shell-escape</code>. Basta con elegirlo en la barra de herramientas de la ventana de código o con una línea <code>% !TEX program = sepdflatexmk</code>, así que úselo solo con documentos de confianza.</p>
 
 <h2>Confirmar shell-escape</h2>
-<p>Ajustes › Composición › PDF directo › «Confirmar shell-escape», desactivado por omisión, protege las órdenes del grupo «PDF directo». Cuando está activado y la orden plain TeX o LaTeX de ese grupo contiene <code>-shell-escape</code> o <code>--shell-escape</code>, TeXShop pregunta antes de componer un documento por primera vez después de abrirlo:</p>
+<p>Ajustes › Composición › PDF directo › «Confirmar shell-escape», desactivado por omisión, protege los comandos del grupo «PDF directo». Cuando está activado y el comando plain TeX o LaTeX de ese grupo contiene <code>-shell-escape</code> o <code>--shell-escape</code>, TeXShop pregunta antes de componer un documento por primera vez después de abrirlo:</p>
 <ul>
 <li>«Aceptar» compone con la opción.</li>
 <li>«Omitir shell-escape» compone sin ella.</li>
 <li>«Cancelar» no compone.</li>
 </ul>
-<p>Una vez que elige «Aceptar» u «Omitir shell-escape», la respuesta se mantiene para ese documento hasta que se cierra, de modo que puede componer sus propios documentos con la opción y los documentos de otras personas sin ella. Los archivos de motor no se comprueban, aunque contengan <code>-shell-escape</code>.</p>
+<p>Una vez que elige «Aceptar» u «Omitir shell-escape», la respuesta se mantiene para ese documento hasta que se cierra, de modo que puede componer sus propios documentos con la opción y los documentos de otras personas sin ella. Los archivos de motor no se comprueban, aunque contengan <code>-shell-escape</code>, de modo que sepdflatexmk compone con la opción sin preguntar.</p>
 </main>
 </body>
 </html>

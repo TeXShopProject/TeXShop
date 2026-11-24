@@ -49,13 +49,13 @@
 
 <h2>EPS files</h2>
 <p>TeX Live converts EPS graphics to PDF automatically while it typesets, using epstopdf, as long as the document loads graphicx. The converted file, <code>diagram-eps-converted-to.pdf</code>, is written next to the EPS file and used from then on.</p>
-<p>An EPS file opened in TeXShop is also converted: TeXShop writes a PDF file of the same name next to it and shows it.</p>
+<p>An EPS file opened in TeXShop is also converted: TeXShop writes a PDF file of the same name next to it, or in a temporary folder when the folder of the EPS file cannot be written to, and shows it.</p>
 
 <h2>TIFF files</h2>
 <p>LaTeX cannot include TIFF files. Choose File › Convert TIFF while a source window is active: a dialog shows the folder of the document, where only TIFF files can be chosen. Select one or several and click Convert. Each one is converted to a PNG file of the same name in the same folder; the TIFF files are kept.</p>
 
 <h2>Typesetting via DVI</h2>
-<p>Documents that use PostScript code, for example with the pstricks package, are typeset with the Via DVI method, which runs dvips by default. Graphics are then included in EPS format; PDF, PNG and JPEG files cannot be used. See <a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>.</p>
+<p>Documents that use PostScript code, for example with the pstricks package, are typeset with the Via DVI method, which runs dvips by default. Graphics are then included in EPS format; PDF, PNG and JPEG files cannot be used. The engine profiles whose names end in “+ dvipdfmx” also typeset Via DVI, but they run dvipdfmx instead of dvips; with <code>\usepackage[dvipdfmx]{graphicx}</code>, PDF, PNG and JPEG files can be used there. See <a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>.</p>
 </main>
 </body>
 </html>

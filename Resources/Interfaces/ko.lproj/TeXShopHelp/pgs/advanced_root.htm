@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 도움말"></a><span class="chapter">고급 도움말</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
@@ -61,8 +61,8 @@
 <ul>
 <li>장 파일에서 조판하면 루트 파일이 조판되고, 루트 파일의 미리보기 윈도우에 문서 전체가 표시됩니다. <code>% !TEX program</code> 줄처럼 조판에 관한 매직 코멘트는 루트 파일에 넣습니다.</li>
 <li>편집 › 오류 지점으로 이동은 오류가 있는 파일이 열려 있지 않으면 그 파일을 열고 해당 줄로 이동합니다.</li>
-<li>미리보기 윈도우에서 동기화하면 클릭한 곳이 들어 있는 장 파일이 열립니다. <a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a>를 참고하십시오.</li>
-<li>파일 › 부수파일 삭제는 루트 파일의 부수 파일을 삭제합니다. <a href="advanced_removeaux.htm">부수 파일 삭제</a>를 참고하십시오.</li>
+<li>미리보기 윈도우에서 동기화하면 클릭한 곳이 들어 있는 장 파일이 열립니다. <a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a>를 참조하십시오.</li>
+<li>파일 › 부수파일 삭제는 루트 파일의 부수 파일을 삭제합니다. <a href="advanced_removeaux.htm">부수 파일 삭제</a>를 참조하십시오.</li>
 <li>장 파일에서 윈도우 › 편집/보기 윈도우 맞바꾸기(<kbd>⌘1</kbd>)를 선택하면 루트 파일의 미리보기 윈도우가 앞으로 옵니다. 미리보기 윈도우에서 다시 선택하면 원래 있던 소스 윈도우로 돌아가며, 소스 윈도우에서 오지 않았다면 루트 파일로 갑니다.</li>
 </ul>
 
@@ -70,7 +70,7 @@
 <p>root 줄이 있는 장 파일을 열면 TeXShop은 루트 파일과 그 미리보기 윈도우도 함께 엽니다. 이 동작은 설정 › 일반 › 프로젝트 루트 파일의 두 항목으로 조절합니다. “문서를 열 때 루트 파일 열기”는 이 동작을 켜거나 끄며, “루트 파일 창을 최소화”는 루트 파일의 소스 윈도우를 Dock으로 보냅니다. 장을 작업하는 동안에는 루트 파일을 편집할 일이 거의 없기 때문입니다.</p>
 
 <h2>프로젝트 전체에서 찾기 및 대치</h2>
-<p>프로젝트의 모든 파일을 한 번에 검색하려면 프로젝트 파일 중 하나에서 편집 › 찾기 › 같은 TEX root를 가진 TeX 소스에서 찾기…를 선택합니다. 루트 파일과, root 줄로 그 루트 파일을 지정한 파일을 검색합니다. <a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a>와 <a href="basic_find.htm">찾기 및 대치</a>를 참고하십시오.</p>
+<p>프로젝트의 모든 파일을 한 번에 검색하려면 장 파일 중 하나에서 편집 › 찾기 › 같은 TEX root를 가진 TeX 소스에서 찾기…를, 루트 파일에서는 이 파일을 TEX root로 하는 TeX 소스에서 찾기…를 선택합니다. 루트 파일, 그리고 루트 파일의 폴더와 그 하위 폴더에 있는 <code>.tex</code> 파일 중 처음 20행 안의 root 줄로 그 루트 파일을 지정한 파일을 검색합니다. <a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a>와 <a href="basic_find.htm">찾기 및 대치</a>를 참조하십시오.</p>
 
 <h2>.texshop 파일로 지정한 루트 파일</h2>
 <p>장 파일 옆에 확장자가 <code>.texshop</code>인 파일(예: <code>two.tex</code>에 대한 <code>two.texshop</code>)이 있으면 이 파일로도 루트 파일을 지정할 수 있으며, TeXShop은 지금도 이 파일을 읽습니다. 이런 파일을 만드는 메뉴 명령은 없습니다. 소스와 함께 옮겨지는 <code>% !TEX root</code> 줄을 사용하십시오.</p>

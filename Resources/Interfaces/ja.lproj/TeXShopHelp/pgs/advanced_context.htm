@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShopヘルプ"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
@@ -56,8 +56,8 @@
 
 <h2>MetaPost</h2>
 <p>MetaPostは、John Hobbyによるプログラムで、KnuthのMETAFONTから派生したプログラミング言語での記述から図を描きます。マニュアルはTeX Liveに含まれています。「ヘルプ」→「パッケージのヘルプを表示...」を選び、<code>metapost</code>と入力してください。</p>
-<p>「タイプセット」→「MetaPost」（<kbd>⇧⌘M</kbd>）、または「タイプセット」ボタンの横のポップアップメニューの「MetaPost」は、作業中の書類（拡張子<code>.mp</code>のファイル）にMetaPostを実行します。実行するのは「設定」→「タイプセット」→「周辺ツール」の「MetaPost」にあるコマンドで、初期値は<code>mpost</code>です。エンジンのプロファイルはこの欄を設定します。pLaTeX + dvipdfmxでは<code>pmpost</code>、upLaTeX + dvipdfmxでは<code>upmpost</code>になり、ラベルの日本語をタイプセットできます。ほかのプロファイルでは<code>mpost</code>です。pmpostやupmpostで日本語のラベルをタイプセットした図は、LuaLaTeXでは取り込めません。LuaLaTeXでは、そうした図はluamplibパッケージを使って書類の中で描いてください。</p>
-<p>新しいファイルをMetaPostのファイルとして保存するには、保存ダイアログのファイルの種類のメニューでmpを選びます。</p>
+<p>「タイプセット」→「MetaPost」（<kbd>⇧⌘M</kbd>）、または「タイプセット」ボタンの横のポップアップメニューの「MetaPost」は、作業中の書類と同じ名前で拡張子が<code>.mp</code>のファイルにMetaPostを実行します。書類自体が<code>.mp</code>ファイルならその書類に、そうでなければ隣にある<code>.mp</code>ファイル（たとえばmfpicパッケージが<code>.tex</code>の書類のために書き出すもの）に実行します。実行するのは「設定」→「タイプセット」→「周辺ツール」の「MetaPost」にあるコマンドで、初期値は<code>mpost</code>です。エンジンのプロファイルはこの欄を設定します。pLaTeX + dvipdfmxでは<code>pmpost</code>、upLaTeX + dvipdfmxでは<code>upmpost</code>になり、ラベルの日本語をタイプセットできます。ほかのプロファイルでは<code>mpost</code>です。pmpostやupmpostで日本語のラベルをタイプセットした図は、LuaLaTeXでは取り込めません。LuaLaTeXでは、そうした図はluamplibパッケージを使って書類の中で描いてください。</p>
+<p>新しいファイルをMetaPostのファイルとして保存するには、保存ダイアログの「ファイルフォーマット」のメニューでmpを選びます。</p>
 <p>Nicola Vitacolonnaによるエンジンnv-metapostとnv-metafunを使うと、MetaPostとMetaFunでの作業が楽になり、ファイルの中の図をプレビューのウインドウに表示できます。これらは<code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>にあります。インストールと使い方は1つ上の<code>MetaPostEngines-1.4.7</code>フォルダにある<code>README.pdf</code>に説明されていて、同じフォルダの<code>examples</code>フォルダにはサンプルファイルがあります。たとえば、次のように始まるファイルは、nv-metafunのエンジンをEnginesフォルダに置けばnv-metafunでタイプセットされます。</p>
 <pre>% !TEX program = nv-metafun
 beginfig(1);

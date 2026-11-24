@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-Hilfe"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">Einführung</a></li>
@@ -52,7 +52,7 @@
 <pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
 <p>Um auch den Dateien von <code>\input</code>-Befehlen Tabs zu geben, verwenden Sie diese versteckte Einstellung im Terminal:</p>
 <pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
-<p>Um die Dateien selbst zu wählen, beginnen Sie mit <code>useTabsWithFiles</code> und fügen für jeden Tab eine Zeile <code>tabbedFile</code> hinzu, alle in den ersten 50 Zeilen der Hauptdatei. Ein Name für den Tab kann in Klammern folgen:</p>
+<p>Um die Dateien selbst zu wählen, schreiben Sie eine Zeile <code>useTabsWithFiles</code> in die ersten 20 Zeilen der Hauptdatei und fügen für jeden Tab eine Zeile <code>tabbedFile</code> hinzu, alle in ihren ersten 50 Zeilen. Ein Name für den Tab kann in Klammern folgen:</p>
 <pre>% !TEX useTabsWithFiles
 % !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
 % !TEX tabbedFile{Galois.log}

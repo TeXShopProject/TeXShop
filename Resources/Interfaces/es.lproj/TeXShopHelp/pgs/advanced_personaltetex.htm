@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm" class="current">Añadir archivos personales a TeX Live</a></li>
@@ -39,11 +39,11 @@
 </nav>
 <main id="content">
 <h1>Añadir archivos personales a TeX Live</h1>
-<p>Los archivos de estilo, las clases, las bases de datos bibliográficas y otros archivos que no forman parte de TeX Live se guardan en su árbol TeX personal, la carpeta <code>texmf</code> de la carpeta Librería de su carpeta de inicio: <code>~/Library/texmf</code>. Todos los programas de TeX Live encuentran ahí los archivos, y estos tienen prioridad sobre los archivos del mismo nombre de TeX Live. No hace falta registrar nada después de añadir un archivo; la siguiente composición lo encuentra.</p>
-<p>La carpeta Librería está oculta en el Finder. Para abrirla, elija Ir › Ir a la carpeta… en el Finder y escriba <code>~/Library</code>. Cree ahí la carpeta <code>texmf</code> si aún no existe.</p>
+<p>Los archivos de estilo, las clases, las bases de datos bibliográficas y otros archivos que no forman parte de TeX Live se guardan en su árbol TeX personal, la carpeta <code>texmf</code> de la carpeta Library (Biblioteca) de su carpeta de inicio: <code>~/Library/texmf</code>. Todos los programas de TeX Live encuentran ahí los archivos, y estos tienen prioridad sobre los archivos del mismo nombre de TeX Live. No hace falta registrar nada después de añadir un archivo; la siguiente composición lo encuentra.</p>
+<p>La carpeta Library (Biblioteca) está oculta en el Finder. Para abrirla, elija Ir › Ir a la carpeta… en el Finder y escriba <code>~/Library</code>. Cree ahí la carpeta <code>texmf</code> si aún no existe.</p>
 
 <h2>Antes de añadir un paquete</h2>
-<p>La mayoría de los paquetes de CTAN ya forman parte de TeX Live, y MacTeX los instala todos. Para saber si TeX ya tiene un archivo, elija Archivo › Abrir archivo de estilo… en TeXShop y escriba su nombre, por ejemplo <code>hyperref.sty</code>; TeXShop abre el archivo que usaría TeX. Añada un paquete a su árbol personal solo cuando TeX Live no lo tenga o cuando necesite una versión propia. Como su copia tiene prioridad, elimínela cuando TeX Live se haya puesto al día; de lo contrario, seguirá usando la versión antigua.</p>
+<p>La mayoría de los paquetes de CTAN ya forman parte de TeX Live, y MacTeX los instala todos. Para saber si TeX ya tiene un archivo, elija Archivo › Abrir archivo de estilo... en TeXShop y escriba su nombre, por ejemplo <code>hyperref.sty</code>; TeXShop abre el archivo que usaría TeX. Añada un paquete a su árbol personal solo cuando TeX Live no lo tenga o cuando necesite una versión propia. Como su copia tiene prioridad, elimínela cuando TeX Live se haya puesto al día; de lo contrario, seguirá usando la versión antigua.</p>
 
 <h2>Dónde van los archivos</h2>
 <p>Las carpetas dentro de <code>texmf</code> siguen la misma estructura que TeX Live. Cree las carpetas que necesite:</p>
@@ -54,9 +54,9 @@
 <tr><td><code>tex/generic/</code></td><td>archivos que funcionan con cualquier formato</td></tr>
 <tr><td><code>bibtex/bib/</code></td><td>bases de datos bibliográficas (.bib)</td></tr>
 <tr><td><code>bibtex/bst/</code></td><td>estilos bibliográficos (.bst)</td></tr>
-<tr><td><code>doc/</code></td><td>documentación de los paquetes que ha añadido; Ayuda › Mostrar ayuda del paquete… la encuentra ahí</td></tr>
+<tr><td><code>doc/</code></td><td>documentación de los paquetes que ha añadido; Ayuda › Mostrar ayuda del paquete... la encuentra ahí</td></tr>
 </table>
-<p>Por ejemplo, un paquete con sus propias macros y su base de datos bibliográfica se guardarían así:</p>
+<p>Por ejemplo, un paquete de macros propio y su base de datos bibliográfica se guardarían así:</p>
 <pre>~/Library/texmf/tex/latex/mymacros/mymacros.sty
 ~/Library/texmf/bibtex/bib/mybibliography.bib</pre>
 <p>Entonces <code>\usepackage{mymacros}</code> y <code>\bibliography{mybibliography}</code> funcionan en todos los documentos, estén donde estén guardados.</p>

@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
@@ -42,26 +42,26 @@
 <p>Puede escribir en otro editor y usar TeXShop para componer y mostrar el PDF.</p>
 
 <h2>Abrir solo la vista previa</h2>
-<p>Archivo › Abrir para previsualizar… pide un archivo fuente y abre solo su ventana de vista previa. Si el archivo aún no se ha compuesto, o si el PDF es más antiguo que el archivo fuente, TeXShop lo compone primero. Edite el archivo fuente en su editor; para componerlo, guárdelo allí y pulse «Componer» en la ventana de vista previa o pulse <kbd>⌘T</kbd>. En este modo TeXShop nunca abre ni modifica el archivo fuente. Si la barra de herramientas de la ventana de vista previa no tiene botón «Componer», añádalo con Ventana › Personalizar barra de herramientas….</p>
-<p>Si trabaja siempre de esta manera, active Ajustes › General › Al iniciar › «Configurar para editor externo». Archivo › Abrir… y «Abrir recientes» abren entonces los archivos fuente solo para previsualizarlos, y Archivo › Abrir para previsualizar… se convierte en «Abrir para editar…», que abre un archivo fuente en el editor de TeXShop cuando lo necesite. Los demás archivos, como los PDF, los gráficos y los archivos log, se abren como siempre.</p>
+<p>Archivo › Abrir para previsualizar... pide un archivo fuente y abre solo su ventana de vista previa. Si el archivo aún no se ha compuesto, o si el PDF es más antiguo que el archivo fuente, TeXShop lo compone primero. Edite el archivo fuente en su editor; para componerlo, guárdelo allí y pulse «Componer» en la ventana de vista previa o pulse <kbd>⌘T</kbd>. En este modo TeXShop nunca abre ni modifica el archivo fuente. Si la barra de herramientas de la ventana de vista previa no tiene botón «Componer», añádalo con Ventana › Personalizar barra de herramientas...</p>
+<p>Si trabaja siempre de esta manera, active Ajustes › General › Al iniciar › «Configurar para editor externo». Archivo › Abrir... y «Abrir recientes» abren entonces los archivos fuente solo para previsualizarlos, y Archivo › Abrir para previsualizar... se convierte en «Abrir para editar...», que abre un archivo fuente en el editor de TeXShop cuando lo necesite. Los demás archivos, como los PDF, los gráficos y los archivos log, se abren como siempre.</p>
 
 <h2>Mantener actualizada la vista previa</h2>
 <p>Cuando otro programa reescribe el PDF, por ejemplo su editor o latexmk en Terminal, TeXShop lo recarga cuando vuelve a TeXShop o a la ventana de vista previa, conservando la página y el aumento. Con Ajustes › Vista previa › Actualización › «Vigilar siempre los cambios del PDF hechos por otras apps» activado, recarga el PDF en cuanto cambia, incluso con TeXShop en segundo plano, por ejemplo cuando la vista previa está junto a su editor. Una vista previa con anotaciones sin guardar no se recarga, para que no se pierdan las anotaciones.</p>
 <p>TeXShop también vigila los archivos fuente abiertos en su propio editor. Cuando otro editor modifica uno de esos archivos, TeXShop lo recarga, salvo que la copia de TeXShop tenga cambios sin guardar.</p>
 
 <h2>Sincronizar con el editor</h2>
-<p>Comando + clic en la ventana de vista previa puede llevarle a la línea en su editor, e «Ir al error» en la consola puede abrir allí la línea de un error. Esto requiere «Configurar para editor externo», un ajuste oculto y un programa de línea de órdenes del editor:</p>
+<p>Un clic con la tecla Comando en la ventana de vista previa puede llevarle a la línea en su editor, e «Ir al error» en la consola puede abrir allí la línea de un error. Esto requiere «Configurar para editor externo», un ajuste oculto y un programa de línea de comandos del editor:</p>
 <ul>
-<li>Para TextMate, cuya orden <code>mate</code> está en <code>/usr/local/bin</code>: <code>defaults write TeXShop TextMateSync YES</code>.</li>
+<li>Para TextMate, cuyo comando <code>mate</code> está en <code>/usr/local/bin</code>: <code>defaults write TeXShop TextMateSync YES</code>.</li>
 <li>Para cualquier otro editor: <code>defaults write TeXShop OtherEditorSync YES</code>, y un script ejecutable <code>/usr/local/bin/othereditor</code> que recibe el número de línea como <code>$1</code> y la ruta completa del archivo como <code>$2</code>. Para BBEdit es así:
 <pre>#!/bin/sh
 /usr/local/bin/bbedit "$2:$1"</pre></li>
 </ul>
-<p>Para el sentido contrario, de una línea del editor a la ventana de vista previa, el editor llama a TeXShop mediante AppleScript con las órdenes <code>sync_preview_line</code>, <code>sync_preview_index</code> y <code>sync_preview_name</code>. El capítulo «Using an External Editor» de Ayuda › Manual de TeXShop (en inglés) contiene un script completo.</p>
+<p>Para el sentido contrario, de una línea del editor a la ventana de vista previa, el editor llama a TeXShop mediante AppleScript con los comandos <code>sync_preview_line</code>, <code>sync_preview_index</code> y <code>sync_preview_name</code>. El capítulo «Using an External Editor» de Ayuda › Manual de TeXShop (en inglés) contiene un script completo.</p>
 <p>La carpeta <code>~/Library/TeXShop/ExternalEditorScripts</code> contiene soluciones listas para usar con su documentación: AppleScripts que componen y previsualizan en TeXShop un documento de BBEdit, y un complemento para Vim.</p>
 
-<h2>Órdenes AppleScript para editores</h2>
-<p>Un editor puede llamar a estas órdenes AppleScript de un documento de TeXShop:</p>
+<h2>Comandos AppleScript para editores</h2>
+<p>Un editor puede llamar a estos comandos AppleScript de un documento de TeXShop:</p>
 <dl>
 <dt><code>typesetinteractive</code>, <code>texinteractive</code>, <code>latexinteractive</code>, <code>bibtexinteractive</code>, <code>makeindexinteractive</code>, <code>metapostinteractive</code></dt>
 <dd>Componen, o ejecutan plain TeX, LaTeX, BibTeX, MakeIndex o MetaPost. La llamada vuelve de inmediato, sin esperar a que termine la composición; la vista previa se actualiza cuando termina.</dd>
@@ -69,7 +69,7 @@
 <dt><code>refreshpdf</code></dt><dd>Recarga el PDF y trae al frente la ventana de vista previa.</dd>
 <dt><code>refreshpdfbackground</code></dt><dd>Recarga el PDF sin traer TeXShop al frente, cuando la ventana de vista previa ya está abierta.</dd>
 <dt><code>refreshtext</code></dt><dd>Vuelve a leer del disco el archivo fuente.</dd>
-<dt><code>open_for_externaleditor</code></dt><dd>Abre un archivo fuente como lo hace Archivo › Abrir para previsualizar….</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Abre un archivo fuente como lo hace Archivo › Abrir para previsualizar...</dd>
 </dl>
 <p>Cuando el editor compone a través de TeXShop, no hace falta «Vigilar siempre los cambios del PDF hechos por otras apps». Consulte también <a href="macros_writingcompletescripts.htm">Scripts con los comandos de composición de TeXShop</a>.</p>
 </main>

@@ -50,7 +50,7 @@
 
 <p>En Página simple y Página doble, al desplazarse más allá del principio o del final de una página se pasa de página; active «No pasar de página al desplazar» en Ajustes › Vista previa › Visualización y navegación para detenerse en el borde de la página. Las teclas de flecha arriba y abajo desplazan dentro de la página. Las teclas de flecha izquierda y derecha desplazan lateralmente cuando una página ampliada es más ancha que la ventana y, si no, pasan de página; «Pasar siempre de página con las teclas de flecha izquierda y derecha» hace que siempre pasen de página.</p>
 
-<p>Con Ventana › Personalizar barra de herramientas... se pueden añadir dos menús a la barra de herramientas. Disposición de página elige el formato de las páginas. Con páginas dobles elige, solo para este documento, si un par de páginas se lee de izquierda a derecha o de derecha a izquierda, y si la primera página se muestra sola como portada; su elemento «Restaurar ajustes del documento» vuelve a los ajustes. Los ajustes son «Dirección de las páginas» y «Mostrar la primera página sola como portada», en «Al abrir un documento», y las líneas mágicas <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> y <code>% !TEX standardDisplay</code> los establecen para un documento.</p>
+<p>La barra de herramientas tiene dos menús para las páginas; si se han quitado, Ventana › Personalizar barra de herramientas... los vuelve a poner. «Disposición de página» elige el formato de las páginas. «Con páginas dobles» elige, solo para este documento, si un par de páginas se lee de izquierda a derecha o de derecha a izquierda, y si la primera página se muestra sola como portada; su elemento «Restaurar ajustes del documento» vuelve a los ajustes. Los ajustes son «Dirección de las páginas» y «Mostrar la primera página sola como portada», en «Al abrir un documento», y las líneas mágicas <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> y <code>% !TEX standardDisplay</code> los establecen para un documento.</p>
 
 <h2>Aumento</h2>
 
@@ -61,7 +61,7 @@
 <dt>Ajustar al ancho del contenido</dt>
 <dd>Como Ajustar a la ventana, pero sin los márgenes blancos: la parte compuesta de las páginas ocupa el ancho de la ventana.</dd>
 <dt>Aumento fijo</dt>
-<dd>El aumento se mantiene como se haya establecido en el campo Escala de la barra de herramientas, o con Acercar (<kbd>⇧⌘=</kbd>) y Alejar (<kbd>⇧⌘-</kbd>).</dd>
+<dd>El aumento se mantiene como se haya establecido en el campo Escala de la barra de herramientas, o con Acercar (<kbd>⇧⌘+</kbd>) y Alejar (<kbd>⇧⌘_</kbd>).</dd>
 <dt>Tamaño real</dt>
 <dd>Las páginas al tamaño del papel.</dd>
 </dl>
@@ -70,7 +70,7 @@
 
 <h2>Las herramientas del ratón</h2>
 
-<p>El elemento Modo de ratón de la barra de herramientas elige qué hace el puntero sobre la página. Desplazar mueve la página. Seleccionar texto selecciona texto para copiarlo. Aumentar y Aumentar (Grande) muestran una lupa mientras se mantiene pulsado el botón del ratón: haga doble clic y mantenga pulsado para una lupa más grande, haga triple clic y mantenga pulsado para ampliar toda la ventana, y pulse Comando, Opción o Control para ampliar más, o Mayúsculas para ampliar menos. Seleccionar PDF selecciona una zona de la página para copiarla como imagen. «Modo de ratón», en «Al abrir un documento», elige la herramienta con la que empieza una ventana.</p>
+<p>El elemento Modo de ratón de la barra de herramientas elige qué hace el puntero sobre la página. Desplazar mueve la página. Seleccionar texto selecciona texto para copiarlo. Aumentar y Aumentar (Grande) muestran una lupa mientras se mantiene pulsado el botón del ratón: haga doble clic y mantenga pulsado para una lupa más grande, haga triple clic y mantenga pulsado para ampliar toda la ventana, y pulse Comando, Opción o Control para ampliar más; añada Mayúsculas a una de ellas para ampliar menos. Seleccionar PDF selecciona una zona de la página para copiarla como imagen. «Modo de ratón», en «Al abrir un documento», elige la herramienta con la que empieza una ventana.</p>
 
 <p>Con Seleccionar PDF, arrastre sobre una zona de la página y después cópiela con <kbd>⌘C</kbd> o arrástrela a otra aplicación o al escritorio; PDF › Guardar selección en archivo... la guarda en un archivo. PDF › Copiar con formato elige si la copia es PDF o una imagen como PNG, TIFF o JPEG; «Formato de imagen al copiar», en Ajustes › Vista previa › Copia de imágenes, establece el valor por omisión. Consulte <a href="advanced_pdfcopypaste.htm">Copiar y pegar, arrastrar y soltar</a>.</p>
 
@@ -114,11 +114,11 @@
 
 <h2>Anotaciones</h2>
 
-<p>PDF › Mostrar barra de herramientas de anotaciones muestra las herramientas de anotación bajo la barra de herramientas de la ventana. Haga clic en Edición, en el extremo izquierdo de la barra de herramientas de anotaciones, y use después sus botones para tachar, resaltar o subrayar el texto seleccionado, o para añadir formas, flechas, texto y notas. Las anotaciones no forman parte del código fuente, y la siguiente composición sustituye el archivo PDF, así que guárdelas con «Guardar anotaciones…» en la barra de herramientas de anotaciones; se guarda una copia del archivo PDF, llamada por ejemplo Fourier-Annotated.pdf para Fourier.tex. Después de haber trabajado en el modo Edición, TeXShop ofrece guardar las anotaciones antes de volver a componer o de cerrar la ventana. El Manual de TeXShop describe las anotaciones en detalle.</p>
+<p>PDF › Mostrar barra de herramientas de anotaciones muestra las herramientas de anotación bajo la barra de herramientas de la ventana. Haga clic en «Edición» (el modo de edición), en el extremo izquierdo de la barra de herramientas de anotaciones, y use después sus botones para tachar, resaltar o subrayar el texto seleccionado, o para añadir formas, flechas, texto y notas. Las anotaciones no forman parte del código fuente, y la siguiente composición sustituye el archivo PDF, así que guárdelas con «Guardar anotaciones…» en la barra de herramientas de anotaciones; se guarda una copia del archivo PDF, llamada por ejemplo Fourier-Annotated.pdf para Fourier.tex. Después de haber trabajado en el modo Edición, TeXShop ofrece guardar las anotaciones antes de volver a componer o de cerrar la ventana. El Manual de TeXShop describe las anotaciones en detalle.</p>
 
 <h2>Más</h2>
 
-<p>Haga clic con la tecla Comando en la vista previa para ir al lugar correspondiente del código fuente; consulte <a href="basic_typesetting.htm">Componer documentos</a>. Rotar en sentido horario y Rotar en sentido antihorario, en el menú PDF, giran las páginas. Cuando otra aplicación, como latexmk, reescribe el archivo PDF, la vista previa lo vuelve a cargar en el mismo lugar; active «Vigilar siempre los cambios del PDF hechos por otras apps» en Ajustes › Vista previa › Actualización para que también se vuelva a cargar mientras TeXShop está en segundo plano. PDF › Guardar posición ventana del PDF hace que las ventanas de vista previa nuevas se abran en el lugar y con el tamaño de la ventana que está al frente.</p>
+<p>Haga clic con la tecla Comando en la vista previa para ir al lugar correspondiente del código fuente; consulte <a href="basic_typesetting.htm">Componer documentos</a>. Rotar en sentido horario y Rotar en sentido antihorario, en el menú PDF, giran las páginas. Cuando otra aplicación, como latexmk, reescribe el archivo PDF, la vista previa lo vuelve a cargar en el mismo lugar cuando usted vuelve a TeXShop o a la ventana de vista previa; active «Vigilar siempre los cambios del PDF hechos por otras apps» en Ajustes › Vista previa › Actualización para que se vuelva a cargar de inmediato, incluso mientras TeXShop está en segundo plano. PDF › Guardar posición ventana del PDF hace que las ventanas de vista previa nuevas se abran en el lugar y con el tamaño de la ventana que está al frente.</p>
 </main>
 </body>
 </html>

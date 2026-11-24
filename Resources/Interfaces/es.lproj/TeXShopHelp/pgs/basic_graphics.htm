@@ -51,13 +51,13 @@
 
 <h2>Archivos EPS</h2>
 <p>TeX Live convierte automáticamente los gráficos EPS a PDF mientras compone, con epstopdf, siempre que el documento cargue graphicx. El archivo convertido, <code>diagram-eps-converted-to.pdf</code>, se escribe junto al archivo EPS y se usa a partir de entonces.</p>
-<p>Un archivo EPS abierto en TeXShop también se convierte: TeXShop escribe un archivo PDF con el mismo nombre junto a él y lo muestra.</p>
+<p>Un archivo EPS abierto en TeXShop también se convierte: TeXShop escribe un archivo PDF con el mismo nombre junto a él, o en una carpeta temporal cuando no se puede escribir en la carpeta del archivo EPS, y lo muestra.</p>
 
 <h2>Archivos TIFF</h2>
 <p>LaTeX no puede incluir archivos TIFF. Elija Archivo › Convertir TIFF mientras una ventana de código está activa: un cuadro de diálogo muestra la carpeta del documento, donde solo se pueden elegir archivos TIFF. Seleccione uno o varios y haga clic en Convertir. Cada uno se convierte en un archivo PNG con el mismo nombre en la misma carpeta; los archivos TIFF se conservan.</p>
 
 <h2>Componer vía DVI</h2>
-<p>Los documentos que usan código PostScript, por ejemplo con el paquete pstricks, se componen con el método Vía DVI, que por omisión ejecuta dvips. Los gráficos se incluyen entonces en formato EPS; no se pueden usar archivos PDF, PNG ni JPEG. Consulte <a href="basic_alternatetypeset.htm">Modo alternativo de composición</a>.</p>
+<p>Los documentos que usan código PostScript, por ejemplo con el paquete pstricks, se componen con el método Vía DVI, que por omisión ejecuta dvips. Los gráficos se incluyen entonces en formato EPS; no se pueden usar archivos PDF, PNG ni JPEG. Los perfiles del motor cuyo nombre termina en «+ dvipdfmx» también componen vía DVI, pero ejecutan dvipdfmx en lugar de dvips; con <code>\usepackage[dvipdfmx]{graphicx}</code>, con ellos sí se pueden usar archivos PDF, PNG y JPEG. Consulte <a href="basic_alternatetypeset.htm">Modo alternativo de composición</a>.</p>
 </main>
 </body>
 </html>

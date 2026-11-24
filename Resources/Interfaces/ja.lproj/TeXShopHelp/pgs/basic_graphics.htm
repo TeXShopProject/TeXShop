@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShopヘルプ"></a><span class="chapter">基本的なヘルプ</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">まえがき</a></li>
@@ -51,13 +51,13 @@
 
 <h2>EPSファイル</h2>
 <p>書類がgraphicxを読み込んでいれば、TeX Liveはタイプセットの途中でepstopdfを使い、EPSの画像を自動的にPDFに変換します。変換したファイル<code>diagram-eps-converted-to.pdf</code>はEPSファイルの隣に書き出され、以後はそれが使われます。</p>
-<p>TeXShopでEPSファイルを開いたときも変換されます。TeXShopは同じ名前のPDFファイルを隣に書き出して表示します。</p>
+<p>TeXShopでEPSファイルを開いたときも変換されます。TeXShopは同じ名前のPDFファイルを隣に書き出し（EPSファイルのフォルダに書き込めないときは一時的なフォルダに書き出し）、表示します。</p>
 
 <h2>TIFFファイル</h2>
 <p>LaTeXはTIFFファイルを取り込めません。ソースウインドウが作業中のときに「ファイル」→「TIFFファイルを変換」を選ぶと、書類のフォルダを表示したダイアログが開き、TIFFファイルだけを選べます。ひとつまたは複数を選んで「変換」をクリックすると、それぞれが同じフォルダに同じ名前のPNGファイルとして変換されます。TIFFファイルはそのまま残ります。</p>
 
 <h2>DVI経由でタイプセットするとき</h2>
-<p>pstricksパッケージを使う場合など、PostScriptのコードを含む書類は「DVI経由」の方式でタイプセットします。この方式は、初期状態ではdvipsを使います。このとき画像はEPS形式で取り込み、PDF、PNG、JPEGのファイルは使えません。「<a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>」を参照してください。</p>
+<p>pstricksパッケージを使う場合など、PostScriptのコードを含む書類は「DVI経由」の方式でタイプセットします。この方式は、初期状態ではdvipsを使います。このとき画像はEPS形式で取り込み、PDF、PNG、JPEGのファイルは使えません。名前が「+ dvipdfmx」で終わるエンジンのプロファイルもDVI経由でタイプセットしますが、dvipsの代わりにdvipdfmxを使います。<code>\usepackage[dvipdfmx]{graphicx}</code>と書けば、PDF、PNG、JPEGのファイルも使えます。「<a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>」を参照してください。</p>
 </main>
 </body>
 </html>

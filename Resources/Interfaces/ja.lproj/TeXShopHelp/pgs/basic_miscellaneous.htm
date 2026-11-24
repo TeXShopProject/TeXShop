@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShopヘルプ"></a><span class="chapter">基本的なヘルプ</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">まえがき</a></li>
@@ -53,7 +53,7 @@
 <pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
 <p><code>\input</code>コマンドで読むファイルもタブで開くには、ターミナルで次の隠し設定を使います。</p>
 <pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
-<p>タブで開くファイルを自分で選ぶには、<code>useTabsWithFiles</code>の行で始め、タブごとに<code>tabbedFile</code>の行を加えます。これらはすべてルートファイルの最初の50行のうちに書きます。タブの名前は、丸括弧に入れて続けられます。</p>
+<p>タブで開くファイルを自分で選ぶには、ルートファイルの最初の20行のうちに<code>useTabsWithFiles</code>の行を書き、タブごとに<code>tabbedFile</code>の行を加えます。これらはすべてルートファイルの最初の50行のうちに書きます。タブの名前は、丸括弧に入れて続けられます。</p>
 <pre>% !TEX useTabsWithFiles
 % !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
 % !TEX tabbedFile{Galois.log}

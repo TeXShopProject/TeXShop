@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShopヘルプ"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
@@ -69,7 +69,7 @@
 <p>ルートの行のある章のファイルを開くと、TeXShopはルートファイルとそのプレビューのウインドウも開きます。これは「設定」→「一般」→「プロジェクトのルートファイル」の2つの項目で設定します。「ファイルを開いたときにルートファイルも開く」でこの動作をオン・オフし、「開いたルートファイルを最小化する」をオンにすると、ルートファイルのソースのウインドウをDockにしまいます。章を編集している間、ルートファイルを編集することはあまりないからです。</p>
 
 <h2>プロジェクト全体で検索・置換する</h2>
-<p>プロジェクトのすべてのファイルを一度に検索するには、そのどれかのファイルで「編集」→「検索」→「同じTEX rootを持つTeXソースを検索…」を選びます。ルートファイルと、ルートの行でそのルートファイルを指定しているファイルが検索されます。<a href="basic_texrootsearch.htm">TeXソースの検索と置換</a>と<a href="basic_find.htm">検索と置換</a>を参照してください。</p>
+<p>プロジェクトのすべてのファイルを一度に検索するには、章のファイルのどれかで「編集」→「検索」→「同じTEX rootを持つTeXソースを検索…」を、ルートファイルでは「これをTEX rootとするTeXソースを検索…」を選びます。ルートファイルと、そのフォルダとその下にある<code>.tex</code>ファイルのうち、先頭20行のルートの行でそのルートファイルを指定しているものが検索されます。<a href="basic_texrootsearch.htm">TeXソースの検索と置換</a>と<a href="basic_find.htm">検索と置換</a>を参照してください。</p>
 
 <h2>.texshopファイルで指定したルートファイル</h2>
 <p>章のファイルの隣にある拡張子<code>.texshop</code>のファイル（<code>two.tex</code>に対する<code>two.texshop</code>など）でもルートファイルを指定でき、TeXShopは今もこれを読みます。ただし、このファイルを作るメニューコマンドはありません。ソースとともに移動できる<code>% !TEX root</code>の行を使ってください。</p>
