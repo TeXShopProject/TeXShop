@@ -283,6 +283,53 @@ static void TestHighlightRedisplay(void)
     }
 }
 
+/// Multiple Replace may highlight a match that contains another (a rule for the whole of three lines and one for "b"):
+/// the matches are sorted by their start, not by their end. The long one shows on every line, moves with an edit
+/// before it and goes, all of it, when an edit touches it, while the short one stays.
+static void TestOverlappingHighlights(void)
+{
+    NSTextStorage *storage = [[NSTextStorage alloc] initWithString:@"abc\ndef\nghi" attributes:@{NSFontAttributeName: [NSFont userFixedPitchFontOfSize:14] ?: [NSFont systemFontOfSize:14]}];
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 420, 400) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+    window.releasedWhenClosed = NO;
+    NSMutableArray<RecordingLayoutManager *> *layouts = [NSMutableArray array];
+    NSMutableArray<NSTextView *> *views = [NSMutableArray array];
+    for (NSInteger i = 0; i < 2; i++) {
+        RecordingLayoutManager *layout = [RecordingLayoutManager new];
+        [storage addLayoutManager:layout];
+        NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(400, 1e7)];
+        [layout addTextContainer:container];
+        NSTextView *view = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 200 - 200 * i, 400, 200) textContainer:container];
+        [window.contentView addSubview:view];
+        [layout ensureLayoutForTextContainer:container];
+        layout.invalidated = [NSMutableArray array];
+        [layouts addObject:layout];
+        [views addObject:view];
+    }
+    NSTextView *view = views[0];
+    NSColor *plain = ColorDrawingLineOnly(view, NSMakeRange(9, 1));
+    NSColor *lit = Over(view, plain, @[TSAdvancedFindHighlights.color]);
+    TSAdvancedFindHighlights *highlights = [TSAdvancedFindHighlights highlightsForTextStorage:storage];
+    highlights.ranges = @[[NSValue valueWithRange:NSMakeRange(0, 11)], [NSValue valueWithRange:NSMakeRange(1, 1)]]; // as Multiple Replace sorts them
+    Check(Invalidated(layouts[0], NSMakeRange(0, 11)) && Invalidated(layouts[1], NSMakeRange(0, 11)), @"overlapping: setting them redraws the long one");
+    Check(SameColor(ColorDrawingLineOnly(view, NSMakeRange(5, 1)), lit) && SameColor(ColorDrawingLineOnly(view, NSMakeRange(9, 1)), lit),
+          @"overlapping: the long one shows when its second or third line is drawn alone");
+    // An edit before both moves them; the long one still shows on its last line
+    Edit(view, NSMakeRange(0, 0), @"xy ");
+    Check(highlights.ranges.count == 2 && NSEqualRanges(highlights.ranges[0].rangeValue, NSMakeRange(3, 11)) && NSEqualRanges(highlights.ranges[1].rangeValue, NSMakeRange(4, 1))
+          && SameColor(ColorDrawingLineOnly(view, NSMakeRange(12, 1)), lit), @"overlapping: an edit before them moves both, and the long one shows on its last line");
+    // An edit inside the long one, away from the short one, takes the long one away, all of it
+    for (RecordingLayoutManager *layout in layouts)
+        layout.invalidated = [NSMutableArray array];
+    Edit(view, NSMakeRange(8, 1), @"X"); // the e of def
+    [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check(highlights.ranges.count == 1 && NSEqualRanges(highlights.ranges[0].rangeValue, NSMakeRange(4, 1)),
+          [NSString stringWithFormat:@"overlapping: an edit in the long one drops it and keeps the short one (%@)", highlights.ranges]);
+    Check(Invalidated(layouts[0], NSMakeRange(3, 11)) && Invalidated(layouts[1], NSMakeRange(3, 11)), @"overlapping: all of the long one is drawn again");
+    Check(SameColor(ColorDrawingLineOnly(view, NSMakeRange(12, 1)), plain) && SameColor(ColorDrawingLineOnly(view, NSMakeRange(4, 1)), lit),
+          @"overlapping: its lines are plain again, the short one is still highlighted");
+    [window close];
+}
+
 /// Drawing a part of the text visits only the matches that may show there: with 100 times as many matches, the first
 /// and the last lines take about as long to draw (before, every match and its groups were visited on every drawing).
 static void TestHighlightScale(void)
@@ -1088,6 +1135,7 @@ int main(int argc, const char *argv[])
             TestFindAllAction();
             TestHighlightGroups();
             TestHighlightRedisplay();
+            TestOverlappingHighlights();
             TestPanelList();
         }
         if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"large"]) {

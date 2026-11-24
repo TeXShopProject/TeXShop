@@ -19,8 +19,8 @@ NS_SWIFT_NAME(AdvancedFindHighlights)
 + (nullable instancetype)existingHighlightsForTextStorage:(NSTextStorage *)storage;
 
 @property (nonatomic, readonly, weak) NSTextStorage *textStorage;
-/// The matches: sorted, without overlaps. Edits move the ranges after them and drop the ones they touch.
-/// Setting them removes the groups.
+/// The matches, sorted by their start: those of one search do not overlap, those of Multiple Replace may contain each
+/// other. Edits move the ranges after them and drop the ones they touch. Setting them removes the groups.
 @property (nonatomic, copy) NSArray<NSValue *> *ranges;
 /// The groups of each match, in the order of `ranges` (element k - 1 is group k, {NSNotFound, 0} if it did not take
 /// part), or empty when the matches have no groups; made on request. A match goes with its groups: an edit that touches

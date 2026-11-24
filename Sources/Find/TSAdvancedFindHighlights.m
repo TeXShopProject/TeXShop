@@ -29,9 +29,12 @@ static NSRange TSShiftedRange(NSRange range, NSInteger delta)
     /// `groupCount` NSRanges for each match, in the order of the matches; nil without groups. Plain ranges, not
     /// objects: there may be hundreds of thousands of matches, and an edit moves all those after it.
     NSMutableData *_groupRanges;
-    /// How far a group reaches at most before the start or after the end of its match. With them, the matches that may
-    /// show in a part of the text are found from the sorted matches alone.
-    NSUInteger _reachBefore, _reachAfter;
+    /// How far a group reaches at most before the start of its match, and for each match the end of the highlights that
+    /// reach furthest among it and those before it (NSUIntegers). The matches are sorted by their start, but those of
+    /// Multiple Replace may contain each other: with these, the matches that may show in a part of the text are found
+    /// without visiting the others.
+    NSUInteger _reachBefore;
+    NSMutableData *_ends;
     /// Where edits took highlights away, in the edited text, to be drawn again once the edits are done;
     /// {NSNotFound, 0} if nowhere.
     NSRange _dropped;
@@ -130,23 +133,16 @@ static NSRange TSShiftedRange(NSRange range, NSInteger delta)
     _ranges = [ranges copy];
     _groupCount = groupCount;
     _groupRanges = groupCount ? [groupRanges mutableCopy] : nil;
-    _reachBefore = _reachAfter = 0;
-    if (groupCount) {
-        const NSRange *groups = _groupRanges.bytes;
-        NSUInteger i = 0;
-        for (NSValue *value in _ranges) {
-            NSRange match = value.rangeValue;
-            for (NSUInteger k = 0; k < groupCount; k++) {
-                NSRange group = groups[i * groupCount + k];
-                if (group.location == NSNotFound)
-                    continue;
-                if (group.location < match.location)
-                    _reachBefore = MAX(_reachBefore, match.location - group.location);
-                if (NSMaxRange(group) > NSMaxRange(match))
-                    _reachAfter = MAX(_reachAfter, NSMaxRange(group) - NSMaxRange(match));
-            }
-            i++;
-        }
+    _reachBefore = 0;
+    _ends = [NSMutableData dataWithLength:_ranges.count * sizeof(NSUInteger)];
+    NSUInteger *ends = _ends.mutableBytes, furthest = 0, i = 0;
+    const NSRange *groups = groupCount ? _groupRanges.bytes : NULL;
+    for (NSValue *value in _ranges) {
+        NSRange match = value.rangeValue;
+        NSRange extent = TSHighlightExtent(match, groups ? groups + i * groupCount : NULL, groupCount);
+        _reachBefore = MAX(_reachBefore, match.location - extent.location);
+        furthest = MAX(furthest, NSMaxRange(extent));
+        ends[i++] = furthest;
     }
     [self redisplayRange:old];
     [self redisplayRange:self.span];
@@ -157,24 +153,26 @@ static NSRange TSShiftedRange(NSRange range, NSInteger delta)
     self.ranges = @[];
 }
 
-/// From where the first highlight may start to where the last may end, with their groups; {NSNotFound, 0} if none.
-/// Found from the first and the last match only, so it costs nothing with many matches.
+/// From where the first highlight may start to where the furthest one ends, with their groups; {NSNotFound, 0} if none.
 - (NSRange)span
 {
-    if (self.ranges.count == 0)
+    NSUInteger count = self.ranges.count;
+    if (count == 0)
         return NSMakeRange(NSNotFound, 0);
-    NSRange first = self.ranges.firstObject.rangeValue, last = self.ranges.lastObject.rangeValue;
+    NSRange first = self.ranges.firstObject.rangeValue;
     NSUInteger start = first.location - MIN(_reachBefore, first.location);
-    return NSMakeRange(start, NSMaxRange(last) + _reachAfter - start);
+    NSUInteger end = ((const NSUInteger *)_ends.bytes)[count - 1];
+    return NSMakeRange(start, MAX(end, start) - start);
 }
 
 /// The first match that may show at `location` or after it: every match before it, with its groups, ends before.
 - (NSUInteger)firstMatchReaching:(NSUInteger)location
 {
+    const NSUInteger *ends = _ends.bytes;
     NSUInteger low = 0, high = self.ranges.count;
     while (low < high) {
         NSUInteger middle = low + (high - low) / 2;
-        if (NSMaxRange(self.ranges[middle].rangeValue) + _reachAfter <= location)
+        if (ends[middle] <= location)
             low = middle + 1;
         else
             high = middle;
@@ -227,6 +225,8 @@ static NSRange TSRangeAfterEdit(NSRange range, NSRange edited, NSUInteger oldEnd
     NSMutableArray<NSValue *> *moved = [NSMutableArray arrayWithCapacity:count];
     [moved addObjectsFromArray:[ranges subarrayWithRange:NSMakeRange(0, first)]];
     NSUInteger kept = first;
+    _ends.length = first * sizeof(NSUInteger); // the ends before stay
+    NSUInteger furthest = first > 0 ? ((const NSUInteger *)_ends.bytes)[first - 1] : 0;
     NSRange dropped = NSMakeRange(NSNotFound, 0);
     for (NSUInteger i = first; i < count; i++) {
         NSValue *value = ranges[i];
@@ -246,6 +246,8 @@ static NSRange TSRangeAfterEdit(NSRange range, NSRange edited, NSUInteger oldEnd
                     for (NSUInteger k = 0; k < groupCount; k++)
                         target[k] = TSShiftedRange(target[k], delta);
             }
+            furthest = MAX(furthest, NSMaxRange(after ? TSShiftedRange(extent, delta) : extent));
+            [_ends appendBytes:&furthest length:sizeof furthest];
             kept++;
         } else {
             NSRange place = TSRangeAfterEdit(extent, edited, oldEnd, delta);
