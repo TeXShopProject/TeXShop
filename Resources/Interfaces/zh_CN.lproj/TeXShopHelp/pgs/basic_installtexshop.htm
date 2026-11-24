@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安装 TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="安装 TeXShop; texshop.app; 首次启动; 检查更新; 更新设置; 预发布版本; ~/Library/TeXShop; 关于本发行版">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm" class="current">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>安装 TeXShop</h1>
+
+<p>TeXShop 需要 macOS 14.6 或更高版本。MacTeX 会将它安装到 /Applications/TeX 中。也可以从 TeXShop 网站下载：</p>
+
+<p><a href="https://texshop.app/">https://texshop.app/</a></p>
+
+<p>将下载的 TeXShop 移到 /Applications 或 /Applications/TeX 中。安装 MacTeX 后，请选取“TeXShop”>“检查更新…”一次，因为 MacTeX 中可能包含较早的版本。</p>
+
+<h2>首次启动</h2>
+
+<p>TeXShop 首次启动时，会查找 TeX 和 Ghostscript，并按从新到旧的顺序列出找到的安装；选择其中一个，然后点按“好”。接着它会让你选择引擎配置，按你使用的引擎设置排版。两者以后都可以在“设置”>“排版”中更改；请参阅“<a href="basic_typesetting.htm#engine">选择引擎</a>”。</p>
+
+<h2>更新</h2>
+
+<p>“TeXShop”>“检查更新…”会查找新版本。如果有新版本，TeXShop 会显示更改内容并提供安装，然后重新启动并回到你离开时的状态。在“设置”>“更新”中，“自动检查更新”和“检查间隔”用于设置 TeXShop 是否以及多久自动检查一次。打开“包含预发布版本”后，还会收到 Beta 版本；Beta 版本的 TeXShop 首次运行时会打开此项。</p>
+
+<p>更新后，请看一下“帮助”>“关于本发行版（英文）”。如果有需要手动完成的事情，它会告诉你；通常什么都不用做。</p>
+
+<h2>~/Library/TeXShop 文件夹</h2>
+
+<p>TeXShop 将你可以更改的文件，例如模板、宏、引擎、按键绑定、命令补全列表和主题，保存在个人文件夹的“资源库”文件夹中的 TeXShop 文件夹里。“TeXShop”>“打开 ~/Library/TeXShop”会在访达中显示它。TeXShop 首次运行时会创建此文件夹。如果其中的某个设置文件（例如宏、按键绑定、命令补全列表或主题）缺失或损坏，TeXShop 会放入自己的副本，不显示错误信息，并将损坏的文件保留在 ~/Library/TeXShop/Backups 中。</p>
+
+<p>更新不会更改你可能编辑过的文件，例如宏和当前使用的引擎；它只会更新少数存放可选项目的文件夹。如果某个版本带来了新的宏、引擎或其他项目，“关于本发行版（英文）”会加以说明，“<a href="configure_correctinstall.htm">获取资源库中的新项目</a>”则说明如何添加它们。</p>
+</main>
+</body>
+</html>

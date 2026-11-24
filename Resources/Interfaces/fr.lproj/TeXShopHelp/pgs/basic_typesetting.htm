@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Composer des documents</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="composition; premier document; Composer; console; erreurs; Aller à l’erreur; Arrêter; Fichiers AUX à la corbeille; profil du moteur; % !TEX program; fichier racine; SyncTeX; Utiliser une seule fenêtre">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm" class="current">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Composer des documents</h1>
+
+<h2>Un premier document</h2>
+
+<p>Choisissez Fichier › Nouveau. Dans la barre d’outils de la nouvelle fenêtre, choisissez LatexTemplate dans le menu « Modèles » ; la fenêtre se remplit des lignes dont tout document LaTeX a besoin. Écrivez votre texte entre <code>\begin{document}</code> et <code>\end{document}</code>. Une ligne vide commence un nouveau paragraphe.</p>
+
+<p>Cliquez sur « Composer » dans la barre d’outils, ou appuyez sur <kbd>⌘T</kbd> (Composition › Composer). La première fois, TeXShop demande où enregistrer le document. TeX écrit plusieurs fichiers à côté de la source ; donnez donc à chaque document son propre dossier. TeXShop exécute ensuite TeX et ouvre une fenêtre d’aperçu avec le document composé.</p>
+
+<p>Dès lors, écrivez, composez et regardez le résultat. TeXShop enregistre la source avant chaque composition, et l’aperçu reste à la page que vous lisiez. <kbd>⌘T</kbd> fonctionne dans la source, dans l’aperçu et dans la console, et <kbd>⌘1</kbd> (Fenêtre › Source ⇔ Aperçu) passe de la source à son aperçu et inversement. Réglages › Composition › Après la composition choisit la fenêtre qui passe au premier plan lorsque TeX a terminé.</p>
+
+<p>L’ouverture d’un fichier .tex ouvre aussi le fichier PDF du même nom, s’il existe. Fermer la fenêtre d’aperçu laisse la source ouverte, et l’aperçu revient à la composition suivante ; fermer la fenêtre source ferme le document.</p>
+
+<h2>La console</h2>
+
+<p>Pendant que TeX s’exécute, ses messages s’affichent dans la console. Réglages › Console › « Afficher la console » choisit si la console passe au premier plan à chaque composition (« toujours ») ou seulement quand TeX signale une erreur (« en cas d'erreur »). Fichier › Afficher la console (<kbd>⌘0</kbd>) fait passer au premier plan la console du document actif, et <kbd>⌘0</kbd> dans la console revient à la fenêtre d’où vous veniez. Le texte de la console peut être sélectionné et copié à tout moment.</p>
+
+<p>Lorsque TeX trouve une erreur, il affiche un message à la fin de la console et attend une réponse. Saisissez-la dans le champ en bas de la console et appuyez sur Retour ; Retour seul passe à l’erreur suivante, et le champ énumère les autres réponses que TeX accepte. Pour arrêter TeX, cliquez sur « Arrêter » dans la console ou choisissez Fichier › Arrêter la composition (<kbd>⌃⌥⌘A</kbd>).</p>
+
+<h2>Trouver les erreurs</h2>
+
+<p>« Aller à l’erreur » dans la console, ou Édition › Aller à l’erreur (<kbd>⌃⌘E</kbd>), fait défiler la source jusqu’à la ligne de la première erreur et la met en évidence ; choisissez-le de nouveau pour l’erreur suivante. Si l’erreur se trouve dans un autre fichier du projet, ce fichier est ouvert. Corriger quelques erreurs puis composer de nouveau est souvent le plus rapide, car une erreur peut en provoquer plusieurs autres. Cette fonction s’appuie sur les noms de fichiers et les numéros de ligne que TeX écrit avec <code>-file-line-error</code>, option qu’utilisent les commandes et les fichiers de moteur de TeXShop.</p>
+
+<p>LaTeX écrit des informations pour sa prochaine exécution, comme la table des matières et les renvois, dans un fichier .aux et d’autres fichiers auxiliaires ; un document peut donc nécessiter deux ou trois exécutions avant que toutes les références soient justes. Une erreur peut laisser ces fichiers endommagés, et le document peut alors ne plus se composer, même une fois l’erreur corrigée. Choisissez Composition › Fichiers AUX à la corbeille et composer (<kbd>⌥⌘T</kbd>) pour placer les fichiers auxiliaires dans la Corbeille et composer de nouveau, ou Fichier › Fichiers AUX à la corbeille (<kbd>⌃⌘A</kbd>), également présent sous forme de bouton dans la console. Voir <a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a>.</p>
+
+<h2 id="engine">Choisir le moteur</h2>
+
+<p>Réglages › Composition › Profil du moteur prépare en une seule étape la composition pour un moteur. Choisissez le profil du moteur que vous utilisez ; une zone de dialogue énumère les valeurs qu’il règle, et OK les applique. Dans cette zone de dialogue, « Exécution de LaTeX » peut être réglé sur « Avec latexmk », afin que latexmk exécute BibTeX, l’index et les passes supplémentaires selon les besoins. Dès que l’une de ces valeurs est modifiée, le menu affiche « Personnalisé ». Le Manuel de TeXShop énumère ce que règlent les profils.</p>
+
+<p>Pour un seul document, choisissez le moteur dans le menu local « Programme », à côté de « Composer » dans la barre d’outils. Il énumère plain TeX, LaTeX, BibTeX, MakeIndex et MetaPost, puis les fichiers de moteur de ~/Library/TeXShop/Engines, comme LuaLaTeX et XeLaTeX, et le choix vaut pour cette fenêtre. Pour l’inscrire dans le document, placez une ligne comme celle-ci parmi les 20 premières lignes de la source :</p>
+
+<pre>% !TEX program = LuaLaTeX</pre>
+
+<p><kbd>⌘T</kbd> compose alors toujours le fichier avec ce moteur. Le nom est celui d’un fichier de moteur, ou l’un de <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> et <code>tex</code> pour LaTeX et plain TeX intégrés (voir <a href="basic_alternatetypeset.htm">Mode de composition alternatif</a>). La macro Macros › Set Typesetting Program… insère une telle ligne, avec le moteur choisi dans une liste ; elle écrit <code>% !TEX TS-program =</code>, qui a le même sens. Réglages › Composition › Composer les nouveaux documents avec détermine le moteur des documents qui n’ont pas une telle ligne. Pour les fichiers de moteur, voir <a href="advanced_addengine.htm">Ajouter des moteurs de composition</a>.</p>
+
+<p>Le menu Composition exécute aussi BibTeX, MakeIndex et MetaPost sur le document ; voir <a href="advanced_bibtex.htm">BibTeX</a> et <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
+
+<h2>Documents en plusieurs fichiers</h2>
+
+<p>Un livre est souvent divisé en un fichier racine, qui contient le préambule, et des fichiers de chapitre qu’il lit avec <code>\include</code> ou <code>\input</code>. Placez une ligne comme <code>% !TEX root = ../Book.tex</code> en tête de chaque fichier de chapitre, en désignant le fichier racine par son chemin depuis le fichier de chapitre. <kbd>⌘T</kbd> dans un fichier de chapitre compose alors le fichier racine, et « Aller à l'erreur » et SyncTeX trouvent le bon fichier de chapitre. Voir <a href="advanced_root.htm">Définir le fichier racine d’un projet</a>.</p>
+
+<h2>Passer de la source à l’aperçu</h2>
+
+<p>Cliquez sur un mot de la source en maintenant la touche Commande enfoncée : l’aperçu défile jusqu’au texte composé et le marque. Cliquez de même dans l’aperçu : la source passe au premier plan avec le texte correspondant marqué ; dans un document avec des fichiers de chapitre, le fichier de chapitre s’ouvre si nécessaire. La correspondance n’est pas toujours exacte ; regardez donc autour de l’endroit marqué. Les couleurs des marques se règlent dans Réglages › Thèmes › SyncTeX.</p>
+
+<p>Cette fonction utilise SyncTeX, que les moteurs prennent en charge lorsqu’ils sont exécutés avec <code>-synctex=1</code>, comme le sont les commandes et les fichiers de moteur de TeXShop ; Réglages › Composition › « Méthode de synchronisation » doit être sur « SyncTeX (recommandé) ». Le fichier SyncTeX d’un document enregistre l’emplacement de ses fichiers ; après le déplacement d’un dossier de projet, composez donc une fois de plus avant de synchroniser.</p>
+
+<h2>Disposer les fenêtres</h2>
+
+<p>Fenêtre › Utiliser une seule fenêtre place la source et son aperçu côte à côte dans une seule fenêtre, et Fenêtre › Utiliser des fenêtres séparées les sépare de nouveau. Pour ouvrir tous les documents de cette façon, réglez Réglages › Général › Fenêtres › « Source et aperçu » sur « Utiliser une seule fenêtre » ; « Position de la source dans la fenêtre combinée » place la source à gauche ou à droite. Faites glisser le séparateur pour donner plus ou moins de place à la source ; TeXShop ouvre toutes les fenêtres combinées avec la même répartition. Un fichier de chapitre qui contient une ligne <code>% !TEX root</code> reste en fenêtres séparées ; le fichier racine lui-même peut utiliser une seule fenêtre. Fichier › Nouveau n’ouvre qu’une fenêtre source : composez d’abord le nouveau document, puis choisissez « Utiliser une seule fenêtre ».</p>
+
+<p>Avec des fenêtres séparées, placez et dimensionnez les fenêtres source et d’aperçu à votre convenance, puis choisissez Source › Enregistrer la position de la source et Page › Enregistrer la position de l'aperçu ; les nouvelles fenêtres s’ouvriront à cet endroit.</p>
+</main>
+</body>
+</html>

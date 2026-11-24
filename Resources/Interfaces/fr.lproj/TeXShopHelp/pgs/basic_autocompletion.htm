@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raccourcis de saisie</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="raccourcis de saisie; liste des raccourcis de saisie; caractère saisi; texte produit; coller; symbole yen; barre oblique inverse; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm" class="current">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Raccourcis de saisie</h1>
+
+<p>Les raccourcis de saisie font qu’un caractère saisi insère un autre texte. Avec la liste fournie avec TeXShop, saisir <code>^</code> donne <code>^{}</code> avec le point d’insertion entre les accolades, saisir <code>"</code> donne les guillemets TeX <code>``''</code> autour du point d’insertion, et saisir <code>ä</code> donne <code>\"a</code>. Un raccourci de saisie peut aussi placer le texte sélectionné à l’intérieur : sélectionnez un mot et saisissez <code>^</code> pour obtenir <code>^{mot}</code>. La liste compte 45 raccourcis de saisie.</p>
+
+<p>Les raccourcis de saisie sont désactivés au départ. Activez « Utiliser les raccourcis de saisie (valeur initiale des nouveaux documents) » dans Réglages › Clavier pour qu’ils soient activés dans chaque document que vous ouvrez. Source › Raccourcis de saisie les active ou les désactive pour le document au premier plan, par exemple pour saisir tel quel un caractère qui a un raccourci de saisie. L’élément « Raccourcis de saisie », que l’on peut ajouter à la barre d’outils, fait de même.</p>
+
+<h2>La liste des raccourcis de saisie</h2>
+
+<p>Le groupe « Raccourcis de saisie » de Réglages › Clavier énumère les raccourcis de saisie, avec pour chacun le « Caractère saisi » et le « Texte produit ». Double-cliquez sur une cellule pour la modifier ; cliquez sur + sous la liste pour ajouter un raccourci de saisie et sur − pour supprimer ceux qui sont sélectionnés, et faites glisser les lignes pour changer leur ordre. Un caractère saisi est un caractère unique. Les modifications sont enregistrées aussitôt et agissent aussi dans les documents ouverts ; Édition › Annuler les reprend.</p>
+
+<p>Dans un texte produit, les éléments spéciaux apparaissent sous forme de petites étiquettes : le texte sélectionné, l’emplacement du point d’insertion, le texte du presse-papiers, un repère (•) pour Édition › Repères, un saut de ligne et une tabulation. Ajoutez-les avec « Insérer » sous la liste, ou saisissez-les : <code>#SEL#</code>, <code>#INS#</code>, <code>#PASTE#</code> et <code>•</code>, Option-Retour pour un saut de ligne et Option-Tab pour une tabulation. Le bouton ? les énumère tous.</p>
+
+<p>Une coche dans la colonne « Coller » applique aussi le raccourci de saisie au texte que vous collez dans la source ou que vous y déposez : chaque occurrence du caractère saisi est remplacée par le texte produit. Comme pour la saisie, cela ne se produit que lorsque les raccourcis de saisie sont activés pour le document. Un raccourci de saisie dont le texte produit contient la sélection, le point d’insertion, le presse-papiers ou un repère ne peut pas être coché.</p>
+
+<h2>Le symbole yen</h2>
+
+<p>Sur un clavier japonais, la touche de la barre oblique inverse peut produire un symbole yen (¥). Dans la liste fournie avec TeXShop, ¥ donne une seule barre oblique inverse et sa case « Coller » est cochée. Ainsi, quand l’encodage des nouveaux documents est UTF-8, il suffit d’activer les raccourcis de saisie pour qu’un ¥ saisi ou collé dans la source devienne \. Si votre liste provient d’une version antérieure de TeXShop, réglez vous-même le texte produit de ¥ sur une seule barre oblique inverse et cochez sa case « Coller ».</p>
+
+<p>La liste est enregistrée dans ~/Library/TeXShop/Keyboard/autocompletion.plist ; voir <a href="configure_autocompletion.htm">Modifier les raccourcis de saisie</a>.</p>
+</main>
+</body>
+</html>

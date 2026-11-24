@@ -20,7 +20,7 @@
 "IsoLatin9"	= "欧米（ISO Latin 9）";
 
 /* "IsoLatinGreek" corresponds to code 0x00000207 in TextEncodingNames.string */
-"IsoLatinGreek"	= "Greek（ISO 8859-7）";
+"IsoLatinGreek"	= "ギリシャ語（ISO 8859-7）";
 
 /* "Mac Central European Roman" corresponds to code 0x0000001D in TextEncodingNames.string */
 "Mac Central European Roman" = "中欧（Mac OS）";
@@ -95,4 +95,4 @@
 "GB 18030"	= "中国語（GB 18030）";
 
 /* "Ascii" corresponds to code ???? in TextEncodingNames.string */
-"Ascii"    = "欧米 (Ascii)";
+"Ascii"    = "欧米（ASCII）";

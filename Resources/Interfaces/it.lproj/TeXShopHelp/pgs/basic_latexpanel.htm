@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pannello LaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Pannello LaTeX; simboli; lettere greche; ambienti; stile del carattere; amssymb; completion.plist; pulsanti personalizzati">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm" class="current">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Pannello LaTeX</h1>
+<p>Finestra › Pannello LaTeX... apre un pannello di codice LaTeX: simboli matematici, lettere greche, funzioni, caratteri accentati e internazionali, ambienti e comandi per lo stile del carattere. Fai clic nel sorgente dove deve andare il codice, poi fai clic su un pulsante del pannello. Il suo codice viene inserito nel punto di inserimento. Il pannello resta davanti alle finestre sorgente mentre lavori.</p>
+<p>I pulsanti sono disposti in pagine. Scegli una pagina con i pulsanti in cima a ciascuna parte del pannello: «Matematici», «Greche», «Simboli», «Funzioni» e «Internazionale», e «Ambienti», «Aspetto» e «Personalizzato».</p>
+<p>Se c’è del testo selezionato quando fai clic su un pulsante di stile del carattere o di ambiente, il testo selezionato finisce all’interno del codice inserito, come in <code>\textbf{testo selezionato}</code>.</p>
+<p>Alcuni simboli richiedono il pacchetto amssymb. Aggiungi questa riga al preambolo di un documento che li usa:</p>
+<pre>\usepackage{amssymb}</pre>
+
+<h2>Personalizzare il pannello</h2>
+<p>Il codice che inserisce ogni pulsante è conservato in <code>~/Library/TeXShop/LatexPanel/completion.plist</code>. Apri questo file in TeXShop per modificarlo; i commenti all’inizio spiegano come è organizzato. I nomi dei pulsanti standard non si possono cambiare, ma il codice che inseriscono sì. In questo codice:</p>
+<ul>
+<li><code>#SEL#</code> rappresenta il testo selezionato;</li>
+<li><code>#INS#</code> indica dove va il punto di inserimento dopo l’inserimento del codice;</li>
+<li><code>#PASTE#</code> rappresenta il testo negli appunti.</li>
+</ul>
+<p>La pagina «Personalizzato» ha spazio per un massimo di sedici pulsanti tuoi. Ciascuno è definito nell’elenco <code>Customized</code> del file da due stringhe, il nome del pulsante e il codice che inserisce:</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>Salva il file in UTF-8, poi esci da TeXShop e riavvialo per vedere le modifiche nel pannello. Se il file manca o è danneggiato, TeXShop lo sostituisce con una propria copia. Consulta <a href="configure_panel.htm">Modificare il Pannello LaTeX</a> e <a href="advanced_plist.htm">File in ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

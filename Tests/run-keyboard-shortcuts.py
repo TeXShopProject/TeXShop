@@ -94,8 +94,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
                 'if (self.overrides[command.commandID] && !command.managedBySystem) [active addObject:command.commandID];',
                 'if (self.overrides[command.commandID]) [active addObject:command.commandID];'),
             'treat Save As as AppKit-managed without Duplicate': (
-                'command.managedBySystem = appKitSaveAs && item.action == @selector(saveDocumentAs:);',
-                'command.managedBySystem = item.action == @selector(saveDocumentAs:);'),
+                'command.managedBySystem = (appKitSaveAs && item.action == @selector(saveDocumentAs:)) || item.action == @selector(toggleFullScreen:);',
+                'command.managedBySystem = item.action == @selector(saveDocumentAs:) || item.action == @selector(toggleFullScreen:);'),
         }
         for name,(before,after) in cases.items():
             assert production.count(before)==1,(name,before)

@@ -1,0 +1,14 @@
+\begin{longtable}{ll}
+Name & Age \\
+\endfirsthead
+Name & Age \\
+\endhead
+\multicolumn{2}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+Alice & 30 \\
+Bob & 25 \\
+
+\end{longtable}

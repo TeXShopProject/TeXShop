@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scrierea scripturilor cu comenzi shell</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; script shell; do shell script; Run pdfLaTeX with Shell Escape; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor pentru macrocomenzi</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="macros_default.htm">Înțelegerea macrocomenzilor implicite</a></li>
+<li><a href="macros_rearrange.htm">Rearanjarea meniului Macro</a></li>
+<li><a href="macros_define.htm">Definirea macrocomenzilor noi</a></li>
+<li><a href="macros_applescript.htm">Macrocomenzi AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macrocomenzile AppleScript implicite</a></li>
+<li><a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crearea dialogurilor</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm" class="current">Scrierea scripturilor cu comenzi shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Scrierea scripturilor cu comenzi shell</h1>
+<p>Această pagină folosește macrocomanda Run pdfLaTeX with Shell Escape a lui Claus Gerhardt, din Macro › Claus Gerhardt Macros, pentru a arăta cum apelează un script AppleScript un script shell. Scriptul shell în sine este simplu: adaugă dosarele programelor TeX la calea de căutare și rulează pdflatex cu <code>--shell-escape</code>. Scripturile dvs. vor face probabil mai mult, de exemplu vor rula mai multe programe unul după altul; atunci devin utile aceste tehnici.</p>
+
+<h2 id="shell-script">Scriptul shell</h2>
+<p>Scriptul shell este ~/Library/TeXShop/bin/pdflatexc. Nu depinde de TeXShop: dacă dosarul lui se află în calea dvs. de căutare, tastarea <code>pdflatexc myfile.tex</code> în Terminal îl rulează. Iată-l:</p>
+<pre>#!/bin/tcsh
+# pdflatexc
+# Claus Gerhardt
+#
+# Usage
+# pdflatexc filename.tex
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+
+pdflatex --shell-escape "$1"</pre>
+
+<h2 id="applescript">Scriptul AppleScript</h2>
+<p>Macrocomanda care apelează acest script shell este mai interesantă:</p>
+<pre>--Applescript
+-- Apply only to an already saved file.
+
+set scriptPath to (do shell script "dirname " &amp; "~/Library/TeXShop/Scripts/ex")
+set scriptPath to scriptPath &amp; "/setname.scpt"
+set scriptName to POSIX file scriptPath as alias
+set scriptLiB to (load script scriptName)
+tell scriptLib
+set frontName to setname(#NAMEPATH#,#TEXPATH#)
+end tell
+
+set fileName to  #TEXPATH#
+set n to (number of characters of contents of fileName)
+set fileNamequoted to quoted form of fileName
+set baseName to do shell script "basename " &amp; fileNamequoted
+set m to (number of characters of contents of baseName)
+set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
+
+set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName
+do shell script shellScript
+
+tell document frontName of application "TeXShop"
+    refreshpdf
+end tell</pre>
+<p>După comentarii, primele șapte linii sunt o rețetă a lui Claus Gerhardt pentru a salva fișierul sursă și a afla numele documentului lui, care este pus în <code>frontName</code>. Treaba o face scriptul compilat setname.scpt din ~/Library/TeXShop/Scripts: aceste linii găsesc calea ~/Library/TeXShop/Scripts/setname.scpt, încarcă scriptul și îl apelează cu #NAMEPATH# și #TEXPATH#.</p>
+<p>Adesea, același lucru se poate face mai simplu cu</p>
+<pre>set frontName to #DOCUMENTNAME#
+tell document frontName of application "TeXShop"
+    save
+end tell</pre>
+<p>Rețeta are două avantaje. Funcționează și când documentul din față nu este cel care trebuie să primească comenzile următoare, de exemplu un fișier jurnal precum /Users/name/Examples/myfile.log. Iar dacă fișierul nu a fost salvat niciodată, rețeta returnează o eroare, în timp ce comanda <code>save</code> ar lăsa scriptul să aștepte în spatele unui dialog de salvare.</p>
+<p>Următoarele șase linii setează variabilele <code>dirName</code> și <code>baseName</code>. Dacă fișierul sursă este /Users/name/My Papers/Stuff/myfile.tex, <code>dirName</code> este <code>'/Users/name/My Papers/Stuff'</code>, pus între ghilimele pentru shell din cauza spațiului din numele unui dosar, iar <code>baseName</code> este <code>myfile.tex</code>. Numele fișierului este pus între ghilimele în același mod când este transmis scriptului shell, așa că ambele pot conține spații.</p>
+<p>Următoarele trei linii apelează scriptul shell. Rezultatul este același ca atunci când tastați <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code> în Terminal. Ultimele trei linii actualizează fereastra de previzualizare.</p>
+<p>Câteva dintre aceste linii sunt complicate, dar pot fi copiate neschimbate în scripturi noi.</p>
+
+<h2 id="do-shell-script">Rularea comenzilor shell din AppleScript</h2>
+<p>AppleScript rulează o comandă shell în forma</p>
+<pre>do shell script "cmd input"</pre>
+<p>Pentru a construi o comandă din bucăți, scrieți-o în forma echivalentă</p>
+<pre>do shell script "cmd " &amp; "input"</pre>
+<p>Observați spațiul de după <code>cmd</code>. Ampersandul unește două șiruri:</p>
+<pre>"cmd " &amp; "input" = "cmd input"</pre>
+<p>Un shell pornit de AppleScript începe în dosarul rădăcină. Comanda</p>
+<pre>do shell script "cd " &amp; dirName</pre>
+<p>trece în dosarul din <code>dirName</code>, care este deja pus între ghilimele, așa că nu mai sunt necesare alte ghilimele.</p>
+<p>Fiecare <code>do shell script</code> pornește un shell nou, așa că o comandă ulterioară nu s-ar afla în acel dosar. Pentru a rula alte comenzi în același dosar, uniți-le cu punct și virgulă într-o singură comandă, ca în Terminal:</p>
+<pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
+<p>Scriptul de mai sus face acest lucru cu cmd1 = <code>cd</code>, input1 = <code>dirName</code>, cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code> și input2 = <code>baseName</code>. Liniile</p>
+<pre>set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName</pre>
+<p>sunt doar un mod comod de a pune această succesiune într-o singură variabilă.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modifier les réglages</title>
+<meta name="description" content="Réglages; préférences; rechercher dans les réglages; profil du moteur; commandes de composition; Détecter les chemins; encodage; UTF-8; thèmes; opacité; correspondance des parenthèses; caractères invisibles; clavier; mises à jour; icône du Dock; réglages cachés">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm" class="current">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modifier les réglages</h1>
+<p>Choisissez TeXShop › Réglages… (<kbd>⌘,</kbd>) pour modifier le fonctionnement de TeXShop. La barre latérale des Réglages énumère dix catégories : Général, Documents et enregistrement, Éditeur, Clavier, Orthographe, Thèmes, Composition, Console, Aperçu et Mises à jour. Chaque catégorie commence par un bref aperçu et range ses réglages en groupes nommés. « Précédent » et « Suivant », ou <kbd>⌘[</kbd> et <kbd>⌘]</kbd>, ramènent aux catégories consultées tant que les Réglages sont ouverts.</p>
+<p>Les réglages déterminent la façon dont les documents commencent ; les commandes de menu ne modifient que le document actif tant qu’il est ouvert. Par exemple, Source › Numérotation des lignes affiche ou masque les numéros de ligne de la fenêtre active, tandis que « Numérotation des lignes » dans Réglages › Éditeur détermine si les documents s’ouvrent avec les numéros de ligne. Les réglages de ce type sont réunis dans le groupe « À l’ouverture d’un document », en haut des catégories Éditeur et Aperçu.</p>
+<p>Les modifications sont enregistrées au fur et à mesure ; un champ de texte prend sa valeur lorsque vous appuyez sur Retour ou quittez le champ. « Activer l’enregistrement automatique et les versions », ainsi que le passage à la palette OgreKit ou depuis celle-ci, prennent effet après le redémarrage de TeXShop.</p>
+
+<h2 id="settings-search">Rechercher dans les réglages</h2>
+<p>Saisissez du texte dans le champ « Rechercher », en haut de la barre latérale, pour trouver un réglage, une option ou une commande de menu. Chaque résultat indique le nom de l’élément et sa catégorie. Des mots séparés par des espaces doivent tous décrire le même élément, et le nom d’une catégorie restreint la recherche. La casse, les accents latins, les caractères pleine chasse et la différence entre hiragana et katakana sont ignorés. Sélectionnez un résultat pour aller au réglage, qui est mis en évidence ; « Précédent » vous ramène ensuite là où vous étiez. Effacer la recherche laisse la catégorie à l’écran. Une commande de menu ouvre Clavier avec la commande dans sa liste, où son raccourci peut être modifié.</p>
+
+<h2>Général</h2>
+<p>« Au démarrage » choisit si TeXShop ouvre un document vide lorsqu’il démarre sans fichier (« Ouvrir un document vierge »). « Configurer pour éditeur externe » sert à écrire la source dans un autre éditeur : TeXShop n’affiche alors que l’aperçu d’un fichier source ; voir <a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a>.</p>
+<p>« Fenêtres » choisit si la source et l’aperçu d’un document s’ouvrent dans des fenêtres séparées ou dans une seule fenêtre, de quel côté de cette fenêtre se trouve la source (« Position de la source dans la fenêtre combinée »), et si les nouvelles fenêtres s’ouvrent dans des onglets (voir <a href="basic_miscellaneous.htm">Fenêtres et onglets</a>). « Position des fenêtres » choisit où s’ouvrent les fenêtres source, d’aperçu, de console et HTML ; « Enregistrer la position » utilise l’emplacement et la taille de la fenêtre actuellement ouverte. « Fichier racine du projet » ouvre le fichier racine d’un projet lorsque l’un de ses fichiers de chapitre est ouvert ; voir <a href="advanced_root.htm">Définir le fichier racine d’un projet</a>.</p>
+<p>« Icône du Dock pendant l’exécution » choisit l’icône que TeXShop affiche dans le Dock : l’icône actuelle ou l’un des modèles antérieurs. « Avancé » contient le bouton « Ouvrir le manuel des commentaires spéciaux et réglages cachés… », qui ouvre le document énumérant les lignes de commentaire magiques et les réglages absents de cette fenêtre ; voir <a href="configure_hidden.htm">Réglages cachés</a>.</p>
+
+<h2>Documents et enregistrement</h2>
+<p>L’encodage des nouveaux documents est Unicode (UTF-8), le bon choix pour presque tout le monde. Lorsqu’un fichier sans ligne d’encodage est ouvert, TeXShop détecte son encodage ; une ligne <code>% !TEX encoding = …</code> en tête d’un fichier, que la macro Macros › Set Encoding… écrit pour vous, fixe l’encodage de ce fichier. « Afficher l’encodage dans le dialogue d’enregistrement » ajoute un menu d’encodage à la zone de dialogue d’enregistrement. Voir <a href="advanced_encoding.htm">Encodages</a>.</p>
+<p>« Activer l’enregistrement automatique et les versions » active la fonction de macOS qui enregistre vos modifications pendant que vous travaillez et conserve les versions antérieures. L’option Conserver le fichier précédent sous « nom~ » garde une copie de sauvegarde du fichier tel qu’il était avant chaque enregistrement : pour paper.tex, le fichier paper~.tex. « Convertir automatiquement UTF-8-MAC en UTF-8 » réunit, à l’enregistrement, les caractères stockés en plusieurs parties, comme か (U+304B) suivi du dakuten combinant (U+3099), en caractères uniques, ici が (U+304C).</p>
+
+<h2>Éditeur</h2>
+<p>« Police du document » détermine la police de toutes les fenêtres source ; une police à chasse fixe garde les colonnes de la source alignées. Dans le même groupe « Affichage », « Taille du numéro de ligne » rend les numéros de ligne petits ou grands, et « Menu Étiquettes dans la barre des menus » place le menu Étiquettes dans la barre des menus. Le groupe « Style » détermine la largeur d’une tabulation, si « Indenter » et « Désindenter » utilisent des caractères de tabulation (« Utiliser des tabulations pour indenter »), l’indentation des paragraphes écrits sans saut de ligne et l’espacement entre les lignes ; les fenêtres source ouvertes montrent aussitôt la modification. « Saisie » contient « Sélection lors de l’activation », qui détermine si le clic qui fait passer une fenêtre source au premier plan déplace aussi le point d’insertion, « Entourer le texte sélectionné lors de la saisie d’une parenthèse », et « Langues de droite à gauche (arabe, hébreu, persan) », qui aligne à droite les lignes écrites dans ces langues ; voir <a href="advanced_encoding.htm">Encodages</a>. « Surlignage syntaxique » contient des options pour <code>@</code> dans les noms de commande, le code expl3, les caractères pleine chasse et les entrées d’index ; les couleurs se règlent dans Thèmes. « Recherche » choisit l’interface de recherche et si la palette de recherche avancée reste devant les autres fenêtres (« Garder la palette de recherche avancée au premier plan ») ; voir <a href="basic_find.htm">Rechercher et remplacer</a>. « Balises XML dans la liste des étiquettes » choisit les balises d’un document XML que le menu Étiquettes énumère.</p>
+<p>« À l’ouverture d’un document » détermine si les nouvelles fenêtres source affichent les numéros de ligne, mettent en surbrillance la ligne courante, enroulent les lignes, affichent les caractères invisibles et utilisent le curseur-bloc. Le menu Source les modifie pour la fenêtre active. Le groupe « Insertion » détermine la couleur du curseur-bloc, le côté du point d’insertion où il est dessiné et sa largeur.</p>
+<h3>Correspondance des parenthèses</h3>
+<p>Lorsque vous saisissez une parenthèse ou une accolade fermante, TeXShop montre son partenaire, pour que vous puissiez vérifier que les paires d’une formule se correspondent. Le groupe « Correspondance des parenthèses » choisit les paires vérifiées et la façon dont le partenaire est signalé : mis brièvement en évidence (« Appariement des parenthèses »), clignotant (« Marquage clignotant »), avec le texte entre les deux coloré (« Surligner les caractères inclus »), ou aussi lorsque le point d’insertion se place à côté d’un délimiteur (« Afficher l’indicateur en se déplaçant »). « Biper pour les parenthèses isolées » et « Retour arrière vers parenthèses isolées » avertissent quand un délimiteur fermant n’a pas de partenaire. Double-cliquer sur un délimiteur sélectionne tout jusqu’à son partenaire. Les couleurs sont « Entourés » et « Accolades » dans le groupe « Surlignage » de Thèmes, et « Flash » dans son groupe « Source ».</p>
+<h3>Caractères invisibles</h3>
+<p>Source › Afficher les caractères invisibles montre les espaces, les espaces japonaises, les retours à la ligne et les tabulations dans la fenêtre active, ce qui aide quand le texte se comporte de façon déroutante. Le groupe « Invisibles » d’Éditeur choisit ceux qui sont affichés et le symbole utilisé pour chacun ; « Afficher les caractères invisibles », sous « À l’ouverture d’un document », les affiche dans tous les documents. Leur couleur est « Invisibles » dans le groupe « Surlignage » de Thèmes.</p>
+
+<h2>Clavier</h2>
+<p>Clavier contient les raccourcis de saisie, qui remplacent un caractère saisi par un texte comme <code>{}</code> (voir <a href="basic_autocompletion.htm">Raccourcis de saisie</a>) ; la complétion des commandes et sa touche de déclenchement, avec « Modifier la complétion des commandes… » pour la liste des complétions (voir <a href="basic_commandcompletion.htm">Complétion des commandes</a>) ; la complétion des labels et des clés de citation ; et les raccourcis de toutes les commandes de menu, qui peuvent être modifiés ici (voir <a href="configure_menushortcuts.htm">Redéfinir les raccourcis clavier des menus</a>).</p>
+
+<h2>Orthographe</h2>
+<p>« Vérifier l’orthographe » règle la vérification orthographique pendant la saisie, la correction automatique et le dictionnaire. Sous « Méthode », choisissez « Utiliser la vérification adaptée à LaTeX (recommandé) », qui ignore les commentaires, les mathématiques, les commandes et les arguments de commandes comme <code>\label</code> et <code>\cite</code> ; « Modifier les exclusions LaTeX… » change ce qu’elle laisse de côté. « Ancienne méthode » a trois options propres. Voir <a href="basic_spelling.htm">Vérifier l’orthographe</a>.</p>
+
+<h2>Thèmes</h2>
+<p>Un thème est un ensemble de couleurs pour les fenêtres, le surlignage syntaxique, la correspondance des parenthèses, les caractères invisibles et d’autres mises en évidence. « Thème pour le mode clair » et « Thème pour le mode sombre » choisissent le thème utilisé dans chaque apparence de macOS. En dessous, la liste des thèmes permet d’ajouter, de dupliquer, de renommer, de supprimer, de restaurer, d’exporter et d’importer des thèmes ; sélectionnez un thème pour modifier ses couleurs. Les modifications d’un thème sont enregistrées aussitôt.</p>
+<p>Dans Thèmes, vous réglez les couleurs d’arrière-plan, de texte et de curseur et l’opacité (« Opacité ») des fenêtres source, d’aperçu et de console, ainsi que la couleur de la sélection dans la source. Sous les couleurs du curseur et de la sélection, « Utiliser la couleur du système » utilise à la place la couleur d’accentuation et la couleur de surlignage choisies dans Réglages Système › Apparence ; quand l’option est de nouveau décochée, la couleur propre du thème revient. « Opacité » utilise un curseur et un champ numérique de 0 % à 100 %. Saisissez un pourcentage entier et appuyez sur Retour ou quittez le champ pour l’appliquer. Les boutons fléchés à côté du champ l’augmentent ou le diminuent d’un pour cent. Les valeurs hors de cette plage sont ramenées à la limite la plus proche. Un texte non valide, y compris une valeur décimale, rétablit la valeur précédente à la fin de la saisie ; le texte saisi et le texte collé suivent la même règle.</p>
+<p>Voir <a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a> pour les couleurs de la source.</p>
+
+<h2>Composition</h2>
+<p>Le moyen le plus rapide de préparer la composition est un profil du moteur. Choisissez un profil, comme pdfLaTeX, LuaLaTeX ou upLaTeX + dvipdfmx, dans le menu « Profil du moteur », en haut du groupe « Moteur ». Une zone de dialogue énumère les valeurs que règle le profil ; désactivez une valeur pour garder son réglage actuel, choisissez si LaTeX s’exécute avec latexmk, et cliquez sur OK. Un profil règle les commandes et la méthode de composition, la commande kpsewhich, le moteur BibTeX, le programme d’index, MetaPost et la conversion otf ; les profils japonais règlent aussi l’encodage des nouveaux documents, le dictionnaire et la conversion UTF-8-MAC. Tous les autres réglages restent tels quels. Quand les réglages ne correspondent à aucun profil, le menu affiche « Personnalisé ».</p>
+<p>Les autres réglages du groupe « Moteur » choisissent ce que la barre d’outils sélectionne à côté du bouton « Composer » à l’ouverture d’un document (« Composer les nouveaux documents avec »), le fichier de moteur utilisé quand « Fichier de moteur » y est choisi, et la « Méthode de composition » : « PDF direct », « Via DVI » ou « Script personnel ». Une ligne <code>% !TEX program</code> en tête d’un document est prioritaire. « Moteur TeX alternatif » est le moteur qu’utilise Composition › Composer avec un moteur TeX alternatif ; voir <a href="advanced_addengine.htm">Ajouter des moteurs de composition</a>. « Après la composition » choisit la fenêtre qui passe au premier plan à la fin de la composition : « Amener l'aperçu devant », « Continuer l'édition » ou « Afficher l'aperçu puis revenir à la fenêtre d'origine ». « Synchronisation de la source et de l’aperçu » choisit la « Méthode de synchronisation » et si les fichiers atteints par la synchro s’ouvrent dans des onglets de la fenêtre du fichier racine ; voir <a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a>.</p>
+<p>Les groupes « PDF direct » et « Via DVI » contiennent les commandes plain TeX et LaTeX qu’exécute chaque méthode, avec leurs options. Si vous ajoutez <code>-shell-escape</code> à une commande, activez « Confirmer le shell-escape » pour que l’on vous demande confirmation avant de composer un tel document ; voir <a href="advanced_shellescape.htm">Protection contre le shell-escape</a>. Le groupe « Script personnel » contient les commandes de la méthode « Script personnel ». « Outils associés » contient les commandes de BibTeX, de l’index et de MetaPost. Voir <a href="basic_typesetting.htm">Composer des documents</a> et <a href="basic_alternatetypeset.htm">Mode de composition alternatif</a>.</p>
+<p>« Chemins » contient les dossiers des programmes TeX (« Moteurs TeX », en général <code>/Library/TeX/texbin</code>) et de Ghostscript, ainsi que « Seconds moteurs TeX », un second dossier de programmes TeX utilisé pour les documents qui contiennent la ligne <code>% !TEX useAlternatePath</code>. « Détecter les chemins… » cherche TeX Live et Ghostscript aux emplacements habituels, énumère les installations trouvées avec leur version, de la plus récente à la plus ancienne, et règle celle que vous choisissez. TeXShop le fait aussi à sa première utilisation. Le groupe « pLaTeX japonais » est décrit dans <a href="advanced_Japan.htm">Composition en japonais</a>.</p>
+
+<h2>Console</h2>
+<p>Console détermine la police de la console, utilisable aussi pour l’éditeur de macros si vous le souhaitez, et le moment où la console apparaît : toujours pendant la composition, ou seulement en cas d’erreur. « Redimensionnement de la console » choisit si la fenêtre de la console peut être redimensionnée dans les deux sens ou seulement verticalement.</p>
+
+<h2>Aperçu</h2>
+<p>« À l’ouverture d’un document » détermine la façon dont les nouvelles fenêtres d’aperçu montrent un document : la mise en page, l’agrandissement, le mode de la souris, les pop-up des liens et le sens des mises en page à deux pages. Les autres groupes règlent le changement de page et les pop-up des liens, l’actualisation lorsqu’une autre application modifie le PDF, le format des images copiées et la page de démarrage de la fenêtre HTML. Voir <a href="basic_preview.htm">La fenêtre d’aperçu</a>.</p>
+
+<h2>Mises à jour</h2>
+<p>TeXShop peut rechercher automatiquement les nouvelles versions, chaque jour, chaque semaine ou chaque mois. Activez « Mettre à jour vers les versions préliminaires, quand disponible » pour recevoir aussi les versions bêta. « Rechercher les mises à jour... » effectue la recherche immédiatement.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verborgen instellingen</title>
+<meta name="description" content="verborgen instellingen; defaults write; Terminal; Commentaarregels en verborgen instellingen; OtherTrashExtensions; ConTeXtTags; RedConsoleAfterError; RefreshTime">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hoe configureer ik TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Inleiding</a></li>
+<li><a href="configure_prefchanges.htm">Aanbevolen wijzigingen in de instellingen</a></li>
+<li><a href="configure_correctinstall.htm">Nieuwe bestanden in de bibliotheek krijgen</a></li>
+<li><a href="configure_hidden.htm" class="current">Verborgen instellingen</a></li>
+<li><a href="configure_panel.htm">Het LaTeX-venster aanpassen</a></li>
+<li><a href="configure_autocompletion.htm">Toetsbindingen aanpassen</a></li>
+<li><a href="configure_menushortcuts.htm">Toetscombinaties van menu’s wijzigen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Verborgen instellingen</h1>
+<p>Het venster Instellingen bevat de instellingen die de meeste mensen nodig hebben. Minder gebruikelijke instellingen zijn verborgen instellingen: ze hebben geen regelaar in het venster Instellingen en worden gewijzigd met een commando in Terminal. Het naslagdocument ‘Commentaarregels en verborgen instellingen’ geeft een overzicht van elke verborgen instelling met het bijbehorende commando, geordend per onderwerp. Open het met Help › Commentaarregels en verborgen instellingen (Engels), of met ‘Handleiding voor commentaarregels en verborgen instellingen openen…’ in Instellingen › Algemeen › Geavanceerd.</p>
+
+<h2 id="change">Een verborgen instelling wijzigen</h2>
+<ol>
+<li>Stop TeXShop.</li>
+<li>Open Terminal (in /Applications/Utilities), typ het commando en druk op Return.</li>
+<li>Start TeXShop opnieuw.</li>
+</ol>
+<p>Elk commando heeft de vorm <code>defaults write TeXShop <var>naam</var> <var>waarde</var></code>. Om terug te gaan naar de standaardwaarde, gebruikt u <code>defaults delete TeXShop <var>naam</var></code>.</p>
+
+<h2 id="examples">Voorbeelden</h2>
+<dl>
+<dt><code>defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'</code></dt>
+<dd>Archief › Wis Aux-bestanden verwijdert ook bestanden met deze extensies. Geef de extensies op zonder punt. Zie <a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a>.</dd>
+<dt><code>defaults write TeXShop ConTeXtTags YES</code></dt>
+<dd>Het menu Tags toont de sectiecommando’s van ConTeXt, zoals \title en \subject, in plaats van die van LaTeX.</dd>
+<dt><code>defaults write TeXShop RedConsoleAfterError YES</code></dt>
+<dd>Tekst die in de console wordt getypt als antwoord op een TeX-fout, en alle latere uitvoer van die ronde, wordt in rood getoond.</dd>
+<dt><code>defaults write TeXShop RefreshTime 2</code></dt>
+<dd>Zolang ‘PDF-wijzigingen door andere apps altijd volgen’ in Instellingen › Voorvertoning aan staat, controleert TeXShop elke 2 seconden of een PDF is gewijzigd. De standaardwaarde is 1 seconde en het minimum 0,5.</dd>
+</dl>
+
+<p>Instellingen die in het venster Instellingen staan, worden niet nog eens bij de verborgen instellingen vermeld. Zo wordt het verplaatsen naar het volgende of vorige markeerpunt van Wijzig › Markeerpunten met Option of Control en de activeringstoets voor aanvullen aan- en uitgezet met ‘Naar het volgende of vorige markeerpunt met Option of Control en de activeringstoets’ in Instellingen › Toetsenbord. Gebruik ‘Zoek in instellingen’ om zo’n instelling te vinden; zie <a href="basic_preferences.htm#settings-search">Zoek in instellingen</a>.</p>
+</main>
+</body>
+</html>

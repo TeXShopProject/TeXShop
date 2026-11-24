@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>デフォルトのAppleScriptマクロ</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScriptマクロ; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; 改行コード; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
+<meta name="description" content="AppleScriptマクロ; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Save Copy with Unix Line Endings; 改行コード; 参考文献; Claus Gerhardt Macros; TeX4ht; Extract Pages from PDF; MetaPost">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -41,20 +41,20 @@
 </dl>
 <p>このマクロは、クリップボードの内容をLaTeXの文字列に置き換えます。同じセルを別のスタイルでペーストするときは、先にスプレッドシートでもう一度コピーしてください。</p>
 
-<h2 id="line-endings">Applescript › Convert to MAC、Convert to Unix、Convert to Windows</h2>
-<p>テキストファイルの行の終わり方には、いくつかの種類があります。macOSとUnixはラインフィード、Windowsはキャリッジリターンとラインフィード、ごく古いMacintoshのファイルはキャリッジリターンだけです。TeXShopはこの3つのどれでも読めます。ほかの人のエディタが読めないときは、これらのマクロを使います。ソースファイルがMyFile.texなら、「Convert to Unix」は保存されたファイルをコピーしてラインフィードにしたMyFile_Unix.texを書き出します。同じように「Convert to Windows」はMyFile_Windows.texを、「Convert to MAC」はMyFile_Mac.texを書き出します。これらのマクロは、~/Library/TeXShop/binにあるCraig Stuart Sappのプログラムflipを使います。</p>
+<h2 id="line-endings">Applescript › Save Copy with Unix Line Endings、Save Copy with Windows Line Endings、Save Copy with Classic Mac Line Endings</h2>
+<p>テキストファイルの行の終わり方には、いくつかの種類があります。macOSとUnixはラインフィード、Windowsはキャリッジリターンとラインフィード、ごく古いMacintoshのファイルはキャリッジリターンだけです。TeXShopはこの3つのどれでも読めます。ほかの人のエディタが読めないときは、これらのマクロを使います。ソースファイルがMyFile.texなら、「Save Copy with Unix Line Endings」は保存されたファイルをコピーしてラインフィードにしたMyFile_Unix.texを書き出します。同じように「Save Copy with Windows Line Endings」はMyFile_Windows.texを、「Save Copy with Classic Mac Line Endings」はMyFile_Mac.texを書き出します。これらのマクロは、~/Library/TeXShop/binにあるCraig Stuart Sappのプログラムflipを使います。</p>
 
-<h2 id="bibliography">Applescript › Bibliography</h2>
-<p>参考文献リストのある書類には、何回かの実行が必要です。LaTeXが.auxファイルを書き出し、BibTeXがそれを使って.bblファイルと.blgファイルを書き出し、LaTeXをもう一度実行して参考文献リストを加え、さらにもう一度実行してリストへの参照を更新します。「Bibliography」マクロは、LaTeX、BibTeX、LaTeX、LaTeXを順に実行します。その仕組みは<a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>で説明しています。</p>
+<h2 id="bibliography">Applescript › Run LaTeX, BibTeX, Then LaTeX Twice</h2>
+<p>参考文献リストのある書類には、何回かの実行が必要です。LaTeXが.auxファイルを書き出し、BibTeXがそれを使って.bblファイルと.blgファイルを書き出し、LaTeXをもう一度実行して参考文献リストを加え、さらにもう一度実行してリストへの参照を更新します。このマクロは、これらを順に実行します。その仕組みは<a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>で説明しています。</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
-<p>このサブメニューのマクロの多くは、~/Library/TeXShop/binにある同じ名前のシェルスクリプトを呼び出します。bibtexcpl、mpostcpl、latex-makeindex-mpostはそのうちのいくつかを順に呼び出し、openpdfは書類のPDFを開きます。保存したファイルに対して働きます。例としてpdflatexcを<a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>で説明しています。</p>
-<h3>htlatexc、htlatexr</h3>
-<p>TeX4htは、LaTeXの書類をWebページ（HTMLのページと画像ファイル）に変換します。htlatexcは書類にhtlatexを実行し、できたHTMLファイルをSafariで開きます。書類でtex4htパッケージを読み込む必要はありません。htlatexが読み込みます。htlatexrは、htlatexをオプション<code>-r</code>付きで実行します。このオプションを付けると、画像がすでにあっても作り直します。</p>
-<h3>pdfselectc</h3>
-<p>pdfselectcは、書類のPDFから選んだページを含むPDFファイルを作ります。まず作るファイルの数を尋ね、次にそれぞれのファイルのページを尋ねます。5ページから8ページなら<code>5:8</code>、<code>3:4,6,8:12</code>のようにも指定できます。書類の名前がMyFileなら、ファイルはMyFile-1.pdf、MyFile-2.pdf、…という名前で保存されます。</p>
-<h3>mpostc、mpostcpl、latex-makeindex-mpost</h3>
-<p>mpostcはMetaPostを実行してからpdfLaTeXを実行します。mpostcplはpdfLaTeX、MetaPost、pdfLaTeXを順に実行します。latex-makeindex-mpostはpdfLaTeX、MakeIndex、MetaPost、pdfLaTeXを順に実行し、途中でログファイルを開きます。MetaPostについては<a href="advanced_context.htm">ConTeXtとMetaPost</a>を参照してください。</p>
+<p>このサブメニューのマクロの多くは、~/Library/TeXShop/binにあるシェルスクリプトを呼び出します。たとえばpdflatexcはpdfLaTeXを、bibtexcはBibTeXを実行するスクリプトです。名前が「Run」で始まるマクロは、名前にあるプログラムをその順に実行し、「Open PDF」は書類のPDFを開きます。「Run LaTeX, dvips and ps2pdf」にはGhostscriptも必要です。保存したファイルに対して働きます。例として「Run pdfLaTeX with Shell Escape」を<a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>で説明しています。</p>
+<h3>Make HTML with TeX4ht</h3>
+<p>TeX4htは、LaTeXの書類をWebページ（HTMLのページと画像ファイル）に変換します。「Make HTML with TeX4ht」は書類にhtlatexを実行し、できたHTMLファイルをSafariで開きます。書類でtex4htパッケージを読み込む必要はありません。htlatexが読み込みます。「Make HTML with TeX4ht, Remaking Images」は、htlatexをオプション<code>-r</code>付きで実行します。このオプションを付けると、画像がすでにあっても作り直します。</p>
+<h3>Extract Pages from PDF…</h3>
+<p>「Extract Pages from PDF…」は、書類のPDFから選んだページを含むPDFファイルを作ります。まず作るファイルの数を尋ね、次にそれぞれのファイルのページを尋ねます。5ページから8ページなら<code>5:8</code>、<code>3:4,6,8:12</code>のようにも指定できます。書類の名前がMyFileなら、ファイルはMyFile-1.pdf、MyFile-2.pdf、…という名前で保存されます。</p>
+<h3>MetaPost</h3>
+<p>「Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX」は、途中でログファイルを開きます。MetaPostについては<a href="advanced_context.htm">ConTeXtとMetaPost</a>を参照してください。</p>
 </main>
 </body>
 </html>

@@ -5,29 +5,29 @@ tiPaletteLabelSave			= "Bewaar";
 tiToolTipSave				= "Bewaar de broncode van het document";
 
 /* tool tips for the default Print item. Different actions depending on the window */
-tiToolTipPrintSource			= "Print de TeX-bron";
-tiToolTipPrint				= "Print het PDF-bestand";
+tiToolTipPrintSource			= "Druk de TeX-bron af";
+tiToolTipPrint				= "Druk het PDF-bestand af";
 
 tiLabelTypeset				= "Zet";
 tiPaletteLabelTypeset			= "Zet";
 tiToolTipTypeset			= "Voer zetprogramma uit";
 
-tiLabelSharing				= "Deel";
-tiPaletteLabelSharing		= "Deel";
+tiLabelSharing				= "Deel bron";
+tiPaletteLabelSharing		= "Deel bron";
 tiToolTipSharing			= "Deel tekst en afbeeldingen";
 
 
 tiLabelProgram				= "Programma";
 tiPaletteLabelProgram			= "Programma";
-tiToolTipProgram			= "Kies zet-programma";
+tiToolTipProgram			= "Kies zetprogramma";
 
 tiLabelTeX				= "plain TeX";
 tiPaletteLabelTeX			= "plain TeX";
-tiToolTipTeX				= "Zet de source met plain TeX";
+tiToolTipTeX				= "Zet de bron met plain TeX";
 
 tiLabelLaTeX				= "LaTeX";
 tiPaletteLabelLaTeX			= "LaTeX";
-tiToolTipLaTeX				= "Zet de source met LaTeX";
+tiToolTipLaTeX				= "Zet de bron met LaTeX";
 
 tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
@@ -50,11 +50,11 @@ tiPaletteLabelMetaFont			= "MetaFont";
 tiToolTipMetaFont			= "Voer MetaFont uit";
 
 tiLabelPreviousPage			= "Vorige";
-tiPaletteLabelPreviousPage		= "Verwissel vorige pagina";
+tiPaletteLabelPreviousPage		= "Vorige pagina (variant)";
 tiToolTipPreviousPage			= "Toon vorige pagina";
 
 tiLabelNextPage				= "Volgende";
-tiPaletteLabelNextPage			= "Verwissel volgende pagina";
+tiPaletteLabelNextPage			= "Volgende pagina (variant)";
 tiToolTipNextPage			= "Toon volgende pagina";
 
 tiLabelGotoPage				= "Ga naar pagina";
@@ -67,11 +67,11 @@ tiToolTipMagnification			= "Stel vergroting in";
 
 tiLabelTemplates			= "Sjablonen";
 tiPaletteLabelTemplates			= "Sjablonen";
-tiToolTipTemplates			= "Kies een Sjabloon om in te voegen";
+tiToolTipTemplates			= "Kies een sjabloon om bij het invoegpunt in te voegen";
 
-tiLabelTags				= "Markering";
-tiPaletteLabelTags			= "Markering";
-tiToolTipTags				= "Kies een markering om naar toe te scrollen";
+tiLabelTags				= "Tags";
+tiPaletteLabelTags			= "Tags";
+tiToolTipTags				= "Kies een tag om naartoe te scrollen";
 
 tiLabelPreviousPageButton		= "Vorige";
 tiPaletteLabelPreviousPageButton	= "Vorige pagina";
@@ -87,27 +87,27 @@ tiToolTipTypesetEE			= "Voer zetprogramma uit";
 
 tiLabelProgramEE			= "Programma";
 tiPaletteLabelProgramEE			= "Programma";
-tiToolTipProgramEE			= "Kies een zet-programma";
+tiToolTipProgramEE			= "Kies zetprogramma";
 
 tiLabelAutoComplete			= "Toetsbindingen";
 tiPaletteLabelAutoComplete		= "Toetsbindingen";
 tiToolTipAutoComplete			= "Zet toetsbindingen aan/uit";
 
-tiLabelSplit				= "Splits venster";
-tiPaletteLabelSplit			= "Splits venster";
-tiToolTipSplit				= "Splits venster (of juist niet). Option + klik om verticaal te splitsen.";
+tiLabelSplit				= "Splits bron";
+tiPaletteLabelSplit			= "Splits bron";
+tiToolTipSplit				= "Splits de bron of hef de splitsing op; Option-klik om verticaal te splitsen";
 
-tiLabelSplitKIT				= "Splits venster";
-tiPaletteLabelSplitKIT		= "Splits venster";
-tiToolTipSplitKIT			= "Splits venster (of juist niet). Option + klik om verticaal te splitsen.";
-"tiToolTipSplitKITContinuous" = "Splits venster (of juist niet). Option + klik om verticaal te splitsen, Shift + klik om de pagina's onderaan te laten doorlopen.";
+tiLabelSplitKIT				= "Splits voorvertoning";
+tiPaletteLabelSplitKIT		= "Splits voorvertoning";
+tiToolTipSplitKIT			= "Splits de voorvertoning of hef de splitsing op; Option-klik om verticaal te splitsen";
+"tiToolTipSplitKITContinuous" = "Splits de voorvertoning of hef de splitsing op; Option-klik om verticaal te splitsen, Shift-klik om de pagina’s onderaan te laten doorlopen";
 
-tiLabelMacros				= "Macro's";
-tiPaletteLabelMacros			= "Macro's";
+tiLabelMacros				= "Macro’s";
+tiPaletteLabelMacros			= "Macro’s";
 tiToolTipMacros				= "Voer macro uit";
 
-tiLabelMacrosEE				= "Macro's";
-tiPaletteLabelMacrosEE			= "Macro's";
+tiLabelMacrosEE				= "Macro’s";
+tiPaletteLabelMacrosEE			= "Macro’s";
 tiToolTipMacrosEE                       = "Voer macro uit";
 
 tiLabelMouseMode			= "Muismodus";
@@ -122,12 +122,12 @@ tiLabelTypesetKIT				= "Zet";
 tiPaletteLabelTypesetKIT		= "Zet";
 tiToolTipTypesetKIT				= "Voer zetprogramma uit";
 
-tiLabelSearchKIT				= "Zoek";
-tiPaletteLabelSearchKIT         = "Zoek";
-tiToolTipSearchKIT				= "Zoek";
+tiLabelSearchKIT				= "Zoek in PDF";
+tiPaletteLabelSearchKIT         = "Zoek in PDF";
+tiToolTipSearchKIT				= "Zoek in PDF";
 
-tiLabelSharingKIT				= "Deel";
-tiPaletteLabelSharingKIT		= "Deel";
+tiLabelSharingKIT				= "Deel voorvertoning";
+tiPaletteLabelSharingKIT		= "Deel voorvertoning";
 tiToolTipSharingKIT				= "Deel tekst en afbeeldingen";
 
 
@@ -147,12 +147,12 @@ tiLabelGotoPageKIT				= "Ga naar pagina";
 tiPaletteLabelGotoPageKIT		= "Ga naar pagina";
 tiToolTipGotoPageKIT			= "Ga naar pagina";
 
-tiLabelMagnificationKIT			= "Zoomen";
-tiPaletteLabelMagnificationKIT	= "Zoomen";
-tiToolTipMagnificationKIT		= "Stel zoomniveau in";
+tiLabelMagnificationKIT			= "Vergroting";
+tiPaletteLabelMagnificationKIT	= "Vergroting";
+tiToolTipMagnificationKIT		= "Stel vergroting in";
 
-tiLabelMacrosKIT				= "Macro's";
-tiPaletteLabelMacrosKIT			= "Macro's";
+tiLabelMacrosKIT				= "Macro’s";
+tiPaletteLabelMacrosKIT			= "Macro’s";
 tiToolTipMacrosKIT              = "Voer macro uit";
 
 tiLabelMouseModeKIT				= "Muismodus";
@@ -160,7 +160,7 @@ tiPaletteLabelMouseModeKIT		= "Muismodus";
 tiToolTipMouseModeScroll = "Scrollen: sleep om het document te verplaatsen";
 tiToolTipMouseModeSelectText = "Tekst selecteren: sleep om tekst te selecteren om te kopiëren";
 tiToolTipMouseModeMagnify = "Vergroten: houd ingedrukt om door een kleine loep te kijken";
-tiToolTipMouseModeMagnifyLarge = "Vergroten (groter): houd ingedrukt om door een grote loep te kijken";
+tiToolTipMouseModeMagnifyLarge = "Vergroten (groot): houd ingedrukt om door een grote loep te kijken";
 tiToolTipMouseModeSelectPDF = "PDF selecteren: sleep om een gebied te selecteren om als afbeelding te kopiëren";
 
 tiLabelSyncMarksKIT				= "Syncpunten";
@@ -185,17 +185,17 @@ tiLabelShowFullPath				= "Volledig pad";
 tiPaletteLabelShowFullPath		= "Volledig pad";
 tiToolTipShowFullPath			= "Toon volledig pad in venstertitel";
 
-tiLabelProgramSplit				= "Zet";
-tiPaletteLabelProgramSplit		= "Zet";
-tiToolTipProgramSplit			= "Voer zetprogramma uit";
+tiLabelProgramSplit				= "Programma";
+tiPaletteLabelProgramSplit		= "Programma";
+tiToolTipProgramSplit			= "Kies zetprogramma";
 
-tiLabelMacrosSplit				= "Macro's";
-tiPaletteLabelMacrosSplit		= "Macro's";
+tiLabelMacrosSplit				= "Macro’s";
+tiPaletteLabelMacrosSplit		= "Macro’s";
 tiToolTipMacrosSplit			= "Voer macro uit";
 
-tiLabelTagsSplit				= "Markering";
-tiPaletteLabelTagsSplit         = "Markering";
-tiToolTipTagsSplit              = "Kies een markering om naar toe te scrollen";
+tiLabelTagsSplit				= "Tags";
+tiPaletteLabelTagsSplit         = "Tags";
+tiToolTipTagsSplit              = "Kies een tag om naartoe te scrollen";
 
 tiLabelGotoPageSplit			= "Ga naar pagina";
 tiPaletteLabelGotoPageSplit     = "Ga naar pagina";
@@ -211,7 +211,7 @@ tiToolTipAutoCompleteSplit     = "Zet toetsbindingen aan/uit";
 
 tiLabelTemplatesSplit            = "Sjablonen";
 tiPaletteLabelTemplatesSplit            = "Sjablonen";
-tiToolTipTemplatesSplit            = "Kies een Sjabloon om in te voegen";
+tiToolTipTemplatesSplit            = "Kies een sjabloon om bij het invoegpunt in te voegen";
 
 tiLabelSharingSplit                = "Deel bron";
 tiPaletteLabelSharingSplit        = "Deel bron";
@@ -220,9 +220,9 @@ tiToolTipSharingSplit            = "Deel tekst en afbeeldingen";
 tiLabelMouseModeKITSplit                = "Muismodus";
 tiPaletteLabelMouseModeKITSplit        = "Muismodus";
 
-tiLabelSearchKITSplit                = "Zoek";
-tiPaletteLabelSearchKITSplit         = "Zoek";
-tiToolTipSearchKITSplit                = "Zoek";
+tiLabelSearchKITSplit                = "Zoek in PDF";
+tiPaletteLabelSearchKITSplit         = "Zoek in PDF";
+tiToolTipSearchKITSplit                = "Zoek in PDF";
 
 tiLabelTypesetSplit                = "Zet";
 tiPaletteLabelTypesetSplit            = "Zet";
@@ -264,18 +264,18 @@ tiToolTipHtmlSearch           = "Zoek";
 
 "Page Layout" = "Pagina-indeling";
 "tiLabelTSPreviewAppearance" = "Weergave";
-"Continuous Two Pages" = "Dubbel doorlopend";
+"Continuous Two Pages" = "Twee pagina’s doorlopend";
 "Restore Document Settings" = "Herstel documentinstellingen";
 "Single Page" = "Enkele pagina";
 "PreviewAppearanceDark" = "Donker";
 "PreviewAppearanceLight" = "Licht";
-"Two Pages" = "Dubbele pagina";
+"Two Pages" = "Twee pagina’s";
 "PreviewAppearanceSystem" = "Systeem";
 "Left to right" = "Van links naar rechts";
-"Two-Page Arrangement" = "Indeling dubbele pagina’s";
-"Applies when displaying two pages" = "Geldt bij weergave van dubbele pagina’s";
+"Two-Page Arrangement" = "Indeling bij twee pagina’s";
+"Applies when displaying two pages" = "Geldt bij weergave van twee pagina’s";
 "Continuous" = "Doorlopend";
 "Right to left" = "Van rechts naar links";
 "Show first page alone as cover" = "Eerste pagina apart als omslag tonen";
-"tiToolTipUnsplit" = "Splitsing van het venster opheffen";
-"tiToolTipUnsplitKIT" = "Splitsing van het venster opheffen";
+"tiToolTipUnsplit" = "Hef de splitsing van de bron op";
+"tiToolTipUnsplitKIT" = "Hef de splitsing van de voorvertoning op";

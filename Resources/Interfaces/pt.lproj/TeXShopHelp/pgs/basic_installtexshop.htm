@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instalar o TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="instalar o TeXShop; texshop.app; primeira abertura; Buscar atualizações; Ajustes Atualizações; pré-lançamentos; ~/Library/TeXShop; Sobre esta versão">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm" class="current">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composição</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Buscar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matriz</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar os ajustes</a></li>
+<li><a href="basic_templates.htm">Modelos e gabaritos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e abas</a></li>
+<li><a href="basic_bugs.htm">Enviar relatórios de erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Instalar o TeXShop</h1>
+
+<p>O TeXShop requer o macOS 14.6 ou posterior. O MacTeX o instala em /Applications/TeX. Ele também pode ser baixado do site do TeXShop:</p>
+
+<p><a href="https://texshop.app/">https://texshop.app/</a></p>
+
+<p>Mova o TeXShop baixado para /Applications ou /Applications/TeX. Depois de instalar o MacTeX, escolha TeXShop › Buscar atualizações... uma vez, já que o MacTeX pode conter uma versão anterior.</p>
+
+<h2>A primeira abertura</h2>
+
+<p>Quando o TeXShop é aberto pela primeira vez, ele procura o TeX e o Ghostscript e lista as instalações que encontra, da mais recente para a mais antiga; escolha uma e clique em OK. Em seguida, ele pede um perfil do motor, que prepara a composição para o motor que você usa. Ambos podem ser alterados depois em Ajustes › Composição; consulte <a href="basic_typesetting.htm#engine">Escolher o motor</a>.</p>
+
+<h2>Atualizações</h2>
+
+<p>TeXShop › Buscar atualizações... procura uma nova versão. Quando há uma, o TeXShop mostra o que mudou e oferece instalá-la; depois, reinicia no ponto em que você parou. Em Ajustes › Atualizações, “Verificar automaticamente se há atualizações” e “Intervalo de verificação” definem se e com que frequência o TeXShop verifica por conta própria. Ative “Atualizar para Pré-Lançamentos Quando Disponíveis” para receber também as versões beta; uma versão beta do TeXShop ativa essa opção na primeira vez que é executada.</p>
+
+<p>Depois de uma atualização, dê uma olhada em Ajuda › Sobre esta versão (em inglês). Ele informa quando há algo a fazer manualmente, o que geralmente não acontece.</p>
+
+<h2>A pasta ~/Library/TeXShop</h2>
+
+<p>O TeXShop guarda os arquivos que você pode alterar, como os modelos, as macros, os motores, as associações de teclas, a lista de conclusão de comandos e os temas, na pasta TeXShop dentro da pasta Biblioteca da sua pasta pessoal. TeXShop › Abrir pasta ~/Library/TeXShop a mostra no Finder. O TeXShop cria a pasta na primeira vez que é executado. Se um dos arquivos de ajustes dessa pasta, como as macros, as associações de teclas, a lista de conclusão de comandos ou um tema, estiver faltando ou danificado, o TeXShop coloca no lugar a sua própria cópia, sem mensagem de erro, e guarda o arquivo danificado em ~/Library/TeXShop/Backups.</p>
+
+<p>Uma atualização não altera os arquivos que você possa ter editado, como as macros e os motores ativos; ela renova apenas algumas pastas de itens opcionais. Quando uma versão traz novas macros, motores ou outros itens, Sobre esta versão informa, e <a href="configure_correctinstall.htm">Obter novos itens da biblioteca</a> explica como acrescentá-los.</p>
+</main>
+</body>
+</html>

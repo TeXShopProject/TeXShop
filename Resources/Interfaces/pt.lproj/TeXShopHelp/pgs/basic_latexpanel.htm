@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel LaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Painel LaTeX; símbolos; letras gregas; ambientes; tipo de letra; amssymb; completion.plist; botões Personalizado">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo alternativo de composição</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Buscar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm" class="current">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matriz</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir gráficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar os ajustes</a></li>
+<li><a href="basic_templates.htm">Modelos e gabaritos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e abas</a></li>
+<li><a href="basic_bugs.htm">Enviar relatórios de erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Painel LaTeX</h1>
+<p>Janela › Painel LaTeX... abre um painel de código LaTeX: símbolos matemáticos, letras gregas, funções, caracteres acentuados e internacionais, ambientes e comandos de tipo de letra. Clique no código-fonte onde o código deve entrar e depois clique em um botão do painel. O código do botão é inserido no ponto de inserção. O painel permanece na frente das janelas de código-fonte enquanto você trabalha.</p>
+<p>Os botões estão organizados em páginas. Escolha uma página com os botões no topo de cada parte do painel: Matemática, Grego, Símbolos, Funções e Internacional, e Ambientes, Tipo e Personalizado.</p>
+<p>Se houver texto selecionado quando você clicar em um botão de tipo de letra ou de ambiente, o texto selecionado vai para dentro do código inserido, como em <code>\textbf{texto selecionado}</code>.</p>
+<p>Alguns símbolos precisam do pacote amssymb. Acrescente esta linha ao preâmbulo de um documento que os usa:</p>
+<pre>\usepackage{amssymb}</pre>
+
+<h2>Personalizar o painel</h2>
+<p>O código que cada botão insere fica guardado em <code>~/Library/TeXShop/LatexPanel/completion.plist</code>. Abra esse arquivo no TeXShop para alterá-lo; os comentários no início dele explicam como ele é organizado. Os nomes dos botões padrão não podem ser alterados, mas o código que eles inserem pode. Nesse código:</p>
+<ul>
+<li><code>#SEL#</code> representa o texto selecionado;</li>
+<li><code>#INS#</code> marca para onde vai o ponto de inserção depois que o código é inserido;</li>
+<li><code>#PASTE#</code> representa o texto da área de transferência.</li>
+</ul>
+<p>A página Personalizado tem espaço para até dezesseis botões seus. Cada um é definido na lista <code>Customized</code> do arquivo por duas cadeias de caracteres, o nome do botão e o código que ele insere:</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>Salve o arquivo em UTF-8 e depois encerre e reabra o TeXShop para ver as alterações no painel. Se o arquivo estiver faltando ou danificado, o TeXShop o substitui pela sua própria cópia. Consulte <a href="configure_panel.htm">Modificar o Painel LaTeX</a> e <a href="advanced_plist.htm">Arquivos em ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

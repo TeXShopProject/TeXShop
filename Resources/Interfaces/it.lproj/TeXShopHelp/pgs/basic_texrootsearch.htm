@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cerca nei sorgenti TeX</title>
+<meta name="copyright" content="Copyright (c) 2026 under the GNU FDL">
+<meta name="description" content="cercare e sostituire in tutti i file con lo stesso file principale; cercare e sostituire in tutti i file di un documento diviso; TEX root; Cerca nei sorgenti TeX; Sostituisci tutto; copie di sicurezza">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm" class="current">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Cerca nei sorgenti TeX</h1>
+
+<p><a name="texroot_search"></a>In un documento diviso in un file principale e in file dei capitoli si può cercare, e sostituire, in tutti i file contemporaneamente. Con uno dei suoi file in primo piano, scegli Modifica › Trova › Cerca nei sorgenti TeX con la stessa TEX root…; quando in primo piano c’è il file principale stesso, la voce è «Cerca nei sorgenti TeX con questo file come TEX root…». La stessa voce si trova nel menu di «Trova tutto» nel pannello di ricerca avanzata, e «Applica ai sorgenti TeX con la stessa TEX root…» nel menu di «Sostituisci tutto» della finestra Sostituzione multipla apre la finestra con l’insieme scelto lì; per il file principale stesso la voce è «Applica ai sorgenti TeX con questo file come TEX root…». Le voci sono disattivate per un documento senza nome e per un file il cui nome non termina con .tex (in minuscolo), e la voce «Applica» anche quando nella finestra Sostituzione multipla non è scelto alcun insieme.</p>
+
+<h2>In quali file si cerca</h2>
+
+<p>La finestra cerca nel file principale e nei file .tex della sua cartella e delle cartelle sottostanti che lo indicano in una riga <code>% !TEX root</code> tra le loro prime 20 righe; consulta <a href="advanced_root.htm">Impostare il file principale di un progetto</a>. Quando l’impostazione nascosta <code>UseOldHeadingCommands</code> è attiva, si cerca anche nei file che lo indicano in una vecchia riga <code>%SourceDoc</code>. La riga sotto le modalità indica in quale file principale si cerca, e il suo pulsante ? ripete questa regola. I file indicati in <code>\input</code> o <code>\include</code> non vengono seguiti, e un file principale indicato in un file .texshop non viene usato. I collegamenti simbolici a file, le cartelle raggiunte tramite collegamenti simbolici o alias, e la cartella TeXShop Backups vengono esclusi.</p>
+
+<p>L’elenco a sinistra mostra i file; disattiva lì un file o una cartella per escluderlo. Se alcuni file o cartelle non si sono potuti leggere, il pulsante «File non letti» in basso li elenca con il motivo.</p>
+
+<h2>Cercare e sostituire</h2>
+
+<p>I campi di ricerca e di sostituzione e le opzioni sono quelli del <a href="basic_find.htm">pannello di ricerca avanzata</a>. Scegli una modalità:</p>
+<ul>
+<li>«Trova» elenca ogni corrispondenza con il suo numero di riga.</li>
+<li>«Sostituisci» mostra ogni riga prima e dopo la sostituzione. Ogni corrispondenza ha una casella di controllo; una corrispondenza disattivata non viene sostituita.</li>
+<li>«Sostituzione multipla» applica un insieme della finestra Sostituzione multipla ed elenca i gruppi di righe modificate, ciascuno con una casella di controllo. «Modifica…» apre l’insieme in quella finestra.</li>
+</ul>
+
+<p>Fai clic su una riga per mostrare la corrispondenza nel suo documento; fai doppio clic per portare quella finestra in primo piano. L’elenco segue le tue modifiche, e il pulsante ↻ (<kbd>⌘R</kbd>) raccoglie di nuovo i file. Il pulsante di interruzione, il tasto Esc o <kbd>⌘.</kbd> interrompe una ricerca lunga.</p>
+
+<p>In un documento aperto si cerca nel testo così com’è sullo schermo, con le modifiche non salvate; un file non aperto viene letto nella codifica con cui TeXShop lo aprirebbe. In alcuni file si può solo cercare, non sostituire, per esempio in un file su cui non si può scrivere o che la sua codifica non è in grado di salvare senza modificarlo. Questi file sono contrassegnati con ⊘, e il contrassegno ne indica il motivo.</p>
+
+<h2>Sostituisci tutto</h2>
+
+<p>«Sostituisci tutto» chiede conferma prima di sostituire. Se nel frattempo un file è cambiato, non viene sostituito nulla e l’elenco viene rifatto. Con «Salva copie di sicurezza» attivo, ogni file da modificare viene prima copiato nella cartella TeXShop Backups, in una cartella che porta la data e l’ora, accanto al file principale.</p>
+
+<p>I file non aperti vengono poi scritti direttamente, nella loro codifica e con i loro caratteri di fine riga e permessi; questa operazione non si può annullare. I documenti aperti vengono modificati sullo schermo e non vengono salvati, e un solo Annulla in un documento ripristina le sue sostituzioni. Interrompendo «Sostituisci tutto», i file già elaborati restano sostituiti e gli altri restano invariati. Al termine si cerca di nuovo nei file, e la riga in basso indica quante corrispondenze sono state sostituite. Se alcuni file non si sono potuti modificare, un foglio li elenca con il motivo, e «Mostra nel Finder» apre la cartella della copia di sicurezza.</p>
+
+<p>Non eseguire «Sostituisci tutto» mentre un’altra applicazione continua a scrivere questi file.</p>
+</main>
+</body>
+</html>

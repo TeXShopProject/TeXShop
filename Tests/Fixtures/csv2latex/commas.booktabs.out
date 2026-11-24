@@ -1,0 +1,10 @@
+\begin{tabular}{l}
+
+\toprule
+a,b,c \\
+\midrule
+1,2,3 \\
+"x,y",z \\
+
+\bottomrule
+\end{tabular}

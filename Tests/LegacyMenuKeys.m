@@ -344,6 +344,10 @@ int main(int argc,char **argv){@autoreleasepool{
     Apply(main,@{window.title:@{title:@[@"9",@YES,@YES]}});
     for(NSMenuItem *i in window.submenu.itemArray)Check([i.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"%@: the former name %@ reaches no item (%@ got it)",language,title,i.title]);
    }
+   // Enter Full Screen keeps Globe-F, which macOS gives it at launch: a saved key for it, by name or by its position of 5.58, changes nothing.
+   NSMenuItem *fullScreen=nil;for(NSMenuItem *i in window.submenu.itemArray)if(i.action==@selector(toggleFullScreen:))fullScreen=i;
+   Apply(main,@{window.title:@{fullScreen.title:@[@"9",@YES,@YES],@"4":@[@"9",@YES,@YES]}});
+   Check(fullScreen!=nil && [fullScreen.keyEquivalent isEqual:@""],[language stringByAppendingString:@": a saved key for Enter Full Screen changes nothing"]);
   }
   printf("PASS: a saved key for Fullscreen (Old Method), by its name of 5.58 or of 6.00 beta 8, reaches no item in %lu languages\n",(unsigned long)edits.count);
   NSUInteger checkedWindows=0;
@@ -432,6 +436,38 @@ int main(int argc,char **argv){@autoreleasepool{
    }
   }
   Check(names>=36,@"names of the course, the tables and Feature Confusion are checked in every language");
+  // Source › Font: 6.00 removed its rich-text items. Positions of 5.58 still reach Show Fonts, Bigger and Smaller; the
+  // positions and names of the removed items reach no item.
+  NSUInteger fontPositions=0,fontNames=0;
+  for(NSString *language in edits){
+   NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:edits[language][@"nib"]] bundle:nil];NSArray *objects=nil;
+   Check([nib instantiateWithOwner:NSApp topLevelObjects:&objects],language);
+   NSMenu *main=nil;for(id o in objects)if([o isKindOfClass:NSMenu.class]&&[o numberOfItems]>5)main=o;
+   NSMenuItem *sourceTop=nil,*fontTop=nil;
+   for(NSMenuItem *top in main.itemArray)for(NSMenuItem *i in top.submenu.itemArray)
+    for(NSMenuItem *c in i.submenu.itemArray)if([c.identifier isEqual:@"TSShortcut.orderFrontFontPanel:.0"]){sourceTop=top;fontTop=i;}
+   Check(fontTop!=nil,[language stringByAppendingString:@": Source › Font is found"]);
+   NSMenu *font=fontTop.submenu;
+   Check(font.numberOfItems==4,[language stringByAppendingString:@": Source › Font has Show Fonts, a separator, Bigger and Smaller"]);
+   NSArray *old=edits[language][@"fontactions"];
+   for(NSUInteger i=0;i<old.count;i++){
+    for(NSMenuItem *m in font.itemArray)m.keyEquivalent=@"";
+    NSString *position=[NSString stringWithFormat:@"%lu",(unsigned long)i+1];
+    Apply(main,@{sourceTop.title:@{fontTop.title:@{position:@[@"9",@YES,@YES]}}});
+    NSMenuItem *target=nil;for(NSMenuItem *m in font.itemArray)if([old[i] length]&&[m.identifier isEqual:old[i]])target=m;
+    for(NSMenuItem *m in font.itemArray)
+     Check([m.keyEquivalent isEqual:m==target?@"9":@""],[NSString stringWithFormat:@"%@: Font position %@ (%@) reaches %@ only (%@ has %@)",language,position,old[i],target.identifier,m.identifier,m.keyEquivalent]);
+    fontPositions++;
+   }
+   for(NSString *title in edits[language][@"fontremoved"]){
+    for(NSMenuItem *m in font.itemArray)m.keyEquivalent=@"";
+    Apply(main,@{sourceTop.title:@{fontTop.title:@{title:@[@"9",@YES,@YES]}}});
+    for(NSMenuItem *m in font.itemArray)Check([m.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"%@: the removed %@ reaches no item (%@ has %@)",language,title,m.identifier,m.keyEquivalent]);
+    fontNames++;
+   }
+  }
+  Check(fontPositions==156&&fontNames==83,@"13 positions and 7 names of Source › Font in 12 languages");
+  printf("PASS: %lu positions of Source › Font of 5.58 reach Show Fonts, Bigger and Smaller or no item; %lu names of its removed rich-text items reach no item\n",(unsigned long)fontPositions,(unsigned long)fontNames);
   Check(olderChecks==192,@"8 documents of Older Documents by name and position in 12 languages");
   printf("PASS: %lu former names and %lu positions of 5.58 in the Help menus, and %lu names and positions in Older Documents of 6.00b9.1, reach the item that opens the same document\n",(unsigned long)names,(unsigned long)positions,(unsigned long)olderChecks);
  }

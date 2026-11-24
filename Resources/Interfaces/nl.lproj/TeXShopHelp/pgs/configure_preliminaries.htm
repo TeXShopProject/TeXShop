@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inleiding</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeXShop configureren; venster Instellingen; Zoek in instellingen; ~/Library/TeXShop; beschadigde bestanden; Backups; verborgen instellingen; magische commentaarregels">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hoe configureer ik TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm" class="current">Inleiding</a></li>
+<li><a href="configure_prefchanges.htm">Aanbevolen wijzigingen in de instellingen</a></li>
+<li><a href="configure_correctinstall.htm">Nieuwe bestanden in de bibliotheek krijgen</a></li>
+<li><a href="configure_hidden.htm">Verborgen instellingen</a></li>
+<li><a href="configure_panel.htm">Het LaTeX-venster aanpassen</a></li>
+<li><a href="configure_autocompletion.htm">Toetsbindingen aanpassen</a></li>
+<li><a href="configure_menushortcuts.htm">Toetscombinaties van menu’s wijzigen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Inleiding</h1>
+<p>Dit hoofdstuk legt uit hoe u TeXShop aanpast aan uw manier van werken: de instellingen die u het eerst moet controleren, hoe TeXShop de bestanden in ~/Library/TeXShop actueel houdt, de verborgen instellingen, en hoe u het LaTeX-venster, de toetsbindingen en de toetscombinaties van menu’s wijzigt.</p>
+
+<h2 id="settings">Het venster Instellingen</h2>
+<p>Kies TeXShop › Instellingen… om het venster Instellingen te openen. De navigatiekolom heeft tien categorieën: Algemeen, Documenten en bewaren, Editor, Toetsenbord, Spellingcontrole, Thema’s, Zetten, Console, Voorvertoning en Updates. Om een instelling te vinden zonder de categorie te kennen, typt u een woord in het veld ‘Zoek in instellingen’ boven in de navigatiekolom en kiest u een resultaat: Instellingen toont de instelling en markeert haar. Zie <a href="basic_preferences.htm#settings-search">Zoek in instellingen</a>.</p>
+<p>Veel instellingen hebben een bijbehorend menucommando, zoals Bron › Toon regelnummers en de instelling ‘Regelnummers’ in Editor. Het menucommando wijzigt alleen het actieve document zolang het open is; de instelling bepaalt hoe documenten eruitzien en zich gedragen wanneer ze worden geopend.</p>
+<p>Het meeste van wat in bestanden wordt bewaard, kunt u in TeXShop zelf wijzigen. Instellingen › Toetsenbord bevat de toetsbindingen, de lijst voor commandoaanvulling (‘Commandoaanvulling bewerken…’) en de toetscombinaties van menu’s; macro’s bewerkt u in de macro-editor (Macro’s › Open macro-editor...), en kleurthema’s in Instellingen › Thema’s.</p>
+
+<h2 id="library">De map ~/Library/TeXShop</h2>
+<p>Sjablonen, macro’s, engines, het bestand van het LaTeX-venster, toetsbindingen, de lijst voor commandoaanvulling, thema’s en andere bestanden die u kunt wijzigen, worden bewaard in ~/Library/TeXShop, de map TeXShop in de map Bibliotheek van uw thuismap. TeXShop › Open ~/Library/TeXShop opent deze map in de Finder. Een nieuwe versie van TeXShop laat uw wijzigingen daar staan; <a href="configure_correctinstall.htm">Nieuwe bestanden in de bibliotheek krijgen</a> legt uit welke bestanden worden bijgewerkt.</p>
+<p>Als een bestand dat TeXShop nodig heeft, zoals de macro’s, het bestand van het LaTeX-venster, de toetsbindingen of een thema, ontbreekt of beschadigd is, vervangt TeXShop het bij het starten zonder melding door een eigen kopie. Het beschadigde bestand wordt bewaard in ~/Library/TeXShop/Backups, zodat u uw wijzigingen daaruit kunt terughalen.</p>
+<p>Om terug te gaan naar de standaardinhoud van een map, stopt u TeXShop, verplaatst u de map (bijvoorbeeld Templates) uit ~/Library/TeXShop, bijvoorbeeld naar het bureaublad, en start u TeXShop opnieuw. TeXShop maakt de map opnieuw aan met de standaardinhoud; kopieer uit de verplaatste map terug wat u wilt behouden.</p>
+
+<h2 id="more">Verborgen instellingen en magische commentaarregels</h2>
+<p>Enkele instellingen staan niet in het venster Instellingen; ze worden gewijzigd met een commando in Terminal. Zie <a href="configure_hidden.htm">Verborgen instellingen</a>. Magische commentaarregels zoals <code>% !TEX program = lualatex</code> bovenaan een bronbestand stellen de engine, de codering, het hoofdbestand en meer in voor alleen dat bestand. Help › Commentaarregels en verborgen instellingen (Engels) geeft een overzicht van alle magische commentaarregels en verborgen instellingen.</p>
+</main>
+</body>
+</html>

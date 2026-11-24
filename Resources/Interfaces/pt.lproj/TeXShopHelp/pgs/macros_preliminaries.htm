@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preliminares</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macros; editor de macros; Macros_Latex.plist; pasta Macros; salvar macros em um arquivo; adicionar macros de um arquivo; Shishikura">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda para macros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm" class="current">Preliminares</a></li>
+<li><a href="macros_default.htm">Entender as macros padrão</a></li>
+<li><a href="macros_rearrange.htm">Reorganizar o menu Macros</a></li>
+<li><a href="macros_define.htm">Definir novas macros</a></li>
+<li><a href="macros_applescript.htm">Macros AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macros AppleScript padrão</a></li>
+<li><a href="macros_defapplescript.htm">Definir macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Criar diálogos</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts com os comandos de composição do TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts com comandos de shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Preliminares</h1>
+<p>As macros do TeXShop e o editor de macros foram escritos originalmente por Mitsuhiro Shishikura; as macros LaTeX padrão foram criadas por Mitsuhiro Shishikura e Hirokazu Ogawa.</p>
+<p>As macros aparecem no menu Macros e no menu local Macros da barra de ferramentas da janela do código-fonte. Há dois tipos. As macros de texto inserem texto no código-fonte, como os botões do Painel LaTeX. As macros AppleScript executam um AppleScript; consulte <a href="macros_applescript.htm">Macros AppleScript</a>.</p>
+
+<h2 id="files">Onde as macros ficam guardadas</h2>
+<p>As macros são guardadas em</p>
+<pre>~/Library/TeXShop/Macros/Macros_Latex.plist</pre>
+<p>e o menu Macros as mostra para todos os motores de composição. Um conjunto separado pode ser mantido para os motores integrados plain TeX, BibTeX, MakeIndex e MetaPost: quando um deles está escolhido para o documento, o editor de macros salva as macros em um arquivo próprio, como Macros_Tex.plist, e deixa Macros_Latex.plist inalterado.</p>
+<p>Os arquivos de macros são arquivos de texto comuns, mas é melhor alterá-los com o editor de macros, que Macros › Abrir editor de macros... abre. <a href="macros_define.htm">Definir novas macros</a> explica como acrescentar, apagar e nomear macros e como dar atalhos a elas.</p>
+
+<h2 id="missing">Se a pasta Macros estiver ausente</h2>
+<p>Se a pasta Macros estiver ausente quando o TeXShop for iniciado, o TeXShop a cria de novo com as macros padrão. Se Macros_Latex.plist estiver danificado, o TeXShop o substitui pela própria cópia ao ser iniciado, sem mostrar nenhuma mensagem, e guarda o arquivo danificado em ~/Library/TeXShop/Backups. Para recomeçar com as macros padrão, encerre o TeXShop, mova a pasta Macros para a Mesa e abra o TeXShop de novo; a pasta movida guarda as suas macros antigas.</p>
+
+<h2 id="sharing">Compartilhar macros</h2>
+<p>Enquanto o editor de macros está aberto, o menu Macros tem dois comandos a mais. “Salvar seleção em um arquivo...” salva as macros selecionadas em um arquivo próprio, que você pode passar a outras pessoas. “Adicionar macros de um arquivo...” acrescenta as macros desse arquivo à sua lista; depois, organize-as como quiser no editor de macros.</p>
+</main>
+</body>
+</html>

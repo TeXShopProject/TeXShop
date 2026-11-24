@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scrierea scripturilor cu comenzile de compilare ale TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; bibliografie; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; succesiune de comenzi de compilare">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor pentru macrocomenzi</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="macros_default.htm">Înțelegerea macrocomenzilor implicite</a></li>
+<li><a href="macros_rearrange.htm">Rearanjarea meniului Macro</a></li>
+<li><a href="macros_define.htm">Definirea macrocomenzilor noi</a></li>
+<li><a href="macros_applescript.htm">Macrocomenzi AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macrocomenzile AppleScript implicite</a></li>
+<li><a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crearea dialogurilor</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Scrierea scripturilor cu comenzile de compilare ale TeXShop</h1>
+<p>Un document cu bibliografie are nevoie de o succesiune de compilări: LaTeX scrie fișierul .aux, BibTeX îl folosește pentru a scrie fișierele .bbl și .blg, LaTeX rulează din nou pentru a adăuga bibliografia în document și încă o dată pentru a actualiza trimiterile la ea. Proiectele dvs. pot avea nevoie de succesiuni asemănătoare, iar o macrocomandă AppleScript le poate rula în locul dvs.</p>
+<p>Macrocomanda Macro › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice, livrată cu TeXShop, arată cum. Iată conținutul ei:</p>
+<pre>--Applescript
+
+set fileName to #FILEPATH#
+if fileName is equal to  ""
+activate
+display dialog "Please save the file first"  buttons {"OK"} default button "OK"
+return
+end if
+
+set frontName to #DOCUMENTNAME#
+
+tell document frontName of application "TeXShop"
+
+    latexinteractive
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    bibtex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+end tell</pre>
+<p>Prima linie face din aceasta o macrocomandă AppleScript rulată de ScriptRunner, astfel încât îi poate cere lui TeXShop să compileze (consultați <a href="macros_applescript.htm">Macrocomenzi AppleScript</a>). Liniile următoare verifică #FILEPATH#, calea completă a fișierului sursă. Acesta este un șir gol când documentul nu a fost încă salvat; în acest caz, scriptul vă cere să-l salvați și se oprește.</p>
+<p>Scriptul se referă apoi la document prin #DOCUMENTNAME#. TeXShop salvează singur documentul când începe o comandă de compilare, așa că scriptul nu trebuie să-l salveze.</p>
+<p>Comenzile rămase rulează latexinteractive, bibtex, latex și latex. O comandă de compilare revine imediat în script, înainte ca compilarea să se termine, așa că după fiecare comandă o buclă <code>repeat</code> așteaptă până când <code>taskdone</code> raportează că lucrarea s-a încheiat. Linia <code>delay 2</code> face ca scriptul să facă o pauză între verificări, în loc să întrebe continuu și să încetinească computerul. Comenzile sunt listate în <a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a>.</p>
+</main>
+</body>
+</html>

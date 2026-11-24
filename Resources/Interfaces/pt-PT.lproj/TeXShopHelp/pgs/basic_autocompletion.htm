@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Associações de teclas</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="associações de teclas; Lista de associações de teclas; Carácter escrito; Texto de saída; Colar; símbolo do iene; barra invertida; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm" class="current">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Associações de teclas</h1>
+
+<p>As associações de teclas fazem com que um carácter escrito insira outro texto. Com a lista fornecida com o TeXShop, escrever <code>^</code> dá <code>^{}</code> com o ponto de inserção entre as chavetas, escrever <code>"</code> dá as aspas do TeX <code>``''</code> à volta do ponto de inserção, e escrever <code>ä</code> dá <code>\"a</code>. Uma associação de teclas também pode colocar o texto selecionado lá dentro: selecione uma palavra e escreva <code>^</code> para obter <code>^{palavra}</code>. A lista tem 45 associações de teclas.</p>
+
+<p>As associações de teclas estão desativadas de início. Ative «Usar associações de teclas (predefinição para novos documentos)» em Definições › Teclado para as ter ativadas em todos os documentos que abrir. Código-fonte › Associações de teclas ativa-as ou desativa-as para o documento que está à frente, por exemplo para escrever tal como é um carácter que tem uma associação de teclas. O item «Associações de teclas», que pode ser acrescentado à barra de ferramentas, faz o mesmo.</p>
+
+<h2>A lista de associações de teclas</h2>
+
+<p>O grupo «Associações de teclas» de Definições › Teclado enumera as associações de teclas, cada uma com o seu «Carácter escrito» e o seu «Texto de saída». Faça duplo clique numa célula para a editar; clique em + por baixo da lista para acrescentar uma associação de teclas e em − para apagar as selecionadas, e arraste linhas para alterar a ordem. Um carácter escrito é um único carácter. As alterações são guardadas de imediato e atuam também nos documentos abertos; Edição › Desfazer anula-as.</p>
+
+<p>Num texto de saída, os elementos especiais são mostrados como pequenas fichas: o texto selecionado, o local do ponto de inserção, o texto da área de transferência, uma marca (•) para Edição › Marcas, uma quebra de linha e uma tabulação. Acrescente-os com «Inserir», por baixo da lista, ou escreva-os: <code>#SEL#</code>, <code>#INS#</code>, <code>#PASTE#</code> e <code>•</code>, Opção + Return para uma quebra de linha e Opção + Tab para uma tabulação. O botão ? enumera-os todos.</p>
+
+<p>Um visto na coluna «Colar» aplica a associação de teclas também ao texto que colar no código-fonte ou que largar nele: cada ocorrência do carácter escrito é substituída pelo texto de saída. Tal como ao escrever, isto só acontece enquanto as associações de teclas estão ativadas para o documento. Uma associação de teclas cujo texto de saída contém a seleção, o ponto de inserção, a área de transferência ou uma marca não pode ser assinalada.</p>
+
+<h2>O símbolo do iene</h2>
+
+<p>Num teclado japonês, a tecla da barra invertida pode escrever um símbolo do iene (¥). Na lista fornecida com o TeXShop, ¥ dá uma única barra invertida e a sua caixa «Colar» está assinalada. Assim, quando a codificação dos novos documentos é UTF-8, basta ativar as associações de teclas para que o ¥ escrito ou colado no código-fonte passe a \. Se a sua lista vier de uma versão anterior do TeXShop, defina o texto de saída de ¥ como uma única barra invertida e assinale a sua caixa «Colar».</p>
+
+<p>A lista é guardada em ~/Library/TeXShop/Keyboard/autocompletion.plist; consulte <a href="configure_autocompletion.htm">Modificar as associações de teclas</a>.</p>
+</main>
+</body>
+</html>

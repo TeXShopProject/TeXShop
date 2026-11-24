@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macrocomenzi</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macrocomenzi; meniul Macro; Editorul de Macro; scurtătura unei macrocomenzi; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
+<li><a href="basic_macros.htm" class="current">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Macrocomenzi</h1>
+<p>Meniul „Macro” și articolul „Macro” din bara de instrumente conțin comenzi care inserează cod LaTeX în sursă sau rulează scripturi AppleScript. Câteva dintre macrocomenzile incluse în TeXShop:</p>
+<ul>
+<li>Set Typesetting Program…, Set Encoding… și Set Root File… scriu liniile <code>% !TEX</code> care aleg motorul de compilare, codificarea și fișierul principal al unui document. Alegeți motorul sau codificarea din lista pe care o afișează Set Typesetting Program… sau Set Encoding…, ori fișierul principal în dialogul pe care îl deschide Set Root File…; linia este scrisă corect la începutul sursei.</li>
+<li>Insert Begin/End transformă cuvântul de la punctul de inserare sau cuvântul selectat, de exemplu <code>theorem</code>, într-o pereche <code>\begin{theorem}</code> … <code>\end{theorem}</code>, cu punctul de inserare între ele.</li>
+<li>Submeniuri precum Headings, Mathematics, Lists, Tables și Figures inserează cod LaTeX uzual.</li>
+</ul>
+
+<h2>Editorul de Macro</h2>
+<p>Alegeți Macro › Deschideți Editorul de Macro... pentru a vedea cum este definită fiecare macrocomandă, pentru a o modifica sau pentru a adăuga macrocomenzi proprii. Lista din stânga este meniul „Macro”: trageți articolele pentru a le rearanja și folosiți bara de sub listă pentru a adăuga articole, submeniuri și separatoare. Textul unei macrocomenzi este inserat în sursă. În acest text, elementele cu colțuri rotunjite reprezintă textul selectat, textul din clipboard și locul punctului de inserare; alegeți-le din meniul „Inserați” de sub text.</p>
+<p>Pentru a atribui unei macrocomenzi o scurtătură de tastatură, selectați-o în listă, faceți clic pe scurtătura ei (sau faceți dublu clic pe ea) și apăsați tastele. O scurtătură folosește tasta Comandă sau Control ori este o tastă funcțională. Dacă o comandă de meniu sau altă macrocomandă o folosește deja, Editorul de Macro vă spune acest lucru.</p>
+<p>Macrocomenzile sunt păstrate în <code>~/Library/TeXShop/Macros/Macros_Latex.plist</code>. Pentru a da macrocomenzi altor persoane, selectați-le în Editorul de Macro și alegeți Macro › Salvați selecția în fișier...; pentru a adăuga macrocomenzi dintr-un astfel de fișier, alegeți Macro › Adăugați macrocomenzi din fișier....</p>
+<p>Capitolul <a href="macros.htm">Ajutor pentru macrocomenzi</a> explică macrocomenzile în detaliu, inclusiv <a href="macros_applescript.htm">macrocomenzile AppleScript</a>.</p>
+</main>
+</body>
+</html>

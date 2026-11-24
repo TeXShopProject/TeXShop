@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeXShop installeren</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeXShop installeren; eerste start; engineprofiel; Zoek naar updates; prereleases; Over deze versie; ~/Library/TeXShop; Backups">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm" class="current">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeXShop installeren</h1>
+
+<p>TeXShop vereist macOS 14.6 of nieuwer. MacTeX installeert het in /Applications/TeX. U kunt het ook downloaden van de website van TeXShop:</p>
+
+<p><a href="https://texshop.app/">https://texshop.app/</a></p>
+
+<p>Verplaats de gedownloade TeXShop naar /Applications of /Applications/TeX. Kies na het installeren van MacTeX één keer TeXShop › Zoek naar updates..., omdat MacTeX een oudere versie kan bevatten.</p>
+
+<h2>De eerste start</h2>
+
+<p>Als TeXShop voor het eerst start, zoekt het naar TeX en Ghostscript en toont het de gevonden installaties, de nieuwste eerst; kies er een en klik op ‘OK’. Daarna vraagt het om een engineprofiel, dat het zetten instelt voor de engine die u gebruikt. Beide kunt u later wijzigen in Instellingen › Zetten; zie <a href="basic_typesetting.htm#engine">De engine kiezen</a>.</p>
+
+<h2>Updates</h2>
+
+<p>TeXShop › Zoek naar updates... zoekt naar een nieuwe versie. Als die er is, toont TeXShop wat er is veranderd en biedt het aan om de versie te installeren; daarna start het opnieuw op en gaat het verder waar u was gebleven. In Instellingen › Updates bepalen ‘Automatisch naar updates zoeken’ en ‘Controle-interval’ of en hoe vaak TeXShop zelf zoekt. Schakel ‘Werk bij naar prereleases wanneer beschikbaar’ in om ook bètaversies aangeboden te krijgen; een bètaversie van TeXShop schakelt deze optie in als ze voor het eerst wordt gestart.</p>
+
+<p>Kijk na een update even in Help › Over deze versie (Engels). Daar staat of u iets met de hand moet doen; meestal is dat niet zo.</p>
+
+<h2>De map ~/Library/TeXShop</h2>
+
+<p>De bestanden die u kunt wijzigen, zoals de sjablonen, macro’s, engines, toetsbindingen, de lijst voor commandoaanvulling en de thema’s, bewaart TeXShop in de map TeXShop in de map Bibliotheek van uw thuismap. TeXShop › Open ~/Library/TeXShop toont die map in de Finder. TeXShop maakt de map aan als het voor het eerst wordt gestart. Als een van de instellingenbestanden daarin, zoals de macro’s, de toetsbindingen, de lijst voor commandoaanvulling of een thema, ontbreekt of beschadigd is, zet TeXShop er zonder foutmelding zijn eigen exemplaar voor in de plaats en bewaart het het beschadigde bestand in ~/Library/TeXShop/Backups.</p>
+
+<p>Een update verandert de bestanden die u misschien hebt bewerkt niet, zoals de macro’s en de actieve engines; het vernieuwt alleen enkele mappen met optionele onderdelen. Als een versie nieuwe macro’s, engines of andere onderdelen meebrengt, staat dat in ‘Over deze versie (Engels)’, en <a href="configure_correctinstall.htm">Nieuwe bestanden in de bibliotheek krijgen</a> legt uit hoe u ze toevoegt.</p>
+</main>
+</body>
+</html>

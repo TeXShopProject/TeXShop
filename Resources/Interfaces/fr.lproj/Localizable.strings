@@ -5,27 +5,27 @@
 "Typeset" = "Composition";
 "Save" = "Enregistrer";
 "Print..." = "Imprimer...";
-"Print Source..." = "Imprimer les sources...";
+"Print Source..." = "Imprimer la source...";
 "Set Project Root..." = "Document principal...";
 "LaTeX Panel..." = "Palette LaTeX...";
-"Close LaTeX Panel" = "Fermer la Palette LaTeX";
+"Close LaTeX Panel" = "Fermer la palette LaTeX";
 "Matrix Panel..." = "Palette Matrice...";
-"Close Matrix Panel" = "Fermer la Palette Matrice";
-"Open for Preview..." = "Ouvrir un aperçu...";
+"Close Matrix Panel" = "Fermer la palette Matrice";
+"Open for Preview..." = "Ouvrir pour aperçu...";
 "Open for Editing..." = "Ouvrir pour éditer...";
 "File" = "Fichier";
-"Goto Error" = "Erreur";
-"RotateClockwise" = "Rotation vers la droite";
-"RotateCounterclockwise" = "Rotation vers la gauche";
-"Comment" = "Ajouter un commentaire";
-"Uncomment" = "Enlever le commentaire";
+"Goto Error" = "Aller à l’erreur";
+"RotateClockwise" = "Rotation à droite";
+"RotateCounterclockwise" = "Rotation à gauche";
+"Comment" = "Commenter";
+"Uncomment" = "Décommenter";
 "Indent" = "Indenter";
-"Unindent" = "À la ligne";
+"Unindent" = "Désindenter";
 "Macros" = "Macros";
 "Open Macro Editor..." = "Ouvrir l'éditeur de macros...";
 "Close Macro Editor" = "Fermer l'éditeur de macros";
-"Add macros from file..." = "Ajouter une macro à partir du fichier...";
-"Save selection to file..." = "Enregistrer la sélection dans le fichier...";
+"Add macros from file..." = "Ajouter des macros à partir d’un fichier...";
+"Save selection to file..." = "Enregistrer la sélection dans un fichier...";
 "Edit" = "Édition";
 "Warning" = "Avertissement";
 "Don't Save" = "Ne pas enregistrer";
@@ -36,17 +36,17 @@
 "AutoComplete" = "Raccourcis de saisie"; //Should be translation of "Key Bindings", even in English
 "Page Number" = "Numéro de page";
 "Page Number Panel" = "Panneau Numéro de page";
-"Magnification Panel" = "Panneau de magnification";
-"Omit Shell Escape" = "Omettre Shell Escape";
-"Warning: Using Shell Escape" = "Avertissement : utilisation de Shell Escape";
+"Magnification Panel" = "Panneau Agrandissement";
+"Omit Shell Escape" = "Omettre le shell-escape";
+"Warning: Using Shell Escape" = "Avertissement : utilisation du shell-escape";
 "Preview" = "Page";
 "Display Format" = "Format d’affichage";// mitsu 1.29b
 "Magnification" = "Agrandissement";// mitsu 1.29b
 "Copy Format" = "Copier le format";// mitsu 1.29b
-"ToolbarItems" = "Éléments de la barre d'outils";
+"ToolbarItems" = "Éléments de la barre d’outils";
 "Autocompletion" = "Expression liée";
 "Completion" = "Complétion";
-"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Chemin : %@\nFile size: %d octets\nCreation date : %@\nModification date : %@";
+"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Chemin : %@\nTaille du fichier : %d octets\nDate de création : %@\nDate de modification : %@";
 "Info: %@" = "Informations : %@";
 "%@\n\nCharacters: %d" = "%@\n\nCharacters : %d";
 "The file encoding changed; characters can be lost if the wrong encoding is used." = "L'encodage du fichier a changé ; des caractères risquent d'être perdus si le mauvais encodage est utilisé.";
@@ -54,18 +54,18 @@
 "Drag && Drop" = "Glisser && Déposer";
 "The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "Le lien /Library/TeX/texbin n’existe pas. Pour le réparer, allez à cette adresse https://tug.org/mactex et installez MacTeX ou BasicTeX (2015 ou ultérieur).";
 "%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ n’existe pas. TeXShop est un outil de gestion pour TeX, mais vous avez aussi besoin d’une distribution TeX. Peut-être qu’une telle distribution n’a pas été installée ou a été supprimée lors d’une mise à niveau de votre système. Si c’est le cas, allez à cette adresse https://tug.org/mactex et suivez les instructions pour installer MacTeX ou BasicTeX.";
-"Can't find required tool." = "N'a pu trouver l'outil requis.";
+"Can't find required tool." = "Impossible de trouver l’outil requis.";
 "Typesetting engine cannot be found." = "Le moteur TeX n'a pas été trouvé.";
-"The source LaTeX document cannot be found." = "Le source LaTeX du document n'a pas été trouvé.";
+"The source LaTeX document cannot be found." = "Le document source LaTeX est introuvable.";
 "Sync Marks" = "Marques synchro";
 "%@ does not exist." = "%@ n'existe pas.";
 "%@ does not have the executable bit set." = "%@ ne possède pas le bit d'exécution activé.";
 "This file was opened with IsoLatin9 encoding." = "Ce fichier a été ouvert avec l'encodage IsoLatin9.";
-"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Le fichier n'a pu être ouvert avec l'encodage %@ parce que il n'a pas été enregistré avec celui-ci. Si vous souhaitez l'ouvrir dans un autre encodage, fermez la fenêtre et l'ouvrir à nouveau.";
+"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Le fichier n'a pu être ouvert avec l'encodage %@ parce qu’il n’a pas été enregistré avec celui-ci. Si vous souhaitez l’ouvrir dans un autre encodage, fermez la fenêtre et rouvrez-le.";
 "Error" = "Erreur";
-"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Cette version de TeXShop requiert Mac OS X 10.4 ou plus. Utiliser TeXShop 1.37 au lieu.";
-"Hard Wrap" = "Enroulement des lignes";
-"Newline Removal" = "Suppression de la nouvelle ligne";
+"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Cette version de TeXShop requiert Mac OS X 10.4 ou plus. Utilisez plutôt TeXShop 1.37.";
+"Hard Wrap" = "Enrouler";
+"Newline Removal" = "Joindre les lignes";
 "Help" = "Aide";
 "Sync" = "Synchroniser";
 "ShowFullPath" = "Afficher le chemin entier";
@@ -76,18 +76,18 @@
 " does not exist." = " n'existe pas.";
 "failed to copy selection." = "échec de la copie de la sélection.";
 "failed to save selection to the file." = "échec de la sauvegarde de la sélection dans le fichier.";
+"Emoji Style" = "Style des emoji";
 "<a character consisting of %1$@ code points>" = "<un caractère composé de %1$@ points de code>";
 "%1$@ characters, %2$@ words, %3$@ lines" = "%1$@ caractères, %2$@ mots, %3$@ lignes";
-"Emoji Style" = "Style des émoticones";
 "Text Style" = "Style du texte";
 "Character Info" = "Information caractère";
 "Variant" = "Variante";
 "Revert To" = "Revenir à";
-"Skin Tone I-II" = "Très claire";
-"Skin Tone III" = "Claire";
-"Skin Tone IV" = "Mate";
-"Skin Tone V" = "Mate";
-"Skin Tone VI" = "Noire";
+"Skin Tone I-II" = "Peau claire";
+"Skin Tone III" = "Peau moyennement claire";
+"Skin Tone IV" = "Peau légèrement mate";
+"Skin Tone V" = "Peau mate";
+"Skin Tone VI" = "Peau foncée";
 "Code Point:" = "Point de code :";
 "Block:" = "Bloc :";
 "Category:" = "Catégorie :";
@@ -95,7 +95,7 @@
 "Unknown" = "Inconnu";
 "No Block" = "Aucun bloc";
 "deprecated" = "obsolète";
-"Unknown encoding; using UTF-8." = "Encodage inconnu ; UTF-8 utilisé";
+"Unknown encoding; using UTF-8." = "Encodage inconnu ; UTF-8 utilisé.";
 "Source" = "Source";
 "<<Close All - unlocalized>>" = "Tout fermer";
 "Close All" = "Tout fermer";
@@ -193,6 +193,7 @@
 "No command uses this key." = "Aucune commande n’utilise cette touche.";
 "Press a key" = "Appuyez sur une touche";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Cette touche ne peut pas servir de raccourci. Utilisez Commande ou Contrôle avec une touche, ou F1–F20.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Les raccourcis avec la touche Globe (fn) ne peuvent pas être affectés aux commandes de TeXShop.";
 
 
 "This key cannot be assigned to a new shortcut." = "Cette touche ne peut pas être affectée à un nouveau raccourci.";
@@ -270,7 +271,7 @@
 
 
 /* System spelling dictionary selection. */
-"Automatic Language" = "Détection automatique de la langue";
+"Automatic Language" = "Automatique par langue";
 
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "Appliquer « %@ » à tout le document ?";
@@ -456,9 +457,9 @@
 "Right" = "Droite";
 
 /* Edit menu */
-"Complete Label or Citation Key" = "Compléter l’étiquette ou la clé de citation";
+"Complete Label or Citation Key" = "Compléter le label ou la clé de citation";
 /* Edit › Complete Label or Citation Key tooltip */
-"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Propose les étiquettes du fichier après \\ref{ et, si les réglages le permettent, les clés de citation de BibDesk après \\cite{.";
+"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Propose les labels du fichier après \\ref{ et, si les réglages le permettent, les clés de citation de BibDesk après \\cite{.";
 
 /* Print panel: the section of a PDF print, as in Preview */
 "Auto Rotate" = "Rotation automatique";

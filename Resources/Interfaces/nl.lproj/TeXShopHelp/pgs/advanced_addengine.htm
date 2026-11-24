@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zet-engines toevoegen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="engine; engine-bestand; .engine; map Engines; % !TEX program; % !TEX parameter; alternatieve engine; Inactive; shellscript">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm" class="current">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Zet-engines toevoegen</h1>
+<p>Behalve met plain TeX en LaTeX zet TeXShop met <em>engines</em>: kleine shellscripts met de extensie <code>.engine</code> in de map <code>~/Library/TeXShop/Engines</code>. Een engine kan één programma uitvoeren, of een reeks programma’s, bijvoorbeeld LuaLaTeX, dan Biber, dan nog twee keer LuaLaTeX. TeXShop wordt geleverd met engines zoals LuaLaTeX, XeLaTeX en pdflatexmk; de submap <code>Inactive</code> bevat er nog veel meer.</p>
+
+<h2>Een engine kiezen</h2>
+<p>Het venstermenu naast de knop ‘Zet’ in de knoppenbalk van het bronvenster toont de engines. Kies er een en klik op ‘Zet’ of druk op <kbd>⌘T</kbd>. De keuze geldt alleen voor dat document.</p>
+<p>Om nieuwe documenten met een engine te zetten, kiest u ‘Engine-bestand’ bij Instellingen › Zetten › Engine › ‘Nieuwe documenten zetten met’, en kiest u de engine in het menu ‘Engine-bestand’ daaronder. ‘Engine-lijst bewerken…’ opent de map Engines in de Finder; het menu ‘Engine-bestand’ volgt de map wanneer u bestanden toevoegt, verwijdert of een andere naam geeft. Als het gekozen engine-bestand niet meer in de map staat, toont het menu het als niet gevonden en worden documenten met LaTeX gezet.</p>
+<p>Om een document aan een engine te koppelen, zet u een regel als deze in een van de eerste twintig regels:</p>
+<pre>% !TEX program = XeLaTeX</pre>
+<p>De naam is de naam van het engine-bestand zonder <code>.engine</code>; <code>tex</code> en <code>latex</code> zetten plain TeX en LaTeX via DVI, en <code>pdftex</code> en <code>pdflatex</code> zetten ze met Direct PDF. De regel gaat voor de knoppenbalk, de instellingen en Zet met alternatieve engine. De vorm <code>% !TEX TS-program =</code> wordt op dezelfde manier gelezen. Schrijf de regel precies zoals hierboven, met één spatie aan weerszijden van het isgelijkteken; de macro Set Typesetting Program… in het menu Macro’s voegt de regel voor u in, met een lijst van engine-namen om uit te kiezen. In een project met een hoofdbestand heeft alleen het hoofdbestand de regel nodig.</p>
+<p>Zet › Zet met alternatieve engine (<kbd>⌃⌥⌘T</kbd>) zet één keer met de engine in Instellingen › Zetten › Engine › ‘Alternatieve engine’, standaard pdflatexmk, zonder de knoppenbalk te wijzigen. In het menu Zet verschijnt het onderdeel in plaats van ‘Zet’ zolang u Control en Option ingedrukt houdt. Het is geschikt voor documenten die meestal in één snelle doorgang en af en toe volledig worden gezet, met latexmk.</p>
+
+<h2>Een engine schrijven</h2>
+<p>De eenvoudigste manier om een engine te maken, is in de Finder een engine in de map Engines te dupliceren, de kopie een andere naam te geven en die in TeXShop te openen om haar te bewerken. Een engine-bestand moet de extensie <code>.engine</code> hebben en uitvoerbaar zijn; een duplicaat behoudt dat. Documenten die u daarna opent, tonen de nieuwe engine in hun knoppenbalk. Dit is XeLaTeX.engine:</p>
+<pre>#!/bin/tcsh
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+xelatex  -file-line-error -synctex=1 "$1"</pre>
+<p>De eerste regel noemt de shell of de taal van het script; zsh, bash, tcsh, Perl en andere werken allemaal, zolang het script in die taal is geschreven. TeXShop voert de engine uit in de map van het bronbestand en geeft er drie waarden aan door:</p>
+<dl>
+<dt><code>$1</code></dt><dd>De naam van het bronbestand met extensie, zonder map, zoals <code>main.tex</code>. Een script dat naar een andere map gaat, moet eerst het volledige pad vastleggen, bijvoorbeeld als <code>"$PWD/$1"</code>. In een project is dit het hoofdbestand.</dd>
+<dt><code>$2</code></dt><dd>De rest van een regel <code>% !TEX parameter = …</code> bovenaan de bron (het hoofdbestand), met meerdere opties gescheiden door spaties, bijvoorbeeld <code>% !TEX parameter = -shell-escape</code>. Zonder zo’n regel is dit één spatie.</dd>
+<dt><code>$3</code></dt><dd>De map in het veld ‘TeX-engines’ van Instellingen › Zetten › Paden, of de map in ‘Tweede TeX-engines’ als het document de regel <code>% !TEX useAlternatePath</code> bevat.</dd>
+</dl>
+<p>Wanneer de engine klaar is, opent TeXShop het PDF-bestand met de naam van de bron en de extensie <code>.pdf</code> in het voorvertoningsvenster, als dat er is, en scrolt het naar de plaats die vóór het zetten te zien was. Een script dat andere uitvoer maakt, kan met de volgende regels aangeven wat getoond moet worden; ze mogen overal in de engine staan, binnen een commentaar van de taal van het script:</p>
+<table>
+<tr><th>Regel</th><th>Effect</th></tr>
+<tr><td><code>!TEX-noPreview</code></td><td>geen voorvertoningsvenster, ook als hieronder genoemde regels aanwezig zijn</td></tr>
+<tr><td><code>!TEX-pdfPreview</code></td><td>het PDF-bestand tonen</td></tr>
+<tr><td><code>!TEX-htmlPreview</code></td><td>het HTML-bestand met dezelfde naam in het HTML-venster tonen</td></tr>
+<tr><td><code>!TEX-bothPreview</code></td><td>zowel het PDF-bestand als het HTML-bestand tonen</td></tr>
+<tr><td><code>!TEX-noConsole</code></td><td>de console niet tonen</td></tr>
+</table>
+<p>Een engine die LuaLaTeX, Biber en nog twee keer LuaLaTeX uitvoert, kan er in zsh bijvoorbeeld zo uitzien, waarbij <code>${1:r}</code> de naam zonder extensie is:</p>
+<pre>#!/bin/zsh
+export PATH="/Library/TeX/texbin:$PATH"
+lualatex -file-line-error -synctex=1 "$1"
+biber "${1:r}"
+lualatex -file-line-error -synctex=1 "$1"
+lualatex -file-line-error -synctex=1 "$1"</pre>
+
+<h2>De map Inactive</h2>
+<p>De submap <code>Engines/Inactive</code> bevat engines voor bijzondere werkwijzen, vaak met documentatie en voorbeelden, bijvoorbeeld voor latexmk, ConTeXt, Sage, PreTeXt en Typst. Om er een te gebruiken, verplaatst u die uit haar map naar de map Engines zelf. Wanneer TeXShop wordt bijgewerkt, wordt elk bestand in de map Inactive dat bij TeXShop hoort door de nieuwe versie ervan vervangen, zodat wijzigingen die u in zo’n bestand hebt aangebracht verloren gaan; bestanden die u hebt toegevoegd en bestanden die niet meer bij TeXShop horen, blijven zoals ze zijn. De bestanden die direct in de map Engines staan, worden nooit aangeraakt; engines die u daarheen hebt verplaatst en bewerkt, blijven dus behouden.</p>
+<p>Meer over engines vindt u in het hoofdstuk ‘Engines and latexmk’ van Help › TeXShop-handleiding (Engels).</p>
+</main>
+</body>
+</html>

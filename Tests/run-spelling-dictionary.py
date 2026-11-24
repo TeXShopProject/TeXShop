@@ -29,6 +29,9 @@ MUTATIONS = {
         '    return;\n    NSString *defaultSpellLanguage'),
     'tex-line-follows': ('Sources/Document/TSDocument.m',
         '                self.spellLanguageFollowsDefault = NO;\n', ''),
+    'tex-line-raw': ('Sources/Document/TSDocument.m',
+        'self.spellLanguage = TSSpellingLanguageMatching(spellcheckString, [[NSSpellChecker sharedSpellChecker] availableLanguages])\n                    ?: TSSpellingLanguageNormalized(spellcheckString);',
+        'self.spellLanguage = spellcheckString;'),
     'tex-line-resets-other': ('Sources/Document/TSDocument.m',
         '                if ([self spellingWindowIsMain])\n                    [self resetSpelling];',
         '                [self resetSpelling];'),
@@ -66,7 +69,7 @@ document, header, delegate = (sources[path] for path in
 
 init_block = document[document.index('    NSString *defaultSpellLanguage = nil;\n    self.automaticSpelling = TSSpellingDefaultIsAutomatic'):]
 init_block = init_block[:init_block.index('name:TSSpellingLanguageChangedNotification object:nil];\n') + len('name:TSSpellingLanguageChangedNotification object:nil];\n')]
-tex_block = document[document.index('                self.automaticSpelling = NO;\n                self.spellLanguage = spellcheckString;\n'):]
+tex_block = document[document.index('                self.automaticSpelling = NO;\n                // As in Settings › Spell Checking'):]
 tex_block = tex_block[:tex_block.index('[self resetSpelling];\n') + len('[self resetSpelling];\n')]
 methods = [method(document, s) for s in ('- (void)resetSpelling {', '- (void)resignSpelling {',
     '- (void)spellingLanguageDefaultChanged:(NSNotification *)notification {', '- (BOOL)spellingWindowIsMain {',
@@ -388,6 +391,22 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check([checker.language isEqual:@"de"], "The line wins over the launch choice");
     [texLine resignMain];   // Settings comes to the front.
     Check(!texLine.spellLanguageFollowsDefault && [texLine.spellLanguage isEqual:@"de"], "The line's document keeps its language");
+    // The line may name the language with a hyphen, as the help's example "de-DE" does, or with an underscore.
+    for (NSString *value in @[@"de-DE", @"de_DE", @"en-GB", @"en_GB"]) {
+        ProbeDocument *hyphen = NewDocument();
+        [hyphen applySpellcheckLine:value];
+        [hyphen becomeMain];
+        NSString *expected = [value hasPrefix:@"de"] ? @"de" : @"en_GB";
+        Check([checker.language isEqual:expected] && [hyphen.spellLanguage isEqual:expected], [@"A spellcheck line of " stringByAppendingString:value].UTF8String);
+        [hyphen resignMain];
+        Check(!hyphen.spellLanguageFollowsDefault && [hyphen.spellLanguage isEqual:expected], "The line's language is kept, not taken as a panel choice");
+        [hyphen close];
+    }
+    // A language the checker does not have is passed on with "_", as Settings does.
+    ProbeDocument *unknown = NewDocument();
+    [unknown applySpellcheckLine:@"tlh-XX"];
+    Check([unknown.spellLanguage isEqual:@"tlh_XX"], "An unknown language is written with an underscore");
+    [unknown close];
     ProbeDocument *plain = NewDocument();
     [plain becomeMain];
     Check([checker.language isEqual:@"en"], "A document without a line uses Settings");

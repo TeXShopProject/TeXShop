@@ -2,10 +2,8 @@
  "comment": "What run-interface-label-fit.py finds in windows and panels that have not been fixed yet. These are printed and do not fail the check. A problem not listed here fails it, and so does a listed one that is no longer found: remove it from the list. Compiled variants of a nib are written as *, and a window at its smallest size as (smallest size). A group marked intermittent may be missing without failing.",
  "known": [
   {
-   "reason": "Log file window (TSDocument.nib): filter check boxes too close (pt-PT, ro). Found on 2026-11-15; not fixed yet.",
+   "reason": "Log file window (TSDocument.nib): filter check boxes too close (ro). Found on 2026-11-15; not fixed yet.",
    "problems": [
-    "TOUCH pt-PT.lproj/TSDocument.nib/* [Ficheiro de registo] (smallest size) NSButton \"informação de fonte\" and NSButton \"fim do arquivo de log\" are 3.5 points apart (need 4)",
-    "TOUCH pt-PT.lproj/TSDocument.nib/* [Ficheiro de registo] NSButton \"informação de fonte\" and NSButton \"fim do arquivo de log\" are 3.5 points apart (need 4)",
     "TOUCH ro.lproj/TSDocument.nib/* [Fișier jurnal] (smallest size) NSButton \"fișiere .sty și .cls\" and NSButton \"imagini\" are 3.5 points apart (need 4)",
     "TOUCH ro.lproj/TSDocument.nib/* [Fișier jurnal] (smallest size) NSButton \"fișiere .tex\" and NSButton \"fișiere .sty și .cls\" are 3.5 points apart (need 4)",
     "TOUCH ro.lproj/TSDocument.nib/* [Fișier jurnal] NSButton \"fișiere .sty și .cls\" and NSButton \"imagini\" are 3.5 points apart (need 4)",

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asocieri de taste</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="asocieri de taste; Lista asocierilor de taste; Caracter tastat; Text rezultat; Lipiți; semnul yenului; bară oblică inversă; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm" class="current">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Asocieri de taste</h1>
+
+<p>Asocierile de taste fac ca un caracter tastat să insereze alt text. Cu lista inclusă în TeXShop, tastarea <code>^</code> dă <code>^{}</code>, cu punctul de inserare între acolade, tastarea <code>"</code> dă ghilimelele TeX <code>``''</code> în jurul punctului de inserare, iar tastarea <code>ä</code> dă <code>\"a</code>. O asociere de taste poate pune și textul selectat în interior: selectați un cuvânt și tastați <code>^</code> pentru a obține <code>^{cuvânt}</code>. Lista conține 45 de asocieri de taste.</p>
+
+<p>Inițial, asocierile de taste sunt dezactivate. Activați „Folosiți asocieri de taste (implicit pentru documentele noi)” în Configurări › Tastatură pentru ca ele să fie activate în fiecare document pe care îl deschideți. Sursă › Asocieri de taste le activează sau le dezactivează pentru documentul din prim-plan, de exemplu pentru a tasta ca atare un caracter care are o asociere de taste. Articolul „Asocieri de taste”, care poate fi adăugat în bara de instrumente, face același lucru.</p>
+
+<h2>Lista asocierilor de taste</h2>
+
+<p>Grupul „Asocieri de taste” din Configurări › Tastatură enumeră asocierile de taste, fiecare cu „Caracter tastat” și „Text rezultat”. Faceți dublu clic pe o celulă pentru a o edita; faceți clic pe + sub listă pentru a adăuga o asociere de taste și pe − pentru a le șterge pe cele selectate, și trageți rândurile pentru a le schimba ordinea. Un caracter tastat este un singur caracter. Modificările sunt salvate imediat și acționează și în documentele deschise; Editare › Infirmați le retrage.</p>
+
+<p>Într-un text rezultat, elementele speciale sunt afișate ca mici etichete: textul selectat, locul punctului de inserare, textul din clipboard, un marcaj (•) pentru Editare › Marcaje, o întrerupere de rând și un tabulator. Adăugați-le cu „Inserați” de sub listă sau tastați-le: <code>#SEL#</code>, <code>#INS#</code>, <code>#PASTE#</code> și <code>•</code>, Opțiune-Return pentru o întrerupere de rând și Opțiune-Tab pentru un tabulator. Butonul ? le enumeră pe toate.</p>
+
+<p>O bifă în coloana „Lipiți” aplică asocierea de taste și textului pe care îl lipiți în sursă sau îl plasați pe ea: fiecare apariție a caracterului tastat este înlocuită cu textul rezultat. Ca la tastare, acest lucru se întâmplă doar cât timp asocierile de taste sunt activate pentru document. O asociere de taste al cărei text rezultat conține selecția, punctul de inserare, clipboardul sau un marcaj nu poate fi bifată.</p>
+
+<h2>Semnul yenului</h2>
+
+<p>Pe o tastatură japoneză, tasta pentru bara oblică inversă poate tasta semnul yenului (¥). În lista inclusă în TeXShop, ¥ dă o singură bară oblică inversă, iar caseta sa „Lipiți” este bifată. Astfel, când codificarea documentelor noi este UTF-8, este suficient să activați asocierile de taste pentru ca ¥ tastat sau lipit în sursă să devină \. Dacă lista dumneavoastră provine dintr-o versiune mai veche a TeXShop, setați singur textul rezultat al lui ¥ la o singură bară oblică inversă și bifați caseta sa „Lipiți”.</p>
+
+<p>Lista este păstrată în ~/Library/TeXShop/Keyboard/autocompletion.plist; consultați <a href="configure_autocompletion.htm">Modificarea asocierilor de taste</a>.</p>
+</main>
+</body>
+</html>

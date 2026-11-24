@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MakeIndex</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="index; makeindex; makeidx; mendex; upmendex; Programme d’index; fichier idx">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm" class="current">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>MakeIndex</h1>
+<p>MakeIndex trie les entrées d’index d’un document LaTeX et écrit l’index. Pour ajouter un index à un document :</p>
+<ol>
+<li>Placez <code>\usepackage{makeidx}</code> et <code>\makeindex</code> dans le préambule.</li>
+<li>Placez <code>\printindex</code> à l’endroit où l’index doit apparaître, souvent juste avant <code>\end{document}</code>.</li>
+<li>Marquez les entrées dans le texte :
+<pre>There are many animals in the world\index{animal}.
+Examples include bears\index{animal!bear}
+and tigers\index{animal!tiger}.</pre></li>
+</ol>
+<p>Pour créer l’index, composez le document, puis choisissez Composition › MakeIndex (<kbd>⇧⌘I</kbd>), ou choisissez MakeIndex dans le menu local situé à côté du bouton « Composer » et cliquez sur « Composer », puis composez de nouveau. La composition avec latexmk exécute MakeIndex d’elle-même.</p>
+<p>MakeIndex exécute le programme indiqué dans Réglages › Composition › « Outils associés » › « Programme d’index », suivi du nom du fichier idx. La valeur par défaut est <code>makeindex</code>. Indiquez un autre programme, comme <code>mendex</code> ou <code>upmendex</code> pour les documents japonais, avec les options dont il a besoin, par exemple <code>upmendex -s mystyle.ist</code>. Les profils du moteur règlent ce champ : <code>makeindex</code> pour les profils occidentaux, <code>mendex</code> pour pLaTeX + dvipdfmx, et <code>upmendex</code> pour upLaTeX + dvipdfmx et LuaLaTeX (japonais).</p>
+<p>Source › Surligner les entrées d'index affiche les arguments de <code>\index</code> dans la couleur « Index » du thème ; consultez <a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a>.</p>
+</main>
+</body>
+</html>

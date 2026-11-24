@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supprimer les fichiers AUX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Fichiers AUX à la corbeille; Fichiers AUX à la corbeille et composer; aux; log; fichiers auxiliaires; OtherTrashExtensions; AggressiveTrashAUX">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm" class="current">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Supprimer les fichiers AUX</h1>
+<p>Lorsque LaTeX compose <code>Galois.tex</code>, il écrit des fichiers auxiliaires tels que <code>Galois.aux</code>, <code>Galois.toc</code> et <code>Galois.log</code>, que la composition suivante lit pour les renvois, la table des matières, etc. Si la composition s’arrête en cours de route, par exemple après une erreur, ces fichiers peuvent rester endommagés, et la composition suivante signale des erreurs qui ne sont pas dans la source, souvent juste avant <code>\begin{document}</code>. Placer les fichiers auxiliaires dans la Corbeille puis recomposer règle le problème.</p>
+
+<h2>Placer les fichiers dans la Corbeille</h2>
+<ul>
+<li>Fichier › Fichiers AUX à la corbeille (<kbd>⌃⌘A</kbd>), ou le bouton « Fichiers AUX à la corbeille » de la console, place les fichiers auxiliaires du document dans la Corbeille.</li>
+<li>Composition › Fichiers AUX à la corbeille et composer (<kbd>⌥⌘T</kbd>) fait la même chose, puis compose. Dans le menu Composition, cette commande apparaît à la place de « Composer » tant que vous maintenez la touche Option enfoncée.</li>
+</ul>
+<p>Les fichiers placés dans la Corbeille sont ceux du dossier de la source qui portent son nom et l’une de ces extensions :</p>
+<pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
+gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
+lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
+ttt  wrm  xref</pre>
+<p>Les fichiers que SyncTeX laisse avec <code>(busy)</code> à la fin de leur nom quand la composition est interrompue sont également placés dans la Corbeille. Le fichier <code>.bbl</code> de BibTeX est conservé.</p>
+<p>Dans un projet dont les fichiers de chapitre désignent un fichier racine avec <code>% !TEX root</code>, ce sont les fichiers du fichier racine qui sont placés dans la Corbeille, y compris lorsque la commande est donnée depuis un fichier de chapitre.</p>
+
+<h2>Variantes</h2>
+<ul>
+<li>Maintenez la touche Maj enfoncée en choisissant « Fichiers AUX à la corbeille » ou en cliquant sur le bouton pour placer aussi le fichier PDF du document dans la Corbeille. D’habitude, l’ancien PDF est conservé, afin que la fenêtre d’aperçu ait quelque chose à afficher si la composition échoue.</li>
+<li>Maintenez la touche Option enfoncée en choisissant « Fichiers AUX à la corbeille » ou en cliquant sur le bouton pour nettoyer tout un projet : tous les fichiers portant l’une des extensions ci-dessus, dans le dossier du fichier racine et dans tous les dossiers qu’il contient, sont placés dans la Corbeille, quel que soit leur nom. Cela supprime aussi les fichiers <code>.aux</code> que <code>\include</code> écrit pour les chapitres situés dans des sous-dossiers.</li>
+</ul>
+<p>Deux réglages cachés modifient ce comportement. Pour ajouter des extensions à la liste, par exemple <code>dvi</code>, tapez dans Terminal</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
+<p>et pour revenir à la liste standard</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array</pre>
+<p>Pour faire du comportement avec Option le comportement standard de « Fichiers AUX à la corbeille » :</p>
+<pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
+</main>
+</body>
+</html>

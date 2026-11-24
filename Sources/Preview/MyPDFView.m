@@ -3506,7 +3506,7 @@ failed. If you change the code below, be sure to test carefully!
 	return pageStyle;
 }
 
-// action for menu items "Single Page/Two Page/Multi-Page/Double Multi-Page"
+// action for menu items "Single Page/Double Page/MultiPage/Double MultiPage"
 // -- tags should be correctly set
 - (void)changePageStyle: (id)sender
 {

@@ -14,6 +14,24 @@ NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcut
 @property NSUInteger settleRounds;
 @end
 
+void TSGiveFullScreenGlobeKey(NSMenu *menu)
+{
+    NSMutableArray<NSMenuItem *> *items = [NSMutableArray array];
+    TSVisitMenu(menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (item.action == @selector(toggleFullScreen:) && !item.submenu) [items addObject:item];
+    });
+    for (NSMenuItem *item in items) {
+        // A hidden copy that AppKit added for a key the item had keeps no key.
+        if (item.hidden) { item.keyEquivalent = @""; continue; }
+        // The modifier first: the key alone would be Command-F (Find) for a moment.
+        item.allowsAutomaticKeyEquivalentLocalization = NO;
+        item.keyEquivalentModifierMask = NSEventModifierFlagFunction;
+        item.keyEquivalent = @"f";
+        // Where AppKit does not take the Globe key, the item has no key rather than a bare F.
+        if (item.keyEquivalentModifierMask != NSEventModifierFlagFunction) item.keyEquivalent = @"";
+    }
+}
+
 @implementation TSKeyboardShortcuts
 + (instancetype)sharedController {
     static TSKeyboardShortcuts *controller;
@@ -32,6 +50,8 @@ NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcut
     if (self.store != nil) { [self refreshMenuAndMacros]; return; }
     NSMenu *menu = NSApp.mainMenu;
     if (menu == nil) { return; }
+    // The store reads Globe-F as the default of Enter Full Screen.
+    TSGiveFullScreenGlobeKey(menu);
     self.store = [[TSShortcutStore alloc] initWithMenu:menu defaults:NSUserDefaults.standardUserDefaults];
     self.store.macroProvider = self.macroProvider;
     [self observeMenuChanges];

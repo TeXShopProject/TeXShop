@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scripts con comandos de shell</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="AppleScript; script de shell; do shell script; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<meta name="description" content="AppleScript; script de shell; do shell script; Run pdfLaTeX with Shell Escape; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
 </nav>
 <main id="content">
 <h1>Scripts con comandos de shell</h1>
-<p>Esta página usa la macro pdflatexc de Claus Gerhardt, en Macros › Claus Gerhardt Macros, para mostrar cómo un AppleScript llama a un script de shell. El script de shell en sí es sencillo: añade las carpetas de los programas de TeX a la ruta de búsqueda y ejecuta pdflatex con <code>--shell-escape</code>. Sus propios scripts probablemente harán más, por ejemplo ejecutar varios programas uno tras otro; es entonces cuando estas técnicas resultan útiles.</p>
+<p>Esta página usa la macro Run pdfLaTeX with Shell Escape de Claus Gerhardt, en Macros › Claus Gerhardt Macros, para mostrar cómo un AppleScript llama a un script de shell. El script de shell en sí es sencillo: añade las carpetas de los programas de TeX a la ruta de búsqueda y ejecuta pdflatex con <code>--shell-escape</code>. Sus propios scripts probablemente harán más, por ejemplo ejecutar varios programas uno tras otro; es entonces cuando estas técnicas resultan útiles.</p>
 
 <h2 id="shell-script">El script de shell</h2>
 <p>El script de shell es ~/Library/TeXShop/bin/pdflatexc. No depende de TeXShop: si su carpeta está en la ruta de búsqueda, al escribir <code>pdflatexc myfile.tex</code> en Terminal se ejecuta. Es este:</p>

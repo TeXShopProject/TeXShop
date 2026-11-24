@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A janela de pré-visualização</title>
+<meta name="description" content="janela de pré-visualização; formato de apresentação; disposição da página; disposição de páginas duplas; ampliação; Ajustar à janela; lupa; Selecionar PDF; copiar imagens; pesquisar no PDF; gaveta; pop-ups de links; pop-up fixado; dividir janela; Trocar vistas; ecrã completo; barra de ferramentas de anotações">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm" class="current">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>A janela de pré-visualização</h1>
+
+<p>A janela de pré-visualização mostra o ficheiro PDF composto. É atualizada após cada composição e fica na página que estava a ler. As suas definições estão em Definições › Pré-visualização: as do grupo «Ao abrir um documento» aplicam-se quando um documento é aberto, e o menu Pré-visualização altera-as para a janela que está à frente.</p>
+
+<h2>Percorrer o documento</h2>
+
+<p>Pré-visualização › Formato de apresentação escolhe a disposição das páginas: «Uma página» e «Duas páginas» mostram uma página ou um par de páginas, e «Páginas contínuas» e «Duas páginas contínuas» mostram todas as páginas numa longa coluna. «Estilo predefinido da página», em «Ao abrir um documento», define o formato com que uma janela começa. «Página anterior» e «Página seguinte», no menu Pré-visualização e na barra de ferramentas, mudam de página, o campo «Ir para pág.» da barra de ferramentas vai para uma página pelo seu número, e as duas setas de «Retroceder/Avançar» da barra de ferramentas regressam aos locais por onde passou, como num navegador web.</p>
+
+<p>Em «Uma página» e «Duas páginas», deslocar para além do topo ou do fundo de uma página muda de página; ative «Não mudar de página ao deslocar» em Definições › Pré-visualização › Visualização e navegação para parar no limite da página. As teclas de seta para cima e para baixo deslocam dentro da página. As teclas de seta para a esquerda e para a direita deslocam na horizontal quando uma página ampliada é mais larga do que a janela e, caso contrário, mudam de página; «Mudar sempre de página com as teclas de seta esquerda e direita» faz com que mudem sempre de página.</p>
+
+<p>A barra de ferramentas tem dois menus para as páginas; se tiverem sido removidos, Janela › Personalizar barra de ferramentas... volta a colocá-los. «Disposição da página» escolhe o formato de apresentação. «Disposição de páginas duplas» escolhe, apenas para este documento, se um par de páginas se lê da esquerda para a direita ou da direita para a esquerda, e se a primeira página é mostrada sozinha como capa; o seu item «Repor definições do documento» regressa às definições. As definições são «Direção das páginas» e «Mostrar a primeira página como capa», em «Ao abrir um documento», e as linhas especiais <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> e <code>% !TEX standardDisplay</code> definem-nas para um documento.</p>
+
+<h2>Ampliação</h2>
+
+<p>Pré-visualização › Ampliação oferece estas opções:</p>
+<dl>
+<dt>Ajustar à janela</dt>
+<dd>A página ocupa a largura da janela, e redimensionar a janela altera a ampliação.</dd>
+<dt>Ajustar à largura do conteúdo</dt>
+<dd>Como «Ajustar à janela», mas sem as margens brancas: a parte composta das páginas ocupa a largura da janela.</dd>
+<dt>Ampliação fixa</dt>
+<dd>A ampliação mantém-se como foi definida no campo «Ampliação» da barra de ferramentas ou com «Ampliar» (<kbd>⇧⌘+</kbd>) e «Reduzir» (<kbd>⇧⌘_</kbd>).</dd>
+<dt>Tamanho real</dt>
+<dd>As páginas com o tamanho do papel.</dd>
+</dl>
+
+<p>«Ampliar para o conteúdo» e «Ampliar para a largura do conteúdo», no fim do mesmo submenu, definem a ampliação uma vez, de modo que a parte composta da página caiba na janela ou ocupe a sua largura. Alterar a ampliação com a barra de ferramentas, com estes comandos ou com um gesto de beliscar no trackpad passa a janela para «Ampliação fixa»; escolha novamente «Ajustar à janela» para voltar atrás. Clicar na palavra junto ao campo «Ampliação» abre o menu «Ampliação». «Após redimensionar a janela» e «Ampliação», em «Ao abrir um documento», definem a ampliação com que uma janela começa.</p>
+
+<h2>As ferramentas do rato</h2>
+
+<p>O item «Modo do rato» da barra de ferramentas escolhe o que o cursor faz na página. «Deslocar» move a página. «Selecionar texto» seleciona texto para copiar. «Ampliar» e «Ampliar mais» mostram uma lupa enquanto o botão do rato está premido: faça duplo clique e mantenha premido para uma lupa maior, faça triplo clique e mantenha premido para ampliar a janela inteira, e prima Comando, Opção ou Controlo para ampliar mais; junte Shift a uma destas teclas para ampliar menos. «Selecionar PDF» seleciona uma área da página para copiar como imagem. «Modo predefinido do rato», em «Ao abrir um documento», escolhe a ferramenta com que uma janela começa.</p>
+
+<p>Com «Selecionar PDF», arraste sobre uma área da página e depois copie-a com <kbd>⌘C</kbd> ou arraste-a para outra aplicação ou para a secretária; Pré-visualização › Guardar seleção num ficheiro... guarda-a num ficheiro. Pré-visualização › Formato de cópia escolhe se a cópia é em PDF ou uma imagem como PNG, TIFF ou JPEG; «Formato de cópia da imagem», em Definições › Pré-visualização › Copiar imagens, define a predefinição. Consulte <a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e largar</a>.</p>
+
+<h2 id="search">Pesquisa e gaveta</h2>
+
+<p>Escreva uma palavra no campo «Pesquisar PDF» da barra de ferramentas e prima Return para selecionar a primeira ocorrência; <kbd>⌘G</kbd> vai para a seguinte. Enquanto a janela de pré-visualização está à frente, <kbd>⌘F</kbd> vai para este campo.</p>
+
+<p>Pré-visualização › Gaveta, ou o item «Gaveta» da barra de ferramentas, mostra a gaveta. A parte superior é o índice do documento, que o pacote hyperref cria a partir dos capítulos e das secções; clique numa entrada para ir até lá, ou escolha uma com as teclas de seta e prima Return. A parte inferior é um segundo campo de pesquisa, que enumera todas as ocorrências com a respetiva página; clique numa para ir até lá.</p>
+
+<h2>Links e pop-ups de links</h2>
+
+<p>Os links criados pelo pacote hyperref funcionam na pré-visualização: clique numa referência para ir para o teorema ou para a entrada da bibliografia, e a seta esquerda de «Retroceder/Avançar» regressa. Um endereço web abre-se no seu navegador.</p>
+
+<p>Mantenha o cursor sobre um link para ver o local de destino num pop-up, com o número da página no canto inferior direito. O pop-up desaparece ao fim de alguns segundos. As teclas mantidas premidas quando o pop-up aparece alteram-no:</p>
+<dl>
+<dt>Shift</dt>
+<dd>mostra o pop-up acima do link em vez de abaixo.</dd>
+<dt>Comando</dt>
+<dd>mostra um pop-up maior.</dd>
+<dt>Opção</dt>
+<dd>fixa o pop-up, para que permaneça. Premir Opção enquanto um pop-up é mostrado também o fixa.</dd>
+<dt>Controlo</dt>
+<dd>inverte «Pop-ups de links» para este link: enquanto «Pop-ups de links» está ativado, não aparece nenhum pop-up, para que nenhum estorve um clique com Controlo; enquanto está desativado, o pop-up aparece na mesma.</dd>
+</dl>
+
+<p>Um pop-up fixado pode ser movido, redimensionado e deslocado, e o seu texto pode ser selecionado e copiado. Fica no seu lugar na respetiva página enquanto clica, desloca, amplia, segue links ou trabalha noutras janelas, até premir Escape na janela de pré-visualização. Enquanto um pop-up está fixado, os outros pop-ups continuam a aparecer, e Opção fixa um deles em vez do anterior.</p>
+
+<p>Pré-visualização › Pop-ups de links ativa ou desativa os pop-ups para a janela, e «Pop-ups de links», em «Ao abrir um documento», define se estão ativados quando um documento é aberto. «Mostrar o número da página nos pop-ups de links», em Definições › Pré-visualização › Visualização e navegação, mostra no pop-up o número da página de destino; desative-a para o omitir. Não aparecem pop-ups enquanto a ferramenta «Selecionar PDF» está escolhida.</p>
+
+<h2>Dividir a janela</h2>
+
+<p>Janela › Dividir janela (<kbd>⌃2</kbd>), ou o item «Dividir janela» da barra de ferramentas, divide a janela de pré-visualização em duas partes que podem mostrar locais diferentes do documento; escolha-o novamente para remover a divisão. Mantenha premida a tecla Opção para dividir a janela lado a lado (Janela › Dividir janela verticalmente, <kbd>⌃⌥2</kbd>). Cada parte tem o seu próprio formato de apresentação e a sua própria ampliação. A parte em que clicou por último é a parte ativa, assinalada com uma linha fina na cor de realce: a barra de ferramentas, a gaveta, o SyncTeX e o menu Pré-visualização atuam sobre ela, e remover a divisão mantém-na.</p>
+
+<p>Clique num link interno com a tecla Controlo premida, ou com o botão direito do rato, e escolha «Dividir janela com link» para mostrar o local de destino na outra parte, mantendo o link à vista; se for necessário, a janela é dividida primeiro.</p>
+
+<p>Janela › Trocar vistas (<kbd>⌥2</kbd>) troca as duas partes de uma janela dividida. Numa janela que não está dividida, alterna entre duas vistas do documento, cada uma com o seu local, formato de apresentação e ampliação, para que possa ir e voltar entre dois locais.</p>
+
+<h2>Ecrã completo</h2>
+
+<p>Janela › Ecrã completo (<kbd>🌐F</kbd>) mostra a pré-visualização no ecrã inteiro. A divisão da janela é então removida, e a janela usa a ampliação e o formato de apresentação usados da última vez em ecrã completo; sair do ecrã completo repõe os anteriores. Para manter a divisão, a ampliação e o formato de apresentação, ative «Manter a ampliação, o formato de apresentação e a divisão ao passar para ecrã completo» em Definições › Pré-visualização › Visualização e navegação. Em ecrã completo, o primeiro Escape fecha um pop-up fixado e o segundo sai do ecrã completo.</p>
+
+<h2>Anotações</h2>
+
+<p>Pré-visualização › Mostrar barra de ferramentas de anotações mostra as ferramentas de anotação por baixo da barra de ferramentas da janela. Clique em «Modo de edição», na extremidade esquerda da barra de ferramentas de anotações, e use depois os seus botões para rasurar, destacar ou sublinhar o texto selecionado, ou para acrescentar formas, setas, texto e notas. As anotações não fazem parte do código-fonte, e a composição seguinte substitui o ficheiro PDF, por isso guarde-as com «Guardar anotações…» na barra de ferramentas de anotações; este comando guarda uma cópia do ficheiro PDF, chamada, por exemplo, Fourier-Annotated.pdf para Fourier.tex. Depois de trabalhar em «Modo de edição», o TeXShop propõe guardar as anotações antes de compor de novo ou de fechar a janela. O Manual do TeXShop (em inglês) descreve as anotações em pormenor.</p>
+
+<h2>Mais</h2>
+
+<p>Clique na pré-visualização com a tecla Comando premida para ir para o local correspondente no código-fonte; consulte <a href="basic_typesetting.htm">Compor documentos</a>. «Rodar para a direita» e «Rodar para a esquerda», no menu Pré-visualização, rodam as páginas. Quando outra aplicação, como o latexmk, reescreve o ficheiro PDF, a pré-visualização recarrega-o no mesmo local quando regressa ao TeXShop ou à janela de pré-visualização; ative «Vigiar sempre as alterações ao PDF feitas por outras apps» em Definições › Pré-visualização › Atualização para que seja recarregado de imediato, mesmo com o TeXShop em segundo plano. Pré-visualização › Guardar posição da pré-visualização faz com que as novas janelas de pré-visualização se abram no local e com o tamanho da janela que está à frente.</p>
+</main>
+</body>
+</html>

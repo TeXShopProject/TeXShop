@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panoul LaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Panoul LaTeX; simboluri; litere grecești; medii; tipografie; amssymb; completion.plist; butoane personalizate">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm" class="current">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Panoul LaTeX</h1>
+<p>Fereastră › Panoul LaTeX… deschide un panou cu cod LaTeX: simboluri matematice, litere grecești, funcții, caractere accentuate și internaționale, medii și comenzi tipografice. Faceți clic în sursă acolo unde trebuie să ajungă codul, apoi faceți clic pe un buton din panou. Codul acestuia este inserat la punctul de inserare. Panoul rămâne în fața ferestrelor sursă în timp ce lucrați.</p>
+<p>Butoanele sunt așezate pe pagini. Alegeți o pagină cu butoanele din partea de sus a fiecărei părți a panoului: „Matematică”, „Litere grecești”, „Simboluri”, „Funcții” și „Internațional”, respectiv „Medii”, „Tipografie” și „Personalizat”.</p>
+<p>Dacă este selectat text când faceți clic pe un buton de tipografie sau de mediu, textul selectat este pus în interiorul codului inserat, ca în <code>\textbf{text selectat}</code>.</p>
+<p>Unele simboluri au nevoie de pachetul amssymb. Adăugați această linie în preambulul unui document care le folosește:</p>
+<pre>\usepackage{amssymb}</pre>
+
+<h2>Personalizarea panoului</h2>
+<p>Codul pe care îl inserează fiecare buton este păstrat în <code>~/Library/TeXShop/LatexPanel/completion.plist</code>. Deschideți acest fișier în TeXShop pentru a-l modifica; comentariile de la începutul lui explică modul în care este organizat. Numele butoanelor standard nu pot fi schimbate, dar codul pe care îl inserează poate fi schimbat. În acest cod:</p>
+<ul>
+<li><code>#SEL#</code> reprezintă textul selectat;</li>
+<li><code>#INS#</code> marchează unde ajunge punctul de inserare după inserarea codului;</li>
+<li><code>#PASTE#</code> reprezintă textul din clipboard.</li>
+</ul>
+<p>Pagina „Personalizat” are loc pentru până la șaisprezece butoane proprii. Fiecare este definit în lista <code>Customized</code> a fișierului prin două șiruri, numele butonului și codul pe care îl inserează:</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>Salvați fișierul în UTF-8, apoi închideți și reporniți TeXShop pentru a vedea modificările în panou. Dacă fișierul lipsește sau este deteriorat, TeXShop îl înlocuiește cu propria copie. Consultați <a href="configure_panel.htm">Modificarea panoului LaTeX</a> și <a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

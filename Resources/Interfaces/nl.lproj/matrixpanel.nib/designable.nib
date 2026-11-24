@@ -292,7 +292,7 @@
 							<object class="NSButtonCell" key="NSProtoCell" id="376160260">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">137887744</int>
-								<string key="NSContents">Löschen</string>
+								<string key="NSContents">Wis</string>
 								<reference key="NSSupport" ref="143750659"/>
 								<int key="NSTag">-1</int>
 								<int key="NSButtonFlags">-2038284033</int>

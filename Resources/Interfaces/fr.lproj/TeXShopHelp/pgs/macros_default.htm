@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comprendre les macros par défaut</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macros par défaut; Insert Begin/End; #SEL#; #INS#; #PASTE#; repères; placer le curseur; macros de texte">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide sur les macros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Préliminaires</a></li>
+<li><a href="macros_default.htm" class="current">Comprendre les macros par défaut</a></li>
+<li><a href="macros_rearrange.htm">Réorganiser le menu Macros</a></li>
+<li><a href="macros_define.htm">Définir de nouvelles macros</a></li>
+<li><a href="macros_applescript.htm">Macros AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macros AppleScript par défaut</a></li>
+<li><a href="macros_defapplescript.htm">Définir des macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Créer des zones de dialogue</a></li>
+<li><a href="macros_writingcompletescripts.htm">Écrire des scripts avec les commandes de composition de TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Écrire des scripts avec des commandes shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Comprendre les macros par défaut</h1>
+<p>Le meilleur moyen de comprendre les macros par défaut est de les examiner dans l’éditeur de macros (Macros › Ouvrir l'éditeur de macros...) : sélectionnez une macro dans la liste, et son contenu apparaît à côté.</p>
+<p>Supposons par exemple que vous vouliez un environnement theorem. Tapez le mot theorem, sélectionnez-le et choisissez Macros › Insert Begin/End. Le mot est remplacé par</p>
+<pre>\begin{theorem}
+
+\end{theorem}</pre>
+<p>et le point d’insertion est placé sur la ligne intermédiaire.</p>
+<p>Insert Begin/End est une macro AppleScript (consultez <a href="macros_applescript.htm">Macros AppleScript</a>). Une macro de texte qui fait la même chose lorsqu’un mot est sélectionné s’écrit :</p>
+<pre>\begin{#SEL#}
+#INS#
+\end{#SEL#}</pre>
+
+<h2 id="placeholders">Espaces réservés dans les macros de texte</h2>
+<p>Le texte d’une macro de texte est inséré dans la source, avec les remplacements suivants :</p>
+<dl>
+<dt>#SEL#</dt><dd>est remplacé par le texte qui était sélectionné lorsque la macro a été choisie, ou par rien si aucun texte n’était sélectionné.</dd>
+<dt>#INS#</dt><dd>indique où va le point d’insertion. En son absence, le point d’insertion est placé à la fin du texte inséré.</dd>
+<dt>#PASTE#</dt><dd>est remplacé par le texte du presse-papiers, ou par rien si le presse-papiers ne contient pas de texte.</dd>
+<dt>•</dt><dd>est un repère, vers lequel Édition › Repères permet de se déplacer.</dd>
+</dl>
+<p>Dans l’éditeur de macros, ces espaces réservés s’affichent sous forme de jetons arrondis ; <a href="macros_define.htm">Définir de nouvelles macros</a> explique comment les insérer. Avec ces connaissances, les macros par défaut sont faciles à comprendre et à modifier.</p>
+</main>
+</body>
+</html>

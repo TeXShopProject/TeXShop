@@ -23,11 +23,11 @@ tiToolTipProgram			= "Elegir el programa que compone";
 
 tiLabelTeX				= "plain TeX";
 tiPaletteLabelTeX			= "plain TeX";
-tiToolTipTeX				= "Compilar el código usando plain TeX";
+tiToolTipTeX				= "Componer el código con plain TeX";
 
 tiLabelLaTeX				= "LaTeX";
 tiPaletteLabelLaTeX			= "LaTeX";
-tiToolTipLaTeX				= "Compilar el código usando LaTeX";
+tiToolTipLaTeX				= "Componer el código con LaTeX";
 
 tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
@@ -264,17 +264,17 @@ tiToolTipHtmlSearch           = "Buscar";
 
 "Page Layout" = "Disposición de página";
 "tiLabelTSPreviewAppearance" = "Aspecto";
-"Continuous Two Pages" = "Multipágina doble";
+"Continuous Two Pages" = "Dos páginas continuas";
 "Restore Document Settings" = "Restaurar ajustes del documento";
-"Single Page" = "Página simple";
+"Single Page" = "Una página";
 "PreviewAppearanceDark" = "Oscuro";
 "PreviewAppearanceLight" = "Claro";
-"Two Pages" = "Página doble";
+"Two Pages" = "Dos páginas";
 "PreviewAppearanceSystem" = "Sistema";
 "Left to right" = "De izquierda a derecha";
-"Two-Page Arrangement" = "Con páginas dobles";
+"Two-Page Arrangement" = "Disposición de dos páginas";
 "Applies when displaying two pages" = "Se aplica al mostrar dos páginas";
-"Continuous" = "Multipágina";
+"Continuous" = "Una página continua";
 "Right to left" = "De derecha a izquierda";
 "Show first page alone as cover" = "Mostrar la primera página sola como portada";
 "tiToolTipUnsplit" = "Quitar la división de la ventana";

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inclure des images</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="inclure des images; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; Convertir TIFF">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm" class="current">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Inclure des images</h1>
+<p>Lorsqu’il compose directement en PDF, LaTeX inclut des images aux formats PDF, PNG et JPEG. Le PDF garde les dessins au trait et le texte nets à toutes les tailles ; utilisez-le pour les schémas et les graphiques. PNG et JPEG conviennent aux captures d’écran et aux photographies.</p>
+<p>Chargez le paquet graphicx dans le préambule :</p>
+<pre>\usepackage{graphicx}</pre>
+<p>et incluez une image à l’endroit où elle doit apparaître :</p>
+<pre>\includegraphics[width=0.8\textwidth]{diagram}</pre>
+<p>L’extension peut être omise ; LaTeX cherche alors <code>diagram.pdf</code>, <code>diagram.png</code>, <code>diagram.jpg</code> et les autres formats qu’il connaît. Modifiez la largeur pour changer la taille de l’image. Placez les fichiers d’images dans le dossier du document, ou indiquez un chemin relatif à celui-ci, comme <code>figures/diagram</code>.</p>
+
+<h2>Fichiers EPS</h2>
+<p>TeX Live convertit automatiquement les images EPS en PDF pendant la composition, à l’aide d’epstopdf, à condition que le document charge graphicx. Le fichier converti, <code>diagram-eps-converted-to.pdf</code>, est écrit à côté du fichier EPS et utilisé dès lors.</p>
+<p>Un fichier EPS ouvert dans TeXShop est aussi converti : TeXShop écrit un fichier PDF du même nom à côté de lui, ou dans un dossier temporaire quand le dossier du fichier EPS n’est pas accessible en écriture, et l’affiche.</p>
+
+<h2>Fichiers TIFF</h2>
+<p>LaTeX ne peut pas inclure de fichiers TIFF. Choisissez Fichier › Convertir TIFF pendant qu’une fenêtre source est active : une zone de dialogue montre le dossier du document, où seuls les fichiers TIFF peuvent être choisis. Sélectionnez-en un ou plusieurs et cliquez sur « Convertir ». Chacun est converti en un fichier PNG du même nom dans le même dossier ; les fichiers TIFF sont conservés.</p>
+
+<h2>Composer via DVI</h2>
+<p>Les documents qui utilisent du code PostScript, par exemple avec le paquet pstricks, sont composés avec la méthode « Via DVI », qui exécute dvips par défaut. Les images sont alors incluses au format EPS ; les fichiers PDF, PNG et JPEG ne peuvent pas être utilisés. Les profils du moteur dont le nom se termine par « + dvipdfmx » composent aussi « Via DVI », mais ils exécutent dvipdfmx au lieu de dvips ; avec <code>\usepackage[dvipdfmx]{graphicx}</code>, les fichiers PDF, PNG et JPEG peuvent y être utilisés. Voir <a href="basic_alternatetypeset.htm">Mode de composition alternatif</a>.</p>
+</main>
+</body>
+</html>

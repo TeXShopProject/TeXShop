@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>シェルコマンドでスクリプトを書く</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; シェルスクリプト; do shell script; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<meta name="description" content="AppleScript; シェルスクリプト; do shell script; Run pdfLaTeX with Shell Escape; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
 </nav>
 <main id="content">
 <h1>シェルコマンドでスクリプトを書く</h1>
-<p>このページでは、「マクロ」→「Claus Gerhardt Macros」にあるClaus Gerhardtのマクロpdflatexcを使って、AppleScriptからシェルスクリプトを呼び出す方法を説明します。シェルスクリプト自体は単純で、TeXのプログラムのフォルダを検索パスに加え、pdflatexを<code>--shell-escape</code>付きで実行するだけです。自分のスクリプトでは、いくつかのプログラムを順に実行するなど、もっと多くのことをするでしょう。そのときにここで説明する技法が役に立ちます。</p>
+<p>このページでは、「マクロ」→「Claus Gerhardt Macros」にあるClaus Gerhardtのマクロ「Run pdfLaTeX with Shell Escape」を使って、AppleScriptからシェルスクリプトを呼び出す方法を説明します。シェルスクリプト自体は単純で、TeXのプログラムのフォルダを検索パスに加え、pdflatexを<code>--shell-escape</code>付きで実行するだけです。自分のスクリプトでは、いくつかのプログラムを順に実行するなど、もっと多くのことをするでしょう。そのときにここで説明する技法が役に立ちます。</p>
 
 <h2 id="shell-script">シェルスクリプト</h2>
 <p>シェルスクリプトは~/Library/TeXShop/bin/pdflatexcです。TeXShopには依存しないので、そのフォルダが検索パスに入っていれば、ターミナルで<code>pdflatexc myfile.tex</code>と入力して実行できます。内容は次のとおりです。</p>

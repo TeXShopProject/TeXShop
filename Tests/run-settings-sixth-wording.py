@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check reviewed sixth-audit wording contracts by reverting isolated resources."""
 from pathlib import Path
-import json,shutil,subprocess,tempfile,sys
+import json,os,shutil,subprocess,tempfile,sys
 R=Path(__file__).resolve().parents[1]
 expected=json.loads((R/'Tests/Fixtures/SettingsSixthWording.json').read_text())
 with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
@@ -16,7 +16,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
         return subprocess.run(['python3',str(R/'Tests/run-settings-ui-wording.py'),'--interfaces',str(T/'Resources/Interfaces')],capture_output=True,text=True)
     checker=(R/'Tests/check-settings-guidance.py').read_text().replace('ROOT = Path(__file__).resolve().parents[1]','ROOT = Path('+repr(str(T))+')')
     def guidance():
-        return subprocess.run(['python3','-c',checker],capture_output=True,text=True)
+        # The mutations are of the other books; the books still in translation are check-settings-guidance.py's own concern.
+        return subprocess.run(['python3','-c',checker],capture_output=True,text=True,env=dict(os.environ,TEXSHOP_HELP_TRANSLATIONS_PENDING='1'))
     for run in [wording,guidance]:
         result=run();assert result.returncode==0,result.stderr
     for lang,tables in ({} if "--guidance-only" in sys.argv else expected).items():

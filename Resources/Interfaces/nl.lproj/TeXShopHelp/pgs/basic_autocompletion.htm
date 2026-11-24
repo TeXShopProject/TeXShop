@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toetsbindingen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="toetsbindingen; lijst met toetsbindingen; invoerteken; uitvoertekst; plakken; yenteken; backslash; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm" class="current">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Toetsbindingen</h1>
+
+<p>Met toetsbindingen voegt een getypt teken andere tekst in. Met de lijst die bij TeXShop hoort, levert het typen van <code>^</code> de tekst <code>^{}</code> op met het invoegpunt tussen de accolades, levert <code>"</code> de TeX-aanhalingstekens <code>``''</code> rond het invoegpunt op, en levert <code>ä</code> de tekst <code>\"a</code> op. Een toetsbinding kan ook de geselecteerde tekst erin zetten: selecteer een woord en typ <code>^</code> om <code>^{woord}</code> te krijgen. De lijst bevat 45 toetsbindingen.</p>
+
+<p>Toetsbindingen staan eerst uit. Schakel ‘Toetsbindingen gebruiken (standaard voor nieuwe documenten)’ in Instellingen › Toetsenbord in om ze aan te hebben in elk document dat u opent. Bron › Toetsbindingen schakelt ze in of uit voor het voorste document, bijvoorbeeld om een teken met een toetsbinding gewoon als zichzelf te typen. Het onderdeel ‘Toetsbindingen’, dat u aan de knoppenbalk kunt toevoegen, doet hetzelfde.</p>
+
+<h2>De lijst met toetsbindingen</h2>
+
+<p>De groep ‘Toetsbindingen’ van Instellingen › Toetsenbord toont de toetsbindingen, elk met het ‘Invoerteken’ en de ‘Uitvoertekst’. Klik dubbel op een cel om die te bewerken; klik op + onder de lijst om een toetsbinding toe te voegen en op − om de geselecteerde te verwijderen, en sleep rijen om de volgorde te wijzigen. Een invoerteken is één teken. Wijzigingen worden meteen bewaard en werken ook in geopende documenten; Wijzig › Herstel maakt ze ongedaan.</p>
+
+<p>In een uitvoertekst worden speciale onderdelen als kleine labels getoond: de geselecteerde tekst, de plaats van het invoegpunt, de tekst op het klembord, een markeerpunt (•) voor Wijzig › Markeerpunten, een regeleinde en een tab. Voeg ze toe met ‘Voeg in’ onder de lijst, of typ ze: <code>#SEL#</code>, <code>#INS#</code>, <code>#PASTE#</code> en <code>•</code>, Option-Return voor een regeleinde en Option-Tab voor een tab. De knop ? toont ze allemaal.</p>
+
+<p>Een vinkje in de kolom ‘Plak’ past de toetsbinding ook toe op tekst die u in de bron plakt of erop neerzet: elk voorkomen van het invoerteken wordt vervangen door de uitvoertekst. Net als bij typen gebeurt dit alleen zolang toetsbindingen voor het document aan staan. Een toetsbinding waarvan de uitvoertekst de selectie, het invoegpunt, het klembord of een markeerpunt bevat, kan geen vinkje krijgen.</p>
+
+<h2>Het yenteken</h2>
+
+<p>Op een Japans toetsenbord kan de toets voor de backslash een yenteken (¥) typen. In de lijst die bij TeXShop hoort, levert ¥ één backslash op en heeft het een vinkje bij ‘Plak’. Als de codering voor nieuwe documenten UTF-8 is, hoeft u dus alleen toetsbindingen in te schakelen om een ¥ die in de bron wordt getypt of geplakt een \ te laten worden. Als uw lijst uit een eerdere versie van TeXShop komt, stelt u zelf de uitvoertekst van ¥ in op één backslash en zet u een vinkje bij ‘Plak’.</p>
+
+<p>De lijst wordt bewaard in ~/Library/TeXShop/Keyboard/autocompletion.plist; zie <a href="configure_autocompletion.htm">Toetsbindingen aanpassen</a>.</p>
+</main>
+</body>
+</html>

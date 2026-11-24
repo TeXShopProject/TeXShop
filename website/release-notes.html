@@ -86,6 +86,7 @@
 <li><strong>Menu shortcuts set in macOS:</strong> shortcuts for TeXShop made in macOS System Settings may need to be set again in Settings → Keyboard.</li>
 <li><strong>Macro shortcuts:</strong> macro shortcuts are set in the list of the Macro Editor.</li>
 <li><strong>Marks:</strong> the mark commands are in Edit → Marks.</li>
+<li><strong>Enter Full Screen:</strong> its shortcut is now Globe-F (🌐F). Control-Command-F was used for both it and Next Mark, and is now only Next Mark.</li>
 <li><strong>Command completion:</strong> the Command Completion submenu of the Source menu is now one item, Add to Command Completion List.</li>
 <li><strong>Open Style File:</strong> it has moved from the Help menu to the File menu.</li>
 <li><strong>Demo movies:</strong> the two movies in the Help menu are removed. Reported by <a href="https://github.com/herbs">Herb Schulz</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/43">#43</a>).</li>
@@ -98,6 +99,7 @@
 <li><strong><code>\UTF</code> commands:</strong> <code>\UTF</code> commands of the otf package are turned back into characters when a file is opened.</li>
 <li><strong>Line endings:</strong> opening a file with Windows or other line endings tells you that they were changed to LF.<figure class="note-shot"><img class="shot-light" src="assets/release-notes/en/line-endings.png" width="534" height="520" alt="The notice that a document used Windows line endings, which were changed to LF" loading="lazy"><img class="shot-dark" src="assets/release-notes/en/line-endings-dark.png" width="534" height="520" alt="The notice that a document used Windows line endings, which were changed to LF" loading="lazy"></figure></li>
 <li><strong>Statistics:</strong> Edit › Statistics… opens Text Statistics in the status bar.</li>
+<li><strong>Bundled macro names:</strong> bundled macros get new names that tell their use: Program → Set Typesetting Program…; Encoding → Set Encoding…; Root → Set Root File…; Numbering → Page Number Correction; PreText Personal Mark → PreTeXt Tag Comment; Root (Short Version) → Root File Line; GetFontSet → Insert Font Set…; SaveFontSet → Save Font Set; TestFontSet → Test Font Set Sizes; Tabularize → Align Table Columns; Tabularize +space → Align Table Columns with Spaces; Show files → Show Source and PDF in Finder; Convert to MAC → Save Copy with Classic Mac Line Endings; Convert to Unix → Save Copy with Unix Line Endings; Convert to Windows → Save Copy with Windows Line Endings; Bibliography → Run LaTeX, BibTeX, Then LaTeX Twice; bibtexc → Run BibTeX, Then pdfLaTeX Twice; bibtexcpl → Run pdfLaTeX, BibTeX, Then pdfLaTeX Twice; mpostc → Run MetaPost, Then pdfLaTeX; mpostcpl → Run pdfLaTeX, MetaPost, Then pdfLaTeX; htlatexc → Make HTML with TeX4ht; htlatexr → Make HTML with TeX4ht, Remaking Images; altpdflatexc → Run LaTeX, dvips and ps2pdf; pdflatexc → Run pdfLaTeX with Shell Escape; pdfselectc → Extract Pages from PDF…; openpdf → Open PDF; latex-makeindex-mpost → Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX; regular → figure. Macros that you did not edit get the new names when TeXShop is updated, and keep their shortcuts. A shortcut set for an old name in System Settings → Keyboard → Keyboard Shortcuts → App Shortcuts must be set again for the new name.</li>
 </ul>
 <h3 id="v6.00-fixes-typesetting-and-the-console">Fixes: typesetting and the console</h3>
 <ul>
@@ -154,7 +156,11 @@
 <li>Help → TeX Live Documentation opens in every language, in English where there is no version in that language, and links to the current documents on the web instead of files that only MacTeX has.</li>
 <li>Users of earlier versions also get the html engine that Help → HTML Commands needs, and that page no longer points to the removed demo movies.</li>
 <li>The bundled ConTeXt macro that opened an old web page opens the TeX Live home page instead.</li>
-<li>Bundled macros that run shell commands, such as the macros that typeset with pdflatex or change line endings, work with names of files and folders that have a space. The macros already in <code>~/Library/TeXShop/Macros</code> are not changed.</li>
+<li>Bundled macros that run shell commands, such as the macros that typeset with pdflatex or change line endings, work with names of files and folders that have a space. Macros that you did not edit in <code>~/Library/TeXShop/Macros</code> get this change as well.</li>
+<li>Paste Spreadsheet Cells works with any characters in the cells, such as Japanese.</li>
+<li>Set Root File… works with any characters in the path of the root file.</li>
+<li>Run LaTeX, dvips and ps2pdf works with TeX Live and Ghostscript, and shows a message when a step fails.</li>
+<li>TeXShop no longer comes with the inactive engines and other files that need programs TeX Live and macOS do not provide, such as jing.jar; files already in <code>~/Library/TeXShop</code> stay.</li>
 <li>Add help for LaTeX-aware spell checking.</li>
 <li>The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.</li>
 <li>Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.</li>

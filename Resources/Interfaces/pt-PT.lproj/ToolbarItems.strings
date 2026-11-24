@@ -10,10 +10,10 @@ tiToolTipPrint				= "Imprimir a imagem PDF";
 
 tiLabelTypeset				= "Compor";
 tiPaletteLabelTypeset			= "Compor";
-tiToolTipTypeset			= "Correr o programa de composição";
+tiToolTipTypeset			= "Executar o programa de composição";
 
 tiLabelSharing				= "Partilhar";
-tiPaletteLabelSharing		= "Partilhar";
+tiPaletteLabelSharing		= "Partilhar código-fonte";
 tiToolTipSharing			= "Partilhar texto e imagens";
 
 
@@ -31,7 +31,7 @@ tiToolTipLaTeX				= "Compor usando LaTeX";
 
 tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
-tiToolTipBibTeX				= "Correr BibTeX";
+tiToolTipBibTeX				= "Executar o BibTeX";
 
 tiLabelMakeIndex			= "MakeIndex";
 tiPaletteLabelMakeIndex			= "MakeIndex";
@@ -39,7 +39,7 @@ tiToolTipMakeIndex			= "Fazer o índice remissivo";
 
 tiLabelMetaPost				= "MetaPost";
 tiPaletteLabelMetaPost			= "MetaPost";
-tiToolTipMetaPost			= "Correr MetaPost";
+tiToolTipMetaPost			= "Executar o MetaPost";
 
 tiLabelConTeX				= "ConTeXt";
 tiPaletteLabelConTeX			= "ConTeXt";
@@ -47,7 +47,7 @@ tiToolTipConTeX				= "Compor usando ConTeXt";
 
 tiLabelMetaFont				= "MetaFont";
 tiPaletteLabelMetaFont			= "MetaFont";
-tiToolTipMetaFont			= "Correr MetaFont";
+tiToolTipMetaFont			= "Executar o MetaFont";
 
 tiLabelPreviousPage			= "Anterior";
 tiPaletteLabelPreviousPage		= "Página anterior";
@@ -58,8 +58,8 @@ tiPaletteLabelNextPage			= "Página seguinte";
 tiToolTipNextPage			= "Mostrar a página seguinte";
 
 tiLabelGotoPage				= "Ir para pág.";
-tiPaletteLabelGotoPage			= "Ir para pág.";
-tiToolTipGotoPage			= "Saltar para a página...";
+tiPaletteLabelGotoPage			= "Ir para a página";
+tiToolTipGotoPage			= "Ir para a página";
 
 tiLabelMagnification			= "Ampliação";
 tiPaletteLabelMagnification		= "Ampliação";
@@ -69,9 +69,9 @@ tiLabelTemplates			= "Minutas";
 tiPaletteLabelTemplates			= "Minutas";
 tiToolTipTemplates			= "Escolher uma minuta para inserir";
 
-tiLabelTags				= "Marcas";
-tiPaletteLabelTags			= "Marcas";
-tiToolTipTags				= "Escolher uma marca para saltar";
+tiLabelTags				= "Etiquetas";
+tiPaletteLabelTags			= "Etiquetas";
+tiToolTipTags				= "Selecionar uma etiqueta para ir até ela";
 
 tiLabelPreviousPageButton		= "Anterior";
 tiPaletteLabelPreviousPageButton	= "Página anterior";
@@ -83,7 +83,7 @@ tiToolTipNextPageButton			= "Mostrar a página seguinte";
 
 tiLabelTypesetEE			= "Compor";
 tiPaletteLabelTypesetEE			= "Compor";
-tiToolTipTypesetEE			= "Correr o programa de composição";
+tiToolTipTypesetEE			= "Executar o programa de composição";
 
 tiLabelProgramEE			= "Programa";
 tiPaletteLabelProgramEE			= "Programa";
@@ -120,15 +120,15 @@ tiToolTipSyncMarks			= "Mostrar marcas de sincronização";
 
 tiLabelTypesetKIT				= "Compor";
 tiPaletteLabelTypesetKIT		= "Compor";
-tiToolTipTypesetKIT				= "Correr o programa de composição";
+tiToolTipTypesetKIT				= "Executar o programa de composição";
 
 tiLabelSharingKIT				= "Partilhar";
-tiPaletteLabelSharingKIT		= "Partilhar";
+tiPaletteLabelSharingKIT		= "Partilhar pré-visualização";
 tiToolTipSharingKIT				= "Partilhar texto e imagens";
 
-tiLabelSearchKIT				= "Pesquisa";
-tiPaletteLabelSearchKIT         = "Pesquisa";
-tiToolTipSearchKIT				= "Pesquisa";
+tiLabelSearchKIT				= "Pesquisar PDF";
+tiPaletteLabelSearchKIT         = "Pesquisar PDF";
+tiToolTipSearchKIT				= "Pesquisar PDF";
 
 tiLabelProgramKIT				= "Programa";
 tiPaletteLabelProgramKIT		= "Programa";
@@ -144,7 +144,7 @@ tiToolTipNextPageButtonKIT			= "Mostrar a página seguinte";
 
 tiLabelGotoPageKIT				= "Ir para pág.";
 tiPaletteLabelGotoPageKIT		= "Ir para a página";
-tiToolTipGotoPageKIT			= "Saltar para a página";
+tiToolTipGotoPageKIT			= "Ir para a página";
 
 tiLabelMagnificationKIT			= "Ampliação";
 tiPaletteLabelMagnificationKIT	= "Ampliação";
@@ -192,13 +192,13 @@ tiLabelMacrosSplit				= "Macros";
 tiPaletteLabelMacrosSplit		= "Macros";
 tiToolTipMacrosSplit			= "Inserir macros";
 
-tiLabelTagsSplit				= "Marcas";
-tiPaletteLabelTagsSplit         = "Marcas";
-tiToolTipTagsSplit              = "Escolher uma marca para saltar";
+tiLabelTagsSplit				= "Etiquetas";
+tiPaletteLabelTagsSplit         = "Etiquetas";
+tiToolTipTagsSplit              = "Selecionar uma etiqueta para ir até ela";
 
 tiLabelGotoPageSplit			= "Ir para pág.";
-tiPaletteLabelGotoPageSplit     = "Ir para pág.";
-tiToolTipGotoPageSplit          = "Saltar para a página...";
+tiPaletteLabelGotoPageSplit     = "Ir para a página";
+tiToolTipGotoPageSplit          = "Ir para a página";
 
 tiLabelMagnificationSplit		= "Ampliação";
 tiPaletteLabelMagnificationSplit   = "Ampliação";
@@ -219,13 +219,13 @@ tiToolTipSharingSplit            = "Partilhar texto e imagens";
 tiLabelMouseModeKITSplit                = "Modo do rato";
 tiPaletteLabelMouseModeKITSplit        = "Modo do rato";
 
-tiLabelSearchKITSplit                = "Pesquisa";
-tiPaletteLabelSearchKITSplit         = "Pesquisa";
-tiToolTipSearchKITSplit                = "Pesquisa";
+tiLabelSearchKITSplit                = "Pesquisar PDF";
+tiPaletteLabelSearchKITSplit         = "Pesquisar PDF";
+tiToolTipSearchKITSplit                = "Pesquisar PDF";
 
 tiLabelTypesetSplit                = "Compor";
 tiPaletteLabelTypesetSplit            = "Compor";
-tiToolTipTypesetSplit            = "Correr o programa de composição";
+tiToolTipTypesetSplit            = "Executar o programa de composição";
 
 tiLabelLabels                = "Rótulos";
 tiPaletteLabelLabels            = "Rótulos";

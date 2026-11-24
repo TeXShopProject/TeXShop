@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modifiche consigliate alle impostazioni</title>
+<meta name="description" content="impostazioni consigliate; profilo del motore; latexmk; PDF diretto; Tramite DVI; comandi di compilazione; interfaccia di ricerca; Pannello di ricerca avanzata; salvataggio automatico; posizione delle finestre">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Come configuro TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminari</a></li>
+<li><a href="configure_prefchanges.htm" class="current">Modifiche consigliate alle impostazioni</a></li>
+<li><a href="configure_correctinstall.htm">Ottenere i nuovi elementi della libreria</a></li>
+<li><a href="configure_hidden.htm">Impostazioni nascoste</a></li>
+<li><a href="configure_panel.htm">Modificare il Pannello LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificare le associazioni dei tasti</a></li>
+<li><a href="configure_menushortcuts.htm">Ridefinire le scorciatoie da tastiera dei menu</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modifiche consigliate alle impostazioni</h1>
+<p>TeXShop funziona con le impostazioni predefinite, ma alcune dipendono dalla tua installazione di TeX, dal tuo schermo e dalle tue abitudini. Conviene controllarle per prime. Scegli TeXShop › Impostazioni… per aprire la finestra Impostazioni; <a href="basic_preferences.htm#settings-search">Cercare nelle impostazioni</a> spiega come trovare un’impostazione.</p>
+
+<h2 id="engine-profile">Scegliere un profilo del motore</h2>
+<p>Impostazioni › Compilazione › Profilo del motore prepara la compilazione in un solo passaggio. Scegli il profilo del motore che usi; quelli meno comuni si trovano in Altro. Un foglio elenca i valori che il profilo imposta e contrassegna quelli che cambiano. Disattiva i valori che vuoi mantenere, poi fai clic su OK; Annulla non cambia nulla.</p>
+<p>Scegli «Con latexmk» perché latexmk esegua BibTeX, il programma per indici e i passaggi aggiuntivi necessari; altrimenti ogni compilazione esegue il motore una sola volta. Un profilo imposta il metodo di compilazione e i relativi comandi di compilazione, il comando kpsewhich, il motore BibTeX, il programma per indici, MetaPost e «Converti in \UTF / \CID del pacchetto otf». I profili giapponesi impostano inoltre UTF-8 come codifica dei nuovi documenti, il dizionario ortografico e la conversione di UTF-8-MAC. Tutte le altre impostazioni restano come sono. Se in seguito cambi una di queste impostazioni, il menu mostra Personalizzato; scegli di nuovo il profilo per tornare ai suoi valori.</p>
+<p>I percorsi di TeX e di Ghostscript si impostano a parte, con «Rileva percorsi…» nel gruppo Percorsi della stessa categoria. Quando TeXShop si avvia per la prima volta, chiede i percorsi e poi un profilo del motore.</p>
+
+<h3 id="commands">Comandi di compilazione</h3>
+<p>I comandi impostati da un profilo si trovano nei gruppi PDF diretto e Tramite DVI di Impostazioni › Compilazione, ciascuno con un comando per plain TeX e uno per LaTeX, e «Metodo di compilazione» sceglie quale gruppo viene usato. Compila › PDF diretto e Compila › Tramite DVI cambiano il metodo solo per il documento attivo. I comandi predefiniti contengono già <code>-file-line-error</code>, che permette a TeXShop di portarti alla riga di un errore, e <code>-synctex=1</code>, che fa funzionare la sincronizzazione tra sorgente e anteprima, quindi la maggior parte delle persone non li modifica mai. Se un documento richiede <code>-shell-escape</code>, consulta prima <a href="advanced_shellescape.htm">Protezione da shell escape</a>.</p>
+
+<h2 id="find">Scegliere l’interfaccia di ricerca</h2>
+<p>Impostazioni › Editor › «Interfaccia di ricerca» sceglie la finestra o la barra che Trova apre. «Pannello di ricerca avanzata (consigliato)» cerca con le espressioni regolari, elenca tutte le corrispondenze e sostituisce più coppie di stringhe in una volta; consulta <a href="basic_find.htm">Trova e sostituisci</a>. «Pannello di ricerca Apple» e «Barra di ricerca Apple» sono la ricerca standard di macOS, e «Pannello di ricerca OgreKit (obsoleto)» resta disponibile. Una nuova scelta ha effetto subito, tranne il passaggio al pannello di ricerca OgreKit o da esso, che ha effetto dopo il riavvio di TeXShop. Attiva «Mantieni il pannello di ricerca avanzata in primo piano» se il pannello deve restare davanti alle finestre dei documenti.</p>
+
+<h2 id="autosave">Lasciare attivo il salvataggio automatico</h2>
+<p>«Attiva salvataggio automatico e versioni» in Impostazioni › Documenti e salvataggio è attivo per impostazione predefinita, ed è consigliabile lasciarlo attivo. macOS salva allora i tuoi documenti mentre lavori, e File › Ripristina a › Sfoglia tutte le versioni… recupera le versioni precedenti. Se lo disattivi, il file cambia solo quando lo salvi; «Mantieni il file precedente come “nome~” al salvataggio» conserva allora la versione precedente accanto al file. Una modifica di questa impostazione ha effetto dopo il riavvio di TeXShop.</p>
+
+<h2 id="window-positions">Fissare la posizione delle finestre</h2>
+<p>Per impostazione predefinita ogni finestra si apre dove si trovava l’ultima volta che è stata chiusa. Se di solito lavori su un documento alla volta, è meglio aprire le finestre in una posizione fissa. Compila un documento breve e disponi la sua finestra sorgente e la sua finestra di anteprima, una accanto all’altra se lo schermo è abbastanza largo. Poi, in Impostazioni › Generali › Posizione delle finestre, scegli «Posizione predefinita» per Sorgente e per Anteprima e fai clic su «Imposta la posizione» in ciascuna riga. Le righe Console e HTML funzionano allo stesso modo.</p>
+<p>I comandi di menu Sorgente › Salva posizione sorgente e Anteprima › Salva posizione anteprima fanno lo stesso dalle finestre stesse. Se usi un Mac portatile con un monitor grande, disponi le finestre per lo schermo integrato e scegli anche Sorgente › Salva posizione sorgente per il portatile e Anteprima › Salva posizione anteprima per il portatile; TeXShop usa allora queste posizioni quando il monitor grande non è collegato.</p>
+
+<h2 id="fonts-colors">Font e colori</h2>
+<p>Il font della finestra sorgente si imposta in Impostazioni › Editor › «Font del documento», e il font della console in Impostazioni › Console. Impostazioni › Temi sceglie e modifica i temi dei colori delle finestre sorgente, di anteprima e della console; consulta <a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a>.</p>
+</main>
+</body>
+</html>

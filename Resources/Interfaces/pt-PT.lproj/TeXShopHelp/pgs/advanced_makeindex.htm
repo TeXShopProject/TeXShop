@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MakeIndex</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="índice remissivo; makeindex; makeidx; mendex; upmendex; Programa de índice; ficheiro idx">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar ficheiros pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistir com outras distribuições TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar o código-fonte e a pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover ficheiros AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm" class="current">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experiências</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e largar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros ficheiros com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto a cores</a></li>
+<li><a href="advanced_plist.htm">Ficheiros em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>MakeIndex</h1>
+<p>O MakeIndex ordena as entradas do índice remissivo de um documento LaTeX e escreve o índice. Para adicionar um índice remissivo a um documento:</p>
+<ol>
+<li>Coloque <code>\usepackage{makeidx}</code> e <code>\makeindex</code> no preâmbulo.</li>
+<li>Coloque <code>\printindex</code> onde o índice deve aparecer, muitas vezes logo antes de <code>\end{document}</code>.</li>
+<li>Assinale as entradas no texto:
+<pre>There are many animals in the world\index{animal}.
+Examples include bears\index{animal!bear}
+and tigers\index{animal!tiger}.</pre></li>
+</ol>
+<p>Para criar o índice, componha o documento, escolha depois Compor › MakeIndex (<kbd>⇧⌘I</kbd>), ou escolha MakeIndex no menu pop-up ao lado do botão «Compor» e prima «Compor», e componha de novo. A composição com o latexmk executa o MakeIndex por si.</p>
+<p>O MakeIndex executa o programa indicado em Definições › Composição › «Ferramentas relacionadas» › «Programa de índice», seguido do nome do ficheiro idx. A predefinição é <code>makeindex</code>. Introduza outro programa, como <code>mendex</code> ou <code>upmendex</code> para documentos japoneses, com as opções de que precise, por exemplo <code>upmendex -s mystyle.ist</code>. Os perfis do motor definem este campo: <code>makeindex</code> para os perfis ocidentais, <code>mendex</code> para pLaTeX + dvipdfmx e <code>upmendex</code> para upLaTeX + dvipdfmx e LuaLaTeX (japonês).</p>
+<p>Código-fonte › Destacar as entradas do índice mostra os argumentos de <code>\index</code> com a cor «Índice» do tema; consulte <a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a>.</p>
+</main>
+</body>
+</html>

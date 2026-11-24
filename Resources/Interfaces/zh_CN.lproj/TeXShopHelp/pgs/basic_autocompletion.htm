@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>按键绑定</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="按键绑定; 按键绑定列表; 输入字符; 输出文本; 粘贴; 日元符号; 反斜杠; 自动补全; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm" class="current">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>按键绑定</h1>
+
+<p>按键绑定让键入的字符插入其他文本。使用 TeXShop 附带的列表时，键入 <code>^</code> 会得到 <code>^{}</code>，插入点位于花括号之间；键入 <code>"</code> 会在插入点两侧得到 TeX 引号 <code>``''</code>；键入 <code>ä</code> 会得到 <code>\"a</code>。按键绑定还可以将所选文本放入其中：选中一个单词后键入 <code>^</code>，即可得到 <code>^{word}</code>。该列表包含 45 个按键绑定。</p>
+
+<p>按键绑定一开始是关闭的。在“设置”>“键盘”中打开“使用按键绑定（新文稿的默认值）”，即可在你打开的每份文稿中使用它们。“源代码”>“按键绑定”用于为最前面的文稿打开或关闭按键绑定，例如要原样键入设有按键绑定的字符时。可以添加到工具栏中的“按键绑定”项目作用相同。</p>
+
+<h2>按键绑定列表</h2>
+
+<p>“设置”>“键盘”的“按键绑定”组列出了各个按键绑定，包括每个“输入字符”及其“输出文本”。连按单元格即可编辑；点按列表下方的 + 可添加按键绑定，点按 − 可删除所选的按键绑定，拖移各行可更改其顺序。输入字符是单个字符。更改会立即保存，并在已打开的文稿中生效；“编辑”>“撤销”可撤回更改。</p>
+
+<p>在输出文本中，特殊项目显示为小标签：所选文本、插入点的位置、剪贴板上的文本、用于“编辑”>“标记”的标记（•）、换行符和制表符。可以用列表下方的“插入”添加它们，也可以直接键入：<code>#SEL#</code>、<code>#INS#</code>、<code>#PASTE#</code> 和 <code>•</code>，用 Option-Return 键入换行符，用 Option-Tab 键入制表符。? 按钮会列出所有这些项目。</p>
+
+<p>勾选“粘贴”列后，按键绑定也会应用于粘贴或拖放到源代码中的文本：输入字符每次出现都会被替换为输出文本。与键入时一样，只有在该文稿的按键绑定打开时才会这样做。输出文本中含有所选内容、插入点、剪贴板或标记的按键绑定无法勾选此项。</p>
+
+<h2>日元符号</h2>
+
+<p>在日语键盘上，反斜杠键可能会键入日元符号（¥）。在 TeXShop 附带的列表中，¥ 会得到单个反斜杠，并且已勾选其“粘贴”框。因此，新文稿的编码为 UTF-8 时，只需打开按键绑定，键入或粘贴到源代码中的 ¥ 就会变成 \。如果你的列表来自较早版本的 TeXShop，请自行将 ¥ 的输出文本设为单个反斜杠，并勾选其“粘贴”框。</p>
+
+<p>该列表存储在 ~/Library/TeXShop/Keyboard/autocompletion.plist 中；请参阅“<a href="configure_autocompletion.htm">修改按键绑定</a>”。</p>
+</main>
+</body>
+</html>

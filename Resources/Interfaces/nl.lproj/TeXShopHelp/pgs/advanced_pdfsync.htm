@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bron en voorvertoning synchroniseren</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="SyncTeX; sync; synchroniseren; synchronisatie; Command-klik; Synchroniseermethode; PDF doorzoeken; synctex.gz; projectfile; useConTeXtSyncParser">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm" class="current">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Bron en voorvertoning synchroniseren</h1>
+<p>Klik met Command ingedrukt op een woord in het bronvenster, en het voorvertoningsvenster scrolt naar de overeenkomstige plaats en markeert die. Klik met Command ingedrukt op een plaats in het voorvertoningsvenster, en het bronbestand opent, indien nodig, bij de overeenkomstige regel, die wordt gemarkeerd. De kleuren van de twee markeringen stelt u in bij Instellingen › Thema’s › SyncTeX, onder ‘Voorvertoning’ en ‘Bron’.</p>
+
+<h2>SyncTeX</h2>
+<p>TeXShop synchroniseert met SyncTeX. Wanneer TeX wordt uitgevoerd met de optie <code>-synctex=1</code>, schrijft het naast de PDF een bestand zoals <code>Galois.synctex.gz</code>, dat vastlegt waar elk stuk van de bron op de pagina terecht is gekomen. De zetcommando’s in Instellingen › Zetten, zoals de engineprofielen ze instellen, en de engines die TeXShop in <code>~/Library/TeXShop/Engines</code> zet en die TeX uitvoeren, gebruiken deze optie al. Een engine die u daar toevoegt, ook een van de optionele engines uit de map Inactive, gebruikt haar alleen als het commando ervan haar bevat. Voeg in een eigen engine <code>-synctex=1</code> toe aan de aanroep van TeX (met één of twee streepjes; elke engine accepteert beide).</p>
+<p>Het synctex-bestand bevat de volledige paden van de bronbestanden. Nadat een projectmap is verplaatst, gekopieerd of naar iemand anders is gestuurd, doet synchronisatie niets totdat het document opnieuw is gezet.</p>
+<p>SyncTeX is niet helemaal exact: de plaats die u zoekt, kan iets voor of na de markering liggen.</p>
+
+<h2>Projecten met meerdere bestanden</h2>
+<p>In een project waarvan de hoofdstukbestanden het hoofdbestand noemen met <code>% !TEX root</code> (zie <a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a>), gaat een Command-klik in een hoofdstukbestand naar de plaats ervan in de voorvertoning van het hele document, en opent een Command-klik in de voorvertoning het hoofdstukbestand met de plek waarop is geklikt. Als Instellingen › Zetten › Synchronisatie van bron en voorvertoning › ‘Bestanden die via synchronisatie worden bereikt als tabbladen in het venster van het hoofdbestand openen’ aan staat, wordt een bestand dat zo wordt geopend als tabblad aan het venster van het hoofdbestand toegevoegd in plaats van in een eigen venster geopend.</p>
+
+<h2>Synchroniseermethode</h2>
+<p>Instellingen › Zetten › Synchronisatie van bron en voorvertoning › ‘Synchroniseermethode’ heeft twee keuzes:</p>
+<dl>
+<dt>SyncTeX (aanbevolen)</dt><dd>Gebruikt het synctex-bestand, zoals hierboven beschreven. Dit is de standaard.</dd>
+<dt>PDF doorzoeken</dt><dd>Zoekt in de PDF naar de tekst rond de klik, en in de bron naar de tekst rond een klik in de voorvertoning. Er is geen synctex-bestand nodig, maar het werkt niet waar de gezette tekst afwijkt van de bron, zoals in formules en tekst met veel commando’s. Om het bestand bij een plek in de voorvertoning te vinden, doorzoekt het de bestanden die in de commando’s <code>\include</code> en <code>\input</code> van het hoofdbestand worden genoemd. Voor projecten die bestanden op een andere manier invoegen, somt u ze in het hoofdbestand op met regels zoals
+<pre>% !TEX projectfile = chapter2.tex
+% !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
+Een naam is een volledig pad of een pad relatief ten opzichte van het hoofdbestand; deze regels mogen overal in het hoofdbestand staan.</dd>
+</dl>
+
+<h2>ConTeXt</h2>
+<p>Voeg voor ConTeXt <code>\setupsynctex[state=start,method=min]</code> toe aan de instellingen van het document en de regel <code>% !TEX useConTeXtSyncParser</code> bovenaan het hoofdbestand; TeXShop gebruikt dan de eigen synchronisatiecode van ConTeXt. Zie <a href="advanced_context.htm">ConTeXt en MetaPost</a>.</p>
+<p>Om te synchroniseren met een bron die in een andere editor is geopend, zie <a href="advanced_externaleditor.htm">Een externe editor gebruiken</a>.</p>
+</main>
+</body>
+</html>

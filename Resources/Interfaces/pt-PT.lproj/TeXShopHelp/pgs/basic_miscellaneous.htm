@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Janelas e separadores</title>
+<meta name="copyright" content="Copyright (c) 2016 Richard Koch under the GNU FDL">
+<meta name="description" content="separadores; janelas; Abrir novas janelas como separadores; Unir numa única janela; Abrir em janelas separadas; useTabs; useTabsWithFiles; tabbedFile; TabsAlsoForInputFiles">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm" class="current">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Janelas e separadores</h1>
+<p>As janelas do TeXShop podem ser reunidas como separadores de uma só janela, como noutras apps do macOS. Em Definições › Geral, «Abrir novas janelas como separadores» escolhe quando isto acontece: «Nunca», «Automaticamente», que segue a definição de separadores do macOS, ou «Sempre».</p>
+<p>Com «Sempre» e janelas separadas para o código-fonte e a pré-visualização, o código-fonte de cada documento que abrir torna-se um separador da janela do código-fonte e a respetiva pré-visualização um separador da janela de pré-visualização; as consolas e os registos são reunidos da mesma forma. Selecionar um separador de uma janela traz para a frente o separador correspondente da outra quando compõe ou sincroniza. Se o código-fonte e a pré-visualização forem mostrados numa só janela («Código-fonte e pré-visualização», em Definições › Geral, definido como «Unir numa única janela»), cada separador contém um documento inteiro. Janela › Unir numa única janela e Janela › Abrir em janelas separadas mudam o documento ativo de uma forma para a outra.</p>
+<p>Uma janela que mostra o código-fonte e a pré-visualização juntos, com ou sem separadores, funciona bem em ecrã completo: a consola flutua então sobre ela enquanto compõe.</p>
+
+<h2>Abrir um projeto em separadores</h2>
+<p>Num livro cujos capítulos são ficheiros separados, o ficheiro principal pode pedir ao TeXShop que abra os capítulos como separadores da sua janela. Coloque esta linha nas 20 primeiras linhas do ficheiro principal:</p>
+<pre>% !TEX useTabs</pre>
+<p>Quando o ficheiro principal é aberto, os ficheiros indicados pelos seus comandos <code>\include</code> abrem como separadores. Na mesma linha podem seguir-se nomes curtos para os separadores, entre parênteses e separados por vírgulas; um espaço em branco entre duas vírgulas mantém o nome desse ficheiro:</p>
+<pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
+<p>Para dar separadores também aos ficheiros dos comandos <code>\input</code>, use esta definição oculta no Terminal:</p>
+<pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
+<p>Para escolher os ficheiros por si, coloque uma linha <code>useTabsWithFiles</code> nas 20 primeiras linhas do ficheiro principal e acrescente uma linha <code>tabbedFile</code> para cada separador, todas nas suas 50 primeiras linhas. Pode seguir-se um nome para o separador entre parênteses:</p>
+<pre>% !TEX useTabsWithFiles
+% !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
+% !TEX tabbedFile{Galois.log}
+% !TEX tabbedFile{~/Graphics/diagram.pdf}</pre>
+<p>Um caminho é relativo à pasta do ficheiro principal, começa na sua pasta pessoal com <code>~</code> ou é um caminho completo. Escreva sempre a extensão, mesmo quando o Finder a oculta: estes separadores também podem mostrar registos, ficheiros PDF e imagens. Cada ficheiro abre-se como se o abrisse manualmente, pelo que um ficheiro do código-fonte pode trazer consigo a respetiva pré-visualização.</p>
+<p>Consulte Ajuda › Linhas de comentário e definições ocultas (em inglês) para as outras linhas de comentário especiais.</p>
+</main>
+</body>
+</html>

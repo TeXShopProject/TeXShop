@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Suchen und Ersetzen</title>
-<meta name="description" content="suchen und ersetzen; Erweiterte Suchmaske; Suchoberfläche; reguläre Ausdrücke; Alle suchen; Alle hervorheben; Alles ersetzen; Mehrfach ersetzen; Apple Suchleiste; OgreKit Suchmaske">
+<meta name="description" content="suchen und ersetzen; Erweiterte Suchmaske; Suchoberfläche; reguläre Ausdrücke; Alle suchen; Alle hervorheben; Alles ersetzen; Mehrfach ersetzen; Apple-Suchleiste; OgreKit-Suchmaske">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -23,8 +23,8 @@
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
 <li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
 <li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
-<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
 <li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
 <li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
@@ -40,7 +40,7 @@
 <main id="content">
 <h1>Suchen und Ersetzen</h1>
 
-<p>Die Befehle zum Suchen stehen im Untermenü „Suchen“ des Menüs „Bearbeiten“: Suchen... (<kbd>⌘F</kbd>), Suchen und ersetzen... (<kbd>⌥⌘F</kbd>), Weitersuchen (vorwärts) (<kbd>⌘G</kbd>), Weitersuchen (rückwärts) (<kbd>⇧⌘G</kbd>), Auswahl für Suche verwenden (<kbd>⌘E</kbd>) und Auswahl anzeigen (<kbd>⌘J</kbd>). Wie Sie Text im gesetzten Dokument finden, steht unter <a href="basic_preview.htm#search">Das Vorschaufenster</a>.</p>
+<p>Die Befehle zum Suchen stehen im Untermenü „Suchen“ des Menüs „Bearbeiten“: Suchen … (<kbd>⌘F</kbd>), Suchen und ersetzen … (<kbd>⌥⌘F</kbd>), Weitersuchen (vorwärts) (<kbd>⌘G</kbd>), Weitersuchen (rückwärts) (<kbd>⇧⌘G</kbd>), Auswahl für Suche verwenden (<kbd>⌘E</kbd>) und Auswahl anzeigen (<kbd>⌘J</kbd>). Wie Sie Text im gesetzten Dokument finden, steht unter <a href="basic_preview.htm#search">Das Vorschaufenster</a>.</p>
 
 <h2>Die Suchoberfläche wählen</h2>
 
@@ -48,11 +48,11 @@
 <dl>
 <dt>Erweiterte Suchmaske (empfohlen)</dt>
 <dd>Ein Fenster mit regulären Ausdrücken, einer Liste aller Treffer und „Mehrfach ersetzen“, auf dieser Seite beschrieben. Mit ihr beginnt jeder Benutzer.</dd>
-<dt>Apple Suchleiste</dt>
+<dt>Apple-Suchleiste</dt>
 <dd>Die Suchleiste von macOS oben im Quelltext, wie in Safari und Xcode.</dd>
-<dt>Apple Suchmaske</dt>
+<dt>Apple-Suchmaske</dt>
 <dd>Das einfache Suchfenster von macOS.</dd>
-<dt>OgreKit Suchmaske (veraltet)</dt>
+<dt>OgreKit-Suchmaske (veraltet)</dt>
 <dd>Das Suchfenster von OgreKit von Isao Sonobe, mit eigenen regulären Ausdrücken. Ein Wechsel zu ihm oder von ihm wird nach einem Neustart von TeXShop wirksam.</dd>
 </dl>
 
@@ -73,7 +73,7 @@
 
 <p>„Alles ersetzen“, „Alle suchen“ und „Mehrfach ersetzen“ arbeiten im Hintergrund, und das Dokument lässt sich erst nach ihrem Ende bearbeiten. Dauert einer länger, zeigt ein Dialog am Dokumentfenster den Fortschritt; „Abbrechen“ im Dialog oder die Escape-Taste hält ihn an und lässt den Text, wie er war.</p>
 
-<p>Die Suchmaske findet Text auch in der Konsole, im Protokoll und in den Fenstern von Bearbeiten › Testen.... Ersetzen ist in der Konsole, im Protokoll und in der Konsole zum Testen nicht möglich, da sie die Ausgabe von TeX zeigen.</p>
+<p>Die Suchmaske findet Text auch in der Konsole, im Protokoll und in den Fenstern von Bearbeiten › Testen …. Ersetzen ist in der Konsole, im Protokoll und in der Konsole zum Testen nicht möglich, da sie die Ausgabe von TeX zeigen.</p>
 
 <p>Die Suchmaske gehört zu den Dokumentfenstern; ein Klick in den Quelltext legt sie daher hinter dieses Fenster, und „Suchen“ holt sie zurück. Um sie vor den Dokumentfenstern zu halten, schalten Sie „Erweiterte Suchmaske immer im Vordergrund halten“ unter Einstellungen › Editor › Suchen ein.</p>
 
@@ -81,7 +81,7 @@
 
 <p>Ist „Regulärer Ausdruck“ eingeschaltet, ist der Suchbegriff ein Muster in der Syntax von ICU, den regulären Ausdrücken von macOS. Die meisten Muster schreiben Sie wie in anderen Programmen. Eine geschweifte Klammer, die nicht zu einer Wiederholung gehört, muss als <code>\{</code> oder <code>\}</code> geschrieben werden; suchen Sie also nach <code>\\section\{</code> statt nach <code>\\section{</code>.</p>
 
-<p>Im Ersatztext ist <code>$0</code> der gesamte Treffer, <code>$1</code>, <code>$2</code>, … sind die Gruppen und <code>\$</code> ist ein Dollarzeichen; eine Formel <code>$x$</code> schreiben Sie also als <code>\$x\$</code>. Ein Backslash wird doppelt geschrieben: <code>\\section</code> ergibt <code>\section</code>. Die Syntax von OgreKit mit <code>\1</code>, <code>\2</code>, … für die Gruppen und <code>$</code> als gewöhnlichem Zeichen lässt sich unter den Optionen wählen; Benutzer, die von der OgreKit Suchmaske kommen, beginnen mit ihr.</p>
+<p>Im Ersatztext ist <code>$0</code> der gesamte Treffer, <code>$1</code>, <code>$2</code>, … sind die Gruppen und <code>\$</code> ist ein Dollarzeichen; eine Formel <code>$x$</code> schreiben Sie also als <code>\$x\$</code>. Ein Backslash wird doppelt geschrieben: <code>\\section</code> ergibt <code>\section</code>. Die Syntax von OgreKit mit <code>\1</code>, <code>\2</code>, … für die Gruppen und <code>$</code> als gewöhnlichem Zeichen lässt sich unter den Optionen wählen; Benutzer, die von der OgreKit-Suchmaske kommen, beginnen mit ihr.</p>
 
 <p>Die kleine Taste „?“ neben „Regulärer Ausdruck“ öffnet eine Kurzreferenz der Syntax von Mustern und Ersetzungen und ihrer Unterschiede zu OgreKit. Die Felder zeigen die Teile eines Musters in den Farben des Themas, einen Fehler in Rot und das, was OgreKit anders lesen würde, in Orange; die Zeile unter den Optionen erklärt sie.</p>
 

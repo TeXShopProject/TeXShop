@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LaTeX-venster</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="LaTeX-venster; symbolen; Griekse letters; omgevingen; lettertype; amssymb; completion.plist; eigen knoppen">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm" class="current">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>LaTeX-venster</h1>
+<p>Venster › LaTeX-venster... opent een paneel met LaTeX-code: wiskundige symbolen, Griekse letters, functies, letters met accenten en internationale tekens, omgevingen en commando’s voor lettertypen. Klik in de bron op de plaats waar de code moet komen en klik dan op een knop in het paneel. De code ervan wordt bij het invoegpunt ingevoegd. Het paneel blijft vóór de bronvensters staan terwijl u werkt.</p>
+<p>De knoppen zijn over pagina’s verdeeld. Kies een pagina met de knoppen bovenaan elk deel van het paneel: ‘Wiskunde’, ‘Grieks’, ‘Symbolen’, ‘Functies’ en ‘Internationaal’, en ‘Omgevingen’, ‘Lettertype’ en ‘Aangepast’.</p>
+<p>Als er tekst is geselecteerd wanneer u op een knop voor een lettertype of omgeving klikt, komt de geselecteerde tekst in de ingevoegde code te staan, zoals in <code>\textbf{geselecteerde tekst}</code>.</p>
+<p>Sommige symbolen hebben het pakket amssymb nodig. Voeg deze regel toe aan de preambule van een document dat ze gebruikt:</p>
+<pre>\usepackage{amssymb}</pre>
+
+<h2>Het paneel aanpassen</h2>
+<p>De code die elke knop invoegt, staat in <code>~/Library/TeXShop/LatexPanel/completion.plist</code>. Open dit bestand in TeXShop om het te wijzigen; het commentaar aan het begin legt uit hoe het is opgebouwd. De namen van de standaardknoppen kunnen niet worden gewijzigd, maar de code die ze invoegen wel. In deze code:</p>
+<ul>
+<li>staat <code>#SEL#</code> voor de geselecteerde tekst;</li>
+<li>geeft <code>#INS#</code> aan waar het invoegpunt komt nadat de code is ingevoegd;</li>
+<li>staat <code>#PASTE#</code> voor de tekst op het klembord.</li>
+</ul>
+<p>De pagina ‘Aangepast’ heeft ruimte voor maximaal zestien eigen knoppen. Elke knop wordt in de lijst <code>Customized</code> van het bestand gedefinieerd door twee strings, de naam van de knop en de code die hij invoegt:</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>Bewaar het bestand in UTF-8, stop TeXShop en start het opnieuw om de wijzigingen in het paneel te zien. Als het bestand ontbreekt of beschadigd is, vervangt TeXShop het door zijn eigen exemplaar. Zie <a href="configure_panel.htm">Het LaTeX-venster aanpassen</a> en <a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

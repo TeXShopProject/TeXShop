@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les fichiers de ~/Library/TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop; fichiers plist; fichiers de configuration; completion.plist; autocompletion.plist; KeyEquivalents.plist; Macros_Latex.plist; matrixpanel; thèmes; CommandCompletion.txt; sauvegardes">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm" class="current">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Les fichiers de ~/Library/TeXShop</h1>
+<p>TeXShop conserve les fichiers que vous pouvez personnaliser dans le dossier <code>~/Library/TeXShop</code>, qu’il crée lors de sa première exécution. TeXShop › Ouvrir ~/Bibliothèque/TeXShop ouvre ce dossier dans le Finder. Pour emporter vos personnalisations sur un autre Mac, copiez-y ce dossier.</p>
+
+<h2>Contenu du dossier</h2>
+<p>La plupart de ces fichiers se modifient dans TeXShop lui-même, et il n’est pas nécessaire de les ouvrir :</p>
+<table>
+<tr><th>Fichier ou dossier</th><th>Contenu</th><th>Où le modifier</th></tr>
+<tr><td><code>Keyboard/autocompletion.plist</code>, avec <code>autocompletionPaste.plist</code> et <code>autocompletionDisplayOrder.plist</code></td><td>Raccourcis de saisie</td><td>Réglages › Clavier › « Liste des raccourcis de saisie »</td></tr>
+<tr><td><code>CommandCompletion/CommandCompletion.txt</code></td><td>Liste de complétion des commandes</td><td>Réglages › Clavier › « Modifier la complétion des commandes… »</td></tr>
+<tr><td><code>Menus/KeyEquivalents.plist</code></td><td>Raccourcis par défaut des menus</td><td>Réglages › Clavier, liste des raccourcis des menus</td></tr>
+<tr><td><code>Macros/Macros_Latex.plist</code></td><td>Menu Macros</td><td>Macros › Ouvrir l'éditeur de macros...</td></tr>
+<tr><td><code>Themes/</code></td><td>Thèmes de couleurs</td><td>Réglages › Thèmes</td></tr>
+<tr><td><code>SpellCheck/SpellingExclusions.txt</code></td><td>Ce que la vérification orthographique adaptée à LaTeX ignore</td><td>Réglages › Orthographe › « Modifier les exclusions LaTeX… »</td></tr>
+<tr><td><code>Engines/</code></td><td>Moteurs de composition</td><td>Réglages › Composition › « Modifier la liste des moteurs… »</td></tr>
+<tr><td><code>LatexPanel/completion.plist</code></td><td>Textes de la palette LaTeX</td><td>À la main ; consultez <a href="configure_panel.htm">Modifier la palette LaTeX</a></td></tr>
+<tr><td><code>MatrixPanel/matrixpanel_1.plist</code></td><td>Textes de la palette Matrice</td><td>À la main</td></tr>
+<tr><td><code>Templates/</code>, <code>Stationery/</code></td><td>Menu « Modèles », Fichier › Nouveau depuis la papeterie...</td><td>Dans le Finder ; consultez <a href="basic_templates.htm">Modèles et papeterie</a></td></tr>
+</table>
+<p>Les raccourcis des menus indiqués dans <code>KeyEquivalents.plist</code> deviennent les valeurs par défaut de la liste des raccourcis de Réglages › Clavier ; les raccourcis modifiés dans les réglages ont priorité. Consultez <a href="configure_menushortcuts.htm">Redéfinir les raccourcis clavier des menus</a>.</p>
+
+<h2>Modifier un fichier à la main</h2>
+<p>Les fichiers portant l’extension <code>.plist</code> sont du texte XML. Ils peuvent être ouverts et modifiés dans TeXShop, dans un autre éditeur de texte ou dans Xcode. Plusieurs d’entre eux commencent par des commentaires qui expliquent leur format. Conservez-les en UTF-8, l’encodage dans lequel ils sont écrits. Modifiez les couleurs des thèmes dans Réglages › Thèmes plutôt que dans leurs fichiers.</p>
+<p>Si un fichier que vous avez modifié cesse de fonctionner, sortez-le du dossier, ou déplacez son dossier sur le bureau, puis relancez TeXShop : il recrée le fichier avec son contenu d’origine.</p>
+
+<h2>Fichiers manquants ou endommagés</h2>
+<p>Lorsque l’un des fichiers dont TeXShop a besoin, comme les macros, les raccourcis de saisie, les textes de la palette LaTeX et de la palette Matrice, les raccourcis des menus, la liste de complétion des commandes, les exclusions orthographiques ou les thèmes standard, est manquant, ou se révèle endommagé au démarrage de TeXShop, TeXShop met sa propre copie à sa place sans message d’erreur. Un fichier endommagé est déplacé dans le dossier <code>~/Library/TeXShop/Backups</code>, dans un dossier nommé d’après la date et l’heure, afin que vous puissiez y récupérer vos modifications.</p>
+<p>Les fichiers que vous pouvez supprimer volontairement, comme les modèles, la papeterie, les moteurs et vos propres thèmes, ne sont pas restaurés.</p>
+</main>
+</body>
+</html>

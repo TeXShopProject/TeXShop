@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BibTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="BibTeX; bibliografie; citare; fișier bib; biber; biblatex; upbibtex; pbibtex; % !BIB program; Motor BibTeX">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm" class="current">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>BibTeX</h1>
+<p>BibTeX construiește bibliografia unui document LaTeX pornind de la o bază de date de referințe, un fișier cu extensia <code>.bib</code>. Documentul citează intrările prin cheile lor, iar BibTeX listează numai intrările citate.</p>
+<p>O bază de date <code>mybibliography.bib</code> conține intrări precum</p>
+<pre>@book{Knuth:TeXbook,
+  author    = {Donald E. Knuth},
+  title     = {The {\TeX}book},
+  publisher = {Addison-Wesley},
+  year      = {1986}
+}</pre>
+<p>iar documentul le citează și indică stilul și baza de date:</p>
+<pre>As explained in~\cite{Knuth:TeXbook}, …
+
+\bibliographystyle{plain}
+\bibliography{mybibliography}</pre>
+
+<h2>Rularea BibTeX</h2>
+<ol>
+<li>Compilați documentul. Citările apar ca [?], iar bibliografia lipsește.</li>
+<li>Alegeți Compilare › BibTeX (<kbd>⇧⌘B</kbd>) sau alegeți BibTeX în meniul pop-up de lângă butonul „Compilare” și apăsați „Compilare”.</li>
+<li>Compilați încă de două ori: prima rulare adaugă bibliografia, a doua completează citările.</li>
+</ol>
+<p>Compilarea cu latexmk, de exemplu cu motorul pdflatexmk sau cu un profil configurat „Cu latexmk”, rulează singură BibTeX și trecerile suplimentare.</p>
+<p>Pentru a crea o bază de date nouă în TeXShop, alegeți tipul bib în meniul de format al fișierului din dialogul de salvare, pentru ca fișierul să primească extensia <code>.bib</code>. O bază de date poate sta și în arborele TeX personal, unde o găsește orice document; consultați <a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a>.</p>
+
+<h2>Alegerea programului</h2>
+<p>Compilare › BibTeX rulează comanda din Configurări › Compilare › „Instrumente asociate” › „Motor BibTeX”, implicit <code>bibtex</code>. Introduceți acolo alt program cu opțiunile de care are nevoie, de exemplu <code>biber</code> pentru documentele care folosesc pachetul biblatex. Profilurile motorului setează acest câmp: <code>pbibtex</code> pentru pLaTeX + dvipdfmx, <code>upbibtex</code> pentru upLaTeX + dvipdfmx și LuaLaTeX (japoneză) și <code>bibtex</code> pentru celelalte profiluri.</p>
+<p>Pentru a alege programul pentru un singur document, puneți o linie ca aceasta într-una dintre primele lui douăzeci de linii:</p>
+<pre>% !BIB program = biber</pre>
+<p>Linia are prioritate față de configurare. Forma <code>% !BIB TS-program =</code> este citită la fel.</p>
+</main>
+</body>
+</html>

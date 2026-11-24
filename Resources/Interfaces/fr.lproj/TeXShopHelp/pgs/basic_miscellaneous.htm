@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fenêtres et onglets</title>
+<meta name="copyright" content="Copyright (c) 2016 Richard Koch under the GNU FDL">
+<meta name="description" content="onglets; fenêtres; Ouvrir les nouvelles fenêtres dans des onglets; Utiliser une seule fenêtre; Utiliser des fenêtres séparées; useTabs; useTabsWithFiles; tabbedFile; TabsAlsoForInputFiles">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm" class="current">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Fenêtres et onglets</h1>
+<p>Les fenêtres de TeXShop peuvent être réunies sous forme d’onglets d’une seule fenêtre, comme dans les autres apps de macOS. Dans Réglages › Général, « Ouvrir les nouvelles fenêtres dans des onglets » choisit quand cela se produit : « Jamais », « Automatiquement », qui suit le réglage des onglets de macOS, ou « Toujours ».</p>
+<p>Avec « Toujours » et des fenêtres source et d’aperçu séparées, la source de chaque document que vous ouvrez devient un onglet de la fenêtre source, et son aperçu un onglet de la fenêtre d’aperçu ; les consoles et les logs sont réunis de la même façon. Lorsque vous composez ou synchronisez, sélectionner un onglet d’une fenêtre fait passer au premier plan l’onglet correspondant de l’autre. Si la source et l’aperçu sont affichés dans une seule fenêtre (« Source et aperçu » réglé sur « Utiliser une seule fenêtre » dans Réglages › Général), chaque onglet contient un document entier. Fenêtre › Utiliser une seule fenêtre et Fenêtre › Utiliser des fenêtres séparées font passer le document actif d’une façon à l’autre.</p>
+<p>Une fenêtre qui montre ensemble la source et l’aperçu, avec ou sans onglets, se prête bien au plein écran : la console flotte alors au-dessus pendant la composition.</p>
+
+<h2>Ouvrir un projet dans des onglets</h2>
+<p>Pour un livre dont les chapitres sont des fichiers séparés, le fichier racine peut demander à TeXShop d’ouvrir les chapitres sous forme d’onglets de sa fenêtre. Placez cette ligne parmi les 20 premières lignes du fichier racine :</p>
+<pre>% !TEX useTabs</pre>
+<p>À l’ouverture du fichier racine, les fichiers désignés par ses commandes <code>\include</code> s’ouvrent dans des onglets. Des noms courts pour les onglets peuvent suivre sur la même ligne, entre parenthèses et séparés par des virgules ; un blanc entre deux virgules garde le nom de ce fichier :</p>
+<pre>% !TEX useTabs (Intro, Groups, , Fields)</pre>
+<p>Pour donner aussi des onglets aux fichiers des commandes <code>\input</code>, utilisez ce réglage caché dans Terminal :</p>
+<pre>defaults write TeXShop TabsAlsoForInputFiles YES</pre>
+<p>Pour choisir vous-même les fichiers, placez une ligne <code>useTabsWithFiles</code> parmi les 20 premières lignes du fichier racine et ajoutez une ligne <code>tabbedFile</code> pour chaque onglet, le tout parmi ses 50 premières lignes. Un nom pour l’onglet peut suivre entre parenthèses :</p>
+<pre>% !TEX useTabsWithFiles
+% !TEX tabbedFile{chapter1/Introduction.tex} (Introduction)
+% !TEX tabbedFile{Galois.log}
+% !TEX tabbedFile{~/Graphics/diagram.pdf}</pre>
+<p>Un chemin est relatif au dossier du fichier racine, part de votre dossier de départ avec <code>~</code>, ou est un chemin complet. Écrivez toujours l’extension, même quand le Finder la masque : ces onglets peuvent aussi montrer des logs, des fichiers PDF et des images. Chaque fichier s’ouvre comme si vous l’ouvriez vous-même ; un fichier source peut donc amener son aperçu avec lui.</p>
+<p>Voir Aide › Commentaires spéciaux et réglages cachés (en anglais) pour les autres lignes de commentaire magiques.</p>
+</main>
+</body>
+</html>

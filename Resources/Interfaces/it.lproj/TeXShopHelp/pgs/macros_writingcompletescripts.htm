@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scrivere script con i comandi di compilazione di TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; bibliografia; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; sequenza di comandi di compilazione">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto sulle macro</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminari</a></li>
+<li><a href="macros_default.htm">Le macro predefinite</a></li>
+<li><a href="macros_rearrange.htm">Riordinare il menu Macro</a></li>
+<li><a href="macros_define.htm">Definire nuove macro</a></li>
+<li><a href="macros_applescript.htm">Macro AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macro AppleScript predefinite</a></li>
+<li><a href="macros_defapplescript.htm">Definire macro AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Creare finestre di dialogo</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">Scrivere script con i comandi di compilazione di TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Scrivere script con i comandi di compilazione di TeXShop</h1>
+<p>Un documento con una bibliografia richiede una sequenza di compilazioni: LaTeX scrive il file .aux, BibTeX lo usa per scrivere i file .bbl e .blg, LaTeX viene eseguito di nuovo per aggiungere la bibliografia al documento e un’altra volta ancora per aggiornarne i riferimenti. I tuoi progetti potrebbero richiedere sequenze simili, e una macro AppleScript può eseguirle al posto tuo.</p>
+<p>La macro Macro › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice, fornita con TeXShop, mostra come fare. Ecco il suo contenuto:</p>
+<pre>--Applescript
+
+set fileName to #FILEPATH#
+if fileName is equal to  ""
+activate
+display dialog "Please save the file first"  buttons {"OK"} default button "OK"
+return
+end if
+
+set frontName to #DOCUMENTNAME#
+
+tell document frontName of application "TeXShop"
+
+    latexinteractive
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    bibtex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+end tell</pre>
+<p>La prima riga fa di questa una macro AppleScript eseguita da ScriptRunner, così può chiedere a TeXShop di compilare (consulta <a href="macros_applescript.htm">Macro AppleScript</a>). Le righe successive controllano #FILEPATH#, il percorso completo del file sorgente. È una stringa vuota quando il documento non è ancora stato salvato; in tal caso lo script ti chiede di salvarlo e si ferma.</p>
+<p>Lo script si riferisce poi al documento tramite #DOCUMENTNAME#. TeXShop salva il documento da sé quando inizia un comando di compilazione, quindi lo script non ha bisogno di salvarlo.</p>
+<p>I comandi rimanenti eseguono latexinteractive, bibtex, latex e latex. Un comando di compilazione restituisce subito il controllo allo script, prima che la compilazione sia terminata, perciò dopo ogni comando un ciclo <code>repeat</code> attende finché <code>taskdone</code> segnala che il lavoro è completato. La riga <code>delay 2</code> fa sì che lo script faccia una pausa tra un controllo e l’altro, invece di chiedere di continuo e rallentare il computer. I comandi sono elencati in <a href="macros_defapplescript.htm">Definire macro AppleScript</a>.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scrivere script con comandi della shell</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; script della shell; do shell script; Run pdfLaTeX with Shell Escape; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto sulle macro</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminari</a></li>
+<li><a href="macros_default.htm">Le macro predefinite</a></li>
+<li><a href="macros_rearrange.htm">Riordinare il menu Macro</a></li>
+<li><a href="macros_define.htm">Definire nuove macro</a></li>
+<li><a href="macros_applescript.htm">Macro AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macro AppleScript predefinite</a></li>
+<li><a href="macros_defapplescript.htm">Definire macro AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Creare finestre di dialogo</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di compilazione di TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm" class="current">Scrivere script con comandi della shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Scrivere script con comandi della shell</h1>
+<p>Questa pagina usa la macro Run pdfLaTeX with Shell Escape di Claus Gerhardt, in Macro › Claus Gerhardt Macros, per mostrare come un AppleScript richiama uno script della shell. Lo script della shell in sé è semplice: aggiunge al percorso di ricerca le cartelle dei programmi TeX ed esegue pdflatex con <code>--shell-escape</code>. I tuoi script probabilmente faranno di più, per esempio eseguiranno diversi programmi in sequenza; è allora che queste tecniche diventano utili.</p>
+
+<h2 id="shell-script">Lo script della shell</h2>
+<p>Lo script della shell è ~/Library/TeXShop/bin/pdflatexc. Non dipende da TeXShop: se la sua cartella è nel tuo percorso di ricerca, digitando <code>pdflatexc myfile.tex</code> in Terminale lo si esegue. Eccolo:</p>
+<pre>#!/bin/tcsh
+# pdflatexc
+# Claus Gerhardt
+#
+# Usage
+# pdflatexc filename.tex
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+
+pdflatex --shell-escape "$1"</pre>
+
+<h2 id="applescript">L’AppleScript</h2>
+<p>La macro che richiama questo script della shell è più interessante:</p>
+<pre>--Applescript
+-- Apply only to an already saved file.
+
+set scriptPath to (do shell script "dirname " &amp; "~/Library/TeXShop/Scripts/ex")
+set scriptPath to scriptPath &amp; "/setname.scpt"
+set scriptName to POSIX file scriptPath as alias
+set scriptLiB to (load script scriptName)
+tell scriptLib
+set frontName to setname(#NAMEPATH#,#TEXPATH#)
+end tell
+
+set fileName to  #TEXPATH#
+set n to (number of characters of contents of fileName)
+set fileNamequoted to quoted form of fileName
+set baseName to do shell script "basename " &amp; fileNamequoted
+set m to (number of characters of contents of baseName)
+set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
+
+set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName
+do shell script shellScript
+
+tell document frontName of application "TeXShop"
+    refreshpdf
+end tell</pre>
+<p>Dopo i commenti, le prime sette righe sono una ricetta di Claus Gerhardt per salvare il file sorgente e trovare il nome del suo documento, che viene messo in <code>frontName</code>. Il lavoro lo fa lo script compilato setname.scpt in ~/Library/TeXShop/Scripts: queste righe trovano il percorso ~/Library/TeXShop/Scripts/setname.scpt, caricano lo script e lo richiamano con #NAMEPATH# e #TEXPATH#.</p>
+<p>Spesso si può ottenere lo stesso risultato in modo più semplice con</p>
+<pre>set frontName to #DOCUMENTNAME#
+tell document frontName of application "TeXShop"
+    save
+end tell</pre>
+<p>La ricetta ha due vantaggi. Funziona anche quando il documento in primo piano non è quello che deve ricevere i comandi successivi, per esempio un file di log come /Users/name/Examples/myfile.log. E se il file non è mai stato salvato, la ricetta restituisce un errore, mentre il comando <code>save</code> lascerebbe lo script in attesa dietro una finestra di dialogo di salvataggio.</p>
+<p>Le sei righe successive impostano le variabili <code>dirName</code> e <code>baseName</code>. Se il file sorgente è /Users/name/My Papers/Stuff/myfile.tex, <code>dirName</code> è <code>'/Users/name/My Papers/Stuff'</code>, racchiuso tra virgolette per la shell a causa dello spazio nel nome di una cartella, e <code>baseName</code> è <code>myfile.tex</code>. Il nome del file viene racchiuso tra virgolette allo stesso modo quando viene passato allo script della shell, quindi entrambi possono contenere spazi.</p>
+<p>Le tre righe successive richiamano lo script della shell. Il risultato è lo stesso che si otterrebbe digitando <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code> in Terminale. Le ultime tre righe aggiornano la finestra di anteprima.</p>
+<p>Alcune di queste righe sono complicate, ma si possono copiare senza modifiche in nuovi script.</p>
+
+<h2 id="do-shell-script">Eseguire comandi della shell da AppleScript</h2>
+<p>AppleScript esegue un comando della shell nella forma</p>
+<pre>do shell script "cmd input"</pre>
+<p>Per costruire un comando a partire da più parti, scrivilo nella forma equivalente</p>
+<pre>do shell script "cmd " &amp; "input"</pre>
+<p>Nota lo spazio dopo <code>cmd</code>. La e commerciale unisce due stringhe:</p>
+<pre>"cmd " &amp; "input" = "cmd input"</pre>
+<p>Una shell avviata da AppleScript parte dalla cartella radice. Il comando</p>
+<pre>do shell script "cd " &amp; dirName</pre>
+<p>passa alla cartella contenuta in <code>dirName</code>, che è già racchiusa tra virgolette, quindi non servono altre virgolette.</p>
+<p>Ogni <code>do shell script</code> avvia una nuova shell, quindi un comando successivo non si troverebbe in quella cartella. Per eseguire altri comandi nella stessa cartella, uniscili con il punto e virgola in un unico comando, come in Terminale:</p>
+<pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
+<p>Lo script qui sopra fa proprio questo con cmd1 = <code>cd</code>, input1 = <code>dirName</code>, cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code> e input2 = <code>baseName</code>. Le righe</p>
+<pre>set shellScript to "cd " &amp; dirName &amp; ";"
+set shellScript to shellScript &amp; "~/Library/TeXShop/bin/pdflatexc  " &amp; quoted form of baseName</pre>
+<p>sono semplicemente un modo comodo per mettere questa sequenza in un’unica variabile.</p>
+</main>
+</body>
+</html>

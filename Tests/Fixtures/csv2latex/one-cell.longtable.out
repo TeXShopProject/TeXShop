@@ -1,0 +1,12 @@
+\begin{longtable}{l}
+alone \\
+\endfirsthead
+alone \\
+\endhead
+\multicolumn{1}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+
+\end{longtable}

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Skripte mit TeXShop-Satzbefehlen schreiben</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="AppleScript; Makro Bibliography; latexinteractive; bibtex; taskdone; Folge von Satzbefehlen">
+<meta name="description" content="AppleScript; Literaturverzeichnis; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; Folge von Satzbefehlen">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <main id="content">
 <h1>Skripte mit TeXShop-Satzbefehlen schreiben</h1>
 <p>Ein Dokument mit Literaturverzeichnis braucht eine Folge von Satzläufen: LaTeX schreibt die .aux-Datei, BibTeX schreibt daraus die .bbl- und .blg-Dateien, LaTeX läuft erneut, um das Literaturverzeichnis in das Dokument aufzunehmen, und noch einmal, um die Verweise darauf zu aktualisieren. Ihre Projekte brauchen vielleicht ähnliche Folgen, und ein AppleScript-Makro kann sie für Sie ausführen.</p>
-<p>Das mit TeXShop gelieferte Makro Makros › Applescript › Bibliography zeigt, wie das geht. Hier ist sein Inhalt:</p>
+<p>Das mit TeXShop gelieferte Makro Makros › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice zeigt, wie das geht. Hier ist sein Inhalt:</p>
 <pre>--Applescript
 
 set fileName to #FILEPATH#

@@ -74,7 +74,7 @@
         "nl": "LaTeX-bewuste spellingcontrole gebruiken (aanbevolen)",
         "pt": "Usar verificação adaptada ao LaTeX (recomendado)",
         "pt-PT": "Usar verificação adaptada ao LaTeX (recomendado)",
-        "ro": "Folosește verificarea adaptată la LaTeX (recomandat)",
+        "ro": "Folosiți verificarea adaptată la LaTeX (recomandat)",
         "ko": "LaTeX 구문을 고려한 맞춤법 검사 사용(권장)",
         "zh_CN": "使用考虑LaTeX语法的拼写检查（推荐）"
       }
@@ -131,14 +131,14 @@
       "default": "Edit Command Completion…",
       "overrides": {
         "ja": "コマンド補完ファイルを編集…",
-        "de": "Befehlsvervollständigung bearbeiten…",
+        "de": "Befehlsvervollständigung bearbeiten …",
         "fr": "Modifier la complétion des commandes…",
         "es": "Editar autocompletado de comandos…",
         "it": "Modifica il completamento dei comandi…",
         "nl": "Commandoaanvulling bewerken…",
         "pt": "Editar conclusão de comandos…",
         "pt-PT": "Editar conclusão de comandos…",
-        "ro": "Editează completarea comenzilor…",
+        "ro": "Editați completarea comenzilor…",
         "ko": "명령어 완성 파일 편집…",
         "zh_CN": "编辑命令补全文件…"
       }
@@ -166,12 +166,12 @@
         "de": "Installieren Sie TeX Live oder MacTeX und wählen Sie dann „Pfade erkennen“ unter Einstellungen > Satz.",
         "fr": "Installez TeX Live ou MacTeX, puis choisissez « Détecter les chemins » dans Réglages > Composition.",
         "es": "Instale TeX Live o MacTeX y elija «Detectar rutas» en Ajustes > Composición.",
-        "it": "Installa TeX Live o MacTeX, quindi scegli «Rileva percorsi» in Impostazioni > Composizione.",
+        "it": "Installa TeX Live o MacTeX, quindi scegli «Rileva percorsi» in Impostazioni > Compilazione.",
         "nl": "Installeer TeX Live of MacTeX en kies daarna ‘Paden detecteren’ bij Instellingen > Zetten.",
         "pt": "Instale o TeX Live ou o MacTeX e escolha “Detectar caminhos” em Ajustes > Composição.",
         "pt-PT": "Instale o TeX Live ou o MacTeX e escolha “Detetar caminhos” em Definições > Composição.",
-        "ro": "Instalați TeX Live sau MacTeX, apoi alegeți „Detectați căile” în Configurări > Compunere.",
-        "ko": "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '경로 자동 감지'를 선택하십시오.",
+        "ro": "Instalați TeX Live sau MacTeX, apoi alegeți „Detectați căile” în Configurări > Compilare.",
+        "ko": "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 ‘경로 자동 감지’를 선택하십시오.",
         "zh_CN": "请安装TeX Live或MacTeX，然后在设置 > 排版中选择“自动检测路径”。"
       }
     },
@@ -184,7 +184,7 @@
         "es": "Esta tecla está reservada para completar comandos.",
         "it": "Questo tasto è riservato al completamento dei comandi.",
         "nl": "Deze toets is gereserveerd voor commandoaanvulling.",
-        "pt": "Esta tecla está reservada para completar comandos.",
+        "pt": "Esta tecla está reservada para a conclusão de comandos.",
         "pt-PT": "Esta tecla está reservada para completar comandos.",
         "ro": "Această tastă este rezervată completării comenzilor.",
         "ko": "명령어 완성을 위해 예약된 키입니다.",
@@ -195,7 +195,7 @@
       "default": "Encoding",
       "overrides": {
         "ja": "文字コード",
-        "de": "Kodierung",
+        "de": "Codierung",
         "fr": "Encodage",
         "es": "Codificación",
         "it": "Codifica",

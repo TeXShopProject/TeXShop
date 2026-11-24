@@ -348,7 +348,7 @@ expected = {
     'en': [('Back/Forward', 'Back/Forward', 'Go Back', 'Go Forward', 'Back', 'Forward')] * 2,
     'de': [('Zurück/Vorwärts', 'Zurück/Vorwärts', 'Zurück', 'Vorwärts', 'Zurück', 'Vorwärts')] * 2,
     'es': [('Atrás/Adelante', 'Atrás/Adelante', 'Atrás', 'Adelante', 'Atrás', 'Adelante')] * 2,
-    'fr': [('Revenir/Avancer', 'Revenir/Avancer', 'Revenir', 'Avancer', 'Revenir', 'Avancer')] * 2,
+    'fr': [('Précédent/Suivant', 'Précédent/Suivant', 'Précédent', 'Suivant', 'Précédent', 'Suivant')] * 2,
     'it': [('Indietro/Avanti', 'Indietro/Avanti', 'Indietro', 'Avanti', 'Indietro', 'Avanti')] * 2,
     'ja': [('戻る／進む', '戻る／進む', '戻る', '進む', '戻る', '進む')] * 2,
     'ko': [('뒤로/앞으로', '뒤로/앞으로', '뒤로', '앞으로', '뒤로', '앞으로')] * 2,

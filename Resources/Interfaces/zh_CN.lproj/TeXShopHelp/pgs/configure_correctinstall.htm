@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>获取资源库中的新项目</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop；更新；New 文件夹；bin；Scripts；Engines Inactive；宏；损坏的文件；Backups；文件夹的默认内容">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">如何配置 TeXShop？</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">预备知识</a></li>
+<li><a href="configure_prefchanges.htm">建议更改的设置</a></li>
+<li><a href="configure_correctinstall.htm" class="current">获取资源库中的新项目</a></li>
+<li><a href="configure_hidden.htm">隐藏设置</a></li>
+<li><a href="configure_panel.htm">修改 LaTeX 面板</a></li>
+<li><a href="configure_autocompletion.htm">修改按键绑定</a></li>
+<li><a href="configure_menushortcuts.htm">重新定义菜单键盘快捷键</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>获取资源库中的新项目</h1>
+<p>TeXShop 把你可以更改的文件（例如模板、宏、引擎、按键绑定、LaTeX 面板文件和主题）保存在 ~/Library/TeXShop 中，即个人文件夹内“资源库”文件夹中的 TeXShop 文件夹。“TeXShop”>“打开 ~/Library/TeXShop”会在访达中打开它。TeXShop 首次运行时，会创建这个文件夹并放入默认内容。</p>
+
+<h2 id="updates">新版本会更改什么</h2>
+<p>新版本的 TeXShop 不会改动 ~/Library/TeXShop 的大部分内容，因此你所做的更改会保留下来。只有少数几处存放 TeXShop 自己的支持文件或可选项目，新版本会将它们更新为最新：</p>
+<ul>
+<li>文件夹 bin、Documents、ExternalEditorScripts 和 Scripts；</li>
+<li>Engines/Inactive 和 HTML/Inactive，其中存放可以移出来使用的引擎和 HTML 文件；</li>
+<li>HTML/Help.html，即“帮助”>“HTML 指令（英文）”所显示的页面；</li>
+<li>文件夹 New，它会被整体替换。</li>
+</ul>
+<p>在这些位置，TeXShop 自带的每个文件都会被替换为新版本，因此你对这些文件所做的更改会丢失；新文件会被添加进来，你以其他名称添加的文件则保持不变。要保留其中某个文件的你自己的版本，请用其他名称保存它。</p>
+<p>正在使用的引擎（即 Engines 文件夹本身中的引擎）不会被更改。只有当该文件夹上一次是由早于 6.00 的 TeXShop 版本更新时，TeXShop 才会向 Engines 中添加 html.engine，且只添加一次，并且只在没有同名文件时添加。在 Macros 文件夹中，TeXShop 自带且从未编辑过的少数几个宏（例如打开 TeXShop 网站的宏）会更新为当前的内容；编辑过的宏和你自己的宏保持不变。其他所有内容都会保留你的更改。</p>
+<p>TeXShop 会把它的版本记录在 ~/Library/TeXShop/New 中的隐藏文件 <code>.Version</code> 中，只有当自身版本比记录的版本新时才更新该文件夹。因此，~/Library/TeXShop 不会在每次启动 TeXShop 时被重写，运行较旧版本的 TeXShop 也不会更改它。</p>
+
+<h2 id="new">New 文件夹</h2>
+<p>New 文件夹中包含你可能想自行添加的项目，例如新的模板。请将这样的项目移到相应的文件夹（例如 Templates）中，然后按需编辑。“帮助”>“关于本发行版（英文）”会说明何时有可以取用的内容。</p>
+
+<h2 id="repair">丢失和损坏的文件</h2>
+<p>当 TeXShop 需要的文件（例如宏、LaTeX 面板文件、按键绑定、KeyEquivalents.plist 或主题）丢失或损坏时，TeXShop 会在启动时用自带的副本替换它，且不显示任何信息。损坏的文件保留在 ~/Library/TeXShop/Backups 中，你可以从中恢复所做的更改。</p>
+
+<h2 id="defaults">获取文件夹的默认内容</h2>
+<p>要获取某个文件夹（例如 Templates）最新的默认内容，请退出 TeXShop，将该文件夹移出 ~/Library/TeXShop（比如移到桌面），然后再次启动 TeXShop。它会重新创建该文件夹并放入默认内容。然后从移走的文件夹中拷贝回你想保留的内容。</p>
+</main>
+</body>
+</html>

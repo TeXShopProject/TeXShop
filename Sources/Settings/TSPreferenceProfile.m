@@ -221,7 +221,7 @@ static void *TSEngineProfileWatcherContext = &TSEngineProfileWatcherContext;
 TSEngineProfile TSEngineProfileForLanguages(NSArray<NSString *> *languages)
 {
     NSString *first = languages.firstObject.lowercaseString ?: @"";
-    return [first isEqualToString:@"ja"] || [first hasPrefix:@"ja-"] || [first hasPrefix:@"ja_"] ? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX;
+    return [first isEqualToString:@"ja"] || [first hasPrefix:@"ja-"] || [first hasPrefix:@"ja_"] ? TSEngineProfileLuaLaTeXJapanese : TSEngineProfilePdfLaTeX;
 }
 
 NSSet<TSPreferenceKey> *TSEngineProfileApply(NSUserDefaults *defaults, NSDictionary<TSPreferenceKey, id> *values)

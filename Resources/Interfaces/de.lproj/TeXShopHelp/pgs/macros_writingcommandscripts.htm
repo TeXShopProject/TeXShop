@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Skripte mit Shell-Befehlen schreiben</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="AppleScript; Shell-Skript; do shell script; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<meta name="description" content="AppleScript; Shell-Skript; do shell script; Run pdfLaTeX with Shell Escape; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
 </nav>
 <main id="content">
 <h1>Skripte mit Shell-Befehlen schreiben</h1>
-<p>Diese Seite zeigt am Makro pdflatexc von Claus Gerhardt unter Makros › Claus Gerhardt Macros, wie ein AppleScript ein Shell-Skript aufruft. Das Shell-Skript selbst ist einfach: Es fügt die Ordner der TeX-Programme dem Suchpfad hinzu und startet pdflatex mit <code>--shell-escape</code>. Ihre eigenen Skripte werden wahrscheinlich mehr tun, etwa mehrere Programme nacheinander starten; dann werden diese Techniken nützlich.</p>
+<p>Diese Seite zeigt am Makro Run pdfLaTeX with Shell Escape von Claus Gerhardt unter Makros › Claus Gerhardt Macros, wie ein AppleScript ein Shell-Skript aufruft. Das Shell-Skript selbst ist einfach: Es fügt die Ordner der TeX-Programme dem Suchpfad hinzu und startet pdflatex mit <code>--shell-escape</code>. Ihre eigenen Skripte werden wahrscheinlich mehr tun, etwa mehrere Programme nacheinander starten; dann werden diese Techniken nützlich.</p>
 
 <h2 id="shell-script">Das Shell-Skript</h2>
 <p>Das Shell-Skript ist ~/Library/TeXShop/bin/pdflatexc. Es hängt nicht von TeXShop ab: Liegt sein Ordner in Ihrem Suchpfad, startet die Eingabe <code>pdflatexc myfile.tex</code> im Terminal das Skript. Hier ist es:</p>
@@ -74,7 +74,7 @@ end tell</pre>
 tell document frontName of application "TeXShop"
     save
 end tell</pre>
-<p>Das Rezept hat zwei Vorteile. Es funktioniert auch, wenn das vorderste Dokument nicht dasjenige ist, das die späteren Befehle erhalten soll, etwa eine Log-Datei wie /Users/name/Examples/myfile.log. Und wurde die Datei noch nie gesichert, gibt das Rezept einen Fehler zurück, während der Befehl <code>save</code> das Skript hinter einem Sichern-Dialog warten ließe.</p>
+<p>Das Rezept hat zwei Vorteile. Es funktioniert auch, wenn das vorderste Dokument nicht dasjenige ist, das die späteren Befehle erhalten soll, etwa eine Protokolldatei wie /Users/name/Examples/myfile.log. Und wurde die Datei noch nie gesichert, gibt das Rezept einen Fehler zurück, während der Befehl <code>save</code> das Skript hinter einem Sichern-Dialog warten ließe.</p>
 <p>Die nächsten sechs Zeilen setzen die Variablen <code>dirName</code> und <code>baseName</code>. Ist die Quelltextdatei /Users/name/My Papers/Stuff/myfile.tex, so ist <code>dirName</code> gleich <code>'/Users/name/My Papers/Stuff'</code>, wegen des Leerzeichens in einem Ordnernamen für die Shell in Anführungszeichen gesetzt, und <code>baseName</code> ist <code>myfile.tex</code>. Der Dateiname wird ebenso in Anführungszeichen gesetzt, wenn er an das Shell-Skript übergeben wird, sodass beide Leerzeichen enthalten dürfen.</p>
 <p>Die nächsten drei Zeilen rufen das Shell-Skript auf. Das Ergebnis ist dasselbe wie die Eingabe von <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code> im Terminal. Die letzten drei Zeilen aktualisieren das Vorschaufenster.</p>
 <p>Einige dieser Zeilen sind kompliziert, lassen sich aber unverändert in neue Skripte kopieren.</p>

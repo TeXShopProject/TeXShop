@@ -87,7 +87,7 @@
     },
     "it": {
       "SettingsCategories.strings": {
-        "catalog.typesetting.0.2.title": "Metodo di composizione",
+        "catalog.typesetting.0.2.title": "Metodo di compilazione",
         "catalog.typesetting.3.0.title": "Motori TeX",
         "catalog.typesetting.3.1.title": "Ghostscript",
         "catalog.typesetting.3.2.title": "Secondi motori TeX",
@@ -179,7 +179,7 @@
         "group.typesetting.5.title": "Via DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Confirmar shell-escape"
+        "catalog.typesetting.4.2.title": "Confirmar shell escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direto",
@@ -200,7 +200,7 @@
         "group.typesetting.5.title": "Via DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Confirmar shell-escape"
+        "catalog.typesetting.4.2.title": "Confirmar shell escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direto",
@@ -213,7 +213,7 @@
     },
     "ro": {
       "SettingsCategories.strings": {
-        "catalog.typesetting.0.2.title": "Metoda de tehnoredactare",
+        "catalog.typesetting.0.2.title": "Metoda de compilare",
         "catalog.typesetting.3.0.title": "Motoare TeX",
         "catalog.typesetting.3.1.title": "Ghostscript",
         "catalog.typesetting.3.2.title": "Al doilea set de motoare TeX",
@@ -248,7 +248,7 @@
         "191.title": "直接生成PDF",
         "187.title": "经由DVI"
       },
-      "note_prefix": "用于含有“% !TEX useAlternatePath”的文档。",
+      "note_prefix": "用于含有“% !TEX useAlternatePath”的文稿。",
       "Localizable.strings": {
         "Not found": "未找到"
       }

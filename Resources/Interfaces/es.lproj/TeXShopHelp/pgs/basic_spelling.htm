@@ -52,10 +52,10 @@
 
 <h2>Ajustes › Ortografía</h2>
 
-<p>En el grupo «Comprobar ortografía», «Comprobar ortografía mientras se escribe» establece si las palabras mal escritas se subrayan en un documento cuando se abre, «Autocorregir ortografía» establece si «Corregir ortografía automáticamente» está activado en un documento cuando se abre, y «Diccionario» se describe más abajo. El grupo Método elige cómo se comprueba el código TeX:</p>
+<p>En el grupo «Comprobar ortografía», «Comprobar ortografía mientras se escribe» establece si las palabras mal escritas se subrayan en un documento cuando se abre, «Corregir ortografía automáticamente» establece si la corrección automática está activada en un documento cuando se abre, y «Diccionario» se describe más abajo. El grupo Método elige cómo se comprueba el código TeX:</p>
 <dl>
 <dt>«Usar corrección adaptada a LaTeX (recomendado)»</dt>
-<dd>El método descrito arriba. «Editar exclusiones de LaTeX…», al final de su línea, abre las reglas que indican qué se omite.</dd>
+<dd>El método descrito arriba. «Editar reglas de exclusión de LaTeX…», al final de su línea, abre las reglas que indican qué se omite.</dd>
 <dt>«Método anterior»</dt>
 <dd>macOS lo comprueba todo, salvo lo que excluyen las tres opciones que hay debajo: «No comprobar comandos LaTeX», «No comprobar parámetros», que omite los parámetros de algunos comandos con palabras especiales, como <code>\usepackage</code>, y «No comprobar comentarios». Estas opciones solo funcionan mientras el resaltado de sintaxis está activado, y Comprobar documento ahora no las tiene en cuenta.</dd>
 </dl>
@@ -63,7 +63,7 @@
 
 <h2>Reglas de exclusión</h2>
 
-<p>Las reglas de la revisión ortográfica adaptada a LaTeX están en el archivo ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Ábralo con «Editar exclusiones de LaTeX…» en Ajustes o con Edición › Ortografía y gramática › Editar excepciones de ortografía…; se abre en TeXShop, y su principio explica el formato. Por ejemplo, estas líneas omiten el primer argumento de un comando <code>\mycommand</code> y el contenido del entorno <code>proof</code>:</p>
+<p>Las reglas de la revisión ortográfica adaptada a LaTeX están en el archivo ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Ábralo con «Editar reglas de exclusión de LaTeX…» en Ajustes o con Edición › Ortografía y gramática › Editar exclusiones de ortografía…; se abre en TeXShop, y su principio explica el formato. Por ejemplo, estas líneas omiten el primer argumento de un comando <code>\mycommand</code> y el contenido del entorno <code>proof</code>:</p>
 <pre>skip-args  1  mycommand
 skip-body  proof</pre>
 <p>Los cambios tienen efecto la próxima vez que se compruebe la ortografía. Si se borra el archivo, TeXShop crea una copia nueva del archivo por omisión la próxima vez que se abre. Para no omitir nada, deje en él solo líneas de comentario.</p>

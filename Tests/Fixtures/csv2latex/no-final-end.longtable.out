@@ -1,0 +1,13 @@
+\begin{longtable}{ll}
+x & y \\
+\endfirsthead
+x & y \\
+\endhead
+\multicolumn{2}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+z & w \\
+
+\end{longtable}

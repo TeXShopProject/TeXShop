@@ -1,6 +1,23 @@
 #!/bin/zsh
 
-java -jar $HOME/Library/TeXShop/bin/jing.jar $HOME/Documents/mathbook/schema/pretext.rng "$1" 
+# Checks the PreTeXt file against the PreTeXt schema with xmllint of macOS.
+# (Up to TeXShop 6.00 RC 2 this engine ran jing, which needs Java.)
+# The exit status is that of xmllint: 0 when the file is valid, 1 when it is not well-formed XML,
+# 3 when it does not follow the schema. When the schema is not found, it stops with status 1.
 
-echo "Finished. No news is good news."
+schema="$HOME/Documents/mathbook/schema/pretext.rng"
+if [[ ! -f "$schema" ]]; then
+	echo "PreTeXt-Validate: the PreTeXt schema $schema is not found; the PreTeXt files (mathbook) must be in ~/Documents/mathbook." >&2
+	exit 1
+fi
 
+/usr/bin/xmllint --noout --relaxng "$schema" "$1"
+result=$?
+
+case $result in
+0) echo "Finished. $1 is valid." ;;
+1) echo "PreTeXt-Validate: $1 is not well-formed XML; see the errors above." >&2 ;;
+3) echo "PreTeXt-Validate: $1 does not follow the PreTeXt schema; see the errors above." >&2 ;;
+*) echo "PreTeXt-Validate: xmllint stopped with status $result; see the messages above." >&2 ;;
+esac
+exit $result

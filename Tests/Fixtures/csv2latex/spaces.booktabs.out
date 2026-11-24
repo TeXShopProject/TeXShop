@@ -1,0 +1,9 @@
+\begin{tabular}{lll}
+
+\toprule
+ a  &   b &  c   \\
+\midrule
+    &  &   \\
+
+\bottomrule
+\end{tabular}

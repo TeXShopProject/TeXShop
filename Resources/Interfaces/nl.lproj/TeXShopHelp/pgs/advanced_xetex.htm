@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XeLaTeX en LuaLaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="XeLaTeX; LuaLaTeX; XeTeX; LuaTeX; fontspec; systeemlettertypen; OpenType; Unicode; engineprofiel">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm" class="current">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>XeLaTeX en LuaLaTeX</h1>
+<p>XeLaTeX en LuaLaTeX zijn versies van LaTeX die UTF-8-bronnen rechtstreeks lezen en zowel de OpenType- en TrueType-lettertypen gebruiken die op de Mac zijn geïnstalleerd als de lettertypen van TeX Live. Elk schrift dat Unicode codeert, kunt u in de bron typen en laten zetten, mits een lettertype de tekens ervan heeft. Beide maken deel uit van TeX Live, en beide zetten gewone LaTeX-documenten zonder aanpassingen.</p>
+
+<h2>Zetten met XeLaTeX of LuaLaTeX</h2>
+<p>Er zijn drie manieren, van de meest algemene tot de meest specifieke:</p>
+<ul>
+<li><strong>Engineprofiel.</strong> Kies bij Instellingen › Zetten › ‘Engineprofiel’ XeLaTeX of LuaLaTeX. Het profiel stelt de LaTeX- en plain TeX-commando’s van Direct PDF in op xelatex en xetex, of op lualatex en luatex, zodat de keuze LaTeX in de knoppenbalk en Zet › LaTeX die engine gebruiken. Voordat u bevestigt, toont een venster de waarden die het profiel instelt.</li>
+<li><strong>Engine-bestand.</strong> De engines LuaLaTeX en XeLaTeX staan in het venstermenu naast de knop ‘Zet’. Om nieuwe documenten met een van beide te zetten, kiest u ‘Engine-bestand’ bij Instellingen › Zetten › Engine › ‘Nieuwe documenten zetten met’, en de engine in het menu ‘Engine-bestand’; daar is aanvankelijk LuaLaTeX gekozen.</li>
+<li><strong>Magische commentaarregel.</strong> Een regel bovenaan de bron kiest de engine voor dat document, wat er verder ook is ingesteld:
+<pre>% !TEX program = LuaLaTeX</pre></li>
+</ul>
+<p>Voor de Japanse versie van LuaLaTeX, zie <a href="advanced_Japan.htm">Japans zetten</a>.</p>
+
+<h2>De lettertypen van de Mac gebruiken</h2>
+<p>Het pakket fontspec kiest lettertypen aan de hand van de namen die ze in de app Lettertypecatalogus hebben. Bijvoorbeeld:</p>
+<pre>% !TEX program = XeLaTeX
+\documentclass{article}
+\usepackage{fontspec}
+\setmainfont{Palatino}
+\setsansfont{Helvetica Neue}
+\begin{document}
+Text in Palatino, \textsf{and in Helvetica Neue}.
+\end{document}</pre>
+<p>Zonder fontspec, of zonder lettertypecommando, gebruiken beide engines Latin Modern, het standaardlettertype van LaTeX. Pakketten zoals polyglossia of babel regelen de woordafbreking en de conventies voor andere talen; hun documentatie is beschikbaar via Help › Toon documentatie voor pakket….</p>
+
+<h2>Andere schriften typen</h2>
+<p>Om Grieks, Cyrillisch, Arabisch, Hebreeuws of andere schriften te typen, voegt u de invoerbronnen ervan toe in Systeeminstellingen › Toetsenbord en wisselt u ertussen met het invoermenu in de menubalk. TeXShop kan regels in het Arabisch, Hebreeuws en Perzisch rechts uitlijnen; zie <a href="advanced_encoding.htm">Coderingen</a>. Bewaar zulke documenten in UTF-8, de standaardcodering voor nieuwe documenten.</p>
+</main>
+</body>
+</html>

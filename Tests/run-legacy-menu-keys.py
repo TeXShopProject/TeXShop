@@ -44,6 +44,14 @@ with tempfile.TemporaryDirectory(prefix='texshop-legacy-menu-') as td:
   assert len(former)==1,language;edits[language]['fullscreen']=former[0]
   # Its name in 6.00 beta 8, the last version that had it (written here: TetsuTeXShop has no tags of TeXShop).
   edits[language]['fullscreen600b8']=BETA8_FULLSCREEN[language]
+  # Source › Font of 5.58: the command of each position ('' for a separator or a submenu), and the names of the rich-text
+  # items that 6.00 removed.
+  font=[m for m in root.iter('menu') if m.get('systemMenu')=='font']
+  assert len(font)==1,language
+  edits[language]['fontactions']=[(f"TSShortcut.{i.find('connections/action').get('selector')}.{i.get('tag','0')}" if i.find('connections/action') is not None else '') for i in font[0].find('items')]
+  edits[language]['fontremoved']=[i.get('title') for i in font[0].find('items') if i.get('title') and (i.find('connections/action') is None or i.find('connections/action').get('selector') not in ('orderFrontFontPanel:','modifyFont:'))]
+  # (The Spanish Paste Style had no title in 5.58.)
+  assert len(edits[language]['fontactions'])==13 and len(edits[language]['fontremoved'])==(6 if language=='es' else 7),(language,edits[language]['fontactions'])
  # The Help menu of 5.58 and of 6.00 beta 9 (6b0e2342): the names of George Grätzer's Short Course, its symbol tables and
  # TeXShop Feature Confusion, which a KeyEquivalents.plist may use, and the actions at the positions of 5.58.
  for language in edits:

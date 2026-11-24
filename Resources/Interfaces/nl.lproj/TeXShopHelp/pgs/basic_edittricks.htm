@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handige bewerkingstips</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="bewerkingstips; overeenkomende haakjes; regels selecteren; commentaar; inspringen; menu Tags; Sluit huidige omgeving; bron splitsen; slepen en neerzetten; statusbalk; statistieken; Wissel met klembord; Kopieer met stijl; Tekensoort omzetten; reservekopie">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm" class="current">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Handige bewerkingstips</h1>
+
+<h2>Selecteren</h2>
+
+<p>Klik dubbel op een haakje, zoals ( of }, om alles tussen dat haakje en het bijbehorende haakje te selecteren; zo vindt u makkelijker een ontbrekende accolade. Klik dubbel met de Option-toets ingedrukt om alleen het haakje te selecteren. Klik of sleep over de regelnummers om hele regels te selecteren. De groep ‘Overeenkomende haakjes’ van Instellingen › Editor bepaalt hoe overeenkomende haakjes tijdens het typen worden aangegeven.</p>
+
+<h2>Commentaar en inspringen</h2>
+
+<p>Bron › Maak commentaar (<kbd>⌘{</kbd>) zet % aan het begin van de geselecteerde regels, en Bron › Hef commentaar op (<kbd>⌘}</kbd>) haalt het weg. Bron › Verhoog inspringniveau en Bron › Verlaag inspringniveau verplaatsen de geselecteerde regels naar rechts of links, met een tab als ‘Tabs gebruiken voor inspringmenu’ in Instellingen › Editor › Editorstijl aan staat, en anders met zoveel spaties als ‘Tabbreedte’ aangeeft. Een nieuwe regel begint met dezelfde tabs en spaties als de regel ervoor; druk op Delete om ze weg te halen.</p>
+
+<h2>Door de bron bewegen</h2>
+
+<p>Het venstermenu ‘Tags’ in de knoppenbalk toont de hoofdstukken, secties en andere onderdelen van het document; kies er een om erheen te gaan. Een regel die met <code>%:</code> begint, voegt de rest van de regel als eigen tag aan het menu toe. ‘Tags-menu in menubalk’ in Instellingen › Editor › Weergave zet hetzelfde menu in de menubalk. Het onderdeel ‘Labels’ van de knoppenbalk toont de labels van het document. Wijzig › Regelnummer… (<kbd>⌘L</kbd>) gaat naar een regel met een bepaald nummer.</p>
+
+<p>Venster › Splits venster (<kbd>⌃2</kbd>), of het onderdeel ‘Splits bron’ van de knoppenbalk, verdeelt het bronvenster in twee delen met dezelfde tekst, zodat u het ene deel van het document kunt lezen terwijl u aan een ander deel schrijft. Houd Option ingedrukt om het in twee delen naast elkaar te splitsen. Wat u in het ene deel typt, verschijnt ook in het andere.</p>
+
+<h2>Minder typen</h2>
+
+<p>Bron › Sluit huidige omgeving (<kbd>⌃⌘C</kbd>) voegt de <code>\end</code>-regel toe van de omgeving die nog open is, bijvoorbeeld <code>\end{itemize}</code> na een lijst. Commandoaanvulling maakt commando’s en omgevingen af die u bent begonnen te typen; zie <a href="basic_commandcompletion.htm">Commandoaanvulling</a>. Toetsbindingen vervangen een getypt teken door tekst; zie <a href="basic_autocompletion.htm">Toetsbindingen</a>. Het LaTeX-venster, het Matrix-venster en het menu Macro’s voegen langere stukken tekst in.</p>
+
+<h2>Bestanden op de bron neerzetten</h2>
+
+<p>Sleep een bestand vanuit de Finder naar de bron om er een commando voor in te voegen:</p>
+
+<table>
+<tr><th>Bestand</th><th>Ingevoegd commando</th></tr>
+<tr><td>.pdf, .png, .jpg, .jpeg, .tif, .tiff, .eps, .ps</td><td><code>\includegraphics[]{<var>pad</var>}</code></td></tr>
+<tr><td>.bib</td><td><code>\bibliography{<var>naam</var>}</code></td></tr>
+<tr><td>.bst</td><td><code>\bibliographystyle{<var>naam</var>}</code></td></tr>
+<tr><td>.sty</td><td><code>\usepackage{<var>naam</var>}</code></td></tr>
+<tr><td>.cls</td><td><code>\documentclass{<var>naam</var>}</code></td></tr>
+<tr><td>andere bestanden, zoals .tex</td><td><code>\input{<var>pad</var>}</code></td></tr>
+</table>
+
+<p>Hier is <var>pad</var> het pad van het bestand vanaf de map van het bronbestand, en <var>naam</var> de bestandsnaam zonder extensie. Een neergezette alias wordt vervangen door het bestand waarvoor die staat, dat TeX zelf niet zou kunnen vinden. Een bestand met een spatie in het pad wordt niet ingevoegd; TeXShop toont dan een waarschuwing.</p>
+
+<p>Om voor een soort bestand iets anders in te voegen, opent u de macro-editor (Macro’s › Open macro-editor...) en voegt u een submenu met de naam <code>Drag &amp; Drop</code> toe. Voeg daarin een onderdeel toe dat naar de extensie is genoemd, zoals <code>.pdf</code>, met als inhoud de tekst die moet worden ingevoegd, bijvoorbeeld <code>\includegraphics[#INS#]{%r}</code>; een onderdeel met de naam <code>.*</code> wordt gebruikt voor elke andere extensie, die geen eigen onderdeel heeft en niet in de tabel hierboven staat. De inhoud kan deze afkortingen gebruiken:</p>
+
+<dl>
+<dt><code>%F</code></dt><dd>het volledige pad van het neergezette bestand</dd>
+<dt><code>%f</code></dt><dd>de naam van het bestand</dd>
+<dt><code>%r</code></dt><dd>het pad van het bestand vanaf de map van het bronbestand</dd>
+<dt><code>%n</code></dt><dd>de naam van het bestand zonder extensie</dd>
+<dt><code>%e</code></dt><dd>de extensie</dd>
+</dl>
+
+<h2>De statusbalk en tekststatistieken</h2>
+
+<p>De statusbalk onder de bron toont de regels, tekens en woorden van het document, met tussen haakjes de aantallen in de selectie, en de positie, de regel en de kolom van het invoegpunt. Tekens worden geteld zoals ze worden gezien, dus een letter met accent of een emoji telt als één teken, en TeX-commando’s worden geteld zoals ze zijn geschreven; een emoji telt ook als een woord. Rechts staat de grootte van het bewaarde bestand. Bron › Toon statusbalk toont of verbergt de statusbalk in elk venster.</p>
+
+<p>‘Tekststatistieken…’ in de statusbalk, of Wijzig › Statistieken..., telt de tekst zonder de TeX-commando’s. Het TeX Live-programma detex haalt die uit het document of uit de selectie en voegt de bestanden toe die met <code>\input</code> en <code>\include</code> worden ingelezen; TeXShop telt wat overblijft op dezelfde manier als de statusbalk. Het document hoeft niet bewaard te zijn. Er wordt geteld als de popover opent en als op de vernieuwknop ervan wordt geklikt.</p>
+
+<h2>Het klembord</h2>
+
+<p>Wijzig › Wissel met klembord vervangt de selectie door de tekst op het klembord en zet de selectie op het klembord. Om twee stukken tekst te verwisselen, kopieert u het eerste, selecteert u het tweede en kiest u ‘Wissel met klembord’, en selecteert u daarna de plaats van het eerste en plakt u. Als er niets is geselecteerd, plakt het gewoon.</p>
+
+<p>Wijzig › Kopieer met stijl kopieert de selectie in het lettertype van de bron en met de kleuren van het thema voor lichte of donkere modus, met of zonder de achtergrondkleur, om te plakken in een tekstverwerker, een presentatie of een e-mail. Elk van de vier onderdelen ervan kan een toetscombinatie krijgen in Instellingen › Toetsenbord.</p>
+
+<h2>Tekens omzetten</h2>
+
+<p>De submenu’s ‘Tekensoort omzetten’ en ‘Unicode-normalisatie’ van het menu Wijzig, die ook in het contextuele menu van de bron staan, herschrijven de selectie; als er niets is geselecteerd, vraagt TeXShop of het hele document moet worden herschreven. ‘Tekensoort omzetten’ is vooral bedoeld voor Japanse documenten. Het zet om tussen hiragana en katakana, tussen cijfers en letters in volle en halve breedte, tussen tekens zoals omcirkelde cijfers en de commando’s van het pakket ajmacros, en tussen tekens buiten JIS X 0208 en de commando’s <code>\UTF</code> en <code>\CID</code> van het pakket otf. Het zet ook typografische aanhalingstekens om in TeX-aanhalingstekens. ‘Unicode-normalisatie’ zet de selectie om in NFC, NFD, NFKC of NFKD, of in Gewijzigde NFC of Gewijzigde NFD, die CJK-compatibiliteitsideogrammen ongewijzigd laten. Beide kunnen ongedaan worden gemaakt.</p>
+
+<h2>Reservekopieën</h2>
+
+<p>Als ‘Automatisch bewaren en versies inschakelen’ in Instellingen › Documenten en bewaren uit staat, schakelt u daar “Vorig bestand bewaren als ‘naam~’” in om bij elke keer bewaren de vorige versie van een bestand te behouden. De reservekopie heeft een tilde na de naam van het bestand, vóór de extensie: de reservekopie van paper.tex is paper~.tex.</p>
+
+<p>Zoeken en vervangen, met reguliere expressies en meervoudige vervanging, wordt beschreven in <a href="basic_find.htm">Zoeken en vervangen</a>.</p>
+</main>
+</body>
+</html>

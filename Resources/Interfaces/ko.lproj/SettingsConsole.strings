@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"765.title" = "상하로만 리사이즈";
-"766.title" = "상하 좌우로 리사이즈";
-"830.title" = "항상 보이기";
-"831.title" = "오류 발생시 보이기";
+"765.title" = "세로로만 크기 조절";
+"766.title" = "자유롭게 크기 조절";
+"830.title" = "항상 표시";
+"831.title" = "오류 발생 시 표시";
 "906.title" = "설정...";
 "PqO-5d-lRv.title" = "항상 같은 위치에서 열기";
 "ga2-ik-lSC.title" = "닫을 때 위치 저장";

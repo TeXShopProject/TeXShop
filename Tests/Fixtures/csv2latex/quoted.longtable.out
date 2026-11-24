@@ -1,0 +1,15 @@
+\begin{longtable}{ll}
+"Name" & "Note" \\
+\endfirsthead
+"Name" & "Note" \\
+\endhead
+\multicolumn{2}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+"Smith, J." & "line one \\
+line two" \\
+"say ""hi""" & 'single' \\
+
+\end{longtable}

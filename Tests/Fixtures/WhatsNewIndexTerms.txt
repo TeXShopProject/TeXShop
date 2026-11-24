@@ -26,7 +26,6 @@
 209
 21
 213
-22
 23
 2312
 24
@@ -143,7 +142,6 @@ alan
 alarming
 align
 all
-allow
 allowing
 allows
 almost
@@ -153,6 +151,7 @@ already
 alternate
 although
 altogether
+altpdflatexc
 always
 am
 an
@@ -217,7 +216,6 @@ auto
 automatic
 automatically
 automatically''
-automation
 autosave
 aux
 auxiliary
@@ -242,7 +240,6 @@ because
 become
 becomes
 before
-began
 begin
 beginning
 beginnings
@@ -261,6 +258,8 @@ bibdesk
 bibliography
 bibstuff
 bibtex
+bibtexc
+bibtexcpl
 big
 bigger
 bin
@@ -310,7 +309,7 @@ categories
 cause
 caused
 causes
-certainly
+cells
 chain
 chains
 change
@@ -336,6 +335,7 @@ citations
 citecolor
 citing
 claims
+classic
 click
 clicked
 clicking
@@ -356,6 +356,7 @@ coloring
 colorlinks
 colors
 colors''
+columns
 combination
 combined
 combining
@@ -368,7 +369,6 @@ comment
 comments
 commercial
 common
-commonly
 compare
 compilation
 compiled
@@ -397,7 +397,6 @@ consider
 console
 constant
 constants
-constraints
 consult
 contact
 contain
@@ -416,6 +415,7 @@ control
 convenient
 convergence
 conversion
+convert
 converted
 coordinates
 copied
@@ -477,8 +477,6 @@ debugging
 decides
 decline
 decomposed
-decrypted
-decrypting
 default
 defaults
 defective
@@ -527,7 +525,6 @@ display
 displayed
 displaying
 displays
-distributed
 divider
 divides
 do
@@ -560,6 +557,7 @@ duplicating
 during
 dvi
 dvipath
+dvips
 e
 each
 earlier
@@ -589,8 +587,6 @@ embarrassing
 emilio
 emphasize
 empire
-employ
-empty
 enable
 encoding
 encodings
@@ -619,7 +615,6 @@ ethanphil4
 european
 even
 evenly
-events
 eventually
 everything
 exact
@@ -658,8 +653,10 @@ extends
 extension
 extensions
 extra
+extract
 extracted
 extreme
+f
 facility
 fact
 fail
@@ -679,6 +676,7 @@ fetishist
 few
 fewer
 field
+figure
 file
 file's
 filename
@@ -691,6 +689,7 @@ filter
 final
 finally
 find
+finder
 finder's
 finds
 fine
@@ -732,7 +731,6 @@ four
 fourier
 fraction
 fractional
-free
 friend
 from
 front
@@ -753,6 +751,7 @@ generally
 george
 gestures
 get
+getfontset
 ghostscript
 gibbons
 gift
@@ -763,14 +762,12 @@ gives
 glance
 glass
 globe
-glory
 go
 goes
 golden
 gone
 good
 google
-got
 goto
 gracefully
 gradually
@@ -791,7 +788,6 @@ handling
 handover
 hangs
 hans
-happen
 happened
 happens
 has
@@ -829,6 +825,8 @@ hovering
 hovers
 how
 however
+htlatexc
+htlatexr
 html
 huh
 hyperfigures
@@ -849,6 +847,7 @@ illusion
 illustrating
 illustrations
 image
+images
 immediately
 implement
 implementing
@@ -901,7 +900,6 @@ integer
 integers
 intel
 intelligence
-intend
 intended
 interaction
 interactive
@@ -934,7 +932,9 @@ its
 itself
 iv
 japanese
+jar
 jeff
+jing
 job
 john
 jpeg
@@ -949,7 +949,6 @@ kernel
 key
 keyboard
 keyboards
-keychain
 keynote
 keys
 keystroke
@@ -988,7 +987,6 @@ leftarrow
 legacy
 lemmas
 length
-less
 lesson
 let
 letters
@@ -999,7 +997,6 @@ library
 light
 like
 likely
-limited
 line
 lines
 link
@@ -1062,11 +1059,11 @@ maintainer
 maintains
 major
 make
+makeindex
 makes
 making
 malformed
 malumbres
-managed
 management
 manipulated
 manner
@@ -1148,6 +1145,9 @@ moved
 moves
 movies
 moving
+mpost
+mpostc
+mpostcpl
 mr
 multipage
 multiple
@@ -1213,7 +1213,6 @@ occurs
 october
 of
 off
-offer
 offers
 often
 ok
@@ -1230,6 +1229,7 @@ opacity
 open
 opened
 opening
+openpdf
 opens
 operation
 option
@@ -1280,7 +1280,6 @@ party
 pass
 passes
 password
-passwords
 past
 paste
 path
@@ -1291,7 +1290,9 @@ pay
 pdf
 pdfkit
 pdflatex
+pdflatexc
 pdfpath
+pdfselectc
 pdfstartview
 pearce
 people
@@ -1303,6 +1304,7 @@ periods
 perl
 permanent
 permission
+personal
 peter
 phase
 pi
@@ -1347,6 +1349,7 @@ preliminary
 present
 preserve
 press
+pretext
 prevent
 prevented
 preview
@@ -1356,7 +1359,6 @@ previously
 primitive
 print
 printed
-privacy
 probably
 problem
 problems
@@ -1388,6 +1390,7 @@ proves
 provide
 provided
 provides
+ps2pdf
 pspath
 purpose
 push
@@ -1398,7 +1401,6 @@ quick
 quickly
 quit
 quitting
-quotation
 quoted
 r
 rails
@@ -1429,9 +1431,7 @@ recent
 recently
 recognize
 recommended
-recompiled
 recreate
-recreated
 rect
 rectangle
 red
@@ -1458,6 +1458,7 @@ reluctant
 remain
 remained
 remains
+remaking
 remember
 remembered
 remembers
@@ -1542,6 +1543,7 @@ same
 sample
 save
 saved
+savefontset
 saves
 saving
 saw
@@ -1568,8 +1570,6 @@ second
 seconds
 section
 sections
-secure
-security
 see
 seems
 seen
@@ -1596,7 +1596,6 @@ setting
 settings
 seven
 several
-severely
 sharp
 sharpe
 sharpe's
@@ -1632,6 +1631,7 @@ single
 site
 situation
 size
+sizes
 sizing
 sketch
 skim
@@ -1646,7 +1646,6 @@ smith
 smooth
 so
 software
-solve
 some
 someone
 something
@@ -1657,6 +1656,7 @@ sophisticated
 sort
 source
 space
+spaces
 spanish
 sparkle
 special
@@ -1668,6 +1668,7 @@ splits
 splitting
 spot
 spotlight
+spreadsheet
 stable
 stackoverflow
 standard
@@ -1698,7 +1699,6 @@ students
 stupid
 style
 sub
-subdirectory
 subfolder
 subfolders
 submenu
@@ -1709,7 +1709,6 @@ substantial
 substitute
 subtab
 subtle
-subviews
 succeeds
 such
 suddenly
@@ -1729,7 +1728,6 @@ surprises
 survey
 svb
 swap
-swift
 switch
 switched
 switches
@@ -1747,6 +1745,8 @@ t
 tab
 tabbed
 table
+tabularize
+tag
 tags
 tahoe
 take
@@ -1758,7 +1758,6 @@ taught
 tcsh
 teaching
 team
-technique
 tell
 telling
 tells
@@ -1769,6 +1768,8 @@ temporary
 ten
 terada
 terminal
+test
+testfontset
 tex
 tex4ht
 texbin
@@ -1874,7 +1875,6 @@ understand
 undesirable
 undo
 unexpected
-unfortunately
 unicode
 units
 unix
@@ -1935,7 +1935,6 @@ very
 vi
 videos
 view
-viewers
 views
 visible
 voisin
@@ -1998,3 +1997,4 @@ zero
 zlib
 zoom
 ’s
+🌐

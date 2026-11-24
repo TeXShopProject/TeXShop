@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>소스와 미리보기 동기화</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="SyncTeX; 동기화; Sync; Command-클릭; Sync 방식; PDF 검색; synctex.gz; projectfile; useConTeXtSyncParser">
+<meta name="description" content="SyncTeX; 동기화; Sync; Command-클릭; 동기화 방식; PDF 검색; synctex.gz; projectfile; useConTeXtSyncParser">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
 <li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
-<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_externaleditor.htm">외부 편집기 사용하기</a></li>
 <li><a href="advanced_experiments.htm">실험</a></li>
 <li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
 <li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
@@ -49,8 +49,8 @@
 <h2>여러 파일로 된 프로젝트</h2>
 <p>장 파일이 <code>% !TEX root</code>로 루트 파일을 지정한 프로젝트(<a href="advanced_root.htm">프로젝트 루트 파일 설정</a> 참조)에서는, 장 파일에서 Command-클릭하면 문서 전체의 미리보기에서 해당 위치로 이동하고, 미리보기에서 Command-클릭하면 클릭한 곳이 들어 있는 장 파일이 열립니다. 설정 › 조판 › 소스와 미리보기 동기화 › “동기화로 여는 파일을 루트 파일 윈도우의 탭으로 열기”가 켜져 있으면, 이렇게 여는 파일은 별도의 윈도우가 아니라 루트 파일 윈도우의 탭으로 열립니다.</p>
 
-<h2>Sync 방식</h2>
-<p>설정 › 조판 › 소스와 미리보기 동기화 › Sync 방식에서는 두 가지 중 하나를 선택합니다.</p>
+<h2>동기화 방식</h2>
+<p>설정 › 조판 › 소스와 미리보기 동기화 › 동기화 방식에서는 두 가지 중 하나를 선택합니다.</p>
 <dl>
 <dt>SyncTeX(권장)</dt><dd>위에서 설명한 대로 synctex 파일을 사용합니다. 기본값입니다.</dd>
 <dt>PDF 검색</dt><dd>소스에서 클릭한 곳 주변의 텍스트를 PDF에서 찾고, 미리보기에서 클릭한 곳 주변의 텍스트를 소스에서 찾습니다. synctex 파일이 필요 없지만, 수식이나 명령이 많은 텍스트처럼 조판된 텍스트가 소스와 다른 곳에서는 찾지 못합니다. 미리보기의 어떤 곳이 어느 파일에 있는지 찾을 때는 루트 파일의 <code>\include</code> 명령과 <code>\input</code> 명령에 지정된 파일을 검색합니다. 다른 방법으로 파일을 포함하는 프로젝트에서는 루트 파일에 다음과 같은 줄로 그 파일들을 나열합니다.
@@ -61,7 +61,7 @@
 
 <h2>ConTeXt</h2>
 <p>ConTeXt에서는 문서의 설정 부분에 <code>\setupsynctex[state=start,method=min]</code>을 추가하고, 루트 파일 첫머리에 <code>% !TEX useConTeXtSyncParser</code> 줄을 넣습니다. 그러면 TeXShop은 ConTeXt 자체의 동기화 코드를 사용합니다. <a href="advanced_context.htm">ConTeXt와 MetaPost</a>를 참조하십시오.</p>
-<p>다른 에디터에서 열어 둔 소스와 동기화하는 방법은 <a href="advanced_externaleditor.htm">외부 에디터 사용하기</a>를 참조하십시오.</p>
+<p>다른 편집기에서 열어 둔 소스와 동기화하는 방법은 <a href="advanced_externaleditor.htm">외부 편집기 사용하기</a>를 참조하십시오.</p>
 </main>
 </body>
 </html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>实验台</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="实验台；试排公式；代码片段；源代码面板；预览面板；实验台控制台">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm" class="current">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>实验台</h1>
+<p>“编辑”>“实验台…”让你在把一小段棘手的 LaTeX 代码（例如公式、表格或 TikZ 图形）放进文稿之前先试一试。它在源代码窗口处于活跃状态时可用。</p>
+<p>该命令会打开一个源代码面板。如果在源代码窗口中选择了文本，这些文本会被拷贝到面板中；否则面板显示你上次留在其中的内容。键入或编辑这段代码（例如 <code>$$\sqrt{x^2 + y^2}$$</code>），然后点按面板底部的“排版”按钮。预览面板会显示结果。第一次显示的是第一页的顶部；再次排版时，它会保持你正在查看的那部分页面。这段代码可以是任何内容，从一个公式到好几页都可以。</p>
+
+<h2>代码如何排版</h2>
+<p>TeXShop 排版的文件由文稿的导言区（即 <code>\begin{document}</code> 之前的所有内容）、这段代码以及 <code>\end{document}</code> 组成。在带有根文件的项目中，使用根文件的导言区。你的文稿及其所在文件夹不会被更改：</p>
+<ul>
+<li>该文件在一个临时文件夹中排版，这个文件夹中有文稿旁边的文件和文件夹的副本，因此图片能像排版文稿时一样被找到，使用以 <code>./</code> 开头的路径也可以。如果文稿所在的文件夹中有超过 5000 个项目（包括其子文件夹中的项目），则不拷贝任何内容；无法用这种方式拷贝的项目（例如其他磁盘上的文件或云服务中仅在线存储的文件）也会被略过；此时文稿旁边的文件仍然能被找到，但不能使用以 <code>./</code> 开头的路径。</li>
+<li>会读取文稿上次排版生成的 <code>.aux</code> 文件的副本，因此 <code>\ref</code>、<code>\pageref</code> 和 <code>\cite</code> 会显示文稿中的编号。</li>
+</ul>
+<p>所用的引擎就是文稿所用的引擎：源文件开头的 <code>% !TEX program</code> 行，否则是源代码窗口工具栏中的选择。使用 LaTeX 时，会遵循文稿的排版方式：直接生成 PDF、经由 DVI 或个性化脚本。如果选择的是 BibTeX 或 MakeIndex，则使用 pdfLaTeX。ConTeXt、MetaPost 和 plain TeX 不能用于实验台。你自己的引擎会被尝试使用，但如果它们不接受 LaTeX 或不生成 PDF 文件，就可能失败。</p>
+
+<h2>面板</h2>
+<p>源代码面板以与源代码窗口相同的方式显示文本，使用相同的字体、制表符、行间距、换行、语法颜色、当前行高亮、块状光标、不可见字符、行号和括号匹配，并会跟随在菜单或“设置”中对这些项目所做的更改。“源代码”>“字体”>“调大”（<kbd>⌘=</kbd>）和“调小”（<kbd>⌘-</kbd>）可放大或缩小文本；与用字体面板选择的字体一样，它们也会更改源代码窗口。按键绑定、命令补全和“编辑”>“补全引用标签或引用键”都可以在面板中使用。命令补全使用在“设置”>“键盘”>“触发按键”中选择的触发按键。</p>
+<p>预览面板的工具栏中有预览窗口的工具：“滚动”“选择文本”“放大镜”和“选择 PDF”。使用“放大镜”时，按住鼠标按钮会以 150% 显示指针下的页面，同时按住 Command、Option 或 Control 键时则为 200%、250% 或 300%；连按可得到更大的放大镜。使用“选择 PDF”时，拖出一个矩形，即可按“预览”>“拷贝格式”中选择的格式拷贝它。面板会与预览窗口分开记住各自的工具。工具旁边有“缩小”“放大”“缩放到内容”（放大页面中已排版的部分以填满面板）和“缩放到内容宽度”（使已排版的部分与面板同宽）。面板也可以用鼠标和触控板手势滚动和缩放。</p>
+<p>排版的输出显示在一个单独的控制台中，即实验台控制台。排版开始时它会移到最前面；点按某个面板可再次将该面板移到前面。在面板中按 <kbd>⌘0</kbd>（“文件”>“显示控制台”）会把实验台控制台移到前面，再按一次则返回面板。如果“设置”>“控制台”>“显示控制台”设为仅在出错时显示控制台，实验台控制台会一直隐藏，直到 TeX 报告错误或等待输入为止。</p>
+<p>这两个面板和实验台控制台浮动在文稿窗口之上。它们可以移动和调整大小，TeXShop 会记住它们的大小和位置。用关闭按钮或 <kbd>⌘W</kbd> 关闭面板。按 Esc 键也会关闭预览面板；当命令补全使用 Tab 键时，Esc 键也会关闭源代码面板；当 Esc 键是补全触发按键时，它会在源代码面板中补全命令。</p>
+
+<h2>保留结果</h2>
+<p>这段代码正确后，从源代码面板中拷贝它，然后粘贴到文稿中。面板关闭后再打开时会保留其内容，但退出 TeXShop 后不会保留，而且这些内容无法保存。</p>
+<p>每个文稿都有自己的面板，面板的标题栏中显示文稿的名称。打开多个文稿时，请关闭不再需要的面板，以便清楚地知道某个实验属于哪个文稿。</p>
+</main>
+</body>
+</html>

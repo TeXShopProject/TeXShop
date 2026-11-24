@@ -871,6 +871,12 @@ static void TSSendButtonAction(NSButton *button)
     TSMacroTreeNode *item = self.recordingItem;
     if (!item.isStandardItem || self.previousItem != item) return NO;
     TSShortcutBinding *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
+    NSString *globe = TSGlobeRecordingRefusal(event);
+    if (globe) {
+        self.refusedShortcut = TSShortcutDisplayKey(binding.key, binding.modifiers | NSEventModifierFlagFunction);
+        [self showShortcutRecordingError:globe];
+        return NO;
+    }
     if (binding.key.length != 1 || ![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) {
         // The field shows the key pressed, as for a key another command uses; a key without a character, the shortcut.
         self.refusedShortcut = binding.key.length ? TSShortcutDisplayKey(binding.key, binding.modifiers) : nil;

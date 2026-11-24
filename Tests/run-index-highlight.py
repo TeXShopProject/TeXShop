@@ -26,13 +26,13 @@ UI = R / 'Resources/Interfaces'
 LANGS = ['Base', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt-PT', 'pt', 'ro', 'zh_CN']
 MENU = {'Base': 'Highlight Index Entries', 'de': 'Indexeinträge hervorheben', 'es': 'Resaltar las entradas del índice',
         'fr': "Surligner les entrées d'index", 'it': "Evidenzia le voci dell'indice", 'ja': '索引をハイライト',
-        'ko': '색인 항목 하이라이트', 'nl': 'Indexitems markeren', 'pt-PT': 'Destacar as entradas do índice',
-        'pt': 'Destacar as entradas do índice', 'ro': 'Evidențiază intrările de index', 'zh_CN': '高亮索引条目'}
+        'ko': '색인 항목 하이라이트', 'nl': 'Markeer indexitems', 'pt-PT': 'Destacar as entradas do índice',
+        'pt': 'Destacar as entradas do índice', 'ro': 'Evidențiați intrările de index', 'zh_CN': '高亮索引条目'}
 SETTING = {'Base': 'Highlight Index Entries by Default', 'de': 'Indexeinträge standardmäßig hervorheben',
            'es': 'Resaltar las entradas del índice por omisión', 'fr': "Surligner les entrées d'index par défaut",
            'it': "Evidenzia le voci dell'indice di default", 'ja': '索引を既定でハイライト', 'ko': '기본으로 색인 항목 하이라이트',
            'nl': 'Indexitems standaard markeren', 'pt-PT': 'Destacar as entradas do índice por predefinição',
-           'pt': 'Destacar as entradas do índice por padrão', 'ro': 'Evidențiază intrările de index implicit',
+           'pt': 'Destacar as entradas do índice por padrão', 'ro': 'Evidențiați intrările de index implicit',
            'zh_CN': '默认高亮索引条目'}
 # The label of the former toolbar item in each language.
 FORMER = {'Base': 'Color Index', 'de': 'Farbindex', 'es': 'Colorear índice', 'fr': 'Index des couleurs', 'it': 'Colora indice',

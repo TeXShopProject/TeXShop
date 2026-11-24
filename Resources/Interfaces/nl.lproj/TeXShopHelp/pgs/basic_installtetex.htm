@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeX Live installeren</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeX Live; MacTeX; BasicTeX; installatie; /Library/TeX/texbin; TeX Live Utility; Paden detecteren; MacPorts; Homebrew; MiKTeX">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm" class="current">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeX Live installeren</h1>
+
+<p>TeXShop heeft een TeX-distributie nodig. De standaarddistributie is TeX Live, die TeX-gebruikersgroepen elk jaar maken voor macOS, Windows, Linux en andere systemen. Op de Mac installeert u die met MacTeX, een installatiepakket van de TeX Users Group (TUG):</p>
+
+<p><a href="https://tug.org/mactex/">https://tug.org/mactex/</a></p>
+
+<p>De pagina biedt twee pakketten aan. Klik dubbel op het pakket dat u hebt gedownload en volg het installatieprogramma; als dat klaar is, is TeX klaar voor gebruik.</p>
+
+<dl>
+<dt>MacTeX</dt>
+<dd>De volledige TeX Live, met Ghostscript, en TeXShop en andere apps in /Applications/TeX. Bijna elk voorbeeld uit een boek over TeX of LaTeX werkt zonder dat u iets hoeft toe te voegen. Kies dit pakket voor echt werk.</dd>
+<dt>BasicTeX</dt>
+<dd>Een klein deel van TeX Live, genoeg om TeX uit te proberen en veel LaTeX-documenten te zetten. Het installeert TeXShop niet; zie <a href="basic_installtexshop.htm">TeXShop installeren</a>.</dd>
+</dl>
+
+<h2>Waar TeX Live wordt geïnstalleerd</h2>
+
+<p>MacTeX installeert TeX Live in <code>/usr/local/texlive/2026</code> en BasicTeX in <code>/usr/local/texlive/2026basic</code>. Beide kunnen naast elkaar geïnstalleerd zijn. Elk jaar, rond april, verschijnt een nieuwe TeX Live, in een map die naar het jaar is genoemd. Om een installatie te verwijderen, sleept u de map ervan naar de prullenmand.</p>
+
+<p>Het installatieprogramma maakt ook <code>/Library/TeX/texbin</code> aan, dat naar de programma’s van de gebruikte TeX Live leidt en een nieuwe TeX Live volgt zodra die is geïnstalleerd. TeXShop voert TeX vanaf daar uit (Instellingen › Zetten › Paden › ‘TeX-engines’), zodat er voor een nieuw jaar niets hoeft te worden gewijzigd. ‘Paden detecteren…’ in dezelfde groep zoekt naar de installaties van TeX en Ghostscript op de Mac en laat u er een kiezen.</p>
+
+<p>Tussen de jaarlijkse versies door krijgen de pakketten van TeX Live updates. MacTeX installeert TeX Live Utility in /Applications/TeX om ze te installeren.</p>
+
+<h2>Andere TeX-distributies</h2>
+
+<p>TeXShop werkt ook met TeX dat met MacPorts of Homebrew is geïnstalleerd, of met MiKTeX. Hun programma’s staan in andere mappen: gebruik ‘Paden detecteren…’ of typ de map in Instellingen › Zetten › Paden › ‘TeX-engines’. Zie <a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a>.</p>
+</main>
+</body>
+</html>

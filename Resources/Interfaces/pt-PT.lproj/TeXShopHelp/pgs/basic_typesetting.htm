@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compor documentos</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="composição; primeiro documento; Compor; consola; erros; Mostrar erro; Interromper; Apagar ficheiros auxiliares; perfil do motor; % !TEX program; ficheiro principal; SyncTeX; Unir numa única janela">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm" class="current">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Compor documentos</h1>
+
+<h2>Um primeiro documento</h2>
+
+<p>Escolha Ficheiro › Novo. Na barra de ferramentas da nova janela, escolha LatexTemplate no menu «Minutas»; a janela é preenchida com as linhas de que qualquer documento LaTeX precisa. Escreva o texto entre <code>\begin{document}</code> e <code>\end{document}</code>. Uma linha em branco inicia um novo parágrafo.</p>
+
+<p>Clique em «Compor» na barra de ferramentas ou prima <kbd>⌘T</kbd> (Compor › Compor). Da primeira vez, o TeXShop pergunta onde guardar o documento. O TeX escreve vários ficheiros junto ao código-fonte, por isso dê a cada documento uma pasta própria. Em seguida, o TeXShop executa o TeX e abre uma janela de pré-visualização com o documento composto.</p>
+
+<p>A partir daí, escreva, componha e veja o resultado. O TeXShop guarda o código-fonte antes de cada composição, e a pré-visualização fica na página que estava a ler. <kbd>⌘T</kbd> funciona no código-fonte, na pré-visualização e na consola, e <kbd>⌘1</kbd> (Janela › Código-fonte ⇔ Pré-visualização) alterna entre o código-fonte e a respetiva pré-visualização. Definições › Composição › «Após a composição» escolhe a janela que passa para a frente quando o TeX termina.</p>
+
+<p>Abrir um ficheiro .tex abre também o ficheiro PDF com o mesmo nome, se existir. Fechar a janela de pré-visualização deixa o código-fonte aberto, e a pré-visualização volta na composição seguinte; fechar a janela do código-fonte fecha o documento.</p>
+
+<h2>A consola</h2>
+
+<p>Enquanto o TeX é executado, as suas mensagens aparecem na consola. Definições › Consola › «Mostrar consola» escolhe se a consola passa para a frente em cada composição («sempre») ou apenas quando o TeX assinala um erro («em caso de erros»). Ficheiro › Mostrar consola (<kbd>⌘0</kbd>) traz para a frente a consola do documento ativo, e <kbd>⌘0</kbd> na consola regressa à janela de onde veio. O texto da consola pode ser selecionado e copiado em qualquer momento.</p>
+
+<p>Quando o TeX encontra um erro, escreve uma mensagem no fim da consola e espera por uma resposta. Escreva-a no campo na parte inferior da consola e prima Return; Return sozinho passa ao erro seguinte, e o campo enumera as outras respostas que o TeX aceita. Para parar o TeX, clique em «Interromper» na consola ou escolha Ficheiro › Interromper composição (<kbd>⌃⌥⌘A</kbd>).</p>
+
+<h2>Encontrar erros</h2>
+
+<p>«Mostrar erro» na consola, ou Edição › Mostrar erro (<kbd>⌃⌘E</kbd>), desloca o código-fonte até à linha do primeiro erro e destaca-a; escolha-o novamente para o erro seguinte. Se o erro estiver noutro ficheiro do projeto, esse ficheiro é aberto. Corrigir alguns erros e compor de novo é muitas vezes o mais rápido, porque um erro pode causar vários outros. «Mostrar erro» baseia-se nos nomes de ficheiro e nos números de linha que o TeX escreve com <code>-file-line-error</code>, opção usada pelos comandos e pelos ficheiros de motor do TeXShop.</p>
+
+<p>O LaTeX escreve informação para a execução seguinte, como o índice e as referências cruzadas, num ficheiro .aux e noutros ficheiros auxiliares, pelo que um documento pode precisar de duas ou três execuções até todas as referências estarem certas. Um erro pode deixar estes ficheiros danificados, e o documento pode então não compor mesmo depois de o erro ser corrigido. Escolha Compor › Apagar aux. e compor (<kbd>⌥⌘T</kbd>) para mover os ficheiros auxiliares para o Lixo e compor de novo, ou Ficheiro › Apagar ficheiros auxiliares (<kbd>⌃⌘A</kbd>), que é também um botão da consola. Consulte <a href="advanced_removeaux.htm">Remover ficheiros AUX</a>.</p>
+
+<h2 id="engine">Escolher o motor</h2>
+
+<p>Definições › Composição › «Perfil do motor» prepara a composição para um motor num só passo. Escolha o perfil do motor que utiliza; uma folha enumera os valores que define, e OK aplica-os. Na folha, «Executar o LaTeX» pode ser definido como «Com latexmk», para que o latexmk execute o BibTeX, o índice e as passagens adicionais conforme necessário. Quando um destes valores é alterado, o menu mostra «Personalizado». O Manual do TeXShop (em inglês) enumera o que os perfis definem.</p>
+
+<p>Para um só documento, escolha o motor no menu pop-up «Programa», junto a «Compor» na barra de ferramentas. Este menu enumera plain TeX, LaTeX, BibTeX, MakeIndex e MetaPost, seguidos dos ficheiros de motor de ~/Library/TeXShop/Engines, como LuaLaTeX e XeLaTeX, e a escolha vale para essa janela. Para que faça parte do documento, coloque uma linha como esta entre as 20 primeiras linhas do código-fonte:</p>
+
+<pre>% !TEX program = LuaLaTeX</pre>
+
+<p>Assim, <kbd>⌘T</kbd> compõe sempre o ficheiro com esse motor. O nome é o de um ficheiro de motor, ou um de <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> e <code>tex</code> para o LaTeX e o plain TeX integrados (consulte <a href="basic_alternatetypeset.htm">Modo de composição alternativo</a>). Macros › Set Typesetting Program… insere uma linha deste tipo, com o motor escolhido numa lista; escreve <code>% !TEX TS-program =</code>, que significa o mesmo. Definições › Composição › «Compor documentos novos com» define o motor dos documentos sem essa linha. Consulte <a href="advanced_addengine.htm">Adicionar motores de composição</a> para os ficheiros de motor.</p>
+
+<p>O menu Compor também executa o BibTeX, o MakeIndex e o MetaPost sobre o documento; consulte <a href="advanced_bibtex.htm">BibTeX</a> e <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
+
+<h2>Documentos em vários ficheiros</h2>
+
+<p>Um livro é muitas vezes dividido num ficheiro principal, que contém o preâmbulo, e em ficheiros de capítulo que este lê com <code>\include</code> ou <code>\input</code>. Coloque uma linha como <code>% !TEX root = ../Book.tex</code> no início de cada ficheiro de capítulo, indicando o ficheiro principal pelo seu caminho a partir do ficheiro de capítulo. Assim, <kbd>⌘T</kbd> num ficheiro de capítulo compõe o ficheiro principal, e «Mostrar erro» e o SyncTeX encontram o ficheiro de capítulo certo. Consulte <a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a>.</p>
+
+<h2>Passar do código-fonte para a pré-visualização e vice-versa</h2>
+
+<p>Clique numa palavra do código-fonte com a tecla Comando premida, e a pré-visualização desloca-se até ao texto composto e marca-o. Clique na pré-visualização com a tecla Comando premida, e o código-fonte passa para a frente com o texto correspondente marcado; num documento com ficheiros de capítulo, o ficheiro de capítulo abre-se se for necessário. A correspondência nem sempre é exata, por isso procure à volta do local marcado. As cores das marcas definem-se em Definições › Temas › SyncTeX.</p>
+
+<p>Isto usa o SyncTeX, que os motores suportam quando são executados com <code>-synctex=1</code>, como acontece com os comandos e os ficheiros de motor do TeXShop; Definições › Composição › «Método de sincronização» deve ser «SyncTeX (recomendado)». O ficheiro SyncTeX de um documento regista onde estão os seus ficheiros, por isso, depois de mover a pasta de um projeto, componha mais uma vez antes de sincronizar.</p>
+
+<h2>Organizar as janelas</h2>
+
+<p>Janela › Unir numa única janela coloca o código-fonte e a respetiva pré-visualização lado a lado numa só janela, e Janela › Abrir em janelas separadas volta a separá-los. Para abrir todos os documentos desta forma, defina Definições › Geral › Janelas › «Código-fonte e pré-visualização» como «Unir numa única janela»; «Posição do código-fonte na janela combinada» coloca o código-fonte à esquerda ou à direita. Arraste o divisor para dar mais ou menos espaço ao código-fonte; o TeXShop abre todas as janelas combinadas com a mesma proporção. Um ficheiro de capítulo com uma linha <code>% !TEX root</code> fica em janelas separadas; o próprio ficheiro principal pode usar uma só janela. Ficheiro › Novo abre apenas uma janela do código-fonte: componha primeiro o novo documento e depois escolha «Unir numa única janela».</p>
+
+<p>Com janelas separadas, coloque e dimensione as janelas do código-fonte e da pré-visualização como preferir e depois escolha Código-fonte › Guardar posição do código-fonte e Pré-visualização › Guardar posição da pré-visualização; as novas janelas abrem-se nesse local.</p>
+</main>
+</body>
+</html>

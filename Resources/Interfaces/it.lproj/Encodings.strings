@@ -8,28 +8,28 @@
 "MacOSRoman"	= "Occidentale (Mac OS Roman)";
 
 /* "IsoLatin" corresponds to code 0x00000201 in TextEncodingNames.string */
-"IsoLatin"	= "Occidentale (ISO Latin 1)";
+"IsoLatin"	= "Occidentale (ISO latino 1)";
 
 /* "IsoLatin2" corresponds to code 0x00000202 in TextEncodingNames.string */
-"IsoLatin2"	= "Centro-Europa (ISO Latin 2)";
+"IsoLatin2"	= "Centroeuropeo (ISO latino 2)";
 
 /* "IsoLatin5" corresponds to code 0x00000209 in TextEncodingNames.string */
-"IsoLatin5"	= "Turco (ISO Latin 5)";
+"IsoLatin5"	= "Turco (ISO latino 5)";
 
 /* "IsoLatin9" corresponds to code 0x0000020F in TextEncodingNames.string */
-"IsoLatin9"	= "Occidentale (ISO Latin 9)";
+"IsoLatin9"	= "Occidentale (ISO latino 9)";
 
 /* "IsoLatinGreek" corresponds to code 0x00000207 in TextEncodingNames.string */
 "IsoLatinGreek"	= "Greco (ISO 8859-7)";
 
 /* "Mac Central European Roman" corresponds to code 0x00000029 in TextEncodingNames.string */
-"Mac Central European Roman" = "Centro-Europa (Mac OS)";
+"Mac Central European Roman" = "Centroeuropeo (Mac OS)";
 
 /* "MacJapanese" corresponds to code 0x00000001 in TextEncodingNames.string */
 "MacJapanese"	= "Giapponese (Mac OS, ShiftJIS ¥)";
 
 /* "DOSJapanese" corresponds to code 0x00000420 in TextEncodingNames.string */
-"DOSJapanese"	= "Giapponese (Windows, DOS, ShiftJIS \)";
+"DOSJapanese"	= "Giapponese (Windows, DOS, ShiftJIS \\)";
 
 /* "SJIS_X0213" corresponds to code 0x00000628 in TextEncodingNames.string */
 "SJIS_X0213"	= "Giapponese (Shift JIS X0213)";
@@ -62,10 +62,10 @@
 "DOS Russian"	= "Russo (DOS)";
 
 /* "Windows Latin 1" corresponds to code 0x00000500 in TextEncodingNames.string */
-"Windows Latin 1" = "Occidentale (Windows Latin 1)";
+"Windows Latin 1" = "Occidentale (Windows latino 1)";
 
 /* "WindowsCentralEurRoman" corresponds to code 0x00000501 in TextEncodingNames.string */
-"WindowsCentralEurRoman" = "Centro-Europa (Windows Latin 2)";
+"WindowsCentralEurRoman" = "Centroeuropeo (Windows latino 2)";
 
 /* "Windows Cyrillic" corresponds to code 0x00000502 in TextEncodingNames.string */
 "Windows Cyrillic"	= "Cirillico (Windows)";

@@ -3,7 +3,7 @@
     "SettingsSource.strings": {
       "582.title": "Pannello di ricerca Apple",
       "927.title": "Esc",
-      "928.title": "Tabulatore",
+      "928.title": "Tabulazione",
       "1080.title": "Pannello di ricerca OgreKit (obsoleto)"
     },
     "SettingsCategories.strings": {
@@ -14,7 +14,7 @@
       "group.editor.2.title": "Digitazione",
       "catalog.preview.1.1.title": "Mostra la prima pagina da sola come copertina",
       "catalog.preview.4.1.title": "Usa la mappatura dei colori",
-      "catalog.editor.0.2.title": "Numeri di linea"
+      "catalog.editor.0.2.title": "Numeri di riga"
     },
     "SettingsMiscOne.strings": {
       "375.title": "JPEG (alta qualità)",
@@ -47,11 +47,11 @@
   "ko": {
     "SettingsCategories.strings": {
       "group.editor.2.title": "입력",
-      "catalog.appearance.7.0.item.0": "보이지 않는 문자",
+      "catalog.appearance.7.0.item.0": "숨김문자",
       "catalog.appearance.7.0.item.1": "괄호 안의 내용",
       "catalog.appearance.7.0.item.2": "중괄호",
       "catalog.spelling.0.2.title": "사전",
-      "group.editor.5.title": "보이지 않는 문자",
+      "group.editor.5.title": "숨김문자",
       "catalog.preview.0.2.title": "배율",
       "catalog.preview.1.1.title": "첫 페이지를 표지로 따로 표시",
       "catalog.appearance.2.0.column.2": "불투명도"
