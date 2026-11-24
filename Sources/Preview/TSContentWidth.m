@@ -327,7 +327,9 @@ void TSContentWidthNoteAnnotationChange(PDFDocument *document)
     // Reading annotations, or drawing a page, can make PDFKit add one. That is not an edit,
     // and it must not start another measurement while a slice still has the main thread.
     if (TSContentWidthSuppressNotes) return;
-    TSContentWidthAdvance(document, NO);
+    // The private clone was copied before this edit. Measuring it again would store the old
+    // page and miss ink that is only in memory, so this document stays on PDFKit.
+    TSContentWidthAdvance(document, YES);
     for (PDFView *view in TSContentWidthViews.allObjects) {
         if (view.document == document && [view respondsToSelector:@selector(measureContentLater)])
             [(id<TSContentWidthMeasuring>)view measureContentLater];

@@ -169,8 +169,11 @@ BOOL TSContentWidthTokenCurrent(id view, NSUInteger token);
 // Cancel a measurement whose document is no longer shown.
 void TSContentWidthDocumentVisibilityChanged(PDFDocument *document);
 
-// An annotation was added, removed or changed. The generation advances either way, so a job
-// that read the old page cannot write its rects back. Link-only edits advance it too.
+// An annotation was added, removed or changed. The generation advances, and this document
+// stays on the PDFKit measurement for the rest of its life. The clone file does not contain
+// the edit, so a later worker must not finish from that file. PDFKit can also add an
+// annotation while a page is being read or drawn; that call is suppressed and does not lock
+// the document. Link-only edits lock it too.
 void TSContentWidthNoteAnnotationChange(PDFDocument *document);
 // The displayed document no longer matches the clone it was opened from. Rotation, and
 // inserting, deleting or reordering pages, do this. It stays on the PDFKit measurement

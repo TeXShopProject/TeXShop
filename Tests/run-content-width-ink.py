@@ -4,8 +4,9 @@
 Synthetic PDFs are generated while the probe runs. Core Graphics and PDFKit must agree within
 one page point on each edge. A borderless link may use the background measurement; a popup,
 highlight, ink mark, bordered link or unknown annotation may not. The workers reject those
-annotations themselves, and a rejection stores nothing. The three benchmark PDFs stay outside
-this repository.
+annotations themselves, and a rejection stores nothing. A highlight or ink mark added to
+the open document leaves the clone for the rest of its life. The three benchmark PDFs stay
+outside this repository.
 """
 from pathlib import Path
 import argparse, os, subprocess, sys, tempfile
@@ -380,6 +381,37 @@ int main(int argc, char **argv) {
         TSContentWidthRawInk(mixedDocument, kPDFDisplayBoxCropBox, [mixedDocument pageAtIndex:1], &secondKnown);
         check(mixedResult == TSContentWidthResultPDFKit && !known && !secondKnown,
               @"a popup on a later page stores neither page");
+
+        // The clone file has no annotation added or removed after it was copied. Finishing
+        // the fast path again would fit without that ink.
+        for (NSString *kind in @[@"highlight", @"ink"]) {
+            PDFDocument *live = cloneAt(root, [@"live-" stringByAppendingString:kind], plainPage, keep);
+            ProbeView *liveView = [ProbeView new];
+            liveView.displayBox = kPDFDisplayBoxCropBox;
+            liveView.document = live;
+            check(finish(liveView) == TSContentWidthResultReady && TSContentWidthIsComplete(live, kPDFDisplayBoxCropBox),
+                  [NSString stringWithFormat:@"%@ starts from a clone with no annotations", kind]);
+            PDFAnnotationSubtype type = [kind isEqualToString:@"highlight"] ? PDFAnnotationSubtypeHighlight : PDFAnnotationSubtypeInk;
+            PDFAnnotation *mark = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(4, 4, 36, 14) forType:type withProperties:nil];
+            mark.color = NSColor.blackColor;
+            [[live pageAtIndex:0] addAnnotation:mark];
+            check(TSContentWidthDrawingDiverged(live) && !TSContentWidthIsComplete(live, kPDFDisplayBoxCropBox),
+                  [NSString stringWithFormat:@"adding %@ in memory leaves the clone", kind]);
+            check(!TSContentWidthScheduleFast(liveView, nil),
+                  [NSString stringWithFormat:@"%@ added in memory is not measured from the clone", kind]);
+        }
+        PDFDocument *removedLink = cloneAt(root, @"live-remove", pdfAnnotated(annotations[@"link"], nil), keep);
+        ProbeView *removedLinkView = [ProbeView new];
+        removedLinkView.displayBox = kPDFDisplayBoxCropBox;
+        removedLinkView.document = removedLink;
+        check(finish(removedLinkView) == TSContentWidthResultReady,
+              @"a borderless link can be measured before it is removed");
+        PDFAnnotation *link = [removedLink pageAtIndex:0].annotations.firstObject;
+        check(link != nil, @"the borderless link is on the page");
+        [[removedLink pageAtIndex:0] removeAnnotation:link];
+        check(TSContentWidthDrawingDiverged(removedLink) && !TSContentWidthIsComplete(removedLink, kPDFDisplayBoxCropBox) &&
+              !TSContentWidthScheduleFast(removedLinkView, nil),
+              @"removing an annotation in memory leaves the clone");
 
         NSData *twoPages = pdfPages(@[
             @{@"media": @"[0 0 200 100]", @"rotate": @0, @"stream": @"0 g\n10 20 30 40 re f"},
