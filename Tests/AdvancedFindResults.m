@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// The Find All list of the Advanced Find panel: the matches, their lines and text, the edits,
-// live update, a large document, the list in the panel, and its layout and images in every language.
+// The Find All list of the Advanced Find panel: the matches, their lines and text, the edits, Highlight All with
+// the colors of the groups, live update, a large document, the list in the panel, and its layout and images in every language.
 // Built by Tests/run-advanced-find-results.py; no window is ever shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
@@ -122,6 +122,143 @@ static TSAdvancedFindController *MakeController(NSUInteger *beeps)
     controller.beepHandler = ^{ (*beeps)++; };
     controller.lineEndingHandler = ^NSString *(NSTextView *view) { return @"\n"; };
     return controller;
+}
+
+#pragma mark Highlight All with groups
+
+/// The color drawn at the middle of `range`, under the glyphs, in the never shown window.
+static NSColor *ColorAt(NSTextView *view, NSRange range)
+{
+    __block NSColor *color = nil;
+    [view.effectiveAppearance performAsCurrentDrawingAppearance:^{
+        [view.layoutManager ensureLayoutForTextContainer:view.textContainer];
+        NSRect rect = [view.layoutManager boundingRectForGlyphRange:[view.layoutManager glyphRangeForCharacterRange:range actualCharacterRange:NULL]
+                                                    inTextContainer:view.textContainer];
+        rect = NSOffsetRect(rect, view.textContainerOrigin.x, view.textContainerOrigin.y);
+        [view setNeedsDisplay:YES];
+        NSBitmapImageRep *rep = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
+        [view cacheDisplayInRect:view.bounds toBitmapImageRep:rep];
+        CGFloat scale = rep.pixelsWide / NSWidth(view.bounds);
+        color = [[rep colorAtX:(NSInteger)(NSMidX(rect) * scale) y:(NSInteger)((NSMaxY(rect) - 1) * scale)] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    }];
+    return color;
+}
+
+/// `colors`, translucent, painted in turn over `background` in a bitmap like the one the view is drawn into.
+static NSColor *Over(NSTextView *view, NSColor *background, NSArray<NSColor *> *colors)
+{
+    NSRect square = NSMakeRect(0, 0, 4, 4);
+    NSBitmapImageRep *rep = [view bitmapImageRepForCachingDisplayInRect:square];
+    [view.effectiveAppearance performAsCurrentDrawingAppearance:^{
+        [NSGraphicsContext saveGraphicsState];
+        NSGraphicsContext.currentContext = [NSGraphicsContext graphicsContextWithBitmapImageRep:rep];
+        [background setFill];
+        NSRectFill(square);
+        for (NSColor *color in colors) {
+            [color setFill];
+            NSRectFillUsingOperation(square, NSCompositingOperationSourceOver);
+        }
+        [NSGraphicsContext restoreGraphicsState];
+    }];
+    return [[rep colorAtX:1 y:1] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+}
+
+/// Within 0.06: the system colors lie partly outside sRGB, and the text view blends them a little differently from
+/// a plain bitmap; a group color mixed with the highlight color is more than 0.2 away.
+static BOOL SameColor(NSColor *_Nullable a, NSColor *_Nullable b)
+{
+    return a && b && fabs(a.redComponent - b.redComponent) < 0.06 && fabs(a.greenComponent - b.greenComponent) < 0.06
+        && fabs(a.blueComponent - b.blueComponent) < 0.06;
+}
+
+static NSRange Of(NSString *part, NSString *string, NSUInteger occurrence)
+{
+    NSRange found = NSMakeRange(0, 0);
+    for (NSUInteger i = 0; i <= occurrence; i++)
+        found = [string rangeOfString:part options:0 range:NSMakeRange(NSMaxRange(found), string.length - NSMaxRange(found))];
+    return found;
+}
+
+static void TestHighlightGroups(void)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController(&beeps);
+    TSAdvancedFindSettings *settings = controller.settings;
+    settings.options = TSRegexFindDefaultOptions | TSRegexFindRegularExpression;
+    NSString *text = @"\\subsection{Intro} \\section{Body} plain";
+    TestDocument *document = [[TestDocument alloc] initWithText:text];
+    NSTextView *view = document.upper;
+    NSColor *plain = ColorAt(view, Of(@"plain", text, 0));
+    NSColor *match = TSAdvancedFindHighlights.color;
+    NSArray<NSColor *> *groupColors = TSAdvancedFindHighlights.groupColors;
+    Check([TSAdvancedFindResultsView.groupColors isEqual:groupColors], @"the list and the text have the same group colors");
+
+    settings.findString = @"\\\\(sub)?section\\{(.*?)\\}";
+    Check(TSTestPerform(controller, TSAdvancedFindActionHighlight, view), @"Highlight All with groups");
+    TSAdvancedFindHighlights *highlights = [TSAdvancedFindHighlights existingHighlightsForTextStorage:document.storage];
+    Check(highlights.ranges.count == 2 && highlights.groups.count == 2 && highlights.groups[0].count == 2
+          && NSEqualRanges(highlights.groups[0][0].rangeValue, Of(@"sub", text, 0)) && NSEqualRanges(highlights.groups[0][1].rangeValue, Of(@"Intro", text, 0))
+          && highlights.groups[1][0].rangeValue.location == NSNotFound && NSEqualRanges(highlights.groups[1][1].rangeValue, Of(@"Body", text, 0)),
+          @"the groups of each match are kept, one that did not take part as {NSNotFound, 0}");
+    NSColor *expectedMatch = Over(view, plain, @[match]);
+    NSColor *expectedFirst = Over(view, plain, @[groupColors[0]]), *expectedSecond = Over(view, plain, @[groupColors[1]]);
+    for (NSTextView *part in @[document.upper, document.lower]) {
+        NSString *name = part == document.upper ? @"upper" : @"lower";
+        Check(SameColor(ColorAt(part, Of(@"section", text, 0)), expectedMatch),
+              [NSString stringWithFormat:@"%@: the match outside its groups has the highlight color (%@, expected %@ over %@)", name, ColorAt(part, Of(@"section", text, 0)), expectedMatch, plain]);
+        Check(SameColor(ColorAt(part, Of(@"sub", text, 0)), expectedFirst),
+              [NSString stringWithFormat:@"%@: group 1 has its own color, not mixed with the highlight color (%@, expected %@; mixed %@)", name, ColorAt(part, Of(@"sub", text, 0)), expectedFirst, Over(part, plain, @[match, groupColors[0]])]);
+        Check(SameColor(ColorAt(part, Of(@"Intro", text, 0)), expectedSecond),
+              [NSString stringWithFormat:@"%@: group 2 has the next color (%@)", name, ColorAt(part, Of(@"Intro", text, 0))]);
+        Check(SameColor(ColorAt(part, Of(@"section", text, 1)), expectedMatch) && SameColor(ColorAt(part, Of(@"Body", text, 0)), expectedSecond),
+              [NSString stringWithFormat:@"%@: a group that did not take part leaves the highlight color", name]);
+        Check(SameColor(ColorAt(part, Of(@"plain", text, 0)), plain), [NSString stringWithFormat:@"%@: the text after the matches is not highlighted", name]);
+    }
+
+    // Edits move a match with its groups, and drop it when they touch one of its groups
+    Edit(view, NSMakeRange(0, 0), @"xx ");
+    text = view.string;
+    Check(highlights.ranges.count == 2 && NSEqualRanges(highlights.groups[0][1].rangeValue, Of(@"Intro", text, 0))
+          && SameColor(ColorAt(view, Of(@"Intro", text, 0)), expectedSecond), @"an edit before the matches moves their groups");
+    Edit(view, NSMakeRange(Of(@"Body", text, 0).location + 1, 1), @"O");
+    text = view.string;
+    Check(highlights.ranges.count == 1 && highlights.groups.count == 1 && NSEqualRanges(highlights.groups[0][0].rangeValue, Of(@"sub", text, 0))
+          && SameColor(ColorAt(view, Of(@"BOdy", text, 0)), plain) && SameColor(ColorAt(view, Of(@"section", text, 1)), plain),
+          @"an edit inside a group drops its match with all its groups");
+
+    // A group inside another shows its own color
+    document = [[TestDocument alloc] initWithText:@"abc abc"];
+    view = document.upper;
+    settings.findString = @"((a)b)c";
+    Check(TSTestPerform(controller, TSAdvancedFindActionHighlight, view), @"Highlight All with nested groups");
+    Check(SameColor(ColorAt(view, NSMakeRange(0, 1)), Over(view, plain, @[groupColors[1]])) && SameColor(ColorAt(view, NSMakeRange(1, 1)), expectedFirst)
+          && SameColor(ColorAt(view, NSMakeRange(2, 1)), expectedMatch), @"the inner group, the outer group, then the match");
+
+    // A group outside the match (a lookahead) is colored too, and an edit there drops the match
+    document = [[TestDocument alloc] initWithText:@"xyy x"];
+    view = document.upper;
+    highlights = [TSAdvancedFindHighlights highlightsForTextStorage:document.storage];
+    settings.findString = @"x(?=(yy))";
+    Check(TSTestPerform(controller, TSAdvancedFindActionHighlight, view) && highlights.ranges.count == 1
+          && SameColor(ColorAt(view, NSMakeRange(0, 1)), expectedMatch) && SameColor(ColorAt(view, NSMakeRange(2, 1)), expectedFirst),
+          @"a group after the match has its color");
+    Edit(view, NSMakeRange(2, 1), @"z");
+    Check(highlights.ranges.count == 0 && SameColor(ColorAt(view, NSMakeRange(0, 1)), plain), @"an edit in that group drops the match");
+
+    // Without groups, and when the ranges are set alone, the matches have the highlight color only
+    document = [[TestDocument alloc] initWithText:@"cat cat"];
+    view = document.upper;
+    settings.findString = @"cat";
+    settings.options = TSRegexFindDefaultOptions;
+    Check(TSTestPerform(controller, TSAdvancedFindActionHighlight, view), @"Highlight All without groups");
+    highlights = [TSAdvancedFindHighlights existingHighlightsForTextStorage:document.storage];
+    Check(highlights.ranges.count == 2 && highlights.groups.count == 0 && SameColor(ColorAt(view, NSMakeRange(1, 1)), expectedMatch),
+          @"plain text: the highlight color, no groups");
+    [highlights setRanges:@[[NSValue valueWithRange:NSMakeRange(0, 3)]] groups:@[@[[NSValue valueWithRange:NSMakeRange(1, 1)]]]];
+    highlights.ranges = @[[NSValue valueWithRange:NSMakeRange(0, 3)]];
+    Check(highlights.groups.count == 0 && SameColor(ColorAt(view, NSMakeRange(1, 1)), expectedMatch), @"setting the ranges alone removes the groups");
+    [highlights removeAll];
+    Check(SameColor(ColorAt(view, NSMakeRange(1, 1)), plain), @"Remove Highlights removes the groups too");
 }
 
 #pragma mark The list's contents
@@ -791,6 +928,7 @@ int main(int argc, const char *argv[])
             TestEdits();
             TestTypingInDocument();
             TestFindAllAction();
+            TestHighlightGroups();
             TestPanelList();
         }
         if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"large"])

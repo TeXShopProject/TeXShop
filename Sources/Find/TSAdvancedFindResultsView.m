@@ -25,11 +25,7 @@ static NSUserInterfaceItemIdentifier const TSTextColumn = @"text";
 
 + (NSArray<NSColor *> *)groupColors
 {
-    NSArray<NSColor *> *base = @[NSColor.systemTealColor, NSColor.systemPinkColor, NSColor.systemPurpleColor, NSColor.systemOrangeColor, NSColor.systemBlueColor];
-    NSMutableArray<NSColor *> *colors = [NSMutableArray array];
-    for (NSColor *color in base)
-        [colors addObject:[color colorWithAlphaComponent:0.35]];
-    return colors;
+    return TSAdvancedFindHighlights.groupColors;
 }
 
 - (instancetype)initWithSettings:(TSAdvancedFindSettings *)settings

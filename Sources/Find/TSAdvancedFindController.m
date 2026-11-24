@@ -427,8 +427,21 @@ static BOOL TSTextViewRefusesReplacing(NSTextView *textView)
     NSTextStorage *storage = textView.textStorage;
     if (!find || !storage)
         return NO;
-    NSArray<NSValue *> *matches = [self matchesOfFind:find inTextView:textView];
-    [TSAdvancedFindHighlights highlightsForTextStorage:storage].ranges = matches;
+    NSArray<NSValue *> *matches;
+    if (find.pattern.numberOfCaptureGroups > 0) {
+        // The groups show in their colors, as in the list of Find All.
+        NSMutableArray<NSValue *> *found = [NSMutableArray array];
+        NSMutableArray<NSArray<NSValue *> *> *groups = [NSMutableArray array];
+        [find enumerateMatchesWithCancellation:nil usingBlock:^(NSArray<NSValue *> *ranges, BOOL *stop) {
+            [found addObject:ranges.firstObject];
+            [groups addObject:[ranges subarrayWithRange:NSMakeRange(1, ranges.count - 1)]];
+        }];
+        matches = found;
+        [[TSAdvancedFindHighlights highlightsForTextStorage:storage] setRanges:found groups:groups];
+    } else {
+        matches = [self matchesOfFind:find inTextView:textView];
+        [TSAdvancedFindHighlights highlightsForTextStorage:storage].ranges = matches;
+    }
     NSString *format = TSLocalized(@"AdvancedFind.Found", @"%lu found");
     [self report:[NSString stringWithFormat:format, (unsigned long)matches.count] isError:NO];
     if (matches.count == 0)
