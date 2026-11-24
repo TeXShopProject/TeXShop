@@ -116,6 +116,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'the refused cell has no triangle': ('    self.recordingCell.warning.hidden = self.recordingError == nil;', '    self.recordingCell.warning.hidden = YES;'),
             'the message has no triangle': ('    self.shortcutStatusMark.hidden = message.length == 0;', '    self.shortcutStatusMark.hidden = YES;'),
             'a refused key is not shown in the field': ('    self.recordingCell.recorder.shortcut = self.refusedShortcut ?: getMenuItemString(current);', '    self.recordingCell.recorder.shortcut = getMenuItemString(current);'),
+            'a Globe key is recorded without fn': ('    NSString *globe = TSGlobeRecordingRefusal(event);\n    if (globe) {', '    NSString *globe = nil;\n    if (globe) {'),
+            'a Globe key refused is shown without fn': ('        self.refusedShortcut = TSShortcutDisplayKey(binding.key, binding.modifiers | NSEventModifierFlagFunction);', '        self.refusedShortcut = TSShortcutDisplayKey(binding.key, binding.modifiers);'),
             'a key that cannot be one is not shown in the field': ('        self.refusedShortcut = binding.key.length ? TSShortcutDisplayKey(binding.key, binding.modifiers) : nil;', '        self.refusedShortcut = nil;'),
             'a submenu records': ('    if (![item isKindOfClass:TSMacroTreeNode.class] || !item.isStandardItem || recorder == nil', '    if (![item isKindOfClass:TSMacroTreeNode.class] || recorder == nil'),
             'the field stays after a click elsewhere': ('            if (strongSelf != nil && strongSelf.recordingItem != item) [strongSelf removeShortcutRecorderOfItem:item];', '            (void)strongSelf;'),
@@ -126,6 +128,13 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
         }
         # Mutations of the sidebar shared with the Multiple Replace window.
         file_cases={
+            # The refusal shared with Settings › Keyboard: arrows and function keys carry fn of their own and still record.
+            'ShortcutProduction.m': {
+                'arrows and function keys with fn are refused': ('    return TSEventGlobeModifier(event) ? NSLocalizedString(', '    return (event.modifierFlags & NSEventModifierFlagFunction) ? NSLocalizedString('),
+                # Characters above U+F700 that are not AppKit's function keys (U+F700–U+F8FF), as the fullwidth comma, are character keys.
+                'characters above U+F700 are function keys': ('return c >= NSUpArrowFunctionKey && c <= 0xf8ff;', 'return c >= NSUpArrowFunctionKey;'),
+                'function keys are character keys': ('    BOOL character = c >= 0x20 && c != 0x7f && !TSIsFunctionKeyCharacter(c);', '    BOOL character = c >= 0x20 && c != 0x7f;'),
+            },
             'TSListBottomBar.m': {
                 'the sidebar stops above the bottom edge': ('        [bar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],', '        [bar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-20],'),
                 'the window\'s contents stay below the title bar': ('        window.styleMask |= NSWindowStyleMaskFullSizeContentView;', '        (void)0;'),
@@ -151,8 +160,14 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'VoiceOver presses a submenu\'s shortcut': ('\tif (selector == @selector(accessibilityPerformPress)) return [self.representedObject isKindOfClass:TSMacroTreeNode.class] && [self.representedObject isStandardItem];', '\tif (selector == @selector(accessibilityPerformPress)) return YES;'),
         }
         originals={name:Path(next(x for x in extra if x.endswith('/'+name))) for name in file_cases}
+        # Read once: ShortcutProduction.m is the copy in td that a mutation overwrites, and mutations must not add up.
+        original_texts={name:path.read_text() for name,path in originals.items()}
+        def restore_originals():
+            for name,path in originals.items():
+                if path.parent==Path(td): path.write_text(original_texts[name])
         for name,changed,(before,after) in [*((k,None,v) for k,v in cases.items()),*((f'{f}: {k}',f,v) for f,c in file_cases.items() for k,v in c.items()),*((f'TSMacroOutlineController.m: {k}','outline',v) for k,v in outline_cases.items())]:
-            text=outline if changed=='outline' else originals[changed].read_text() if changed else editor
+            restore_originals()
+            text=outline if changed=='outline' else original_texts[changed] if changed else editor
             assert text.count(before)==1,name
             write_editor(td,editor if changed else editor.replace(before,after))
             write_outline(td,text.replace(before,after) if changed=='outline' else outline)
@@ -173,6 +188,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
 
         # Removing the Portuguese minimum size must fail the old-small-frame restoration case.
         write_editor(td,editor); write_outline(td,outline)
+        restore_originals()
         subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-Wno-deprecated-declarations','-Wno-nullability-completeness',*FRAMEWORKS,'-I',td,'-I',str(root/'Tests'),*include_args(root),str(root/'Tests/MacroShortcutLayout.m'),*extra,'-o',str(binary)],check=True)
         nibSource=(root/'Resources/Interfaces/pt.lproj/MacroEditor.nib/designable.nib').read_text()
         minimum='<string key="NSMinSize">{270, 272}</string>'

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"1080.title" = "Painel de localizar OgreKit (legado)";
-"adv-Fd-Pnl.title" = "Painel de localizar avançado (recomendado)";
+"1080.title" = "Painel de busca OgreKit (legado)";
+"adv-Fd-Pnl.title" = "Painel de busca avançada (recomendado)";
 "31.title" = "Abrir sempre em uma posição fixa";
 "32.title" = "Lembrar-se da última posição";
-"582.title" = "Painel de localizar da Apple";
-"583.title" = "Barra de localizar da Apple";
+"582.title" = "Painel de busca da Apple";
+"583.title" = "Barra de busca da Apple";
 "872.title" = "Escolher...";
 "927.title" = "Escape";
 "928.title" = "Tab";

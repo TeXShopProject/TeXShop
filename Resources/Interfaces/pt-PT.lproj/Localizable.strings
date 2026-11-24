@@ -1,34 +1,34 @@
 /* Localizable Strings: Spanish */
 
 /* Tags menu */
-"Tags" = "Marcas";
+"Tags" = "Etiquetas";
 "Typeset" = "Compor";
 "Save" = "Guardar";
 "Print..." = "Imprimir...";
 "Print Source..." = "Imprimir o código...";
-"Set Project Root..." = "Documento principal...";
+"Set Project Root..." = "Ficheiro principal...";
 "LaTeX Panel..." = "Painel LaTeX...";
 "Close LaTeX Panel" = "Fechar Painel LaTeX";
 "Matrix Panel..." = "Painel Matrix...";
 "Close Matrix Panel" = "Fechar Painel Matrix";
-"Open for Preview..." = "Abrir para ver...";
-"Open for Editing..." = "Abrir para alterar...";
+"Open for Preview..." = "Abrir para pré-visualizar...";
+"Open for Editing..." = "Abrir para editar...";
 "File" = "Ficheiro";
 "Goto Error" = "Mostrar erro";
 "RotateClockwise" = "RodarDireita";
 "RotateCounterclockwise" = "RodarEsquerda";
-"Comment" = "Não comentar";
+"Comment" = "Comentar";
 "Uncomment" = "Não comentar";
-"Indent" = "Recolher parágrafo";
-"Unindent" = "Não recolher";
+"Indent" = "Aumentar indentação";
+"Unindent" = "Diminuir indentação";
 "Macros" = "Macros";
 "Open Macro Editor..." = "Abrir editor de macros...";
 "Close Macro Editor" = "Fechar editor de macros";
 "Add macros from file..." = "Adicionar macros de um ficheiro...";
 "Save selection to file..." = "Guardar seleção num ficheiro...";
-"Edit" = "Editar";
+"Edit" = "Edição";
 "Warning" = "Aviso";
-"Don't Save" = "Não salvar";
+"Don't Save" = "Não guardar";
 "Cancel" = "Cancelar";
 "Do you want to save macros?" = "Pretende guardar as macros?";
 "Save Spot" = "Guardar posição";
@@ -39,7 +39,7 @@
 "Magnification Panel" = "Painel de ampliação";
 "Omit Shell Escape" = "Omitir shell escape";
 "Warning: Using Shell Escape" = "Aviso: a usar shell escape";
-"Preview" = "Página";
+"Preview" = "Pré-visualização";
 "Display Format" = "Formato de apresentação";// mitsu 1.29b
 "Magnification" = "Ampliação";// mitsu 1.29b
 "Copy Format" = "Formato de cópia";// mitsu 1.29b
@@ -100,9 +100,9 @@
 "Close All" = "Fechar todas";
 "File Already Exists" = "O ficheiro já existe";
 "Labels" = "Rótulos";
-"New Tag" = "Nova marca";
+"New Tag" = "Nova etiqueta";
 "Split Window" = "Dividir janela";
-"New Document" = "Novo Documento";
+"New Document" = "Novo documento";
 "Link Popups" = "Pop-ups de links";
 "Split Window with Link" = "Dividir janela com link";
 "Highlight expl3 Code" = "Destacar o código expl3";
@@ -110,7 +110,7 @@
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
 "Forget Learned Words…" = "Esquecer palavras aprendidas…";
-"Edit Spelling Exclusions…" = "Editar exceções de ortografia…";
+"Edit Spelling Exclusions…" = "Editar exclusões de ortografia…";
 "Forget learned words" = "Esquecer palavras aprendidas";
 "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Estas palavras deste documento foram aprendidas para %@. Selecione as que deseja esquecer. Clicar com Shift ou Comando seleciona várias.";
 "Forget Selected" = "Esquecer selecionadas";
@@ -118,7 +118,7 @@
 "Forgot %lu words." = "%lu palavras esquecidas.";
 "No learned words in this document" = "Nenhuma palavra aprendida neste documento";
 "None of the words in this document have been learned for %@." = "Nenhuma das palavras deste documento foi aprendida para %@.";
-"Problems in the spelling exclusions file" = "Problemas no ficheiro de exceções de ortografia";
+"Problems in the spelling exclusions file" = "Problemas no ficheiro de exclusões de ortografia";
 "OK" = "OK";
 /* Button added to the Spelling and Grammar panel */
 "Change All" = "Alterar tudo";
@@ -192,6 +192,7 @@
 "No command uses this key." = "Nenhum comando usa esta tecla.";
 "Press a key" = "Prima uma tecla";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla não pode ser usada como atalho. Use Comando ou Controlo com uma tecla, ou F1–F20.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Os atalhos com a tecla Globo (fn) não podem ser atribuídos a comandos do TeXShop.";
 
 
 "This key cannot be assigned to a new shortcut." = "Esta tecla não pode ser atribuída a um novo atalho.";
@@ -427,7 +428,7 @@
 /* Annotation tool: the name the annotation menu gives it */
 "Popup" = "Pop-up";
 /* Annotation toolbar: switch for edit mode */
-"Edit Mode" = "Edição";
+"Edit Mode" = "Modo de edição";
 /* Preview menu: shows the annotation toolbar under the toolbar */
 "Show Annotation Toolbar" = "Mostrar barra de ferramentas de anotações";
 /* Preview menu, while the annotation toolbar is shown */
@@ -456,9 +457,9 @@
 "Right" = "À direita";
 
 /* Edit menu */
-"Complete Label or Citation Key" = "Completar etiqueta ou chave de citação";
+"Complete Label or Citation Key" = "Completar rótulo ou chave de citação";
 /* Edit › Complete Label or Citation Key tooltip */
-"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Oferece as etiquetas do ficheiro após \\ref{ e, se as definições o permitirem, as chaves de citação do BibDesk após \\cite{.";
+"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Oferece os rótulos do ficheiro após \\ref{ e, se as definições o permitirem, as chaves de citação do BibDesk após \\cite{.";
 
 /* Print panel: the section of a PDF print, as in Preview */
 "Auto Rotate" = "Rodar automaticamente";

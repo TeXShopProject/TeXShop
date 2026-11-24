@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Mutate isolated help/UI resources and require the intended diagnostic."""
 from pathlib import Path
-import tempfile,subprocess,shutil,re,json
+import tempfile,subprocess,shutil,re,json,os
 R=Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  T=Path(td)
@@ -12,7 +12,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  for name in ['Sources/Settings/TSSettingsCategory.m','Sources/Settings/TSSettingsCategoryList.m']:
   dest=T/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(R/name,dest)
  check=(R/'Tests/check-settings-guidance.py').read_text().replace('ROOT = Path(__file__).resolve().parents[1]','ROOT = Path('+repr(str(T))+')')
- def guidance():return subprocess.run(['python3','-c',check],capture_output=True,text=True)
+ # The mutations are of the other books; the books still in translation are check-settings-guidance.py's own concern.
+ def guidance():return subprocess.run(['python3','-c',check],capture_output=True,text=True,env=dict(os.environ,TEXSHOP_HELP_TRANSLATIONS_PENDING='1'))
  def wording():return subprocess.run(['python3',str(R/'Tests/run-settings-ui-wording.py'),'--interfaces',str(T/'Resources/Interfaces')],capture_output=True,text=True)
  for run in [guidance,wording]:
   result=run();assert result.returncode==0,result.stderr

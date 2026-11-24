@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experimenten</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Experiment; formule uitproberen; fragment; bronpaneel; voorvertoningspaneel; Experimentconsole">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm" class="current">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Experimenten</h1>
+<p>Met Wijzig › Experiment... kunt u een kort maar lastig stuk LaTeX uitproberen, zoals een formule, een tabel of een TikZ-afbeelding, voordat u het in het document opneemt. Dit commando is beschikbaar als een bronvenster actief is.</p>
+<p>Het commando opent een bronpaneel. Als er tekst in het bronvenster is geselecteerd, wordt die naar het paneel gekopieerd; anders toont het paneel wat u er de vorige keer in hebt achtergelaten. Typ of bewerk het fragment, bijvoorbeeld <code>$$\sqrt{x^2 + y^2}$$</code>, en klik op de knop ‘Zet’ onder in het paneel. Een voorvertoningspaneel toont het resultaat. De eerste keer toont het de bovenkant van de eerste pagina; als u opnieuw zet, blijft het deel van de pagina staan waarnaar u kijkt. Het fragment kan van alles zijn, van een formule tot meerdere pagina’s.</p>
+
+<h2>Hoe het fragment wordt gezet</h2>
+<p>TeXShop zet een bestand dat bestaat uit de preambule van het document, alles tot <code>\begin{document}</code>, gevolgd door het fragment en <code>\end{document}</code>. In een project met een hoofdbestand wordt de preambule van het hoofdbestand gebruikt. Uw document en de map ervan worden niet gewijzigd:</p>
+<ul>
+<li>Het bestand wordt gezet in een tijdelijke map met kopieën van de bestanden en mappen naast het document, zodat afbeeldingen worden gevonden zoals bij het zetten van het document, ook met paden die met <code>./</code> beginnen. Als de map van het document meer dan 5000 onderdelen bevat, die in de submappen meegeteld, wordt er niets gekopieerd, en onderdelen die niet op deze manier kunnen worden gekopieerd, zoals bestanden op een andere schijf of bestanden van een clouddienst die alleen online staan, worden overgeslagen; bestanden naast het document worden dan nog steeds gevonden, maar niet met paden die met <code>./</code> beginnen.</li>
+<li>Er wordt een kopie gelezen van het <code>.aux</code>-bestand van de laatste keer dat het document is gezet, zodat <code>\ref</code>, <code>\pageref</code> en <code>\cite</code> de nummers van het document tonen.</li>
+</ul>
+<p>De engine is die van het document: een regel <code>% !TEX program</code> boven aan de bron, of anders de keuze in de knoppenbalk van het bronvenster. Bij LaTeX wordt de zetmethode van het document gevolgd: Direct PDF, Via DVI of Eigen script. Als BibTeX of MakeIndex is gekozen, wordt pdfLaTeX gebruikt. ConTeXt, MetaPost en plain TeX kunnen niet voor een experiment worden gebruikt. Eigen engines worden geprobeerd, maar ze kunnen mislukken als ze geen LaTeX verwachten of geen PDF-bestand maken.</p>
+
+<h2>De panelen</h2>
+<p>Het bronpaneel toont tekst zoals het bronvenster, met hetzelfde lettertype, dezelfde tabs, regelafstand, regelomloop, syntaxkleuren, markering van de huidige regel, blokcursor, onzichtbare tekens, regelnummers en overeenkomende haakjes, en volgt wijzigingen die u daarin via de menu’s of de instellingen aanbrengt. Bron › Lettertype › Groter (<kbd>⌘=</kbd>) en Kleiner (<kbd>⌘-</kbd>) maken de tekst groter of kleiner; net als een lettertype dat in het venster ‘Lettertypen’ is gekozen, veranderen ze ook het bronvenster. Toetsbindingen, commandoaanvulling en Wijzig › Label of citatiesleutel aanvullen werken in het paneel. Commandoaanvulling gebruikt de activeringstoets die is gekozen in Instellingen › Toetsenbord › ‘Activeringstoets’.</p>
+<p>De knoppenbalk van het voorvertoningspaneel heeft de gereedschappen van het voorvertoningsvenster: ‘Scrollen’, ‘Tekst selecteren’, ‘Vergroten’ en ‘PDF selecteren’. ‘Vergroten’ toont de pagina onder de aanwijzer op 150% zolang de muisknop is ingedrukt, of op 200%, 250% en 300% met Command, Option en Control; klik dubbel voor een grotere loep. Met ‘PDF selecteren’ tekent u een rechthoek en kopieert u die in het formaat dat is gekozen in Voorvertoning › Formaat kopiëren. Het paneel onthoudt zijn gereedschap los van het voorvertoningsvenster. Naast de gereedschappen staan ‘Zoom uit’, ‘Zoom in’, ‘Zoom naar inhoud’, dat het gezette deel van de pagina vergroot tot het het paneel vult, en ‘Zoom naar inhoudsbreedte’, dat het gezette deel even breed maakt als het paneel. Het paneel scrollt en zoomt ook met muis- en trackpadgebaren.</p>
+<p>De uitvoer van het zetten verschijnt in een eigen console, de Experimentconsole. Die komt naar voren als het zetten begint; klik op een paneel om dat paneel weer naar voren te halen. <kbd>⌘0</kbd> (Archief › Toon console) in een paneel brengt de Experimentconsole naar voren, en nogmaals drukken brengt u terug naar het paneel. Als Instellingen › Console › ‘Console tonen’ zo is ingesteld dat de console alleen wordt getoond als er een fout optreedt, blijft de Experimentconsole verborgen tot TeX een fout meldt of op invoer wacht.</p>
+<p>De panelen en de Experimentconsole zweven boven de documentvensters. U kunt ze verplaatsen en van grootte veranderen, en TeXShop onthoudt hun grootte en positie. Sluit een paneel met de sluitknop of met <kbd>⌘W</kbd>. Escape sluit ook het voorvertoningspaneel, en het bronpaneel als commandoaanvulling de Tab-toets gebruikt; als Escape de activeringstoets is, vult Escape in het bronpaneel commando’s aan.</p>
+
+<h2>Het resultaat bewaren</h2>
+<p>Als het fragment klopt, kopieert u het uit het bronpaneel en plakt u het in het document. De panelen behouden hun inhoud als ze worden gesloten en weer geopend, maar niet als TeXShop stopt, en ze kunnen niet worden bewaard.</p>
+<p>Elk document heeft eigen panelen, die de naam van het document in hun titelbalk dragen. Als er meerdere documenten open zijn, sluit u de panelen die u niet meer nodig hebt, zodat duidelijk blijft bij welk document een experiment hoort.</p>
+</main>
+</body>
+</html>

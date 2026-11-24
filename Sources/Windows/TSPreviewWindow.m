@@ -575,7 +575,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     
 
 
-	if ([self.myDocument fromKit] && ([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+	// A dead key, such as ^ on a French keyboard, gives no characters.
+	if ([self.myDocument fromKit] && ([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSCommandKeyMask) && [[theEvent characters] length] > 0) {
 		if ([[theEvent characters] characterAtIndex:0] == '[') {
 			// [[self.myDocument pdfKitView] goBack: self];
 			[self.activeView zoomOut:nil];
@@ -625,7 +626,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 		
 		unichar	theChar;
 
-		if ([theEvent type] == NSEventTypeKeyDown) {
+		// A dead key gives no characters; such a key goes on to the window as any other.
+		if ([theEvent type] == NSEventTypeKeyDown && [[theEvent characters] length] > 0) {
 
 			/*
 			if (([theEvent modifierFlags] & NSControlKeyMask) &&

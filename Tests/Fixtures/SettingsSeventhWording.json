@@ -11,7 +11,7 @@
   },
   "fr": {
     "SettingsPreview.strings": {
-      "337.title": "Sélectionner"
+      "337.title": "Sélectionner (PDF)"
     },
     "Localizable.strings": {
       "Search Settings": "Rechercher"
@@ -19,7 +19,7 @@
   },
   "it": {
     "SettingsPreview.strings": {
-      "337.title": "Selezione"
+      "337.title": "Selezione PDF"
     },
     "Localizable.strings": {
       "Search Settings": "Cerca"
@@ -31,8 +31,8 @@
       "catalog.editor.1.0.title": "Tabbreedte:"
     },
     "SettingsPreview.strings": {
-      "505.title": "Pagina’s lopen van links naar rechts",
-      "507.title": "Pagina’s lopen van rechts naar links"
+      "505.title": "Van links naar rechts",
+      "507.title": "Van rechts naar links"
     }
   },
   "pt-PT": {
@@ -50,7 +50,7 @@
     "SettingsCategories.strings": {
       "group.typesetting.9.title": "pLaTeX japonez",
       "catalog.editor.1.0.title": "Lățimea tabulatorului:",
-      "catalog.editor.1.1.title": "Folosește tabulatori pentru meniul de indentare",
+      "catalog.editor.1.1.title": "Folosiți tabulatori pentru meniul de indentare",
       "group.typesetting.6.title": "Script personal"
     },
     "SettingsPreview.strings": {

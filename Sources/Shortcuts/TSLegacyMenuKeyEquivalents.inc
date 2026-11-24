@@ -110,9 +110,28 @@ static NSMutableArray<NSMenuItem *> *TSLegacyFormerOlderItems(NSMenu *menu)
     }
     return items;
 }
+// Source › Font kept only Show Fonts, Bigger and Smaller in 6.00: its other items styled rich text, and the source is
+// plain text. Positions saved before count the submenu as it was (5.58), with a place for each removed item, so that
+// Bigger and Smaller keep their positions and the keys of the removed items reach no item.
+static NSString *const TSLegacyFontMenuMarker = @"TSShortcut.orderFrontFontPanel:.0";
+static NSMutableArray<NSMenuItem *> *TSLegacyFormerFontItems(NSMenu *menu)
+{
+    BOOL fontMenu = NO;
+    for (NSMenuItem *item in menu.itemArray)
+        if ([item.identifier isEqualToString:TSLegacyFontMenuMarker]) fontMenu = YES;
+    if (!fontMenu) return nil;
+    NSArray<NSString *> *former = @[TSLegacyFontMenuMarker, @"", @"", @"", @"TSShortcut.modifyFont:.3", @"TSShortcut.modifyFont:.4",
+                                    @"", @"", @"", @"", @"", @"", @""];
+    NSMutableArray<NSMenuItem *> *items = [NSMutableArray array];
+    for (NSString *identifier in former) {
+        NSMenuItem *item = identifier.length ? TSLegacyItemWithIdentifier(menu, identifier) : nil;
+        [items addObject:item ?: [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""]];
+    }
+    return items;
+}
 static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 {
-    NSMutableArray<NSMenuItem *> *items = TSLegacyFormerHelpItems(menu) ?: TSLegacyFormerOlderItems(menu) ?: [menu.itemArray mutableCopy];
+    NSMutableArray<NSMenuItem *> *items = TSLegacyFormerHelpItems(menu) ?: TSLegacyFormerOlderItems(menu) ?: TSLegacyFormerFontItems(menu) ?: [menu.itemArray mutableCopy];
     [items filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSMenuItem *item, NSDictionary *bindings) {
         return ![item.identifier isEqualToString:TSLegacyStatusBarItem] && ![item.identifier isEqualToString:TSLegacyIndexColorItem] &&
                ![item.identifier isEqualToString:TSLegacySwapItem] &&
@@ -138,21 +157,26 @@ static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 }
 // Japanese and Chinese titles dropped the space between CJK and Latin text,
 // as macOS does, and titles in several languages dropped a stray space at the
-// start or end or a doubled one inside; titles saved before that still name the same items.
+// start or end or a doubled one inside, and wrote "..." as the ellipsis character (German with a space before
+// it); titles saved before that still name the same items.
+// Scripts/update-legacy-menu-titles.py compares titles in the same way.
 static NSString *TSLegacyComparableTitle(NSString *title)
 {
-    static NSRegularExpression *space, *doubled;
+    static NSRegularExpression *space, *doubled, *ellipsis;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         NSString *cjk = @"[\\x{3000}-\\x{30FF}\\x{3400}-\\x{9FFF}\\x{FF01}-\\x{FF60}]";
         NSString *pattern = [NSString stringWithFormat:@"(?<=%@) (?=[A-Za-z0-9])|(?<=[A-Za-z0-9]) (?=%@)", cjk, cjk];
         space = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:NULL];
         doubled = [NSRegularExpression regularExpressionWithPattern:@" {2,}" options:0 error:NULL];
+        ellipsis = [NSRegularExpression regularExpressionWithPattern:@"[ \\x{00A0}]?(?:\\.\\.\\.|\\x{2026})" options:0 error:NULL];
     });
     // 6.00 marks the documents that are in English only, in every language; titles saved without the mark name the same items.
     for (NSString *mark in @[@" (Englisch)", @"（英語）", @" (영문)", @" (en inglés)", @" (en anglais)", @" (in inglese)", @" (Engels)",
                              @" (em inglês)", @" (în engleză)", @"（英文）"])
         if ([title hasSuffix:mark]) { title = [title substringToIndex:title.length - mark.length]; break; }
+    // "...", "…", " …" and "\u00A0…" compare equal.
+    title = [ellipsis stringByReplacingMatchesInString:title options:0 range:NSMakeRange(0, title.length) withTemplate:@"\u2026"];
     NSString *trimmed = [title stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" \n"]];
     trimmed = [doubled stringByReplacingMatchesInString:trimmed options:0 range:NSMakeRange(0, trimmed.length) withTemplate:@" "];
     return [space stringByReplacingMatchesInString:trimmed options:0 range:NSMakeRange(0, trimmed.length) withTemplate:@""];
@@ -221,6 +245,38 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
     });
     return identifiers[TSLegacyComparableTitle(title)];
 }
+#include "TSLegacyMenuTitles.inc"
+// Titles of 5.59 and 6.00 RC2 that menus and items had before they took Apple's terms or were otherwise renamed, in every
+// language (TSLegacyMenuTitles.inc, written by Scripts/update-legacy-menu-titles.py): the item with that identifier, or
+// the menu that holds an item with that identifier.
+static NSDictionary<NSString *, NSArray<NSString *> *> *TSLegacyRenamedTable(NSArray<NSArray<NSString *> *> *rows)
+{
+    NSMutableDictionary<NSString *, NSArray<NSString *> *> *map = [NSMutableDictionary dictionary];
+    for (NSArray<NSString *> *row in rows) {
+        NSString *title = TSLegacyComparableTitle(row.firstObject);
+        map[title] = [(map[title] ?: @[]) arrayByAddingObjectsFromArray:[row subarrayWithRange:NSMakeRange(1, row.count - 1)]];
+    }
+    return map;
+}
+static NSMenuItem *TSLegacyRenamedItem(NSArray<NSMenuItem *> *legacyItems, NSMenu *menu, NSString *title)
+{
+    static NSDictionary<NSString *, NSArray<NSString *> *> *formerItems, *formerMenus;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        formerItems = TSLegacyRenamedTable(TSLegacyFormerItemTitles());
+        formerMenus = TSLegacyRenamedTable(TSLegacyFormerMenuTitles());
+    });
+    NSString *comparable = TSLegacyComparableTitle(title);
+    // The items as positions count them, then the menu as it is now (a title of 6.00 RC2 may name an item that
+    // positions skip or count elsewhere, as Open Style File or Older Documents).
+    for (NSArray<NSMenuItem *> *items in @[legacyItems, menu.itemArray]) {
+        for (NSString *identifier in formerItems[comparable])
+            for (NSMenuItem *item in items) if (!item.hasSubmenu && [item.identifier isEqualToString:identifier]) return item;
+        for (NSString *identifier in formerMenus[comparable])
+            for (NSMenuItem *item in items) if (item.hasSubmenu && TSLegacyItemWithIdentifier(item.submenu, identifier) != nil) return item;
+    }
+    return nil;
+}
 // An entry for the first item of the former Command Completion submenu, by
 // position or by any title Add Word had, reaches the command. Its other items
 // (Marks, the removed file editor) stay inert.
@@ -241,16 +297,19 @@ static NSMenuItem *TSLegacyMenuItem(NSMenu *menu, id key)
         if (titled != nil) return titled;
         NSString *comparable = TSLegacyComparableTitle(key);
         if (comparable.length > 0)
-            for (NSMenuItem *item in items) if ([TSLegacyComparableTitle(item.title) isEqualToString:comparable]) return item;
+            for (NSArray<NSMenuItem *> *list in @[items, menu.itemArray])
+                for (NSMenuItem *item in list) if ([TSLegacyComparableTitle(item.title) isEqualToString:comparable]) return item;
         NSString *identifier = TSLegacyFormerTitleIdentifier(key);
         if (identifier != nil) for (NSMenuItem *item in items) if ([item.identifier isEqualToString:identifier]) return item;
-        return nil;
+        return TSLegacyRenamedItem(items, menu, key);
     }
     return index > 0 && index <= (NSInteger)items.count ? items[index - 1] : nil;
 }
 static void TSApplyLegacyKeyEquivalent(NSMenuItem *item, id value)
 {
     if (item == nil || ![value isKindOfClass:NSArray.class] || [value count] < 3) return;
+    // Enter Full Screen keeps Globe-F, which macOS gives it (TSGiveFullScreenGlobeKey).
+    if (item.action == @selector(toggleFullScreen:)) return;
     id key = value[0];
     if (![key isKindOfClass:NSString.class] || ![value[1] respondsToSelector:@selector(boolValue)] || ![value[2] respondsToSelector:@selector(boolValue)]) return;
     // As recording refuses them (TSShortcutStore isAllowedKey:), a saved key never takes Tab, Escape or

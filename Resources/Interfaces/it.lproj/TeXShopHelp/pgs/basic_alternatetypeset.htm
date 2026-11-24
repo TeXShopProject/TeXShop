@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modalità di compilazione alternativa</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Tramite DVI; PDF diretto; dvips; Ghostscript; PostScript; pstricks; Metodo di compilazione; % !TEX program; Script personale">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm" class="current">Modalità di compilazione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modalità di compilazione alternativa</h1>
+
+<p>Di solito TeXShop compila con il metodo PDF diretto: pdfLaTeX o pdfTeX scrive direttamente il file PDF. Il metodo alternativo, Tramite DVI, esegue LaTeX o TeX per creare un file DVI, lo converte in PostScript con dvips e converte il PostScript in PDF con Ghostscript. Questi passaggi li esegue lo script simpdftex di TeX Live.</p>
+
+<p>Tramite DVI serve per i documenti che inseriscono codice PostScript nel risultato, per esempio con il pacchetto pstricks. Le immagini EPS non ne hanno bisogno: TeX Live le converte in PDF durante la compilazione con PDF diretto.</p>
+
+<h2>Scegliere il metodo</h2>
+
+<p>Compila › Tramite DVI e Compila › PDF diretto cambiano il metodo del documento attivo; gli altri documenti aperti mantengono il proprio. Impostazioni › Compilazione › «Metodo di compilazione» imposta il metodo con cui iniziano i documenti. La sua terza scelta, «Script personale», esegue invece i comandi del gruppo «Script personale». I comandi di Tramite DVI, uno per plain TeX e uno per LaTeX, si trovano nel gruppo «Tramite DVI» di Impostazioni › Compilazione. Il profilo del motore LaTeX + dvips + Ghostscript, sotto «Altro» nel menu «Profilo del motore», imposta la compilazione Tramite DVI.</p>
+
+<h2>Scegliere il metodo nel documento</h2>
+
+<p>Una riga tra le prime 20 righe del sorgente imposta il programma e il metodo per quel documento, indipendentemente dalle impostazioni:</p>
+
+<table>
+<tr><th>Riga</th><th>Compila con</th></tr>
+<tr><td><code>% !TEX program = pdflatex</code></td><td>LaTeX, PDF diretto</td></tr>
+<tr><td><code>% !TEX program = latex</code></td><td>LaTeX, Tramite DVI</td></tr>
+<tr><td><code>% !TEX program = pdftex</code></td><td>plain TeX, PDF diretto</td></tr>
+<tr><td><code>% !TEX program = tex</code></td><td>plain TeX, Tramite DVI</td></tr>
+<tr><td><code>% !TEX program = personallatex</code></td><td>LaTeX, Script personale</td></tr>
+<tr><td><code>% !TEX program = personaltex</code></td><td>plain TeX, Script personale</td></tr>
+</table>
+
+<h2>Opzioni per Tramite DVI</h2>
+
+<p>Per impostazione predefinita Ghostscript ignora la trasparenza PostScript. Per mantenerla, aggiungi <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code> alla fine del comando nel gruppo «Tramite DVI». Per conservare il file PostScript intermedio, aggiungi <code>--keep-psfile</code>. Ghostscript viene eseguito dalla cartella indicata in Impostazioni › Compilazione › Percorsi › Ghostscript.</p>
+</main>
+</body>
+</html>

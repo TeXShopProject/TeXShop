@@ -29,7 +29,7 @@
 "MacJapanese"	= "Japans (Mac OS, ShiftJIS ¥)";
 
 /* "DOSJapanese" corresponds to code 0x00000420 in TextEncodingNames.string */
-"DOSJapanese"	= "Japans (Windows, DOS, ShiftJIS \)";
+"DOSJapanese"	= "Japans (Windows, DOS, ShiftJIS \\)";
 
 /* "SJIS_X0213" corresponds to code 0x00000628 in TextEncodingNames.string */
 "SJIS_X0213"	= "Japans (Shift JIS X0213)";
@@ -71,7 +71,7 @@
 "Windows Cyrillic"	= "Cyrillisch (Windows)";
 
 /* "KOI8_R" corresponds to code 0x00000a02 in TextEncodingNames.string */
-"KOI8_R"	= "Cyrillisch (KOI8-R)";
+"KOI8_R"	= "Russisch (KOI8-R)";
 
 /* "Mac Chinese Traditional" corresponds to code 0x00000002 in TextEncodingNames.string */
 "Mac Chinese Traditional"	= "Traditioneel Chinees (Mac OS)";

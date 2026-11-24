@@ -47,7 +47,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{414, 289}, {585, 420}}</string>
 				<int key="NSWTFlags">813170688</int>
-				<string key="NSWindowTitle">Editor de Macro</string>
+				<string key="NSWindowTitle">Editor de macros</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
@@ -854,7 +854,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="360138343">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">(tecla Comando sempre será usada)</string>
+								<string key="NSContents">(tecla Command sempre será usada)</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="901063775"/>
 								<reference key="NSBackgroundColor" ref="446734689"/>

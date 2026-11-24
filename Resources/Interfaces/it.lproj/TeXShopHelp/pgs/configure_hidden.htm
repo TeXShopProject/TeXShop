@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impostazioni nascoste</title>
+<meta name="description" content="impostazioni nascoste; defaults write; Terminale; Righe di commento e impostazioni nascoste; OtherTrashExtensions; ConTeXtTags; RedConsoleAfterError; RefreshTime">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Come configuro TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminari</a></li>
+<li><a href="configure_prefchanges.htm">Modifiche consigliate alle impostazioni</a></li>
+<li><a href="configure_correctinstall.htm">Ottenere i nuovi elementi della libreria</a></li>
+<li><a href="configure_hidden.htm" class="current">Impostazioni nascoste</a></li>
+<li><a href="configure_panel.htm">Modificare il Pannello LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificare le associazioni dei tasti</a></li>
+<li><a href="configure_menushortcuts.htm">Ridefinire le scorciatoie da tastiera dei menu</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Impostazioni nascoste</h1>
+<p>La finestra Impostazioni contiene le impostazioni di cui la maggior parte delle persone ha bisogno. Quelle meno comuni sono impostazioni nascoste: non hanno un controllo nella finestra Impostazioni e si cambiano con un comando nel Terminale. Il riferimento «Righe di commento e impostazioni nascoste», in inglese, elenca ogni impostazione nascosta con il suo comando, raggruppata per argomento. Aprilo con Aiuto › Righe di commento e impostazioni nascoste (in inglese) oppure con «Apri il manuale delle righe di commento e impostazioni nascoste…» in Impostazioni › Generali › Avanzate.</p>
+
+<h2 id="change">Cambiare un’impostazione nascosta</h2>
+<ol>
+<li>Esci da TeXShop.</li>
+<li>Apri il Terminale (in Applicazioni › Utility), digita il comando e premi A capo.</li>
+<li>Avvia di nuovo TeXShop.</li>
+</ol>
+<p>Ogni comando ha la forma <code>defaults write TeXShop <var>name</var> <var>value</var></code>. Per tornare al valore predefinito, usa <code>defaults delete TeXShop <var>name</var></code>.</p>
+
+<h2 id="examples">Esempi</h2>
+<dl>
+<dt><code>defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'</code></dt>
+<dd>File › Cestina file ausiliari elimina anche i file con queste estensioni. Indica le estensioni senza il punto. Consulta <a href="advanced_removeaux.htm">Eliminare i file ausiliari</a>.</dd>
+<dt><code>defaults write TeXShop ConTeXtTags YES</code></dt>
+<dd>Il menu Tag elenca i comandi di sezione di ConTeXt, come \title e \subject, invece di quelli di LaTeX.</dd>
+<dt><code>defaults write TeXShop RedConsoleAfterError YES</code></dt>
+<dd>Il testo digitato nella console per rispondere a un errore di TeX, e tutto l’output successivo di quella esecuzione, viene mostrato in rosso.</dd>
+<dt><code>defaults write TeXShop RefreshTime 2</code></dt>
+<dd>Finché «Controlla sempre le modifiche al PDF fatte da altre app» è attivo in Impostazioni › Anteprima, TeXShop controlla ogni 2 secondi se un PDF è cambiato. Il valore predefinito è 1 secondo e il minimo 0,5.</dd>
+</dl>
+
+<p>Le impostazioni presenti nella finestra Impostazioni non sono ripetute tra le impostazioni nascoste. Per esempio, lo spostamento al marcatore successivo o precedente di Modifica › Marcatori con Opzione o Controllo e il tasto di attivazione del completamento si attiva e disattiva con «Vai al marcatore successivo o precedente con Opzione o Controllo e il tasto di attivazione» in Impostazioni › Tastiera. Per trovare un’impostazione di questo tipo, usa la ricerca nelle impostazioni; consulta <a href="basic_preferences.htm#settings-search">Cercare nelle impostazioni</a>.</p>
+</main>
+</body>
+</html>

@@ -3,7 +3,7 @@
 "F0z-JX-Cv5.title" = "Modal Sheet (title will be hidden)";
 
 /* Class = "NSTextFieldCell"; title = "Changing the encoding of a file can lead to loss of data. Only use this panel if the current file is a copy of the original file."; ObjectID = "Prr-63-EQ4"; */
-"Prr-63-EQ4.title" = "Cambiar la codificación de un archivo puede acarrear pérdida de datos. Usa este panel sólo si el archivo actual es una copia del original.";
+"Prr-63-EQ4.title" = "Cambiar la codificación de un archivo puede acarrear pérdida de datos. Use este panel solo si el archivo actual es una copia del original.";
 
 /* Class = "NSButtonCell"; title = "OK"; ObjectID = "V5P-DF-wCP"; */
 "V5P-DF-wCP.title" = "Aceptar";

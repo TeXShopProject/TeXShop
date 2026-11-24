@@ -8,8 +8,7 @@ help gives GitHub issues as the place for bug reports. Plain text in the history
 earlier versions (What's New in the help, Changes, About This Release) may still
 quote the old addresses as a record, but never as a link.
 
-The vendored filltex project keeps its upstream README and bibliography unchanged, and the
-update of unedited bundled macros names the earlier addresses to recognize them.
+The update of unedited bundled macros names the earlier addresses to recognize them.
 """
 import argparse, re, sys
 from pathlib import Path
@@ -22,7 +21,6 @@ root = Path(__file__).resolve().parents[1]
 
 FORMER = re.compile(r'(pages\.uoregon\.edu/koch|uoregon\.edu/~koch|darkwing\.uoregon\.edu|koch@(?:math\.)?uoregon\.edu)', re.I)
 LINK = re.compile(r'''(href\s*=\s*["']?[^"'>\s]*|\\(?:url|href)\{[^}]*|open location "[^"]*)''' + FORMER.pattern, re.I)
-VENDORED = root/'Resources/TeXShop/Engines/Inactive/filltex/filltex-master'
 INDEXES = ('.helpindex', '.cshelpindex')
 # Names the addresses of earlier bundled macros, to replace them in unedited copies.
 RECOGNIZES = {root/'Sources/Macros/TSBundledMacroUpdate.m'}
@@ -49,7 +47,7 @@ pdfs = 0
 files = [p for d in ('Resources', 'Sources') for p in sorted((root/d).rglob('*')) if p.is_file()]
 for path in files:
     rel = path.relative_to(root)
-    if VENDORED in path.parents or path.suffix in INDEXES or path.name.endswith(' idx'):
+    if path.suffix in INDEXES or path.name.endswith(' idx'):
         continue
     if path.suffix.lower() == '.pdf':
         pdfs += 1
@@ -74,7 +72,7 @@ for path in files:
 # The help sends bug reports to GitHub issues in every language.
 issues = 'https://github.com/TeXShopProject/TeXShop/issues'
 bug_pages = sorted((root/'Resources/Interfaces').glob('*.lproj/TeXShopHelp/pgs/basic_bugs.htm'))
-assert len(bug_pages) == 5, bug_pages
+assert len(bug_pages) == 12, bug_pages  # en, ja, de, es, ko, fr, it, nl, pt, pt-PT, ro, zh_CN
 for page in bug_pages:
     text = page.read_bytes().decode('utf-8')
     if args.mutation == 'bug-contact' and page.parent.parent.parent.name == 'de.lproj':

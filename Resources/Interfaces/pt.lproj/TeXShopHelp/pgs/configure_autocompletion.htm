@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modificar as associações de teclas</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="associações de teclas; Lista de associações de teclas; editar associações de teclas; Caractere digitado; Texto de saída; Colar; pasta Keyboard; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Como configurar o TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm">Alterações recomendadas nos ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obter novos itens da biblioteca</a></li>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
+<li><a href="configure_panel.htm">Modificar o Painel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm" class="current">Modificar as associações de teclas</a></li>
+<li><a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modificar as associações de teclas</h1>
+<p>As associações de teclas substituem um caractere digitado por um texto, por exemplo ^ por ^{} com o ponto de inserção entre as chaves; <a href="basic_autocompletion.htm">Associações de teclas</a> explica como usá-las. Esta página explica como alterar a lista.</p>
+
+<h2 id="on-off">Ativar as associações de teclas</h2>
+<p>“Usar associações de teclas (padrão para novos documentos)”, em Ajustes › Teclado, decide se as associações de teclas estão ativadas quando um documento é aberto; no início, está desativado. Código-fonte › Associações de teclas as ativa ou desativa somente para o documento ativo, e o item opcional Associações de teclas da barra de ferramentas faz o mesmo.</p>
+
+<h2 id="edit">Editar a lista</h2>
+<p>A “Lista de associações de teclas”, em Ajustes › Teclado, mostra cada caractere digitado com o seu texto de saída. Clique duas vezes em uma célula para editá-la ali mesmo. Clique em + abaixo da lista para acrescentar uma associação de teclas e em − para apagar as selecionadas; arraste as linhas para mudar a ordem. Um caractere digitado é um único caractere. As alterações são salvas na hora e valem imediatamente, também nos documentos que já estão abertos; Editar › Desfazer as reverte.</p>
+<p>Um texto de saída pode conter estes símbolos, que a lista mostra como pequenos blocos:</p>
+<dl>
+<dt>#SEL#</dt><dd>o texto que estava selecionado quando a tecla foi digitada</dd>
+<dt>#INS#</dt><dd>para onde vai o ponto de inserção</dd>
+<dt>#PASTE#</dt><dd>o texto da área de transferência</dd>
+<dt>•</dt><dd>uma marca, para a qual Editar › Marcas pode ir</dd>
+</dl>
+<p>Acrescente-os com o menu Inserir abaixo da lista, ou digite-os como estão escritos acima; Option-Return digita uma quebra de linha e Option-Tab uma tabulação. O botão ? ao lado da lista mostra todos eles. Ao copiar um texto de saída, os símbolos são copiados como estão escritos acima.</p>
+<p>Marcar a coluna Colar aplica uma associação de teclas também ao texto colado: enquanto as associações de teclas estiverem ativadas para o documento, cada ocorrência do seu caractere digitado no texto colado ou solto no código-fonte é substituída pelo seu texto de saída. As associações de teclas cujo texto de saída contém #SEL#, #INS#, #PASTE# ou uma marca não podem ser marcadas.</p>
+
+<h2 id="reset">Voltar à lista padrão</h2>
+<p>A lista fica guardada na pasta ~/Library/TeXShop/Keyboard. Para voltar à lista que vem com o TeXShop, encerre o TeXShop, mova a pasta Keyboard para a Mesa e abra o TeXShop de novo; ele cria a pasta com o conteúdo padrão.</p>
+</main>
+</body>
+</html>

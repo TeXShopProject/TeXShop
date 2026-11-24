@@ -10,7 +10,7 @@ tiToolTipPrint				= "PDF-Bild drucken";
 
 tiLabelTypeset				= "Setzen";
 tiPaletteLabelTypeset			= "Setzen";
-tiToolTipTypeset			= "Schriftsatzprogramm starten";
+tiToolTipTypeset			= "Satzprogramm starten";
 
 tiLabelSharing				= "Freigeben";
 tiPaletteLabelSharing		= "Freigeben";
@@ -19,7 +19,7 @@ tiToolTipSharing			= "Quelltext freigeben";
 
 tiLabelProgram				= "Programm";
 tiPaletteLabelProgram			= "Programm";
-tiToolTipProgram			= "Schriftsatzprogramm auswählen";
+tiToolTipProgram			= "Satzprogramm auswählen";
 
 tiLabelTeX				= "plain TeX";
 tiPaletteLabelTeX			= "plain TeX";
@@ -31,7 +31,7 @@ tiToolTipLaTeX				= "Quelltext mit LaTeX ausführen";
 
 tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
-tiToolTipBibTeX				= "Starte BibTeX";
+tiToolTipBibTeX				= "BibTeX starten";
 
 tiLabelMakeIndex			= "Index erstellen";
 tiPaletteLabelMakeIndex			= "Index erstellen";
@@ -39,23 +39,23 @@ tiToolTipMakeIndex			= "Index anlegen";
 
 tiLabelMetaPost				= "MetaPost";
 tiPaletteLabelMetaPost			= "MetaPost";
-tiToolTipMetaPost			= "Starte MetaPost";
+tiToolTipMetaPost			= "MetaPost starten";
 
 tiLabelConTeX				= "ConTeXt";
 tiPaletteLabelConTeX			= "ConTeXt";
-tiToolTipConTeX				= "Starte ConTeXt";
+tiToolTipConTeX				= "ConTeXt starten";
 
 tiLabelMetaFont				= "MetaFont";
 tiPaletteLabelMetaFont			= "MetaFont";
-tiToolTipMetaFont			= "Starte MetaFont";
+tiToolTipMetaFont			= "MetaFont starten";
 
-tiLabelPreviousPage			= "Zurück";
+tiLabelPreviousPage			= "Vorherige";
 tiPaletteLabelPreviousPage		= "Alternative vorherige Seite";
 tiToolTipPreviousPage			= "Vorherige Seite anzeigen";
 
 tiLabelNextPage				= "Nächste";
 tiPaletteLabelNextPage			= "Alternative nächste Seite";
-tiToolTipNextPage			= "Zeige nächste Seite";
+tiToolTipNextPage			= "Nächste Seite anzeigen";
 
 tiLabelGotoPage				= "Gehe zu Seite";
 tiPaletteLabelGotoPage			= "Gehe zu Seite";
@@ -63,7 +63,7 @@ tiToolTipGotoPage			= "Gehe zu Seite";
 
 tiLabelMagnification			= "Vergrößerung";
 tiPaletteLabelMagnification		= "Vergrößerung";
-tiToolTipMagnification			= "Stelle Seitenvergrößerung ein";
+tiToolTipMagnification			= "Seitenvergrößerung einstellen";
 
 tiLabelTemplates			= "Vorlagen";
 tiPaletteLabelTemplates			= "Vorlagen";
@@ -73,7 +73,7 @@ tiLabelTags				= "Markierungen";
 tiPaletteLabelTags			= "Markierungen";
 tiToolTipTags				= "Markierung auswählen, zu der gescrollt werden soll";
 
-tiLabelPreviousPageButton		= "Zurück";
+tiLabelPreviousPageButton		= "Vorherige";
 tiPaletteLabelPreviousPageButton	= "Vorherige Seite";
 tiToolTipPreviousPageButton		= "Vorherige Seite anzeigen";
 
@@ -83,11 +83,11 @@ tiToolTipNextPageButton			= "Nächste Seite anzeigen";
 
 tiLabelTypesetEE			= "Setzen";
 tiPaletteLabelTypesetEE			= "Setzen";
-tiToolTipTypesetEE			= "Starte Schriftsatzprogramm";
+tiToolTipTypesetEE			= "Satzprogramm starten";
 
 tiLabelProgramEE			= "Programm";
 tiPaletteLabelProgramEE			= "Programm";
-tiToolTipProgramEE			= "Schriftsatzprogramm auswählen";
+tiToolTipProgramEE			= "Satzprogramm auswählen";
 
 tiLabelAutoComplete			= "Tastenbelegungen";
 tiPaletteLabelAutoComplete		= "Tastenbelegungen";
@@ -110,17 +110,17 @@ tiLabelMacrosEE				= "Makros";
 tiPaletteLabelMacrosEE		= "Makros";
 tiToolTipMacrosEE           = "Makros einfügen";
 
-tiLabelMouseMode			= "Maus-Modus";
-tiPaletteLabelMouseMode		= "Maus-Modus";
-tiToolTipMouseMode			= "Maus-Modus ändern";
+tiLabelMouseMode			= "Mausmodus";
+tiPaletteLabelMouseMode		= "Mausmodus";
+tiToolTipMouseMode			= "Mausmodus ändern";
 
-tiLabelSyncMarks			= "SynchPunkte";
-tiPaletteLabelSyncMarks		= "Synchronisationspunkte";
-tiToolTipSyncMarks			= "Synchronisationspunkte anzeigen";
+tiLabelSyncMarks			= "Sync-Punkte";
+tiPaletteLabelSyncMarks		= "Synchronisierungspunkte";
+tiToolTipSyncMarks			= "Synchronisierungspunkte anzeigen";
 
 tiLabelTypesetKIT				= "Setzen";
 tiPaletteLabelTypesetKIT		= "Setzen";
-tiToolTipTypesetKIT				= "Starte Schriftsatzprogramm";
+tiToolTipTypesetKIT				= "Satzprogramm starten";
 
 tiLabelSharingKIT				= "Freigeben";
 tiPaletteLabelSharingKIT		= "Freigeben";
@@ -130,9 +130,9 @@ tiLabelSearchKIT				= "Suchen";
 tiPaletteLabelSearchKIT         = "Suchen";
 tiToolTipSearchKIT				= "Suchen";
 
-tiLabelProgramKIT				= "Setzmethode";
-tiPaletteLabelProgramKIT		= "Setzmethode";
-tiToolTipProgramKIT				= "Schriftsatzprogramm auswählen";
+tiLabelProgramKIT				= "Programm";
+tiPaletteLabelProgramKIT		= "Programm";
+tiToolTipProgramKIT				= "Satzprogramm auswählen";
 
 tiLabelPreviousPageButtonKIT		= "Vorherige";
 tiPaletteLabelPreviousPageButtonKIT	= "Vorherige Seite";
@@ -148,23 +148,23 @@ tiToolTipGotoPageKIT			= "Gehe zu Seite";
 
 tiLabelMagnificationKIT			= "Vergrößerung";
 tiPaletteLabelMagnificationKIT	= "Vergrößerung";
-tiToolTipMagnificationKIT		= "Stelle Seitenvergrößerung ein";
+tiToolTipMagnificationKIT		= "Seitenvergrößerung einstellen";
 
 tiLabelMacrosKIT				= "Makros";
 tiPaletteLabelMacrosKIT			= "Makros";
 tiToolTipMacrosKIT              = "Makros einfügen";
 
-tiLabelMouseModeKIT				= "Maus-Modus";
-tiPaletteLabelMouseModeKIT		= "Maus-Modus";
+tiLabelMouseModeKIT				= "Mausmodus";
+tiPaletteLabelMouseModeKIT		= "Mausmodus";
 tiToolTipMouseModeScroll = "Verschieben: Dokument durch Ziehen bewegen";
 tiToolTipMouseModeSelectText = "Textauswahl: Text zum Kopieren durch Ziehen auswählen";
 tiToolTipMouseModeMagnify = "Lupe: Gedrückt halten, um durch eine kleine Lupe zu sehen";
 tiToolTipMouseModeMagnifyLarge = "Lupe (groß): Gedrückt halten, um durch eine große Lupe zu sehen";
 tiToolTipMouseModeSelectPDF = "PDF-Auswahl: Bereich zum Kopieren als Grafik durch Ziehen auswählen";
 
-tiLabelSyncMarksKIT				= "SynchPunkte";
-tiPaletteLabelSyncMarksKIT		= "Synchronisationspunkte";
-tiToolTipSyncMarksKIT			= "Synchronisationspunkte anzeigen";
+tiLabelSyncMarksKIT				= "Sync-Punkte";
+tiPaletteLabelSyncMarksKIT		= "Synchronisierungspunkte";
+tiToolTipSyncMarksKIT			= "Synchronisierungspunkte anzeigen";
 
 tiLabelBackForthKIT				= "Zurück/Vorwärts";
 tiPaletteLabelBackForthKIT		= "Zurück/Vorwärts";
@@ -180,13 +180,13 @@ tiLabelDrawerKIT				= "Schubfach";
 tiPaletteLabelDrawerKIT			= "Schubfach";
 tiToolTipDrawerKIT				= "Schubfach ein-/ausblenden";
 
-tiLabelShowFullPath				= "Gesamt-Pfad";
-tiPaletteLabelShowFullPath		= "Gesamt-Pfad";
-tiToolTipShowFullPath			= "Zeige gesamten Pfad im Kopf des Fensters";
+tiLabelShowFullPath				= "Ganzer Pfad";
+tiPaletteLabelShowFullPath		= "Ganzer Pfad";
+tiToolTipShowFullPath			= "Vollständigen Pfad in der Titelleiste anzeigen";
 
-tiLabelProgramSplit				= "Setzmethode";
-tiPaletteLabelProgramSplit		= "Setzmethode";
-tiToolTipProgramSplit			= "Schriftsatzprogramm auswählen";
+tiLabelProgramSplit				= "Programm";
+tiPaletteLabelProgramSplit		= "Programm";
+tiToolTipProgramSplit			= "Satzprogramm auswählen";
 
 tiLabelMacrosSplit				= "Makros";
 tiPaletteLabelMacrosSplit		= "Makros";
@@ -202,7 +202,7 @@ tiToolTipGotoPageSplit          = "Gehe zu Seite";
 
 tiLabelMagnificationSplit		= "Vergrößerung";
 tiPaletteLabelMagnificationSplit   = "Vergrößerung";
-tiToolTipMagnificationSplit     = "Stelle Seitenvergrößerung ein";
+tiToolTipMagnificationSplit     = "Seitenvergrößerung einstellen";
 
 tiLabelAutoCompleteSplit		= "Tastenbelegungen";
 tiPaletteLabelAutoCompleteSplit   = "Tastenbelegungen";
@@ -216,8 +216,8 @@ tiLabelSharingSplit                = "Freigeben";
 tiPaletteLabelSharingSplit        = "Freigeben";
 tiToolTipSharingSplit            = "Quelltext freigeben";
 
-tiLabelMouseModeKITSplit                = "Maus-Modus";
-tiPaletteLabelMouseModeKITSplit        = "Maus-Modus";
+tiLabelMouseModeKITSplit                = "Mausmodus";
+tiPaletteLabelMouseModeKITSplit        = "Mausmodus";
 
 tiLabelSearchKITSplit                = "Suchen";
 tiPaletteLabelSearchKITSplit         = "Suchen";
@@ -225,7 +225,7 @@ tiToolTipSearchKITSplit                = "Suchen";
 
 tiLabelTypesetSplit                = "Setzen";
 tiPaletteLabelTypesetSplit            = "Setzen";
-tiToolTipTypesetSplit            = "Schriftsatzprogramm starten";
+tiToolTipTypesetSplit            = "Satzprogramm starten";
 
 tiLabelLabels                = "Labels";
 tiPaletteLabelLabels            = "Labels";
@@ -263,16 +263,16 @@ tiToolTipHtmlSearch           = "Suchen";
 
 "Page Layout" = "Seitenlayout";
 "tiLabelTSPreviewAppearance" = "Erscheinungsbild";
-"Continuous Two Pages" = "Doppelseiten, kontinuierlich";
+"Continuous Two Pages" = "Doppelseite, kontinuierlich";
 "Restore Document Settings" = "Dokumenteinstellungen wiederherstellen";
-"Single Page" = "Einzelseiten";
+"Single Page" = "Einzelseite";
 "PreviewAppearanceDark" = "Dunkel";
 "PreviewAppearanceLight" = "Hell";
-"Two Pages" = "Doppelseiten";
+"Two Pages" = "Doppelseite";
 "Left to right" = "Von links nach rechts";
 "Two-Page Arrangement" = "Doppelseiten-Anordnung";
 "Applies when displaying two pages" = "Gilt bei der Anzeige von Doppelseiten";
-"Continuous" = "Einzelseiten, kontinuierlich";
+"Continuous" = "Einzelseite, kontinuierlich";
 "Right to left" = "Von rechts nach links";
 "Show first page alone as cover" = "Erste Seite einzeln als Deckblatt anzeigen";
 

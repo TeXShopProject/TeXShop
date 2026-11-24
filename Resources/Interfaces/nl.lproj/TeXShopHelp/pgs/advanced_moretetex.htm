@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meer over TeX Live</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeX Live; MacTeX; BasicTeX; /usr/local/texlive; /Library/TeX/texbin; pad TeX-engines; documentatie">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm" class="current">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Meer over TeX Live</h1>
+<h2>Waar TeX Live is geïnstalleerd</h2>
+<p>MacTeX installeert TeX Live in <code>/usr/local/texlive/2026</code>, en BasicTeX in <code>/usr/local/texlive/2026basic</code>. TeX Live verschijnt één keer per jaar, en elk jaar wordt in een eigen map geïnstalleerd, zoals <code>2027</code>, zodat meerdere jaargangen naast elkaar op de Mac kunnen staan. Om er een te verwijderen, sleept u de map ervan naar de prullenmand.</p>
+<p>De map <code>/usr/local</code> is in de Finder verborgen. Om erin te kijken, kiest u in de Finder Ga › Ga naar map… en typt u het pad.</p>
+
+<h2>Hoe TeXShop TeX vindt</h2>
+<p>TeXShop voert TeX uit vanuit de map in het veld ‘TeX-engines’ van Instellingen › Zetten › Paden. Standaard is dat <code>/Library/TeX/texbin</code>, een koppeling die de installatieprogramma’s van MacTeX en BasicTeX laten wijzen naar de programma’s van de zojuist geïnstalleerde TeX Live. Wanneer een nieuwe jaargang van TeX Live wordt geïnstalleerd, volgt de koppeling mee, en gebruikt TeXShop de nieuwe TeX zonder dat u iets in de instellingen hoeft te wijzigen.</p>
+<p>Om een andere installatie te gebruiken, vult u in ‘TeX-engines’ de map met de programma’s ervan in, bijvoorbeeld <code>/usr/local/texlive/2026/bin/universal-darwin</code>, of klikt u op ‘Paden detecteren…’ om te kiezen uit de installaties die TeXShop vindt; zie <a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a>.</p>
+
+<h2>Laat TeX Live zoals het is</h2>
+<p>De mappen van TeX Live horen bij het systeem, en een update of een nieuwe jaargang van TeX Live vervangt ze. Voeg daar geen bestanden toe en wijzig er niets. Zet uw eigen stijlbestanden, klassen en literatuurlijsten in plaats daarvan in uw persoonlijke boom, waar TeX ze als eerste vindt en waar updates ze met rust laten; zie <a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a>.</p>
+
+<h2>Documentatie</h2>
+<p>TeX Live bevat documentatie voor bijna elk pakket. Help › Toon documentatie voor pakket… opent de documentatie van een pakket aan de hand van de naam, bijvoorbeeld <code>hyperref</code> of <code>tikz</code>. Help › TeX Live-documentatie (Engels) vermeldt waar u de handleiding van TeX Live en andere documentatie online vindt.</p>
+</main>
+</body>
+</html>

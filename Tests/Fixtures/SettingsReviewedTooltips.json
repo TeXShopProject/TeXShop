@@ -65,13 +65,13 @@
       "Associar o preto e o branco a outras cores."
     ],
     "ro": [
-      "Folosește reguli de excludere pentru documentele LaTeX.",
+      "Folosiți reguli de excludere pentru documentele LaTeX.",
       "Valorile mai mari accentuează textul la copierea imaginilor raster.",
       "Asociază alb și negru cu alte culori."
     ],
     "zh_CN": [
-      "对LaTeX文档使用排除规则。",
-      "复制位图图像时，数值越大，文字越突出。",
+      "对LaTeX文稿使用排除规则。",
+      "拷贝位图图像时，数值越大，文字越突出。",
       "将黑白映射为其他颜色。"
     ]
   },

@@ -1,0 +1,10 @@
+\begin{tabular}{lllll}
+
+\toprule
+h1 & h2 \\
+\midrule
+only \\
+1 & 2 & 3 & 4 & 5 \\
+
+\bottomrule
+\end{tabular}

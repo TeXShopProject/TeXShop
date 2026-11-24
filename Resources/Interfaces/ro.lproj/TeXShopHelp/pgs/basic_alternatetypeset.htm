@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modul de compilare alternativ</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Prin DVI; PDF direct; dvips; Ghostscript; PostScript; pstricks; Metoda de compilare; % !TEX program; Script personal">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm" class="current">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modul de compilare alternativ</h1>
+
+<p>În mod normal, TeXShop compilează cu metoda „PDF direct”: pdfLaTeX sau pdfTeX scrie direct fișierul PDF. Metoda alternativă, „Prin DVI”, rulează LaTeX sau TeX pentru a crea un fișier DVI, îl convertește în PostScript cu dvips și convertește fișierul PostScript în PDF cu Ghostscript. Acești pași sunt executați de scriptul simpdftex din TeX Live.</p>
+
+<p>Metoda „Prin DVI” este necesară pentru documentele care pun cod PostScript în rezultat, de exemplu cu pachetul pstricks. Imaginile EPS nu au nevoie de ea: TeX Live le convertește în PDF în timpul compilării cu „PDF direct”.</p>
+
+<h2>Alegerea metodei</h2>
+
+<p>Compilare › Prin DVI și Compilare › PDF direct schimbă metoda documentului activ; celelalte documente deschise o păstrează pe a lor. Configurări › Compilare › Metoda de compilare stabilește metoda cu care încep documentele. A treia ei opțiune, „Script personal”, rulează în schimb comenzile din grupul „Script personal”. Comenzile pentru „Prin DVI”, una pentru plain TeX și una pentru LaTeX, se află în grupul „Prin DVI” din Configurări › Compilare. Profilul motorului LaTeX + dvips + Ghostscript, aflat la „Altele” în meniul „Profilul motorului”, pregătește compilarea „Prin DVI”.</p>
+
+<h2>Alegerea metodei în document</h2>
+
+<p>O linie aflată printre primele 20 de linii ale sursei stabilește programul și metoda pentru acel document, oricare ar fi configurările:</p>
+
+<table>
+<tr><th>Linie</th><th>Compilează cu</th></tr>
+<tr><td><code>% !TEX program = pdflatex</code></td><td>LaTeX, PDF direct</td></tr>
+<tr><td><code>% !TEX program = latex</code></td><td>LaTeX, Prin DVI</td></tr>
+<tr><td><code>% !TEX program = pdftex</code></td><td>plain TeX, PDF direct</td></tr>
+<tr><td><code>% !TEX program = tex</code></td><td>plain TeX, Prin DVI</td></tr>
+<tr><td><code>% !TEX program = personallatex</code></td><td>LaTeX, Script personal</td></tr>
+<tr><td><code>% !TEX program = personaltex</code></td><td>plain TeX, Script personal</td></tr>
+</table>
+
+<h2>Opțiuni pentru Prin DVI</h2>
+
+<p>În mod implicit, Ghostscript ignoră transparența PostScript. Pentru a o păstra, adăugați <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code> la sfârșitul comenzii din grupul „Prin DVI”. Pentru a păstra fișierul PostScript intermediar, adăugați <code>--keep-psfile</code>. Ghostscript este rulat din dosarul indicat în Configurări › Compilare › Căi › Ghostscript.</p>
+</main>
+</body>
+</html>

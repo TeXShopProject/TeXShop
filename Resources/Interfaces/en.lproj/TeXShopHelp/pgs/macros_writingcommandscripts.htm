@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Writing Scripts with Shell Commands</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; shell script; do shell script; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
+<meta name="description" content="AppleScript; shell script; do shell script; Run pdfLaTeX with Shell Escape; pdflatexc; setname.scpt; Claus Gerhardt; ~/Library/TeXShop/bin">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
 </nav>
 <main id="content">
 <h1>Writing Scripts with Shell Commands</h1>
-<p>This page uses the macro pdflatexc by Claus Gerhardt, in Macros › Claus Gerhardt Macros, to show how an AppleScript calls a shell script. The shell script itself is simple: it adds the folders of the TeX programs to the search path and runs pdflatex with <code>--shell-escape</code>. Your own scripts will probably do more, for instance run several programs in sequence; that is when these techniques become useful.</p>
+<p>This page uses the macro Run pdfLaTeX with Shell Escape by Claus Gerhardt, in Macros › Claus Gerhardt Macros, to show how an AppleScript calls a shell script. The shell script itself is simple: it adds the folders of the TeX programs to the search path and runs pdflatex with <code>--shell-escape</code>. Your own scripts will probably do more, for instance run several programs in sequence; that is when these techniques become useful.</p>
 
 <h2 id="shell-script">The shell script</h2>
 <p>The shell script is ~/Library/TeXShop/bin/pdflatexc. It does not depend on TeXShop: if its folder is in your search path, typing <code>pdflatexc myfile.tex</code> in Terminal runs it. Here it is:</p>

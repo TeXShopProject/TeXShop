@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Usare un editor esterno</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="editor esterno; Apri per Anteprima; Configura per editor esterno; Controlla sempre le modifiche al PDF fatte da altre app; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codifiche</a></li>
+<li><a href="advanced_Japan.htm">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm" class="current">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Usare un editor esterno</h1>
+<p>Puoi scrivere in un altro editor e usare TeXShop per compilare e per mostrare il PDF.</p>
+
+<h2>Aprire solo l’anteprima</h2>
+<p>File › Apri per anteprima... chiede un file sorgente e apre solo la sua finestra di anteprima. Se il file non è ancora stato compilato, o se il PDF è più vecchio del sorgente, TeXShop lo compila prima. Modifica il sorgente nel tuo editor; per compilare, salvalo lì e premi «Compila» nella finestra di anteprima oppure premi <kbd>⌘T</kbd>. In questa modalità TeXShop non apre né modifica mai il file sorgente. Se la barra strumenti della finestra di anteprima non ha il pulsante «Compila», aggiungilo con Finestra › Personalizza la barra strumenti....</p>
+<p>Se lavori sempre in questo modo, attiva Impostazioni › Generali › All’avvio › «Configura per editor esterno». File › Apri... e Apri recenti aprono allora i file sorgente solo per l’anteprima, e File › Apri per anteprima... diventa «Apri per modificare...», che apre un file sorgente nell’editor di TeXShop quando ti serve. Gli altri file, come PDF, immagini e file di log, si aprono come prima.</p>
+
+<h2>Mantenere aggiornata l’anteprima</h2>
+<p>Quando il PDF viene riscritto da un altro programma, per esempio dal tuo editor o da latexmk nel Terminale, TeXShop lo ricarica quando torni a TeXShop o alla finestra di anteprima, mantenendo la pagina e l’ingrandimento. Con Impostazioni › Anteprima › Aggiornamento › «Controlla sempre le modifiche al PDF fatte da altre app» attivato, ricarica il PDF appena cambia, anche mentre TeXShop è in secondo piano, per esempio quando l’anteprima è affiancata al tuo editor. Un’anteprima con annotazioni non salvate non viene ricaricata, così le annotazioni non vanno perse.</p>
+<p>TeXShop controlla anche i file sorgente aperti nel suo editor. Quando un altro editor modifica uno di questi file, TeXShop lo ricarica, a meno che la copia in TeXShop abbia modifiche non salvate.</p>
+
+<h2>Sincronizzare con l’editor</h2>
+<p>Un Comando-clic nella finestra di anteprima può portarti alla riga corrispondente nel tuo editor, e «Vai all’errore» nella console può aprire lì la riga di un errore. Servono «Configura per editor esterno», un’impostazione nascosta e un programma a riga di comando dell’editor:</p>
+<ul>
+<li>Per TextMate, il cui comando <code>mate</code> si trova in <code>/usr/local/bin</code>: <code>defaults write TeXShop TextMateSync YES</code>.</li>
+<li>Per qualsiasi altro editor: <code>defaults write TeXShop OtherEditorSync YES</code> e uno script eseguibile <code>/usr/local/bin/othereditor</code> che riceve il numero di riga come <code>$1</code> e il percorso completo del file come <code>$2</code>. Per BBEdit è così:
+<pre>#!/bin/sh
+/usr/local/bin/bbedit "$2:$1"</pre></li>
+</ul>
+<p>Per la direzione opposta, da una riga dell’editor alla finestra di anteprima, l’editor chiama TeXShop tramite AppleScript con i comandi <code>sync_preview_line</code>, <code>sync_preview_index</code> e <code>sync_preview_name</code>. Il capitolo «Using an External Editor» in Aiuto › Manuale di TeXShop (in inglese) contiene uno script completo.</p>
+<p>La cartella <code>~/Library/TeXShop/ExternalEditorScripts</code> contiene un supporto già pronto con la relativa documentazione: AppleScript che compilano e mostrano in anteprima in TeXShop un documento di BBEdit, e un plug-in per Vim.</p>
+
+<h2>Comandi AppleScript per gli editor</h2>
+<p>Un editor può chiamare questi comandi AppleScript di un documento di TeXShop:</p>
+<dl>
+<dt><code>typesetinteractive</code>, <code>texinteractive</code>, <code>latexinteractive</code>, <code>bibtexinteractive</code>, <code>makeindexinteractive</code>, <code>metapostinteractive</code></dt>
+<dd>Compilano, oppure eseguono plain TeX, LaTeX, BibTeX, MakeIndex o MetaPost. La chiamata ritorna subito, senza attendere la fine della compilazione; l’anteprima viene aggiornata quando questa termina.</dd>
+<dt><code>taskdone</code></dt><dd>Restituisce NO mentre la compilazione è in corso e YES quando è terminata.</dd>
+<dt><code>refreshpdf</code></dt><dd>Ricarica il PDF e porta in primo piano la finestra di anteprima.</dd>
+<dt><code>refreshpdfbackground</code></dt><dd>Ricarica il PDF senza portare TeXShop in primo piano, quando la finestra di anteprima è già aperta.</dd>
+<dt><code>refreshtext</code></dt><dd>Rilegge il file sorgente dal disco.</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Apre un file sorgente come fa File › Apri per anteprima....</dd>
+</dl>
+<p>Quando l’editor compila tramite TeXShop, «Controlla sempre le modifiche al PDF fatte da altre app» non serve. Consulta anche <a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di compilazione di TeXShop</a>.</p>
+</main>
+</body>
+</html>

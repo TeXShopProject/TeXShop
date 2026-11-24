@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trova e sostituisci</title>
+<meta name="description" content="trova e sostituisci; pannello di ricerca avanzata; interfaccia di ricerca; espressioni regolari; Trova tutto; Evidenzia tutto; Sostituisci tutto; Sostituzione multipla; barra di ricerca Apple; pannello di ricerca OgreKit">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm" class="current">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Trova e sostituisci</h1>
+
+<p>I comandi di ricerca si trovano nel sottomenu Trova del menu Modifica: «Trova…» (<kbd>⌘F</kbd>), «Trova e sostituisci…» (<kbd>⌥⌘F</kbd>), «Trova successivo» (<kbd>⌘G</kbd>), «Trova precedente» (<kbd>⇧⌘G</kbd>), «Usa selezione per trovare» (<kbd>⌘E</kbd>) e «Vai alla selezione» (<kbd>⌘J</kbd>). Per trovare del testo nel documento compilato, consulta <a href="basic_preview.htm#search">La finestra di anteprima</a>.</p>
+
+<h2>Scegliere l’interfaccia di ricerca</h2>
+
+<p>Impostazioni › Editor › «Interfaccia di ricerca» sceglie che cosa apre «Trova»:</p>
+<dl>
+<dt>Pannello di ricerca avanzata (consigliato)</dt>
+<dd>Un pannello con le espressioni regolari, un elenco di tutte le corrispondenze e la sostituzione multipla, descritto in questa pagina. È quello con cui iniziano tutti gli utenti.</dd>
+<dt>Barra di ricerca Apple</dt>
+<dd>La barra di ricerca di macOS, in cima al sorgente, come in Safari e in Xcode.</dd>
+<dt>Pannello di ricerca Apple</dt>
+<dd>Il pannello di ricerca di base di macOS.</dd>
+<dt>Pannello di ricerca OgreKit (obsoleto)</dt>
+<dd>Il pannello di ricerca di OgreKit di Isao Sonobe, con espressioni regolari proprie. Il passaggio a questo pannello, o da questo pannello a un altro, ha effetto al riavvio di TeXShop.</dd>
+</dl>
+
+<h2>Il pannello di ricerca avanzata</h2>
+
+<p>«Trova» apre il pannello con il campo di ricerca selezionato, e «Trova e sostituisci» con il campo di sostituzione selezionato. In un campo, A capo trova la corrispondenza successiva e Tab passa all’altro campo; Opzione-A capo e Opzione-Tab inseriscono un’interruzione di riga e una tabulazione. L’icona a sinistra di un campo elenca le stringhe recenti, e l’estremità destra del campo di ricerca mostra la posizione della corrispondenza corrente, per esempio «3 di 12».</p>
+
+<p>Sotto i campi si trovano «Espressione regolare», «Ignora maiuscole/minuscole» e «In selezione». Il pulsante con i tre puntini mostra altre opzioni: continuare dall’inizio, solo parole intere, ignorare i segni diacritici o la differenza tra caratteri a larghezza piena e a mezza larghezza, opzioni per le espressioni regolari, la sintassi della sostituzione e «Tratta ¥ come \». Le opzioni vengono conservate da una sessione all’altra.</p>
+
+<p>I pulsanti in basso sono «Trova tutto», «Sostituisci tutto», «Sostituzione multipla…», «Sostituisci e trova» e le frecce per la corrispondenza precedente e successiva.</p>
+<ul>
+<li>«Trova tutto» elenca ogni corrispondenza con il suo numero di riga. Fai clic su una riga per selezionare la corrispondenza nel sorgente; fai doppio clic per portare anche la finestra sorgente in primo piano. Con «Aggiornamento automatico» attivo, l’elenco segue le tue modifiche. Il menu di «Trova tutto» contiene anche «Evidenzia tutto», che contrassegna ogni corrispondenza nel testo, «Seleziona tutto», che le seleziona tutte, e «Rimuovi evidenziazioni».</li>
+<li>«Sostituisci tutto» sostituisce ogni corrispondenza, oppure ogni corrispondenza nella selezione quando «In selezione» è attivo. Un solo Annulla ripristina l’intera sostituzione.</li>
+<li>«Sostituisci e trova» sostituisce la corrispondenza selezionata e trova quella successiva; il suo menu contiene anche il solo «Sostituisci».</li>
+</ul>
+
+<p>Con il pannello di ricerca avanzata, il sottomenu Trova contiene anche i comandi del pannello, che funzionano anche quando il pannello è chiuso: «Trova tutto» (<kbd>⇧⌘F</kbd>), «Seleziona tutte le corrispondenze», «Usa selezione per sostituire» (<kbd>⇧⌘E</kbd>), «Sostituisci», «Sostituisci e trova» (<kbd>⌥⌘G</kbd>), «Sostituisci tutto», «Evidenzia tutto» (<kbd>⇧⌘H</kbd>) e «Rimuovi evidenziazioni» (<kbd>⌃⇧⌘H</kbd>). Le loro scorciatoie si possono cambiare in Impostazioni › Tastiera.</p>
+
+<p>«Sostituisci tutto», «Trova tutto» e la sostituzione multipla lavorano in background, e il documento non si può modificare finché non hanno finito. Quando uno di questi comandi richiede molto tempo, un foglio sulla finestra del documento ne mostra l’avanzamento; «Annulla» nel foglio, oppure il tasto Esc, lo interrompe e lascia il testo com’era.</p>
+
+<p>Il pannello trova il testo anche nella console, nel log e nelle finestre di «Sperimenta». Non è possibile sostituire nella console, nel log e nella console dell’esperimento, che mostrano l’output di TeX.</p>
+
+<p>Il pannello è una delle finestre dei documenti, quindi un clic nel sorgente lo porta dietro quella finestra, e «Trova» lo riporta davanti. Per tenerlo davanti alle finestre dei documenti, attiva «Mantieni il pannello di ricerca avanzata in primo piano» in Impostazioni › Editor › Trova.</p>
+
+<h2>Espressioni regolari</h2>
+
+<p>Con «Espressione regolare» attivo, la stringa di ricerca è un modello nella sintassi di ICU, le espressioni regolari di macOS. La maggior parte dei modelli si scrive come in altre applicazioni. Una graffa che non fa parte di una ripetizione va scritta <code>\{</code> o <code>\}</code>, quindi cerca <code>\\section\{</code> invece di <code>\\section{</code>.</p>
+
+<p>Nella sostituzione, <code>$0</code> è l’intera corrispondenza, <code>$1</code>, <code>$2</code>, … sono i gruppi, e <code>\$</code> è il simbolo del dollaro, quindi una formula <code>$x$</code> si scrive <code>\$x\$</code>. Una barra rovesciata si scrive due volte: <code>\\section</code> produce <code>\section</code>. La sintassi di OgreKit, con <code>\1</code>, <code>\2</code>, … per i gruppi e <code>$</code> come carattere normale, si può scegliere tra le opzioni; gli utenti che provengono dal pannello di ricerca OgreKit iniziano con questa sintassi.</p>
+
+<p>Il piccolo pulsante ? accanto a «Espressione regolare» apre una guida rapida alla sintassi dei modelli e delle sostituzioni, e ai punti in cui differisce da OgreKit. I campi mostrano le parti di un modello nei colori del tema, un errore in rosso e ciò che OgreKit leggerebbe diversamente in arancione; la riga sotto le opzioni li spiega.</p>
+
+<p>Alcuni esempi:</p>
+<ul>
+<li>Per trasformare <code>\section{Intro}</code> in <code>\section*{Intro}</code>, cerca <code>\\section\{([^}]*)\}</code> e sostituisci con <code>\\section*{$1}</code>.</li>
+<li>Per trovare ogni carattere non ASCII, cerca <code>[^[:ascii:]]</code>, poi fai clic su «Trova tutto» oppure scegli «Evidenzia tutto».</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>Sostituzione multipla</h2>
+
+<p>«Modifica sostituzione multipla…» nel sottomenu Trova, oppure il pulsante «Sostituzione multipla…» del pannello, apre la finestra Sostituzione multipla. Questa conserva insiemi di coppie di ricerca e sostituzione, chiamate regole, e applica le regole di un insieme nell’ordine, dall’alto in basso. Gli insiemi sono elencati a sinistra e le regole dell’insieme selezionato a destra. Ogni regola ha le proprie stringhe di ricerca e di sostituzione, la propria scelta di espressione regolare (RE) e di ignorare maiuscole/minuscole (IC), e una descrizione; la casella di controllo alla sua sinistra la disattiva. I pulsanti + e − aggiungono e rimuovono regole, e le regole si riordinano trascinandole. Il pulsante con i tre puntini sotto le regole contiene le opzioni dell’intero insieme. Una regola che non si può usare, per esempio perché ha un modello non valido, mostra un segnale di avviso e viene saltata.</p>
+
+<p>«Sostituisci tutto» nella finestra applica le regole all’intero testo, oppure alla selezione quando «In selezione» è attivo; un solo Annulla ripristina tutto. «Evidenzia tutto» contrassegna ciò che le regole trovano. Ogni modifica nella finestra viene salvata subito. Il sottomenu Sostituzione multipla del sottomenu Trova elenca gli insiemi e applica quello che scegli all’intero testo del sorgente in primo piano.</p>
+
+<p>Ogni insieme è un file in ~/Library/TeXShop/MultipleReplace, nel formato JSON delle definizioni di sostituzione di CotEditor. I pulsanti + e − sotto l’elenco degli insiemi creano un nuovo insieme e spostano nel Cestino l’insieme selezionato; il menu con i tre puntini accanto a essi duplica, importa ed esporta gli insiemi. «Importa…» legge anche le definizioni di sostituzione di CotEditor e il testo separato da tabulazioni con una regola per riga. Due insiemi di esempio convertono tra i caratteri Unicode e i comandi del pacchetto ajmacros, come fa «Conversione tipo di carattere»; vengono scritti solo quando la cartella MultipleReplace non esiste ancora.</p>
+
+<h2>Cercare in tutti i file di un progetto</h2>
+
+<p>Per cercare e sostituire contemporaneamente nel file principale e in tutti i file dei capitoli di un documento, consulta <a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a>.</p>
+</main>
+</body>
+</html>

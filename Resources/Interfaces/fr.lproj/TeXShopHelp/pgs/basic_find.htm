@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rechercher et remplacer</title>
+<meta name="description" content="rechercher et remplacer; palette de recherche avancée; interface de recherche; expressions régulières; Tout rechercher; Tout surligner; Tout remplacer; remplacement multiple; Bannière de recherche Apple; Palette OgreKit">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm" class="current">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Rechercher et remplacer</h1>
+
+<p>Les commandes de recherche se trouvent dans le sous-menu Rechercher du menu Édition : « Rechercher... » (<kbd>⌘F</kbd>), « Rechercher et remplacer... » (<kbd>⌥⌘F</kbd>), « Rechercher le suivant » (<kbd>⌘G</kbd>), « Rechercher le précédent » (<kbd>⇧⌘G</kbd>), « Rechercher la sélection » (<kbd>⌘E</kbd>) et « Aller à la sélection » (<kbd>⌘J</kbd>). Pour rechercher du texte dans le document composé, voir <a href="basic_preview.htm#search">La fenêtre d’aperçu</a>.</p>
+
+<h2>Choisir l’interface de recherche</h2>
+
+<p>Réglages › Éditeur › Interface de recherche choisit ce qu’ouvre « Rechercher... » :</p>
+<dl>
+<dt>Palette de recherche avancée (recommandée)</dt>
+<dd>Une palette avec les expressions régulières, la liste de toutes les occurrences et le remplacement multiple, décrite sur cette page. C’est celle avec laquelle tous les utilisateurs commencent.</dd>
+<dt>Bannière de recherche Apple</dt>
+<dd>La barre de recherche de macOS, en haut de la source, comme dans Safari et Xcode.</dd>
+<dt>Palette Apple</dt>
+<dd>La palette de recherche de base de macOS.</dd>
+<dt>Palette OgreKit (ancienne)</dt>
+<dd>La palette de recherche d’OgreKit, d’Isao Sonobe, avec ses propres expressions régulières. Le passage à cette palette, ou depuis celle-ci, prend effet au redémarrage de TeXShop.</dd>
+</dl>
+
+<h2>La palette de recherche avancée</h2>
+
+<p>« Rechercher... » ouvre la palette avec le champ de recherche sélectionné, et « Rechercher et remplacer... » avec le champ de remplacement sélectionné. Dans un champ, Retour recherche l’occurrence suivante et Tab passe à l’autre champ ; Option-Retour et Option-Tab insèrent un saut de ligne et une tabulation. L’icône à gauche d’un champ énumère ses chaînes récentes, et l’extrémité droite du champ de recherche indique la position de l’occurrence courante, par exemple « 3 sur 12 ».</p>
+
+<p>Sous les champs se trouvent « Expression régulière », « Ignorer la casse » et « Dans la sélection ». Le bouton à trois points affiche d’autres options : la recherche en boucle, les mots entiers seulement, l’oubli des signes diacritiques ou de la différence entre caractères pleine chasse et demi-chasse, des options pour les expressions régulières, la syntaxe du remplacement, et « Traiter ¥ comme \ ». Les options sont conservées d’une session à l’autre.</p>
+
+<p>Les boutons du bas sont « Tout rechercher », « Tout remplacer », « Remplacement multiple… », « Remplacer et rechercher », et les flèches pour l’occurrence précédente et suivante.</p>
+<ul>
+<li>« Tout rechercher » énumère toutes les occurrences avec leur numéro de ligne. Cliquez sur une ligne de la liste pour sélectionner l’occurrence dans la source ; double-cliquez pour faire aussi passer la fenêtre source au premier plan. Avec « Mise à jour en direct » activé, la liste suit vos modifications. Le menu de « Tout rechercher » contient aussi « Tout surligner », qui marque toutes les occurrences dans le texte, « Tout sélectionner », qui les sélectionne toutes, et « Supprimer le surlignage ».</li>
+<li>« Tout remplacer » remplace toutes les occurrences, ou toutes celles de la sélection quand « Dans la sélection » est activé. Une seule annulation reprend tout le remplacement.</li>
+<li>« Remplacer et rechercher » remplace l’occurrence sélectionnée et recherche la suivante ; son menu contient aussi « Remplacer » seul.</li>
+</ul>
+
+<p>Avec la palette de recherche avancée, le sous-menu Rechercher contient aussi les commandes de la palette, qui fonctionnent quand la palette est fermée : « Tout rechercher » (<kbd>⇧⌘F</kbd>), « Sélectionner toutes les occurrences », « Utiliser la sélection pour remplacer » (<kbd>⇧⌘E</kbd>), « Remplacer », « Remplacer et rechercher » (<kbd>⌥⌘G</kbd>), « Tout remplacer », « Tout surligner » (<kbd>⇧⌘H</kbd>) et « Supprimer le surlignage » (<kbd>⌃⇧⌘H</kbd>). Leurs raccourcis peuvent être modifiés dans Réglages › Clavier.</p>
+
+<p>« Tout remplacer », « Tout rechercher » et le remplacement multiple travaillent en arrière-plan, et le document ne peut pas être modifié avant qu’ils aient terminé. Quand l’un d’eux prend du temps, une zone de dialogue sur la fenêtre du document montre sa progression ; « Annuler » dans cette zone, ou la touche Échap, l’arrête et laisse le texte tel qu’il était.</p>
+
+<p>La palette recherche aussi du texte dans la console, le journal et les fenêtres de l’expérience. Le remplacement n’est pas possible dans la console, le journal et la console de l’expérience, qui affichent la sortie de TeX.</p>
+
+<p>La palette est l’une des fenêtres de document ; un clic dans la source la place donc derrière cette fenêtre, et « Rechercher... » la ramène. Pour la garder devant les fenêtres de document, activez « Garder la palette de recherche avancée au premier plan » dans Réglages › Éditeur › Recherche.</p>
+
+<h2>Expressions régulières</h2>
+
+<p>Avec « Expression régulière » activé, la chaîne recherchée est un motif dans la syntaxe d’ICU, les expressions régulières de macOS. La plupart des motifs s’écrivent comme dans les autres applications. Une accolade qui ne fait pas partie d’une répétition doit s’écrire <code>\{</code> ou <code>\}</code> ; recherchez donc <code>\\section\{</code> plutôt que <code>\\section{</code>.</p>
+
+<p>Dans le remplacement, <code>$0</code> est l’occurrence entière, <code>$1</code>, <code>$2</code>, … sont les groupes, et <code>\$</code> est un signe dollar ; une formule <code>$x$</code> s’écrit donc <code>\$x\$</code>. Une barre oblique inverse s’écrit deux fois : <code>\\section</code> donne <code>\section</code>. La syntaxe d’OgreKit, avec <code>\1</code>, <code>\2</code>, … pour les groupes et <code>$</code> comme caractère ordinaire, peut être choisie parmi les options ; les utilisateurs venus de la palette OgreKit commencent avec elle.</p>
+
+<p>Le petit bouton ? à côté de « Expression régulière » ouvre un aide-mémoire de la syntaxe des motifs et des remplacements, et de ce qui y diffère d’OgreKit. Les champs affichent les parties d’un motif dans les couleurs du thème, une erreur en rouge et ce qu’OgreKit lirait autrement en orange ; la ligne sous les options les explique.</p>
+
+<p>Quelques exemples :</p>
+<ul>
+<li>Pour changer <code>\section{Intro}</code> en <code>\section*{Intro}</code>, recherchez <code>\\section\{([^}]*)\}</code> et remplacez par <code>\\section*{$1}</code>.</li>
+<li>Pour trouver tous les caractères qui ne sont pas ASCII, recherchez <code>[^[:ascii:]]</code>, puis cliquez sur « Tout rechercher » ou choisissez « Tout surligner ».</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>Remplacement multiple</h2>
+
+<p>« Modifier les remplacements multiples… » dans le sous-menu Rechercher, ou le bouton « Remplacement multiple… » de la palette, ouvre la fenêtre de remplacement multiple. Elle conserve des jeux de paires de recherche et de remplacement, appelées règles, et applique les règles d’un jeu dans l’ordre, de haut en bas. Les jeux sont énumérés à gauche, et les règles du jeu sélectionné à droite. Chaque règle a ses propres chaînes de recherche et de remplacement, son propre choix d’expression régulière (RE) et d’ignorer la casse (IC), et une description ; la case à cocher à sa gauche la désactive. Les boutons + et − ajoutent et suppriment des règles, et l’on réordonne les règles en les faisant glisser. Le bouton à trois points sous les règles contient les options de tout le jeu. Une règle inutilisable, par exemple avec un motif non valide, affiche un signe d’avertissement et est ignorée.</p>
+
+<p>« Tout remplacer » dans la fenêtre applique les règles à tout le texte, ou à la sélection quand « Dans la sélection » est activé ; une seule annulation le reprend. « Tout surligner » marque ce que trouvent les règles. Toute modification dans la fenêtre est enregistrée aussitôt. Le sous-menu « Remplacement multiple » du sous-menu Rechercher énumère les jeux et applique celui que vous choisissez à tout le texte de la source au premier plan.</p>
+
+<p>Chaque jeu est un fichier de ~/Library/TeXShop/MultipleReplace, au format JSON des définitions de remplacement de CotEditor. Les boutons + et − sous la liste des jeux créent un nouveau jeu et placent le jeu sélectionné dans la Corbeille ; le menu à trois points à côté d’eux duplique, importe et exporte des jeux. L’importation lit aussi les définitions de remplacement de CotEditor et du texte séparé par des tabulations, avec une règle par ligne. Deux jeux d’exemple convertissent entre les caractères Unicode et les commandes du paquet ajmacros, comme le fait « Conversion du type de caractères » ; ils ne sont écrits que si le dossier MultipleReplace n’existe pas encore.</p>
+
+<h2>Rechercher dans tous les fichiers d’un projet</h2>
+
+<p>Pour rechercher et remplacer à la fois dans le fichier racine et dans tous les fichiers de chapitre d’un document, voir <a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a>.</p>
+</main>
+</body>
+</html>

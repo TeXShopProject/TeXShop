@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stabilirea fișierului principal al proiectului</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="fișier principal; % !TEX root; proiect; fișiere de capitol; include; input; Sursă ⇔ Previzualizare; Fișierul principal al proiectului">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm" class="current">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Stabilirea fișierului principal al proiectului</h1>
+<p>Documentele mari sunt adesea împărțite în mai multe fișiere: un fișier principal cu preambulul, care include câte un fișier pentru fiecare capitol. De exemplu, un fișier principal <code>Main.tex</code> ar putea arăta așa:</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p>Când editați <code>two.tex</code>, TeXShop trebuie să compileze <code>Main.tex</code>, nu capitolul, care nu are preambul. Pentru a-i spune acest lucru, puneți această linie într-una dintre primele douăzeci de linii ale fiecărui fișier de capitol:</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>Fișierul principal însuși nu are nevoie de o astfel de linie. Numele fișierului principal poate fi dat</p>
+<ul>
+<li>doar prin numele lui, <code>Main.tex</code>, când se află în același dosar cu fișierul de capitol;</li>
+<li>relativ la dosarul fișierului de capitol, <code>../Main.tex</code> sau <code>../../Main.tex</code>;</li>
+<li>prin calea completă, <code>/Users/me/Book/Main.tex</code>, care trebuie modificată când proiectul este mutat.</li>
+</ul>
+<p>Macrocomanda Set Root File… din meniul „Macro” inserează linia: cere fișierul principal și oferă o linie relativă sau absolută, înlocuind o linie root anterioară.</p>
+
+<h2>Ce face linia root</h2>
+<ul>
+<li>„Compilare” într-un fișier de capitol compilează fișierul principal, iar fereastra de previzualizare a fișierului principal afișează întregul document. O linie <code>% !TEX program</code> sau alte linii speciale pentru compilare se pun în fișierul principal.</li>
+<li>„Accesați eroarea” deschide fișierul care conține o eroare, dacă nu este deschis, și merge la linia respectivă.</li>
+<li>Sincronizarea din fereastra de previzualizare deschide fișierul de capitol care conține locul pe care ați făcut clic; consultați <a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a>.</li>
+<li>„Ștergeți fișierele aux” elimină fișierele auxiliare ale fișierului principal; consultați <a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a>.</li>
+<li>Fereastră › Sursă ⇔ Previzualizare (<kbd>⌘1</kbd>) într-un fișier de capitol aduce în față fereastra de previzualizare a fișierului principal. Dacă îl folosiți din nou în fereastra de previzualizare, reveniți la fereastra sursă din care ați venit sau la fișierul principal dacă nu ați venit dintr-o fereastră sursă.</li>
+</ul>
+
+<h2>Deschiderea unui fișier de capitol</h2>
+<p>Când este deschis un fișier de capitol cu linie root, TeXShop deschide și fișierul principal și fereastra lui de previzualizare. Două articole din Configurări › General › „Fișierul principal al proiectului” controlează acest lucru: „Deschideți fișierul principal la deschiderea unui document” îl activează sau îl dezactivează, iar „Minimizați fereastra deschisă a fișierului principal” trimite în Dock fereastra sursă a fișierului principal, deoarece aceasta este rareori editată cât timp lucrați la un capitol.</p>
+
+<h2>Căutare și înlocuire în întregul proiect</h2>
+<p>Pentru a căuta deodată în toate fișierele unui proiect, alegeți Editare › Găsiți › Căutați în sursele TeX cu aceeași TEX root… într-unul dintre fișierele lui de capitol sau „Căutați în sursele TeX cu acest fișier ca TEX root…” în fișierul principal. Se caută în fișierul principal și în fișierele <code>.tex</code> din dosarul lui și din subdosare care îl indică într-o linie root aflată în primele lor 20 de linii. Consultați <a href="basic_texrootsearch.htm">Căutare în sursele TeX</a> și <a href="basic_find.htm">Căutare și înlocuire</a>.</p>
+
+<h2>Fișiere principale indicate în fișiere .texshop</h2>
+<p>Un fișier cu extensia <code>.texshop</code> aflat lângă un fișier de capitol, de exemplu <code>two.texshop</code> pentru <code>two.tex</code>, poate și el să indice fișierul principal, iar TeXShop îl citește în continuare. Nicio comandă de meniu nu creează astfel de fișiere; folosiți o linie <code>% !TEX root</code>, care călătorește împreună cu sursa.</p>
+</main>
+</body>
+</html>

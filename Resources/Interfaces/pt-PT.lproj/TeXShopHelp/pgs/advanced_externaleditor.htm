@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Usar um editor externo</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="editor externo; Abrir para pré-visualizar; Configurar para editor externo; Vigiar sempre as alterações ao PDF feitas por outras apps; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar ficheiros pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistir com outras distribuições TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar o código-fonte e a pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover ficheiros AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm" class="current">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experiências</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e largar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros ficheiros com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto a cores</a></li>
+<li><a href="advanced_plist.htm">Ficheiros em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Usar um editor externo</h1>
+<p>Pode escrever noutro editor e usar o TeXShop para compor e mostrar o PDF.</p>
+
+<h2>Abrir apenas a pré-visualização</h2>
+<p>Ficheiro › Abrir para pré-visualizar… pede um ficheiro de código-fonte e abre apenas a respetiva janela de pré-visualização. Se o ficheiro ainda não tiver sido composto, ou se o PDF for mais antigo do que o código-fonte, o TeXShop compõe-no primeiro. Edite o código-fonte no seu editor; para compor, guarde-o aí e prima «Compor» na janela de pré-visualização ou prima <kbd>⌘T</kbd>. Neste modo, o TeXShop nunca abre nem altera o ficheiro de código-fonte. Se a barra de ferramentas da janela de pré-visualização não tiver o botão «Compor», adicione-o com Janela › Personalizar barra de ferramentas….</p>
+<p>Se trabalhar sempre desta forma, ative Definições › Geral › «Ao iniciar» › «Configurar para editor externo». Ficheiro › Abrir… e «Abrir documento recente» passam então a abrir os ficheiros de código-fonte apenas para pré-visualização, e Ficheiro › Abrir para pré-visualizar… passa a «Abrir para editar…», que abre um ficheiro de código-fonte no editor do próprio TeXShop quando precisar. Os outros ficheiros, como PDF, imagens e ficheiros de registo, abrem como antes.</p>
+
+<h2>Manter a pré-visualização atualizada</h2>
+<p>Quando o PDF é reescrito por outro programa, por exemplo pelo seu editor ou pelo latexmk no Terminal, o TeXShop recarrega-o quando volta ao TeXShop ou à janela de pré-visualização, mantendo a página e a ampliação. Com Definições › Pré-visualização › Atualização › «Vigiar sempre as alterações ao PDF feitas por outras apps» ativo, recarrega o PDF assim que este muda, mesmo com o TeXShop em segundo plano, por exemplo quando a pré-visualização está ao lado do seu editor. Uma pré-visualização com anotações por guardar não é recarregada, para que as anotações não se percam.</p>
+<p>O TeXShop vigia também os ficheiros de código-fonte abertos no seu próprio editor. Quando outro editor altera um desses ficheiros, o TeXShop recarrega-o, a menos que a cópia no TeXShop tenha alterações por guardar.</p>
+
+<h2>Sincronizar com o editor</h2>
+<p>Um clique com a tecla Comando premida na janela de pré-visualização pode levá-lo à linha no seu editor, e «Mostrar erro» na consola pode abrir aí a linha de um erro. Isto requer «Configurar para editor externo», uma definição oculta e um programa de linha de comandos do editor:</p>
+<ul>
+<li>Para o TextMate, cujo comando <code>mate</code> está em <code>/usr/local/bin</code>: <code>defaults write TeXShop TextMateSync YES</code>.</li>
+<li>Para qualquer outro editor: <code>defaults write TeXShop OtherEditorSync YES</code> e um script executável <code>/usr/local/bin/othereditor</code> que recebe o número da linha como <code>$1</code> e o caminho completo do ficheiro como <code>$2</code>. Para o BBEdit, é assim:
+<pre>#!/bin/sh
+/usr/local/bin/bbedit "$2:$1"</pre></li>
+</ul>
+<p>Para o sentido inverso, de uma linha no editor para a janela de pré-visualização, o editor chama o TeXShop através do AppleScript com os comandos <code>sync_preview_line</code>, <code>sync_preview_index</code> e <code>sync_preview_name</code>. O capítulo «Using an External Editor» de Ajuda › Manual do TeXShop (em inglês) contém um script completo.</p>
+<p>A pasta <code>~/Library/TeXShop/ExternalEditorScripts</code> contém suporte pronto a usar, com documentação: AppleScripts que compõem e pré-visualizam no TeXShop um documento do BBEdit e um plug-in para o Vim.</p>
+
+<h2>Comandos AppleScript para editores</h2>
+<p>Um editor pode chamar estes comandos AppleScript de um documento do TeXShop:</p>
+<dl>
+<dt><code>typesetinteractive</code>, <code>texinteractive</code>, <code>latexinteractive</code>, <code>bibtexinteractive</code>, <code>makeindexinteractive</code>, <code>metapostinteractive</code></dt>
+<dd>Compor, ou executar plain TeX, LaTeX, BibTeX, MakeIndex ou MetaPost. A chamada regressa de imediato, sem esperar pelo fim da composição; a pré-visualização é atualizada quando a composição termina.</dd>
+<dt><code>taskdone</code></dt><dd>Devolve NO enquanto a composição está em curso e YES quando terminou.</dd>
+<dt><code>refreshpdf</code></dt><dd>Recarrega o PDF e traz a janela de pré-visualização para a frente.</dd>
+<dt><code>refreshpdfbackground</code></dt><dd>Recarrega o PDF sem trazer o TeXShop para a frente, quando a janela de pré-visualização já está aberta.</dd>
+<dt><code>refreshtext</code></dt><dd>Lê de novo o ficheiro de código-fonte a partir do disco.</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Abre um ficheiro de código-fonte como Ficheiro › Abrir para pré-visualizar….</dd>
+</dl>
+<p>Quando o editor compõe através do TeXShop, «Vigiar sempre as alterações ao PDF feitas por outras apps» não é necessário. Consulte também <a href="macros_writingcompletescripts.htm">Escrever scripts com os comandos de composição do TeXShop</a>.</p>
+</main>
+</body>
+</html>

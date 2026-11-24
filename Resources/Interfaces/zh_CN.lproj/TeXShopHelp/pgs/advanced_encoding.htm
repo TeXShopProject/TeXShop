@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>编码</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="编码；UTF-8；Unicode；% !TEX encoding；自动检测；打开对话框；保存对话框；IsoLatin9；从右向左；阿拉伯语；希伯来语；波斯语；输入法">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm" class="current">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>编码</h1>
+<p>TeXShop 以 Unicode 编辑文本，因此源代码窗口可以接受任何语言的任何字符。<em>编码</em>决定这些文本如何写入磁盘上的文件以及如何读回。UTF-8 可以存储所有字符，LaTeX、XeLaTeX 和 LuaLaTeX 默认读取 UTF-8。较旧的文件和来自其他系统的文件可能使用其他编码，例如 ISO Latin 9 或 Shift JIS。</p>
+
+<h2>新文稿</h2>
+<p>新文稿以“设置”>“文稿与保存”>“编码”>“新文稿的编码”中选择的编码保存。默认为“Unicode (UTF-8)”；除非你要与需要其他编码的人交换文件，否则请保留此设置。</p>
+<p>文稿以打开时所用的编码保存，因此较旧的文件会保留原来的编码。文件的编码无法表示的字符，在保存文件时会丢失。</p>
+
+<h2>打开文件</h2>
+<p>打开没有编码行（见下文）的文件时，TeXShop 会检测它的编码。字节顺序标记可以识别 UTF-8 和 UTF-16 文件。只含 ASCII 字符的文件按新文稿的编码读取。否则，TeXShop 会先使用保存该文件的程序随文件记录的编码（如果 macOS 保留了这一信息），然后尝试 UTF-8，再尝试你所用语言的编码以及新文稿的编码。源文件中声明的编码（例如 <code>\usepackage[latin9]{inputenc}</code>）会被用作参考。</p>
+<p>检测只是一种推测，对含有相当数量文本的文件效果最好。如果选错了编码，请关闭文件且不要保存，然后用“文件”>“打开…”再次打开它，在打开对话框中点按“选项”，并在其菜单中选择编码；在那里选择的编码会用于当时打开的文件，并且文稿会一直使用它。该菜单最初显示的是新文稿的编码；保持这个编码不变时，不算作一次选择，编码会照常检测。然后在文件中加入编码行，使它总能正确打开。可以用以下隐藏设置关闭检测：</p>
+<pre>defaults write TeXShop EncodingAutoDetection NO</pre>
+<p>这样，文件会按新文稿的编码读取。</p>
+
+<h2>编码行</h2>
+<p>源文件前二十行之一中的如下一行，可以固定该文件读取和保存时所用的编码，并优先于其他所有设置：</p>
+<pre>% !TEX encoding = UTF-8 Unicode</pre>
+<p>请按所示格式书写这一行，等号前有一个空格；<code>%</code> 后面没有空格的 <code>%!TEX encoding =</code> 也能被读取。名称必须与下表中的写法完全一致。“宏”菜单中的“Set Encoding…”宏会为你插入这一行，并提供一个可供选择的编码列表。TeXworks 使用的名称（例如 <code>UTF-8</code> 或 <code>ISO 8859-1</code>）也能被识别。</p>
+<p>如果这一行指定了 TeXShop 不认识的编码，TeXShop 会按 UTF-8 读取文件并给出提示。如果这一行指定了 UTF-8，但文件不是有效的 UTF-8，TeXShop 会报告这一情况，并以 ISO Latin 9 打开文件，这种编码可以读取任何文件；不更改这一行就保存时，会写回相同的字节，因此不会丢失任何内容。要在打开文件时不应用它的编码行，请在文件打开时按住 Option 键。</p>
+<table>
+<tr><th>编码行中的名称</th><th>菜单中的名称</th></tr>
+<tr><td><code>UTF-8 Unicode</code></td><td>Unicode (UTF-8)</td></tr>
+<tr><td><code>Standard Unicode</code></td><td>Unicode (UTF-16)</td></tr>
+<tr><td><code>MacOSRoman</code></td><td>西文 (Mac OS Roman)</td></tr>
+<tr><td><code>IsoLatin</code></td><td>西文 (ISO Latin 1)</td></tr>
+<tr><td><code>IsoLatin9</code></td><td>西文 (ISO Latin 9)</td></tr>
+<tr><td><code>Windows Latin 1</code></td><td>西文 (Windows Latin 1)</td></tr>
+<tr><td><code>IsoLatin2</code></td><td>中欧语系 (ISO Latin 2)</td></tr>
+<tr><td><code>Mac Central European Roman</code></td><td>Mac 中欧语系</td></tr>
+<tr><td><code>WindowsCentralEurRoman</code></td><td>中欧语系 (Windows)</td></tr>
+<tr><td><code>IsoLatin5</code></td><td>土耳其 (ISO Latin 5)</td></tr>
+<tr><td><code>IsoLatinGreek</code></td><td>希腊文 (ISO 8859-7)</td></tr>
+<tr><td><code>Mac Cyrillic</code></td><td>西里尔文 (Mac OS)</td></tr>
+<tr><td><code>DOS Cyrillic</code></td><td>西里尔文 (DOS)</td></tr>
+<tr><td><code>Windows Cyrillic</code></td><td>西里尔文 (Windows)</td></tr>
+<tr><td><code>DOS Russian</code></td><td>俄文 (DOS)</td></tr>
+<tr><td><code>KOI8_R</code></td><td>俄文 (KOI8-R)</td></tr>
+<tr><td><code>MacJapanese</code></td><td>日文 (Mac OS, ShiftJIS ¥)</td></tr>
+<tr><td><code>DOSJapanese</code></td><td>日文 (Windows, DOS, ShiftJIS \)</td></tr>
+<tr><td><code>SJIS_X0213</code></td><td>日文 (Shift JIS X0213)</td></tr>
+<tr><td><code>EUC_JP</code></td><td>日文 (EUC)</td></tr>
+<tr><td><code>JISJapanese</code></td><td>日文 (ISO 2022-JP)</td></tr>
+<tr><td><code>MacKorean</code></td><td>韩文 (Mac OS)</td></tr>
+<tr><td><code>DOSKorean</code></td><td>韩文 (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Traditional</code></td><td>繁体中文 (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Traditional</code></td><td>繁体中文 (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Simplified</code></td><td>简体中文 (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Simplified</code></td><td>简体中文 (Windows, DOS)</td></tr>
+<tr><td><code>GB 2312</code></td><td>简体中文 (GB 2312)</td></tr>
+<tr><td><code>GBK</code></td><td>中文 (GBK)</td></tr>
+<tr><td><code>GB 18030</code></td><td>中文 (GB 18030)</td></tr>
+<tr><td><code>Ascii</code></td><td>西文 (ASCII)</td></tr>
+</table>
+
+<h2>以其他编码保存</h2>
+<p>要在保存时选择编码，请打开“设置”>“文稿与保存”>“编码”>“在保存对话框中显示编码”；这样，保存对话框中就会有一个编码菜单。“编辑”>“转换”>“更改编码”用于选择已打开的文稿此后保存时所用的编码。如果文件有编码行，则以编码行为准；请改为编辑这一行。TeXShop 会保留 UTF-8 文件的字节顺序标记和 UTF-16 文件的字节顺序。</p>
+<p>把文件转换为其他编码时，新编码无法表示的每个字符都会丢失；以错误的编码读取文件并保存，会永久替换其中的字符。请保留原始文件的副本。命令行程序 <code>iconv</code> 可以转换文件而不更改原始文件。“帮助”菜单中的文稿“文件编码指南（英文）”更详细地讨论了这些问题。</p>
+
+<h2>从右向左的语言</h2>
+<p>阿拉伯语、希伯来语和波斯语在源代码窗口中从右向左键入。当“设置”>“编辑器”>“键入”>“从右向左的语言（阿拉伯语、希伯来语、波斯语）”打开，并且语法高亮也打开时，以阿拉伯文或希伯来文开头的行会右对齐，其他行（例如以 LaTeX 命令开头的行）会左对齐。使用隐藏设置</p>
+<pre>defaults write TeXShop RightJustifyIfAny YES</pre>
+<p>时，任何位置含有这类字符的每一行都会右对齐。这种对齐仅用于编辑；TeX 会按它自己的命令排布排版后的文本。要排版这些语言，请使用 XeLaTeX 或 LuaLaTeX；请参阅 <a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a>。</p>
+
+<h2>键入其他文字</h2>
+<p>要用其他文字键入，请在“系统设置”>“键盘”的“文字输入”中为它添加输入法，然后用菜单栏中的输入法菜单切换输入法。</p>
+</main>
+</body>
+</html>

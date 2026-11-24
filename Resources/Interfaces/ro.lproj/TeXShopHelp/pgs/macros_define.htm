@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Definirea macrocomenzilor noi</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macrocomenzi noi; Editorul de Macro; scurtătură de tastatură; submeniuri; separatoare; jetoane substituente; meniul Inserează">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor pentru macrocomenzi</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="macros_default.htm">Înțelegerea macrocomenzilor implicite</a></li>
+<li><a href="macros_rearrange.htm">Rearanjarea meniului Macro</a></li>
+<li><a href="macros_define.htm" class="current">Definirea macrocomenzilor noi</a></li>
+<li><a href="macros_applescript.htm">Macrocomenzi AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macrocomenzile AppleScript implicite</a></li>
+<li><a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crearea dialogurilor</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Definirea macrocomenzilor noi</h1>
+<p>În Editorul de Macro (Macro › Deschideți Editorul de Macro...), faceți clic pe + sub listă pentru a adăuga un element. Meniul de la capătul din dreapta al barei de sub listă (⋯) adaugă un submeniu sau un separator și duplică elementele selectate; − le șterge. Un element sau un submeniu nou primește imediat un nume: tastați numele și apăsați Return. Submeniurile pot fi imbricate pe oricâte niveluri. Puțin exercițiu vă arată cum se comportă editorul.</p>
+
+<h2 id="shortcuts">Scurtături</h2>
+<p>Pentru a da unui element o scurtătură de tastatură, selectați-l și faceți clic pe scurtătura lui din listă (sau faceți dublu clic pe scurtătură), apoi apăsați noua scurtătură: Comandă sau Control cu o tastă ori una dintre tastele F1–F20, cu Shift și Opțiune după nevoie. Dacă o comandă de meniu sau altă macrocomandă folosește deja scurtătura, TeXShop vă anunță sub conținut și nu o modifică; apăsați altă scurtătură. Pentru a elimina o scurtătură, faceți clic pe „Eliminați scurtătura” (⊖) din câmp sau apăsați Delete; Escape păstrează scurtătura pe care o avea. O scurtătură inactivă deoarece o folosește o comandă de meniu sau o macrocomandă anterioară este marcată în listă cu un triunghi de avertizare; selectați elementul pentru a vedea motivul sub conținut. Consultați <a href="configure_menushortcuts.htm">Redefinirea scurtăturilor de tastatură din meniuri</a> pentru modul în care scurtăturile de meniu și cele ale macrocomenzilor funcționează împreună.</p>
+
+<h2 id="tokens">Substituenți</h2>
+<p>În conținut, substituenții pe care îi înlocuiește o macrocomandă sunt afișați ca jetoane rotunjite care spun ce reprezintă, de exemplu „Text selectat”: #SEL#, #INS#, #PASTE# și marcajele • ale unei macrocomenzi text (consultați <a href="macros_default.htm">Înțelegerea macrocomenzilor implicite</a>), precum și #FILEPATH# și celelalte căi ale unei macrocomenzi AppleScript (consultați <a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a>). Macrocomanda îi păstrează așa cum sunt scriși, astfel încât copierea și salvarea funcționează ca de obicei. Tastați un substituent sau alegeți-l din meniul „Inserați” de sub conținut; butonul de ajutor din dreapta lui îi listează pe toți. Ștergerea lângă un jeton îl șterge în întregime.</p>
+</main>
+</body>
+</html>

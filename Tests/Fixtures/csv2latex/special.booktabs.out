@@ -1,0 +1,9 @@
+\begin{tabular}{lll}
+
+\toprule
+Cost \$ & 50\% & \#1 \& \#2 \\
+\midrule
+A\&B & \$x\$ & \%comment \\
+
+\bottomrule
+\end{tabular}

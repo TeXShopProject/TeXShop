@@ -20,10 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 // The editable text view, not a field editor, that is the first responder of the key
 // window; the menu item is dimmed without one.
 + (nullable NSTextView *)completionTarget;
-// Where showMarkHelp: goes in a localization: nil in English, for the help
-// book's anchor "marks"; in every other language, the English page with that
-// section, opened as a link (most languages have no help book, and those that
-// have one do not explain marks in their language).
+// Where showMarkHelp: goes in a localization: nil when the localization has its
+// own help book, for that book's anchor "marks"; otherwise the English page with
+// that section, opened as a link.
 + (nullable NSURL *)markHelpPageForLocalization:(NSString *)localization inBundle:(NSBundle *)bundle;
 // One sentence explaining • and •‹note›, naming the Edit › Mark menu as it is titled.
 + (NSString *)markGuide;

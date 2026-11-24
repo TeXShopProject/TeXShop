@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text colorat</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="text colorat; xcolor; culoare; textcolor; definecolor; dvipsnames; culoarea paginilor în previzualizare; Pagini luminoase">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm" class="current">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Text colorat</h1>
+<p>Pachetul xcolor colorează textul în documentul cules. Încărcați-l în preambul:</p>
+<pre>\usepackage{xcolor}</pre>
+<p>Apoi <code>\color{blue}</code> trece la albastru până la sfârșitul grupului sau al mediului curent, iar <code>\textcolor{red}{This is very important!}</code> colorează doar argumentul. Pentru a defini culori proprii, folosiți de exemplu</p>
+<pre>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</pre>
+<p>Opțiunea <code>dvipsnames</code> adaugă o listă de culori cu nume, precum BrickRed și ForestGreen:</p>
+<pre>\usepackage[dvipsnames]{xcolor}</pre>
+<p>Documentația xcolor, deschisă cu Ajutor › Afișați ajutorul pentru pachet..., listează toate culorile și opțiunile.</p>
+
+<h2>Culoarea paginilor din fereastra de previzualizare</h2>
+<p>Textul colorat poate fi greu de citit pe o pagină albă. Paginilor din fereastra de previzualizare li se poate da altă culoare în Configurări › Teme: în grupul „Ferestre”, culoarea din coloana „Pagini luminoase” de pe rândul „Previzualizare” umple paginile cât timp sunt afișate luminoase. Fiecare temă are propria culoare, astfel încât „Tema modului luminos” și „Tema modului întunecat” pot folosi culori diferite.</p>
+<p>Culoarea servește doar la vizualizare: nu se tipărește și nu apare când se copiază o parte dintr-o pagină. Paginile afișate întunecat cu articolul „Aspect” din bara de instrumente a ferestrei de previzualizare nu sunt umplute cu această culoare. Culoarea textului însuși este stabilită de document, cu xcolor, ca mai sus.</p>
+</main>
+</body>
+</html>

@@ -1,9 +1,11 @@
 // Earlier versions of TeXShop bundled macros that open Richard Koch's former web site, and
 // macros since reworded (TeX Live written with the space, the ConTeXt macro for the teTeX page
-// that now opens the TeX Live home page). When TeXShop is updated, a macro in
-// ~/Library/TeXShop/Macros whose content is still exactly one of those bundled texts takes the
-// current bundled text, and the current name when it was renamed. Macros that were edited or
-// renamed, and every other macro, stay as they are.
+// that now opens the TeX Live home page, file names quoted for the shell) or renamed so that the
+// name says what the macro does (pdfselectc is Extract Pages from PDF…). When TeXShop is updated,
+// a macro in ~/Library/TeXShop/Macros whose content is still exactly one of those bundled texts
+// takes the current bundled text, and the current name when it was renamed and still has the
+// earlier name. Its key stays. Macros that were edited or renamed, and every other macro, stay as
+// they are.
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN

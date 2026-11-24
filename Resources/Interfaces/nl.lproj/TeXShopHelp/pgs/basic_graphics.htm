@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afbeeldingen invoegen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="afbeeldingen invoegen; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; Converteer TIFF">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm" class="current">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Afbeeldingen invoegen</h1>
+<p>Bij direct zetten naar PDF voegt LaTeX afbeeldingen in de formaten PDF, PNG en JPEG in. PDF houdt lijnen en tekst op elke grootte scherp, dus gebruik het voor diagrammen en grafieken; PNG en JPEG zijn geschikt voor schermafbeeldingen en foto’s.</p>
+<p>Laad het pakket graphicx in de preambule:</p>
+<pre>\usepackage{graphicx}</pre>
+<p>en voeg een afbeelding in waar die moet verschijnen:</p>
+<pre>\includegraphics[width=0.8\textwidth]{diagram}</pre>
+<p>De extensie mag u weglaten; LaTeX zoekt dan naar <code>diagram.pdf</code>, <code>diagram.png</code>, <code>diagram.jpg</code> en de andere formaten die het kent. Wijzig de breedte om de grootte van de afbeelding te wijzigen. Zet afbeeldingsbestanden in de map van het document, of geef een pad dat daarvan uitgaat, zoals <code>figures/diagram</code>.</p>
+
+<h2>EPS-bestanden</h2>
+<p>TeX Live zet EPS-afbeeldingen tijdens het zetten automatisch om in PDF met epstopdf, zolang het document graphicx laadt. Het omgezette bestand, <code>diagram-eps-converted-to.pdf</code>, wordt naast het EPS-bestand geschreven en vanaf dan gebruikt.</p>
+<p>Een EPS-bestand dat in TeXShop wordt geopend, wordt ook omgezet: TeXShop schrijft een PDF-bestand met dezelfde naam ernaast, of in een tijdelijke map als er niet naar de map van het EPS-bestand kan worden geschreven, en toont dat.</p>
+
+<h2>TIFF-bestanden</h2>
+<p>LaTeX kan geen TIFF-bestanden invoegen. Kies Archief › Converteer TIFF terwijl een bronvenster actief is: een dialoogvenster toont de map van het document, waarin alleen TIFF-bestanden kunnen worden gekozen. Selecteer er een of meer en klik op ‘Converteer’. Elk bestand wordt omgezet in een PNG-bestand met dezelfde naam in dezelfde map; de TIFF-bestanden blijven bewaard.</p>
+
+<h2>Zetten via DVI</h2>
+<p>Documenten die PostScript-code gebruiken, bijvoorbeeld met het pakket pstricks, worden gezet met de methode Via DVI, die standaard dvips uitvoert. Afbeeldingen worden dan in EPS-formaat ingevoegd; PDF-, PNG- en JPEG-bestanden kunnen niet worden gebruikt. De engineprofielen waarvan de naam op “+ dvipdfmx” eindigt, zetten ook Via DVI, maar voeren dvipdfmx uit in plaats van dvips; met <code>\usepackage[dvipdfmx]{graphicx}</code> kunnen daar wel PDF-, PNG- en JPEG-bestanden worden gebruikt. Zie <a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a>.</p>
+</main>
+</body>
+</html>

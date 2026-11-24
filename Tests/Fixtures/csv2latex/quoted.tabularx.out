@@ -1,0 +1,7 @@
+\begin{tabular}{ll}
+
+"Smith, J." & "line one \\
+line two" \\
+"say ""hi""" & 'single' \\
+
+\end{tabular}

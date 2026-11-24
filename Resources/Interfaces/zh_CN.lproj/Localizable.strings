@@ -1,9 +1,9 @@
         "%@\n\nCharacters: %d" = "%@\n\n字符数：%d";
-    "%@ does not exist." = "%@ \U4e0d\U5b58\U5728\U3002";
-"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "目录链接 /Library/TeX/texbin不存在。若要修复，请访问https://tug.org/mactex并安装MacTeX或Basic TeX (2015或更新版)。";
-"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ 不存在。TeXShop仅为TeX的前端，您还需要安装TeX发行包。发行包可能尚未安装，或在系统升级时被删除。若有此 况，请访问https://tug.org/mactex并按照说明安装MacTeX或BasicTeX。";
-"%@ does not have the executable bit set." = "%@ 不存在。TeXShop仅为TeX的前端，您还需要安装TeX发行包。发行包可能尚未安装，或在系统升级时被删除。若有此 况，请访问http://tug.org/mactex并按照说明安装MacTeX或BasicTeX。";
-    "Add macros from file..." = "\U4ece\U6587\U4ef6\U6dfb\U52a0\U5b8f...";
+    "%@ does not exist." = "%@不存在。";
+"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "链接/Library/TeX/texbin不存在。若要修复，请访问https://tug.org/mactex并安装MacTeX或BasicTeX（2015或更高版本）。";
+"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@不存在。TeXShop仅为TeX的前端，你还需要安装TeX发行版。发行版可能尚未安装，或在系统升级时被删除。若是这样，请访问https://tug.org/mactex并按照说明安装MacTeX或BasicTeX。";
+"%@ does not have the executable bit set." = "%@没有设置可执行权限。";
+    "Add macros from file..." = "从文件添加宏…";
     AutoComplete = "\U6309\U952e\U7ed1\U5b9a";
     Autocompletion = "\U6309\U952e\U7ed1\U5b9a\U8f93\U5165";
     "Can't find required tool." = "\U627e\U4e0d\U5230\U5fc5\U8981\U7684\U5de5\U5177\U3002";
@@ -14,12 +14,12 @@
     "Close Matrix Panel" = "\U5173\U95ed\U77e9\U9635\U9762\U677f";
     Comment = "\U6ce8\U91ca";
     Completion = "\U8865\U5168";
-    "Copy Format" = "\U62f7\U8d1d\U6837\U5f0f";
+    "Copy Format" = "拷贝格式";
     "Currently open files retain their old encoding." = "\U5f53\U524d\U6253\U5f00\U7684\U6587\U4ef6\U4ecd\U4fdd\U7559\U65e7\U7684\U7f16\U7801\U3002";
     "Display Format" = "\U663e\U793a\U6837\U5f0f";
-    "Do you want to save macros?" = "您想保存宏吗？";
+    "Do you want to save macros?" = "你想保存宏吗？";
     "Don't Save" = "不保存";
-    "Drag && Drop" = "\U62d6\U62fd";
+    "Drag && Drop" = "拖放";
     Edit = "\U7f16\U8f91";
     Error = "\U9519\U8bef";
     File = "\U6587\U4ef6";
@@ -27,37 +27,37 @@
     "Hard Wrap" = "\U786c\U6362\U884c";
     Help = "\U5e2e\U52a9";
     Indent = "\U7f29\U8fdb";
-    "Info: %@" = "\U4fe1\U606f: %@";
-    "LaTeX Panel..." = "LaTeX\U9762\U677f...";
+    "Info: %@" = "信息：%@";
+    "LaTeX Panel..." = "LaTeX面板…";
     Macros = "\U5b8f";
-    Magnification = "\U653e\U5927";
-    "Magnification Panel" = "\U653e\U5927\U9762\U677f";
-    "Matrix Panel..." = "\U77e9\U9635\U9762\U677f...";
+    Magnification = "放大率";
+    "Magnification Panel" = "放大率面板";
+    "Matrix Panel..." = "矩阵面板…";
     "Newline Removal" = "\U5220\U9664\U65b0\U884c";
     "Omit Shell Escape" = "\U5ffd\U7565Shell Escape";
-    "Open Macro Editor..." = "\U6253\U5f00\U5b8f\U7f16\U8f91\U5668...";
-    "Open for Editing..." = "\U6253\U5f00\U4ee5\U7f16\U8f91...";
-    "Open for Preview..." = "\U6253\U5f00\U4ee5\U9884\U89c8...";
+    "Open Macro Editor..." = "打开宏编辑器…";
+    "Open for Editing..." = "打开以编辑…";
+    "Open for Preview..." = "打开以预览…";
     "Page Number" = "\U9875\U7801";
     "Page Number Panel" = "\U9875\U7801\U9762\U677f";
-    "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "\U8def\U5f84: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
+    "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "路径：%@\n文件大小：%d字节\n创建日期：%@\n修改日期：%@";
     Preview = "\U9884\U89c8";
-    "Print Source..." = "\U6253\U5370\U6e90\U4ee3\U7801...";
-    "Print..." = "\U6253\U5370...";
+    "Print Source..." = "打印源代码…";
+    "Print..." = "打印…";
     RotateClockwise = "\U987a\U65f6\U9488\U65cb\U8f6c";
     RotateCounterclockwise = "\U9006\U65f6\U9488\U65cb\U8f6c";
     Save = "保存";
     "Save Spot" = "保存位置";
-    "Save selection to file..." = "保存选区到文件...";
-    "Set Project Root..." = "\U8bbe\U7f6e\U9879\U76ee\U6839\U6587\U4ef6...";
+    "Save selection to file..." = "保存选区到文件…";
+    "Set Project Root..." = "设置项目根文件…";
     ShowFullPath = "\U663e\U793a\U5b8c\U6574\U8def\U5f84";
     Sync = "\U540c\U6b65";
     "Sync Marks" = "\U540c\U6b65\U6807\U8bb0";
     Tags = "标签";
     Template = "\U6a21\U677f";
-    "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "该文件无法以 %@ 编码打开，因为它并未以此编码保存。如果您想以其他编码打开，请关闭窗口再打开。";
+    "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "该文件无法以%@编码打开，因为它并未以此编码保存。如果你想以其他编码打开，请关闭窗口再打开。";
     "The file encoding changed; characters can be lost if the wrong encoding is used." = "\U6587\U4ef6\U7f16\U7801\U5df2\U66f4\U6539\Uff0c\U5982\U679c\U4f7f\U7528\U9519\U8bef\U7684\U7f16\U7801\U5c06\U4f1a\U5bfc\U81f4\U5b57\U7b26\U4e22\U5931\U3002";
-    "The source LaTeX document cannot be found." = "\U627e\U4e0d\U5230LaTeX\U6e90\U4ee3\U7801\U6587\U6863\U3002";
+    "The source LaTeX document cannot be found." = "找不到LaTeX源文稿。";
     "This file was opened with IsoLatin9 encoding." = "\U672c\U6587\U4ef6\U4ee5IsoLatin9\U897f\U6587\U7f16\U7801\U6253\U5f00\U3002";
     "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "\U672c\U7248TeXShop\U9700\U8981Mac OS X 10.4\U6216\U66f4\U9ad8\U7248\U672c\U3002\U8bf7\U4f7f\U7528TeXShop 1.37\U3002";
     ToolbarItems = "\U5de5\U5177\U680f\U9879\U76ee";
@@ -66,15 +66,15 @@
     Uncomment = "\U53d6\U6d88\U6ce8\U91ca";
     Unindent = "\U53d6\U6d88\U7f29\U8fdb";
     Warning = "\U8b66\U544a";
-    "Warning: Using Shell Escape" = "\U8b66\U544a: \U6b63\U5728\U4f7f\U7528Shell Escape";
-    "Your current setting of %@ will be replaced. OK?" = "\U60a8\U5f53\U524d %@ \U7684\U8bbe\U7f6e\U5c06\U4f1a\U88ab\U66ff\U6362\U3002\U786e\U5b9a\U5417?";
+    "Warning: Using Shell Escape" = "警告：正在使用Shell Escape";
+    "Your current setting of %@ will be replaced. OK?" = "你当前%@的设置将会被替换。确定吗？";
     "Convert" = "转换";
     "The program " = "程序 ";
     " does not exist." = " 未找到。";
     "failed to copy selection." = "无法拷贝选中的区域。";
     "failed to save selection to the file." = "无法将选中的区域保存至文件。";
     "<a character consisting of %1$@ code points>" = "<由%1$@个码位组成的字符>";
-    "%1$@ characters, %2$@ words, %3$@ lines" = "%1$@个字符, %2$@个单词, 共 %3$@行";
+    "%1$@ characters, %2$@ words, %3$@ lines" = "%1$@个字符，%2$@个单词，共%3$@行";
     "Emoji Style" = "Emoji样式";
     "Text Style" = "文本样式";
     "Character Info" = "字符信息";
@@ -97,10 +97,10 @@
 "<<Close All - unlocalized>>" = "全部关闭";
 "Close All" = "全部关闭";
 "File Already Exists" = "文件已存在";
-"Labels" = "标签";
+"Labels" = "引用标签";
 "New Tag" = "新增标签";
 "Split Window" = "分割窗口";
-"New Document" = "新文件";
+"New Document" = "新建文稿";
 "Link Popups" = "链接预览";
 "Split Window with Link" = "分割窗口并显示链接目标";
 "Highlight expl3 Code" = "高亮expl3代码";
@@ -108,15 +108,15 @@
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
 "Forget Learned Words…" = "忘记已学习的单词…";
-"Edit Spelling Exclusions…" = "编辑拼写例外…";
+"Edit Spelling Exclusions…" = "编辑拼写排除规则…";
 "Forget learned words" = "忘记已学习的单词";
 "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "此文稿中的以下单词已为%@学习。请选择要忘记的单词。按住Shift或Command键点按可选择多个。";
 "Forget Selected" = "忘记所选单词";
-"Forgot %lu word." = "已忘记 %lu个单词。";
-"Forgot %lu words." = "已忘记 %lu个单词。";
+"Forgot %lu word." = "已忘记%lu个单词。";
+"Forgot %lu words." = "已忘记%lu个单词。";
 "No learned words in this document" = "此文稿中没有已学习的单词";
 "None of the words in this document have been learned for %@." = "此文稿中的单词都尚未为%@学习。";
-"Problems in the spelling exclusions file" = "拼写例外文件中的问题";
+"Problems in the spelling exclusions file" = "拼写排除规则文件中的问题";
 "OK" = "好";
 /* Button added to the Spelling and Grammar panel */
 "Change All" = "全部更改";
@@ -177,9 +177,9 @@
 
 "Navigation History" = "导航历史记录";
 
-"Back (⌘[)" = "后退 (⌘[)";
+"Back (⌘[)" = "返回（⌘[）";
 
-"Forward (⌘])" = "前进 (⌘])";
+"Forward (⌘])" = "前进（⌘]）";
 
 "Keyboard" = "键盘";
 "Search by Function" = "按功能搜索";
@@ -190,6 +190,7 @@
 "No command uses this key." = "没有命令使用此按键。";
 "Press a key" = "请按键";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与Command或Control组合使用，或使用F1–F20。";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "使用地球仪(fn)键的快捷键不能分配给TeXShop命令。";
 
 
 "This key cannot be assigned to a new shortcut." = "此按键不能分配给新的快捷键。";
@@ -217,7 +218,7 @@
 
 
 /* Page label in the corner of a link popup; %@ is the page label given in the PDF */
-"Page %@" = "第 %@ 页";
+"Page %@" = "第%@页";
 
 
 
@@ -249,7 +250,7 @@
 "Save Anyway (Conflicting Shortcuts Inactive)" = "仍要保存（冲突的快捷键将停用）";
 
 "These macro shortcuts will become inactive:" = "以下宏快捷键将停用：";
-"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "这些新分配或更改的快捷键与其他分配重叠。列表中说明了哪些快捷键将停用。您可以编辑它们、保持原样，或只移除已更改的冲突快捷键。宏的名称和内容将保留。";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "这些新分配或更改的快捷键与其他分配重叠。列表中说明了哪些快捷键将停用。你可以编辑它们、保持原样，或只移除已更改的冲突快捷键。宏的名称和内容将保留。";
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "此快捷键与宏“%@”（%@）冲突。由于该宏位置靠后，它的快捷键将停用。";
 "This shortcut is already used by:\n%@" = "此快捷键已被以下项目使用：\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "此快捷键与“%@”（%@）冲突，因此已停用。";
@@ -345,7 +346,7 @@
 "Engine profile row: Index Program" = "索引生成";
 "Engine profile row: MetaPost" = "MetaPost";
 "Engine profile row: Convert to \\UTF / \\CID" = "转换为\\UTF / \\CID";
-"Engine profile row: New Document Encoding" = "新文档的编码";
+"Engine profile row: New Document Encoding" = "新文稿的编码";
 "Engine profile row: UTF-8-MAC Conversion" = "UTF-8-MAC自动转换";
 "Engine profile row: Dictionary" = "词典";
 "Detect Paths" = "自动检测路径";
@@ -372,7 +373,7 @@
 "Column" = "列";
 
 /* Text Statistics, opened from the status bar */
-"Text Statistics…" = "正文统计…";
+"Text Statistics…" = "文本统计…";
 "Whole Document" = "整个文稿";
 "Selection" = "所选内容";
 "Text" = "正文";
@@ -453,9 +454,9 @@
 "Right" = "右对齐";
 
 /* Edit menu */
-"Complete Label or Citation Key" = "补全标签或引用键";
+"Complete Label or Citation Key" = "补全引用标签或引用键";
 /* Edit › Complete Label or Citation Key tooltip */
-"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "在\\ref{之后列出文件中的标签；设置允许时，在\\cite{之后列出BibDesk的引用键。";
+"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "在\\ref{之后列出文件中的引用标签；设置允许时，在\\cite{之后列出BibDesk的引用键。";
 
 /* Print panel: the section of a PDF print, as in Preview */
 "Auto Rotate" = "自动旋转";

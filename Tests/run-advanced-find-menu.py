@@ -22,9 +22,9 @@ root = Path(__file__).resolve().parents[1]
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
 KEYS = ['FindAll', 'SelectAll', 'SetReplaceString', 'Replace', 'ReplaceAndFind', 'ReplaceAll', 'Highlight', 'Unhighlight']
 # Find and Replace… of each language's MainMenu (only the Base menu had it before 6.00)
-FIND_AND_REPLACE = {'en': 'Find and Replace…', 'de': 'Suchen und ersetzen...', 'es': 'Buscar y reemplazar…', 'fr': 'Rechercher et remplacer...',
+FIND_AND_REPLACE = {'en': 'Find and Replace…', 'de': 'Suchen und ersetzen …', 'es': 'Buscar y reemplazar…', 'fr': 'Rechercher et remplacer...',
                     'it': 'Trova e sostituisci…', 'ja': '検索と置換…', 'ko': '찾기 및 대치...', 'nl': 'Zoek en vervang…', 'pt': 'Buscar e Substituir…',
-                    'pt-PT': 'Procurar e substituir…', 'ro': 'Găsiți și înlocuiți…', 'zh_CN': '查找和替换...'}
+                    'pt-PT': 'Procurar e substituir…', 'ro': 'Găsiți și înlocuiți…', 'zh_CN': '查找和替换…'}
 # The user's names (2026-11-14), those of CotEditor's Japanese Find menu
 JAPANESE = {'FindAll': 'すべて検索', 'SelectAll': 'すべての一致を選択', 'SetReplaceString': '選択部分を置換に使用', 'Replace': '置換',
             'ReplaceAndFind': '置換して次を検索', 'ReplaceAll': 'すべて置換', 'Highlight': 'すべてハイライト', 'Unhighlight': 'ハイライトを削除'}

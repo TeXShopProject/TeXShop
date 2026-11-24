@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ottenere i nuovi elementi della libreria</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop; aggiornamento; cartella New; bin; Scripts; Engines Inactive; macro; file danneggiati; Backups; contenuto predefinito delle cartelle">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Come configuro TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminari</a></li>
+<li><a href="configure_prefchanges.htm">Modifiche consigliate alle impostazioni</a></li>
+<li><a href="configure_correctinstall.htm" class="current">Ottenere i nuovi elementi della libreria</a></li>
+<li><a href="configure_hidden.htm">Impostazioni nascoste</a></li>
+<li><a href="configure_panel.htm">Modificare il Pannello LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificare le associazioni dei tasti</a></li>
+<li><a href="configure_menushortcuts.htm">Ridefinire le scorciatoie da tastiera dei menu</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Ottenere i nuovi elementi della libreria</h1>
+<p>TeXShop conserva i file che puoi modificare, come modelli, macro, motori, associazioni dei tasti, il file del Pannello LaTeX e i temi, in ~/Library/TeXShop, la cartella TeXShop della cartella Libreria nella tua cartella Inizio. TeXShop › Apri ~/Library/TeXShop la apre nel Finder. Quando TeXShop viene eseguito per la prima volta, crea questa cartella con il contenuto predefinito.</p>
+
+<h2 id="updates">Che cosa cambia una nuova versione</h2>
+<p>Una nuova versione di TeXShop lascia invariata la maggior parte di ~/Library/TeXShop, così le tue modifiche vengono conservate. Alcune posizioni contengono file di supporto di TeXShop stesso o elementi facoltativi, e una nuova versione li aggiorna:</p>
+<ul>
+<li>le cartelle bin, Documents, ExternalEditorScripts e Scripts;</li>
+<li>Engines/Inactive e HTML/Inactive, che contengono motori e file HTML che puoi spostare per usarli;</li>
+<li>HTML/Help.html, la pagina mostrata da Aiuto › Comandi HTML (in inglese);</li>
+<li>la cartella New, che viene sostituita per intero.</li>
+</ul>
+<p>In queste posizioni ogni file fornito con TeXShop viene sostituito dalla sua nuova versione, quindi le modifiche che hai fatto a un file di questo tipo vanno perse; i nuovi file vengono aggiunti e i file che hai aggiunto con altri nomi restano come sono. Per conservare una tua versione di uno di questi file, salvala con un altro nome.</p>
+<p>I motori in uso, nella cartella Engines stessa, non vengono modificati. Solo quando la cartella è stata aggiornata l’ultima volta da una versione di TeXShop precedente alla 6.00, TeXShop aggiunge html.engine a Engines, una sola volta e solo se lì non c’è già un file con quel nome. Nella cartella Macros, alcune macro fornite con TeXShop e mai modificate, come quella che apre il sito web di TeXShop, vengono aggiornate al testo attuale; le macro modificate e le tue macro restano come sono. Tutto il resto conserva le tue modifiche.</p>
+<p>TeXShop registra la propria versione in un file nascosto <code>.Version</code> in ~/Library/TeXShop/New e aggiorna la cartella solo quando è più recente della versione registrata lì. Così ~/Library/TeXShop non viene riscritta a ogni avvio di TeXShop, e una versione meno recente di TeXShop si può eseguire senza modificarla.</p>
+
+<h2 id="new">La cartella New</h2>
+<p>La cartella New contiene elementi che potresti voler aggiungere tu stesso, per esempio nuovi modelli. Sposta l’elemento nella cartella giusta, come Templates, e modificalo come preferisci. Aiuto › Informazioni su questa versione (in inglese) indica quando c’è qualcosa da prendere.</p>
+
+<h2 id="repair">File mancanti e danneggiati</h2>
+<p>Quando un file di cui TeXShop ha bisogno, come le macro, il file del Pannello LaTeX, le associazioni dei tasti, KeyEquivalents.plist o un tema, manca o è danneggiato, TeXShop lo sostituisce con una propria copia all’avvio, senza alcun messaggio. Il file danneggiato viene conservato in ~/Library/TeXShop/Backups, così puoi recuperare da lì le tue modifiche.</p>
+
+<h2 id="defaults">Ottenere il contenuto predefinito di una cartella</h2>
+<p>Per ottenere il contenuto predefinito più recente di una cartella, per esempio Templates, esci da TeXShop, sposta quella cartella fuori da ~/Library/TeXShop (per esempio sulla Scrivania) e avvia di nuovo TeXShop. TeXShop crea la cartella con il suo contenuto predefinito. Poi ricopia dalla cartella spostata ciò che vuoi conservare.</p>
+</main>
+</body>
+</html>

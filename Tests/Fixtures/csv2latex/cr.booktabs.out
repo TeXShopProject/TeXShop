@@ -1,0 +1,10 @@
+\begin{tabular}{ll}
+
+\toprule
+Name & Age \\
+\midrule
+Alice & 30 \\
+Bob & 25 \\
+
+\bottomrule
+\end{tabular}

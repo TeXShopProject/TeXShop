@@ -34,12 +34,12 @@
       "I PDF aperti mantengono il proprio zoom. Il nuovo valore si applica ai PDF aperti da questo momento.",
       "Ha effetto dopo il riavvio di TeXShop.",
       "Zoom predefinito per i PDF appena aperti.",
-      "Le seguenti macro usano questa abbreviazione. Assegnandola al comando del menu, le loro abbreviazioni saranno disattivate.\n\n%@"
+      "Le seguenti macro usano questa scorciatoia. Assegnandola al comando del menu, le loro scorciatoie saranno disattivate.\n\n%@"
     ],
     "nl": [
-      "Geopende pdf’s behouden hun zoom. De nieuwe waarde geldt voor pdf’s die vanaf nu worden geopend.",
+      "Geopende PDF’s behouden hun zoom. De nieuwe waarde geldt voor PDF’s die vanaf nu worden geopend.",
       "Wordt van kracht nadat u TeXShop opnieuw start.",
-      "Standaardzoom voor nieuw geopende pdf’s.",
+      "Standaardzoom voor nieuw geopende PDF’s.",
       "De volgende macro’s gebruiken deze toetscombinatie. Als u deze aan het menucommando toewijst, worden hun toetscombinaties inactief.\n\n%@"
     ],
     "pt-PT": [
@@ -83,7 +83,7 @@
   "legacy_encoding_warning": {
     "en": "Currently open files retain their old encoding.",
     "ja": "現在開かれているファイルのエンコーディングは変更されません。",
-    "de": "Gerade geöffnete Dateien behalten ihre alte Kodierung.",
+    "de": "Gerade geöffnete Dateien behalten ihre alte Codierung.",
     "es": "Los archivos actualmente abiertos mantienen su codificación antigua.",
     "fr": "Les fichiers déjà ouverts gardent leurs encodages.",
     "it": "I file attualmente aperti mantengono la propria codifica.",

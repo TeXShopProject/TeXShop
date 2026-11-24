@@ -63,8 +63,6 @@
   
   /* Help book localization */
   CFBundleHelpBookName = "TeXShop Help";
-  /* There is no help book in this language; Help Viewer shows the English one */
-  CFBundleHelpBookFolder = "../en.lproj/TeXShopHelp";
   
  
   

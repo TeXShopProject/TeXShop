@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>~/Library/TeXShop 中的文件</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop；plist 文件；配置文件；completion.plist；autocompletion.plist；KeyEquivalents.plist；Macros_Latex.plist；matrixpanel；主题；CommandCompletion.txt；Backups">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm" class="current">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>~/Library/TeXShop 中的文件</h1>
+<p>TeXShop 把你可以自定的文件保存在文件夹 <code>~/Library/TeXShop</code> 中，该文件夹在 TeXShop 首次运行时创建。“TeXShop”>“打开 ~/Library/TeXShop”会在访达中打开该文件夹。要把你的自定设置带到另一台 Mac 上，请把这个文件夹拷贝过去。</p>
+
+<h2>文件夹中的内容</h2>
+<p>这些文件大多在 TeXShop 中直接编辑，无需打开它们：</p>
+<table>
+<tr><th>文件或文件夹</th><th>内容</th><th>更改位置</th></tr>
+<tr><td><code>Keyboard/autocompletion.plist</code>，以及 <code>autocompletionPaste.plist</code> 和 <code>autocompletionDisplayOrder.plist</code></td><td>按键绑定</td><td>“设置”>“键盘”>“按键绑定列表”</td></tr>
+<tr><td><code>CommandCompletion/CommandCompletion.txt</code></td><td>命令补全列表</td><td>“设置”>“键盘”>“编辑命令补全文件…”</td></tr>
+<tr><td><code>Menus/KeyEquivalents.plist</code></td><td>默认菜单快捷键</td><td>“设置”>“键盘”中的菜单快捷键列表</td></tr>
+<tr><td><code>Macros/Macros_Latex.plist</code></td><td>“宏”菜单</td><td>“宏”>“打开宏编辑器…”</td></tr>
+<tr><td><code>Themes/</code></td><td>配色主题</td><td>“设置”>“主题”</td></tr>
+<tr><td><code>SpellCheck/SpellingExclusions.txt</code></td><td>考虑 LaTeX 语法的拼写检查所略过的内容</td><td>“设置”>“拼写检查”>“编辑 LaTeX 排除规则…”</td></tr>
+<tr><td><code>Engines/</code></td><td>排版引擎</td><td>“设置”>“排版”>“编辑引擎列表…”</td></tr>
+<tr><td><code>LatexPanel/completion.plist</code></td><td>LaTeX 面板的文本</td><td>手动编辑；请参阅<a href="configure_panel.htm">修改 LaTeX 面板</a></td></tr>
+<tr><td><code>MatrixPanel/matrixpanel_1.plist</code></td><td>矩阵面板的文本</td><td>手动编辑</td></tr>
+<tr><td><code>Templates/</code>、<code>Stationery/</code></td><td>“模板”菜单、“文件”>“从样板新建…”</td><td>在访达中；请参阅<a href="basic_templates.htm">模板和样板</a></td></tr>
+</table>
+<p><code>KeyEquivalents.plist</code> 中的菜单快捷键会成为“设置”>“键盘”中快捷键列表的默认值；在“设置”中更改的快捷键优先。请参阅<a href="configure_menushortcuts.htm">重新定义菜单键盘快捷键</a>。</p>
+
+<h2>手动编辑文件</h2>
+<p>扩展名为 <code>.plist</code> 的文件是 XML 文本。可以在 TeXShop、其他文本编辑器或 Xcode 中打开和编辑它们。其中几个文件的开头有说明其格式的注释。请让它们保持 UTF-8 编码，即它们原来所用的编码。请在“设置”>“主题”中编辑主题的颜色，而不要在主题文件中编辑。</p>
+<p>如果你编辑过的某个文件不再起作用，请将它移出该文件夹，或者将它所在的文件夹移到桌面，然后重新启动 TeXShop：TeXShop 会重新创建该文件并放入原始内容。</p>
+
+<h2>丢失或损坏的文件</h2>
+<p>当 TeXShop 需要的某个文件（例如宏、按键绑定、LaTeX 面板和矩阵面板的文本、菜单快捷键、命令补全列表、拼写排除规则或标准主题）丢失，或在 TeXShop 启动时发现已损坏时，TeXShop 会用自带的副本替换它，且不显示错误信息。损坏的文件会被移到文件夹 <code>~/Library/TeXShop/Backups</code> 中一个以日期和时间命名的文件夹里，你可以从中恢复所做的更改。</p>
+<p>你可能会有意删除的文件（例如模板、样板、引擎和你自己的主题）不会被恢复。</p>
+</main>
+</body>
+</html>

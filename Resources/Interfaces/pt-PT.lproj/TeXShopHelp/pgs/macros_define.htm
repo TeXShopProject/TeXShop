@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Definir novas macros</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="novas macros; editor de macros; atalho de teclado; submenus; separadores; fichas de marcadores de posição; menu Inserir">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda das macros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminares</a></li>
+<li><a href="macros_default.htm">Compreender as macros predefinidas</a></li>
+<li><a href="macros_rearrange.htm">Reorganizar o menu Macros</a></li>
+<li><a href="macros_define.htm" class="current">Definir novas macros</a></li>
+<li><a href="macros_applescript.htm">Macros AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macros AppleScript predefinidas</a></li>
+<li><a href="macros_defapplescript.htm">Definir macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Criar caixas de diálogo</a></li>
+<li><a href="macros_writingcompletescripts.htm">Escrever scripts com os comandos de composição do TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Escrever scripts com comandos da shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Definir novas macros</h1>
+<p>No editor de macros (Macros › Abrir editor de macros…), clique em + por baixo da lista para adicionar um item. O menu na extremidade direita da barra por baixo da lista (⋯) adiciona um submenu ou um separador e duplica os itens selecionados; − apaga-os. Um item ou submenu novo recebe logo um nome: escreva o nome e prima Return. Os submenus podem ser encaixados em qualquer número de níveis. Um pouco de prática mostra como o editor se comporta.</p>
+
+<h2 id="shortcuts">Atalhos</h2>
+<p>Para dar um atalho de teclado a um item, selecione-o e clique no seu atalho na lista (ou faça duplo clique no atalho) e, em seguida, prima o novo atalho: Comando ou Controlo com uma tecla, ou uma das teclas F1–F20, com Shift e Opção conforme necessário. Se um comando de menu ou outra macro já usar o atalho, o TeXShop indica-o por baixo do conteúdo e não o altera; prima outro atalho. Para remover um atalho, clique em «Remover atalho» (⊖) no campo ou prima Delete; Escape mantém o atalho que o item tinha. Um atalho que está inativo porque um comando de menu ou uma macro anterior o usa é assinalado na lista com um triângulo de aviso; selecione o item para ver o motivo por baixo do conteúdo. Consulte <a href="configure_menushortcuts.htm">Redefinir os atalhos de teclado dos menus</a> para saber como os atalhos dos menus e das macros funcionam em conjunto.</p>
+
+<h2 id="tokens">Marcadores de posição</h2>
+<p>No conteúdo, os marcadores de posição que uma macro substitui aparecem como fichas arredondadas que indicam o que representam, como «Texto selecionado»: #SEL#, #INS#, #PASTE# e as marcas • de uma macro de texto (consulte <a href="macros_default.htm">Compreender as macros predefinidas</a>), e #FILEPATH# e os outros caminhos de uma macro AppleScript (consulte <a href="macros_defapplescript.htm">Definir macros AppleScript</a>). A macro guarda-os tal como estão escritos, pelo que copiar e guardar funcionam como habitualmente. Escreva um marcador de posição ou escolha-o no menu «Inserir» por baixo do conteúdo; o botão de ajuda à direita deste enumera todos. Apagar junto a uma ficha apaga-a por inteiro.</p>
+</main>
+</body>
+</html>

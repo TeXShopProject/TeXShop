@@ -1520,7 +1520,7 @@
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="933593816"/>
-						<string key="toolTip">Naam die in het menu Macro's verschijnt</string>
+						<string key="toolTip">Naam die in het menu Macro’s verschijnt</string>
 					</object>
 				</object>
 				<string key="11.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1557,7 +1557,7 @@ ZWN0aWU7CmhldCBpbnZvZWdwdW50IGtvbXQgYmlqICNJTlMjLg</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="618924028"/>
-						<string key="toolTip">Bewaar de gewijzigde macro's</string>
+						<string key="toolTip">Bewaar de gewijzigde macro’s</string>
 					</object>
 				</object>
 				<string key="22.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

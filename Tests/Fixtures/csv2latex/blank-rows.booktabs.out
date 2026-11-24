@@ -1,0 +1,12 @@
+\begin{tabular}{ll}
+
+\toprule
+ \\
+\midrule
+ \\
+h1 & h2 \\
+ \\
+1 & 2 \\
+
+\bottomrule
+\end{tabular}

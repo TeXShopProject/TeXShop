@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adăugarea motoarelor de compilare</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="motor; fișier de motor; .engine; dosarul Engines; % !TEX program; % !TEX parameter; Motor alternativ; Inactive; script shell">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm" class="current">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Adăugarea motoarelor de compilare</h1>
+<p>Pe lângă plain TeX și LaTeX, TeXShop compilează cu <em>motoare</em>: scripturi shell mici, cu extensia <code>.engine</code>, aflate în dosarul <code>~/Library/TeXShop/Engines</code>. Un motor poate rula un singur program sau un șir de programe, de exemplu LuaLaTeX, apoi Biber, apoi încă de două ori LuaLaTeX. TeXShop vine cu motoare precum LuaLaTeX, XeLaTeX și pdflatexmk; subdosarul <code>Inactive</code> conține multe altele.</p>
+
+<h2>Alegerea unui motor</h2>
+<p>Meniul pop-up de lângă butonul „Compilare” din bara de instrumente a ferestrei sursă listează motoarele. Alegeți unul și apăsați „Compilare” sau <kbd>⌘T</kbd>. Alegerea se aplică numai documentului respectiv.</p>
+<p>Pentru a compila documentele noi cu un motor, alegeți „Fișier de motor” în Configurări › Compilare › Motor › „Compilați documentele noi cu”, apoi alegeți motorul în meniul „Fișier de motor” de dedesubt. „Editați lista de motoare…” deschide dosarul Engines în Finder; meniul „Fișier de motor” urmează dosarul pe măsură ce adăugați, eliminați sau redenumiți fișiere. Dacă fișierul de motor ales nu mai este în dosar, meniul îl arată ca negăsit, iar documentele sunt compilate cu LaTeX.</p>
+<p>Pentru a lega un document de un motor, puneți o linie ca aceasta într-una dintre primele douăzeci de linii ale lui:</p>
+<pre>% !TEX program = XeLaTeX</pre>
+<p>Numele este numele fișierului de motor fără <code>.engine</code>; <code>tex</code> și <code>latex</code> compilează plain TeX și LaTeX „Prin DVI”, iar <code>pdftex</code> și <code>pdflatex</code> le compilează „PDF direct”. Linia are prioritate față de bara de instrumente, de Configurări și de „Compilare cu motorul alternativ”. Forma <code>% !TEX TS-program =</code> este citită la fel. Scrieți linia exact ca mai sus, cu câte un spațiu de fiecare parte a semnului egal; macrocomanda Set Typesetting Program… din meniul „Macro” inserează linia în locul dvs., cu o listă de nume de motoare din care să alegeți. Într-un proiect cu fișier principal, doar fișierul principal are nevoie de această linie.</p>
+<p>Compilare › Compilare cu motorul alternativ (<kbd>⌃⌥⌘T</kbd>) compilează o dată cu motorul din Configurări › Compilare › Motor › „Motor alternativ”, implicit pdflatexmk, fără să modifice bara de instrumente. În meniul „Compilare”, articolul apare în locul articolului „Compilare” cât timp țineți apăsate Control și Opțiune. Este potrivit pentru documentele compilate de obicei rapid, într-o singură trecere, și din când în când complet, cu latexmk.</p>
+
+<h2>Scrierea unui motor</h2>
+<p>Cel mai simplu mod de a face un motor este să duplicați unul din dosarul Engines în Finder, să redenumiți copia și să o deschideți în TeXShop pentru a o edita. Un fișier de motor trebuie să aibă extensia <code>.engine</code> și permisiunea de a fi executat, pe care un duplicat o păstrează. Documentele deschise după aceea listează noul motor în bara lor de instrumente. Iată XeLaTeX.engine:</p>
+<pre>#!/bin/tcsh
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+xelatex  -file-line-error -synctex=1 "$1"</pre>
+<p>Prima linie indică shellul sau limbajul scriptului; zsh, bash, tcsh, Perl și altele funcționează toate, cu condiția ca scriptul să fie scris în limbajul respectiv. TeXShop rulează motorul în dosarul fișierului sursă și îi transmite trei valori:</p>
+<dl>
+<dt><code>$1</code></dt><dd>Numele fișierului sursă cu extensia lui, fără dosar, de exemplu <code>main.tex</code>. Un script care trece în alt dosar trebuie să rețină mai întâi calea completă, de exemplu ca <code>"$PWD/$1"</code>. Într-un proiect, acesta este fișierul principal.</dd>
+<dt><code>$2</code></dt><dd>Restul unei linii <code>% !TEX parameter = …</code> de la începutul sursei (al fișierului principal), cu mai multe opțiuni separate prin spații, de exemplu <code>% !TEX parameter = -shell-escape</code>. Fără o astfel de linie, este un singur spațiu.</dd>
+<dt><code>$3</code></dt><dd>Dosarul din câmpul „Motoare TeX” din Configurări › Compilare › Căi sau dosarul din „Al doilea set de motoare TeX” când documentul conține linia <code>% !TEX useAlternatePath</code>.</dd>
+</dl>
+<p>Când motorul se termină, TeXShop deschide în fereastra de previzualizare fișierul PDF cu numele sursei și extensia <code>.pdf</code>, dacă există, și derulează la locul afișat înainte de compilare. Un script care produce alt rezultat poate spune ce să se afișeze cu liniile următoare, scrise oriunde în motor, într-un comentariu al limbajului său:</p>
+<table>
+<tr><th>Linie</th><th>Efect</th></tr>
+<tr><td><code>!TEX-noPreview</code></td><td>nicio fereastră de previzualizare, chiar dacă sunt prezente și alte linii de mai jos</td></tr>
+<tr><td><code>!TEX-pdfPreview</code></td><td>afișează fișierul PDF</td></tr>
+<tr><td><code>!TEX-htmlPreview</code></td><td>afișează în fereastra HTML fișierul HTML cu același nume</td></tr>
+<tr><td><code>!TEX-bothPreview</code></td><td>afișează atât fișierul PDF, cât și fișierul HTML</td></tr>
+<tr><td><code>!TEX-noConsole</code></td><td>nu afișează consola</td></tr>
+</table>
+<p>De exemplu, un motor care rulează LuaLaTeX, Biber și încă de două ori LuaLaTeX ar putea arăta astfel în zsh, unde <code>${1:r}</code> este numele fără extensie:</p>
+<pre>#!/bin/zsh
+export PATH="/Library/TeX/texbin:$PATH"
+lualatex -file-line-error -synctex=1 "$1"
+biber "${1:r}"
+lualatex -file-line-error -synctex=1 "$1"
+lualatex -file-line-error -synctex=1 "$1"</pre>
+
+<h2>Dosarul Inactive</h2>
+<p>Subdosarul <code>Engines/Inactive</code> conține motoare pentru fluxuri de lucru speciale, adesea cu documentație și exemple, de exemplu pentru latexmk, ConTeXt, Sage, PreTeXt și Typst. Pentru a folosi unul, mutați-l din dosarul lui în dosarul Engines propriu-zis. Când TeXShop este actualizat, fiecare fișier din dosarul Inactive livrat cu TeXShop este înlocuit cu versiunea lui nouă, așa că modificările pe care le-ați făcut într-un astfel de fișier se pierd; fișierele pe care le-ați adăugat și cele care nu mai sunt livrate cu TeXShop rămân neschimbate. Fișierele aflate direct în dosarul Engines nu sunt atinse niciodată, astfel încât motoarele pe care le-ați mutat acolo și le-ați editat se păstrează.</p>
+<p>Pentru mai multe despre motoare, consultați capitolul „Engines and latexmk” din Ajutor › Manualul TeXShop (în engleză).</p>
+</main>
+</body>
+</html>

@@ -471,7 +471,7 @@
                                             </view>
                                             <font key="titleFont" metaFont="system" />
                                         </box>
-                                        <box fixedFrame="YES" title="Kodierung" translatesAutoresizingMaskIntoConstraints="NO" id="262">
+                                        <box fixedFrame="YES" title="Codierung" translatesAutoresizingMaskIntoConstraints="NO" id="262">
                                             <rect key="frame" x="330" y="380" width="301" height="58" />
                                             <autoresizingMask key="autoresizingMask" />
                                             <view key="contentView" id="9hA-MN-GIq">
@@ -2517,7 +2517,7 @@
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C5V-Sb-TZY">
                                                         <rect key="frame" x="28" y="10" width="391" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                                                        <buttonCell key="cell" type="check" title="Kodierung im Sichern-Dialog anzeigen" bezelStyle="regularSquare" imagePosition="left" inset="2" id="XsL-yK-yvH">
+                                                        <buttonCell key="cell" type="check" title="Codierung im Sichern-Dialog anzeigen" bezelStyle="regularSquare" imagePosition="left" inset="2" id="XsL-yK-yvH">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                                                             <font key="font" metaFont="system" />
                                                             <connections>

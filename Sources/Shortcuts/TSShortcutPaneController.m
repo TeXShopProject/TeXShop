@@ -383,7 +383,8 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
         TSShortcutBinding *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
         NSString *key = binding[@"key"];
         NSEventModifierFlags flags = binding.modifiers;
-        self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags];
+        // With the Globe key, as the list shows Enter Full Screen's 🌐︎F.
+        self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags | TSEventGlobeModifier(event)];
         NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
         self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
         // The trigger key with Shift (the previous candidate), Option or Control (the next or
@@ -468,8 +469,9 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
         TSShortcutBinding *ownerBinding = [self shownBindingForMatch:owner];
         NSString *ownerKey = ownerBinding.key;
         NSEventModifierFlags ownerFlags = ownerBinding.modifiers;
+        TSShortcutCommand *ownerCommand = owner.command;
         return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).", @""),
-            owner.path, [TSShortcutStore displayKey:ownerKey modifiers:ownerFlags]];
+            owner.path, ownerCommand != nil ? [self.store displayKeyForCommand:ownerCommand] : [TSShortcutStore displayKey:ownerKey modifiers:ownerFlags]];
     }
     return NSLocalizedString(@"Inactive for this key", @"");
 }
@@ -509,7 +511,8 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         NSString *reason = [self inactiveReasonForMatch:match];
         BOOL isCommand = [column.identifier isEqualToString:@"command"];
         if (!isCommand && match.command != nil && match.command == self.editingCommand) { return self.recordingCell; }
-        NSString *text = !isCommand ? [TSShortcutStore displayKey:key modifiers:flags]
+        TSShortcutCommand *matchCommand = match.command;
+        NSString *text = !isCommand ? (matchCommand != nil ? [self.store displayKeyForCommand:matchCommand] : [TSShortcutStore displayKey:key modifiers:flags])
             : reason == nil ? [match.path stringByAppendingFormat:@" — %@", NSLocalizedString(@"Assigned", @"")] : match.path;
         NSTextField *label = isCommand || match.command == nil || match.command.managedBySystem ? [NSTextField labelWithString:text] : [self shortcutLabel:text]; label.lineBreakMode = NSLineBreakByTruncatingMiddle; label.toolTip = text;
         if (match.command.managedBySystem) label.textColor = NSColor.disabledControlTextColor;
@@ -532,8 +535,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     TSShortcutCommand *command = self.visibleCommands[(NSUInteger)row];
     BOOL isCommand = [column.identifier isEqualToString:@"command"];
     if (!isCommand && command == self.editingCommand) { return self.recordingCell; }
-    TSShortcutBinding *shown = isCommand ? nil : [self.store shownBindingForCommand:command];
-    NSString *text = isCommand ? command.path : [TSShortcutStore displayKey:shown.key modifiers:shown.modifiers];
+    NSString *text = isCommand ? command.path : [self.store displayKeyForCommand:command];
     // A command whose shortcut macOS keeps is dimmed and not recorded, as alternates are in Xcode.
     NSTextField *label = isCommand || command.managedBySystem ? [NSTextField labelWithString:text] : [self shortcutLabel:text];
     if (command.managedBySystem) label.textColor = NSColor.disabledControlTextColor;
@@ -809,7 +811,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     if (text == nil && command != nil) {
         TSShortcutBinding *shownDefault = [self.store shownDefaultForCommand:command];
         text = shownDefault.key.length == 0 ? NSLocalizedString(@"Default shortcut: None", @"")
-            : [NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@", @""), [TSShortcutStore displayKey:shownDefault.key modifiers:shownDefault.modifiers]];
+            : [NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@", @""), [self.store displayDefaultKeyForCommand:command]];
     }
     // A blank line keeps the list and the buttons where they are.
     self.statusText.stringValue = text.length ? text : @" ";
@@ -829,6 +831,12 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 - (BOOL)captureShortcutEvent:(NSEvent *)event {
     NSString *key = TSShortcutCharacterForEvent(event);
     NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
+    NSString *globe = TSGlobeRecordingRefusal(event);
+    if (globe != nil) {
+        self.capturedKey = nil; self.capturedBindings = nil; self.capturedModifiers = 0;
+        [self showRecordingError:globe];
+        return NO;
+    }
     if (key.length == 0 || ![TSShortcutStore isAllowedKey:key modifiers:flags]) {
         self.capturedKey = nil; self.capturedBindings = nil; self.capturedModifiers = 0;
         [self showRecordingError:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"")];

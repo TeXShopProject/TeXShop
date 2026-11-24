@@ -3,6 +3,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{tgpagella}
+\usepackage{fontawesome5}
 \pdfinterwordspaceon
 \usepackage{enumitem}
 \setlist[itemize]{leftmargin=*,itemsep=.1em}
@@ -113,6 +114,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item \textbf{Menu shortcuts set in macOS:} shortcuts for TeXShop made in macOS System Settings may need to be set again in Settings \(\rightarrow\) Keyboard.
 \item \textbf{Macro shortcuts:} macro shortcuts are set in the list of the Macro Editor.
 \item \textbf{Marks:} the mark commands are in Edit \(\rightarrow\) Marks.
+\item \textbf{Enter Full Screen:} its shortcut is now Globe-F (\faGlobe{}F). Control-Command-F was used for both it and Next Mark, and is now only Next Mark.
 \item \textbf{Command completion:} the Command Completion submenu of the Source menu is now one item, Add to Command Completion List.
 \item \textbf{Open Style File:} it has moved from the Help menu to the File menu.
 \item \textbf{Demo movies:} the two movies in the Help menu are removed. Reported by \href{https://github.com/herbs}{Herb Schulz} (\href{https://github.com/TeXShopProject/TeXShop/issues/43}{\#43}).
@@ -125,6 +127,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item \textbf{\texttt{\textbackslash{}UTF} commands:} \texttt{\textbackslash{}UTF} commands of the otf package are turned back into characters when a file is opened.
 \item \textbf{Line endings:} opening a file with Windows or other line endings tells you that they were changed to LF.
 \item \textbf{Statistics:} Edit \guilsinglright{} Statistics… opens Text Statistics in the status bar.
+\item \textbf{Bundled macro names:} bundled macros get new names that tell their use: Program \(\rightarrow\) Set Typesetting Program…; Encoding \(\rightarrow\) Set Encoding…; Root \(\rightarrow\) Set Root File…; Numbering \(\rightarrow\) Page Number Correction; PreText Personal Mark \(\rightarrow\) PreTeXt Tag Comment; Root (Short Version) \(\rightarrow\) Root File Line; GetFontSet \(\rightarrow\) Insert Font Set…; SaveFontSet \(\rightarrow\) Save Font Set; TestFontSet \(\rightarrow\) Test Font Set Sizes; Tabularize \(\rightarrow\) Align Table Columns; Tabularize +space \(\rightarrow\) Align Table Columns with Spaces; Show files \(\rightarrow\) Show Source and PDF in Finder; Convert to MAC \(\rightarrow\) Save Copy with Classic Mac Line Endings; Convert to Unix \(\rightarrow\) Save Copy with Unix Line Endings; Convert to Windows \(\rightarrow\) Save Copy with Windows Line Endings; Bibliography \(\rightarrow\) Run LaTeX, BibTeX, Then LaTeX Twice; bibtexc \(\rightarrow\) Run BibTeX, Then pdfLaTeX Twice; bibtexcpl \(\rightarrow\) Run pdfLaTeX, BibTeX, Then pdfLaTeX Twice; mpostc \(\rightarrow\) Run MetaPost, Then pdfLaTeX; mpostcpl \(\rightarrow\) Run pdfLaTeX, MetaPost, Then pdfLaTeX; htlatexc \(\rightarrow\) Make HTML with TeX4ht; htlatexr \(\rightarrow\) Make HTML with TeX4ht, Remaking Images; altpdflatexc \(\rightarrow\) Run LaTeX, dvips and ps2pdf; pdflatexc \(\rightarrow\) Run pdfLaTeX with Shell Escape; pdfselectc \(\rightarrow\) Extract Pages from PDF…; openpdf \(\rightarrow\) Open PDF; latex-makeindex-mpost \(\rightarrow\) Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX; regular \(\rightarrow\) figure. Macros that you did not edit get the new names when TeXShop is updated, and keep their shortcuts. A shortcut set for an old name in System Settings \(\rightarrow\) Keyboard \(\rightarrow\) Keyboard Shortcuts \(\rightarrow\) App Shortcuts must be set again for the new name.
 \end{itemize}
 
 \subsection{Fixes: typesetting and the console}
@@ -191,7 +194,11 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Help \(\rightarrow\) TeX Live Documentation opens in every language, in English where there is no version in that language, and links to the current documents on the web instead of files that only MacTeX has.
 \item Users of earlier versions also get the html engine that Help \(\rightarrow\) HTML Commands needs, and that page no longer points to the removed demo movies.
 \item The bundled ConTeXt macro that opened an old web page opens the TeX Live home page instead.
-\item Bundled macros that run shell commands, such as the macros that typeset with pdflatex or change line endings, work with names of files and folders that have a space. The macros already in \texttt{\textasciitilde{}/Library/TeXShop/Macros} are not changed.
+\item Bundled macros that run shell commands, such as the macros that typeset with pdflatex or change line endings, work with names of files and folders that have a space. Macros that you did not edit in \texttt{\textasciitilde{}/Library/TeXShop/Macros} get this change as well.
+\item Paste Spreadsheet Cells works with any characters in the cells, such as Japanese.
+\item Set Root File… works with any characters in the path of the root file.
+\item Run LaTeX, dvips and ps2pdf works with TeX Live and Ghostscript, and shows a message when a step fails.
+\item TeXShop no longer comes with the inactive engines and other files that need programs TeX Live and macOS do not provide, such as jing.jar; files already in \texttt{\textasciitilde{}/Library/TeXShop} stay.
 \item Add help for LaTeX-aware spell checking.
 \item The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.
 \item Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.

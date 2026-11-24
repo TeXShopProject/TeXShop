@@ -24,8 +24,8 @@
 <li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
 <li><a href="basic_autocompletion.htm">Tastenbelegungen</a></li>
 <li><a href="basic_commandcompletion.htm">Befehlsvervollständigung</a></li>
-<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
-<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-Palette</a></li>
 <li><a href="basic_macros.htm">Makros</a></li>
 <li><a href="basic_toolbar.htm">Symbolleiste und AppleScript</a></li>
 <li><a href="basic_graphics.htm">Grafiken einbinden</a></li>
@@ -51,13 +51,13 @@
 
 <h2>Im Quelltext navigieren</h2>
 
-<p>Das Menü „Markierungen“ in der Symbolleiste listet die Kapitel, Abschnitte und anderen Gliederungsteile des Dokuments auf; wählen Sie einen aus, um dorthin zu gehen. Eine Zeile, die mit <code>%:</code> beginnt, fügt den Rest der Zeile als eigene Markierung zum Menü hinzu. Die Einstellung »„Markierungen“ im Menü anzeigen« unter Einstellungen › Editor › Darstellung zeigt dasselbe Menü in der Menüleiste. Das Objekt „Labels“ der Symbolleiste listet die Labels des Dokuments auf. Bearbeiten › Gehe zu Zeile... (<kbd>⌘L</kbd>) springt zu einer Zeile mit ihrer Nummer.</p>
+<p>Das Menü „Markierungen“ in der Symbolleiste listet die Kapitel, Abschnitte und anderen Gliederungsteile des Dokuments auf; wählen Sie einen aus, um dorthin zu gehen. Eine Zeile, die mit <code>%:</code> beginnt, fügt den Rest der Zeile als eigene Markierung zum Menü hinzu. Die Einstellung »Menü „Markierungen“ in der Menüleiste« unter Einstellungen › Editor › Darstellung zeigt dasselbe Menü in der Menüleiste. Das Objekt „Labels“ der Symbolleiste listet die Labels des Dokuments auf. Bearbeiten › Gehe zu Zeile … (<kbd>⌘L</kbd>) springt zu einer Zeile mit ihrer Nummer.</p>
 
 <p>Fenster › Geteiltes Fenster (<kbd>⌃2</kbd>) oder das Objekt „Geteilter Quelltext“ der Symbolleiste teilt das Quelltextfenster in zwei Teile, die denselben Text zeigen; so können Sie einen Teil des Dokuments lesen, während Sie an einem anderen schreiben. Halten Sie die Wahltaste gedrückt, um es nebeneinander zu teilen. Was Sie in einem Teil tippen, erscheint auch im anderen.</p>
 
 <h2>Weniger tippen</h2>
 
-<p>Quelltext › Aktuelle Umgebung schließen (<kbd>⌃⌘C</kbd>) fügt die <code>\end</code>-Zeile der noch offenen Umgebung ein, zum Beispiel <code>\end{itemize}</code> nach einer Liste. Die Befehlsvervollständigung ergänzt Befehle und Umgebungen, die Sie zu tippen begonnen haben; siehe <a href="basic_commandcompletion.htm">Befehlsvervollständigung</a>. Tastenbelegungen ersetzen ein getipptes Zeichen durch einen Text; siehe <a href="basic_autocompletion.htm">Tastenbelegungen</a>. Die LaTeX Palette, die Matrix Palette und das Menü „Makros“ fügen längere Textstücke ein.</p>
+<p>Quelltext › Aktuelle Umgebung schließen (<kbd>⌃⌘C</kbd>) fügt die <code>\end</code>-Zeile der noch offenen Umgebung ein, zum Beispiel <code>\end{itemize}</code> nach einer Liste. Die Befehlsvervollständigung ergänzt Befehle und Umgebungen, die Sie zu tippen begonnen haben; siehe <a href="basic_commandcompletion.htm">Befehlsvervollständigung</a>. Tastenbelegungen ersetzen ein getipptes Zeichen durch einen Text; siehe <a href="basic_autocompletion.htm">Tastenbelegungen</a>. Die LaTeX-Palette, die Matrix-Palette und das Menü „Makros“ fügen längere Textstücke ein.</p>
 
 <h2>Dateien auf dem Quelltext ablegen</h2>
 
@@ -75,7 +75,7 @@
 
 <p>Dabei ist <var>Pfad</var> der Pfad der Datei vom Ordner der Quelltextdatei aus und <var>Name</var> der Dateiname ohne Endung. Ein abgelegtes Alias wird durch die Datei ersetzt, für die es steht, da TeX sie selbst nicht finden könnte. Eine Datei, deren Pfad ein Leerzeichen enthält, wird nicht eingefügt; TeXShop zeigt stattdessen eine Warnung.</p>
 
-<p>Um für eine Dateiart etwas anderes einzufügen, öffnen Sie den Makro-Editor (Makros › Makro-Editor öffnen...) und fügen ein Untermenü namens <code>Drag &amp; Drop</code> hinzu. Fügen Sie darin einen Eintrag hinzu, der nach der Endung benannt ist, etwa <code>.pdf</code>, und dessen Inhalt der einzufügende Text ist, zum Beispiel <code>\includegraphics[#INS#]{%r}</code>; ein Eintrag namens <code>.*</code> gilt für jede andere Endung, also eine, die keinen eigenen Eintrag hat und nicht in der Tabelle oben steht. Im Inhalt können Sie diese Abkürzungen verwenden:</p>
+<p>Um für eine Dateiart etwas anderes einzufügen, öffnen Sie den Makro-Editor (Makros › Makro-Editor öffnen …) und fügen ein Untermenü namens <code>Drag &amp; Drop</code> hinzu. Fügen Sie darin einen Eintrag hinzu, der nach der Endung benannt ist, etwa <code>.pdf</code>, und dessen Inhalt der einzufügende Text ist, zum Beispiel <code>\includegraphics[#INS#]{%r}</code>; ein Eintrag namens <code>.*</code> gilt für jede andere Endung, also eine, die keinen eigenen Eintrag hat und nicht in der Tabelle oben steht. Im Inhalt können Sie diese Abkürzungen verwenden:</p>
 
 <dl>
 <dt><code>%F</code></dt><dd>der vollständige Pfad der abgelegten Datei</dd>
@@ -89,7 +89,7 @@
 
 <p>Die Statusleiste unter dem Quelltext zeigt die Zeilen, Zeichen und Wörter des Dokuments, in Klammern die Anzahl in der Auswahl, sowie Position, Zeile und Spalte der Einfügemarke. Zeichen werden so gezählt, wie man sie sieht, ein Buchstabe mit Akzent oder ein Emoji zählt also als eines, und TeX-Befehle werden so gezählt, wie sie geschrieben sind; ein Emoji zählt auch als Wort. Rechts steht die Größe der gesicherten Datei. Quelltext › Statusleiste einblenden blendet die Statusleiste in allen Fenstern ein oder aus.</p>
 
-<p>„Textstatistik …“ in der Statusleiste oder Bearbeiten › Statistik... zählt den Text ohne die TeX-Befehle. Das TeX-Live-Programm detex entfernt sie aus dem Dokument oder aus der Auswahl und nimmt die mit <code>\input</code> und <code>\include</code> gelesenen Dateien hinzu; TeXShop zählt den Rest. Das Dokument muss nicht gesichert sein. Gezählt wird, wenn sich das Popover öffnet und wenn Sie auf seine Taste zum Aktualisieren klicken.</p>
+<p>„Textstatistik …“ in der Statusleiste oder Bearbeiten › Statistik … zählt den Text ohne die TeX-Befehle. Das TeX-Live-Programm detex entfernt sie aus dem Dokument oder aus der Auswahl und nimmt die mit <code>\input</code> und <code>\include</code> gelesenen Dateien hinzu; TeXShop zählt den Rest. Das Dokument muss nicht gesichert sein. Gezählt wird, wenn sich das Popover öffnet und wenn Sie auf seine Taste zum Aktualisieren klicken.</p>
 
 <p>Die Taste für die Optionen neben der Taste zum Aktualisieren zeigt, wie die Zeichen gezählt werden. „Zeilenumbrüche ignorieren“, „Leerzeichen ignorieren“ und „Aufeinander folgende Leerzeichen als eines behandeln“ lassen Zeilenumbrüche und Leerzeichen weg oder zählen eine Folge von zwei oder mehr davon als ein Leerzeichen. „Normalisierung“ wendet vorher NFC, NFD, NFKC, NFKD, NFKC Case-Fold, Modified NFC oder Modified NFD an. „Einheit“ zählt Graphemcluster (Zeichen, wie man sie sieht), Unicode-Skalare, UTF-16-Codeeinheiten oder Bytes; für Bytes wählt „Kodierung“ die Kodierung. Die Zahlen ändern sich sofort. Die Optionen gelten für alle Dokumente; die Kodierung ist bei jedem Öffnen des Popovers die des Dokuments. Sind die Optionen ausgeblendet und wird anders als in der Statusleiste gezählt, erscheint die Taste für die Optionen farbig.</p>
 
@@ -101,7 +101,7 @@
 
 <h2>Zeichen umwandeln</h2>
 
-<p>Die Untermenüs „Zeichentyp umwandeln“ und „Unicode-Normalisierung“ des Menüs „Bearbeiten“, die auch im Kontextmenü des Quelltexts stehen, schreiben die Auswahl um; ist nichts ausgewählt, fragt TeXShop, ob das ganze Dokument umgeschrieben werden soll. „Zeichentyp umwandeln“ ist vor allem für japanische Dokumente gedacht. Es wandelt zwischen Hiragana und Katakana um, zwischen Ziffern und Buchstaben voller und halber Breite, zwischen Zeichen wie eingekreisten Zahlen und den Befehlen des Pakets ajmacros sowie zwischen Zeichen außerhalb von JIS X 0208 und den Befehlen <code>\UTF</code> und <code>\CID</code> des Pakets otf. Außerdem macht es aus typografischen Anführungszeichen TeX-Anführungszeichen. „Unicode-Normalisierung“ wandelt die Auswahl in NFC, NFD, NFKC oder NFKD um oder in Modified NFC oder Modified NFD, die CJK-Kompatibilitätsideogramme unverändert lassen. Beides lässt sich widerrufen.</p>
+<p>Die Untermenüs „Zeichentyp umwandeln“ und „Unicode-Normalisierung“ des Menüs „Bearbeiten“, die auch im Kontextmenü des Quelltexts stehen, schreiben die Auswahl um; ist nichts ausgewählt, fragt TeXShop, ob das ganze Dokument umgeschrieben werden soll. „Zeichentyp umwandeln“ ist vor allem für japanische Dokumente gedacht. Es wandelt zwischen Hiragana und Katakana um, zwischen Ziffern und Buchstaben voller und halber Breite, zwischen Zeichen wie eingekreisten Zahlen und den Befehlen des Pakets ajmacros sowie zwischen Zeichen außerhalb von JIS X 0208 und den Befehlen <code>\UTF</code> und <code>\CID</code> des Pakets otf. Außerdem macht es aus typografischen Anführungszeichen TeX-Anführungszeichen. „Unicode-Normalisierung“ wandelt die Auswahl in NFC, NFD, NFKC oder NFKD um oder in Modifizierte NFC oder Modifizierte NFD, die CJK-Kompatibilitätsideogramme unverändert lassen. Beides lässt sich widerrufen.</p>
 
 <h2>Sicherungsdateien</h2>
 

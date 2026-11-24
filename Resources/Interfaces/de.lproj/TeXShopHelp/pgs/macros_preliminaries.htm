@@ -26,20 +26,20 @@
 </nav>
 <main id="content">
 <h1>Vorbemerkungen</h1>
-<p>Die Makros von TeXShop und der Makro-Editor stammen von Mitsuhiro Shishikura; die Standardmakros für LaTeX haben Mitsuhiro Shishikura und Hirokazu Ogawa erstellt.</p>
-<p>Makros stehen im Menü „Makros“ und im Einblendmenü „Makros“ der Symbolleiste des Quelltextfensters. Es gibt zwei Arten. Textmakros fügen Text in den Quelltext ein, wie die Tasten der LaTeX Palette. AppleScript-Makros führen ein AppleScript aus; siehe <a href="macros_applescript.htm">AppleScript-Makros</a>.</p>
+<p>Die Makros von TeXShop und der Makro-Editor wurden ursprünglich von Mitsuhiro Shishikura geschrieben; die Standardmakros für LaTeX haben Mitsuhiro Shishikura und Hirokazu Ogawa erstellt.</p>
+<p>Makros stehen im Menü „Makros“ und im Einblendmenü „Makros“ der Symbolleiste des Quelltextfensters. Es gibt zwei Arten. Textmakros fügen Text in den Quelltext ein, wie die Tasten der LaTeX-Palette. AppleScript-Makros führen ein AppleScript aus; siehe <a href="macros_applescript.htm">AppleScript-Makros</a>.</p>
 
 <h2 id="files">Wo die Makros gespeichert sind</h2>
 <p>Die Makros sind gespeichert in</p>
 <pre>~/Library/TeXShop/Macros/Macros_Latex.plist</pre>
 <p>und das Menü „Makros“ zeigt sie für jede Satz-Engine. Für die eingebauten Engines plain TeX, BibTeX, MakeIndex und MetaPost kann ein eigener Satz gepflegt werden: Ist eine davon für das Dokument gewählt, sichert der Makro-Editor seine Makros in einer eigenen Datei, etwa Macros_Tex.plist, und lässt Macros_Latex.plist unverändert.</p>
-<p>Die Makrodateien sind gewöhnliche Textdateien, werden aber am besten mit dem Makro-Editor geändert: Wählen Sie Makros › Makro-Editor öffnen.... <a href="macros_define.htm">Neue Makros definieren</a> erklärt, wie Sie Makros hinzufügen, löschen und benennen und ihnen Kurzbefehle geben.</p>
+<p>Die Makrodateien sind gewöhnliche Textdateien, werden aber am besten mit dem Makro-Editor geändert: Wählen Sie Makros › Makro-Editor öffnen …. <a href="macros_define.htm">Neue Makros definieren</a> erklärt, wie Sie Makros hinzufügen, löschen und benennen und ihnen Kurzbefehle geben.</p>
 
 <h2 id="missing">Wenn der Ordner „Macros“ fehlt</h2>
 <p>Fehlt der Ordner „Macros“ beim Start von TeXShop, legt TeXShop ihn mit den Standardmakros neu an. Ist Macros_Latex.plist beschädigt, ersetzt TeXShop die Datei beim Start ohne Meldung durch eine eigene Kopie und bewahrt die beschädigte Datei in ~/Library/TeXShop/Backups auf. Um mit den Standardmakros neu anzufangen, beenden Sie TeXShop, bewegen den Ordner „Macros“ auf den Schreibtisch und starten TeXShop erneut; der bewegte Ordner enthält Ihre alten Makros.</p>
 
 <h2 id="sharing">Makros weitergeben</h2>
-<p>Solange der Makro-Editor geöffnet ist, hat das Menü „Makros“ zwei weitere Befehle. „Auswahl in Datei sichern...“ sichert die ausgewählten Makros in einer eigenen Datei, die Sie an andere weitergeben können. „Makros aus Datei hinzufügen...“ fügt die Makros einer solchen Datei Ihrer Liste hinzu; ordnen Sie sie dann im Makro-Editor nach Belieben an.</p>
+<p>Solange der Makro-Editor geöffnet ist, hat das Menü „Makros“ zwei weitere Befehle. „Auswahl in Datei sichern …“ sichert die ausgewählten Makros in einer eigenen Datei, die Sie an andere weitergeben können. „Makros aus Datei hinzufügen …“ fügt die Makros einer solchen Datei Ihrer Liste hinzu; ordnen Sie sie dann im Makro-Editor nach Belieben an.</p>
 </main>
 </body>
 </html>

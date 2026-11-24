@@ -1,0 +1,9 @@
+\begin{tabular}{ll}
+
+\toprule
+x & y \\
+\midrule
+z & w \\
+
+\bottomrule
+\end{tabular}

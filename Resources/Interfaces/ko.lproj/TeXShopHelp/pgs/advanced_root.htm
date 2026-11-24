@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>프로젝트 루트 파일 설정</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="루트 파일; % !TEX root; 프로젝트; 장 파일; include; input; 편집/보기 윈도우 맞바꾸기; 프로젝트 루트 파일">
+<meta name="description" content="루트 파일; % !TEX root; 프로젝트; 장 파일; include; input; 소스 ⇔ 미리보기; 프로젝트 루트 파일">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
 <li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
-<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_externaleditor.htm">외부 편집기 사용하기</a></li>
 <li><a href="advanced_experiments.htm">실험</a></li>
 <li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
 <li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
@@ -55,19 +55,19 @@
 <li>장 파일의 폴더를 기준으로 한 상대 경로로 씁니다: <code>../Main.tex</code> 또는 <code>../../Main.tex</code></li>
 <li>전체 경로로 씁니다: <code>/Users/me/Book/Main.tex</code>. 이 경우 프로젝트를 옮기면 경로를 바꿔야 합니다.</li>
 </ul>
-<p>매크로 메뉴의 Root 매크로가 이 줄을 넣어 줍니다. 이 매크로는 루트 파일을 묻고, 상대 경로와 절대 경로 중 하나로 된 줄을 넣으며, 이미 있는 root 줄은 바꿉니다.</p>
+<p>매크로 메뉴의 Set Root File… 매크로가 이 줄을 넣어 줍니다. 이 매크로는 루트 파일을 묻고, 상대 경로와 절대 경로 중 하나로 된 줄을 넣으며, 이미 있는 root 줄은 바꿉니다.</p>
 
 <h2>root 줄의 효과</h2>
 <ul>
 <li>장 파일에서 조판하면 루트 파일이 조판되고, 루트 파일의 미리보기 윈도우에 문서 전체가 표시됩니다. <code>% !TEX program</code> 줄처럼 조판에 관한 매직 코멘트는 루트 파일에 넣습니다.</li>
 <li>편집 › 오류 지점으로 이동은 오류가 있는 파일이 열려 있지 않으면 그 파일을 열고 해당 줄로 이동합니다.</li>
 <li>미리보기 윈도우에서 동기화하면 클릭한 곳이 들어 있는 장 파일이 열립니다. <a href="advanced_pdfsync.htm">소스와 미리보기 동기화</a>를 참조하십시오.</li>
-<li>파일 › 부수파일 삭제는 루트 파일의 부수 파일을 삭제합니다. <a href="advanced_removeaux.htm">부수 파일 삭제</a>를 참조하십시오.</li>
-<li>장 파일에서 윈도우 › 편집/보기 윈도우 맞바꾸기(<kbd>⌘1</kbd>)를 선택하면 루트 파일의 미리보기 윈도우가 앞으로 옵니다. 미리보기 윈도우에서 다시 선택하면 원래 있던 소스 윈도우로 돌아가며, 소스 윈도우에서 오지 않았다면 루트 파일로 갑니다.</li>
+<li>파일 › 부수 파일 삭제는 루트 파일의 부수 파일을 삭제합니다. <a href="advanced_removeaux.htm">부수 파일 삭제</a>를 참조하십시오.</li>
+<li>장 파일에서 윈도우 › 소스 ⇔ 미리보기(<kbd>⌘1</kbd>)를 선택하면 루트 파일의 미리보기 윈도우가 앞으로 옵니다. 미리보기 윈도우에서 다시 선택하면 원래 있던 소스 윈도우로 돌아가며, 소스 윈도우에서 오지 않았다면 루트 파일로 갑니다.</li>
 </ul>
 
 <h2>장 파일 열기</h2>
-<p>root 줄이 있는 장 파일을 열면 TeXShop은 루트 파일과 그 미리보기 윈도우도 함께 엽니다. 이 동작은 설정 › 일반 › 프로젝트 루트 파일의 두 항목으로 조절합니다. “문서를 열 때 루트 파일 열기”는 이 동작을 켜거나 끄며, “루트 파일 창을 최소화”는 루트 파일의 소스 윈도우를 Dock으로 보냅니다. 장을 작업하는 동안에는 루트 파일을 편집할 일이 거의 없기 때문입니다.</p>
+<p>root 줄이 있는 장 파일을 열면 TeXShop은 루트 파일과 그 미리보기 윈도우도 함께 엽니다. 이 동작은 설정 › 일반 › 프로젝트 루트 파일의 두 항목으로 조절합니다. “문서를 열 때 루트 파일 열기”는 이 동작을 켜거나 끄며, “루트 파일 윈도우 최소화”는 루트 파일의 소스 윈도우를 Dock으로 보냅니다. 장을 작업하는 동안에는 루트 파일을 편집할 일이 거의 없기 때문입니다.</p>
 
 <h2>프로젝트 전체에서 찾기 및 대치</h2>
 <p>프로젝트의 모든 파일을 한 번에 검색하려면 장 파일 중 하나에서 편집 › 찾기 › 같은 TEX root를 가진 TeX 소스에서 찾기…를, 루트 파일에서는 이 파일을 TEX root로 하는 TeX 소스에서 찾기…를 선택합니다. 루트 파일, 그리고 루트 파일의 폴더와 그 하위 폴더에 있는 <code>.tex</code> 파일 중 처음 20행 안의 root 줄로 그 루트 파일을 지정한 파일을 검색합니다. <a href="basic_texrootsearch.htm">TeX 소스에서 찾기</a>와 <a href="basic_find.htm">찾기 및 대치</a>를 참조하십시오.</p>

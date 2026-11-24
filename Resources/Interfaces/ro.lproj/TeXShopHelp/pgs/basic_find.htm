@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Căutare și înlocuire</title>
+<meta name="description" content="căutare și înlocuire; panou de căutare avansată; interfața de căutare; expresii regulate; Găsiți tot; Evidențiați tot; Înlocuiți tot; Înlocuire multiplă; Bara de căutare Apple; Panoul de căutare OgreKit">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm" class="current">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Căutare și înlocuire</h1>
+
+<p>Comenzile de căutare se află în submeniul „Găsiți” al meniului „Editare”: „Găsiți…” (<kbd>⌘F</kbd>), „Găsiți și înlocuiți…” (<kbd>⌥⌘F</kbd>), „Găsiți următorul” (<kbd>⌘G</kbd>), „Găsiți anteriorul” (<kbd>⇧⌘G</kbd>), „Găsiți selecția” (<kbd>⌘E</kbd>) și „Salt la selecție” (<kbd>⌘J</kbd>). Pentru a căuta text în documentul compilat, consultați <a href="basic_preview.htm#search">Fereastra de previzualizare</a>.</p>
+
+<h2>Alegerea interfeței de căutare</h2>
+
+<p>Configurări › Editor › Interfața de căutare alege ce deschide comanda „Găsiți”:</p>
+<dl>
+<dt>Panou de căutare avansată (recomandat)</dt>
+<dd>Un panou cu expresii regulate, o listă a tuturor potrivirilor și „Înlocuire multiplă”, descris în această pagină. Cu el pornește fiecare utilizator.</dd>
+<dt>Bara de căutare Apple</dt>
+<dd>Bara de căutare a macOS, în partea de sus a sursei, ca în Safari și Xcode.</dd>
+<dt>Panoul de căutare Apple</dt>
+<dd>Panoul de căutare de bază al macOS.</dd>
+<dt>Panoul de căutare OgreKit (vechi)</dt>
+<dd>Panoul de căutare OgreKit, creat de Isao Sonobe, cu propriile expresii regulate. Trecerea la el sau renunțarea la el intră în vigoare după repornirea TeXShop.</dd>
+</dl>
+
+<h2>Panoul de căutare avansată</h2>
+
+<p>„Găsiți” deschide panoul cu câmpul de căutare selectat, iar „Găsiți și înlocuiți”, cu câmpul de înlocuire selectat. Într-un câmp, Return găsește următoarea potrivire, iar Tab trece la celălalt câmp; Opțiune-Return și Opțiune-Tab inserează o întrerupere de linie și un tabulator. Pictograma din stânga unui câmp enumeră șirurile recente ale acestuia, iar capătul din dreapta al câmpului de căutare arată poziția potrivirii curente, de exemplu „3 din 12”.</p>
+
+<p>Sub câmpuri se află „Expresie regulată”, „Ignorați majuscule/minuscule” și „În selecție”. Butonul cu trei puncte afișează mai multe opțiuni: căutarea în tot textul, numai cuvinte complete, ignorarea semnelor diacritice sau a diferenței dintre caracterele de lățime completă și cele de jumătate de lățime, opțiuni pentru expresiile regulate, sintaxa înlocuirii și „Tratați ¥ ca \”. Opțiunile se păstrează de la o sesiune la alta.</p>
+
+<p>Butoanele din partea de jos sunt „Găsiți tot”, „Înlocuiți tot”, „Înlocuire multiplă…”, „Înlocuiți și găsiți” și săgețile pentru potrivirea anterioară și cea următoare.</p>
+<ul>
+<li>„Găsiți tot” enumeră fiecare potrivire împreună cu numărul liniei. Faceți clic pe un rând pentru a selecta potrivirea în sursă; faceți dublu clic pe el pentru a aduce și fereastra sursă în prim-plan. Cu „Actualizare automată” activat, lista urmează modificările dumneavoastră. Meniul butonului „Găsiți tot” conține și „Evidențiați tot”, care marchează fiecare potrivire din text, „Selectați tot”, care le selectează pe toate, și „Eliminați evidențierile”.</li>
+<li>„Înlocuiți tot” înlocuiește fiecare potrivire sau fiecare potrivire din selecție când „În selecție” este activat. O singură comandă „Infirmați” retrage întreaga înlocuire.</li>
+<li>„Înlocuiți și găsiți” înlocuiește potrivirea selectată și o găsește pe următoarea; meniul său conține și „Înlocuire”, care doar înlocuiește.</li>
+</ul>
+
+<p>Cu panoul de căutare avansată, submeniul „Găsiți” conține și comenzile panoului, care funcționează cât timp panoul este închis: „Găsiți tot” (<kbd>⇧⌘F</kbd>), „Selectați toate potrivirile”, „Folosiți selecția pentru înlocuire” (<kbd>⇧⌘E</kbd>), „Înlocuiți”, „Înlocuiți și găsiți” (<kbd>⌥⌘G</kbd>), „Înlocuiți tot”, „Evidențiați tot” (<kbd>⇧⌘H</kbd>) și „Eliminați evidențierile” (<kbd>⌃⇧⌘H</kbd>). Scurtăturile lor pot fi schimbate în Configurări › Tastatură.</p>
+
+<p>„Înlocuiți tot”, „Găsiți tot” și „Înlocuire multiplă” lucrează în fundal, iar documentul nu poate fi editat până când acestea nu se termină. Când una durează mult, o foaie pe fereastra documentului arată progresul; „Anulați” din foaie sau tasta Escape o oprește și lasă textul așa cum era.</p>
+
+<p>Panoul găsește text și în consolă, în jurnal și în ferestrele Experiment. Înlocuirea nu este posibilă în consolă, în jurnal și în consola experimentului, care afișează ieșirea TeX.</p>
+
+<p>Panoul este una dintre ferestrele documentelor, așa că un clic în sursă îl trimite în spatele acelei ferestre, iar „Găsiți” îl readuce. Pentru a-l păstra în fața ferestrelor documentelor, activați „Păstrați panoul de căutare avansată deasupra” în Configurări › Editor › Căutare.</p>
+
+<h2>Expresii regulate</h2>
+
+<p>Cu „Expresie regulată” activat, șirul căutat este un model în sintaxa ICU, expresiile regulate ale macOS. Majoritatea modelelor se scriu ca în alte aplicații. O acoladă care nu face parte dintr-o repetiție trebuie scrisă <code>\{</code> sau <code>\}</code>, așa că căutați <code>\\section\{</code>, nu <code>\\section{</code>.</p>
+
+<p>În înlocuire, <code>$0</code> este întreaga potrivire, <code>$1</code>, <code>$2</code>, … sunt grupurile, iar <code>\$</code> este semnul dolarului, așa că o formulă <code>$x$</code> se scrie <code>\$x\$</code>. O bară oblică inversă se scrie de două ori: <code>\\section</code> dă <code>\section</code>. Sintaxa OgreKit, cu <code>\1</code>, <code>\2</code>, … pentru grupuri și <code>$</code> ca un caracter obișnuit, poate fi aleasă printre opțiuni; utilizatorii care vin de la panoul de căutare OgreKit pornesc cu ea.</p>
+
+<p>Micul buton ? de lângă „Expresie regulată” deschide o referință a sintaxei modelelor și a înlocuirilor, precum și a diferențelor față de OgreKit. Câmpurile afișează părțile unui model în culorile temei, o greșeală cu roșu și ce ar citi OgreKit altfel cu portocaliu; linia de sub opțiuni le explică.</p>
+
+<p>Câteva exemple:</p>
+<ul>
+<li>Pentru a transforma <code>\section{Intro}</code> în <code>\section*{Intro}</code>, căutați <code>\\section\{([^}]*)\}</code> și înlocuiți cu <code>\\section*{$1}</code>.</li>
+<li>Pentru a găsi fiecare caracter care nu este ASCII, căutați <code>[^[:ascii:]]</code>, apoi faceți clic pe „Găsiți tot” sau alegeți „Evidențiați tot”.</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>Înlocuire multiplă</h2>
+
+<p>„Editați înlocuirea multiplă…” din submeniul „Găsiți” sau butonul „Înlocuire multiplă…” al panoului deschide fereastra „Înlocuire multiplă”. Aceasta păstrează seturi de perechi de căutare și înlocuire, numite reguli, și aplică regulile unui set în ordine, de sus în jos. Seturile sunt enumerate în stânga, iar regulile setului selectat în dreapta. Fiecare regulă are propriile șiruri de căutare și de înlocuire, propria alegere privind expresia regulată (RE) și ignorarea majusculelor/minusculelor (IC) și o descriere; caseta de bifare din stânga ei o dezactivează. Butoanele + și − adaugă și elimină reguli, iar regulile se reordonează prin tragere. Butonul cu trei puncte de sub reguli conține opțiunile întregului set. O regulă care nu poate fi folosită, de exemplu cu un model nevalid, afișează un semn de avertizare și este omisă.</p>
+
+<p>„Înlocuiți tot” din fereastră aplică regulile întregului text sau selecției când „În selecție” este activat; o singură comandă „Infirmați” o retrage. „Evidențiați tot” marchează ce găsesc regulile. Fiecare modificare din fereastră este salvată imediat. Submeniul „Înlocuire multiplă” al submeniului „Găsiți” enumeră seturile și îl aplică pe cel ales întregului text al sursei din prim-plan.</p>
+
+<p>Fiecare set este un fișier în ~/Library/TeXShop/MultipleReplace, în formatul JSON al definițiilor de înlocuire din CotEditor. Butoanele + și − de sub lista seturilor creează un set nou și mută setul selectat în Coș; meniul cu trei puncte de lângă ele duplică, importă și exportă seturi. Importul citește și definiții de înlocuire din CotEditor și text separat prin tabulatori, cu o regulă pe linie. Două seturi exemplu convertesc între caracterele Unicode și comenzile pachetului ajmacros, ca Conversie tip de caractere; ele sunt scrise doar când dosarul MultipleReplace nu există încă.</p>
+
+<h2>Căutarea în toate fișierele unui proiect</h2>
+
+<p>Pentru a căuta și înlocui deodată în fișierul principal și în toate fișierele de capitol ale unui document, consultați <a href="basic_texrootsearch.htm">Căutare în sursele TeX</a>.</p>
+</main>
+</body>
+</html>

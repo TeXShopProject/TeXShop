@@ -527,7 +527,148 @@ int main(int argc,char **argv){@autoreleasepool{
   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)duplicateRow] byExtendingSelection:NO];
   REQUIRE(pane.selectionButtons[0].enabled);
   [first.menu removeItem:saveAsItem];[first.menu removeItem:duplicateItem];[coordinator refreshMenuAndMacros];[pane reloadCommands];
+  // Enter Full Screen has Globe-F, which macOS gives only its own items: shown as AppKit 27 shows it (🌐︎F), dimmed,
+  // not recorded, no buttons, found by its name; Control-Command-F is Next Mark's, and a key saved for it before is left out.
+  const NSUInteger FSControl=NSEventModifierFlagControl,FSFunction=NSEventModifierFlagFunction;
+  NSMenuItem *fullScreen=[[NSMenuItem alloc]initWithTitle:@"Enter Full Screen" action:@selector(toggleFullScreen:) keyEquivalent:@""];fullScreen.identifier=@"TSShortcut.toggleFullScreen:.0";
+  NSMenuItem *nextMark=Item(@"NextMark",@"f",C|FSControl);
+  [first.menu addItem:fullScreen];[first.menu addItem:nextMark];TSGiveFullScreenGlobeKey(first.menu);
+  REQUIRE([fullScreen.keyEquivalent isEqual:@"f"] && fullScreen.keyEquivalentModifierMask==FSFunction);
+  [coordinator refreshMenuAndMacros];[pane reloadCommands];
+  TSShortcutCommand *fullScreenCommand=nil,*nextMarkCommand=nil;
+  for(TSShortcutCommand *command in store.commands){if(command.item==fullScreen)fullScreenCommand=command;if(command.item==nextMark)nextMarkCommand=command;}
+  NSInteger fullScreenRow=[pane rowForCommand:fullScreenCommand];
+  REQUIRE(fullScreenCommand.managedBySystem && !nextMarkCommand.managedBySystem && fullScreenRow>=0);
+  NSString *globeF=@"\U0001F310︎F";
+  for(NSInteger column=0;column<2;column++){
+   NSTextField *cell=(NSTextField *)[pane.table viewAtColumn:column row:fullScreenRow makeIfNecessary:YES];
+   REQUIRE(![cell isKindOfClass:TSShortcutKeyLabel.class] && [cell.textColor isEqual:NSColor.disabledControlTextColor]);
+   if(column==shortcutColumn)REQUIRE([cell.stringValue isEqual:globeF]);
+  }
+  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)fullScreenRow] byExtendingSelection:NO];
+  for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
+  REQUIRE([pane.statusText.stringValue containsString:globeF]);
+  [pane beginRecordingAtRow:fullScreenRow];REQUIRE(pane.editingCommand==nil);
+  [pane removeShortcut:nil];[pane restoreShortcut:nil];
+  REQUIRE([store setKey:@"j" modifiers:C|FSControl forCommand:fullScreenCommand]!=nil);
+  [coordinator refreshMenuAndMacros];
+  REQUIRE([fullScreen.keyEquivalent isEqual:@"f"] && fullScreen.keyEquivalentModifierMask==FSFunction);
+  // Control-Command-F recorded for another command meets Next Mark, as any key in use.
+  NSString *taken=[store setKey:@"f" modifiers:C|FSControl forCommand:firstCommand];
+  REQUIRE(taken!=nil && [taken containsString:nextMarkCommand.path] && ![taken containsString:fullScreenCommand.path]);
+  // Searching by name finds the row.
+  NSString *query=pane.search.stringValue;pane.search.stringValue=@"Full Screen";[pane reloadCommands];
+  REQUIRE([pane.visibleCommands containsObject:fullScreenCommand] && [store.settingsSearchCommandNames containsObject:fullScreenCommand.path]);
+  pane.search.stringValue=query;[pane reloadCommands];
+  // A key saved for Enter Full Screen by an earlier version is left out: the item keeps Globe-F.
+  {
+   TSMemoryDefaults *earlier=[TSMemoryDefaults new];
+   [earlier setObject:@{@"TSShortcut.toggleFullScreen:.0":@{@"key":@"f",@"modifiers":@(C|FSControl)}} forKey:TSMenuShortcutOverridesKey];
+   TSShortcutStore *earlierStore=[[TSShortcutStore alloc]initWithMenu:first.menu defaults:(NSUserDefaults *)earlier];
+   REQUIRE([fullScreen.keyEquivalent isEqual:@"f"] && fullScreen.keyEquivalentModifierMask==FSFunction && earlierStore.unavailableCommands.count==0);
+   REQUIRE([nextMark.keyEquivalent isEqual:@"f"] && (nextMark.keyEquivalentModifierMask&(C|FSControl))==(C|FSControl));
+  }
+  // Key search tells F from 🌐︎F (fn-F): F does not find Enter Full Screen; 🌐︎F finds it alone and the field shows 🌐︎F
+  // as the list does. Control-Command-F still finds Next Mark.
+  {
+   BOOL wasSearching=pane.searchingByKey;
+   if(!wasSearching){pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];}
+   REQUIRE(pane.searchingByKey && pane.editingCommand==nil);
+   fixtureCharacters=@"f";
+   REQUIRE([pane handleKeySearchEvent:Event(@"f",0,3)]);
+   BOOL bareFFindsFullScreen=NO;for(TSShortcutMatch *hit in pane.searchMatches)if(hit.menuItem==fullScreen)bareFFindsFullScreen=YES;
+   REQUIRE(!bareFFindsFullScreen && [pane.search.stringValue isEqual:@"F"]);
+   REQUIRE([pane handleKeySearchEvent:Event(@"f",FSFunction,3)]);
+   REQUIRE(pane.searchMatches.count==1 && pane.searchMatches[0].menuItem==fullScreen && pane.searchMatches[0].winner);
+   REQUIRE([pane.search.stringValue isEqual:globeF]);
+   REQUIRE([pane handleKeySearchEvent:Event(@"f",C|FSControl,3)]);
+   BOOL controlCommandFFindsNextMark=NO;for(TSShortcutMatch *hit in pane.searchMatches){REQUIRE(hit.menuItem!=fullScreen);if(hit.menuItem==nextMark)controlCommandFFindsNextMark=YES;}
+   REQUIRE(controlCommandFFindsNextMark && [pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"f" modifiers:C|FSControl]]);
+   NSArray<TSShortcutMatch *> *bareF=[TSShortcutSearch matchesKey:@"f" modifiers:0 store:store macros:@[]];
+   NSArray<TSShortcutMatch *> *globeFHits=[TSShortcutSearch matchesKey:@"f" modifiers:FSFunction store:store macros:@[]];
+   REQUIRE(bareF.count==0 && globeFHits.count==1 && globeFHits[0].menuItem==fullScreen);
+   if(!wasSearching){pane.searchMode.selectedSegment=0;[pane changeSearchMode:pane.searchMode];REQUIRE(!pane.searchingByKey);}
+  }
+  [first.menu removeItem:fullScreen];[first.menu removeItem:nextMark];[coordinator refreshMenuAndMacros];[pane reloadCommands];
+  // 🌐︎⌃⌘B (fn) is refused while recording, before anything is saved: AppKit keeps fn only on its own items and would
+  // give the command ⌃⌘B. ⌃⌘B records; ⌘↑ and F5, which carry the fn flag of their own, record as before. What the
+  // store saves and what key search finds agree for each.
+  {
+   const NSUInteger G=NSEventModifierFlagFunction,K=NSEventModifierFlagControl,P=NSEventModifierFlagNumericPad;
+   NSString *globeRefusal=NSLocalizedString(@"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands.",@"");
+   if(pane.searchingByKey){pane.searchMode.selectedSegment=0;[pane changeSearchMode:pane.searchMode];}
+   pane.search.stringValue=@"";[pane reloadCommands];
+   NSString *keptKey=first.keyEquivalent;NSEventModifierFlags keptFlags=first.keyEquivalentModifierMask&TSShortcutModifiers;
+   NSDictionary *unchanged=[TSIsolatedAppKitDefaults.values copy];
+   // What key search finds for a key typed with these flags.
+   NSArray<TSShortcutMatch *> *(^search)(NSString *,NSUInteger,unsigned short)=^NSArray<TSShortcutMatch *> *(NSString *c,NSUInteger flags,unsigned short code){
+    pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];
+    fixtureCharacters=c;REQUIRE([pane handleKeySearchEvent:Event(c,flags,code)]);NSArray *hits=pane.searchMatches;
+    pane.searchMode.selectedSegment=0;[pane changeSearchMode:pane.searchMode];pane.search.stringValue=@"";[pane reloadCommands];return hits;};
+   REQUIRE(search(@"b",C|K,11).count==0 && search(@"b",C|K|G,11).count==0);
+   [pane beginRecordingAtRow:[pane rowForCommand:firstCommand]];REQUIRE(pane.editingCommand==firstCommand && shell.window.firstResponder==pane.recorder);
+   fixtureCharacters=@"b";[shell.window performKeyEquivalent:Event(@"b",C|K|G,11)];
+   NSDictionary *globeStored=TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][firstCommand.commandID];
+   printf("Recorded fn+ctrl+cmd+B -> item %s, stored %s, message %s\n",[TSShortcutStore displayKey:first.keyEquivalent modifiers:first.keyEquivalentModifierMask].UTF8String,globeStored?[TSShortcutStore displayKey:globeStored[@"key"] modifiers:[globeStored[@"modifiers"] unsignedIntegerValue]].UTF8String:"(none)",pane.statusText.stringValue.UTF8String);
+   REQUIRE(pane.editingCommand==firstCommand && shell.window.firstResponder==pane.recorder && [first.keyEquivalent isEqual:keptKey] && (first.keyEquivalentModifierMask&TSShortcutModifiers)==keptFlags && [TSIsolatedAppKitDefaults.values isEqual:unchanged]);
+   REQUIRE([pane.recordingError isEqual:globeRefusal] && [pane.statusText.stringValue isEqual:globeRefusal] && !status.arrangedSubviews[0].hidden && !pane.recordingWarning.hidden);
+   REQUIRE([pane.recorder.shortcut isEqual:[TSShortcutStore displayKey:keptKey modifiers:keptFlags]]);
+   [shell.window performKeyEquivalent:Event(@"\033",0,53)];REQUIRE(pane.editingCommand==nil && [first.keyEquivalent isEqual:keptKey]);
+   REQUIRE(search(@"b",C|K,11).count==0 && search(@"b",C|K|G,11).count==0);
+   // Characters beyond ASCII are character keys too, wherever they are in Unicode: the fullwidth comma of Cangjie's
+   // key 43 (U+FF0C, above U+F700), the ideographic comma of Japanese layouts (U+3001) and a Latin letter (ö).
+   // Each is refused with fn as B is, the old key kept and the recording going on.
+   struct { NSString *c; unsigned short code; } globeKeys[]={{@"\uFF0C",43},{@"\u3001",43},{@"\u00F6",41}};
+   for(size_t i=0;i<sizeof globeKeys/sizeof *globeKeys;i++){
+    [pane beginRecordingAtRow:[pane rowForCommand:firstCommand]];REQUIRE(pane.editingCommand==firstCommand);
+    sheetReply=nil;fixtureCharacters=globeKeys[i].c;[shell.window performKeyEquivalent:Event(globeKeys[i].c,C|K|G,globeKeys[i].code)];
+    NSDictionary *stored=TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][firstCommand.commandID];
+    printf("Recorded fn+ctrl+cmd+U+%04X -> item %s, stored %s, message %s\n",[globeKeys[i].c characterAtIndex:0],[TSShortcutStore displayKey:first.keyEquivalent modifiers:first.keyEquivalentModifierMask].UTF8String,stored?[TSShortcutStore displayKey:stored[@"key"] modifiers:[stored[@"modifiers"] unsignedIntegerValue]].UTF8String:"(none)",pane.statusText.stringValue.UTF8String);
+    REQUIRE(sheetReply==nil && pane.editingCommand==firstCommand && [first.keyEquivalent isEqual:keptKey] && (first.keyEquivalentModifierMask&TSShortcutModifiers)==keptFlags && [TSIsolatedAppKitDefaults.values isEqual:unchanged]);
+    REQUIRE([pane.recordingError isEqual:globeRefusal] && [pane.statusText.stringValue isEqual:globeRefusal] && !pane.recordingWarning.hidden);
+    [shell.window performKeyEquivalent:Event(@"\033",0,53)];REQUIRE(pane.editingCommand==nil && [first.keyEquivalent isEqual:keptKey]);
+   }
+   // Without fn the fullwidth comma records as any key; key search then finds ⌃⌘， and not 🌐︎⌃⌘，, as for B.
+   {
+    [pane beginRecordingAtRow:[pane rowForCommand:firstCommand]];sheetReply=nil;fixtureCharacters=@"\uFF0C";
+    [shell.window performKeyEquivalent:Event(@"\uFF0C",C|K,43)];if(sheetReply)sheetReply(NSAlertSecondButtonReturn);
+    REQUIRE(pane.editingCommand==nil && pane.recordingError==nil && [TSShownBinding(first) isEqual:TSBinding(@"\uFF0C",C|K)]);
+    NSUInteger plainHits=search(@"\uFF0C",C|K,43).count,globeHits=search(@"\uFF0C",C|K|G,43).count;
+    printf("Recorded ctrl+cmd+U+FF0C -> search hits %lu, with fn %lu\n",(unsigned long)plainHits,(unsigned long)globeHits);
+    REQUIRE(plainHits==1 && globeHits==0);
+    // The field of key search shows the Globe key with it, as with 🌐︎F.
+    REQUIRE([TSShortcutDisplayKey(@"\uFF0C",C|K|G) isEqual:@"⌃⌘\U0001F310\uFE0E\uFF0C"] && [TSShortcutDisplayKey(@"\uF700",C|G) isEqual:@"⌘↑"]);
+    REQUIRE([store setKey:keptKey modifiers:keptFlags forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];[pane reloadCommands];
+    unchanged=[TSIsolatedAppKitDefaults.values copy];
+   }
+   // Enter with fn (fn-Return on a laptop) ends the recording as Enter does: neither refused for fn nor recorded.
+   [pane beginRecordingAtRow:[pane rowForCommand:firstCommand]];REQUIRE(pane.editingCommand==firstCommand);fixtureCharacters=@"\x03";
+   [shell.window performKeyEquivalent:Event(@"\x03",G,36)];
+   REQUIRE(pane.editingCommand==nil && pane.recordingError==nil && [first.keyEquivalent isEqual:keptKey] && [TSIsolatedAppKitDefaults.values isEqual:unchanged]);
+   // ⌘Enter with fn meets the rule for keys that cannot be shortcuts, as ⌘Enter does, not the refusal for fn.
+   [pane beginRecordingAtRow:[pane rowForCommand:firstCommand]];REQUIRE(pane.editingCommand==firstCommand);fixtureCharacters=@"\x03";
+   [shell.window performKeyEquivalent:Event(@"\x03",C|G,36)];
+   REQUIRE(pane.editingCommand==firstCommand && pane.recordingError!=nil && ![pane.recordingError isEqual:globeRefusal] && [first.keyEquivalent isEqual:keptKey]);
+   [shell.window performKeyEquivalent:Event(@"\033",0,53)];REQUIRE(pane.editingCommand==nil);
+   // ⌃⌘B, ⌘↑ (as a real arrow key comes: fn and the keypad flag), F5 (fn), ⌘⌦ (fn-Delete on a laptop: fn) and
+   // ⌘⇟ (fn) record; search finds them as saved.
+   struct { NSString *c; NSUInteger flags; unsigned short code; NSString *key; NSUInteger saved; } keys[]={
+    {@"b",C|K,11,@"b",C|K},{@"\uF700",C|G|P,126,@"\uF700",C},{@"\uF708",G,96,@"\uF708",0},
+    {@"\uF728",C|G,117,@"\uF728",C},{@"\uF72D",C|G,121,@"\uF72D",C}};
+   for(size_t i=0;i<sizeof keys/sizeof *keys;i++){
+    [pane beginRecordingAtRow:[pane rowForCommand:firstCommand]];REQUIRE(pane.editingCommand==firstCommand);
+    sheetReply=nil;fixtureCharacters=keys[i].c;[shell.window performKeyEquivalent:Event(keys[i].c,keys[i].flags,keys[i].code)];
+    if(sheetReply)sheetReply(NSAlertSecondButtonReturn);
+    NSDictionary *stored=TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][firstCommand.commandID];
+    NSArray<TSShortcutMatch *> *hits=search(keys[i].c,keys[i].flags,keys[i].code);
+    printf("Recorded %s -> stored %s, search hits %lu\n",[TSShortcutStore displayKey:keys[i].key modifiers:keys[i].saved].UTF8String,stored?[TSShortcutStore displayKey:stored[@"key"] modifiers:[stored[@"modifiers"] unsignedIntegerValue]].UTF8String:"(none)",(unsigned long)hits.count);
+    REQUIRE(pane.editingCommand==nil && pane.recordingError==nil && [stored isEqual:TSBinding(keys[i].key,keys[i].saved)] && [TSShownBinding(first) isEqual:TSBinding(keys[i].key,keys[i].saved)]);
+    REQUIRE(hits.count==1 && hits[0].command==firstCommand);
+   }
+   REQUIRE([store setKey:keptKey modifiers:keptFlags forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];[pane reloadCommands];
+  }
  }
+ puts("PASS: Globe-key characters (B, U+FF0C, U+3001, ö) are refused while recording, nothing saved; Control-Command-B, Command-Up Arrow, F5, Command-Forward Delete and Command-Page Down record with fn and are found as saved; Enter with fn ends recording");
  puts("PASS: in-cell recording starts from the selected shortcut, double click, Return and VoiceOver; Escape, Tab and focus elsewhere end it; keys in use are refused under the list; free keys apply at once; macro keys confirm; Delete and the field button remove; Save As… under autosave is dimmed and kept");
  TSMacroTreeNode *tree=[TSMacroTreeNode submenuNodeWithName:@"root"],*group=[TSMacroTreeNode submenuNodeWithName:@"group"];
  TSMacroTreeNode *a=[TSMacroTreeNode nodeWithName:@"same" content:@"unsaved" key:@"A"],*b=[TSMacroTreeNode nodeWithName:@"same" content:@"other" key:@"B"];
@@ -544,6 +685,7 @@ int main(int argc,char **argv){@autoreleasepool{
  originalLocalization=method_setImplementation(class_getInstanceMethod(NSBundle.class,@selector(localizedStringForKey:value:table:)),(IMP)Localized);
  for(NSString *language in translations){@autoreleasepool{
   localizedStrings=translations[language];
+  REQUIRE([localizedStrings[@"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands."] length]>0);
   TSShortcutPaneController *translated=[[TSShortcutPaneController alloc]initWithShortcuts:coordinator];
   NSView *inputHeader=InputHeader();translated.settingsHeader=inputHeader;
   NSWindow *host=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,460) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];NSScrollView *outer=[[NSScrollView alloc]initWithFrame:host.contentView.bounds];outer.hasVerticalScroller=YES;outer.automaticallyAdjustsContentInsets=NO;outer.autoresizingMask=NSViewWidthSizable|NSViewHeightSizable;host.contentView=outer;translated.view.translatesAutoresizingMaskIntoConstraints=NO;outer.documentView=translated.view;[translated.view.widthAnchor constraintEqualToAnchor:outer.contentView.widthAnchor].active=YES;
@@ -635,7 +777,8 @@ int main(int argc,char **argv){@autoreleasepool{
    [translated stopKeySearch];translated.search.stringValue=@"";[translated reloadCommands];
    REQUIRE(translated.table.numberOfRows>0);[translated.table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
    for(NSString *text in @[NSLocalizedString(@"Default shortcut: None",@""),[NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@",@""),@"⌃⌥⇧⌘F12"],
-     [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.",@""),@"Format ▸ Font ▸ Bigger"],NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")]){
+     [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.",@""),@"Format ▸ Font ▸ Bigger"],NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@""),
+     NSLocalizedString(@"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands.",@"")]){
     translated.statusText.stringValue=text;translated.status.arrangedSubviews[0].hidden=NO;[translated.view layoutSubtreeIfNeeded];
     NSRect line=[translated.status convertRect:translated.status.bounds toView:translated.view];
     REQUIRE(NSContainsRect(NSInsetRect(translated.view.bounds,-.5,-.5),line));

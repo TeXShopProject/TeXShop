@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSShortcutInternal.h"
 NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
+static NSString * const TSFullScreenCommandID = @"TSShortcut.toggleFullScreen:.0";
 @interface TSShortcutCommand (PathUpdates)
 @property (nonatomic, readwrite, copy) NSString *path;
 @property (nonatomic, readwrite) BOOL managedBySystem;
@@ -54,6 +55,8 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     if ([saved isKindOfClass:NSDictionary.class]) {
         [saved enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
             if (![key isKindOfClass:NSString.class] || ![value isKindOfClass:NSDictionary.class]) return;
+            // Enter Full Screen has Globe-F since 6.00; a key saved for it before is left out.
+            if ([key isEqual:TSFullScreenCommandID]) return;
             id character = value[@"key"], modifiers = value[@"modifiers"];
             if ([character isKindOfClass:NSString.class] && [modifiers isKindOfClass:NSNumber.class] &&
                 [TSShortcutStore isAllowedKey:character modifiers:[modifiers unsignedIntegerValue]])
@@ -83,7 +86,8 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
         if (!command) {
             command = [[TSShortcutCommand alloc] initWithItem:item identifier:identifier path:path];
         }
-        command.path = path; command.managedBySystem = appKitSaveAs && item.action == @selector(saveDocumentAs:);
+        // Enter Full Screen has Globe-F, which macOS gives only its own items (TSGiveFullScreenGlobeKey).
+        command.path = path; command.managedBySystem = (appKitSaveAs && item.action == @selector(saveDocumentAs:)) || item.action == @selector(toggleFullScreen:);
         [commands addObject:command];
     });
     self.commands = commands;
@@ -468,6 +472,8 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
     // layout as it does the menu's own keys; a saved key is assigned as recorded.
     NSMutableArray<TSShortcutCommand *> *changing = [NSMutableArray array];
     for (TSShortcutCommand *command in self.commands) {
+        // Globe-F stays as it was given: assigning it again could lose the Globe key.
+        if (command.managedBySystem && command.item.action == @selector(toggleFullScreen:)) continue;
         BOOL saved = [active containsObject:command.commandID], none = [yielded containsObject:command.commandID];
         TSShortcutBinding *target = saved ? self.overrides[command.commandID] : none ? TSBinding(@"", 0) : TSBinding(command.defaultKey, command.defaultModifiers);
         if (![self command:command hasKey:target localized:saved ? NO : none ? command.item.allowsAutomaticKeyEquivalentLocalization : command.defaultLocalization])
@@ -713,6 +719,19 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
 }
 + (NSString *)displayKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
     return TSShortcutDisplayKey(key, flags);
+}
+// A command whose key macOS keeps shows it as the menu does, with the Globe key that the bindings leave out (TSBinding).
+- (NSString *)displayKeyForCommand:(TSShortcutCommand *)command {
+    if (command.managedBySystem && (command.item.keyEquivalentModifierMask & NSEventModifierFlagFunction))
+        return TSShortcutDisplayKey(command.item.keyEquivalent, command.item.keyEquivalentModifierMask);
+    TSShortcutBinding *shown = [self shownBindingForCommand:command];
+    return TSShortcutDisplayKey(shown.key, shown.modifiers);
+}
+- (NSString *)displayDefaultKeyForCommand:(TSShortcutCommand *)command {
+    if (command.managedBySystem && (command.defaultModifiers & NSEventModifierFlagFunction))
+        return TSShortcutDisplayKey(command.defaultKey, command.defaultModifiers);
+    TSShortcutBinding *shown = [self shownDefaultForCommand:command];
+    return TSShortcutDisplayKey(shown.key, shown.modifiers);
 }
 + (BOOL)event:(NSEvent *)event matchesItem:(NSMenuItem *)item {
     if (!item.keyEquivalent.length) return NO;

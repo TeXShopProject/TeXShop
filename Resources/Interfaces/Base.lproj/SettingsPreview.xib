@@ -183,9 +183,9 @@
                   <menu key="menu" title="OtherViews" id="336">
                     <items>
                       <menuItem title="Single Page" tag="1" id="333" />
-                      <menuItem title="Two Page" tag="2" id="343" />
-                      <menuItem title="Multi-Page" tag="3" id="347" />
-                      <menuItem title="Double Multi-Page" state="on" tag="4" id="346" />
+                      <menuItem title="Double Page" tag="2" id="343" />
+                      <menuItem title="MultiPage" tag="3" id="347" />
+                      <menuItem title="Double MultiPage" state="on" tag="4" id="346" />
                     </items>
                   </menu>
                 </popUpButtonCell>

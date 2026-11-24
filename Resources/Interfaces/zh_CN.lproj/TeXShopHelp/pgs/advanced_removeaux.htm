@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>删除辅助文件</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="删除Aux文件；删除Aux文件 &amp; 开始排版；aux；log；辅助文件；OtherTrashExtensions；AggressiveTrashAUX">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm" class="current">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>删除辅助文件</h1>
+<p>LaTeX 排版 <code>Galois.tex</code> 时，会写出 <code>Galois.aux</code>、<code>Galois.toc</code> 和 <code>Galois.log</code> 等辅助文件，下一次运行会读取它们来处理交叉引用、目录等。如果排版在中途停止（例如出错之后），这些文件可能会损坏，下一次运行就会报告源文件中并不存在的错误，通常就在 <code>\begin{document}</code> 之前。把辅助文件移到废纸篓再重新排版，就能解决这个问题。</p>
+
+<h2>将文件移到废纸篓</h2>
+<ul>
+<li>“文件”>“删除 Aux 文件”（<kbd>⌃⌘A</kbd>）或控制台中的“删除 Aux 文件”按钮，会把文稿的辅助文件移到废纸篓。</li>
+<li>“排版”>“删除 Aux 文件 &amp; 开始排版”（<kbd>⌥⌘T</kbd>）会执行此操作，然后进行排版。在“排版”菜单中，按住 Option 键时，该项目会出现在“开始排版”的位置。</li>
+</ul>
+<p>移到废纸篓的文件，是源文件所在文件夹中与源文件同名、并带有以下扩展名之一的文件：</p>
+<pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
+gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
+lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
+ttt  wrm  xref</pre>
+<p>排版中断时 SyncTeX 留下的、名称以 <code>(busy)</code> 结尾的文件也会被移到废纸篓。BibTeX 的 <code>.bbl</code> 文件会保留。</p>
+<p>在各章节文件用 <code>% !TEX root</code> 指定根文件的项目中，移到废纸篓的是根文件的辅助文件，即使是在章节文件中执行该命令也是如此。</p>
+
+<h2>变体</h2>
+<ul>
+<li>在选取“删除 Aux 文件”或点按该按钮时按住 Shift 键，会把文稿的 PDF 文件也移到废纸篓。通常旧的 PDF 会被保留，以便排版失败时预览窗口仍有内容可显示。</li>
+<li>在选取“删除 Aux 文件”或点按该按钮时按住 Option 键，会清理整个项目：根文件所在文件夹及其下所有文件夹中带有上述扩展名之一的每个文件，无论名称如何，都会被移到废纸篓。这也会移除 <code>\include</code> 为子文件夹中的各章写出的 <code>.aux</code> 文件。</li>
+</ul>
+<p>有两项隐藏设置可以改变这一行为。要向列表中添加扩展名（例如 <code>dvi</code>），请在终端中键入</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
+<p>要恢复标准列表，请键入</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array</pre>
+<p>要让按住 Option 键时的行为成为“删除 Aux 文件”的标准行为：</p>
+<pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
+</main>
+</body>
+</html>

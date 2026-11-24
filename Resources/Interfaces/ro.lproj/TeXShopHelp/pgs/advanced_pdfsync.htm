@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sincronizarea sursei cu previzualizarea</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="SyncTeX; sincronizare; sincronizarea sursei; Comandă-clic; Metoda de sincronizare; Căutare în PDF; synctex.gz; projectfile; useConTeXtSyncParser">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm" class="current">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Sincronizarea sursei cu previzualizarea</h1>
+<p>Faceți Comandă-clic pe un cuvânt din fereastra sursă, iar fereastra de previzualizare derulează la locul corespunzător și îl marchează. Faceți Comandă-clic pe un loc din fereastra de previzualizare, iar fișierul sursă se deschide, dacă este necesar, la linia corespunzătoare, care este marcată. Culorile celor două marcaje se setează în Configurări › Teme › „SyncTeX”, la „Previzualizare” și „Sursă”.</p>
+
+<h2>SyncTeX</h2>
+<p>TeXShop sincronizează cu SyncTeX. Când TeX este rulat cu opțiunea <code>-synctex=1</code>, scrie lângă PDF un fișier precum <code>Galois.synctex.gz</code>, care înregistrează unde a ajuns pe pagină fiecare bucată din sursă. Comenzile de compilare din Configurări › Compilare, așa cum le setează profilurile motorului, și motoarele pe care TeXShop le pune în <code>~/Library/TeXShop/Engines</code> și care rulează TeX folosesc deja această opțiune. Un motor pe care îl adăugați acolo, inclusiv unul dintre motoarele opționale din dosarul Inactive, o folosește doar dacă o are în comanda lui. Într-un motor propriu, adăugați <code>-synctex=1</code> la apelul lui TeX (cu una sau două cratime; orice motor le acceptă pe ambele).</p>
+<p>Fișierul synctex conține căile complete ale fișierelor sursă. După ce un dosar de proiect este mutat, copiat sau trimis altcuiva, sincronizarea nu face nimic până când documentul nu este compilat din nou.</p>
+<p>SyncTeX nu este complet exact: locul căutat poate fi puțin înainte sau după marcaj.</p>
+
+<h2>Proiecte cu mai multe fișiere</h2>
+<p>Într-un proiect ale cărui fișiere de capitol indică fișierul principal cu <code>% !TEX root</code> (consultați <a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a>), Comandă-clic într-un fișier de capitol duce la locul lui în previzualizarea întregului document, iar Comandă-clic în previzualizare deschide fișierul de capitol care conține locul pe care ați făcut clic. Cu Configurări › Compilare › „Sincronizarea sursei și a previzualizării” › „Deschideți ca file în fereastra fișierului principal fișierele accesate prin sincronizare” activată, un fișier deschis astfel se alătură ferestrei fișierului principal ca filă, în loc să se deschidă în propria fereastră.</p>
+
+<h2>Metoda de sincronizare</h2>
+<p>Configurări › Compilare › „Sincronizarea sursei și a previzualizării” › „Metoda de sincronizare” are două variante:</p>
+<dl>
+<dt>SyncTeX (recomandat)</dt><dd>Folosește fișierul synctex, așa cum s-a descris mai sus. Aceasta este valoarea implicită.</dd>
+<dt>Căutare în PDF</dt><dd>Caută în PDF textul din jurul clicului, iar în sursă textul din jurul unui clic din previzualizare. Nu are nevoie de fișierul synctex, dar eșuează acolo unde textul cules diferă de sursă, ca în formule și în textul cu multe comenzi. Pentru a găsi fișierul unui loc din previzualizare, caută în fișierele indicate în comenzile <code>\include</code> și <code>\input</code> ale fișierului principal. Pentru proiectele care includ fișiere în alt mod, listați-le în fișierul principal cu linii precum
+<pre>% !TEX projectfile = chapter2.tex
+% !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
+Un nume este o cale completă sau o cale relativă la fișierul principal; aceste linii pot fi oriunde în fișierul principal.</dd>
+</dl>
+
+<h2>ConTeXt</h2>
+<p>Pentru ConTeXt, adăugați <code>\setupsynctex[state=start,method=min]</code> în configurarea documentului și linia <code>% !TEX useConTeXtSyncParser</code> la începutul fișierului principal; TeXShop folosește atunci propriul cod de sincronizare al ConTeXt. Consultați <a href="advanced_context.htm">ConTeXt și MetaPost</a>.</p>
+<p>Pentru a sincroniza cu o sursă deschisă în alt editor, consultați <a href="advanced_externaleditor.htm">Folosirea unui editor extern</a>.</p>
+</main>
+</body>
+</html>

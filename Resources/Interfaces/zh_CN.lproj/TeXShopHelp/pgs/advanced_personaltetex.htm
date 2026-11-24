@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>向 TeX Live 添加个人文件</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="个人 texmf 目录树；~/Library/texmf；TEXMFHOME；添加 sty 文件；添加文档类；bib 文件；bst 文件；kpsewhich">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm" class="current">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>向 TeX Live 添加个人文件</h1>
+<p>不属于 TeX Live 的样式文件、文档类、参考文献数据库及其他文件，应放在你的个人 TeX 目录树中，即个人文件夹内“资源库”文件夹中的 <code>texmf</code> 文件夹：<code>~/Library/texmf</code>。TeX Live 的每个程序都能找到其中的文件，并且它们优先于 TeX Live 自身中的同名文件。添加文件后不需要注册任何东西；下次排版时就能找到它。</p>
+<p>“资源库”文件夹在访达中是隐藏的。要打开它，请在访达中选取“前往”>“前往文件夹…”，然后键入 <code>~/Library</code>。如果其中还没有 <code>texmf</code> 文件夹，请创建它。</p>
+
+<h2>添加宏包之前</h2>
+<p>CTAN 上的大多数宏包已经是 TeX Live 的一部分，MacTeX 会安装所有这些宏包。要查看 TeX 是否已有某个文件，请在 TeXShop 中选取“文件”>“打开样式文件…”并键入它的名称，例如 <code>hyperref.sty</code>；TeXShop 会打开 TeX 将会使用的那个文件。只有当 TeX Live 中没有某个宏包，或者你需要自己的版本时，才把它添加到个人目录树中。由于你的副本优先，当 TeX Live 已有更新的版本时，请移除你的副本，否则你会一直使用旧版本。</p>
+
+<h2>文件的放置位置</h2>
+<p><code>texmf</code> 中的文件夹采用与 TeX Live 相同的结构。请创建你需要的文件夹：</p>
+<table>
+<tr><th>文件夹</th><th>内容</th></tr>
+<tr><td><code>tex/latex/</code></td><td>LaTeX 宏包和文档类（.sty、.cls），每个宏包放在单独的文件夹中</td></tr>
+<tr><td><code>tex/plain/</code></td><td>用于 plain TeX 的文件</td></tr>
+<tr><td><code>tex/generic/</code></td><td>适用于任何格式的文件</td></tr>
+<tr><td><code>bibtex/bib/</code></td><td>参考文献数据库（.bib）</td></tr>
+<tr><td><code>bibtex/bst/</code></td><td>参考文献样式（.bst）</td></tr>
+<tr><td><code>doc/</code></td><td>你添加的宏包的说明文档；“帮助”>“显示宏包的帮助…”会在这里找到它们</td></tr>
+</table>
+<p>例如，你自己的宏组成的宏包和你的参考文献数据库可以存储为</p>
+<pre>~/Library/texmf/tex/latex/mymacros/mymacros.sty
+~/Library/texmf/bibtex/bib/mybibliography.bib</pre>
+<p>这样，<code>\usepackage{mymacros}</code> 和 <code>\bibliography{mybibliography}</code> 在每个文稿中都能使用，无论文稿保存在哪里。</p>
+
+<h2>检查文件夹</h2>
+<p>要查看你的 TeX 把哪个文件夹用作个人目录树，请在终端中键入</p>
+<pre>kpsewhich -var-value TEXMFHOME</pre>
+<p>在 Mac 上，它是 <code>~/Library/texmf</code>，除非安装时另有设置。要查看 TeX 会读取文件的哪个副本，可以键入例如 <code>kpsewhich mymacros.sty</code>。</p>
+<p>请不要向 TeX Live 自身的文件夹中添加文件；请参阅<a href="advanced_moretetex.htm">进一步了解 TeX Live</a>。</p>
+</main>
+</body>
+</html>

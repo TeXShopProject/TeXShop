@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用 TeXShop 打开其他文件</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="文件类型；扩展名；sty；cls；bib；log；aux；dtx；ins；Rnw；mp；md；dvi；ps；eps；pdf；OtherTeXExtensions；文件格式">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm" class="current">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>用 TeXShop 打开其他文件</h1>
+<p>TeXShop 可以打开任何文本文件，因此你可以阅读文稿旁边的日志文件、aux 文件以及 TeX 的其他文件。它还可以打开 PDF 文件和图片。</p>
+
+<h2>视为 TeX 源文件的文件</h2>
+<p>带有以下扩展名的文件以及没有扩展名的文件，对 TeXShop 来说都是 TeX 源文件：它们会以语法高亮显示，并且可以排版。</p>
+<pre>asy  bbx  bib  cbx  clo  cls  ctx  def  dtx  fd  fdd  gabc  gtex
+htx  html  ins  lbx  lhs  ltx  lua  lytex  ly  md  mf  mp  ptx
+Rnw  sk  skt  Stex  sty  tex  typ  xml</pre>
+<p>其他文本文件（例如 <code>.log</code>、<code>.aux</code>、<code>.bst</code>、<code>.engine</code> 或 <code>.txt</code> 文件）以纯文本打开，不带语法高亮。</p>
+<p>要让 TeXShop 把带有其他扩展名的文件视为 TeX 源文件，请在终端中用隐藏设置添加该扩展名；例如，对于扩展名为 <code>mkiv</code> 的 ConTeXt 文件：</p>
+<pre>defaults write TeXShop OtherTeXExtensions -array-add "mkiv"</pre>
+
+<h2>PDF 文件和图片</h2>
+<p>PDF 文件以及扩展名为 <code>.png</code>、<code>.jpg</code>、<code>.jpeg</code>、<code>.tif</code>、<code>.tiff</code> 和 <code>.eps</code> 的图片会在单独的窗口中打开。DVI 和 PostScript 文件（<code>.dvi</code>、<code>.ps</code>）会被转换为 PDF 后显示。</p>
+
+<h2>以其他扩展名保存</h2>
+<p>TeXShop 保存文件时，文件会保留原来的扩展名。新文稿会保存为 <code>.tex</code> 文件，除非你在保存对话框的“文件格式”菜单中选择其他类型，例如 sty、bib 或 mp。</p>
+<p>TeXShop 以文件打开时所用的编码保存文件。它是为 TeX 及相关文件设计的；格式特殊的文件在 TeXShop 中编辑后保存，可能会发生变化。请参阅<a href="advanced_encoding.htm">编码</a>。</p>
+</main>
+</body>
+</html>

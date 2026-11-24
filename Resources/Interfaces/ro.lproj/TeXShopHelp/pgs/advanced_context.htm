@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ConTeXt și MetaPost</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="ConTeXt; ConTeXt Garden; luametatex; MetaPost; mpost; pmpost; upmpost; nv-metapost; mfpic; luamplib">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm" class="current">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>ConTeXt și MetaPost</h1>
+<h2>ConTeXt</h2>
+<p>ConTeXt este un pachet de macrocomenzi creat de Hans Hagen, o alternativă la LaTeX cu propriile comenzi și cu un accent puternic pe designul tipografic. TeX Live include ConTeXt, iar ConTeXt Garden distribuie o versiune actualizată des, care se instalează în dosarul de reședință.</p>
+<p>Motoarele pentru ConTeXt se află în <code>~/Library/TeXShop/Engines/Inactive/ConTeXt</code>, împreună cu ghidul <code>Setting-Up-ConTeXt.pdf</code> și cu documente exemplu:</p>
+<table>
+<tr><th>Motor</th><th>Compilează cu</th></tr>
+<tr><td><code>ConTeXt.engine</code></td><td>ConTeXt-ul din TeX Live care rulează pe LuaTeX</td></tr>
+<tr><td><code>ConTeXt-TL.engine</code></td><td>ConTeXt-ul din TeX Live care rulează pe luametatex</td></tr>
+<tr><td><code>ConTeXt-CG.engine</code></td><td>versiunea ConTeXt Garden din dosarul de reședință</td></tr>
+</table>
+<p>Mutați motorul de care aveți nevoie în <code>~/Library/TeXShop/Engines</code> și puneți linii speciale la începutul fișierului principal al documentului, de exemplu:</p>
+<pre>% !TEX program = ConTeXt-TL
+% !TEX useConTeXtSyncParser</pre>
+<p>Pentru ConTeXt-CG, introduceți dosarul programelor instalării ConTeXt Garden în câmpul „Al doilea set de motoare TeX” din Configurări › Compilare › Căi și adăugați linia <code>% !TEX useAlternatePath</code>, care face ca TeXShop să transmită motorului acel dosar în locul celui din TeX Live.</p>
+<p>Pentru sincronizarea dintre sursă și previzualizare, adăugați <code>\setupsynctex[state=start,method=min]</code> în configurarea documentului; linia <code>% !TEX useConTeXtSyncParser</code> face ca TeXShop să folosească propriul cod de sincronizare al ConTeXt. Capitolul despre ConTeXt din Ajutor › Manualul TeXShop (în engleză) descrie în detaliu instalarea versiunii ConTeXt Garden și fiecare motor.</p>
+<p>Pentru a lista în meniul „Etichete” comenzile de secționare ConTeXt, precum <code>\title</code> și <code>\subject</code>, activați configurarea ascunsă ConTeXtTags; consultați <a href="configure_hidden.htm">Configurări ascunse</a>.</p>
+
+<h2>MetaPost</h2>
+<p>MetaPost, creat de John Hobby, desenează ilustrații pornind de la o descriere într-un limbaj de programare derivat din METAFONT-ul lui Knuth. Manualul lui face parte din TeX Live: alegeți Ajutor › Afișați ajutorul pentru pachet... și tastați <code>metapost</code>.</p>
+<p>Compilare › MetaPost (<kbd>⇧⌘M</kbd>) sau MetaPost din meniul pop-up de lângă butonul „Compilare” rulează MetaPost pe fișierul cu numele documentului activ și extensia <code>.mp</code>: pe documentul însuși dacă este un fișier <code>.mp</code>, altfel pe fișierul <code>.mp</code> de lângă el, de exemplu cel pe care pachetul mfpic îl scrie pentru un document <code>.tex</code>. Rulează comanda din Configurări › Compilare › „Instrumente asociate” › „MetaPost”, implicit <code>mpost</code>. Profilurile motorului setează acest câmp: <code>pmpost</code> pentru pLaTeX + dvipdfmx și <code>upmpost</code> pentru upLaTeX + dvipdfmx, care compilează text japonez în etichete, și <code>mpost</code> pentru celelalte profiluri. LuaLaTeX nu poate include figuri ale căror etichete au fost culese în japoneză de pmpost sau upmpost; cu LuaLaTeX, desenați astfel de figuri în document cu pachetul luamplib.</p>
+<p>Pentru a salva un fișier nou ca fișier MetaPost, alegeți tipul mp în meniul de format al fișierului din dialogul de salvare.</p>
+<p>Motorul nv-metapost, creat de Nicola Vitacolonna, ușurează lucrul cu MetaPost și afișează figurile unui fișier în fereastra de previzualizare. Se află în <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>; fișierul <code>README.rtf</code> și dosarul <code>examples</code>, cu un nivel mai sus, în <code>MetaPostEngines-1.4.7</code>, explică instalarea și folosirea lui și oferă fișiere exemplu. De exemplu, un fișier care începe cu</p>
+<pre>% !TEX program = nv-metapost
+beginfig(1);
+  pickup pencircle scaled 2mm;
+  draw fullcircle scaled 2cm withcolor red;
+endfig;
+end</pre>
+<p>este compilat cu nv-metapost după ce acel motor se află în dosarul Engines.</p>
+<p>Desenele MetaPost pot fi scrise și într-un document LaTeX, cu pachetul luamplib pentru LuaLaTeX sau cu pachete precum mfpic, care scriu desenele într-un fișier <code>.mp</code> pe care MetaPost îl prelucrează între două compilări.</p>
+</main>
+</body>
+</html>

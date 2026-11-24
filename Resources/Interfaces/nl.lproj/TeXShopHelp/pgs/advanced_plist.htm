@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bestanden in ~/Library/TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="~/Library/TeXShop; plist-bestanden; configuratiebestanden; completion.plist; autocompletion.plist; KeyEquivalents.plist; Macros_Latex.plist; matrixpanel; thema’s; CommandCompletion.txt; reservekopieën">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm" class="current">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Bestanden in ~/Library/TeXShop</h1>
+<p>TeXShop bewaart de bestanden die u kunt aanpassen in de map <code>~/Library/TeXShop</code>, die het maakt wanneer het voor het eerst wordt gestart. TeXShop › Open ~/Library/TeXShop opent de map in de Finder. Om uw aanpassingen naar een andere Mac mee te nemen, kopieert u deze map daarheen.</p>
+
+<h2>Wat de map bevat</h2>
+<p>De meeste van deze bestanden worden in TeXShop zelf bewerkt, en u hoeft ze niet te openen:</p>
+<table>
+<tr><th>Bestand of map</th><th>Inhoud</th><th>Waar u het wijzigt</th></tr>
+<tr><td><code>Keyboard/autocompletion.plist</code>, met <code>autocompletionPaste.plist</code> en <code>autocompletionDisplayOrder.plist</code></td><td>Toetsbindingen</td><td>Instellingen › Toetsenbord › ‘Lijst met toetsbindingen’</td></tr>
+<tr><td><code>CommandCompletion/CommandCompletion.txt</code></td><td>Lijst voor commandoaanvulling</td><td>Instellingen › Toetsenbord › ‘Commandoaanvulling bewerken…’</td></tr>
+<tr><td><code>Menus/KeyEquivalents.plist</code></td><td>Standaardtoetscombinaties van de menu’s</td><td>Instellingen › Toetsenbord, lijst ‘Menutoetscombinaties’</td></tr>
+<tr><td><code>Macros/Macros_Latex.plist</code></td><td>Menu Macro’s</td><td>Macro’s › Open macro-editor...</td></tr>
+<tr><td><code>Themes/</code></td><td>Kleurthema’s</td><td>Instellingen › Thema’s</td></tr>
+<tr><td><code>SpellCheck/SpellingExclusions.txt</code></td><td>Wat de LaTeX-bewuste spellingcontrole overslaat</td><td>Instellingen › Spellingcontrole › ‘LaTeX-uitsluitingsregels bewerken…’</td></tr>
+<tr><td><code>Engines/</code></td><td>Zet-engines</td><td>Instellingen › Zetten › ‘Engine-lijst bewerken…’</td></tr>
+<tr><td><code>LatexPanel/completion.plist</code></td><td>Teksten van het LaTeX-venster</td><td>Met de hand; zie <a href="configure_panel.htm">Het LaTeX-venster aanpassen</a></td></tr>
+<tr><td><code>MatrixPanel/matrixpanel_1.plist</code></td><td>Teksten van het Matrix-venster</td><td>Met de hand</td></tr>
+<tr><td><code>Templates/</code>, <code>Stationery/</code></td><td>Menu ‘Sjablonen’, Archief › Nieuw uit sjabloondocument...</td><td>In de Finder; zie <a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></td></tr>
+</table>
+<p>De toetscombinaties in <code>KeyEquivalents.plist</code> worden de standaardwaarden van de lijst met toetscombinaties in Instellingen › Toetsenbord; toetscombinaties die in de instellingen zijn gewijzigd, gaan voor. Zie <a href="configure_menushortcuts.htm">Toetscombinaties van menu’s wijzigen</a>.</p>
+
+<h2>Een bestand met de hand bewerken</h2>
+<p>Bestanden met de extensie <code>.plist</code> zijn XML-tekst. U kunt ze openen en bewerken in TeXShop, in een andere teksteditor of in Xcode. Verschillende ervan beginnen met commentaar dat hun opbouw uitlegt. Houd ze in UTF-8, de codering waarin ze zijn geschreven. Bewerk de kleuren van thema’s in Instellingen › Thema’s in plaats van in de bestanden zelf.</p>
+<p>Als een bestand dat u hebt bewerkt niet meer werkt, haalt u het uit de map, of verplaatst u de map ervan naar het bureaublad, en start u TeXShop opnieuw: het programma maakt het bestand dan opnieuw met de oorspronkelijke inhoud.</p>
+
+<h2>Ontbrekende of beschadigde bestanden</h2>
+<p>Als een van de bestanden die TeXShop nodig heeft ontbreekt of bij het starten van TeXShop beschadigd blijkt, zoals de macro’s, de toetsbindingen, de teksten van het LaTeX-venster en het Matrix-venster, de toetscombinaties van de menu’s, de lijst voor commandoaanvulling, de spellinguitsluitingen of de standaardthema’s, zet TeXShop er zonder foutmelding een eigen kopie voor in de plaats. Een beschadigd bestand wordt verplaatst naar de map <code>~/Library/TeXShop/Backups</code>, in een map die naar de datum en tijd is genoemd, zodat u uw wijzigingen eruit kunt terughalen.</p>
+<p>Bestanden die u bewust kunt verwijderen, zoals sjablonen, sjabloondocumenten, engines en uw eigen thema’s, worden niet hersteld.</p>
+</main>
+</body>
+</html>

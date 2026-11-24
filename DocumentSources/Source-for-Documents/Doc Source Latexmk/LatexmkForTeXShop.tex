@@ -39,6 +39,9 @@
 \author{Herbert Schulz\\\small\href{mailto:herbs2@mac.com}{herbs2@mac.com}}
 \date{}
 
+% Lets TeX stretch the spaces of a paragraph that would otherwise stick into the margin.
+\emergencystretch=1em
+
 \begin{document}
 \maketitle
 \thispagestyle{empty}
@@ -65,7 +68,7 @@ to use the \cmd{pdflatexmk} engine which will use \cmd{pdflatex} to typeset your
 
 \section{What is here?}
 
-There is a set of ten \cmd{engine} files to be placed in \path{~/Library/TeXShop/Engines}. There is a \cmd{tslatexmk} folder already placed in \path{~/Library/TeXShop/bin}. The files in that folder consist of the \cmd{latexmk} program, ten basic initialization (\cmd{rc}) files used by the ten \cmd{engine} files, a common file for personal settings (\cmd{latexmkrcDONTedit}) and two shell scripts used for \cmd{pdftricks} and \cmd{pst-pdf} figure processing. When any of the new engines is first run the \cmd{latexmkrcDONTedit} file will automatically be copied to \path{~/Library/TeXShop/bin/latexmkrcedit} if it doesn't already exist. You may copy the file there manually if you wish. \textbf{Any changes or additions to the configuration (e.g., new dependencies and rules) should be placed in the \cmd{laxtexmkrcedit} file. When \TS\ is updated the files in the \path{~/Library/TeXShop/bin/tslatexmk} may automatically get updated; don't edit them or your changes may get lost.}
+There is a set of eight \cmd{engine} files to be placed in \path{~/Library/TeXShop/Engines}. There is a \cmd{tslatexmk} folder already placed in \path{~/Library/TeXShop/bin}. The files in that folder consist of the \cmd{latexmk} program, eight basic initialization (\cmd{rc}) files used by the eight \cmd{engine} files and a common file for personal settings (\cmd{latexmkrcDONTedit}). When any of the new engines is first run the \cmd{latexmkrcDONTedit} file will automatically be copied to \path{~/Library/TeXShop/bin/latexmkrcedit} if it doesn't already exist. You may copy the file there manually if you wish. \textbf{Any changes or additions to the configuration (e.g., new dependencies and rules) should be placed in the \cmd{laxtexmkrcedit} file. When \TS\ is updated the files in the \path{~/Library/TeXShop/bin/tslatexmk} may automatically get updated; don't edit them or your changes may get lost.}
 
 \section{What is New with this Version}
 
@@ -86,7 +89,7 @@ will use \cmd{pdflatex} with \cmd{shell-escape} as the typesetting engine. You c
 \end{verbatim}
 will pass both of those options to the typsetting engine.
 
-Note: the \cmd{dtxmk}, \cmd{pdftricksmk} and \cmd{pst-pdfmk} engines have \emph{not} been updated because of their specialized use.
+Note: the \cmd{dtxmk} engine has \emph{not} been updated because of its specialized use.
 
 \subsection{Project Customization File}
 
@@ -104,20 +107,18 @@ to use \cmd{texindy} rather than the default \cmd{makeindex}; make sure you end 
 
 \textbf{NOTE: If you are updating to this version of \latexmk\ for \TS\ from a previous version you need only activate the engine files, as noted above, and restart \TS\ after installing the files.}
 
-There are ten \cmd{engine} files; two for running \cmd{latex} (one with a final run through \cmd{dvips} and \cmd{ps2pdf} [\cmd{latexmk.engine}] and one with a final run through \cmd{dvipdfmx} [\cmd{dvipdfmxmk.engine]}), two for using \cmd{pdflatex} [\cmd{pdflatexmk.engine} and \cmd{sepdflatexmk.engine}] (the second one for use when you need to use \cmd{-{}-shell-escape}: but see Sub-Section (\ref{sec:CLO}) ), one for using \cmd{xelatex} [\cmd{xelatexmk.engine}], one for using \cmd{lualatex} [\cmd{lualatexmk.engine}], two for using the \cmd{pdftricks} or \cmd{pst-pdf} packages with \cmd{pdflatex} [\cmd{pdftricksmk.engine} or \cmd{pst-pdfmk.engine} respectively] and one for use with files that use the \cmd{asymptote} package [\cmd{asymptotemk.engine}]. The final engine is a very basic engine for typesetting \cmd{dtx} files for a package into the final documentation [\cmd{dtxmk.engine}]. The exact form of the commands and options used are in the corresponding \cmd{rc} file (e.g., \cmd{latexmkrc} for the \cmd{latexmk.engine}) in \path{~/Library/TeXShop/bin/tslatexmk} and shouldn't be changed.
+There are eight \cmd{engine} files; two for running \cmd{latex} (one with a final run through \cmd{dvips} and \cmd{ps2pdf} [\cmd{latexmk.engine}] and one with a final run through \cmd{dvipdfmx} [\cmd{dvipdfmxmk.engine]}), two for using \cmd{pdflatex} [\cmd{pdflatexmk.engine} and \cmd{sepdflatexmk.engine}] (the second one for use when you need to use \cmd{-{}-shell-escape}: but see Sub-Section (\ref{sec:CLO}) ), one for using \cmd{xelatex} [\cmd{xelatexmk.engine}], one for using \cmd{lualatex} [\cmd{lualatexmk.engine}] and one for use with files that use the \cmd{asymptote} package [\cmd{asymptotemk.engine}]. The final engine is a very basic engine for typesetting \cmd{dtx} files for a package into the final documentation [\cmd{dtxmk.engine}]. The exact form of the commands and options used are in the corresponding \cmd{rc} file (e.g., \cmd{latexmkrc} for the \cmd{latexmk.engine}) in \path{~/Library/TeXShop/bin/tslatexmk} and shouldn't be changed.
 
 You can use these \cmd{engine} files by using the drop down menu on the source tool bar or placing the line
 \begin{verbatim}
 % !TEX program = pdflatexmk
 \end{verbatim}
-(for using \cmd{pdflatex}---similar lines for \cmd{latex} and \cmd{xelatex}, etc.) at the top of your document\footnote{For the dtxmk engine the line should be placed just below the initial ``\cmd{\% \textbackslash iffalse}'' line of the \cmd{dtx} file.}; then simply using \mnu{Typeset} (\cmd{\cmdkey-T}) will automatically run the proper \cmd{engine}. Note: these engines \emph{don't} appear under the \mnu{Typeset} Menu but only under the pop-up menu on the source toolbar. Figure (\ref{fig:popupmenus}) shows the default and updated pop-up menu after installing the \latexmk\ engine files.
+(for using \cmd{pdflatex}---similar lines for \cmd{latex} and \cmd{xelatex}, etc.) at the top of your document\footnote{For the dtxmk engine the line should be placed just below the initial ``\cmd{\% \textbackslash iffalse}'' line of the \cmd{dtx} file.}; then simply using \mnu{Typeset} (\cmd{\cmdkey-T}) will automatically run the proper \cmd{engine}. Note: these engines \emph{don't} appear under the \mnu{Typeset} Menu but only under the pop-up menu on the source toolbar. Figure (\ref{fig:popupmenus}) shows an example of the pop-up menu before and after installing the \latexmk\ engine files.
 \begin{figure}
 \centering
 \includegraphics[width=2in]{figs/OriginalTypesetPopup}\qquad\includegraphics[width=2in]{figs/UpdatedTypesetPopup}
-\caption{Default and updated versions of the engine pop-up menu after installing the \latexmk\ engines.}\label{fig:popupmenus}
+\caption{An example of the engine pop-up menu before and after installing the \latexmk\ engines. The \latexmk\ engines appear after installing; the other items depend on the engines in your \cmd{Engines} folder.}\label{fig:popupmenus}
 \end{figure}
-
-%Detailed information about using \latexmk\ with the \cmd{pdftricks} and \cmd{pst-pdf} packages is discussed later.
 
 I have only tested these engines with relatively trivial distributed documents (which include other files using \verb|\include| commands) but it appears that \latexmk\ deals with them properly. Note that when compiling a file with name \cmd{rootname.tex} a file with name \cmd{rootname.fdb\_latexmk}\footnote{The dependency file had extension \cmd{dep} in previous versions of \latexmk\ but didn't do a complete job of keeping track of those dependencies.} is created. This file contains the dependency information for the distributed document so making changes in an included file will force the recompile of the root document by \latexmk.
 
@@ -198,13 +199,13 @@ I have only tested these engines with relatively trivial distributed documents (
 %
 %\subsubsection{Working with \cmd{epstopdf}.}
 %
-%Versions of \cmd{epstopdf} from 1.5 on will automatically update a previously generated \cmd{pdf} file if the corresponding \cmd{eps} file is updated\footnote{Versions of \cmd{epstopdf} earlier than 1.5 never updated the \cmd{pdf} file once it existed.}. To let \latexmk\ ``know'' that it should allow runs of \cmd{pdflatex} if the corresponding \cmd{eps} file is updated the necessary \cmd{rc} files (the ones that run \cmd{pdflatex} rather than \cmd{latex}; \cmd{pdflatexmkrc}, \cmd{pdftricksmkrc}, \cmd{pst-pdfmkrc} and \cmd{asymptotemkrc}) contain a special dependency and rule
+%Versions of \cmd{epstopdf} from 1.5 on will automatically update a previously generated \cmd{pdf} file if the corresponding \cmd{eps} file is updated\footnote{Versions of \cmd{epstopdf} earlier than 1.5 never updated the \cmd{pdf} file once it existed.}. To let \latexmk\ ``know'' that it should allow runs of \cmd{pdflatex} if the corresponding \cmd{eps} file is updated the necessary \cmd{rc} files (the ones that run \cmd{pdflatex} rather than \cmd{latex}; \cmd{pdflatexmkrc} and \cmd{asymptotemkrc}) contain a special dependency and rule
 %\begin{verbatim}
 %add_cus_dep('eps', 'pdf', 0, 'cus_dep_require_primary_run');
 %\end{verbatim}
 %which passes \latexmk\ the proper behavior.
 %
-%If you are using \cmd{epstopdf} 1.5 or later with earlier \TeX\ distributions you should invoke it using the \cmd{[update,prepend]} options. For versions of \cmd{epstopdf} earlier than 1.5 you should edit the \cmd{pdflatexmkrc}, \cmd{pdftrcksmkrc}, \cmd{pst-pdfmkrc} and \cmd{asymptotemkrc} files by commenting out the original dependency (place a \cmd{\#} before the line
+%If you are using \cmd{epstopdf} 1.5 or later with earlier \TeX\ distributions you should invoke it using the \cmd{[update,prepend]} options. For versions of \cmd{epstopdf} earlier than 1.5 you should edit the \cmd{pdflatexmkrc} and \cmd{asymptotemkrc} files by commenting out the original dependency (place a \cmd{\#} before the line
 %\begin{verbatim}
 %add_cus_dep('eps', 'pdf', 0, 'cus_dep_require_primary_run');
 %\end{verbatim}
@@ -228,22 +229,6 @@ I have only tested these engines with relatively trivial distributed documents (
 %
 %%\textbf{Note: I have noticed that there are times when including the \texttt{eps} extension in \texttt{\textbackslash includegraphics} still gives rise to additional runs of \texttt{pdflatex} so I still recommend you leave off the extension in \texttt{\textbackslash includegraphics} commands.}
 
-\subsection{Using the \cmd{pdftricks} package with \latexmk.}
-
-The \cmd{pdftricks} package allows the inclusion of \cmd{pstricks} graphics in documents compiled with \cmd{pdflatex}. The package generates a file for each postscript figure included in the document. Each of those figure files is then processed to produce a \cmd{pdf} file containing a figure with a tight enclosing bounding box. The \cmd{pdftricksmk} engine included with this version of \latexmk\ processes the original file, the figure files, etc., all only if they have changed. To use the engine place the line
-\begin{verbatim}
-% !TEX program = pdftricksmk
-\end{verbatim}
-at the start of the file and Typeset the file. The processing steps for each of the figure files is \cmd{latex}\To\cmd{dvips}\To\cmd{ps2pdf}\To\cmd{pdfcrop} to ensure the proper bounding box is created for each figure. \textbf{NOTE: you must use the \cmd{[noshell]} option to the \cmd{pdftricks} package or \latexmk\ will get into a run-on condition. All figure processing will be taken care of by \latexmk.}
-
-\subsection{Using the \cmd{pst-pdf} package with \latexmk.}
-
-The \cmd{pst-pdf} package also allows the inclusion of \cmd{pstricks} graphics in documents compiled with \cmd{pdflatex}. When the source file is compiled with \cmd{latex} a \cmd{dvi} file containing all of the figures is created. Further processing through the sequence \cmd{dvips}\To\cmd{ps2pdf}\To\cmd{pdfcrop} produces a single file that contains all of the figures with proper bounding boxes. A run of \cmd{pdflatex} on the source file then includes all of the figures previously generated. The \cmd{pst-pdfmk} engine takes care of all of the intermediate processing of the figures as well as the final run(s) of \cmd{pdflatex}, etc. To use the engine place the line
-\begin{verbatim}
-% !TEX program = pst-pdfmk
-\end{verbatim}
-at the start of the file and Typeset the file.
-
 \subsection{The \cmd{glossary}, \cmd{glossaries} and such packages.}
 
 Packages that produce multiple and custom indexes, glossaries, etc., use one of two naming schemes for the multiple files they create:
@@ -265,8 +250,6 @@ The placement of the \latexmk\ program in \path{~/Library/TeXShop/bin/tslatexmk/
 %The contents of the \cmd{rc} files corresponds to the the settings for commands for \TS\ on my system. They are simply text files. Please read the \latexmk\ documentation before changing the contents.
 
 %Because of the way \texttt{latexmk} gets the default path for \texttt{bib} files it will generate an inconsequential error message unless the \texttt{bib} file is in the same directory as the source file; the \texttt{bib} file will still be found by \texttt{bibtex} if it is along the standard path for \texttt{bib} files supplied by \texttt{kpsewhich}. To suppress the spurious error message the supplied \texttt{engine} files build a \emph{temporary} \texttt{BIBINPUTS} environment variable by appending the output of \verb'`kpsewhich --show-path=bib | sed -e "s/\!\!//g"`' to a possibly predefined \texttt{BIBINPUTS} variable. If there is a problem with long waits for searches over a network you can edit each of the \texttt{engine} files and customize the setting of the \texttt{BIBINPUTS} environment variable.
-
-Finally, changes in \cmd{eps} files \emph{included in figures} created by the \cmd{pdftricks} or \cmd{pst-pdf} packages are \emph{not} detected by this packaging of \latexmk\ at this time. I hope to correct that problem at a later date.
 
 %\section{Update for \TS\ 2.18 (and later) with \MacTeX\ 2008 (ditto).}
 %

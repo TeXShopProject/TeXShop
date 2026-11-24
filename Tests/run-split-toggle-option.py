@@ -79,10 +79,10 @@ for nib in nibs:
 
 # Tool tips: both split buttons mention Option-click in every language.
 option_words = {'en': 'Option-click', 'de': 'Option-Taste-Klicken', 'es': 'tecla Opción', 'fr': 'touche Option',
-                'it': 'tasto Opzione', 'ja': 'Option+クリック', 'ko': 'Option-클릭', 'nl': 'Option + klik',
+                'it': 'tasto Opzione', 'ja': 'Option+クリック', 'ko': 'Option-클릭', 'nl': 'Option-klik',
                 'pt': 'tecla Option', 'pt-PT': 'tecla Opção', 'ro': 'Opțiune-clic', 'zh_CN': '按住Option键点按'}
 shift_words = {'en': 'Shift-click', 'de': 'Umschalttaste', 'es': 'Mayúsculas', 'fr': 'touche Maj',
-               'it': 'tasto Maiuscole', 'ja': 'Shift+クリック', 'ko': 'Shift-클릭', 'nl': 'Shift + klik',
+               'it': 'tasto Maiuscole', 'ja': 'Shift+クリック', 'ko': 'Shift-클릭', 'nl': 'Shift-klik',
                'pt': 'tecla Shift', 'pt-PT': 'tecla Shift', 'ro': 'Shift-clic', 'zh_CN': '按住Shift键点按'}
 for language, word in option_words.items():
     strings = subprocess.run(['plutil', '-convert', 'json', '-o', '-',

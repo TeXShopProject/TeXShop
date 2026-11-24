@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macros AppleScript predefinidas</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macros AppleScript; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Save Copy with Unix Line Endings; fins de linha; bibliografia; Claus Gerhardt Macros; TeX4ht; Extract Pages from PDF; MetaPost">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda das macros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminares</a></li>
+<li><a href="macros_default.htm">Compreender as macros predefinidas</a></li>
+<li><a href="macros_rearrange.htm">Reorganizar o menu Macros</a></li>
+<li><a href="macros_define.htm">Definir novas macros</a></li>
+<li><a href="macros_applescript.htm">Macros AppleScript</a></li>
+<li><a href="macros_includedscripts.htm" class="current">Macros AppleScript predefinidas</a></li>
+<li><a href="macros_defapplescript.htm">Definir macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Criar caixas de diálogo</a></li>
+<li><a href="macros_writingcompletescripts.htm">Escrever scripts com os comandos de composição do TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Escrever scripts com comandos da shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Macros AppleScript predefinidas</h1>
+<p>O TeXShop inclui uma coleção de macros AppleScript de Will Robertson, Claus Gerhardt e outros. Algumas executam uma série de comandos de composição em sequência. Copiando-as e alterando-as, pode criar scripts para o seu próprio trabalho. Esta página descreve algumas delas, com os nomes que têm no menu Macros.</p>
+
+<h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
+<p>Estas macros são de Will Robertson. No submenu Column macros, New tabular e New array inserem um ambiente tabular ou array com o número de linhas e de colunas que introduzir, e Add column e Delete column alteram as linhas que selecionar. Insert reference procura comandos <code>\label{…}</code> no ficheiro atual e permite escolher um rótulo numa lista; insere o rótulo envolvido em <code>\ref{…}</code>, um comando que pode alterar no script. Se houver texto selecionado, só são enumerados os rótulos que o contêm. Open quickly… enumera os ficheiros .tex, .sty e .pdf da pasta do ficheiro de código-fonte atual e abre os que escolher.</p>
+
+<h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
+<p>Esta macro, de Alan Munn, cola células de uma folha de cálculo no seu código-fonte LaTeX sob a forma de tabela. Selecione um intervalo de células no Excel ou noutra aplicação de folha de cálculo e copie-as. Em seguida, escolha Macros › Paste Spreadsheet Cells e escolha um estilo de tabela:</p>
+<dl>
+<dt>cells</dt><dd>converte o texto copiado apenas em células de tabela LaTeX.</dd>
+<dt>booktabs</dt><dd>toma a primeira linha como cabeçalho e coloca <code>\toprule</code>, <code>\midrule</code> e <code>\bottomrule</code> num ambiente tabular.</dd>
+<dt>simple</dt><dd>coloca um ambiente tabular simples à volta das células.</dd>
+<dt>longtable</dt><dd>toma a primeira linha como cabeçalho, adiciona as linhas de cabeçalho de uma longtable e coloca as células num ambiente longtable.</dd>
+</dl>
+<p>A macro substitui o conteúdo da área de transferência pelo texto LaTeX. Para colar as mesmas células noutro estilo, copie-as primeiro de novo na folha de cálculo.</p>
+
+<h2 id="line-endings">Applescript › Save Copy with Unix Line Endings, Save Copy with Windows Line Endings, Save Copy with Classic Mac Line Endings</h2>
+<p>Os ficheiros de texto terminam as linhas de formas diferentes: o macOS e o Unix com um avanço de linha, o Windows com um retorno de carro seguido de um avanço de linha, e os ficheiros Macintosh muito antigos apenas com um retorno de carro. O TeXShop lê os três. Se o editor de outra pessoa não conseguir, use estas macros. Para um ficheiro de código-fonte MyFile.tex, Save Copy with Unix Line Endings escreve uma cópia do ficheiro guardado chamada MyFile_Unix.tex com avanços de linha; Save Copy with Windows Line Endings escreve MyFile_Windows.tex e Save Copy with Classic Mac Line Endings escreve MyFile_Mac.tex. As macros usam o programa flip, de Craig Stuart Sapp, em ~/Library/TeXShop/bin.</p>
+
+<h2 id="bibliography">Applescript › Run LaTeX, BibTeX, Then LaTeX Twice</h2>
+<p>Um documento com bibliografia precisa de várias execuções: o LaTeX escreve o ficheiro .aux, o BibTeX usa-o para escrever os ficheiros .bbl e .blg, o LaTeX é executado de novo para adicionar a bibliografia e mais uma vez para atualizar as referências a ela. Esta macro executa-as umas a seguir às outras. <a href="macros_writingcompletescripts.htm">Escrever scripts com os comandos de composição do TeXShop</a> explica como funciona.</p>
+
+<h2 id="gerhardt">Claus Gerhardt Macros</h2>
+<p>A maioria das macros deste submenu chama scripts da shell em ~/Library/TeXShop/bin, como pdflatexc, que executa o pdfLaTeX, e bibtexc, que executa o BibTeX. Cada macro cujo nome começa por Run executa os programas indicados no nome, por essa ordem, e Open PDF abre o PDF do documento. Run LaTeX, dvips and ps2pdf também precisa do Ghostscript. Funcionam sobre um ficheiro guardado. <a href="macros_writingcommandscripts.htm">Escrever scripts com comandos da shell</a> explica Run pdfLaTeX with Shell Escape como exemplo.</p>
+<h3>Make HTML with TeX4ht</h3>
+<p>O TeX4ht converte um documento LaTeX numa página web: uma página HTML e ficheiros de imagem. Make HTML with TeX4ht executa o htlatex sobre o documento e abre o ficheiro HTML resultante no Safari. Não é preciso carregar o pacote tex4ht no documento; o htlatex carrega-o. Make HTML with TeX4ht, Remaking Images executa o htlatex com a opção <code>-r</code>, que volta a criar as imagens mesmo que já existam.</p>
+<h3>Extract Pages from PDF…</h3>
+<p>Extract Pages from PDF… cria ficheiros PDF que contêm páginas selecionadas do PDF do documento. Pergunta primeiro quantos ficheiros criar e, depois, as páginas de cada ficheiro, como <code>5:8</code> para as páginas 5 a 8 ou <code>3:4,6,8:12</code>. Se o documento se chamar MyFile, os ficheiros são guardados como MyFile-1.pdf, MyFile-2.pdf e assim por diante.</p>
+<h3>MetaPost</h3>
+<p>Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX abre pelo caminho os ficheiros de registo. Consulte <a href="advanced_context.htm">ConTeXt e MetaPost</a> para saber mais sobre o MetaPost.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trucchi di scrittura</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="trucchi di scrittura; parentesi corrispondenti; selezionare righe; commento; rientranza; menu Tag; Chiudi ambiente corrente; dividere il sorgente; trascinamento; barra di stato; statistiche; Scambia con gli appunti; Copia con stile; Conversione tipo di carattere; file di backup">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm" class="current">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Trucchi di scrittura</h1>
+
+<h2>Selezionare</h2>
+
+<p>Fai doppio clic su una parentesi, come ( o }, per selezionare tutto ciò che si trova tra essa e la parentesi corrispondente; è utile per trovare una graffa mancante. Fai doppio clic tenendo premuto il tasto Opzione per selezionare solo la parentesi. Fai clic o trascina sui numeri di riga per selezionare righe intere. Il gruppo «Corrispondenza delle parentesi» di Impostazioni › Editor stabilisce come vengono mostrate le parentesi corrispondenti mentre scrivi.</p>
+
+<h2>Commenti e rientranza</h2>
+
+<p>Sorgente › Aggiungi commento (<kbd>⌘{</kbd>) mette % all’inizio delle righe selezionate, e Sorgente › Rimuovi commento (<kbd>⌘}</kbd>) lo toglie. Sorgente › Aumenta rientranza e Sorgente › Diminuisci rientranza spostano le righe selezionate a destra o a sinistra, di una tabulazione quando «Usa tabulazione per la rientranza» è attivo in Impostazioni › Editor › Stile, altrimenti di tanti spazi quanti ne indica «Ampiezza tabulazione». Una nuova riga inizia con le stesse tabulazioni e gli stessi spazi della riga precedente; premi Elimina per toglierli.</p>
+
+<h2>Muoversi nel sorgente</h2>
+
+<p>Il menu «Tag» della barra strumenti elenca i capitoli, le sezioni e le altre suddivisioni del documento; scegline una per andarci. Una riga che inizia con <code>%:</code> aggiunge il resto della riga al menu come voce personale. «Menu Tag nella barra dei menu» in Impostazioni › Editor › Visualizzazione mette lo stesso menu nella barra dei menu. L’elemento «Etichette» della barra strumenti elenca le etichette del documento. Modifica › Vai alla riga... (<kbd>⌘L</kbd>) va a una riga in base al numero.</p>
+
+<p>Finestra › Dividi finestra (<kbd>⌃2</kbd>), oppure l’elemento «Dividi finestra» della barra strumenti, divide la finestra sorgente in due parti che mostrano lo stesso testo, così puoi leggere una parte del documento mentre ne scrivi un’altra. Tieni premuto Opzione per dividerla in due parti affiancate. Ciò che scrivi in una parte compare anche nell’altra.</p>
+
+<h2>Scrivere meno</h2>
+
+<p>Sorgente › Chiudi ambiente corrente (<kbd>⌃⌘C</kbd>) aggiunge la riga <code>\end</code> dell’ambiente ancora aperto, per esempio <code>\end{itemize}</code> dopo un elenco. Il completamento dei comandi termina i comandi e gli ambienti che hai iniziato a scrivere; consulta <a href="basic_commandcompletion.htm">Completamento dei comandi</a>. Le associazioni dei tasti sostituiscono un carattere digitato con un testo; consulta <a href="basic_autocompletion.htm">Associazioni dei tasti</a>. Il pannello LaTeX, il pannello Matrici e il menu Macro inseriscono porzioni di testo più lunghe.</p>
+
+<h2>Trascinare file sul sorgente</h2>
+
+<p>Trascina un file dal Finder sul sorgente per inserire un comando che lo riguarda:</p>
+
+<table>
+<tr><th>File</th><th>Comando inserito</th></tr>
+<tr><td>.pdf, .png, .jpg, .jpeg, .tif, .tiff, .eps, .ps</td><td><code>\includegraphics[]{<var>percorso</var>}</code></td></tr>
+<tr><td>.bib</td><td><code>\bibliography{<var>nome</var>}</code></td></tr>
+<tr><td>.bst</td><td><code>\bibliographystyle{<var>nome</var>}</code></td></tr>
+<tr><td>.sty</td><td><code>\usepackage{<var>nome</var>}</code></td></tr>
+<tr><td>.cls</td><td><code>\documentclass{<var>nome</var>}</code></td></tr>
+<tr><td>altri file, come .tex</td><td><code>\input{<var>percorso</var>}</code></td></tr>
+</table>
+
+<p>Qui <var>percorso</var> è il percorso del file a partire dalla cartella del file sorgente, e <var>nome</var> è il nome del file senza estensione. Un alias trascinato viene sostituito dal file che rappresenta, che TeX non saprebbe trovare da solo. Un file il cui percorso contiene uno spazio non viene inserito; TeXShop mostra invece un avviso.</p>
+
+<p>Per inserire qualcos’altro per un tipo di file, apri l’Editor delle macro (Macro › Apri Editor delle macro...) e aggiungi un sottomenu chiamato <code>Drag &amp; Drop</code>. Al suo interno, aggiungi una voce chiamata come l’estensione, per esempio <code>.pdf</code>, il cui contenuto è il testo da inserire, per esempio <code>\includegraphics[#INS#]{%r}</code>; una voce chiamata <code>.*</code> vale per ogni altra estensione, cioè per quelle che non hanno una voce propria e non compaiono nella tabella qui sopra. Il contenuto può usare queste abbreviazioni:</p>
+
+<dl>
+<dt><code>%F</code></dt><dd>il percorso completo del file trascinato</dd>
+<dt><code>%f</code></dt><dd>il nome del file</dd>
+<dt><code>%r</code></dt><dd>il percorso del file a partire dalla cartella del file sorgente</dd>
+<dt><code>%n</code></dt><dd>il nome del file senza estensione</dd>
+<dt><code>%e</code></dt><dd>l’estensione</dd>
+</dl>
+
+<h2>La barra di stato e le statistiche del testo</h2>
+
+<p>La barra di stato sotto il sorgente mostra le righe, i caratteri e le parole del documento, con tra parentesi i numeri relativi alla selezione, e la posizione, la riga e la colonna del punto di inserimento. I caratteri vengono contati come si vedono, quindi una lettera accentata o un’emoji conta come uno, e i comandi TeX vengono contati come sono scritti; un’emoji conta anche come una parola. A destra è indicata la dimensione del file salvato. Sorgente › Mostra la barra di stato mostra o nasconde la barra di stato in tutte le finestre.</p>
+
+<p>«Statistiche del testo…» nella barra di stato, oppure Modifica › Statistiche…, conta il testo senza i comandi TeX. Il programma detex di TeX Live li rimuove dal documento, o dalla selezione, e aggiunge i file letti con <code>\input</code> e <code>\include</code>; TeXShop conta ciò che resta allo stesso modo della barra di stato. Non è necessario che il documento sia salvato. Il conteggio viene fatto quando si apre il riquadro e quando si fa clic sul suo pulsante di aggiornamento.</p>
+
+<h2>Gli appunti</h2>
+
+<p>Modifica › Scambia con gli appunti sostituisce la selezione con il testo negli appunti e mette la selezione negli appunti. Per scambiare due porzioni di testo, copia la prima, seleziona la seconda e scegli «Scambia con gli appunti», poi seleziona il punto della prima e incolla. Quando non c’è nulla di selezionato, incolla.</p>
+
+<p>Modifica › Copia con stile copia la selezione nel font del sorgente e con i colori del tema della modalità chiara o della modalità scura, con o senza il colore di sfondo, da incollare in un programma di videoscrittura, in una presentazione o in un’email. A ciascuna delle sue quattro voci si può assegnare una scorciatoia in Impostazioni › Tastiera.</p>
+
+<h2>Convertire i caratteri</h2>
+
+<p>I sottomenu «Conversione tipo di carattere» e «Normalizzazione Unicode» del menu Modifica, presenti anche nel menu contestuale del sorgente, riscrivono la selezione; se non c’è nulla di selezionato, TeXShop chiede se riscrivere l’intero documento. «Conversione tipo di carattere» serve soprattutto per i documenti giapponesi. Converte tra hiragana e katakana, tra cifre e lettere a larghezza piena e a mezza larghezza, tra caratteri come i numeri cerchiati e i comandi del pacchetto ajmacros, e tra i caratteri esterni a JIS X 0208 e i comandi <code>\UTF</code> e <code>\CID</code> del pacchetto otf. Trasforma anche le virgolette tipografiche in virgolette TeX. «Normalizzazione Unicode» converte la selezione in NFC, NFD, NFKC o NFKD, oppure in NFC modificato o NFD modificato, che lasciano invariati gli ideogrammi di compatibilità CJK. Entrambe le operazioni si possono annullare.</p>
+
+<h2>File di backup</h2>
+
+<p>Quando «Attiva salvataggio automatico e versioni» è disattivato in Impostazioni › Documenti e salvataggio, attiva lì «Mantieni il file precedente come “nome~” al salvataggio» per conservare la versione precedente di un file ogni volta che viene salvato. Il backup ha una tilde dopo il nome del file, prima dell’estensione: il backup di paper.tex è paper~.tex.</p>
+
+<p>La ricerca e la sostituzione, con le espressioni regolari e la sostituzione multipla, sono descritte in <a href="basic_find.htm">Trova e sostituisci</a>.</p>
+</main>
+</body>
+</html>

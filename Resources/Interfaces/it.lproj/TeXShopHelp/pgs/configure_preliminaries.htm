@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preliminari</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="configurare TeXShop; finestra Impostazioni; Cerca; ~/Library/TeXShop; file danneggiati; Backups; impostazioni nascoste; commenti speciali">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Come configuro TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm" class="current">Preliminari</a></li>
+<li><a href="configure_prefchanges.htm">Modifiche consigliate alle impostazioni</a></li>
+<li><a href="configure_correctinstall.htm">Ottenere i nuovi elementi della libreria</a></li>
+<li><a href="configure_hidden.htm">Impostazioni nascoste</a></li>
+<li><a href="configure_panel.htm">Modificare il Pannello LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificare le associazioni dei tasti</a></li>
+<li><a href="configure_menushortcuts.htm">Ridefinire le scorciatoie da tastiera dei menu</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Preliminari</h1>
+<p>Questo capitolo spiega come adattare TeXShop al tuo modo di lavorare: le impostazioni da controllare per prime, come TeXShop mantiene aggiornati i file in ~/Library/TeXShop, le impostazioni nascoste e come modificare il Pannello LaTeX, le associazioni dei tasti e le scorciatoie da tastiera dei menu.</p>
+
+<h2 id="settings">La finestra Impostazioni</h2>
+<p>Scegli TeXShop › Impostazioni… per aprire la finestra Impostazioni. La sua barra laterale ha dieci categorie: Generali, Documenti e salvataggio, Editor, Tastiera, Ortografia, Temi, Compilazione, Console, Anteprima e Aggiornamenti. Per trovare un’impostazione senza sapere in quale categoria si trova, digita una parola nel campo di ricerca «Cerca» in cima alla barra laterale e scegli un risultato: Impostazioni mostra l’impostazione e la evidenzia. Consulta <a href="basic_preferences.htm#settings-search">Cercare nelle impostazioni</a>.</p>
+<p>Molte impostazioni hanno un comando di menu corrispondente, per esempio Sorgente › Mostra numeri di riga e l’impostazione «Numeri di riga» in Editor. Il comando di menu cambia solo il documento attivo finché resta aperto; l’impostazione decide come appaiono e si comportano i documenti quando vengono aperti.</p>
+<p>Quasi tutto ciò che è conservato nei file si può modificare in TeXShop stesso. Impostazioni › Tastiera contiene le associazioni dei tasti, l’elenco di completamento dei comandi («Modifica il completamento dei comandi…») e le scorciatoie da tastiera dei menu; le macro si modificano nell’Editor delle macro (Macro › Apri Editor delle macro...) e i temi dei colori in Impostazioni › Temi.</p>
+
+<h2 id="library">La cartella ~/Library/TeXShop</h2>
+<p>Modelli, macro, motori, il file del Pannello LaTeX, le associazioni dei tasti, l’elenco di completamento dei comandi, i temi e gli altri file che puoi modificare sono conservati in ~/Library/TeXShop, la cartella TeXShop della cartella Libreria nella tua cartella Inizio. TeXShop › Apri ~/Library/TeXShop la apre nel Finder. Una nuova versione di TeXShop conserva lì le tue modifiche; <a href="configure_correctinstall.htm">Ottenere i nuovi elementi della libreria</a> spiega quali file aggiorna.</p>
+<p>Quando un file di cui TeXShop ha bisogno, come le macro, il file del Pannello LaTeX, le associazioni dei tasti o un tema, manca o è danneggiato, TeXShop lo sostituisce con una propria copia all’avvio, senza alcun messaggio. Il file danneggiato viene conservato in ~/Library/TeXShop/Backups, così puoi recuperare da lì le tue modifiche.</p>
+<p>Per tornare al contenuto predefinito di una cartella, esci da TeXShop, sposta la cartella (per esempio Templates) fuori da ~/Library/TeXShop, per esempio sulla Scrivania, e avvia di nuovo TeXShop. TeXShop crea di nuovo la cartella con il suo contenuto predefinito; ricopia dalla cartella spostata ciò che vuoi conservare.</p>
+
+<h2 id="more">Impostazioni nascoste e commenti speciali</h2>
+<p>Alcune impostazioni non si trovano nella finestra Impostazioni; si cambiano con un comando nel Terminale. Consulta <a href="configure_hidden.htm">Impostazioni nascoste</a>. I commenti speciali come <code>% !TEX program = lualatex</code> all’inizio di un file sorgente impostano il motore, la codifica, il file principale e altro ancora solo per quel file. Aiuto › Righe di commento e impostazioni nascoste (in inglese) elenca tutti i commenti speciali e le impostazioni nascoste.</p>
+</main>
+</body>
+</html>

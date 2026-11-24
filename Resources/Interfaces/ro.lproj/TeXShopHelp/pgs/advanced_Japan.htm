@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compilarea textelor în japoneză</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Japonia; japoneză; pLaTeX; upLaTeX; LuaLaTeX; dvipdfmx; pachetul otf; \UTF; \CID; UTF-8-MAC; normalizare Unicode; yen; bară oblică inversă">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm" class="current">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Compilarea textelor în japoneză</h1>
+<p>TeX Live include motoarele TeX japoneze pTeX și upTeX, cu pLaTeX și upLaTeX, precum și LuaLaTeX cu pachetul LuaTeX-ja. Ajutorul japonez al TeXShop descrie mai detaliat compilarea textelor în japoneză.</p>
+
+<h2>Profiluri de motor pentru japoneză</h2>
+<p>Cel mai rapid mod de a configura TeXShop pentru documente în japoneză este un profil de motor. În Configurări › Compilare › „Profilul motorului”, alegeți unul dintre cele trei profiluri japoneze:</p>
+<table>
+<tr><th>Profil</th><th>Compilare</th><th>BibTeX, index, MetaPost</th></tr>
+<tr><td>upLaTeX + dvipdfmx</td><td>uplatex, apoi dvipdfmx</td><td>upbibtex, upmendex, upmpost</td></tr>
+<tr><td>pLaTeX + dvipdfmx</td><td>platex, apoi dvipdfmx</td><td>pbibtex, mendex, pmpost</td></tr>
+<tr><td>LuaLaTeX (japoneză)</td><td>lualatex</td><td>upbibtex, upmendex, mpost</td></tr>
+</table>
+<p>Profilurile japoneze setează și UTF-8 drept codificare a documentelor noi, setează dicționarul ortografic la detectarea automată a limbii și activează „Convertiți automat UTF-8-MAC în UTF-8”. pLaTeX + dvipdfmx activează în plus „Conversie în \UTF / \CID din pachetul otf”, iar toate celelalte profiluri o dezactivează. Înainte să confirmați, o foaie listează valorile pe care le setează profilul.</p>
+
+<h2>Caractere din afara JIS X 0208 cu pLaTeX</h2>
+<p>pTeX citește surse UTF-8, dar intern cunoaște numai caracterele din JIS X 0208, așa că alte caractere, precum 鷗 din 森鷗外, se pierd. Pachetul otf le tipărește cu comenzi ca <code>\UTF{9DD7}</code>. Configurarea „Conversie în \UTF / \CID din pachetul otf” din grupul „pLaTeX japonez” din Configurări › Compilare vă permite să tastați aceste caractere așa cum sunt:</p>
+<ul>
+<li>Când documentul este salvat, fiecare caracter din afara JIS X 0208 este scris ca <code>\UTF{XXXX}</code>, iar o variantă de glifă aleasă în editor ca <code>\CID{număr}</code>. Dacă o astfel de comandă încheie un rând, după ea se adaugă <code>%</code>, pentru ca în rezultat să nu apară un spațiu.</li>
+<li>Când un document este deschis, aceste comenzi sunt transformate înapoi în caractere, indiferent dacă configurarea este activată sau nu, astfel încât fereastra sursă arată întotdeauna caracterele însele.</li>
+</ul>
+<p>Documentul are nevoie de <code>\usepackage{otf}</code>. De exemplu, fereastra sursă arată</p>
+<pre>\documentclass{jsarticle}
+\usepackage{otf}
+\begin{document}
+森鷗外 was a famous novelist in Japan.
+\end{document}</pre>
+<p>în timp ce fișierul conține <code>森\UTF{9DD7}外</code>. upLaTeX și LuaLaTeX lucrează direct cu Unicode și nu au nevoie de conversie.</p>
+<p>Pentru a converti manual o parte dintr-un text, selectați-o și folosiți Editare › Conversie tip de caractere › Caractere Unicode → \UTF / \CID sau \UTF / \CID → Caractere Unicode. Același submeniu convertește între hiragana și katakana, între cifrele și literele cu lățime completă și cele cu jumătate de lățime, între caractere precum numerele încercuite și comenzile pachetului ajmacros, precum și ghilimelele tipografice în ghilimele TeX. Dacă nu este selectat nimic, TeXShop întreabă dacă să convertească întregul document; orice conversie poate fi anulată.</p>
+
+<h2>Caractere compuse și descompuse</h2>
+<p>Unele caractere japoneze au două forme Unicode. が poate fi un singur caracter (U+304C) sau か (U+304B) urmat de semnul combinant de sonorizare (U+3099). Ambele arată la fel, dar TeX le tratează ca diferite, astfel încât o comandă definită cu o formă nu este găsită când este folosită cu cealaltă:</p>
+<pre>\def\が{GA}
+\が   % Undefined control sequence if this が is decomposed</pre>
+<p>Textul descompus provine adesea din nume de fișiere, pe care discurile HFS+ le stochează în formă descompusă; această formă se numește UTF-8-MAC. Când Configurări › Documente și salvare › „Salvarea documentelor” › „Convertiți automat UTF-8-MAC în UTF-8” este activată, TeXShop combină astfel de caractere în caractere unice la salvarea unui document. Lasă neschimbate ideogramele de compatibilitate CJK și celelalte caractere pe care compunerea standard (NFC) le-ar înlocui cu alte caractere; această formă se numește NFC modificat.</p>
+<p>Submeniul Editare › Normalizare Unicode convertește o selecție sau întregul document în NFC, NFC modificat, NFD, NFD modificat, NFKC sau NFKD, apoi afișează panoul „Informații despre caracter” pentru rezultat, deoarece textul normalizat arată de obicei la fel ca înainte.</p>
+
+<h2>Semnul yen și bara oblică inversă</h2>
+<p>Pe tastaturile japoneze, tasta aflată în locul barei oblice inverse tastează semnul yen ¥, în timp ce comenzile TeX încep cu bara oblică inversă \.</p>
+<ul>
+<li>Cu UTF-8, codificarea setată de profilurile japoneze, ¥ și \ sunt caractere diferite și ambele se păstrează. Activați Sursă › Asocieri de taste pentru document: lista de asocieri de taste livrată cu TeXShop transformă un ¥ tastat în \ și, deoarece coloana „Lipiți” este bifată, și ¥ din textul lipit în sursă. Consultați <a href="basic_autocompletion.htm">Asocieri de taste</a>.</li>
+<li>Când codificarea documentelor noi este una dintre codificările japoneze, TeXShop convertește între ¥ și \ pe măsură ce tastați și lipiți. Cu „Japoneză (Mac OS, ShiftJIS ¥)” și „Japoneză (Shift JIS X0213)”, fereastra sursă arată caracterul de comandă TeX ca ¥; cu celelalte codificări japoneze arată \.</li>
+<li>Când un fișier este salvat într-o codificare japoneză, bara oblică inversă și tilda sunt scrise întotdeauna ca octeții 0x5C și 0x7E, pe care îi așteaptă TeX.</li>
+</ul>
+
+<h2>Alte configurări pentru japoneză</h2>
+<ul>
+<li>Configurări › Editor › „Caractere invizibile” › „Spațiu japonez” afișează spațiul cu lățime completă când sunt afișate caracterele invizibile.</li>
+<li>Configurări › Editor › „Evidențierea sintaxei” › „Evidențiați literele și simbolurile de lățime completă” marchează literele, cifrele și simbolurile cu lățime completă, ușor de confundat cu echivalentele lor ASCII, cu culorile „Lățime completă” ale temei.</li>
+<li>Configurări › Previzualizare › „Direcția paginilor” afișează paginile de la dreapta la stânga, așa cum este necesar pentru textul vertical. Liniile <code>% !TEX PageDirectionR2L</code> și <code>% !TEX PageDirectionL2R</code> stabilesc direcția pentru un singur document.</li>
+</ul>
+<p>Conversia în <code>\UTF</code> / <code>\CID</code> și normalizarea Unicode sunt explicate în detaliu în prezentarea lui Yusuke Terada de la TUG 2013, <a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>.</p>
+</main>
+</body>
+</html>

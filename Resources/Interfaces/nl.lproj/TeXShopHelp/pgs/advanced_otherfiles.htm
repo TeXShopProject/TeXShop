@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Andere bestanden openen met TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="bestandstypen; extensies; sty; cls; bib; log; aux; dtx; ins; Rnw; mp; md; dvi; ps; eps; pdf; OtherTeXExtensions; Bestandstype">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm" class="current">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Andere bestanden openen met TeXShop</h1>
+<p>TeXShop opent elk tekstbestand, zodat u logbestanden, aux-bestanden en andere bestanden van TeX naast uw documenten kunt lezen. Het opent ook PDF-bestanden en afbeeldingen.</p>
+
+<h2>Bestanden die als TeX-bron worden behandeld</h2>
+<p>Bestanden met de volgende extensies, en bestanden zonder extensie, zijn voor TeXShop TeX-bronnen: ze worden met syntaxmarkering getoond en kunnen worden gezet.</p>
+<pre>asy  bbx  bib  cbx  clo  cls  ctx  def  dtx  fd  fdd  gabc  gtex
+htx  html  ins  lbx  lhs  ltx  lua  lytex  ly  md  mf  mp  ptx
+Rnw  sk  skt  Stex  sty  tex  typ  xml</pre>
+<p>Andere tekstbestanden, zoals <code>.log</code>-, <code>.aux</code>-, <code>.bst</code>-, <code>.engine</code>- of <code>.txt</code>-bestanden, worden als platte tekst geopend, zonder syntaxmarkering.</p>
+<p>Om TeXShop bestanden met een andere extensie als TeX-bron te laten behandelen, voegt u de extensie in Terminal toe met een verborgen instelling; bijvoorbeeld voor ConTeXt-bestanden met de extensie <code>mkiv</code>:</p>
+<pre>defaults write TeXShop OtherTeXExtensions -array-add "mkiv"</pre>
+
+<h2>PDF-bestanden en afbeeldingen</h2>
+<p>PDF-bestanden en afbeeldingen met de extensies <code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.tif</code>, <code>.tiff</code> en <code>.eps</code> worden in een eigen venster geopend. DVI- en PostScript-bestanden (<code>.dvi</code>, <code>.ps</code>) worden naar PDF omgezet en getoond.</p>
+
+<h2>Bewaren met een andere extensie</h2>
+<p>Een bestand behoudt zijn extensie als TeXShop het bewaart. Een nieuw document wordt als <code>.tex</code>-bestand bewaard, tenzij u in het bewaarvenster in het menu ‘Bestandstype’ een ander type kiest, zoals sty, bib of mp.</p>
+<p>TeXShop bewaart een bestand in de codering waarmee het is geopend. Het programma is bedoeld voor TeX en verwante bestanden; een bestand in een ongebruikelijk formaat kan veranderen als het na bewerking in TeXShop wordt bewaard. Zie <a href="advanced_encoding.htm">Coderingen</a>.</p>
+</main>
+</body>
+</html>

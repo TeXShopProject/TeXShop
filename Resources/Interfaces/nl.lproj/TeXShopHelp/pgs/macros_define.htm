@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nieuwe macro’s definiëren</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="nieuwe macro’s; macro-editor; toetscombinatie; submenu’s; scheidingslijnen; plaatshouderlabels; menu Voeg in">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hulp bij macro’s</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Inleiding</a></li>
+<li><a href="macros_default.htm">De standaardmacro’s</a></li>
+<li><a href="macros_rearrange.htm">Het menu Macro’s herschikken</a></li>
+<li><a href="macros_define.htm" class="current">Nieuwe macro’s definiëren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-macro’s</a></li>
+<li><a href="macros_includedscripts.htm">Standaard-AppleScript-macro’s</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a></li>
+<li><a href="macros_dialogs.htm">Dialoogvensters maken</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Nieuwe macro’s definiëren</h1>
+<p>Klik in de macro-editor (Macro’s › Open macro-editor...) op + onder de lijst om een onderdeel toe te voegen. Het menu aan het rechtereinde van de balk onder de lijst (⋯) voegt een submenu of een scheidingslijn toe en dupliceert de geselecteerde onderdelen; − verwijdert ze. Een nieuw onderdeel of submenu krijgt meteen een naam: typ de naam en druk op Return. Submenu’s kunnen tot elk niveau worden genest. Met een beetje oefening ziet u hoe de editor werkt.</p>
+
+<h2 id="shortcuts">Toetscombinaties</h2>
+<p>Om een onderdeel een toetscombinatie te geven, selecteert u het en klikt u in de lijst op de toetscombinatie ervan (of klikt u dubbel op de toetscombinatie), en drukt u dan de nieuwe toetscombinatie in: Command of Control met een toets, of een van F1–F20, zo nodig met Shift en Option. Als een menucommando of een andere macro de toetscombinatie al gebruikt, meldt TeXShop dat onder de inhoud en wijzigt het haar niet; druk een andere toetscombinatie in. Om een toetscombinatie te verwijderen, klikt u in het veld op ‘Verwijder toetscombinatie’ (⊖) of drukt u op Delete; Escape behoudt de toetscombinatie die er was. Een toetscombinatie die inactief is omdat een menucommando of een eerdere macro haar gebruikt, wordt in de lijst gemarkeerd met een waarschuwingsdriehoek; selecteer het onderdeel om de reden onder de inhoud te zien. Zie <a href="configure_menushortcuts.htm">Toetscombinaties van menu’s wijzigen</a> voor hoe toetscombinaties van menu’s en macro’s samenwerken.</p>
+
+<h2 id="tokens">Plaatshouders</h2>
+<p>In de inhoud worden de plaatshouders die een macro vervangt, getoond als afgeronde labels die aangeven waarvoor ze staan, zoals ‘Geselecteerde tekst’: #SEL#, #INS#, #PASTE# en de markeerpunten • van een tekstmacro (zie <a href="macros_default.htm">De standaardmacro’s</a>), en #FILEPATH# en de andere paden van een AppleScript-macro (zie <a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a>). De macro bewaart ze zoals ze zijn geschreven, zodat kopiëren en bewaren gewoon werken. Typ een plaatshouder, of kies hem in het menu ‘Voeg in’ onder de inhoud; de helpknop rechts daarvan toont ze allemaal. Wanneer u naast een label iets verwijdert, wordt het hele label verwijderd.</p>
+</main>
+</body>
+</html>

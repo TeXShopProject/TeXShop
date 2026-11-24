@@ -3,8 +3,11 @@
 @implementation TSShortcutSearch
 + (NSArray<TSShortcutMatch *> *)matchesKey:(NSString *)key modifiers:(NSEventModifierFlags)flags store:(TSShortcutStore *)store macros:(NSArray<TSShortcutMacro *> *)macros {
     NSMutableArray<TSShortcutMatch *> *matches = [NSMutableArray array];
+    // The bindings leave out the Globe key; F finds only a bare F, and 🌐︎F only Enter Full Screen.
+    NSEventModifierFlags globe = TSGlobeModifier(key, flags);
     for (TSShortcutMatch *match in [store menuMatchesKey:key modifiers:flags excluding:nil]) {
         if (match.menuItem.hidden && !match.menuItem.allowsKeyEquivalentWhenHidden) continue;
+        if (TSGlobeModifier(match.menuItem.keyEquivalent, match.menuItem.keyEquivalentModifierMask) != globe) continue;
         [matches addObject:[[TSShortcutMatch alloc] initWithPath:match.path menuItem:match.menuItem command:match.command macro:nil winner:matches.count == 0]];
     }
     // Reuse the same raw comparison and file-order ownership used by the macro editor.
@@ -17,6 +20,7 @@
     TSShortcutBinding *binding = TSBinding(key, flags);
     [macros enumerateObjectsUsingBlock:^(TSShortcutMacro *macro, NSUInteger index, BOOL *stop) {
         if (macro.key.length == 0 || ![[store bindingsForMacroKey:macro.key modifiers:macro.modifiers] containsObject:binding]) { return; }
+        if (TSGlobeModifier(macro.key, macro.modifiers) != globe) { return; }
         [matches addObject:[[TSShortcutMatch alloc] initWithPath:macro.path menuItem:nil command:nil macro:macro winner:![inactive containsIndex:index]]];
     }];
     return [matches copy];
@@ -27,9 +31,10 @@
     NSMutableSet<NSIndexPath *> *seenMacros = [NSMutableSet set];
     // These are only the recorder's spellings of this input. Ownership stays raw;
     // no restoration aliases or keyboard-layout comparison of assignments is used.
+    NSEventModifierFlags globe = TSEventGlobeModifier(event);
     for (TSShortcutBinding *binding in TSEventBindings(event, [event charactersByApplyingModifiers:0])) {
         NSString *key = binding.key;
-        for (TSShortcutMatch *match in [self matchesKey:key modifiers:binding.modifiers store:store macros:macros]) {
+        for (TSShortcutMatch *match in [self matchesKey:key modifiers:binding.modifiers | globe store:store macros:macros]) {
             NSMenuItem *item = match.menuItem;
             TSShortcutMacro *macro = match.macro;
             if (item != nil && ![seenMenus containsObject:item]) {

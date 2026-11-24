@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppleScript-macro’s definiëren</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; #FILEPATH#; #PDFPATH#; #TEXPATH#; #FOLDERPATH#; #NAMEPATH#; #DOCUMENTNAME#; typeset; latexinteractive; taskdone; refreshpdf; goto line">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hulp bij macro’s</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Inleiding</a></li>
+<li><a href="macros_default.htm">De standaardmacro’s</a></li>
+<li><a href="macros_rearrange.htm">Het menu Macro’s herschikken</a></li>
+<li><a href="macros_define.htm">Nieuwe macro’s definiëren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-macro’s</a></li>
+<li><a href="macros_includedscripts.htm">Standaard-AppleScript-macro’s</a></li>
+<li><a href="macros_defapplescript.htm" class="current">AppleScript-macro’s definiëren</a></li>
+<li><a href="macros_dialogs.htm">Dialoogvensters maken</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>AppleScript-macro’s definiëren</h1>
+<p>AppleScript is een taal op zich. De <cite>AppleScript Language Guide</cite> van Apple, op de ontwikkelaarswebsite van Apple, beschrijft de taal volledig.</p>
+
+<h2 id="paths">Paden en de documentnaam</h2>
+<p>Voordat TeXShop een AppleScript-macro uitvoert, vervangt het de volgende tekenreeksen door het pad van een bestand van het actieve document, tussen dubbele aanhalingstekens:</p>
+<dl>
+<dt>#FILEPATH#</dt><dd>het bronbestand</dd>
+<dt>#TEXPATH#</dt><dd>het .tex-bestand</dd>
+<dt>#NAMEPATH#</dt><dd>het bronbestand zonder extensie</dd>
+<dt>#FOLDERPATH#</dt><dd>de map met de bron, eindigend op een schuine streep</dd>
+<dt>#PDFPATH#, #DVIPATH#, #PSPATH#, #LOGPATH#, #AUXPATH#</dt><dd>de .pdf-, .dvi-, .ps-, .log- en .aux-bestanden</dd>
+<dt>#INDPATH#, #BBLPATH#, #HTMLPATH#</dt><dd>de .ind-, .bbl- en .html-bestanden</dd>
+</dl>
+<p>Als #FILEPATH# bijvoorbeeld /Users/name/Projects/Fourier/Fourier.tex oplevert, levert #FOLDERPATH# /Users/name/Projects/Fourier/ op. Als het document nog nooit is bewaard, is #FILEPATH# een lege tekenreeks.</p>
+<p>#DOCUMENTNAME# wordt vervangen door de naam van het document zoals de titel van het bronvenster die toont: met extensie, of zonder als de extensie verborgen is. Een script gebruikt deze naam om het document aan te spreken dat het heeft aangeroepen:</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  latex
+end tell</pre>
+
+<h2 id="commands">Commando’s van TeXShop</h2>
+<p>Een AppleScript kan zijn werk op twee manieren doen: het kan shell-commando’s uitvoeren, zoals beschreven in <a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a>, of het kan de eigen commando’s van TeXShop aanroepen, zoals beschreven in <a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a>. TeXShop begrijpt onder meer deze commando’s:</p>
+<pre>typeset
+latex
+tex
+bibtex
+makeindex
+metapost
+typesetinteractive
+latexinteractive
+texinteractive
+bibtexinteractive
+makeindexinteractive
+metapostinteractive
+taskdone
+refreshpdf
+refreshtext
+goto line</pre>
+<p>De eerste zes commando’s zetten doorlopend, zonder bij fouten te stoppen. De volgende zes zetten ook, maar stoppen bij een fout, zodat u in de console kunt antwoorden. Een zetcommando keert meteen terug, voordat het zetten klaar is. <code>taskdone</code> geeft NO terug zolang het zetten nog loopt, en YES wanneer het klaar is. <code>refreshpdf</code> en <code>refreshtext</code> laten PDF- en tekstvensters de nieuwste versie van hun bestanden tonen. <code>goto line</code> selecteert een regel in de bron:</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  goto line 37
+end tell</pre>
+</main>
+</body>
+</html>

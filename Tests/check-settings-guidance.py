@@ -7,7 +7,7 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-LANGUAGES = ('en', 'ja', 'ko', 'de', 'es')
+LANGUAGES = ('en', 'ja', 'ko', 'de', 'es', 'fr', 'it', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN')
 CATEGORIES = ('general', 'documents', 'editor', 'spelling', 'appearance',
               'preview', 'typesetting', 'console', 'keyboard', 'updates')
 # Quoted names and HTML-wrapped names must be checked too. Source *menu* and
@@ -26,6 +26,9 @@ CATEGORY_RULES = {
     'de': rf'\bunter\s+{QUOTE}Programme\b|\bTitel\s+Programme\b|(?:Registerkarte)\s+{QUOTE}(?:Programme|Themes|Quelltext)\b|\b(?:Quelltext|Programme|Div\. ?[12]){QUOTE}[- ]?(?:Reiter|Kategorie|Tab|Bereich)\b|(?:Reiter|Kategorie)\s+{QUOTE}(?:Quelltext|Programme|Div\.|Erscheinungsbild)',
     'es': rf'\b(?:solapa|pestaña|categoría|sección|apartado)\s+{QUOTE}(?:Código|Motor|Misc\d?|Documento|Modos|Copiar|Apariencia)\b',
 }
+# The books translated from the English book of 6.00 have no earlier names of their own; English ones must not stay.
+for _language in ('fr', 'it', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN'):
+    CATEGORY_RULES[_language] = CATEGORY_RULES['en']
 REMOVED_MENU = (r'Edit Key Bindings File|Open Completion File|Edit Command Completion File|'
                 r'Key Bindings menu|Vervollständigungsdatei öffnen|Autovervollständigung-Datei|'
                 r'Abrir archivo de compleciones|Editar archivo de autocompleciones|'
@@ -111,8 +114,13 @@ def core_spotlight_text(path):
     return '\n'.join(texts)
 
 RETIRED_LABELS = json.loads((ROOT / 'Tests/Fixtures/SettingsClassificationStrings.json').read_text())['retired_labels']
-page_count = 0
-for language in LANGUAGES:
+# The books of these languages are being translated from the English book. Their failures are
+# reported at the end, so that the other checks of this file still run meanwhile.
+NEW_BOOKS = ('fr', 'it', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN')
+nonlocal_count = [0]
+
+
+def check_language(language):
     folder = ROOT / f'Resources/Interfaces/{language}.lproj'
     categories = strings(ROOT / 'Resources/Interfaces' / ('Base.lproj' if language == 'en' else language+'.lproj') / 'SettingsCategories.strings')
     labels = strings(folder / 'Localizable.strings')
@@ -126,7 +134,7 @@ for language in LANGUAGES:
             text = current[1]
         check_obsolete(text, language, path)
         pages[path.stem] = text
-        page_count += 1
+        nonlocal_count[0] += 1
     if language in ('en', 'ko'):
         route = 'Settings > Typesetting > Related Tools > BibTeX Engine' if language == 'en' else '설정 > 조판 > 관련 도구 > BibTeX 엔진'
         # The help writes menu and Settings paths with ›, with the names the interface shows (설정 in Korean).
@@ -189,11 +197,22 @@ for language in LANGUAGES:
     # Older de/es key-binding articles do not describe the list; the others name its
     # columns as Settings shows them. Every command-completion article uses the
     # current button label.
-    if language in ('en', 'ko', 'ja'):
+    if language not in ('de', 'es'):
         assert all(labels[key] in pages['basic_autocompletion'] for key in ('Input Character', 'Output String', 'Insert')) and categories['keyboard'] in pages['basic_autocompletion'], (language, 'basic_autocompletion')
     assert labels['Edit Command Completion…'] in pages['basic_commandcompletion'] and categories['keyboard'] in pages['basic_commandcompletion'], (language, 'basic_commandcompletion')
 
-# Simplified Chinese has no help; its method name uses 语法 as in 语法高亮, not 结构.
+
+waiting = []
+for language in LANGUAGES:
+    try:
+        check_language(language)
+    except (AssertionError, KeyError, StopIteration) as error:
+        if language not in NEW_BOOKS:
+            raise
+        waiting.append(f'{language}: {type(error).__name__} {error}'[:400])
+page_count = nonlocal_count[0]
+
+# The Simplified Chinese method name uses 语法 as in 语法高亮, not 结构.
 zh_labels=strings(ROOT/'Resources/Interfaces/zh_CN.lproj/Localizable.strings')
 zh_categories=strings(ROOT/'Resources/Interfaces/zh_CN.lproj/SettingsCategories.strings')
 method='使用考虑LaTeX语法的拼写检查（推荐）'
@@ -238,7 +257,8 @@ for file in ('Documentation/Releases/6.00-ja.md', 'website/release-notes-ja.html
     assert '入力設定とショートカット一覧は同じ縦スクロール領域' not in text
 contract = json.loads((ROOT / 'Tests/Fixtures/SettingsCategoryGroups.json').read_text())
 assert 'catalog' in contract['source'].lower()
-print(f'PASS: {page_count} current help pages in five languages, five central category overviews and 25 DOM layouts, manual, editing routes and original encodings')
+checked = len(LANGUAGES) - len(waiting)
+print(f'PASS: {page_count} current help pages in {checked} languages, {checked} central category overviews and {5 * checked} DOM layouts, manual, editing routes and original encodings')
 
 # Release changes must belong to the version's Settings section, not its footer.
 from html.parser import HTMLParser
@@ -293,7 +313,7 @@ for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','
     assert phrase in (ROOT/filename).read_text(),('Current release layout copies agree',filename)
 
 # Obsolete unlinked pages still enter help indexes, so they must not ship.
-for language in ('en','ko'):
+for language in LANGUAGES:
     assert not (ROOT/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/basic_preferences1.htm').exists(),'Obsolete duplicate preferences help page'
 assert 'Transparency settings bring up a full Color Well' not in manual,'Opacity uses a slider in the manual'
 
@@ -358,11 +378,11 @@ sync_tabs={
         "プレビューからSyncして別のファイルが開くとき、新しいウインドウではなく、ルートファイルのウインドウにタブとして加えます。"),
     'de': ("Über Sync geöffnete Dateien als Tabs im Fenster der Hauptdatei öffnen",
         "Wenn Sync von der Vorschau aus eine andere Datei öffnet, wird sie als Tab zum Fenster der Hauptdatei hinzugefügt, statt in einem eigenen Fenster geöffnet zu werden."),
-    'es': ("Abrir los archivos alcanzados por Sync como pestañas en la ventana del archivo raíz",
-        "Cuando Sync abre otro archivo desde la vista previa, este se añade como pestaña a la ventana del archivo raíz en lugar de abrirse en su propia ventana."),
+    'es': ("Abrir como pestañas en la ventana del archivo raíz los archivos que abre la sincronización",
+        "Cuando la sincronización desde la vista previa abre otro archivo, este se añade como pestaña a la ventana del archivo raíz en lugar de abrirse en su propia ventana."),
     'fr': ("Ouvrir les fichiers atteints par la synchro dans des onglets de la fenêtre du fichier racine",
         "Lorsque la synchro depuis l’aperçu ouvre un autre fichier, celui-ci s’ajoute sous forme d’onglet à la fenêtre du fichier racine au lieu de s’ouvrir dans sa propre fenêtre."),
-    'it': ("Aprire come pannelli nella finestra del file principale i file raggiunti dalla sincronizzazione",
+    'it': ("Apri come pannelli nella finestra del file principale i file raggiunti dalla sincronizzazione",
         "Quando la sincronizzazione dall’anteprima apre un altro file, questo si aggiunge come pannello alla finestra del file principale invece di aprirsi in una finestra propria."),
     'ko': ("동기화로 여는 파일을 루트 파일 윈도우의 탭으로 열기",
         "미리보기에서 동기화하여 다른 파일을 열 때 새 윈도우를 열지 않고 루트 파일 윈도우에 탭으로 추가합니다."),
@@ -372,10 +392,10 @@ sync_tabs={
         "Quando a sincronização a partir da pré-visualização abre outro arquivo, ele é adicionado como aba à janela do arquivo principal em vez de abrir em uma janela própria."),
     'pt-PT': ("Abrir como separadores na janela do ficheiro principal os ficheiros encontrados pela sincronização",
         "Quando a sincronização a partir da pré-visualização abre outro ficheiro, este é adicionado como separador à janela do ficheiro principal em vez de abrir numa janela própria."),
-    'ro': ("Deschide ca file în fereastra fișierului principal fișierele accesate prin sincronizare",
+    'ro': ("Deschideți ca file în fereastra fișierului principal fișierele accesate prin sincronizare",
         "Când sincronizarea din previzualizare deschide alt fișier, acesta se adaugă ca filă în fereastra fișierului principal, în loc să se deschidă într-o fereastră proprie."),
-    'zh_CN': ("在主文件的窗口中以标签页打开通过同步定位的文件",
-        "从预览同步打开其他文件时，将其作为标签页加入主文件的窗口，而不是打开新窗口。"),
+    'zh_CN': ("在根文件的窗口中以标签页打开通过同步定位的文件",
+        "从预览同步打开其他文件时，将其作为标签页加入根文件的窗口，而不是打开新窗口。"),
 }
 for language,(title,note) in sync_tabs.items():
     values=strings(ROOT/f'Resources/Interfaces/{language}.lproj/SettingsCategories.strings')
@@ -383,3 +403,11 @@ for language,(title,note) in sync_tabs.items():
 assert 'Open documents reached by Sync as tabs in the root window' not in manual,'Manual quotes the old Sync tabs name'
 assert manual.count('``'+sync_tabs['Base'][0].replace('\u2019',"'"))==2,'Manual quotes the Sync tabs switch by its current name'
 print('PASS: Sync tabs switch wording in 12 languages and the manual')
+
+# The books still in translation (NEW_BOOKS), last, after every other check of this file. The harnesses that
+# mutate the other books (run-settings-*.py) set TEXSHOP_HELP_TRANSLATIONS_PENDING=1 to see their own failures only.
+import os
+if waiting and os.environ.get('TEXSHOP_HELP_TRANSLATIONS_PENDING') == '1':
+    print('NOTE: help books waiting for their translation or their indexes: ' + ', '.join(w.split(':')[0] for w in waiting))
+else:
+    assert not waiting, 'help books waiting for their translation or their indexes:\n' + '\n'.join(waiting)

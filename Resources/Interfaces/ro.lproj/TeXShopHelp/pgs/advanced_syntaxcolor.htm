@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidențierea sintaxei</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="evidențierea sintaxei; culori de sintaxă; culori; temă; expl3; intrări de index; notă de subsol; marcaj; paranteze; lățime completă; SyntaxColoringEnabled">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm" class="current">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Evidențierea sintaxei</h1>
+<p>Fereastra sursă afișează TeX-ul colorat: comentariile, comenzile, notele de subsol, marcajele <code>$</code> și <code>&amp;</code> și parantezele <code>( )</code>, <code>{ }</code> și <code>[ ]</code> au fiecare propria culoare. Sursă › Evidențierea sintaxei activează sau dezactivează evidențierea pentru documentul activ. Documentele se deschid cu evidențierea activată; pentru a le deschide cu ea dezactivată, folosiți configurarea ascunsă</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
+
+<h2>Ce este evidențiat</h2>
+<ul>
+<li>Comenzile sunt o bară oblică inversă urmată de litere. Configurări › Editor › „Evidențierea sintaxei” › „@ face parte din comenzi” socotește și <code>@</code> drept literă, ca în comenzile interne ale pachetelor.</li>
+<li>Textul din <code>\footnote</code>, <code>\footcite</code> și <code>\autocite</code>, precum și din comenzile care încep cu <code>\cite</code> sau <code>\Cite</code>, precum <code>\citep</code> și <code>\citeauthor</code>, este afișat în culoarea „Notă de subsol”. Configurarea ascunsă <code>defaults write TeXShop SyntaxColorFootnote NO</code> colorează doar comanda.</li>
+<li>Sursă › Evidențiați intrările de index afișează argumentele lui <code>\index</code> și <code>\esindex</code> în culoarea „Index”. Configurări › Editor › „Evidențierea sintaxei” › „Evidențiați intrările de index implicit” o activează la deschiderea documentelor.</li>
+<li>Sursă › Evidențiați codul expl3 colorează și funcțiile, variabilele și celelalte părți ale codului expl3, stratul de programare al LaTeX, pentru cei care scriu pachete. „Evidențiați codul expl3 implicit” din același grup o activează la deschiderea documentelor.</li>
+<li>„Evidențiați literele și simbolurile de lățime completă” din același grup afișează literele, cifrele și simbolurile cu lățime completă, ușor de confundat cu caracterele ASCII în textul japonez, în culorile „Lățime completă”.</li>
+</ul>
+<p>„Evidențiați intrările de index” și „Evidențiați codul expl3” se aplică documentului activ; fiecare fereastră sursă are propria alegere. Fișierele care nu sunt surse TeX, precum fișierele jurnal, nu sunt evidențiate; consultați <a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a> pentru lista extensiilor și pentru modul de a adăuga una.</p>
+
+<h2>Modificarea culorilor</h2>
+<p>Culorile aparțin temei. Alegeți-le în Configurări › Teme:</p>
+<ul>
+<li>grupul „Evidențierea sintaxei” are „Comentariu”, „Comandă”, „Notă de subsol”, „Marcaj” și „Index”;</li>
+<li>grupul „Paranteze” are culorile pentru <code>( )</code>, <code>{ }</code> și <code>[ ]</code>;</li>
+<li>grupul „expl3” are function, __function, key, variable, __variable, argument și msg;</li>
+<li>grupul „Evidențieri” are, printre altele, culorile „Lățime completă”;</li>
+<li>grupul „Sintaxă XML” are culorile pentru fișierele HTML și XML.</li>
+</ul>
+<p>Fiecare temă are propriile culori, astfel încât „Tema modului luminos” și „Tema modului întunecat” pot diferi.</p>
+</main>
+</body>
+</html>

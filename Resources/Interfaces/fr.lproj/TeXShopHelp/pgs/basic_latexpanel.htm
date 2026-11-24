@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palette LaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="palette LaTeX; symboles; lettres grecques; environnements; typographie; amssymb; completion.plist; boutons personnalisés">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm" class="current">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Palette LaTeX</h1>
+<p>Fenêtre › Palette LaTeX... ouvre une palette de code LaTeX : symboles mathématiques, lettres grecques, fonctions, caractères accentués et internationaux, environnements et commandes de typographie. Cliquez dans la source là où le code doit aller, puis cliquez sur un bouton de la palette. Son code est inséré au point d’insertion. La palette reste devant les fenêtres source pendant que vous travaillez.</p>
+<p>Les boutons sont répartis sur des pages. Choisissez une page avec les boutons en haut de chaque partie de la palette : « Mathématiques », « Grec », « Symboles », « Fonctions » et « International », puis « Environnements », « Typographie » et « Personnalisé ».</p>
+<p>Si du texte est sélectionné quand vous cliquez sur un bouton de typographie ou d’environnement, le texte sélectionné se place à l’intérieur du code inséré, comme dans <code>\textbf{texte sélectionné}</code>.</p>
+<p>Certains symboles nécessitent le paquet amssymb. Ajoutez cette ligne au préambule d’un document qui les utilise :</p>
+<pre>\usepackage{amssymb}</pre>
+
+<h2>Personnaliser la palette</h2>
+<p>Le code que chaque bouton insère est conservé dans <code>~/Library/TeXShop/LatexPanel/completion.plist</code>. Ouvrez ce fichier dans TeXShop pour le modifier ; les commentaires placés au début expliquent son organisation. Les noms des boutons standard ne peuvent pas être modifiés, mais le code qu’ils insèrent peut l’être. Dans ce code :</p>
+<ul>
+<li><code>#SEL#</code> représente le texte sélectionné ;</li>
+<li><code>#INS#</code> marque l’endroit où va le point d’insertion après l’insertion du code ;</li>
+<li><code>#PASTE#</code> représente le texte du presse-papiers.</li>
+</ul>
+<p>La page « Personnalisé » peut accueillir jusqu’à seize boutons personnels. Chacun est défini dans la liste <code>Customized</code> du fichier par deux chaînes, le nom du bouton et le code qu’il insère :</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>Enregistrez le fichier en UTF-8, puis quittez et relancez TeXShop pour voir les modifications dans la palette. Si le fichier est absent ou endommagé, TeXShop le remplace par sa propre copie. Voir <a href="configure_panel.htm">Modifier la palette LaTeX</a> et <a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a>.</p>
+</main>
+</body>
+</html>

@@ -11,7 +11,7 @@
 "344.title" = "Ampliação fixa";
 "346.title" = "Duas páginas contínuas";
 "347.title" = "Páginas contínuas";
-"45.title" = "Lembrar-se da última posição";
+"45.title" = "Lembrar a última posição";
 "48.title" = "Abrir sempre numa posição fixa";
 "505.title" = "Da esquerda para a direita";
 "507.title" = "Da direita para a esquerda";
@@ -20,6 +20,6 @@
 "Fc6-Pp-tH1.title" = "Ajustar à largura do conteúdo";
 "SfP-Ak-pn3.title" = "Abrir em janelas separadas";
 "V7d-ht-Pe3.title" = "Direita";
-"sa2-VV-W1K.title" = "Guardar a posição ao fechar";
-"tVs-uh-QcM.title" = "Abrir todas as janelas numa posição fixa";
+"sa2-VV-W1K.title" = "Lembrar a última posição";
+"tVs-uh-QcM.title" = "Abrir sempre numa posição fixa";
 "vOt-2m-d2s.title" = "Unir numa única janela";

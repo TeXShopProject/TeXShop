@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Includerea imaginilor</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="includerea imaginilor; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; Convertiți TIFF">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm" class="current">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Includerea imaginilor</h1>
+<p>Când compilează direct în PDF, LaTeX include imagini în format PDF, PNG și JPEG. PDF păstrează clare desenele și textul la orice dimensiune, așa că folosiți-l pentru diagrame și grafice; PNG și JPEG se potrivesc pentru capturi de ecran și fotografii.</p>
+<p>Încărcați pachetul graphicx în preambul:</p>
+<pre>\usepackage{graphicx}</pre>
+<p>și includeți o imagine acolo unde trebuie să apară:</p>
+<pre>\includegraphics[width=0.8\textwidth]{diagram}</pre>
+<p>Extensia poate fi omisă; LaTeX caută atunci <code>diagram.pdf</code>, <code>diagram.png</code>, <code>diagram.jpg</code> și celelalte formate pe care le cunoaște. Modificați lățimea pentru a schimba dimensiunea imaginii. Puneți fișierele de imagine în dosarul documentului sau indicați o cale relativă la acesta, cum ar fi <code>figures/diagram</code>.</p>
+
+<h2>Fișiere EPS</h2>
+<p>TeX Live convertește automat imaginile EPS în PDF în timpul compilării, folosind epstopdf, cu condiția ca documentul să încarce graphicx. Fișierul convertit, <code>diagram-eps-converted-to.pdf</code>, este scris lângă fișierul EPS și folosit de atunci încolo.</p>
+<p>Un fișier EPS deschis în TeXShop este și el convertit: TeXShop scrie un fișier PDF cu același nume lângă el sau într-un dosar temporar, când în dosarul fișierului EPS nu se poate scrie, și îl afișează.</p>
+
+<h2>Fișiere TIFF</h2>
+<p>LaTeX nu poate include fișiere TIFF. Alegeți Fișier › Convertiți TIFF cât timp o fereastră sursă este activă: un dialog afișează dosarul documentului, în care pot fi alese doar fișiere TIFF. Selectați unul sau mai multe și faceți clic pe „Convertiți”. Fiecare este convertit într-un fișier PNG cu același nume, în același dosar; fișierele TIFF sunt păstrate.</p>
+
+<h2>Compilarea prin DVI</h2>
+<p>Documentele care folosesc cod PostScript, de exemplu cu pachetul pstricks, sunt compilate cu metoda „Prin DVI”, care rulează în mod implicit dvips. Imaginile sunt atunci incluse în format EPS; fișierele PDF, PNG și JPEG nu pot fi folosite. Profilurile motorului ale căror nume se termină în „+ dvipdfmx” compilează și ele „Prin DVI”, dar rulează dvipdfmx în loc de dvips; cu <code>\usepackage[dvipdfmx]{graphicx}</code>, acolo pot fi folosite fișiere PDF, PNG și JPEG. Consultați <a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a>.</p>
+</main>
+</body>
+</html>

@@ -1,4 +1,116 @@
-#!/bin/tcsh
+#!/bin/sh
+# altpdflatexc
+# Claus Gerhardt; rewritten in TeXShop 6.00 to run latex, dvips and ps2pdf itself, as the
+# altpdflatex script it used to call is not part of TeX Live.
+#
+# Usage, in the folder of the file:
+# altpdflatexc filename.tex
+#
+# Makes filename.pdf: latex, then dvips (with Type 1 fonts as far as possible), then ps2pdf of
+# Ghostscript. Only files made by this run go on to the next step. When a step fails or makes
+# nothing (for example latex with no pages of output), it stops with a message on standard error
+# and exit status 1; an earlier filename.pdf is left as it was, and an earlier filename.dvi is put
+# back in place of whatever this run wrote (with no earlier one, the DVI file of this run is removed).
+# When filename.dvi, filename.ps or filename.pdf is a folder, a link or anything but a plain file,
+# it stops at once and leaves everything as it was.
 
-set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
-altpdflatex --maxpfb "$1"
+# TeX Live and Ghostscript as set in TeXShop's Settings (Typesetting > Paths), then the usual places.
+setting() {
+    value=$(/usr/bin/defaults read TeXShop "$1" 2>/dev/null)
+    case $value in
+    "~"*) value=$HOME${value#\~} ;;
+    esac
+    echo "$value"
+}
+texbin=$(setting TetexBinPath)
+gsbin=$(setting GSBinPath)
+PATH="${texbin:+$texbin:}${gsbin:+$gsbin:}$PATH:/Library/TeX/texbin:/usr/texbin:/usr/local/bin"
+export PATH
+
+fail() {
+    echo "altpdflatexc: $*" >&2
+    exit 1
+}
+
+[ $# -eq 1 ] || fail "usage: altpdflatexc filename.tex"
+file=$1
+name=${file##*/}
+name=${name%.*}
+# A name that starts with - is given to the commands as ./name, so that it is never read as an option.
+case $file in -*) file=./$file ;; esac
+n=$name
+case $name in -*) n=./$name ;; esac
+
+for program in latex dvips; do
+    command -v $program >/dev/null 2>&1 ||
+        fail "$program of TeX Live is not found; check Settings > Typesetting > Paths > TeX Engines in TeXShop"
+done
+command -v ps2pdf >/dev/null 2>&1 && command -v gs >/dev/null 2>&1 ||
+    fail "ps2pdf of Ghostscript is not found; check Settings > Typesetting > Paths > Ghostscript in TeXShop"
+
+# Only plain files are moved aside or replaced: a folder or a link with one of these names stops the
+# script before anything is touched.
+for path in "$n.dvi" "$n.ps" "$n.pdf"; do
+    if [ -L "$path" ] || { [ -e "$path" ] && [ ! -f "$path" ]; }; then
+        fail "$path is a folder, a link or another item that is not a plain file; it is left as it is and nothing is typeset"
+    fi
+done
+
+work=$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/altpdflatexc.XXXXXX") || fail "cannot make a temporary folder"
+
+# An earlier filename.dvi is moved aside, so that dvips never takes a DVI file of the earlier
+# source. Unless this run makes the PDF, the earlier one is put back, even over a DVI file that
+# latex wrote before it stopped; with no earlier one, a DVI file of this run is removed.
+put_back_dvi() {
+    if [ -f "$work/earlier.dvi" ]; then
+        /bin/mv -f "$work/earlier.dvi" "$n.dvi" ||
+            echo "altpdflatexc: cannot put the earlier $name.dvi back; it is kept in $work" >&2
+    elif [ -n "$latex_ran" ] && [ -f "$n.dvi" ] && [ ! -L "$n.dvi" ]; then
+        /bin/rm -f "$n.dvi"
+    fi
+}
+# On the way out, only the files this script made in its temporary folder are removed, then the
+# folder itself if it is empty; nothing else is deleted.
+latex_ran=
+made=
+pdf_tmp=
+clean_up() {
+    [ -n "$made" ] || put_back_dvi
+    [ -z "$pdf_tmp" ] || /bin/rm -f "$pdf_tmp"
+    /bin/rm -f "$work/$name.ps" "$work/$name.pdf" "$work/dvips.err" "$work/ps2pdf.err"
+    /bin/rmdir "$work" 2>/dev/null
+}
+trap clean_up EXIT
+trap 'exit 1' HUP INT TERM
+
+if [ -f "$n.dvi" ]; then
+    /bin/mv -f "$n.dvi" "$work/earlier.dvi" || fail "cannot move the earlier $name.dvi aside"
+fi
+
+echo "### latex $file"
+latex_ran=1
+latex --interaction=nonstopmode "$file" ||
+    fail "latex stopped with an error; see $name.log"
+[ -s "$n.dvi" ] ||
+    fail "latex made no $name.dvi (no pages of output?); see $name.log"
+
+echo "### dvips -R -Poutline -o $name.ps $name.dvi"
+dvips -R -Poutline -o "$work/$name.ps" "$n.dvi" 2>"$work/dvips.err" && [ -s "$work/$name.ps" ] ||
+    fail "dvips could not make $name.ps: $(tail -n 5 "$work/dvips.err")"
+
+echo "### ps2pdf $name.ps $name.pdf"
+ps2pdf "$work/$name.ps" "$work/$name.pdf" >"$work/ps2pdf.err" 2>&1 && [ -s "$work/$name.pdf" ] ||
+    fail "ps2pdf could not make $name.pdf: $(tail -n 5 "$work/ps2pdf.err")"
+
+# The PDF is put in place at once, so that a viewer never sees half of it. The file it is copied
+# to first is made new beside the PDF by mktemp, with a short name that fits beside any document
+# name, so that no file of the user's is written over.
+pdf_tmp=$(/usr/bin/mktemp "./.altpdflatexc.XXXXXX") || fail "cannot write $name.pdf"
+# mktemp makes the file readable by its owner only; the PDF gets the permissions of any new file.
+/bin/chmod "$(printf '%o' $((0666 & ~0$(umask))))" "$pdf_tmp" || fail "cannot write $name.pdf"
+/bin/cp "$work/$name.pdf" "$pdf_tmp" && /bin/mv -f "$pdf_tmp" "$n.pdf" || fail "cannot write $name.pdf"
+pdf_tmp=
+# The new DVI file stays; the earlier one is no longer needed.
+made=1
+/bin/rm -f "$work/earlier.dvi"
+echo "### $name.pdf is made"

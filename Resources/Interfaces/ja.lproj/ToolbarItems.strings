@@ -264,17 +264,17 @@ tiToolTipHtmlSearch           = "検索";
 "Left to right" = "左から右";
 "Right to left" = "右から左";
 "Show first page alone as cover" = "先頭ページを表紙として単独表示";
-"Restore Document Settings" = "文書の指定に戻す";
+"Restore Document Settings" = "書類の指定に戻す";
 "Single Page" = "単一ページ";
 "Two Pages" = "見開きページ";
-"Continuous" = "複数ページ";
-"Continuous Two Pages" = "複数見開きページ";
+"Continuous" = "連続ページ";
+"Continuous Two Pages" = "連続見開きページ";
 
 /* Experiment preview tools */
 "ExperimentToolScroll" = "スクロール";
-"ExperimentToolSelectText" = "文字選択";
+"ExperimentToolSelectText" = "テキスト選択";
 "ExperimentToolMagnify" = "拡大鏡";
-"ExperimentToolSelectPDF" = "範囲指定";
+"ExperimentToolSelectPDF" = "範囲選択";
 "ExperimentZoomOut" = "縮小";
 "ExperimentZoomIn" = "拡大";
 "ExperimentZoomToContent" = "内容に合わせて拡大";

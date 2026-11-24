@@ -1,0 +1,10 @@
+\begin{tabular}{lll}
+
+\toprule
+Name & Age & City \\
+\midrule
+Alice & 30 & Paris \\
+Bob & 25 & Berlin \\
+
+\bottomrule
+\end{tabular}

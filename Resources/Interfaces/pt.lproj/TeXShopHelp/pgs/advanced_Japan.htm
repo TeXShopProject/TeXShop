@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Composição em japonês</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Japão; japonês; pLaTeX; upLaTeX; LuaLaTeX; dvipdfmx; pacote otf; \UTF; \CID; UTF-8-MAC; normalização Unicode; iene; barra invertida">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar arquivos pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivência com outras distribuições de TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm" class="current">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o arquivo principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar código-fonte e pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover arquivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros arquivos com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto colorido</a></li>
+<li><a href="advanced_plist.htm">Arquivos em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Composição em japonês</h1>
+<p>O TeX Live inclui os motores TeX japoneses pTeX e upTeX, com o pLaTeX e o upLaTeX, além do LuaLaTeX com o pacote LuaTeX-ja. A ajuda em japonês do TeXShop descreve a composição em japonês com mais detalhes.</p>
+
+<h2>Perfis do motor para japonês</h2>
+<p>A maneira mais rápida de configurar o TeXShop para documentos em japonês é um perfil do motor. Em Ajustes › Composição › Perfil do motor, escolha um dos três perfis japoneses:</p>
+<table>
+<tr><th>Perfil</th><th>Composição</th><th>BibTeX, índice, MetaPost</th></tr>
+<tr><td>upLaTeX + dvipdfmx</td><td>uplatex e depois dvipdfmx</td><td>upbibtex, upmendex, upmpost</td></tr>
+<tr><td>pLaTeX + dvipdfmx</td><td>platex e depois dvipdfmx</td><td>pbibtex, mendex, pmpost</td></tr>
+<tr><td>LuaLaTeX (japonês)</td><td>lualatex</td><td>upbibtex, upmendex, mpost</td></tr>
+</table>
+<p>Os perfis japoneses também definem UTF-8 como codificação dos novos documentos, definem o dicionário ortográfico como detecção automática do idioma e ativam “Converter automaticamente UTF-8-MAC para UTF-8”. pLaTeX + dvipdfmx também ativa “Converter para \UTF / \CID do pacote otf”, e todos os outros perfis o desativam. Uma folha lista os valores que o perfil define antes de você confirmar.</p>
+
+<h2>Caracteres fora do JIS X 0208 com o pLaTeX</h2>
+<p>O pTeX lê código-fonte em UTF-8, mas internamente conhece apenas os caracteres do JIS X 0208; por isso, outros caracteres, como 鷗 em 森鷗外, se perdem. O pacote otf os imprime com comandos como <code>\UTF{9DD7}</code>. O ajuste “Converter para \UTF / \CID do pacote otf”, no grupo “pLaTeX japonês” de Ajustes › Composição, permite digitar esses caracteres como eles são:</p>
+<ul>
+<li>Quando o documento é salvo, cada caractere fora do JIS X 0208 é gravado como <code>\UTF{XXXX}</code>, e uma variante de glifo escolhida no editor como <code>\CID{número}</code>. Se um desses comandos terminar uma linha, <code>%</code> é acrescentado depois dele para que não apareça um espaço no resultado.</li>
+<li>Quando um documento é aberto, esses comandos são convertidos de volta nos caracteres, com o ajuste ativado ou desativado; assim, a janela do código-fonte sempre mostra os próprios caracteres.</li>
+</ul>
+<p>O documento precisa de <code>\usepackage{otf}</code>. Por exemplo, a janela do código-fonte mostra</p>
+<pre>\documentclass{jsarticle}
+\usepackage{otf}
+\begin{document}
+森鷗外 was a famous novelist in Japan.
+\end{document}</pre>
+<p>enquanto o arquivo contém <code>森\UTF{9DD7}外</code>. O upLaTeX e o LuaLaTeX tratam o Unicode diretamente e não precisam de conversão.</p>
+<p>Para converter à mão uma parte do texto, selecione-a e use Editar › Conversão de tipo de caractere › Caracteres Unicode → \UTF / \CID, ou \UTF / \CID → Caracteres Unicode. O mesmo submenu converte entre hiragana e katakana, entre dígitos e letras de largura total e de meia largura, entre caracteres como números circulados e os comandos do pacote ajmacros, e aspas tipográficas em aspas do TeX. Sem nada selecionado, o TeXShop pergunta se deve converter o documento inteiro; toda conversão pode ser desfeita.</p>
+
+<h2>Caracteres compostos e decompostos</h2>
+<p>Alguns caracteres japoneses têm duas formas Unicode. が pode ser um único caractere (U+304C), ou か (U+304B) seguido da marca combinante de som sonoro (U+3099). As duas parecem iguais, mas o TeX as trata como diferentes; assim, um comando definido com uma forma não é encontrado quando é usado com a outra:</p>
+<pre>\def\が{GA}
+\が   % Undefined control sequence if this が is decomposed</pre>
+<p>O texto decomposto muitas vezes vem de nomes de arquivo, que os discos HFS+ guardam na forma decomposta; essa forma é chamada UTF-8-MAC. Quando Ajustes › Documentos e salvamento › Salvar documentos › “Converter automaticamente UTF-8-MAC para UTF-8” está ativado, o TeXShop combina esses caracteres em caracteres únicos ao salvar um documento. Ele deixa inalterados os ideogramas de compatibilidade CJK e os outros caracteres que a composição padrão (NFC) substituiria por caracteres diferentes; essa forma é chamada NFC Modificado.</p>
+<p>O submenu Editar › Normalização Unicode converte uma seleção, ou o documento inteiro, para NFC, NFC Modificado, NFD, NFD Modificado, NFKC ou NFKD e, depois, mostra o painel “Informação do caractere” para o resultado, já que o texto normalizado normalmente tem a mesma aparência de antes.</p>
+
+<h2>O sinal de iene e a barra invertida</h2>
+<p>Nos teclados japoneses, a tecla no lugar da barra invertida digita o sinal de iene ¥, enquanto os comandos do TeX começam com a barra invertida \.</p>
+<ul>
+<li>Com o UTF-8, a codificação que os perfis japoneses definem, ¥ e \ são caracteres diferentes, e ambos são mantidos. Ative Código-fonte › Associações de teclas para o documento: a lista de associações de teclas que vem com o TeXShop transforma um ¥ digitado em \ e, como a sua coluna Colar está marcada, também o ¥ do texto colado no código-fonte. Consulte <a href="basic_autocompletion.htm">Associações de teclas</a>.</li>
+<li>Quando a codificação dos novos documentos é uma das codificações japonesas, o TeXShop converte entre ¥ e \ enquanto você digita e cola. Com Japonês (Mac OS, ShiftJIS ¥) e Japonês (Shift JIS X0213), a janela do código-fonte mostra o caractere de comando do TeX como ¥; com as outras codificações japonesas, mostra \.</li>
+<li>Quando um arquivo é salvo em uma codificação japonesa, a barra invertida e o til são sempre gravados como os bytes 0x5C e 0x7E, que o TeX espera.</li>
+</ul>
+
+<h2>Outros ajustes para o japonês</h2>
+<ul>
+<li>Ajustes › Editor › Invisíveis › “Espaço japonês” mostra o espaço de largura total quando os caracteres invisíveis são mostrados.</li>
+<li>Ajustes › Editor › Destaque de sintaxe › “Destacar letras e símbolos de largura total” marca as letras, os dígitos e os símbolos de largura total, que facilmente se confundem com os equivalentes ASCII, com as cores “Largura total” do tema.</li>
+<li>Ajustes › Pré-visualização › “Direção das páginas” mostra as páginas da direita para a esquerda, como é necessário para o texto vertical. As linhas <code>% !TEX PageDirectionR2L</code> e <code>% !TEX PageDirectionL2R</code> definem a direção para um documento.</li>
+</ul>
+<p>A conversão para <code>\UTF</code> / <code>\CID</code> e a normalização Unicode são explicadas em detalhe nos slides de Yusuke Terada para o TUG 2013, <a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>.</p>
+</main>
+</body>
+</html>

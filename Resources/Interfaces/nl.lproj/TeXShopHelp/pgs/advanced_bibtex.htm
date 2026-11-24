@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BibTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="BibTeX; bibliografie; literatuurlijst; citaat; bib-bestand; biber; biblatex; upbibtex; pbibtex; % !BIB program; BibTeX-engine">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm" class="current">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>BibTeX</h1>
+<p>BibTeX maakt de literatuurlijst van een LaTeX-document uit een database met verwijzingen, een bestand met de extensie <code>.bib</code>. Het document citeert items aan de hand van hun sleutels, en BibTeX neemt alleen de geciteerde items op.</p>
+<p>Een database <code>mybibliography.bib</code> bevat items zoals</p>
+<pre>@book{Knuth:TeXbook,
+  author    = {Donald E. Knuth},
+  title     = {The {\TeX}book},
+  publisher = {Addison-Wesley},
+  year      = {1986}
+}</pre>
+<p>en het document citeert ze en noemt de stijl en de database:</p>
+<pre>As explained in~\cite{Knuth:TeXbook}, …
+
+\bibliographystyle{plain}
+\bibliography{mybibliography}</pre>
+
+<h2>BibTeX uitvoeren</h2>
+<ol>
+<li>Zet het document. De citaten verschijnen als [?] en de literatuurlijst ontbreekt.</li>
+<li>Kies Zet › BibTeX (<kbd>⇧⌘B</kbd>), of kies BibTeX in het venstermenu naast de knop ‘Zet’ en klik op ‘Zet’.</li>
+<li>Zet het document nog twee keer: de eerste keer wordt de literatuurlijst toegevoegd, de tweede keer worden de citaten ingevuld.</li>
+</ol>
+<p>Bij het zetten met latexmk, bijvoorbeeld met de engine pdflatexmk of met een profiel dat ‘Met latexmk’ is ingesteld, worden BibTeX en de extra rondes vanzelf uitgevoerd.</p>
+<p>Om in TeXShop een nieuwe database te maken, kiest u in het bewaarvenster in het menu ‘Bestandstype’ het type bib, zodat het bestand de extensie <code>.bib</code> krijgt. Een database kan ook in uw persoonlijke TeX-boom staan, waar elk document hem vindt; zie <a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a>.</p>
+
+<h2>Het programma kiezen</h2>
+<p>Zet › BibTeX voert het commando uit dat is ingesteld in Instellingen › Zetten › Verwante programma’s › ‘BibTeX-engine’, standaard <code>bibtex</code>. Voer daar een ander programma in, met de opties die het nodig heeft, bijvoorbeeld <code>biber</code> voor documenten die het pakket biblatex gebruiken. De engineprofielen vullen dit veld in: <code>pbibtex</code> voor pLaTeX + dvipdfmx, <code>upbibtex</code> voor upLaTeX + dvipdfmx en LuaLaTeX (Japans), en <code>bibtex</code> voor de andere profielen.</p>
+<p>Om het programma voor één document te kiezen, zet u een regel als deze in een van de eerste twintig regels van het document:</p>
+<pre>% !BIB program = biber</pre>
+<p>Deze regel gaat voor de instelling. De vorm <code>% !BIB TS-program =</code> wordt op dezelfde manier gelezen.</p>
+</main>
+</body>
+</html>

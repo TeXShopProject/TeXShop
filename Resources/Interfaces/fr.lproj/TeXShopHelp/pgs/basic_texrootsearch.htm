@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rechercher dans les sources TeX</title>
+<meta name="copyright" content="Copyright (c) 2026 under the GNU FDL">
+<meta name="description" content="rechercher et remplacer dans tous les fichiers de même fichier racine; rechercher et remplacer dans tous les fichiers d’un document divisé; TEX root; Rechercher dans les sources TeX; Tout remplacer; sauvegardes">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm" class="current">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Rechercher dans les sources TeX</h1>
+
+<p><a name="texroot_search"></a>Dans un document divisé en un fichier racine et des fichiers de chapitre, on peut rechercher et remplacer dans tous les fichiers à la fois. Avec l’un de ses fichiers au premier plan, choisissez Édition › Rechercher › Rechercher dans les sources TeX de même TEX root… ; quand c’est le fichier racine lui-même qui est au premier plan, l’élément s’intitule « Rechercher dans les sources TeX ayant ce fichier pour TEX root… ». Le même élément se trouve dans le menu de « Tout rechercher » de la palette de recherche avancée, et « Appliquer aux sources TeX de même TEX root… », dans le menu de « Tout remplacer » de la fenêtre de remplacement multiple, ouvre la fenêtre avec le jeu qui y est choisi ; pour le fichier racine lui-même, c’est « Appliquer aux sources TeX ayant ce fichier pour TEX root… ». Ces éléments sont estompés pour un document sans titre et pour un fichier dont le nom ne se termine pas par .tex (en minuscules), et l’élément « Appliquer » l’est aussi quand aucun jeu n’est choisi dans la fenêtre de remplacement multiple.</p>
+
+<h2>Fichiers concernés</h2>
+
+<p>La fenêtre recherche dans le fichier racine et dans les fichiers .tex de son dossier et des dossiers inférieurs qui le désignent par une ligne <code>% !TEX root</code> parmi leurs 20 premières lignes ; voir <a href="advanced_root.htm">Définir le fichier racine d’un projet</a>. Lorsque le réglage caché <code>UseOldHeadingCommands</code> est activé, les fichiers qui le désignent par une ancienne ligne <code>%SourceDoc</code> sont aussi inclus. La ligne sous les modes indique dans quel fichier racine la recherche a lieu, et son bouton ? rappelle cette règle. Les fichiers indiqués dans <code>\input</code> ou <code>\include</code> ne sont pas suivis, et un fichier racine indiqué dans un fichier .texshop n’est pas utilisé. Les liens symboliques vers des fichiers, les dossiers atteints par des liens symboliques ou des alias, et le dossier TeXShop Backups sont exclus.</p>
+
+<p>La liste de gauche montre les fichiers ; décochez-y un fichier ou un dossier pour l’exclure. Si certains fichiers ou dossiers n’ont pas pu être lus, le bouton « Fichiers non lus », en bas, les énumère avec la raison.</p>
+
+<h2>Rechercher et remplacer</h2>
+
+<p>Les champs de recherche et de remplacement et les options sont ceux de la <a href="basic_find.htm">palette de recherche avancée</a>. Choisissez un mode :</p>
+<ul>
+<li>« Recherche » énumère toutes les occurrences avec leur numéro de ligne.</li>
+<li>« Remplacement » montre chaque ligne avant et après le remplacement. Chaque occurrence a une case à cocher ; une occurrence décochée n’est pas remplacée.</li>
+<li>« Remplacement multiple » applique un jeu de la fenêtre de remplacement multiple et énumère les groupes de lignes modifiées, chacun avec une case à cocher. « Modifier… » ouvre le jeu dans cette fenêtre.</li>
+</ul>
+
+<p>Cliquez sur une ligne de la liste pour montrer l’occurrence dans son document ; double-cliquez pour faire passer cette fenêtre au premier plan. La liste suit vos modifications, et le bouton ↻ (<kbd>⌘R</kbd>) réunit de nouveau les fichiers. Le bouton d’arrêt, la touche Échap ou <kbd>⌘.</kbd> arrête une longue recherche.</p>
+
+<p>Un document ouvert est examiné tel qu’il est à l’écran, avec ses modifications non enregistrées ; un fichier qui n’est pas ouvert est lu dans l’encodage avec lequel TeXShop l’ouvrirait. Dans certains fichiers, on peut seulement rechercher, pas remplacer, par exemple un fichier qui ne peut pas être écrit ou que son encodage ne permet pas de réenregistrer sans modification. Ils sont marqués ⊘, et la marque en donne la raison.</p>
+
+<h2>Tout remplacer</h2>
+
+<p>« Tout remplacer » demande confirmation avant de remplacer. Si un fichier a été modifié entre-temps, rien n’est remplacé et la liste est refaite. Avec « Enregistrer des sauvegardes » activé, chaque fichier à modifier est d’abord copié dans le dossier TeXShop Backups, dans un dossier nommé d’après la date et l’heure, à côté du fichier racine.</p>
+
+<p>Les fichiers qui ne sont pas ouverts sont alors écrits directement, dans leur propre encodage et avec leurs fins de ligne et leurs autorisations ; cela ne peut pas être annulé. Les documents ouverts sont modifiés à l’écran et ne sont pas enregistrés, et une seule annulation dans un document reprend ses remplacements. Arrêter « Tout remplacer » laisse remplacés les fichiers déjà traités et les autres inchangés. Ensuite, la recherche est refaite dans les fichiers, et la ligne du bas indique combien d’occurrences ont été remplacées. Si certains fichiers n’ont pas pu être modifiés, une zone de dialogue les énumère avec la raison, et « Afficher dans le Finder » ouvre le dossier de la sauvegarde.</p>
+
+<p>N’utilisez pas « Tout remplacer » pendant qu’une autre application écrit dans ces fichiers.</p>
+</main>
+</body>
+</html>
