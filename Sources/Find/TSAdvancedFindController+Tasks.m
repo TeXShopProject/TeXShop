@@ -99,9 +99,34 @@ static void TSScroll(NSTextView *view, CGFloat x, CGFloat y)
     [scroll reflectScrolledClipView:clip];
 }
 
+/// The logical line around `character`, capped so a file that is one long line is not laid out from the start (#72).
+static NSRange TSLineRange(NSString *text, NSUInteger character)
+{
+    NSUInteger length = text.length;
+    if (length == 0 || character == NSNotFound)
+        return NSMakeRange(0, 0);
+    character = MIN(character, length - 1);
+    NSUInteger window = 8192;
+    NSUInteger start = character > window ? character - window : 0;
+    NSUInteger limit = MIN(length, character + window);
+    if (start < character) {
+        NSRange newline = [text rangeOfString:@"\n" options:NSBackwardsSearch range:NSMakeRange(start, character - start)];
+        if (newline.location != NSNotFound)
+            start = NSMaxRange(newline);
+    }
+    NSUInteger end = limit;
+    if (character < limit) {
+        NSRange newline = [text rangeOfString:@"\n" options:0 range:NSMakeRange(character, limit - character)];
+        if (newline.location != NSNotFound)
+            end = MIN(length, NSMaxRange(newline));
+    }
+    return NSMakeRange(start, end - start);
+}
+
 /// The top of the line that holds `character`, in the text view. Laying out every character above it would put the
 /// line on its final coordinates, and that stalls the main thread when the line is near the end of a long file (#72).
-/// The lines around it are laid out instead, until the line stops moving.
+/// The logical line is laid out, so a wrap in the middle of it has a real position, and then the lines around that
+/// position until it stops moving.
 static BOOL TSLineTop(NSTextView *view, NSUInteger character, CGFloat *lineTop)
 {
     NSLayoutManager *layout = view.layoutManager;
@@ -113,7 +138,7 @@ static BOOL TSLineTop(NSTextView *view, NSUInteger character, CGFloat *lineTop)
     CGFloat viewport = clip ? NSHeight(clip.bounds) : NSHeight(view.visibleRect);
     NSRect fragment = NSZeroRect;
     for (NSUInteger pass = 0; pass < 8; pass++) {
-        [layout ensureLayoutForCharacterRange:NSMakeRange(character, 1)];
+        [layout ensureLayoutForCharacterRange:TSLineRange(view.string, character)];
         if (layout.numberOfGlyphs == 0)
             return NO;
         NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:character];
@@ -172,15 +197,23 @@ static void TSRefineAnchor(NSTextView *view, TSScrollAnchor anchor)
     if (!clip)
         return;
     for (NSUInteger pass = 0; pass < 6; pass++) {
+        [view.layoutManager ensureLayoutForCharacterRange:TSLineRange(view.string, character)];
         NSRange line;
         CGFloat top = 0, height = 1;
         if (!TSTopLine(view, &line, &top, &height))
             return;
         if (NSLocationInRange(character, line)) {
+            // A fragment that contains the character can still sit several lines away: its rectangle is an estimate
+            // until the wrap is laid out, and a nudge of less than one line would leave the old wrap on screen (#72).
             CGFloat delta = (top - anchor.pin) - NSMinY(view.visibleRect);
-            if (fabs(delta) >= 0.5 && fabs(delta) < height)
-                TSScroll(view, anchor.clipX, NSMinY(clip.bounds) + delta);
-            return;
+            if (fabs(delta) > height * 30)
+                delta = delta < 0 ? -height * 30 : height * 30;
+            CGFloat before = NSMinY(clip.bounds);
+            if (fabs(delta) >= 0.5)
+                TSScroll(view, anchor.clipX, before + delta);
+            if (fabs(delta) < height || fabs(NSMinY(clip.bounds) - before) < 0.5)
+                return;
+            continue;
         }
         CGFloat linesAway = character < line.location
             ? ((CGFloat)character - (CGFloat)line.location) / (CGFloat)MAX(line.length, 1)

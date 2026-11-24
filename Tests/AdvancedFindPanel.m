@@ -853,6 +853,7 @@ static BOOL MakeScrolledSource(NSString *text, BOOL clipping, CGFloat clipX, NST
 }
 @end
 
+static void TestWrappedMiddleKeepsPlace(void);
 static void TestReplaceAllKeepsPlace(void)
 {
     NSUInteger beeps = 0;
@@ -1021,6 +1022,96 @@ static void TestReplaceAllKeepsPlace(void)
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
     Check([vetoUpper.string isEqualToString:text] && vetoUpper.undoManager.canRedo && !vetoUpper.undoManager.canUndo,
           @"a source that became read-only leaves the text and the redo");
+    TestWrappedMiddleKeepsPlace();
+}
+
+/// The display line at the top of the viewport, not the whole logical line. A wrapped line has several.
+static NSString *VisibleTopFragment(NSTextView *view)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0 || layout.numberOfGlyphs == 0)
+        return @"";
+    NSRect visible = view.visibleRect;
+    NSPoint inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x, NSMinY(visible) + 1 - view.textContainerOrigin.y);
+    NSUInteger glyph = [layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (glyph >= layout.numberOfGlyphs)
+        glyph = layout.numberOfGlyphs - 1;
+    NSRange glyphs;
+    [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:&glyphs];
+    NSRange characters = [layout characterRangeForGlyphRange:glyphs actualGlyphRange:NULL];
+    if (characters.location == NSNotFound || characters.location >= view.string.length)
+        return @"";
+    if (NSMaxRange(characters) > view.string.length)
+        characters.length = view.string.length - characters.location;
+    return [view.string substringWithRange:characters];
+}
+
+/// A long logical line, wrapped, scrolled to a word in the middle of that line. Same-length Replace All must leave
+/// that display line at the top (#72).
+static void TestWrappedMiddleKeepsPlace(void)
+{
+    NSMutableString *mixed = [NSMutableString string];
+    for (int i = 0; i < 500; i++) {
+        [mixed appendFormat:@"line%03d ", i];
+        int words = i % 7 == 0 ? 75 : i % 3 == 0 ? 12 : 4;
+        for (int w = 0; w < words; w++)
+            [mixed appendFormat:@"x%02d.%03d ", w, i];
+        [mixed appendString:@"\n"];
+    }
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat upperY = 0, lowerY = 0;
+    Check(MakeScrolledSource(mixed, NO, 0, &upper, &lower, &upperY, &lowerY), @"wrapped source scrolls");
+    NSArray<NSTextView *> *views = @[upper, lower];
+    upper.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    for (NSTextView *view in views) {
+        view.appearance = upper.window.appearance;
+        view.textColor = NSColor.textColor;
+        view.backgroundColor = NSColor.textBackgroundColor;
+    }
+    NSArray<NSString *> *words = @[@"x35.371", @"x25.126"];
+    for (NSUInteger i = 0; i < views.count; i++) {
+        NSTextView *view = views[i];
+        [view.layoutManager ensureLayoutForTextContainer:view.textContainer];
+        NSRange target = [mixed rangeOfString:words[i]];
+        NSUInteger glyph = [view.layoutManager glyphIndexForCharacterAtIndex:target.location];
+        NSRect line = [view.layoutManager lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+        NSClipView *clip = view.enclosingScrollView.contentView;
+        NSRect bounds = clip.bounds;
+        bounds.origin.y += NSMinY(line) + view.textContainerOrigin.y + 3 - NSMinY(view.visibleRect);
+        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+        [view.enclosingScrollView reflectScrolledClipView:clip];
+    }
+    [upper.window display];
+    NSString *upperBefore = VisibleTopFragment(upper);
+    NSString *lowerBefore = VisibleTopFragment(lower);
+    Check([upperBefore containsString:words[0]] && [lowerBefore containsString:words[1]],
+          [NSString stringWithFormat:@"the wrapped words are on screen (%@ / %@)",
+           [upperBefore stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
+           [lowerBefore stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
+    controller.settings.findString = @"line";
+    controller.settings.replaceString = @"LINE";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper), @"Replace All inside a wrapped line");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    [upper.window display];
+    Check([VisibleTopFragment(upper) isEqualToString:upperBefore] && [VisibleTopFragment(lower) isEqualToString:lowerBefore],
+          [NSString stringWithFormat:@"a wrapped line stays on the same display line (%@ / %@)",
+           [VisibleTopFragment(upper) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
+           [VisibleTopFragment(lower) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    [upper.window display];
+    Check([VisibleTopFragment(upper) isEqualToString:upperBefore] && [VisibleTopFragment(lower) isEqualToString:lowerBefore],
+          @"undo puts the wrapped display lines back");
+    [upper.undoManager redo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    [upper.window display];
+    Check([VisibleTopFragment(upper) isEqualToString:upperBefore] && [VisibleTopFragment(lower) isEqualToString:lowerBefore],
+          @"redo keeps the wrapped display lines");
 }
 
 #pragma mark Main
