@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Editing Tricks</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="editing tricks; matching brackets; select lines; comment; indent; Tags menu; Close Current Environment; split source; drag and drop; status bar; statistics; Swap with Clipboard; Copy with Style; Character Type Conversion; backup file">
+<meta name="description" content="editing tricks; matching brackets; select lines; comment; indent; Tags menu; Close Current Environment; split source; drag and drop; status bar; statistics; character count options; Swap with Clipboard; Copy with Style; Character Type Conversion; backup file">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -89,7 +89,9 @@
 
 <p>The status bar under the source shows the lines, characters and words of the document, with the numbers in the selection in parentheses, and the location, line and column of the insertion point. Characters are counted as they are seen, so an accented letter or an emoji counts as one, and TeX commands are counted as they are written; an emoji also counts as a word. The size of the saved file is shown at the right. Source › Show Status Bar shows or hides the status bar in every window.</p>
 
-<p>Text Statistics… in the status bar, or Edit › Statistics..., counts the text without the TeX commands. The TeX Live program detex removes them from the document, or from the selection, and adds the files read with <code>\input</code> and <code>\include</code>; TeXShop counts what is left in the same way as the status bar. The document need not be saved. The count is made when the popover opens and when its refresh button is clicked.</p>
+<p>Text Statistics… in the status bar, or Edit › Statistics..., counts the text without the TeX commands. The TeX Live program detex removes them from the document, or from the selection, and adds the files read with <code>\input</code> and <code>\include</code>; TeXShop counts what is left. The document need not be saved. The count is made when the popover opens and when its refresh button is clicked.</p>
+
+<p>The options button beside the refresh button shows how the characters are counted. Ignore line endings, Ignore whitespace and Treat consecutive whitespace as one leave out line endings and spaces, or count a run of two or more of them as one space. Normalization applies NFC, NFD, NFKC, NFKD, NFKC Case-Fold, Modified NFC or Modified NFD first. Unit counts grapheme clusters (characters as they are seen), Unicode scalars, UTF-16 code units or bytes; for bytes, Encoding chooses the encoding. The numbers change at once. The options are the same for every document; the encoding is the document&rsquo;s each time the popover opens. When the options are hidden and the characters are not counted as the status bar counts them, the options button is shown in color.</p>
 
 <h2>The clipboard</h2>
 

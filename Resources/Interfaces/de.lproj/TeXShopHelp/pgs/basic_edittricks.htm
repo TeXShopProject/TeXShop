@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tipps zur Bearbeitung</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="Bearbeitungstipps; Klammerpaare; Zeilen auswählen; Kommentar; Einrückung; Menü Markierungen; Aktuelle Umgebung schließen; geteilter Quelltext; Ziehen und Ablegen; Statusleiste; Statistik; Mit Zwischenablage tauschen; Mit Stil kopieren; Zeichentyp umwandeln; Sicherungsdatei">
+<meta name="description" content="Bearbeitungstipps; Klammerpaare; Zeilen auswählen; Kommentar; Einrückung; Menü Markierungen; Aktuelle Umgebung schließen; geteilter Quelltext; Ziehen und Ablegen; Statusleiste; Statistik; Optionen der Zeichenzählung; Mit Zwischenablage tauschen; Mit Stil kopieren; Zeichentyp umwandeln; Sicherungsdatei">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -89,7 +89,9 @@
 
 <p>Die Statusleiste unter dem Quelltext zeigt die Zeilen, Zeichen und Wörter des Dokuments, in Klammern die Anzahl in der Auswahl, sowie Position, Zeile und Spalte der Einfügemarke. Zeichen werden so gezählt, wie man sie sieht, ein Buchstabe mit Akzent oder ein Emoji zählt also als eines, und TeX-Befehle werden so gezählt, wie sie geschrieben sind; ein Emoji zählt auch als Wort. Rechts steht die Größe der gesicherten Datei. Quelltext › Statusleiste einblenden blendet die Statusleiste in allen Fenstern ein oder aus.</p>
 
-<p>„Textstatistik …“ in der Statusleiste oder Bearbeiten › Statistik... zählt den Text ohne die TeX-Befehle. Das TeX-Live-Programm detex entfernt sie aus dem Dokument oder aus der Auswahl und nimmt die mit <code>\input</code> und <code>\include</code> gelesenen Dateien hinzu; TeXShop zählt den Rest auf dieselbe Weise wie die Statusleiste. Das Dokument muss nicht gesichert sein. Gezählt wird, wenn sich das Popover öffnet und wenn Sie auf seine Taste zum Aktualisieren klicken.</p>
+<p>„Textstatistik …“ in der Statusleiste oder Bearbeiten › Statistik... zählt den Text ohne die TeX-Befehle. Das TeX-Live-Programm detex entfernt sie aus dem Dokument oder aus der Auswahl und nimmt die mit <code>\input</code> und <code>\include</code> gelesenen Dateien hinzu; TeXShop zählt den Rest. Das Dokument muss nicht gesichert sein. Gezählt wird, wenn sich das Popover öffnet und wenn Sie auf seine Taste zum Aktualisieren klicken.</p>
+
+<p>Die Taste für die Optionen neben der Taste zum Aktualisieren zeigt, wie die Zeichen gezählt werden. „Zeilenumbrüche ignorieren“, „Leerzeichen ignorieren“ und „Aufeinander folgende Leerzeichen als eines behandeln“ lassen Zeilenumbrüche und Leerzeichen weg oder zählen eine Folge von zwei oder mehr davon als ein Leerzeichen. „Normalisierung“ wendet vorher NFC, NFD, NFKC, NFKD, NFKC Case-Fold, Modified NFC oder Modified NFD an. „Einheit“ zählt Graphemcluster (Zeichen, wie man sie sieht), Unicode-Skalare, UTF-16-Codeeinheiten oder Bytes; für Bytes wählt „Kodierung“ die Kodierung. Die Zahlen ändern sich sofort. Die Optionen gelten für alle Dokumente; die Kodierung ist bei jedem Öffnen des Popovers die des Dokuments. Sind die Optionen ausgeblendet und wird anders als in der Statusleiste gezählt, erscheint die Taste für die Optionen farbig.</p>
 
 <h2>Die Zwischenablage</h2>
 

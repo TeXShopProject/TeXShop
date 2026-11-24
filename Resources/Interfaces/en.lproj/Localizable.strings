@@ -381,6 +381,24 @@
 "detex failed." = "detex failed.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Counted by detex without the TeX commands, including the files read with \\input and \\include.";
 
+/* Text Statistics: how the characters are counted */
+"Character Count Options" = "Character Count Options";
+"Whitespace:" = "Whitespace:";
+"Ignore line endings" = "Ignore line endings";
+"Ignore whitespace" = "Ignore whitespace";
+"Treat consecutive whitespace as one" = "Treat consecutive whitespace as one";
+"Normalization:" = "Normalization:";
+"Normalization: None" = "None";
+"Unit:" = "Unit:";
+"Grapheme Cluster" = "Grapheme Cluster";
+"Unicode Scalar" = "Unicode Scalar";
+"Byte" = "Byte";
+"What the reader sees as one character, an emoji of several code points among them." = "What the reader sees as one character, an emoji of several code points among them.";
+"Encoding:" = "Encoding:";
+"Unicode Scalars" = "Unicode Scalars";
+"Bytes" = "Bytes";
+"Some characters cannot be written in %@." = "Some characters cannot be written in %@.";
+
 /* Issue #49: the annotation toolbar of the Preview */
 /* Annotation tool: the name the annotation menu gives it */
 "Strikeout" = "Strikeout";

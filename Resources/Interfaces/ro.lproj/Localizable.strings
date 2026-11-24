@@ -385,6 +385,24 @@
 "detex failed." = "detex a eșuat.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Numărat de detex fără comenzile TeX, inclusiv fișierele citite cu \\input și \\include.";
 
+/* Text Statistics: how the characters are counted */
+"Character Count Options" = "Opțiuni de numărare a caracterelor";
+"Whitespace:" = "Spații albe:";
+"Ignore line endings" = "Ignoră sfârșiturile de linie";
+"Ignore whitespace" = "Ignoră spațiile albe";
+"Treat consecutive whitespace as one" = "Tratează spațiile albe consecutive ca unul singur";
+"Normalization:" = "Normalizare:";
+"Normalization: None" = "Niciuna";
+"Unit:" = "Unitate:";
+"Grapheme Cluster" = "Cluster de grafeme";
+"Unicode Scalar" = "Scalar Unicode";
+"Byte" = "Octet";
+"What the reader sees as one character, an emoji of several code points among them." = "Ceea ce cititorul vede ca un singur caracter, inclusiv un emoji din mai multe puncte de cod.";
+"Encoding:" = "Codificare:";
+"Unicode Scalars" = "Scalari Unicode";
+"Bytes" = "Octeți";
+"Some characters cannot be written in %@." = "Unele caractere nu pot fi scrise în %@.";
+
 /* Issue #49: the annotation toolbar of the Preview */
 /* Annotation tool: the name the annotation menu gives it */
 "Strikeout" = "Tăiat cu o linie";
