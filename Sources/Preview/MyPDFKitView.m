@@ -564,8 +564,11 @@ static PDFPage *TSPreviewDecodePopupHome(NSCoder *coder, NSString *prefix, PDFDo
         else {
             NSRect visible = [self convertRect:self.bounds toView:nil];
             CGFloat scale = self.scaleFactor;
-            frame = NSMakeRect(NSMinX(visible), NSMaxY(visible) - NSHeight(restoringPopupHomeOnPage) * scale,
-                               NSWidth(restoringPopupHomeOnPage) * scale, NSHeight(restoringPopupHomeOnPage) * scale);
+            NSSize size = NSMakeSize(NSWidth(restoringPopupHomeOnPage) * scale, NSHeight(restoringPopupHomeOnPage) * scale);
+            // On a page turned a quarter, the popup's width on the screen is its height on the page.
+            if (((home.rotation % 180) + 180) % 180 == 90)
+                size = NSMakeSize(size.height, size.width);
+            frame = NSMakeRect(NSMinX(visible), NSMaxY(visible) - size.height, size.width, size.height);
         }
         if ([self placePinnedLinkPreview:popup windowFrame:frame] && !shown) {
             [popup setAwayPlaceOnPage:home rect:restoringPopupHomeOnPage];

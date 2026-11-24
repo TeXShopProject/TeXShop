@@ -465,10 +465,25 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         [indices addObject:@(index)];
     }
     [coder encodeObject:indices forKey:[prefix stringByAppendingString:@"Pages"]];
-    // The part in view, from the corner of the linked page, which keeps it also when the next
-    // page is gone or the pages change size.
-    [coder encodeRect:NSOffsetRect(_source, -NSMinX(_pageRects[0]), -NSMinY(_pageRects[0]))
+    // The part in view, from the corner of the page it shows most of: the linked page, or the next
+    // one when it was scrolled there. That keeps it when the next page is gone or the pages change
+    // size; the size of the whole image tells whether they did.
+    NSUInteger anchor = 0;
+    CGFloat nearest = CGFLOAT_MAX;
+    for (NSUInteger i = 0; i < _pageCount; i++) {
+        CGFloat shared = NSWidth(NSIntersectionRect(_source, _pageRects[i])) * NSHeight(NSIntersectionRect(_source, _pageRects[i]));
+        CGFloat distance = shared > 0 ? -shared
+            : hypot(MAX(MAX(NSMinX(_pageRects[i]) - NSMidX(_source), NSMidX(_source) - NSMaxX(_pageRects[i])), 0),
+                    MAX(MAX(NSMinY(_pageRects[i]) - NSMidY(_source), NSMidY(_source) - NSMaxY(_pageRects[i])), 0));
+        if (distance < nearest) {
+            nearest = distance;
+            anchor = i;
+        }
+    }
+    [coder encodeInteger:(NSInteger)anchor forKey:[prefix stringByAppendingString:@"SourcePage"]];
+    [coder encodeRect:NSOffsetRect(_source, -NSMinX(_pageRects[anchor]), -NSMinY(_pageRects[anchor]))
                forKey:[prefix stringByAppendingString:@"SourceOnPage"]];
+    [coder encodeSize:_pageSize forKey:[prefix stringByAppendingString:@"ImageSize"]];
     if (self.pageLabel)
         [coder encodeObject:self.pageLabel forKey:[prefix stringByAppendingString:@"Label"]];
 }
@@ -524,10 +539,20 @@ static NSRect TSLinkPreviewFitSource(NSRect source, NSRect bounds)
         image = TSLinkPreviewImage(pages[0], size);
     }
     NSRect onPage = [coder decodeRectForKey:[prefix stringByAppendingString:@"SourceOnPage"]];
-    // Across the width of the linked page itself, which in the strip may be narrower than the next
-    // one and lie between gray margins; down the whole strip, which goes on with the next page.
-    NSRect bounds = NSMakeRect(NSMinX(rects[0]), 0, NSWidth(rects[0]), size.height);
-    NSRect source = TSLinkPreviewFitSource(NSOffsetRect(onPage, NSMinX(rects[0]), NSMinY(rects[0])), bounds);
+    NSInteger anchor = [coder decodeIntegerForKey:[prefix stringByAppendingString:@"SourcePage"]];
+    // Without the next page, the part in view goes onto the linked page.
+    if (anchor < 0 || (NSUInteger)anchor >= pages.count) anchor = 0;
+    NSRect source = NSOffsetRect(onPage, NSMinX(rects[anchor]), NSMinY(rects[anchor]));
+    NSSize saved = [coder decodeSizeForKey:[prefix stringByAppendingString:@"ImageSize"]];
+    NSRect bounds;
+    if (pages.count == indices.count && NSEqualSizes(saved, size))
+        // The same pages: the part in view is the one shown before, wherever it was scrolled to.
+        bounds = NSMakeRect(0, 0, size.width, size.height);
+    else
+        // Pages of another size: across the width of the page it showed, which in the strip may be
+        // narrower than the other one and lie between gray margins; down the whole strip.
+        bounds = NSMakeRect(NSMinX(rects[anchor]), 0, NSWidth(rects[anchor]), size.height);
+    source = TSLinkPreviewFitSource(source, bounds);
     if (!image || NSIsEmptyRect(source)) return nil;
     TSLinkPreviewView *preview = [[self alloc] initWithFrame:frame image:image source:source pageSize:size
                                                        pages:pages pageRects:rects];

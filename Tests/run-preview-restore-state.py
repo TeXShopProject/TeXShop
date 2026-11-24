@@ -54,11 +54,15 @@ MUTATIONS = {
     # The third audit: the other view's popup away from its place forgot it.
     'other-home-lost': ('view', '            [otherViewPinnedLinkPreview setAwayPlaceOnPage:otherHomePage rect:otherHome];', '            ;'),
     # The third audit: a narrower linked page above a wider next one showed the gray margin.
-    'strip-margin': ('popup', '    NSRect bounds = NSMakeRect(NSMinX(rects[0]), 0, NSWidth(rects[0]), size.height);',
-                     '    NSRect bounds = NSMakeRect(0, 0, size.width, size.height);'),
+    # The fourth audit: a popup scrolled onto its next page was moved back onto the linked page.
+    'linked-page-only': ('popup', '            anchor = i;\n', '            anchor = 0;\n'),
+    'same-pages-fitted': ('popup', '    if (pages.count == indices.count && NSEqualSizes(saved, size))', '    if (NO)'),
+    # The fourth audit: away from a page turned a quarter, the popup came back upright.
+    'away-turn-ignored': ('view', '            if (((home.rotation % 180) + 180) % 180 == 90)', '            if (NO)'),
+    'strip-margin': ('popup', '        bounds = NSMakeRect(NSMinX(rects[anchor]), 0, NSWidth(rects[anchor]), size.height);',
+                     '        bounds = NSMakeRect(0, 0, size.width, size.height);'),
     # The second audit: pages of another size stretched the popup or lost it; a missing next page lost it.
-    'source-cut': ('popup', '    NSRect source = TSLinkPreviewFitSource(NSOffsetRect(onPage, NSMinX(rects[0]), NSMinY(rects[0])), bounds);',
-                   '    NSRect source = NSIntersectionRect(NSOffsetRect(onPage, NSMinX(rects[0]), NSMinY(rects[0])), NSMakeRect(0, 0, size.width, size.height));'),
+    'source-cut': ('popup', '    source = TSLinkPreviewFitSource(source, bounds);', '    source = NSIntersectionRect(source, NSMakeRect(0, 0, size.width, size.height));'),
     'next-page-required': ('popup', '        if (!there) {\n            if (pages.count == 0) return nil;\n            break;\n        }', '        if (!there) return nil;'),
     'other-view-lost': ('view', '    if ([coder containsValueForKey:TSPreviewStateKey(other, @"PageStyle")]) {', '    if (NO) {'),
 }
@@ -615,6 +619,57 @@ int main(void) { @autoreleasepool {
         check(fitted && NSMinX(fitted.source) >= NSMinX(first) - 0.5 && NSMaxX(fitted.source) <= NSMaxX(first) + 0.5
               && near(NSWidth(fitted.source), 170, 0.5),
               [NSString stringWithFormat:@"the part in view lies on the linked page (%@ within %@)", NSStringFromRect(fitted.source), NSStringFromRect(first)]);
+    }
+
+    {   // A popup scrolled onto the wider next page shows the same part after the next launch; with the
+        // next page narrower since, the part lies on that page (fourth audit).
+        PDFDocument *wideNext = pagesOfWidths(@[@612, @300, @800, @612]);
+        TestWindow *before = preview(wideNext);
+        MyPDFKitView *one = (MyPDFKitView *)before.myPDFKitView;
+        TSLinkPreviewView *popup = pin(one, 1, NSMakeRect(100, 120, 170, 100), NSMakeRect(630, 300, 170, 100));
+        NSData *content = archive(^(NSKeyedArchiver *a) { [popup encodeContentWithCoder:a prefix:@"C"]; });
+        TSLinkPreviewView *same = [TSLinkPreviewView linkPreviewWithCoder:unarchiver(content) prefix:@"C" document:wideNext frame:NSMakeRect(0, 0, 170, 100)];
+        check(same && NSEqualRects(same.source, popup.source),
+              [NSString stringWithFormat:@"the same PDF: the popup shows the same part (%@, not %@)", NSStringFromRect(popup.source), NSStringFromRect(same.source)]);
+        // A part partly beside the linked page, over the gray margin, stays as it was in the same PDF.
+        [popup removeFromSuperview]; one->pinnedLinkPreview = nil;
+        TSLinkPreviewView *margin = pin(one, 1, NSMakeRect(100, 120, 170, 100), NSMakeRect(500, 1000, 170, 100));
+        NSData *marginContent = archive(^(NSKeyedArchiver *a) { [margin encodeContentWithCoder:a prefix:@"C"]; });
+        TSLinkPreviewView *kept = [TSLinkPreviewView linkPreviewWithCoder:unarchiver(marginContent) prefix:@"C" document:wideNext frame:NSMakeRect(0, 0, 170, 100)];
+        check(kept && NSEqualRects(kept.source, margin.source),
+              [NSString stringWithFormat:@"the same PDF: a part over the margin stays as it was (%@, not %@)", NSStringFromRect(margin.source), NSStringFromRect(kept.source)]);
+        PDFDocument *narrowNext = pagesOfWidths(@[@612, @300, @612, @612]);
+        TSLinkPreviewView *moved = [TSLinkPreviewView linkPreviewWithCoder:unarchiver(content) prefix:@"C" document:narrowNext frame:NSMakeRect(0, 0, 170, 100)];
+        NSRect first, second;
+        TSLinkPreviewStrip(NSMakeSize(300, 792), NSMakeSize(612, 792), &first, &second);
+        // It showed the right end of the next page; it does so on the narrower page too.
+        check(moved && near(NSMinX(moved.source), NSMaxX(second) - 170, 0.5) && near(NSMinY(moved.source), 300, 0.5)
+              && near(NSWidth(moved.source), 170, 0.5),
+              [NSString stringWithFormat:@"a narrower next page: the part lies on it (%@ within %@)", NSStringFromRect(moved.source), NSStringFromRect(second)]);
+    }
+
+    {   // Away from its place on a page turned a quarter, with the page it was brought to gone, the popup
+        // keeps the shape it has on the screen (fourth audit).
+        for (NSNumber *turn in @[@90, @270]) {
+            PDFDocument *turned = book(7), *shorter = book(4);
+            [turned pageAtIndex:1].rotation = turn.integerValue; [shorter pageAtIndex:1].rotation = turn.integerValue;
+            TestWindow *before = preview(turned);
+            MyPDFKitView *one = (MyPDFKitView *)before.myPDFKitView;
+            one->pageStyle = PDF_SINGLE_PAGE_STYLE; [one setupPageStyle];
+            scrollTo(one, 5, 600);
+            NSRect frame = [one convertRect:one.bounds toView:nil];
+            TSLinkPreviewView *popup = pin(one, 2, NSMakeRect(NSMinX(frame) + 50, NSMinY(frame) + 60, 170, 90), NSMakeRect(30, 900, 300, 160));
+            // On the turned page a popup 170 wide and 90 high on the screen is 90 wide and 170 high.
+            [popup setAwayPlaceOnPage:[turned pageAtIndex:1] rect:NSMakeRect(100, 200, 90, 170)];
+            NSData *state = archive(^(NSKeyedArchiver *a) { [before encodePreviewStateWithCoder:a]; });
+            TestWindow *after = preview(shorter);
+            MyPDFKitView *a1 = (MyPDFKitView *)after.myPDFKitView;
+            a1->pageStyle = PDF_SINGLE_PAGE_STYLE; [a1 setupPageStyle];
+            [after restorePreviewStateWithCoder:unarchiver(state)]; pump();
+            TSLinkPreviewView *back = a1->pinnedLinkPreview;
+            check(back && NSWidth(back.frame) > NSHeight(back.frame) && near(NSWidth(back.frame) / NSHeight(back.frame), 170.0 / 90, 0.05),
+                  [NSString stringWithFormat:@"turned %@: the popup keeps its shape on the screen (%@)", turn, NSStringFromRect(back.frame)]);
+        }
     }
 
     {   // The other view's popup away from its place keeps it too (third audit).
