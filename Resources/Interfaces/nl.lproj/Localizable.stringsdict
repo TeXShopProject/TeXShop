@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%1$@ characters, %2$@ words, %3$@ lines</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$@ %4$#@c@, %2$@ %5$#@w@, %3$@ %6$#@l@</string>
+		<key>c</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>teken</string>
+			<key>other</key>
+			<string>tekens</string>
+		</dict>
+		<key>l</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>regel</string>
+			<key>other</key>
+			<string>regels</string>
+		</dict>
+		<key>w</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>woord</string>
+			<key>other</key>
+			<string>woorden</string>
+		</dict>
+	</dict>
+	<key>&lt;a character consisting of %1$@ code points&gt;</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>&lt;een teken bestaande uit %1$@ %2$#@n@&gt;</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>codepunt</string>
+			<key>other</key>
+			<string>codepunten</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

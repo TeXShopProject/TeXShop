@@ -319,14 +319,7 @@ static NSFont *TSBarFont(void);
 
 static NSString *TSFormatNumber(NSUInteger value)
 {
-    static NSNumberFormatter *formatter;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        formatter = [NSNumberFormatter new];
-        formatter.numberStyle = NSNumberFormatterDecimalStyle;
-        formatter.locale = NSLocale.autoupdatingCurrentLocale;
-    });
-    return [formatter stringFromNumber:@(value)];
+    return TSStatusBarFormattedNumber(value);
 }
 
 // "1,234", followed by " (56)" when the selection holds some; empty while not counted.
