@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instalar o TeX Live</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="instalar o TeX Live; MacTeX; BasicTeX; /usr/local/texlive; /Library/TeX/texbin; TeX Live Utility; Detetar caminhos; outras distribuições">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda básica</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm" class="current">Instalar o TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalar o TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compor documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">Modo de composição alternativo</a></li>
+<li><a href="basic_preview.htm">A janela de pré-visualização</a></li>
+<li><a href="basic_edittricks.htm">Truques de edição</a></li>
+<li><a href="basic_find.htm">Procurar e substituir</a></li>
+<li><a href="basic_texrootsearch.htm">Procurar nas fontes TeX</a></li>
+<li><a href="basic_spelling.htm">Verificar a ortografia</a></li>
+<li><a href="basic_autocompletion.htm">Associações de teclas</a></li>
+<li><a href="basic_commandcompletion.htm">Conclusão de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Painel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Painel Matrix</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de ferramentas e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Incluir imagens</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm">Alterar as definições</a></li>
+<li><a href="basic_templates.htm">Minutas e modelos</a></li>
+<li><a href="basic_miscellaneous.htm">Janelas e separadores</a></li>
+<li><a href="basic_bugs.htm">Comunicar erros</a></li>
+<li><a href="basic_websites.htm">Sites úteis</a></li>
+<li><a href="basic_license.htm">Licença</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Instalar o TeX Live</h1>
+
+<p>O TeXShop precisa de uma distribuição TeX. A distribuição padrão é o TeX Live, que os grupos de utilizadores de TeX produzem todos os anos para macOS, Windows, Linux e outros sistemas. No Mac, instala-se com o MacTeX, um pacote de instalação feito pelo TeX Users Group (TUG):</p>
+
+<p><a href="https://tug.org/mactex/">https://tug.org/mactex/</a></p>
+
+<p>A página oferece dois pacotes. Faça duplo clique no pacote que descarregou e siga o instalador; quando este terminar, o TeX está pronto a usar.</p>
+
+<dl>
+<dt>MacTeX</dt>
+<dd>O TeX Live completo, com o Ghostscript, e o TeXShop e outras aplicações em /Applications/TeX. Quase todos os exemplos de um livro sobre TeX ou LaTeX funcionam sem acrescentar nada. Escolha este pacote para trabalho a sério.</dd>
+<dt>BasicTeX</dt>
+<dd>Uma pequena parte do TeX Live, suficiente para experimentar o TeX e compor muitos documentos LaTeX. Não instala o TeXShop; consulte <a href="basic_installtexshop.htm">Instalar o TeXShop</a>.</dd>
+</dl>
+
+<h2>Onde é instalado o TeX Live</h2>
+
+<p>O MacTeX instala o TeX Live em <code>/usr/local/texlive/2026</code> e o BasicTeX em <code>/usr/local/texlive/2026basic</code>. Os dois podem ser instalados lado a lado. Todos os anos, por volta de abril, sai um novo TeX Live, numa pasta com o nome do ano. Para remover uma instalação, arraste a respetiva pasta para o Lixo.</p>
+
+<p>O instalador cria também <code>/Library/TeX/texbin</code>, que conduz aos programas do TeX Live em uso e passa para o novo TeX Live quando este é instalado. O TeXShop executa o TeX a partir daí (Definições › Composição › Caminhos › Motores TeX), pelo que não é preciso alterar nada a cada novo ano. «Detetar caminhos…», no mesmo grupo, procura as instalações do TeX e do Ghostscript no Mac e permite escolher uma delas.</p>
+
+<p>Entre as versões anuais, os pacotes do TeX Live recebem atualizações. O MacTeX instala o TeX Live Utility em /Applications/TeX para as instalar.</p>
+
+<h2>Outras distribuições TeX</h2>
+
+<p>O TeXShop também funciona com o TeX instalado pelo MacPorts ou pelo Homebrew, ou com o MiKTeX. Os programas destas distribuições estão noutras pastas: use «Detetar caminhos…» ou escreva a pasta em Definições › Composição › Caminhos › Motores TeX. Consulte <a href="advanced_otherdistributions.htm">Coexistir com outras distribuições TeX</a>.</p>
+</main>
+</body>
+</html>

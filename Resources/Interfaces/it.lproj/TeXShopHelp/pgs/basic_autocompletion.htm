@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Associazioni dei tasti</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="associazioni dei tasti; elenco delle associazioni dei tasti; Carattere digitato; Testo prodotto; Incolla; simbolo dello yen; barra rovesciata; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm" class="current">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Associazioni dei tasti</h1>
+
+<p>Le associazioni dei tasti fanno sì che un carattere digitato inserisca un altro testo. Con l’elenco fornito con TeXShop, digitando <code>^</code> si ottiene <code>^{}</code> con il punto di inserimento tra le graffe, digitando <code>"</code> si ottengono le virgolette TeX <code>``''</code> intorno al punto di inserimento, e digitando <code>ä</code> si ottiene <code>\"a</code>. Un’associazione può anche racchiudere il testo selezionato: seleziona una parola e digita <code>^</code> per ottenere <code>^{parola}</code>. L’elenco contiene 45 associazioni.</p>
+
+<p>All’inizio le associazioni dei tasti sono disattivate. Attiva «Usa le associazioni dei tasti (valore iniziale per i nuovi documenti)» in Impostazioni › Tastiera per averle attive in ogni documento che apri. Sorgente › Associazioni dei tasti le attiva o disattiva per il documento in primo piano, per esempio per digitare così com’è un carattere che ha un’associazione. L’elemento «Associazioni dei tasti», che si può aggiungere alla barra strumenti, fa la stessa cosa.</p>
+
+<h2>L’elenco delle associazioni dei tasti</h2>
+
+<p>Il gruppo «Associazioni dei tasti» di Impostazioni › Tastiera elenca le associazioni, ciascuna con il suo «Carattere digitato» e il suo «Testo prodotto». Fai doppio clic su una cella per modificarla; fai clic su + sotto l’elenco per aggiungere un’associazione e su − per eliminare quelle selezionate, e trascina le righe per cambiarne l’ordine. Un carattere digitato è un singolo carattere. Le modifiche vengono salvate subito e valgono anche nei documenti aperti; Modifica › Annulla le ripristina.</p>
+
+<p>In un testo prodotto, gli elementi speciali sono mostrati come piccole etichette: il testo selezionato, la posizione del punto di inserimento, il testo negli appunti, un marcatore (•) per Modifica › Marcatori, un’interruzione di riga e una tabulazione. Aggiungili con «Inserisci» sotto l’elenco, oppure digitali: <code>#SEL#</code>, <code>#INS#</code>, <code>#PASTE#</code> e <code>•</code>, Opzione-A capo per un’interruzione di riga e Opzione-Tab per una tabulazione. Il pulsante ? li elenca tutti.</p>
+
+<p>Un segno di spunta nella colonna «Incolla» applica l’associazione anche al testo che incolli nel sorgente o che vi trascini: ogni occorrenza del carattere digitato viene sostituita dal testo prodotto. Come per la digitazione, questo avviene solo mentre le associazioni dei tasti sono attive per il documento. Un’associazione il cui testo prodotto contiene la selezione, il punto di inserimento, gli appunti o un marcatore non può essere spuntata.</p>
+
+<h2>Il simbolo dello yen</h2>
+
+<p>Su una tastiera giapponese, il tasto della barra rovesciata può digitare il simbolo dello yen (¥). Nell’elenco fornito con TeXShop, ¥ produce una sola barra rovesciata e la sua casella «Incolla» è spuntata. Quindi, quando la codifica dei nuovi documenti è UTF-8, basta attivare le associazioni dei tasti perché un ¥ digitato o incollato nel sorgente diventi \. Se il tuo elenco proviene da una versione precedente di TeXShop, imposta tu stesso il testo prodotto di ¥ su una sola barra rovesciata e spunta la sua casella «Incolla».</p>
+
+<p>L’elenco è memorizzato in ~/Library/TeXShop/Keyboard/autocompletion.plist; consulta <a href="configure_autocompletion.htm">Modificare le associazioni dei tasti</a>.</p>
+</main>
+</body>
+</html>

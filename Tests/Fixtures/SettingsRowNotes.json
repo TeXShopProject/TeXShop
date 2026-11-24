@@ -25,7 +25,7 @@
  },
  "it": {
   "SettingsCategories.strings": {
-   "catalog.general.0.1.note": "Aprendo un file sorgente si mostra solo l’anteprima; il sorgente si modifica in un altro editor. Per modificarlo in TeXShop, usare Apri per Editare...",
+   "catalog.general.0.1.note": "Aprendo un file sorgente si mostra solo l’anteprima; il sorgente si modifica in un altro editor. Per modificarlo in TeXShop, scegli File > Apri per modificare...",
    "catalog.editor.2.2.note": "Allinea a destra le righe che iniziano con caratteri ebraici o arabi. Funziona quando l’evidenziazione della sintassi è attiva."
   }
  },
@@ -43,13 +43,13 @@
  },
  "nl": {
   "SettingsCategories.strings": {
-   "catalog.general.0.1.note": "Bij het openen van een bronbestand alleen het voorbeeld tonen; de bron bewerkt u in een andere editor. Gebruik Open in TeXShop Editor om in TeXShop te bewerken.",
+   "catalog.general.0.1.note": "Bij het openen van een bronbestand alleen de voorvertoning tonen; de bron bewerkt u in een andere editor. Kies Archief > Open voor bewerking... om in TeXShop te bewerken.",
    "catalog.editor.2.2.note": "Regels die beginnen met Hebreeuws of Arabisch schrift rechts uitlijnen. Werkt als syntaxmarkering aan staat."
   }
  },
  "pt-PT": {
   "SettingsCategories.strings": {
-   "catalog.general.0.1.note": "Ao abrir um ficheiro de código-fonte, mostra apenas a pré-visualização; o código-fonte edita-se noutro editor. Para o editar no TeXShop, use Abrir para alterar...",
+   "catalog.general.0.1.note": "Ao abrir um ficheiro de código-fonte, mostra apenas a pré-visualização; o código-fonte edita-se noutro editor. Para o editar no TeXShop, escolha Ficheiro > Abrir para editar...",
    "catalog.editor.2.2.note": "Alinha à direita as linhas que começam com escrita hebraica ou árabe. Funciona quando o destaque de sintaxe está ativado."
   }
  },
@@ -61,13 +61,13 @@
  },
  "ro": {
   "SettingsCategories.strings": {
-   "catalog.general.0.1.note": "La deschiderea unui fișier sursă se afișează doar previzualizarea; sursa se editează într-un alt editor. Pentru a o edita în TeXShop, folosiți Open for Editing...",
+   "catalog.general.0.1.note": "La deschiderea unui fișier sursă se afișează doar previzualizarea; sursa se editează într-un alt editor. Pentru a o edita în TeXShop, folosiți „Deschideți pentru editare...”.",
    "catalog.editor.2.2.note": "Aliniază la dreapta rândurile care încep cu scriere ebraică sau arabă. Funcționează când evidențierea sintaxei este activată."
   }
  },
  "zh_CN": {
   "SettingsCategories.strings": {
-   "catalog.general.0.1.note": "打开源文件时只显示预览，源文件在其他编辑器中编辑。要在TeXShop中编辑，请使用“打开以编辑...”。",
+   "catalog.general.0.1.note": "打开源文件时只显示预览，源文件在其他编辑器中编辑。要在TeXShop中编辑，请使用“打开以编辑…”。",
    "catalog.editor.2.2.note": "将以希伯来文或阿拉伯文开头的行右对齐。仅在“语法高亮”打开时起作用。"
   }
  }

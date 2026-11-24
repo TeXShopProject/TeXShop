@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La fenêtre d’aperçu</title>
+<meta name="description" content="fenêtre d’aperçu; format d’affichage; mise en page; page double; agrandissement; Adapter à la fenêtre; loupe; Sélectionner (PDF); copier des images; rechercher dans le PDF; tiroir; pop-up des liens; pop-up épinglé; fenêtre divisée; Changer de vue; plein écran; barre d’outils d’annotation">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm" class="current">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>La fenêtre d’aperçu</h1>
+
+<p>La fenêtre d’aperçu affiche le fichier PDF composé. Elle est mise à jour après chaque composition et reste à la page que vous lisiez. Ses réglages se trouvent dans Réglages › Aperçu : ceux du groupe « À l’ouverture d’un document » s’appliquent à l’ouverture d’un document, et le menu Page les modifie pour la fenêtre au premier plan.</p>
+
+<h2>Se déplacer dans le document</h2>
+
+<p>Page › Format d’affichage choisit la disposition des pages : « Page unique » et « Deux pages » montrent une page ou une paire de pages, et « Page unique en continu » et « Deux pages en continu » montrent toutes les pages en une longue colonne. « Style de la page par défaut », sous « À l’ouverture d’un document », détermine le format avec lequel une fenêtre commence. « Page précédente » et « Page suivante », dans le menu Page et dans la barre d’outils, tournent les pages, le champ « Aller à la page » de la barre d’outils va à une page d’après son numéro, et les deux chevrons de « Précédent/Suivant » dans la barre d’outils ramènent aux endroits d’où vous veniez, comme dans un navigateur web.</p>
+
+<p>En « Page unique » et « Deux pages », faire défiler au-delà du haut ou du bas d’une page tourne la page ; activez « Ne pas changer de page en faisant défiler » dans Réglages › Aperçu › Affichage et navigation pour vous arrêter plutôt au bord de la page. Les touches Flèche vers le haut et Flèche vers le bas font défiler la page. Les touches Flèche gauche et Flèche droite font défiler horizontalement quand une page agrandie est plus large que la fenêtre, et sinon tournent la page ; « Toujours changer de page avec les touches fléchées gauche et droite » leur fait toujours tourner la page.</p>
+
+<p>La barre d’outils a deux menus pour les pages ; s’ils ont été retirés, Fenêtre › Personnaliser la barre d’outils… les remet en place. « Format d’affichage » choisit le format d’affichage. « Disposition sur deux pages » choisit, pour ce document seulement, si une paire de pages se lit de gauche à droite ou de droite à gauche, et si la première page est affichée seule comme couverture ; son élément « Rétablir les réglages du document » revient aux réglages. Les réglages sont « Sens des pages » et « Afficher la première page seule comme couverture », sous « À l’ouverture d’un document », et les lignes magiques <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> et <code>% !TEX standardDisplay</code> les fixent pour un document.</p>
+
+<h2>Agrandissement</h2>
+
+<p>Page › Agrandissement propose ces choix :</p>
+<dl>
+<dt>Adapter à la fenêtre</dt>
+<dd>La page remplit la largeur de la fenêtre, et redimensionner la fenêtre change l’agrandissement.</dd>
+<dt>Adapter à la largeur du contenu</dt>
+<dd>Comme « Adapter à la fenêtre », mais sans les marges blanches : la partie composée des pages remplit la largeur de la fenêtre.</dd>
+<dt>Agrandissement constant</dt>
+<dd>L’agrandissement reste tel qu’il a été réglé dans le champ « Agrandissement » de la barre d’outils, ou avec « Zoom avant » (<kbd>⇧⌘+</kbd>) et « Zoom arrière » (<kbd>⇧⌘_</kbd>).</dd>
+<dt>Taille réelle</dt>
+<dd>Les pages à la taille du papier.</dd>
+</dl>
+
+<p>« Zoom sur le contenu » et « Zoom sur la largeur du contenu », à la fin du même sous-menu, règlent l’agrandissement une seule fois, de sorte que la partie composée de la page tienne dans la fenêtre ou en remplisse la largeur. Changer l’agrandissement avec la barre d’outils, avec ces commandes ou en pinçant le trackpad fait passer la fenêtre en « Agrandissement constant » ; choisissez de nouveau « Adapter à la fenêtre » pour revenir en arrière. Cliquer sur le mot à côté du champ « Agrandissement » ouvre le menu Agrandissement. « Après le redimensionnement de la fenêtre » et « Agrandissement », sous « À l’ouverture d’un document », déterminent l’agrandissement avec lequel une fenêtre commence.</p>
+
+<h2>Les outils de la souris</h2>
+
+<p>L’élément « Mode de la souris » de la barre d’outils choisit ce que fait le pointeur sur la page. « Dérouler » déplace la page. « Sélectionner le texte » sélectionne du texte à copier. « Agrandir » et « Agrandissement maximal » affichent une loupe tant que le bouton de la souris est maintenu enfoncé : double-cliquez et maintenez pour une loupe plus grande, triple-cliquez et maintenez pour agrandir toute la fenêtre, et appuyez sur Commande, Option ou Contrôle pour agrandir davantage ; ajoutez Maj à l’une de ces touches pour agrandir moins. « Sélectionner (PDF) » sélectionne une zone de la page à copier sous forme d’image. « Mode de la souris par défaut », sous « À l’ouverture d’un document », choisit l’outil avec lequel une fenêtre commence.</p>
+
+<p>Avec « Sélectionner (PDF) », faites glisser le pointeur sur une zone de la page, puis copiez-la avec <kbd>⌘C</kbd> ou faites-la glisser dans une autre application ou sur le bureau ; Page › Enregistrer la sélection dans un fichier... l’enregistre dans un fichier. Page › Copier le format choisit si la copie est en PDF ou sous forme d’image, par exemple PNG, TIFF ou JPEG ; « Type de copie de l’image », dans Réglages › Aperçu › Copie d’images, détermine le format par défaut. Voir <a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a>.</p>
+
+<h2 id="search">Recherche et tiroir</h2>
+
+<p>Saisissez un mot dans le champ « Rechercher » de la barre d’outils et appuyez sur Retour pour sélectionner sa première occurrence ; <kbd>⌘G</kbd> passe à la suivante. Lorsque la fenêtre d’aperçu est au premier plan, <kbd>⌘F</kbd> place le curseur dans ce champ.</p>
+
+<p>Page › Tiroir, ou l’élément « Tiroir » de la barre d’outils, affiche le tiroir. Sa partie supérieure est le sommaire du document, que le paquet hyperref construit à partir des chapitres et des sections ; cliquez sur une entrée pour y aller, ou choisissez-en une avec les touches fléchées et appuyez sur Retour. Sa partie inférieure est un second champ de recherche, qui énumère toutes les occurrences avec leur page ; cliquez sur l’une d’elles pour y aller.</p>
+
+<h2>Liens et pop-up des liens</h2>
+
+<p>Les liens créés par le paquet hyperref fonctionnent dans l’aperçu : cliquez sur une référence pour aller au théorème ou à l’entrée de la bibliographie, et le chevron gauche de « Précédent/Suivant » vous ramène. Une adresse web s’ouvre dans votre navigateur.</p>
+
+<p>Maintenez le pointeur sur un lien pour voir l’endroit lié dans une fenêtre pop-up, avec le numéro de page dans son coin inférieur droit. Le pop-up disparaît après quelques secondes. Les touches maintenues enfoncées au moment où il apparaît le modifient :</p>
+<dl>
+<dt>Maj</dt>
+<dd>affiche le pop-up au-dessus du lien au lieu d’en dessous.</dd>
+<dt>Commande</dt>
+<dd>affiche un pop-up plus grand.</dd>
+<dt>Option</dt>
+<dd>épingle le pop-up, pour qu’il reste affiché. Appuyer sur Option pendant qu’un pop-up est affiché l’épingle aussi.</dd>
+<dt>Contrôle</dt>
+<dd>inverse « Pop-up pour les liens » pour ce lien : quand l’option est activée, aucun pop-up n’apparaît, si bien qu’aucun ne gêne un clic avec la touche Contrôle ; quand elle est désactivée, le pop-up apparaît quand même.</dd>
+</dl>
+
+<p>Un pop-up épinglé peut être déplacé, redimensionné et défilé, et son texte peut être sélectionné et copié. Il reste à sa place sur sa page pendant que vous cliquez, faites défiler, zoomez, suivez des liens ou travaillez dans d’autres fenêtres, jusqu’à ce que vous appuyiez sur Échap dans la fenêtre d’aperçu. Tant qu’un pop-up est épinglé, les autres pop-up apparaissent toujours, et Option épingle alors l’un d’eux à sa place.</p>
+
+<p>Page › Pop-up pour les liens active ou désactive les pop-up pour la fenêtre, et « Pop-up pour les liens », sous « À l’ouverture d’un document », détermine s’ils sont activés à l’ouverture d’un document. « Afficher le numéro de page dans les pop-up des liens », dans Réglages › Aperçu › Affichage et navigation, affiche le numéro de la page cible dans le pop-up ; désactivez-le pour l’omettre. Aucun pop-up n’apparaît tant que l’outil « Sélectionner (PDF) » est choisi.</p>
+
+<h2>Diviser la fenêtre</h2>
+
+<p>Fenêtre › Diviser la fenêtre (<kbd>⌃2</kbd>), ou l’élément « Diviser » de la barre d’outils, divise la fenêtre d’aperçu en deux parties qui peuvent montrer des endroits différents du document ; choisissez-le de nouveau pour annuler la division. Maintenez la touche Option enfoncée pour diviser la fenêtre côte à côte (Fenêtre › Diviser la fenêtre verticalement, <kbd>⌃⌥2</kbd>). Chaque partie a son propre format d’affichage et son propre agrandissement. La partie sur laquelle vous avez cliqué en dernier est la partie active, signalée par un trait fin de la couleur d’accentuation : la barre d’outils, le tiroir, SyncTeX et le menu Page agissent sur elle, et c’est elle qui reste quand la division est annulée.</p>
+
+<p>Cliquez sur un lien interne en maintenant la touche Contrôle enfoncée, ou avec le bouton droit de la souris, et choisissez « Diviser la fenêtre avec le lien » pour afficher l’endroit lié dans l’autre partie tout en gardant le lien visible ; la fenêtre est d’abord divisée si nécessaire.</p>
+
+<p>Fenêtre › Changer de vue (<kbd>⌥2</kbd>) échange les deux parties d’une fenêtre divisée. Dans une fenêtre qui n’est pas divisée, cette commande passe d’une vue du document à une autre, chacune avec son propre endroit, son format d’affichage et son agrandissement, pour que vous puissiez aller et venir entre deux endroits.</p>
+
+<h2>Plein écran</h2>
+
+<p>Fenêtre › Activer le mode plein écran (<kbd>🌐F</kbd>) affiche l’aperçu sur tout l’écran. La division de la fenêtre est alors annulée, et la fenêtre utilise l’agrandissement et le format d’affichage utilisés en dernier en plein écran ; quitter le plein écran rétablit les précédents. Pour conserver la division, l’agrandissement et le format d’affichage, activez « Conserver l’agrandissement, le format d’affichage et la division en passant en plein écran » dans Réglages › Aperçu › Affichage et navigation. En plein écran, le premier appui sur Échap ferme un pop-up épinglé et le second quitte le plein écran.</p>
+
+<h2>Annotations</h2>
+
+<p>Page › Afficher la barre d’outils d’annotation affiche les outils d’annotation sous la barre d’outils de la fenêtre. Cliquez sur « Mode Édition » à l’extrémité gauche de la barre d’outils d’annotation, puis utilisez ses boutons pour barrer, surligner ou souligner le texte sélectionné, ou pour ajouter des formes, des flèches, du texte et des notes. Les annotations ne font pas partie de la source, et la composition suivante remplace le fichier PDF ; enregistrez-les donc avec « Enregistrer les annotations… » dans la barre d’outils d’annotation, qui enregistre une copie du fichier PDF, nommée par exemple Fourier-Annotated.pdf pour Fourier.tex. Après que vous avez travaillé en « Mode Édition », TeXShop propose d’enregistrer les annotations avant de composer de nouveau ou de fermer la fenêtre. Le Manuel de TeXShop décrit les annotations en détail.</p>
+
+<h2>Autres fonctions</h2>
+
+<p>Cliquez dans l’aperçu en maintenant la touche Commande enfoncée pour aller à l’endroit correspondant de la source ; voir <a href="basic_typesetting.htm">Composer des documents</a>. « Rotation à droite » et « Rotation à gauche », dans le menu Page, font pivoter les pages. Lorsqu’une autre application, comme latexmk, réécrit le fichier PDF, l’aperçu le recharge au même endroit quand vous revenez à TeXShop ou à la fenêtre d’aperçu ; activez « Toujours surveiller les modifications du PDF par d’autres apps » dans Réglages › Aperçu › Actualisation pour qu’il soit rechargé aussitôt, même quand TeXShop est en arrière-plan. Page › Enregistrer la position de l'aperçu fait s’ouvrir les nouvelles fenêtres d’aperçu à l’emplacement et à la taille de la fenêtre au premier plan.</p>
+</main>
+</body>
+</html>

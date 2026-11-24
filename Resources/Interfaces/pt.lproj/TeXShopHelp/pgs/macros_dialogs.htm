@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Criar diálogos</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; diálogos; display dialog; activate; ScriptRunner">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda para macros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminares</a></li>
+<li><a href="macros_default.htm">Entender as macros padrão</a></li>
+<li><a href="macros_rearrange.htm">Reorganizar o menu Macros</a></li>
+<li><a href="macros_define.htm">Definir novas macros</a></li>
+<li><a href="macros_applescript.htm">Macros AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macros AppleScript padrão</a></li>
+<li><a href="macros_defapplescript.htm">Definir macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm" class="current">Criar diálogos</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts com os comandos de composição do TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts com comandos de shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Criar diálogos</h1>
+<p>Um AppleScript pode mostrar diálogos e agir de acordo com o que você digitar. Por exemplo, crie uma macro com o conteúdo a seguir e experimente-a:</p>
+<pre>-- AppleScript
+-- Use a dialog to enter user defined information into an AppleScript.
+-- There are two feedbacks possible 'text' and "choice of buttons".
+-- The returned information can be used to define corresponding
+-- variables.
+-- The number of buttons may not exceed three.
+-- In the three examples below it is shown how to use text return,
+-- button return, and both.
+
+activate
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set theText to (the text returned of the result)
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set theButton to (the button returned of the result)
+display dialog "Test dialog: type something below" ¬
+   default answer "Hello World!" ¬
+   buttons {"A", "B", "C"} default button "B"
+set {theText, theButton} to ¬
+  {the text returned of the result, the button returned of the result}</pre>
+<p>O comando <code>activate</code> merece uma explicação. Uma macro que começa com <code>-- AppleScript</code> é executada pelo ScriptRunner, um programa separado dentro do TeXShop; por isso, os seus diálogos são mostrados pelo ScriptRunner e não pelo TeXShop. <code>activate</code> traz o ScriptRunner para a frente, para que os diálogos apareçam na frente das outras janelas.</p>
+</main>
+</body>
+</html>

@@ -99,7 +99,7 @@ static NSMenuItem *TSItemWithAction(NSMenu *menu, SEL action)
 
 + (NSURL *)markHelpPageForLocalization:(NSString *)localization inBundle:(NSBundle *)bundle
 {
-    if ([localization isEqualToString:@"en"])
+    if ([bundle URLForResource:@"basic_commandcompletion" withExtension:@"htm" subdirectory:@"TeXShopHelp/pgs" localization:localization])
         return nil;
     NSURL *page = [bundle URLForResource:@"basic_commandcompletion" withExtension:@"htm" subdirectory:@"TeXShopHelp/pgs" localization:@"en"];
     if (page == nil)

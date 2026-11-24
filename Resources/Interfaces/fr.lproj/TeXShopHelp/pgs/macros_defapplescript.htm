@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Définir des macros AppleScript</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; #FILEPATH#; #PDFPATH#; #TEXPATH#; #FOLDERPATH#; #NAMEPATH#; #DOCUMENTNAME#; typeset; latexinteractive; taskdone; refreshpdf; goto line">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide sur les macros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Préliminaires</a></li>
+<li><a href="macros_default.htm">Comprendre les macros par défaut</a></li>
+<li><a href="macros_rearrange.htm">Réorganiser le menu Macros</a></li>
+<li><a href="macros_define.htm">Définir de nouvelles macros</a></li>
+<li><a href="macros_applescript.htm">Macros AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macros AppleScript par défaut</a></li>
+<li><a href="macros_defapplescript.htm" class="current">Définir des macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Créer des zones de dialogue</a></li>
+<li><a href="macros_writingcompletescripts.htm">Écrire des scripts avec les commandes de composition de TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Écrire des scripts avec des commandes shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Définir des macros AppleScript</h1>
+<p>AppleScript est un langage à part entière. L’<cite>AppleScript Language Guide</cite> d’Apple, sur le site web d’Apple destiné aux développeurs, le décrit en détail.</p>
+
+<h2 id="paths">Chemins et nom du document</h2>
+<p>Avant d’exécuter une macro AppleScript, TeXShop remplace les chaînes suivantes par le chemin d’un fichier du document actif, entre guillemets doubles :</p>
+<dl>
+<dt>#FILEPATH#</dt><dd>le fichier source</dd>
+<dt>#TEXPATH#</dt><dd>le fichier .tex</dd>
+<dt>#NAMEPATH#</dt><dd>le fichier source sans son extension</dd>
+<dt>#FOLDERPATH#</dt><dd>le dossier qui contient la source, terminé par une barre oblique</dd>
+<dt>#PDFPATH#, #DVIPATH#, #PSPATH#, #LOGPATH#, #AUXPATH#</dt><dd>les fichiers .pdf, .dvi, .ps, .log et .aux</dd>
+<dt>#INDPATH#, #BBLPATH#, #HTMLPATH#</dt><dd>les fichiers .ind, .bbl et .html</dd>
+</dl>
+<p>Par exemple, si #FILEPATH# donne /Users/name/Projects/Fourier/Fourier.tex, #FOLDERPATH# donne /Users/name/Projects/Fourier/. Si le document n’a jamais été enregistré, #FILEPATH# est une chaîne vide.</p>
+<p>#DOCUMENTNAME# est remplacé par le nom du document tel que l’affiche le titre de la fenêtre source : avec son extension, ou sans elle si l’extension est masquée. Un script l’utilise pour s’adresser au document qui l’a appelé :</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  latex
+end tell</pre>
+
+<h2 id="commands">Commandes de TeXShop</h2>
+<p>Un AppleScript peut accomplir son travail de deux façons : il peut exécuter des commandes shell, comme décrit dans <a href="macros_writingcommandscripts.htm">Écrire des scripts avec des commandes shell</a>, ou appeler les commandes propres à TeXShop, comme décrit dans <a href="macros_writingcompletescripts.htm">Écrire des scripts avec les commandes de composition de TeXShop</a>. TeXShop comprend notamment les commandes suivantes :</p>
+<pre>typeset
+latex
+tex
+bibtex
+makeindex
+metapost
+typesetinteractive
+latexinteractive
+texinteractive
+bibtexinteractive
+makeindexinteractive
+metapostinteractive
+taskdone
+refreshpdf
+refreshtext
+goto line</pre>
+<p>Les six premières commandes composent en continu, sans s’arrêter aux erreurs. Les six suivantes composent aussi, mais s’arrêtent à une erreur afin que vous puissiez répondre dans la console. Une commande de composition rend la main aussitôt, avant la fin de la composition. <code>taskdone</code> renvoie NO tant que la composition est en cours et YES lorsqu’elle est terminée. <code>refreshpdf</code> et <code>refreshtext</code> font afficher aux fenêtres PDF et texte la dernière version de leurs fichiers. <code>goto line</code> sélectionne une ligne de la source :</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  goto line 37
+end tell</pre>
+</main>
+</body>
+</html>

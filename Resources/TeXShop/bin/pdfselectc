@@ -1,20 +1,23 @@
-#! /bin/tcsh
-#  pdfselect
-#  Claus Gerhardt
+#!/bin/sh
+# pdfselectc
+# Claus Gerhardt; rewritten for texlua (TeX Live) in TeXShop 6.00
 #
-# Enter a list containing pages or page ranges x:y a:b z filename
-# The last item in the list has to be the filename without suffix .pdf
-# The resulting selections will be named filename-i.pdf, where 1<=i< length of list
+# pdfselectc selection1 [selection2 ...] filename
+#
+# filename is the PDF without the suffix .pdf. For each selection, such as 5:8 or 3:4,6,8:12,
+# the PDF filename-i.pdf is made with those pages, where i is the number of the selection.
+# The work is done by pdfselectc.lua in this folder, run by texlua of TeX Live.
 
+# TeX Live as set in TeXShop's Settings (Typesetting > Paths > TeX Engines), then the usual places.
+bin=$(/usr/bin/defaults read TeXShop TetexBinPath 2>/dev/null)
+case $bin in
+"~"*) bin=$HOME${bin#\~} ;;
+esac
+PATH="${bin:+$bin:}$PATH:/Library/TeX/texbin:/usr/texbin:/usr/local/bin"
+export PATH
 
-set path= ($path  /usr/local/bin  /Library/TeX/texbin /usr/texbin)
-
-set filename="$argv[$#]"
-
-@ i=1 
- while ($#>1) 
-@ j=$#
- texexec  --pdfselect --batch  --silent --selection="$1" --result="$filename-$i.pdf" "$filename.pdf" && rm -f "$filename-$i.tui" && rm -f "$filename-$i.tmp"   && rm -f "texexec.tex" && rm -f "texexec.tmp" && rm -f "texexec.tui" && rm -f "mprun.mp" rm -f "mpgraph.mp" && rm -f "$filename-$i.log"
-@ i++ 
- shift
-end
+if ! command -v texlua >/dev/null 2>&1; then
+    echo "pdfselectc: texlua of TeX Live is not found; check Settings > Typesetting > Paths > TeX Engines in TeXShop" >&2
+    exit 1
+fi
+exec texlua "$(dirname "$0")/pdfselectc.lua" "$@"

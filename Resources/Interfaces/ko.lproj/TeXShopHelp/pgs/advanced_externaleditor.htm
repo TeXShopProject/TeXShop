@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>외부 에디터 사용하기</title>
+<title>외부 편집기 사용하기</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="외부 에디터; 보기로 열기; 편집용으로 열기; 외부 에디터 사용; 다른 앱의 PDF 변경을 항상 감시; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
+<meta name="description" content="외부 편집기; 미리보기로 열기; 편집용으로 열기; 외부 편집기 사용; 다른 앱의 PDF 변경을 항상 감시; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
 <li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
-<li><a href="advanced_externaleditor.htm" class="current">외부 에디터 사용하기</a></li>
+<li><a href="advanced_externaleditor.htm" class="current">외부 편집기 사용하기</a></li>
 <li><a href="advanced_experiments.htm">실험</a></li>
 <li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
 <li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
@@ -38,30 +38,30 @@
 </ul>
 </nav>
 <main id="content">
-<h1>외부 에디터 사용하기</h1>
-<p>다른 에디터에서 글을 쓰고, 조판과 PDF 보기에는 TeXShop을 사용할 수 있습니다.</p>
+<h1>외부 편집기 사용하기</h1>
+<p>다른 편집기에서 글을 쓰고, 조판과 PDF 보기에는 TeXShop을 사용할 수 있습니다.</p>
 
 <h2>미리보기만 열기</h2>
-<p>파일 › 보기로 열기...는 소스 파일을 선택하게 한 다음, 그 파일의 미리보기 윈도우만 엽니다. 파일이 아직 조판되지 않았거나 PDF가 소스보다 오래되었으면 TeXShop이 먼저 조판합니다. 소스는 사용하는 에디터에서 편집합니다. 조판하려면 에디터에서 저장한 다음, 미리보기 윈도우의 조판 버튼이나 <kbd>⌘T</kbd>를 누릅니다. 이 방식에서 TeXShop은 소스 파일을 열거나 변경하지 않습니다. 미리보기 윈도우의 도구 막대에 조판 버튼이 없으면 윈도우 › 도구 막대 사용자화...로 추가합니다.</p>
-<p>항상 이렇게 작업한다면 설정 › 일반 › 시작 시 › “외부 에디터 사용”을 켜십시오. 그러면 파일 › 열기...와 최근 사용 열기가 소스 파일을 미리보기로만 열며, 파일 › 보기로 열기...는 편집용으로 열기...로 바뀝니다. 편집용으로 열기...는 필요할 때 소스 파일을 TeXShop 자체의 에디터에서 엽니다. PDF, 그림, 로그 파일 같은 다른 파일은 평소처럼 열립니다.</p>
+<p>파일 › 미리보기로 열기...는 소스 파일을 선택하게 한 다음, 그 파일의 미리보기 윈도우만 엽니다. 파일이 아직 조판되지 않았거나 PDF가 소스보다 오래되었으면 TeXShop이 먼저 조판합니다. 소스는 사용하는 편집기에서 편집합니다. 조판하려면 편집기에서 저장한 다음, 미리보기 윈도우의 조판 버튼이나 <kbd>⌘T</kbd>를 누릅니다. 이 방식에서 TeXShop은 소스 파일을 열거나 변경하지 않습니다. 미리보기 윈도우의 도구 막대에 조판 버튼이 없으면 윈도우 › 도구 막대 사용자화...로 추가합니다.</p>
+<p>항상 이렇게 작업한다면 설정 › 일반 › 시작 시 › “외부 편집기 사용”을 켜십시오. 그러면 파일 › 열기...와 최근 사용 열기가 소스 파일을 미리보기로만 열며, 파일 › 미리보기로 열기...는 편집용으로 열기...로 바뀝니다. 편집용으로 열기...는 필요할 때 소스 파일을 TeXShop 자체의 편집기에서 엽니다. PDF, 그림, 로그 파일 같은 다른 파일은 평소처럼 열립니다.</p>
 
 <h2>미리보기를 최신 상태로 유지하기</h2>
-<p>사용하는 에디터나 터미널의 latexmk 같은 다른 프로그램이 PDF를 다시 쓰면, TeXShop이나 미리보기 윈도우로 돌아올 때 TeXShop이 페이지와 배율을 유지한 채 PDF를 다시 불러옵니다. 설정 › 미리보기 › 새로 고침 › “다른 앱의 PDF 변경을 항상 감시”를 켜면, TeXShop이 뒤에 있을 때도 PDF가 바뀌는 즉시 다시 불러옵니다. 예를 들어 미리보기를 에디터 옆에 놓고 작업할 때 편리합니다. 저장하지 않은 주석이 있는 미리보기는 주석을 잃지 않도록 다시 불러오지 않습니다.</p>
-<p>TeXShop은 자체 에디터에서 열어 둔 소스 파일도 감시합니다. 다른 에디터가 그런 파일을 변경하면 TeXShop은 파일을 다시 불러옵니다. 다만 TeXShop 쪽 사본에 저장하지 않은 변경 사항이 있으면 다시 불러오지 않습니다.</p>
+<p>사용하는 편집기나 터미널의 latexmk 같은 다른 프로그램이 PDF를 다시 쓰면, TeXShop이나 미리보기 윈도우로 돌아올 때 TeXShop이 페이지와 배율을 유지한 채 PDF를 다시 불러옵니다. 설정 › 미리보기 › 새로 고침 › “다른 앱의 PDF 변경을 항상 감시”를 켜면, TeXShop이 뒤에 있을 때도 PDF가 바뀌는 즉시 다시 불러옵니다. 예를 들어 미리보기를 편집기 옆에 놓고 작업할 때 편리합니다. 저장하지 않은 주석이 있는 미리보기는 주석을 잃지 않도록 다시 불러오지 않습니다.</p>
+<p>TeXShop은 자체 편집기에서 열어 둔 소스 파일도 감시합니다. 다른 편집기가 그런 파일을 변경하면 TeXShop은 파일을 다시 불러옵니다. 다만 TeXShop 쪽 사본에 저장하지 않은 변경 사항이 있으면 다시 불러오지 않습니다.</p>
 
-<h2>에디터와 동기화하기</h2>
-<p>미리보기 윈도우에서 Command-클릭하여 에디터의 해당 줄로 이동하거나, 콘솔의 에러 위치로 버튼으로 에디터에서 오류가 있는 줄을 열 수 있습니다. 이렇게 하려면 “외부 에디터 사용”과 숨겨진 설정, 그리고 에디터의 명령행 프로그램이 필요합니다.</p>
+<h2>편집기와 동기화하기</h2>
+<p>미리보기 윈도우에서 Command-클릭하여 편집기의 해당 줄로 이동하거나, 콘솔의 오류 지점으로 이동 버튼으로 편집기에서 오류가 있는 줄을 열 수 있습니다. 이렇게 하려면 “외부 편집기 사용”과 숨겨진 설정, 그리고 편집기의 명령행 프로그램이 필요합니다.</p>
 <ul>
 <li>TextMate(명령 <code>mate</code>가 <code>/usr/local/bin</code>에 있는 경우): <code>defaults write TeXShop TextMateSync YES</code></li>
-<li>그 밖의 에디터: <code>defaults write TeXShop OtherEditorSync YES</code>를 실행하고, 줄 번호를 <code>$1</code>로, 파일의 전체 경로를 <code>$2</code>로 받는 실행 가능한 스크립트 <code>/usr/local/bin/othereditor</code>를 만듭니다. BBEdit용 스크립트는 다음과 같습니다.
+<li>그 밖의 편집기: <code>defaults write TeXShop OtherEditorSync YES</code>를 실행하고, 줄 번호를 <code>$1</code>로, 파일의 전체 경로를 <code>$2</code>로 받는 실행 가능한 스크립트 <code>/usr/local/bin/othereditor</code>를 만듭니다. BBEdit용 스크립트는 다음과 같습니다.
 <pre>#!/bin/sh
 /usr/local/bin/bbedit "$2:$1"</pre></li>
 </ul>
-<p>반대 방향, 즉 에디터의 줄에서 미리보기 윈도우로 이동하려면 에디터가 AppleScript를 통해 <code>sync_preview_line</code>, <code>sync_preview_index</code>, <code>sync_preview_name</code> 명령으로 TeXShop을 호출합니다. 도움말 › TeXShop 설명서 (영문)의 “Using an External Editor” 장에 완전한 스크립트가 있습니다.</p>
+<p>반대 방향, 즉 편집기의 줄에서 미리보기 윈도우로 이동하려면 편집기가 AppleScript를 통해 <code>sync_preview_line</code>, <code>sync_preview_index</code>, <code>sync_preview_name</code> 명령으로 TeXShop을 호출합니다. 도움말 › TeXShop 설명서 (영문)의 “Using an External Editor” 장에 완전한 스크립트가 있습니다.</p>
 <p><code>~/Library/TeXShop/ExternalEditorScripts</code> 폴더에는 바로 사용할 수 있는 지원 파일이 설명서와 함께 들어 있습니다. BBEdit의 문서를 TeXShop에서 조판하고 미리보는 AppleScript와 Vim용 플러그인입니다.</p>
 
-<h2>에디터용 AppleScript 명령</h2>
-<p>에디터는 TeXShop 문서의 다음 AppleScript 명령을 호출할 수 있습니다.</p>
+<h2>편집기용 AppleScript 명령</h2>
+<p>편집기는 TeXShop 문서의 다음 AppleScript 명령을 호출할 수 있습니다.</p>
 <dl>
 <dt><code>typesetinteractive</code>, <code>texinteractive</code>, <code>latexinteractive</code>, <code>bibtexinteractive</code>, <code>makeindexinteractive</code>, <code>metapostinteractive</code></dt>
 <dd>조판하거나 plain TeX, LaTeX, BibTeX, MakeIndex, MetaPost를 실행합니다. 호출은 조판이 끝나기를 기다리지 않고 즉시 돌아오며, 조판이 끝나면 미리보기가 새로 고쳐집니다.</dd>
@@ -69,9 +69,9 @@
 <dt><code>refreshpdf</code></dt><dd>PDF를 다시 불러오고 미리보기 윈도우를 앞으로 가져옵니다.</dd>
 <dt><code>refreshpdfbackground</code></dt><dd>미리보기 윈도우가 이미 열려 있을 때, TeXShop을 앞으로 가져오지 않고 PDF를 다시 불러옵니다.</dd>
 <dt><code>refreshtext</code></dt><dd>디스크에서 소스 파일을 다시 읽습니다.</dd>
-<dt><code>open_for_externaleditor</code></dt><dd>파일 › 보기로 열기...와 같은 방식으로 소스 파일을 엽니다.</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>파일 › 미리보기로 열기...와 같은 방식으로 소스 파일을 엽니다.</dd>
 </dl>
-<p>에디터가 TeXShop을 통해 조판한다면 “다른 앱의 PDF 변경을 항상 감시”는 필요하지 않습니다. <a href="macros_writingcompletescripts.htm">TeXShop 조판 명령으로 스크립트 작성하기</a>도 참조하십시오.</p>
+<p>편집기가 TeXShop을 통해 조판한다면 “다른 앱의 PDF 변경을 항상 감시”는 필요하지 않습니다. <a href="macros_writingcompletescripts.htm">TeXShop 조판 명령으로 스크립트 작성하기</a>도 참조하십시오.</p>
 </main>
 </body>
 </html>

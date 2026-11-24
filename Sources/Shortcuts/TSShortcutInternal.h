@@ -6,6 +6,11 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT const NSEventModifierFlags TSShortcutModifiers;
 NSString * _Nullable TSTranslateKey(CFDataRef _Nullable data, UInt16 keyCode, BOOL shifted, UInt32 keyboardType);
 TSShortcutBinding *TSBinding(NSString * _Nullable key, NSEventModifierFlags flags);
+// NSEventModifierFlagFunction when flags hold the Globe (fn) key and key is a character key, else 0.
+NSEventModifierFlags TSGlobeModifier(NSString * _Nullable key, NSEventModifierFlags flags);
+NSEventModifierFlags TSEventGlobeModifier(NSEvent *event);
+// Why a key pressed while recording a shortcut cannot have the Globe key; nil when it has none.
+NSString * _Nullable TSGlobeRecordingRefusal(NSEvent *event);
 // The key a menu item was given, before AppKit adapts it to the keyboard layout.
 TSShortcutBinding *TSGivenBinding(NSMenuItem *item);
 // The key AppKit shows for a menu item on the current keyboard layout.
@@ -37,6 +42,9 @@ FOUNDATION_EXPORT NSString * const TSShortcutLearningIdentifier;
 // A command's default as AppKit shows it on the current keyboard layout, and the key it shows now.
 - (TSShortcutBinding *)shownDefaultForCommand:(TSShortcutCommand *)command;
 - (TSShortcutBinding *)shownBindingForCommand:(TSShortcutCommand *)command;
+// The key a command and its default show in Settings › Keyboard: 🌐︎F for Enter Full Screen.
+- (NSString *)displayKeyForCommand:(TSShortcutCommand *)command;
+- (NSString *)displayDefaultKeyForCommand:(TSShortcutCommand *)command;
 // The default as given and as shown on the current keyboard layout.
 - (NSSet<TSShortcutBinding *> *)defaultBindingsForCommand:(TSShortcutCommand *)command;
 // AppKit shows, for one pass of the run loop, the keys of the current layout for every key

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Default AppleScript Macros</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript macros; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Convert to Unix; line endings; Bibliography; Claus Gerhardt Macros; htlatexc; pdfselectc; mpostc">
+<meta name="description" content="AppleScript macros; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Save Copy with Unix Line Endings; line endings; bibliography; Claus Gerhardt Macros; TeX4ht; Extract Pages from PDF; MetaPost">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -41,20 +41,20 @@
 </dl>
 <p>The macro replaces the contents of the clipboard with the LaTeX text. To paste the same cells in another style, copy them again in the spreadsheet first.</p>
 
-<h2 id="line-endings">Applescript › Convert to MAC, Convert to Unix, Convert to Windows</h2>
-<p>Text files end their lines in different ways: macOS and Unix with a line feed, Windows with a carriage return followed by a line feed, and very old Macintosh files with a carriage return alone. TeXShop reads all three. If someone else's editor cannot, use these macros. For a source file MyFile.tex, Convert to Unix writes a copy of the saved file named MyFile_Unix.tex with line feeds; Convert to Windows writes MyFile_Windows.tex and Convert to MAC writes MyFile_Mac.tex. The macros use the program flip by Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
+<h2 id="line-endings">Applescript › Save Copy with Unix Line Endings, Save Copy with Windows Line Endings, Save Copy with Classic Mac Line Endings</h2>
+<p>Text files end their lines in different ways: macOS and Unix with a line feed, Windows with a carriage return followed by a line feed, and very old Macintosh files with a carriage return alone. TeXShop reads all three. If someone else's editor cannot, use these macros. For a source file MyFile.tex, Save Copy with Unix Line Endings writes a copy of the saved file named MyFile_Unix.tex with line feeds; Save Copy with Windows Line Endings writes MyFile_Windows.tex and Save Copy with Classic Mac Line Endings writes MyFile_Mac.tex. The macros use the program flip by Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
 
-<h2 id="bibliography">Applescript › Bibliography</h2>
-<p>A document with a bibliography needs several runs: LaTeX writes the .aux file, BibTeX uses it to write the .bbl and .blg files, LaTeX runs again to add the bibliography, and once more to update the references to it. The Bibliography macro runs LaTeX, BibTeX, LaTeX and LaTeX one after another. <a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a> explains how it works.</p>
+<h2 id="bibliography">Applescript › Run LaTeX, BibTeX, Then LaTeX Twice</h2>
+<p>A document with a bibliography needs several runs: LaTeX writes the .aux file, BibTeX uses it to write the .bbl and .blg files, LaTeX runs again to add the bibliography, and once more to update the references to it. This macro runs them one after another. <a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a> explains how it works.</p>
 
 <h2 id="gerhardt">Claus Gerhardt Macros</h2>
-<p>Most macros of this submenu call shell scripts of the same names in ~/Library/TeXShop/bin; bibtexcpl, mpostcpl and latex-makeindex-mpost call several of them in turn, and openpdf opens the PDF of the document. They work on a saved file. <a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a> explains pdflatexc as an example.</p>
-<h3>htlatexc, htlatexr</h3>
-<p>TeX4ht converts a LaTeX document into a web page: an HTML page and image files. htlatexc runs htlatex on the document and opens the resulting HTML file in Safari. The package tex4ht does not need to be loaded in the document; htlatex loads it. htlatexr runs htlatex with the option <code>-r</code>, which makes the images again even when they already exist.</p>
-<h3>pdfselectc</h3>
-<p>pdfselectc makes PDF files that contain selected pages of the document's PDF. It first asks how many files to make, then for the pages of each file, such as <code>5:8</code> for pages 5 to 8 or <code>3:4,6,8:12</code>. If the document is named MyFile, the files are saved as MyFile-1.pdf, MyFile-2.pdf and so on.</p>
-<h3>mpostc, mpostcpl, latex-makeindex-mpost</h3>
-<p>mpostc runs MetaPost and then pdfLaTeX; mpostcpl runs pdfLaTeX, MetaPost and pdfLaTeX again. latex-makeindex-mpost runs pdfLaTeX, MakeIndex, MetaPost and pdfLaTeX again, opening the log files on the way. See <a href="advanced_context.htm">ConTeXt and MetaPost</a> for MetaPost.</p>
+<p>Most macros of this submenu call shell scripts in ~/Library/TeXShop/bin, such as pdflatexc, which runs pdfLaTeX, and bibtexc, which runs BibTeX. Each macro whose name begins with Run runs the programs it names, in that order, and Open PDF opens the PDF of the document. Run LaTeX, dvips and ps2pdf also needs Ghostscript. They work on a saved file. <a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a> explains Run pdfLaTeX with Shell Escape as an example.</p>
+<h3>Make HTML with TeX4ht</h3>
+<p>TeX4ht converts a LaTeX document into a web page: an HTML page and image files. Make HTML with TeX4ht runs htlatex on the document and opens the resulting HTML file in Safari. The package tex4ht does not need to be loaded in the document; htlatex loads it. Make HTML with TeX4ht, Remaking Images runs htlatex with the option <code>-r</code>, which makes the images again even when they already exist.</p>
+<h3>Extract Pages from PDF…</h3>
+<p>Extract Pages from PDF… makes PDF files that contain selected pages of the document's PDF. It first asks how many files to make, then for the pages of each file, such as <code>5:8</code> for pages 5 to 8 or <code>3:4,6,8:12</code>. If the document is named MyFile, the files are saved as MyFile-1.pdf, MyFile-2.pdf and so on.</p>
+<h3>MetaPost</h3>
+<p>Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX opens the log files on the way. See <a href="advanced_context.htm">ConTeXt and MetaPost</a> for MetaPost.</p>
 </main>
 </body>
 </html>

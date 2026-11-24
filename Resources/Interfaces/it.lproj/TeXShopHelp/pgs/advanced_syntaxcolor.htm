@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidenziazione della sintassi</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="evidenziazione della sintassi; colori della sintassi; colori; tema; expl3; voci dell'indice; nota a piè di pagina; marcatore; parentesi; larghezza piena; SyntaxColoringEnabled">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codifiche</a></li>
+<li><a href="advanced_Japan.htm">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm" class="current">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Evidenziazione della sintassi</h1>
+<p>La finestra sorgente mostra il TeX a colori: i commenti, i comandi, le note a piè di pagina, i marcatori <code>$</code> e <code>&amp;</code> e le parentesi <code>( )</code>, <code>{ }</code> e <code>[ ]</code> hanno ciascuno un colore proprio. Sorgente › Evidenziazione della sintassi attiva o disattiva l’evidenziazione per il documento attivo. I documenti si aprono con l’evidenziazione attiva; per aprirli con l’evidenziazione disattivata, usa l’impostazione nascosta</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
+
+<h2>Che cosa viene evidenziato</h2>
+<ul>
+<li>I comandi sono una barra rovesciata seguita da lettere. Impostazioni › Editor › Evidenziazione della sintassi › «@ fa parte dei nomi dei comandi» considera anche <code>@</code> una lettera, come nei comandi interni dei pacchetti.</li>
+<li>Il testo di <code>\footnote</code>, <code>\footcite</code> e <code>\autocite</code>, e dei comandi che iniziano con <code>\cite</code> o <code>\Cite</code>, come <code>\citep</code> e <code>\citeauthor</code>, viene mostrato nel colore «Nota a piè di pagina». L’impostazione nascosta <code>defaults write TeXShop SyntaxColorFootnote NO</code> colora solo il comando.</li>
+<li>Sorgente › Evidenzia le voci dell'indice mostra gli argomenti di <code>\index</code> e <code>\esindex</code> nel colore «Indice». Impostazioni › Editor › Evidenziazione della sintassi › «Evidenzia le voci dell'indice di default» la attiva all’apertura dei documenti.</li>
+<li>Sorgente › Evidenzia il codice expl3 colora anche le funzioni, le variabili e le altre parti del codice expl3, il livello di programmazione di LaTeX, per chi scrive pacchetti. «Evidenzia il codice expl3 di default», nello stesso gruppo, la attiva all’apertura dei documenti.</li>
+<li>«Evidenzia lettere e simboli a larghezza piena», nello stesso gruppo, mostra nei colori «Larghezza piena» le lettere, le cifre e i simboli a larghezza piena, che nel testo giapponese si confondono facilmente con i caratteri ASCII.</li>
+</ul>
+<p>Evidenzia le voci dell'indice ed Evidenzia il codice expl3 valgono per il documento attivo; ogni finestra sorgente ha la propria scelta. I file che non sono sorgenti TeX, come i file di log, non vengono evidenziati; consulta <a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a> per l’elenco delle estensioni e come aggiungerne una.</p>
+
+<h2>Cambiare i colori</h2>
+<p>I colori fanno parte del tema. Sceglili in Impostazioni › Temi:</p>
+<ul>
+<li>il gruppo «Evidenziazione della sintassi» contiene Commento, Comando, Nota a piè di pagina, Marcatore e Indice;</li>
+<li>il gruppo «Parentesi» contiene i colori di <code>( )</code>, <code>{ }</code> e <code>[ ]</code>;</li>
+<li>il gruppo «expl3» contiene function, __function, key, variable, __variable, argument e msg;</li>
+<li>il gruppo «Evidenziazioni» contiene, tra gli altri, i colori «Larghezza piena»;</li>
+<li>il gruppo «Sintassi XML» contiene i colori per i file HTML e XML.</li>
+</ul>
+<p>Ogni tema ha i propri colori, quindi il tema scelto in «Tema modalità chiara» e quello scelto in «Tema modalità scura» possono essere diversi.</p>
+</main>
+</body>
+</html>

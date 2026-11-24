@@ -27,7 +27,7 @@
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
 <li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
-<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_externaleditor.htm">외부 편집기 사용하기</a></li>
 <li><a href="advanced_experiments.htm">실험</a></li>
 <li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
 <li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
@@ -64,14 +64,14 @@
 森鷗外 was a famous novelist in Japan.
 \end{document}</pre>
 <p>파일에는 <code>森\UTF{9DD7}外</code>가 들어 있습니다. upLaTeX와 LuaLaTeX는 유니코드를 직접 다루므로 변환이 필요 없습니다.</p>
-<p>텍스트의 일부를 직접 변환하려면 그 부분을 선택하고 편집 › 문자 종류 변환 › 유니코드 문자 → \UTF / \CID 또는 \UTF / \CID → 유니코드 문자를 사용합니다. 같은 하위 메뉴에서 히라가나와 가타카나, 전각과 반각 숫자 및 영문자, 원 숫자 같은 문자와 ajmacros 패키지의 명령을 서로 변환하고, 전각 따옴표 → 반각 따옴표 항목으로 둥근 따옴표를 TeX 따옴표로 바꿀 수 있습니다. 아무것도 선택하지 않으면 TeXShop은 문서 전체를 변환할지 묻습니다. 모든 변환은 실행 취소할 수 있습니다.</p>
+<p>텍스트의 일부를 직접 변환하려면 그 부분을 선택하고 편집 › 문자 종류 변환 › 유니코드 문자 → \UTF / \CID 또는 \UTF / \CID → 유니코드 문자를 사용합니다. 같은 하위 메뉴에서 히라가나와 가타카나, 전각과 반각 숫자 및 영문자, 원 숫자 같은 문자와 ajmacros 패키지의 명령을 서로 변환하고, 둥근 따옴표를 TeX 따옴표로 바꿀 수 있습니다. 아무것도 선택하지 않으면 TeXShop은 문서 전체를 변환할지 묻습니다. 모든 변환은 실행 취소할 수 있습니다.</p>
 
 <h2>조합형 문자와 분해형 문자</h2>
 <p>일본어 문자 중에는 유니코드 형태가 두 가지인 것이 있습니다. が는 하나의 문자(U+304C)일 수도 있고, か(U+304B) 뒤에 결합용 탁음 부호(U+3099)가 붙은 것일 수도 있습니다. 둘은 똑같아 보이지만 TeX는 서로 다른 것으로 취급하므로, 한 형태로 정의한 명령을 다른 형태로 사용하면 찾지 못합니다.</p>
 <pre>\def\が{GA}
 \が   % 이 が가 분해형이면 Undefined control sequence</pre>
-<p>분해형 텍스트는 HFS+ 디스크가 분해형으로 저장하는 파일 이름에서 오는 경우가 많으며, 이 형태를 UTF-8-MAC이라고 합니다. 설정 › 문서 및 저장 › 문서 저장 › “UTF-8-MAC을 UTF-8로 자동 변환”이 켜져 있으면, TeXShop은 문서를 저장할 때 이런 문자를 하나의 문자로 합칩니다. 다만 CJK 호환 한자처럼 표준 합성(NFC)을 적용하면 다른 문자로 바뀌는 문자는 그대로 둡니다. 이 형태를 Modified NFC라고 합니다.</p>
-<p>하위 메뉴 편집 › 유니코드 정규화는 선택 부분이나 문서 전체를 NFC, Modified NFC, NFD, Modified NFD, NFKC, NFKD로 변환한 다음, 결과를 문자 정보 패널에 보여 줍니다. 정규화한 텍스트는 대개 겉보기에 달라지지 않기 때문입니다.</p>
+<p>분해형 텍스트는 HFS+ 디스크가 분해형으로 저장하는 파일 이름에서 오는 경우가 많으며, 이 형태를 UTF-8-MAC이라고 합니다. 설정 › 문서 및 저장 › 문서 저장 › “UTF-8-MAC을 UTF-8로 자동 변환”이 켜져 있으면, TeXShop은 문서를 저장할 때 이런 문자를 하나의 문자로 합칩니다. 다만 CJK 호환 한자처럼 표준 합성(NFC)을 적용하면 다른 문자로 바뀌는 문자는 그대로 둡니다. 이 형태를 수정된 NFC라고 합니다.</p>
+<p>하위 메뉴 편집 › 유니코드 정규화는 선택 부분이나 문서 전체를 NFC, 수정된 NFC, NFD, 수정된 NFD, NFKC, NFKD로 변환한 다음, 결과를 문자 정보 패널에 보여 줍니다. 정규화한 텍스트는 대개 겉보기에 달라지지 않기 때문입니다.</p>
 
 <h2>엔화 기호와 백슬래시</h2>
 <p>일본어 키보드에서는 백슬래시 자리에 있는 키를 누르면 엔화 기호 ¥가 입력되지만, TeX 명령은 백슬래시 \로 시작합니다.</p>
@@ -83,8 +83,8 @@
 
 <h2>그 밖의 일본어 관련 설정</h2>
 <ul>
-<li>설정 › 편집기 › 보이지 않는 문자 › 전각 스페이스 (일본어)를 켜면, 숨김문자를 표시할 때 전각 공백도 표시됩니다.</li>
-<li>설정 › 편집기 › 구문 하이라이트 › 전각 영숫자·기호 강조는 ASCII 문자와 혼동하기 쉬운 전각 영문자, 숫자, 기호를 테마의 전각 영숫자·기호 색상으로 표시합니다.</li>
+<li>설정 › 편집기 › 숨김문자 › 전각 스페이스 (일본어)를 켜면, 숨김문자를 표시할 때 전각 공백도 표시됩니다.</li>
+<li>설정 › 편집기 › 구문 하이라이트 › 전각 영숫자·기호 하이라이트는 ASCII 문자와 혼동하기 쉬운 전각 영문자, 숫자, 기호를 테마의 전각 영숫자·기호 색상으로 표시합니다.</li>
 <li>설정 › 미리보기 › 페이지 방향으로 세로쓰기 문서에 필요한 대로 페이지를 오른쪽에서 왼쪽으로 배열할 수 있습니다. <code>% !TEX PageDirectionR2L</code> 줄과 <code>% !TEX PageDirectionL2R</code> 줄은 한 문서의 방향을 정합니다.</li>
 </ul>
 <p><code>\UTF</code> / <code>\CID</code> 변환과 유니코드 정규화는 Yusuke Terada의 TUG 2013 발표 자료 <a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>에서 자세히 설명합니다.</p>

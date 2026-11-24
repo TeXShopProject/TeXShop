@@ -1,3 +1,0 @@
-#!/bin/zsh
-export PATH=/Library/TeX/texbin:/usr/texbin:/usr/local/bin:${PATH}
-arara -v "$1"

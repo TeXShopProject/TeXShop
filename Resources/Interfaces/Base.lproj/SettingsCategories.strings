@@ -229,13 +229,13 @@
 "catalog.appearance.9.0.item.4" = "Value";
 "group.preview.6.title" = "When a Document Opens";
 "group.preview.0.title" = "Display and Navigation";
-"catalog.preview.0.0.title" = "Default Page Style";
+"catalog.preview.0.0.title" = "Default Display Format";
 "catalog.preview.0.1.title" = "After resizing the window";
 "catalog.preview.0.2.title" = "Magnification";
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.3.title" = "Default Mouse Mode";
 "catalog.preview.0.4.title" = "Do not turn pages by scrolling";
-"catalog.preview.0.4.note" = "With Single Page and Two Page, scrolling with the mouse wheel or the trackpad stops at the top and bottom of the page.";
+"catalog.preview.0.4.note" = "With Single Page and Double Page, scrolling with the mouse wheel or the trackpad stops at the top and bottom of the page.";
 "catalog.preview.0.5.title" = "Always turn pages with the left and right arrow keys";
 "catalog.preview.0.5.note" = "Also when a zoomed page is wider than the window, the left and right arrow keys turn the page instead of scrolling sideways.";
 "catalog.preview.0.6.title" = "Link Popups";

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folosirea unui editor extern</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="editor extern; Deschideți pentru previzualizare; Configurați pentru un editor extern; Urmăriți permanent modificările PDF-ului făcute de alte aplicații; AppleScript; refreshpdf; othereditor; OtherEditorSync; TextMateSync; BBEdit; Vim">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm" class="current">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Folosirea unui editor extern</h1>
+<p>Puteți scrie în alt editor și folosi TeXShop pentru a compila și a afișa PDF-ul.</p>
+
+<h2>Deschiderea doar a previzualizării</h2>
+<p>Fișier › Deschideți pentru previzualizare... cere un fișier sursă și deschide doar fereastra lui de previzualizare. Dacă fișierul nu a fost încă compilat sau dacă PDF-ul este mai vechi decât sursa, TeXShop îl compilează mai întâi. Editați sursa în editorul dvs.; pentru a compila, salvați-o acolo și apăsați „Compilare” în fereastra de previzualizare sau apăsați <kbd>⌘T</kbd>. În acest mod, TeXShop nu deschide și nu modifică niciodată fișierul sursă. Dacă bara de instrumente a ferestrei de previzualizare nu are butonul „Compilare”, adăugați-l cu Fereastră › Personalizare bară de instrumente....</p>
+<p>Dacă lucrați mereu astfel, activați Configurări › General › „La pornire” › „Configurați pentru un editor extern”. Fișier › Deschideți... și „Deschideți recente” deschid atunci fișierele sursă doar pentru previzualizare, iar Fișier › Deschideți pentru previzualizare... devine „Deschideți pentru editare...”, care deschide un fișier sursă în editorul propriu al TeXShop atunci când aveți nevoie. Celelalte fișiere, precum PDF-urile, imaginile și fișierele jurnal, se deschid ca înainte.</p>
+
+<h2>Menținerea previzualizării la zi</h2>
+<p>Când PDF-ul este rescris de alt program, de exemplu de editorul dvs. sau de latexmk în Terminal, TeXShop îl reîncarcă atunci când reveniți în TeXShop sau în fereastra de previzualizare, păstrând pagina și mărirea. Cu Configurări › Previzualizare › „Actualizare” › „Urmăriți permanent modificările PDF-ului făcute de alte aplicații” activată, reîncarcă PDF-ul imediat ce se schimbă, chiar și când TeXShop este în fundal, de exemplu când previzualizarea este așezată lângă editor. O previzualizare cu adnotări nesalvate nu este reîncărcată, pentru ca adnotările să nu se piardă.</p>
+<p>TeXShop urmărește și fișierele sursă deschise în propriul editor. Când alt editor modifică un astfel de fișier, TeXShop îl reîncarcă, cu excepția cazului în care copia din TeXShop are modificări nesalvate.</p>
+
+<h2>Sincronizarea cu editorul</h2>
+<p>Comandă-clic în fereastra de previzualizare vă poate duce la linia respectivă din editorul dvs., iar „Accesați eroarea” din consolă poate deschide acolo linia unei erori. Pentru aceasta este nevoie de „Configurați pentru un editor extern”, de o configurare ascunsă și de un program în linie de comandă al editorului:</p>
+<ul>
+<li>Pentru TextMate, a cărui comandă <code>mate</code> se află în <code>/usr/local/bin</code>: <code>defaults write TeXShop TextMateSync YES</code>.</li>
+<li>Pentru orice alt editor: <code>defaults write TeXShop OtherEditorSync YES</code> și un script executabil <code>/usr/local/bin/othereditor</code> care primește numărul liniei ca <code>$1</code> și calea completă a fișierului ca <code>$2</code>. Pentru BBEdit, scriptul este:
+<pre>#!/bin/sh
+/usr/local/bin/bbedit "$2:$1"</pre></li>
+</ul>
+<p>Pentru direcția inversă, de la o linie din editor la fereastra de previzualizare, editorul apelează TeXShop prin AppleScript cu comenzile <code>sync_preview_line</code>, <code>sync_preview_index</code> și <code>sync_preview_name</code>. Capitolul „Using an External Editor” din Ajutor › Manualul TeXShop (în engleză) conține un script complet.</p>
+<p>Dosarul <code>~/Library/TeXShop/ExternalEditorScripts</code> conține suport gata făcut, cu documentație: scripturi AppleScript care compilează și previzualizează în TeXShop un document din BBEdit și un plug-in pentru Vim.</p>
+
+<h2>Comenzi AppleScript pentru editoare</h2>
+<p>Un editor poate apela aceste comenzi AppleScript ale unui document TeXShop:</p>
+<dl>
+<dt><code>typesetinteractive</code>, <code>texinteractive</code>, <code>latexinteractive</code>, <code>bibtexinteractive</code>, <code>makeindexinteractive</code>, <code>metapostinteractive</code></dt>
+<dd>Compilează sau rulează plain TeX, LaTeX, BibTeX, MakeIndex ori MetaPost. Apelul revine imediat, fără să aștepte sfârșitul compilării; previzualizarea este actualizată când aceasta se termină.</dd>
+<dt><code>taskdone</code></dt><dd>Returnează NO cât timp compilarea rulează și YES după ce s-a terminat.</dd>
+<dt><code>refreshpdf</code></dt><dd>Reîncarcă PDF-ul și aduce în față fereastra de previzualizare.</dd>
+<dt><code>refreshpdfbackground</code></dt><dd>Reîncarcă PDF-ul fără să aducă TeXShop în față, când fereastra de previzualizare este deja deschisă.</dd>
+<dt><code>refreshtext</code></dt><dd>Citește din nou fișierul sursă de pe disc.</dd>
+<dt><code>open_for_externaleditor</code></dt><dd>Deschide un fișier sursă la fel ca Fișier › Deschideți pentru previzualizare....</dd>
+</dl>
+<p>Când editorul compilează prin TeXShop, „Urmăriți permanent modificările PDF-ului făcute de alte aplicații” nu este necesară. Consultați și <a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a>.</p>
+</main>
+</body>
+</html>

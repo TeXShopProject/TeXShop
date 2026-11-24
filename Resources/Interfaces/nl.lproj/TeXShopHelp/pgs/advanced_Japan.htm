@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Japans zetten</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Japan; Japans; pLaTeX; upLaTeX; LuaLaTeX; dvipdfmx; otf-pakket; \UTF; \CID; UTF-8-MAC; Unicode-normalisatie; yen; backslash">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm" class="current">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Japans zetten</h1>
+<p>TeX Live bevat de Japanse TeX-engines pTeX en upTeX, met pLaTeX en upLaTeX, en ook LuaLaTeX met het pakket LuaTeX-ja. De Japanse help van TeXShop beschrijft het Japans zetten uitgebreider.</p>
+
+<h2>Engineprofielen voor Japans</h2>
+<p>De snelste manier om TeXShop voor Japanse documenten in te stellen, is een engineprofiel. Kies bij Instellingen › Zetten › ‘Engineprofiel’ een van de drie Japanse profielen:</p>
+<table>
+<tr><th>Profiel</th><th>Zetten</th><th>BibTeX, index, MetaPost</th></tr>
+<tr><td>upLaTeX + dvipdfmx</td><td>uplatex, daarna dvipdfmx</td><td>upbibtex, upmendex, upmpost</td></tr>
+<tr><td>pLaTeX + dvipdfmx</td><td>platex, daarna dvipdfmx</td><td>pbibtex, mendex, pmpost</td></tr>
+<tr><td>LuaLaTeX (Japans)</td><td>lualatex</td><td>upbibtex, upmendex, mpost</td></tr>
+</table>
+<p>De Japanse profielen stellen ook UTF-8 in als codering voor nieuwe documenten, zetten het woordenboek voor de spellingcontrole op automatische taalherkenning en zetten ‘UTF-8-MAC automatisch omzetten naar UTF-8’ aan. pLaTeX + dvipdfmx zet ook ‘Omzetten naar \UTF / \CID van het otf-pakket’ aan, en elk ander profiel zet het uit. Voordat u bevestigt, toont een venster de waarden die het profiel instelt.</p>
+
+<h2>Tekens buiten JIS X 0208 met pLaTeX</h2>
+<p>pTeX leest UTF-8-bronnen, maar kent intern alleen de tekens van JIS X 0208, zodat andere tekens, zoals 鷗 in 森鷗外, verloren gaan. Het pakket otf drukt ze af met commando’s als <code>\UTF{9DD7}</code>. Met de instelling ‘Omzetten naar \UTF / \CID van het otf-pakket’ in de groep ‘Japans pLaTeX’ van Instellingen › Zetten kunt u deze tekens gewoon typen:</p>
+<ul>
+<li>Wanneer het document wordt bewaard, wordt elk teken buiten JIS X 0208 geschreven als <code>\UTF{XXXX}</code>, en een in de editor gekozen glyphvariant als <code>\CID{nummer}</code>. Als zo’n commando een regel afsluit, wordt er <code>%</code> achter gezet, zodat er geen spatie in de uitvoer verschijnt.</li>
+<li>Wanneer een document wordt geopend, worden deze commando’s weer in de tekens omgezet, of de instelling nu aan of uit staat, zodat het bronvenster altijd de tekens zelf toont.</li>
+</ul>
+<p>Het document heeft <code>\usepackage{otf}</code> nodig. Het bronvenster toont bijvoorbeeld</p>
+<pre>\documentclass{jsarticle}
+\usepackage{otf}
+\begin{document}
+森鷗外 was a famous novelist in Japan.
+\end{document}</pre>
+<p>terwijl het bestand <code>森\UTF{9DD7}外</code> bevat. upLaTeX en LuaLaTeX verwerken Unicode rechtstreeks en hebben geen omzetting nodig.</p>
+<p>Om een deel van een tekst met de hand om te zetten, selecteert u het en gebruikt u Wijzig › Tekensoort omzetten › Unicode-tekens → \UTF / \CID, of \UTF / \CID → Unicode-tekens. Hetzelfde submenu zet om tussen hiragana en katakana, tussen cijfers en letters van volle en halve breedte, tussen tekens zoals omcirkelde getallen en de commando’s van het pakket ajmacros, en typografische aanhalingstekens naar TeX-aanhalingstekens. Als er niets is geselecteerd, vraagt TeXShop of het hele document moet worden omgezet; elke omzetting kan ongedaan worden gemaakt.</p>
+
+<h2>Samengestelde en ontlede tekens</h2>
+<p>Sommige Japanse tekens hebben twee vormen in Unicode. が kan één teken zijn (U+304C), of か (U+304B) gevolgd door het combinerende stemhebbendheidsteken (U+3099). Beide zien er hetzelfde uit, maar TeX behandelt ze als verschillend, zodat een commando dat met de ene vorm is gedefinieerd niet wordt gevonden wanneer het met de andere wordt gebruikt:</p>
+<pre>\def\が{GA}
+\が   % Undefined control sequence if this が is decomposed</pre>
+<p>Ontlede tekst komt vaak uit bestandsnamen, die HFS+-schijven in ontlede vorm opslaan; deze vorm heet UTF-8-MAC. Als Instellingen › Documenten en bewaren › Documenten bewaren › ‘UTF-8-MAC automatisch omzetten naar UTF-8’ aan staat, voegt TeXShop zulke tekens bij het bewaren van een document samen tot enkele tekens. De CJK-compatibiliteitsideogrammen en andere tekens die de standaardsamenstelling (NFC) door andere tekens zou vervangen, laat het ongewijzigd; deze vorm heet Gewijzigde NFC.</p>
+<p>Het submenu Wijzig › Unicode-normalisatie zet een selectie of het hele document om naar NFC, Gewijzigde NFC, NFD, Gewijzigde NFD, NFKC of NFKD, en toont daarna het paneel ‘Tekeninfo’ voor het resultaat, omdat genormaliseerde tekst er meestal hetzelfde uitziet als ervoor.</p>
+
+<h2>Het yenteken en de backslash</h2>
+<p>Op Japanse toetsenborden typt de toets op de plaats van de backslash het yenteken ¥, terwijl TeX-commando’s met de backslash \ beginnen.</p>
+<ul>
+<li>Met UTF-8, de codering die de Japanse profielen instellen, zijn ¥ en \ verschillende tekens en worden beide behouden. Zet Bron › Toetsbindingen aan voor het document: de lijst met toetsbindingen die bij TeXShop hoort, maakt van een getypte ¥ een \, en omdat de kolom ‘Plak’ ervan is aangevinkt, ook van de ¥ in tekst die in de bron wordt geplakt. Zie <a href="basic_autocompletion.htm">Toetsbindingen</a>.</li>
+<li>Als de codering voor nieuwe documenten een van de Japanse coderingen is, zet TeXShop tijdens het typen en plakken ¥ en \ in elkaar om. Bij Japans (Mac OS, ShiftJIS ¥) en Japans (Shift JIS X0213) toont het bronvenster het TeX-commandoteken als ¥; bij de andere Japanse coderingen als \.</li>
+<li>Wanneer een bestand in een Japanse codering wordt bewaard, worden de backslash en de tilde altijd geschreven als de bytes 0x5C en 0x7E, die TeX verwacht.</li>
+</ul>
+
+<h2>Andere instellingen voor Japans</h2>
+<ul>
+<li>Instellingen › Editor › Onzichtbare tekens › ‘Japanse spatie’ toont de spatie van volle breedte wanneer onzichtbare tekens worden getoond.</li>
+<li>Instellingen › Editor › Syntaxmarkering › ‘Letters en symbolen in volle breedte markeren’ markeert letters, cijfers en symbolen van volle breedte, die gemakkelijk voor hun ASCII-tegenhangers worden aangezien, met de kleuren voor ‘Volle breedte’ van het thema.</li>
+<li>Instellingen › Voorvertoning › ‘Paginarichting’ toont pagina’s van rechts naar links, zoals nodig is voor verticale tekst. De regels <code>% !TEX PageDirectionR2L</code> en <code>% !TEX PageDirectionL2R</code> stellen de richting in voor één document.</li>
+</ul>
+<p>De omzetting naar <code>\UTF</code> / <code>\CID</code> en de Unicode-normalisatie worden uitgebreid uitgelegd in de dia’s van Yusuke Terada voor TUG 2013, <a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>.</p>
+</main>
+</body>
+</html>

@@ -1,12 +1,12 @@
 /* Localizable Strings: Portuguese */
 
 /* Tags menu */
-"Tags" = "Marcas";
+"Tags" = "Etiquetas";
 "Typeset" = "Compor";
 "Save" = "Salvar";
 "Print..." = "Imprimir...";
-"Print Source..." = "Imprimir código fonte...";
-"Set Project Root..." = "Definir Documento principal...";
+"Print Source..." = "Imprimir código-fonte...";
+"Set Project Root..." = "Definir arquivo principal...";
 "LaTeX Panel..." = "Painel LaTeX...";
 "Close LaTeX Panel" = "Fechar Painel LaTeX";
 "Matrix Panel..." = "Painel Matriz...";
@@ -14,13 +14,13 @@
 "Open for Preview..." = "Abrir para ver...";
 "Open for Editing..." = "Abrir para editar...";
 "File" = "Arquivo";
-"Goto Error" = "Mostrar erro";
-"RotateClockwise" = "RotacionarADireita";
-"RotateCounterclockwise" = "RotacionarAEsquerda";
+"Goto Error" = "Ir para o erro";
+"RotateClockwise" = "Girar à Direita";
+"RotateCounterclockwise" = "Girar à Esquerda";
 "Comment" = "Comentar";
 "Uncomment" = "Descomentar";
-"Indent" = "Indentar";
-"Unindent" = "Remover indentação";
+"Indent" = "Aumentar nível do recuo";
+"Unindent" = "Diminuir nível do recuo";
 "Macros" = "Macros";
 "Open Macro Editor..." = "Abrir editor de macros...";
 "Close Macro Editor" = "Fechar editor de macros";
@@ -37,13 +37,13 @@
 "Page Number" = "Número da página";
 "Page Number Panel" = "Painel de número de página";
 "Magnification Panel" = "Painel de zoom";
-"Omit Shell Escape" = "Omitir Shell Escape";
-"Warning: Using Shell Escape" = "Atenção: Usando Shell Escape";
-"Preview" = "Página";
+"Omit Shell Escape" = "Omitir shell escape";
+"Warning: Using Shell Escape" = "Atenção: usando shell escape";
+"Preview" = "Pré-visualização";
 "Display Format" = "Formato de visualização";// mitsu 1.29b
 "Magnification" = "Ampliação";// mitsu 1.29b
 "Copy Format" = "Copiar formato";// mitsu 1.29b
-"ToolbarItems" = "ItemsBarraDeFerramentas";
+"ToolbarItems" = "Itens da barra de ferramentas";
 "Autocompletion" = "Entrada por associação de teclas";
 "Completion" = "Completar";
 "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Caminho: %@\nTamanho do arquivo: %d bytes\nData de criação: %@\nData de modificação: %@";
@@ -55,7 +55,7 @@
 "The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "O link /Library/TeX/texbin não existe. Para corrigir isso vá no site https://tug.org/mactex e instale o MacTeX ou BasicTeX (2015 ou posterior).";
 "%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ não existe. TeXShop é um aplicativo gráfico para TeX, sendo assim você precisa de uma distribuição TeX. Possivelmente essa distribuição não está instalada ou foi removida durante uma atualização do sistema. Se for isso, então vá no site https://tug.org/mactex e siga as instruções para instalar o MacTeX ou BasicTeX.";
 "Can't find required tool." = "Não foi possível encontrar a ferramenta necessária.";
-"Typesetting engine cannot be found." = "Motor de compilação não pode ser encontrado.";
+"Typesetting engine cannot be found." = "O motor de composição não foi encontrado.";
 "The source LaTeX document cannot be found." = "O fonte do documento LaTeX não pode ser encontrado.";
 "Sync Marks" = "Marcas de sincronismo";
 "%@ does not exist." = "%@ não existe.";
@@ -64,11 +64,11 @@
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "O arquivo não pode ser aberto com a codificação %@ por que este não foi salvo com esta mesma codificação. Se deseja abrí-lo em outra codificação, feche a janela e a abra novamente.";
 "Error" = "Erro";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "A versão do TeXShop requer Mac OS X 10.4 ou superior. Tente usar a versão do TeXShop 1.37";
-"Hard Wrap" = "Quebra dura";
+"Hard Wrap" = "Quebra rígida";
 "Newline Removal" = "Remoção de nova linha";
 "Help" = "Ajuda";
 "Sync" = "Sincronizar";
-"ShowFullPath" = "ExibirCaminhoCompleto";
+"ShowFullPath" = "Exibir caminho completo";
 "Close Current Environment" = "Fechar ambiente atual"; // Terada
 "Your current setting of %@ will be replaced. OK?" = "Suas configurações atuais de %@ serão substituídas. OK?"; // Terada
 "Convert" = "Converter";
@@ -95,12 +95,12 @@
 "No Block" = "Nenhum bloco";
 "deprecated" = "obsoleto";
 "Unknown encoding; using UTF-8." = "Codificação desconhecida; usando UTF-8.";
-"Source" = "Fonte";
+"Source" = "Código-fonte";
 "<<Close All - unlocalized>>" = "Fechar todas";
 "Close All" = "Fechar todas";
 "File Already Exists" = "Arquivo já existe";
 "Labels" = "Rótulos";
-"New Tag" = "Nova marca";
+"New Tag" = "Nova etiqueta";
 "Split Window" = "Dividir janela";
 "New Document" = "Novo Documento";
 "Link Popups" = "Pop-ups de links";
@@ -112,7 +112,7 @@
 "Forget Learned Words…" = "Esquecer palavras aprendidas…";
 "Edit Spelling Exclusions…" = "Editar exceções de ortografia…";
 "Forget learned words" = "Esquecer palavras aprendidas";
-"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Estas palavras deste documento foram aprendidas para %@. Selecione as que deseja esquecer. Clicar com Shift ou Comando seleciona várias.";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Estas palavras deste documento foram aprendidas para %@. Selecione as que deseja esquecer. Clicar com Shift ou Command seleciona várias.";
 "Forget Selected" = "Esquecer selecionadas";
 "Forgot %lu word." = "%lu palavra esquecida.";
 "Forgot %lu words." = "%lu palavras esquecidas.";
@@ -191,7 +191,8 @@
 "Inactive for this key" = "Inativo para esta tecla";
 "No command uses this key." = "Nenhum comando usa esta tecla.";
 "Press a key" = "Pressione uma tecla";
-"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla não pode ser usada como atalho. Use Comando ou Controle com uma tecla, ou F1–F20.";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla não pode ser usada como atalho. Use Command ou Control com uma tecla, ou F1–F20.";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Atalhos com a tecla Globo (fn) não podem ser atribuídos a comandos do TeXShop.";
 
 
 "This key cannot be assigned to a new shortcut." = "Esta tecla não pode ser atribuída a um novo atalho.";
@@ -213,7 +214,7 @@
 "Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "O Ghostscript não foi encontrado. Instale o Ghostscript e escolha “Detectar caminhos” em Ajustes > Composição.";
 
 
-"This key is reserved for command completion." = "Esta tecla está reservada para completar comandos.";
+"This key is reserved for command completion." = "Esta tecla está reservada para a conclusão de comandos.";
 
 "Encoding" = "Codificação";
 
@@ -355,12 +356,12 @@
 "%@ (Not Found)" = "%@ (não encontrado)";
 "%1$@ (%2$@)" = "%1$@ (%2$@)";
 "None" = "Nenhum";
-"Typeset with Alternate Engine" = "Compor com compilador alternativo";
+"Typeset with Alternate Engine" = "Compor com motor alternativo";
 "In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@." = "No menu “%1$@”, este item aparece no lugar de “%2$@” enquanto você mantém %3$@ pressionadas.";
 "This item is in the %@ menu." = "Este item está no menu “%@”.";
 "Key: %@" = "Tecla: %@";
 "No key is assigned." = "Nenhuma tecla atribuída.";
-"Typesets once with this engine instead of the one chosen in the toolbar." = "Compõe uma vez com este compilador em vez do escolhido na barra de ferramentas.";
+"Typesets once with this engine instead of the one chosen in the toolbar." = "Compõe uma vez com este motor em vez do escolhido na barra de ferramentas.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "Uma linha % !TEX TS-program no início do documento tem prioridade.";
 "Choose an Engine Profile" = "Escolher um perfil do motor";
 

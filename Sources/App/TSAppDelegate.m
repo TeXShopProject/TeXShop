@@ -917,6 +917,8 @@ static void TSInstallAdvancedFindFieldStyle(void)
   
 	    
 	[self finishMenuKeyEquivalentsConfigure];
+    // Window › Enter Full Screen has Globe-F; Control-Command-F is Next Mark's.
+    TSGiveFullScreenGlobeKey(NSApp.mainMenu);
 
 }
 

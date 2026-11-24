@@ -10,7 +10,7 @@
 "427.title" = "4";
 "428.title" = "0 (正常)";
 "431.title" = "5";
-"434.ibShadowedToolTip" = "复制位图图像时，数值越大，文字越突出。";
+"434.ibShadowedToolTip" = "拷贝位图图像时，数值越大，文字越突出。";
 "435.title" = "-1";
 "436.title" = "2";
 "437.ibShadowedToolTip" = "将黑白映射为其他颜色。";

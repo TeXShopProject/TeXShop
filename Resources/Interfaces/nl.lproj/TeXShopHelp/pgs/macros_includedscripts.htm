@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standaard-AppleScript-macro’s</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript-macro’s; Column macros; Insert reference; Open quickly; Paste Spreadsheet Cells; Save Copy with Unix Line Endings; regeleinden; literatuurlijst; Claus Gerhardt Macros; TeX4ht; Extract Pages from PDF; MetaPost">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hulp bij macro’s</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Inleiding</a></li>
+<li><a href="macros_default.htm">De standaardmacro’s</a></li>
+<li><a href="macros_rearrange.htm">Het menu Macro’s herschikken</a></li>
+<li><a href="macros_define.htm">Nieuwe macro’s definiëren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-macro’s</a></li>
+<li><a href="macros_includedscripts.htm" class="current">Standaard-AppleScript-macro’s</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a></li>
+<li><a href="macros_dialogs.htm">Dialoogvensters maken</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Standaard-AppleScript-macro’s</h1>
+<p>TeXShop wordt geleverd met een verzameling AppleScript-macro’s van Will Robertson, Claus Gerhardt en anderen. Sommige voeren een reeks zetcommando’s na elkaar uit. Door ze te kopiëren en aan te passen, kunt u scripts voor uw eigen werk maken. Deze pagina beschrijft er enkele, onder hun namen in het menu Macro’s.</p>
+
+<h2 id="robertson">Column macros, Insert reference, Open quickly…</h2>
+<p>Deze macro’s zijn van Will Robertson. In het submenu Column macros voegen New tabular en New array een tabular- of array-omgeving in met het aantal rijen en kolommen dat u opgeeft, en wijzigen Add column en Delete column de rijen die u selecteert. Insert reference zoekt in het huidige bestand naar commando’s <code>\label{…}</code> en laat u een label uit een lijst kiezen; het voegt het label in, omgeven door <code>\ref{…}</code>, een commando dat u in het script kunt wijzigen. Als er tekst is geselecteerd, worden alleen de labels getoond die die tekst bevatten. Open quickly… toont de .tex-, .sty- en .pdf-bestanden in de map van het huidige bronbestand en opent de bestanden die u kiest.</p>
+
+<h2 id="spreadsheet">Paste Spreadsheet Cells</h2>
+<p>Deze macro, van Alan Munn, plakt cellen uit een spreadsheet als tabel in uw LaTeX-bron. Selecteer een celbereik in Excel of een ander spreadsheetprogramma en kopieer het. Kies daarna Macro’s › Paste Spreadsheet Cells en kies een tabelstijl:</p>
+<dl>
+<dt>cells</dt><dd>zet de gekopieerde tekst alleen om naar LaTeX-tabelcellen.</dd>
+<dt>booktabs</dt><dd>neemt de eerste regel als kop en plaatst <code>\toprule</code>, <code>\midrule</code> en <code>\bottomrule</code> in een tabular-omgeving.</dd>
+<dt>simple</dt><dd>zet een eenvoudige tabular-omgeving rond de cellen.</dd>
+<dt>longtable</dt><dd>neemt de eerste regel als kop, voegt de kopregels van een longtable toe en zet de cellen in een longtable-omgeving.</dd>
+</dl>
+<p>De macro vervangt de inhoud van het klembord door de LaTeX-tekst. Om dezelfde cellen in een andere stijl te plakken, kopieert u ze eerst opnieuw in het spreadsheet.</p>
+
+<h2 id="line-endings">Applescript › Save Copy with Unix Line Endings, Save Copy with Windows Line Endings, Save Copy with Classic Mac Line Endings</h2>
+<p>Tekstbestanden beëindigen hun regels op verschillende manieren: macOS en Unix met een line feed, Windows met een carriage return gevolgd door een line feed, en zeer oude Macintosh-bestanden met alleen een carriage return. TeXShop leest alle drie. Als de editor van iemand anders dat niet kan, gebruikt u deze macro’s. Voor een bronbestand MyFile.tex schrijft Save Copy with Unix Line Endings een kopie van het bewaarde bestand met de naam MyFile_Unix.tex met line feeds; Save Copy with Windows Line Endings schrijft MyFile_Windows.tex en Save Copy with Classic Mac Line Endings schrijft MyFile_Mac.tex. De macro’s gebruiken het programma flip van Craig Stuart Sapp in ~/Library/TeXShop/bin.</p>
+
+<h2 id="bibliography">Applescript › Run LaTeX, BibTeX, Then LaTeX Twice</h2>
+<p>Een document met een literatuurlijst heeft meerdere rondes nodig: LaTeX schrijft het .aux-bestand, BibTeX gebruikt dat om de .bbl- en .blg-bestanden te schrijven, LaTeX wordt opnieuw uitgevoerd om de literatuurlijst toe te voegen, en nog een keer om de verwijzingen ernaar bij te werken. Deze macro voert ze na elkaar uit. <a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a> legt uit hoe dat werkt.</p>
+
+<h2 id="gerhardt">Claus Gerhardt Macros</h2>
+<p>De meeste macro’s in dit submenu roepen shellscripts in ~/Library/TeXShop/bin aan, zoals pdflatexc, dat pdfLaTeX uitvoert, en bibtexc, dat BibTeX uitvoert. Elke macro waarvan de naam met Run begint, voert de programma’s uit die de naam noemt, in die volgorde, en Open PDF opent de PDF van het document. Run LaTeX, dvips and ps2pdf heeft daarnaast Ghostscript nodig. Ze werken met een bewaard bestand. <a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a> legt Run pdfLaTeX with Shell Escape als voorbeeld uit.</p>
+<h3>Make HTML with TeX4ht</h3>
+<p>TeX4ht zet een LaTeX-document om in een webpagina: een HTML-pagina en afbeeldingsbestanden. Make HTML with TeX4ht voert htlatex uit op het document en opent het resulterende HTML-bestand in Safari. Het pakket tex4ht hoeft niet in het document te worden geladen; htlatex laadt het. Make HTML with TeX4ht, Remaking Images voert htlatex uit met de optie <code>-r</code>, waardoor de afbeeldingen opnieuw worden gemaakt, ook als ze al bestaan.</p>
+<h3>Extract Pages from PDF…</h3>
+<p>Extract Pages from PDF… maakt PDF-bestanden met geselecteerde pagina’s uit de PDF van het document. Het vraagt eerst hoeveel bestanden moeten worden gemaakt, en daarna naar de pagina’s van elk bestand, zoals <code>5:8</code> voor pagina 5 tot en met 8 of <code>3:4,6,8:12</code>. Als het document MyFile heet, worden de bestanden bewaard als MyFile-1.pdf, MyFile-2.pdf enzovoort.</p>
+<h3>MetaPost</h3>
+<p>Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX opent onderweg de logbestanden. Zie <a href="advanced_context.htm">ConTeXt en MetaPost</a> voor MetaPost.</p>
+</main>
+</body>
+</html>

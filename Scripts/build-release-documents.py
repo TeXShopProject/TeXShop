@@ -4,7 +4,7 @@
 Requires TeX Live (including tgpagella and pdfpages). Run after updating the
 release Markdown and About This Release.tex. An alternate notes directory lets
 documentation be prepared without merging an unfinished website branch.
-Supported Markdown: paragraphs, level 1/2 headings, flat dash lists, bold,
+Supported Markdown: paragraphs, level 1/2 headings, flat dash lists, bold, brackets escaped with a backslash,
 inline code, bare HTTP(S) URLs, [text](URL) links outside bold text, and the
 release-status draft comment.
 Other Markdown constructs are rejected instead of silently printed literally.
@@ -25,7 +25,9 @@ def escaped(text):
                     '_': r'\_', '~': r'\textasciitilde{}', '^': r'\textasciicircum{}',
                     '→': r'\(\rightarrow\)', '＋': '+', '〜': r'\textasciitilde{}',
                     '＼': r'\textbackslash{}', '•': r'\textbullet{}', '‹': r'\guilsinglleft{}',
-                    '›': r'\guilsinglright{}', '−': r'\textminus{}', '⊗': r'\(\otimes\)'}
+                    '›': r'\guilsinglright{}', '−': r'\textminus{}', '⊗': r'\(\otimes\)',
+                    # The Globe key (Globe-F of Enter Full Screen), as a plain globe like the one on the key.
+                    '🌐': r'\faGlobe{}'}
     return ''.join(replacements.get(c, c) for c in text)
 
 
@@ -60,9 +62,11 @@ def inline(text, links=True):
                 raise ValueError(f'Unsupported URL characters: {url!r}')
             result.append(r'\url{' + url + '}' + escaped(token[len(url):]))
         else:
-            if re.search(r'[*`\[\]<>]|~~|(?<!\w)_(?=\S)|(?<=\S)_(?!\w)|\\[\W]', token):
+            # \[ and \] are brackets that are shown, as in the key Control-Command-[.
+            bare = re.sub(r'\\[\[\]]', '', token)
+            if re.search(r'[*`\[\]<>]|~~|(?<!\w)_(?=\S)|(?<=\S)_(?!\w)|\\[\W]', bare):
                 raise ValueError(f'Unsupported inline Markdown: {token!r}')
-            result.append(escaped(token))
+            result.append(escaped(re.sub(r'\\([\[\]])', r'\1', token)))
     return ''.join(result)
 
 
@@ -114,6 +118,7 @@ def main():
 \usepackage[margin=1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{tgpagella}
+\usepackage{fontawesome5}
 \pdfinterwordspaceon
 \usepackage{enumitem}
 \setlist[itemize]{leftmargin=*,itemsep=.1em}

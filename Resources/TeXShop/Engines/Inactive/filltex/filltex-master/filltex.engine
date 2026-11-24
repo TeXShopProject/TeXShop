@@ -1,7 +1,0 @@
-#!/bin/bash
-. ${HOME}/.bashrc
-echo $1
-FILENAME=${1%%.*}
-echo $FILENAME
-
-filltex $FILENAME

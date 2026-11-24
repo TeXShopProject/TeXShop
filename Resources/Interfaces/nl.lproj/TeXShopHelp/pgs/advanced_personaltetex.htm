@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eigen bestanden aan TeX Live toevoegen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="persoonlijke texmf-boom; ~/Library/texmf; TEXMFHOME; sty-bestand toevoegen; klasse toevoegen; bib-bestand; bst-bestand; kpsewhich">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm" class="current">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Eigen bestanden aan TeX Live toevoegen</h1>
+<p>Stijlbestanden, klassen, literatuurdatabases en andere bestanden die niet bij TeX Live horen, komen in uw persoonlijke TeX-boom: de map <code>texmf</code> in de map Bibliotheek van uw thuismap, <code>~/Library/texmf</code>. Alle programma’s van TeX Live vinden de bestanden daar, en ze gaan voor bestanden met dezelfde naam in TeX Live zelf. Na het toevoegen van een bestand hoeft u niets te registreren; de volgende keer dat u zet, wordt het gevonden.</p>
+<p>De map Bibliotheek is in de Finder verborgen. Om de map te openen, kiest u in de Finder Ga › Ga naar map… en typt u <code>~/Library</code>. Maak daar de map <code>texmf</code> aan als die nog niet bestaat.</p>
+
+<h2>Voordat u een pakket toevoegt</h2>
+<p>De meeste pakketten op CTAN maken al deel uit van TeX Live, en MacTeX installeert ze allemaal. Om te zien of TeX een bestand al heeft, kiest u in TeXShop Archief › Open stijlbestand… en typt u de naam, bijvoorbeeld <code>hyperref.sty</code>; TeXShop opent het bestand dat TeX zou gebruiken. Voeg een pakket alleen aan uw persoonlijke boom toe als TeX Live het niet heeft, of als u een eigen versie nodig hebt. Omdat uw kopie voorgaat, verwijdert u haar zodra TeX Live is bijgewerkt; anders blijft u de oude versie gebruiken.</p>
+
+<h2>Waar bestanden komen</h2>
+<p>De mappen in <code>texmf</code> volgen dezelfde structuur als TeX Live. Maak de mappen aan die u nodig hebt:</p>
+<table>
+<tr><th>Map</th><th>Inhoud</th></tr>
+<tr><td><code>tex/latex/</code></td><td>LaTeX-pakketten en -klassen (.sty, .cls), elk pakket in een eigen map</td></tr>
+<tr><td><code>tex/plain/</code></td><td>bestanden voor plain TeX</td></tr>
+<tr><td><code>tex/generic/</code></td><td>bestanden die met elk formaat werken</td></tr>
+<tr><td><code>bibtex/bib/</code></td><td>literatuurdatabases (.bib)</td></tr>
+<tr><td><code>bibtex/bst/</code></td><td>literatuurstijlen (.bst)</td></tr>
+<tr><td><code>doc/</code></td><td>documentatie van de pakketten die u hebt toegevoegd; Help › Toon documentatie voor pakket… vindt die daar</td></tr>
+</table>
+<p>Een pakket met uw eigen macro’s en uw literatuurdatabase worden bijvoorbeeld bewaard als</p>
+<pre>~/Library/texmf/tex/latex/mymacros/mymacros.sty
+~/Library/texmf/bibtex/bib/mybibliography.bib</pre>
+<p>Daarna werken <code>\usepackage{mymacros}</code> en <code>\bibliography{mybibliography}</code> in elk document, waar het ook is bewaard.</p>
+
+<h2>De map controleren</h2>
+<p>Om te zien welke map uw TeX als persoonlijke boom gebruikt, typt u in Terminal</p>
+<pre>kpsewhich -var-value TEXMFHOME</pre>
+<p>Op een Mac is dat <code>~/Library/texmf</code>, tenzij de installatie anders is ingesteld. Om te zien welke kopie van een bestand TeX leest, typt u bijvoorbeeld <code>kpsewhich mymacros.sty</code>.</p>
+<p>Voeg geen bestanden toe aan de mappen van TeX Live zelf; zie <a href="advanced_moretetex.htm">Meer over TeX Live</a>.</p>
+</main>
+</body>
+</html>

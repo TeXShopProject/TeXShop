@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impostare il file principale di un progetto</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="file principale; % !TEX root; progetto; file di capitolo; include; input; Sorgente ⇔ Anteprima; File principale del progetto">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto avanzato</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Aggiungere file personali a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Altre informazioni su TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivenza con altre distribuzioni TeX</a></li>
+<li><a href="advanced_addengine.htm">Aggiungere motori di compilazione</a></li>
+<li><a href="advanced_formats.htm">Creare e usare i formati TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codifiche</a></li>
+<li><a href="advanced_Japan.htm">Composizione in giapponese</a></li>
+<li><a href="advanced_root.htm" class="current">Impostare il file principale di un progetto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a></li>
+<li><a href="advanced_removeaux.htm">Eliminare i file ausiliari</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protezione da shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usare un editor esterno</a></li>
+<li><a href="advanced_experiments.htm">Esperimenti</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copia e incolla, trascina e rilascia</a></li>
+<li><a href="advanced_otherfiles.htm">Aprire altri file con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidenziazione della sintassi</a></li>
+<li><a href="advanced_coloredtext.htm">Testo colorato</a></li>
+<li><a href="advanced_plist.htm">File in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizzazioni</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Impostare il file principale di un progetto</h1>
+<p>I documenti lunghi sono spesso divisi in più file: un file principale con il preambolo, che include un file per ogni capitolo. Per esempio, un file principale <code>Main.tex</code> potrebbe essere così:</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p>Quando modifichi <code>two.tex</code>, TeXShop deve compilare <code>Main.tex</code>, non il capitolo, che non ha preambolo. Per indicarglielo, scrivi questa riga in una delle prime venti righe di ogni file di capitolo:</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>Il file principale non ha bisogno di questa riga. Il nome del file principale si può indicare</p>
+<ul>
+<li>con il solo nome, <code>Main.tex</code>, quando si trova nella stessa cartella del file di capitolo;</li>
+<li>in modo relativo alla cartella del file di capitolo, <code>../Main.tex</code> o <code>../../Main.tex</code>;</li>
+<li>con il percorso completo, <code>/Users/me/Book/Main.tex</code>, che va modificato quando il progetto viene spostato.</li>
+</ul>
+<p>La macro Set Root File… del menu Macro inserisce la riga: chiede il file principale e propone una riga relativa o assoluta, sostituendo una riga root precedente.</p>
+
+<h2>Che cosa fa la riga root</h2>
+<ul>
+<li>Compila in un file di capitolo compila il file principale, e la finestra di anteprima del file principale mostra l’intero documento. Una riga <code>% !TEX program</code> o altre righe speciali per la compilazione vanno nel file principale.</li>
+<li>Vai all’errore apre il file che contiene un errore, se non è aperto, e va alla riga.</li>
+<li>La sincronizzazione dalla finestra di anteprima apre il file di capitolo che contiene il punto su cui hai fatto clic; consulta <a href="advanced_pdfsync.htm">Sincronizzare sorgente e anteprima</a>.</li>
+<li>Cestina file ausiliari elimina i file ausiliari del file principale; consulta <a href="advanced_removeaux.htm">Eliminare i file ausiliari</a>.</li>
+<li>Finestra › Sorgente ⇔ Anteprima (<kbd>⌘1</kbd>) in un file di capitolo porta in primo piano la finestra di anteprima del file principale. Usandolo di nuovo nella finestra di anteprima torni alla finestra sorgente da cui sei arrivato, oppure al file principale se non sei arrivato da una finestra sorgente.</li>
+</ul>
+
+<h2>Aprire un file di capitolo</h2>
+<p>Quando si apre un file di capitolo con una riga root, TeXShop apre anche il file principale e la sua finestra di anteprima. Due voci in Impostazioni › Generali › «File principale del progetto» lo controllano: «Apri il file principale quando si apre un documento» attiva o disattiva questo comportamento, e «Riduci la finestra principale all'apertura» manda nel Dock la finestra sorgente del file principale, che raramente si modifica mentre lavori su un capitolo.</p>
+
+<h2>Trovare e sostituire in tutto il progetto</h2>
+<p>Per cercare in tutti i file di un progetto in una volta, scegli Modifica › Trova › Cerca nei sorgenti TeX con la stessa TEX root… in uno dei suoi file di capitolo, oppure Cerca nei sorgenti TeX con questo file come TEX root… nel file principale. La ricerca riguarda il file principale e i file <code>.tex</code> nella sua cartella e nelle sottocartelle che lo indicano in una riga root nelle prime 20 righe. Consulta <a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a> e <a href="basic_find.htm">Trova e sostituisci</a>.</p>
+
+<h2>File principali indicati nei file .texshop</h2>
+<p>Anche un file con l’estensione <code>.texshop</code> accanto a un file di capitolo, come <code>two.texshop</code> per <code>two.tex</code>, può indicare il file principale, e TeXShop lo legge ancora. Nessun comando di menu crea questi file; usa una riga <code>% !TEX root</code>, che viaggia insieme al sorgente.</p>
+</main>
+</body>
+</html>

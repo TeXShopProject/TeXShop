@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Inspect current documentation and reject known obsolete routes, including arrows."""
 from pathlib import Path
-import runpy
+import os, runpy
 root=Path(__file__).resolve().parents[1]
+# The obsolete-route checks below do not depend on the help books still in translation.
+os.environ['TEXSHOP_HELP_TRANSLATIONS_PENDING']='1'
 checks=runpy.run_path(str(root/'Tests/check-settings-guidance.py'))
 check=checks['check_obsolete']
 for old in ['Settings → Source','Settings > Misc 1','Preferences → Misc 2','Settings > Engine','Settings › Source','Settings ▸ Engine','Misc. 2 tab','approved compact layout','both color groups','A pulldown menu at the bottom of the Settings window']:

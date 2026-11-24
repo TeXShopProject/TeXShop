@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inserire immagini</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="inserire immagini; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; Converti TIFF">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto di base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminari</a></li>
+<li><a href="basic_installtetex.htm">Installare TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installare TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilare i documenti</a></li>
+<li><a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a></li>
+<li><a href="basic_preview.htm">La finestra di anteprima</a></li>
+<li><a href="basic_edittricks.htm">Trucchi di scrittura</a></li>
+<li><a href="basic_find.htm">Trova e sostituisci</a></li>
+<li><a href="basic_texrootsearch.htm">Cerca nei sorgenti TeX</a></li>
+<li><a href="basic_spelling.htm">Controllo ortografico</a></li>
+<li><a href="basic_autocompletion.htm">Associazioni dei tasti</a></li>
+<li><a href="basic_commandcompletion.htm">Completamento dei comandi</a></li>
+<li><a href="basic_latexpanel.htm">Pannello LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Pannello Matrici</a></li>
+<li><a href="basic_macros.htm">Macro</a></li>
+<li><a href="basic_toolbar.htm">Barra strumenti e AppleScript</a></li>
+<li><a href="basic_graphics.htm" class="current">Inserire immagini</a></li>
+<li><a href="basic_printing.htm">Stampa</a></li>
+<li><a href="basic_preferences.htm">Modificare le impostazioni</a></li>
+<li><a href="basic_templates.htm">Modelli e moduli</a></li>
+<li><a href="basic_miscellaneous.htm">Finestre e pannelli</a></li>
+<li><a href="basic_bugs.htm">Segnalare problemi</a></li>
+<li><a href="basic_websites.htm">Siti web utili</a></li>
+<li><a href="basic_license.htm">Licenza</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Inserire immagini</h1>
+<p>Compilando direttamente in PDF, LaTeX inserisce immagini in formato PDF, PNG e JPEG. Il PDF mantiene nitidi linee e testo a qualsiasi dimensione, quindi usalo per diagrammi e grafici; PNG e JPEG sono adatti a schermate e fotografie.</p>
+<p>Carica il pacchetto graphicx nel preambolo:</p>
+<pre>\usepackage{graphicx}</pre>
+<p>e inserisci un’immagine nel punto in cui deve comparire:</p>
+<pre>\includegraphics[width=0.8\textwidth]{diagram}</pre>
+<p>L’estensione si può omettere; LaTeX cerca allora <code>diagram.pdf</code>, <code>diagram.png</code>, <code>diagram.jpg</code> e gli altri formati che conosce. Cambia la larghezza per cambiare la dimensione dell’immagine. Metti i file delle immagini nella cartella del documento, oppure indica un percorso relativo a essa, come <code>figures/diagram</code>.</p>
+
+<h2>File EPS</h2>
+<p>TeX Live converte automaticamente in PDF le immagini EPS durante la compilazione, usando epstopdf, purché il documento carichi graphicx. Il file convertito, <code>diagram-eps-converted-to.pdf</code>, viene scritto accanto al file EPS e usato da quel momento in poi.</p>
+<p>Anche un file EPS aperto in TeXShop viene convertito: TeXShop scrive accanto a esso un file PDF con lo stesso nome, oppure in una cartella temporanea quando non si può scrivere nella cartella del file EPS, e lo mostra.</p>
+
+<h2>File TIFF</h2>
+<p>LaTeX non può inserire file TIFF. Scegli File › Converti TIFF mentre è attiva una finestra sorgente: una finestra di dialogo mostra la cartella del documento, in cui si possono scegliere solo file TIFF. Selezionane uno o più e fai clic su «Converti». Ciascuno viene convertito in un file PNG con lo stesso nome nella stessa cartella; i file TIFF vengono conservati.</p>
+
+<h2>Compilare tramite DVI</h2>
+<p>I documenti che usano codice PostScript, per esempio con il pacchetto pstricks, si compilano con il metodo Tramite DVI, che per impostazione predefinita esegue dvips. Le immagini vanno allora inserite in formato EPS; i file PDF, PNG e JPEG non si possono usare. Anche i profili del motore il cui nome termina con «+ dvipdfmx» compilano Tramite DVI, ma eseguono dvipdfmx invece di dvips; con <code>\usepackage[dvipdfmx]{graphicx}</code>, lì si possono usare file PDF, PNG e JPEG. Consulta <a href="basic_alternatetypeset.htm">Modalità di compilazione alternativa</a>.</p>
+</main>
+</body>
+</html>

@@ -3041,17 +3041,17 @@
           "naM-Et-WMn.title": "Monthly"
         },
         "SettingsPreview": {
-          "346.title": "Double Multi-Page",
+          "346.title": "Double MultiPage",
           "335.title": "Magnify (Large)",
           "sa2-VV-W1K.title": "Remember last position on close",
-          "347.title": "Multi-Page",
+          "347.title": "MultiPage",
           "SfP-Ak-pn3.title": "Use Separate Windows",
           "505.title": "Left to Right",
           "V7d-ht-Pe3.title": "Right",
           "337.title": "Select PDF",
           "tVs-uh-QcM.title": "All windows start at fixed position",
           "507.title": "Right to Left",
-          "343.title": "Two Page",
+          "343.title": "Double Page",
           "332.title": "Magnify",
           "636.title": "Select Text",
           "339.title": "Fit to Window",
@@ -4235,7 +4235,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Double Multi-Page",
+          "value": "Double MultiPage",
           "index": 3
         },
         {
@@ -4274,7 +4274,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Multi-Page",
+          "value": "MultiPage",
           "index": 2
         },
         {
@@ -4415,7 +4415,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Two Page",
+          "value": "Double Page",
           "index": 1
         },
         {
@@ -5758,9 +5758,9 @@
         "SettingsConsole": {
           "831.title": "Nur bei Fehlern",
           "765.title": "Nur vertikal verändern",
-          "ga2-ik-lSC.title": "Merke zuletzt benutzte Position",
+          "ga2-ik-lSC.title": "Zuletzt benutzte Position merken",
           "766.title": "Beliebig verändern",
-          "906.title": "Auswählen ...",
+          "906.title": "Auswählen …",
           "PqO-5d-lRv.title": "Fenster immer an fester Position",
           "830.title": "Immer"
         },
@@ -5785,7 +5785,7 @@
           "436.title": "2",
           "409.title": "TIFF (LZW)",
           "441.title": "3",
-          "431.title": "TeXShop Einstellungen",
+          "431.title": "5",
           "404.title": "TIFF (PackBits)",
           "375.title": "JPEG (Hoch)",
           "438.title": "-2",
@@ -5811,17 +5811,17 @@
           "naM-Et-WMn.title": "Monatlich"
         },
         "SettingsPreview": {
-          "346.title": "Doppelseiten, kontinuierlich",
+          "346.title": "Doppelseite, kontinuierlich",
           "335.title": "Lupe (groß)",
-          "sa2-VV-W1K.title": "Merke zuletzt benutzte Position",
-          "347.title": "Einzelseiten, kontinuierlich",
+          "sa2-VV-W1K.title": "Zuletzt benutzte Position merken",
+          "347.title": "Einzelseite, kontinuierlich",
           "SfP-Ak-pn3.title": "Separate Fenster verwenden",
           "505.title": "Seiten fließen von links nach rechts",
           "V7d-ht-Pe3.title": "Rechts",
           "337.title": "PDF-Auswahl",
           "tVs-uh-QcM.title": "Fenster immer an fester Position",
           "507.title": "Seiten fließen von rechts nach links",
-          "343.title": "Doppelseiten",
+          "343.title": "Doppelseite",
           "332.title": "Lupe",
           "636.title": "Textauswahl",
           "339.title": "An Fenster anpassen",
@@ -5829,29 +5829,29 @@
           "344.title": "Feste Vergrößerung",
           "1uj-kt-7Pj.title": "Links",
           "48.title": "Fenster immer an fester Position",
-          "333.title": "Einzelseiten",
-          "45.title": "Merke zuletzt benutzte Position",
+          "333.title": "Einzelseite",
+          "45.title": "Zuletzt benutzte Position merken",
           "637.title": "Originalgröße",
-          "vOt-2m-d2s.title": "Ein gemeinsames Fenster",
+          "vOt-2m-d2s.title": "Ein gemeinsames Fenster verwenden",
           "113.ibShadowedToolTip": "Standardzoom für neu geöffnete PDFs.",
           "Fc6-Pp-tH1.title": "An Inhaltsbreite anpassen"
         },
         "SettingsSource": {
           "31.title": "Fenster immer an fester Position",
-          "582.title": "Apple Suchmaske",
+          "582.title": "Apple-Suchmaske",
           "Mo3-zf-BYT.title": "Nie",
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Ausschlussregeln für LaTeX-Dokumente verwenden.",
           "928.title": "Tabulator",
-          "583.title": "Apple Suchleiste",
+          "583.title": "Apple-Suchleiste",
           "ts-edit-spelling.ibShadowedToolTip": "Die Ausschlussregeln für die LaTeX-bewusste Rechtschreibprüfung bearbeiten.",
           "Xrb-Fe-9cg.title": "Klein",
           "aI9-3B-vVE.title": "Automatisch",
-          "872.title": "Auswählen ...",
+          "872.title": "Auswählen …",
           "odm-Dy-TNW.title": "Groß",
           "ypQ-Gc-HUa.title": "Immer",
-          "1080.title": "OgreKit Suchmaske (veraltet)",
-          "32.title": "Merke zuletzt benutzte Position",
+          "1080.title": "OgreKit-Suchmaske (veraltet)",
+          "32.title": "Zuletzt benutzte Position merken",
           "adv-Fd-Pnl.title": "Erweiterte Suchmaske (empfohlen)"
         },
         "SettingsTypesetting": {
@@ -5899,7 +5899,7 @@
           "view": "settings.fMM-Lh-WMT",
           "kind": "matrix",
           "property": "title",
-          "value": "Merke zuletzt benutzte Position",
+          "value": "Zuletzt benutzte Position merken",
           "row": 0,
           "column": 0
         },
@@ -5945,7 +5945,7 @@
           "view": "settings.755",
           "kind": "cell",
           "property": "title",
-          "value": "Auswählen ..."
+          "value": "Auswählen …"
         },
         {
           "key": "924.title",
@@ -6574,7 +6574,7 @@
           "view": "settings.434",
           "kind": "menuItem",
           "property": "title",
-          "value": "TeXShop Einstellungen",
+          "value": "5",
           "index": 7
         },
         {
@@ -7005,7 +7005,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Doppelseiten, kontinuierlich",
+          "value": "Doppelseite, kontinuierlich",
           "index": 3
         },
         {
@@ -7035,7 +7035,7 @@
           "view": "settings.4qx-Bg-9Ii",
           "kind": "matrix",
           "property": "title",
-          "value": "Merke zuletzt benutzte Position",
+          "value": "Zuletzt benutzte Position merken",
           "row": 0,
           "column": 0
         },
@@ -7044,7 +7044,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Einzelseiten, kontinuierlich",
+          "value": "Einzelseite, kontinuierlich",
           "index": 2
         },
         {
@@ -7185,7 +7185,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Doppelseiten",
+          "value": "Doppelseite",
           "index": 1
         },
         {
@@ -7278,7 +7278,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Einzelseiten",
+          "value": "Einzelseite",
           "index": 0
         },
         {
@@ -7286,7 +7286,7 @@
           "view": "settings.44",
           "kind": "matrix",
           "property": "title",
-          "value": "Merke zuletzt benutzte Position",
+          "value": "Zuletzt benutzte Position merken",
           "row": 0,
           "column": 0
         },
@@ -7303,7 +7303,7 @@
           "view": "settings.MBq-SG-G54",
           "kind": "cell",
           "property": "title",
-          "value": "Ein gemeinsames Fenster"
+          "value": "Ein gemeinsames Fenster verwenden"
         },
         {
           "key": "preview-cover-note-cell.title",
@@ -7527,7 +7527,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Apple Suchmaske",
+          "value": "Apple-Suchmaske",
           "row": 0,
           "column": 0
         },
@@ -7583,7 +7583,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Apple Suchleiste",
+          "value": "Apple-Suchleiste",
           "row": 1,
           "column": 0
         },
@@ -7667,7 +7667,7 @@
           "view": "settings.16",
           "kind": "cell",
           "property": "title",
-          "value": "Auswählen ..."
+          "value": "Auswählen …"
         },
         {
           "key": "277.title",
@@ -7735,7 +7735,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit Suchmaske (veraltet)",
+          "value": "OgreKit-Suchmaske (veraltet)",
           "row": 3,
           "column": 0
         },
@@ -7753,7 +7753,7 @@
           "view": "settings.30",
           "kind": "matrix",
           "property": "title",
-          "value": "Merke zuletzt benutzte Position",
+          "value": "Zuletzt benutzte Position merken",
           "row": 0,
           "column": 0
         }
@@ -8527,7 +8527,7 @@
       "Tables": {
         "SettingsConsole": {
           "831.title": "Si aparecen errores",
-          "765.title": "Sólo cambio vertical",
+          "765.title": "Solo cambio vertical",
           "ga2-ik-lSC.title": "Conservar la última posición",
           "766.title": "Cambio sin restricciones",
           "906.title": "Elegir...",
@@ -8581,17 +8581,17 @@
           "naM-Et-WMn.title": "Mensual"
         },
         "SettingsPreview": {
-          "346.title": "Multipágina doble",
+          "346.title": "Dos páginas continuas",
           "335.title": "Aumentar (Grande)",
           "sa2-VV-W1K.title": "Conservar la última posición",
-          "347.title": "Multipágina",
+          "347.title": "Una página continua",
           "SfP-Ak-pn3.title": "Usar ventanas separadas",
           "505.title": "De izquierda a derecha",
           "V7d-ht-Pe3.title": "Derecha",
           "337.title": "Seleccionar PDF",
           "tVs-uh-QcM.title": "Comenzar con posición fija",
           "507.title": "De derecha a izquierda",
-          "343.title": "Página doble",
+          "343.title": "Dos páginas",
           "332.title": "Aumentar",
           "636.title": "Seleccionar texto",
           "339.title": "Ajustar a la ventana",
@@ -8599,7 +8599,7 @@
           "344.title": "Aumento fijo",
           "1uj-kt-7Pj.title": "Izquierda",
           "48.title": "Comenzar con posición fija",
-          "333.title": "Página simple",
+          "333.title": "Una página",
           "45.title": "Conservar la última posición",
           "637.title": "Tamaño real",
           "vOt-2m-d2s.title": "Usar una ventana",
@@ -8653,7 +8653,7 @@
           "view": "settings.764",
           "kind": "matrix",
           "property": "title",
-          "value": "Sólo cambio vertical",
+          "value": "Solo cambio vertical",
           "row": 1,
           "column": 0
         },
@@ -9775,7 +9775,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Multipágina doble",
+          "value": "Dos páginas continuas",
           "index": 3
         },
         {
@@ -9814,7 +9814,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Multipágina",
+          "value": "Una página continua",
           "index": 2
         },
         {
@@ -9955,7 +9955,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Página doble",
+          "value": "Dos páginas",
           "index": 1
         },
         {
@@ -10048,7 +10048,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Página simple",
+          "value": "Una página",
           "index": 0
         },
         {
@@ -11299,7 +11299,7 @@
           "831.title": "en cas d'erreur",
           "765.title": "Redimensionnement vertical seulement",
           "ga2-ik-lSC.title": "Conserver la dernière position",
-          "766.title": "Redimensionnent arbitraire",
+          "766.title": "Redimensionnement arbitraire",
           "906.title": "Choisir ...",
           "PqO-5d-lRv.title": "Choisir une position fixe",
           "830.title": "toujours"
@@ -11351,17 +11351,17 @@
           "naM-Et-WMn.title": "Mensuelle"
         },
         "SettingsPreview": {
-          "346.title": "Page multiple en double",
+          "346.title": "Deux pages en continu",
           "335.title": "Agrandissement maximal",
           "sa2-VV-W1K.title": "Conserver la dernière position",
-          "347.title": "Page multiple",
+          "347.title": "Page unique en continu",
           "SfP-Ak-pn3.title": "Utiliser des fenêtres séparées",
           "505.title": "Les pages défilent de gauche à droite",
           "V7d-ht-Pe3.title": "Droite",
-          "337.title": "Sélectionner",
+          "337.title": "Sélectionner (PDF)",
           "tVs-uh-QcM.title": "Choisir une position fixe",
           "507.title": "Les pages défilent de droite à gauche",
-          "343.title": "Page double",
+          "343.title": "Deux pages",
           "332.title": "Agrandir",
           "636.title": "Sélectionner le texte",
           "339.title": "Adapter à la fenêtre",
@@ -11369,7 +11369,7 @@
           "344.title": "Agrandissement constant",
           "1uj-kt-7Pj.title": "Gauche",
           "48.title": "Choisir une position fixe",
-          "333.title": "Page simple",
+          "333.title": "Page unique",
           "45.title": "Conserver la dernière position",
           "637.title": "Taille réelle",
           "vOt-2m-d2s.title": "Utiliser une seule fenêtre",
@@ -11448,7 +11448,7 @@
           "view": "settings.764",
           "kind": "matrix",
           "property": "title",
-          "value": "Redimensionnent arbitraire",
+          "value": "Redimensionnement arbitraire",
           "row": 0,
           "column": 0
         },
@@ -12545,7 +12545,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Page multiple en double",
+          "value": "Deux pages en continu",
           "index": 3
         },
         {
@@ -12584,7 +12584,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Page multiple",
+          "value": "Page unique en continu",
           "index": 2
         },
         {
@@ -12678,7 +12678,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Sélectionner",
+          "value": "Sélectionner (PDF)",
           "index": 4
         },
         {
@@ -12725,7 +12725,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Page double",
+          "value": "Deux pages",
           "index": 1
         },
         {
@@ -12818,7 +12818,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Page simple",
+          "value": "Page unique",
           "index": 0
         },
         {
@@ -14075,13 +14075,13 @@
           "830.title": "Sempre"
         },
         "SettingsEditor": {
-          "UXo-9g-NNW.title": "A Fine Carattere",
+          "UXo-9g-NNW.title": "A fine carattere",
           "inv-955-item-1.title": "¶",
           "inv-957-item-1.title": "·",
           "inv-954-item-1.title": "▹",
           "inv-956-item-1.title": "■",
           "EgL-0e-rdg.title": "Nessuno",
-          "LJw-Jj-VBR.title": "A Fine Parola",
+          "LJw-Jj-VBR.title": "A fine parola",
           "inv-955-item-3.title": "⏎",
           "inv-957-item-0.title": "␣",
           "inv-954-item-0.title": "‣",
@@ -14116,21 +14116,21 @@
           "440.title": "1"
         },
         "SettingsMiscTwo": {
-          "GUV-qt-mM2.title": "una volta al giorno",
-          "oSw-pG-JGB.title": "una volta alla settimana",
-          "naM-Et-WMn.title": "una volta al mese"
+          "GUV-qt-mM2.title": "Una volta al giorno",
+          "oSw-pG-JGB.title": "Una volta alla settimana",
+          "naM-Et-WMn.title": "Una volta al mese"
         },
         "SettingsPreview": {
-          "346.title": "Continuo, affiancate",
+          "346.title": "Continuo con pagine affiancate",
           "335.title": "Ingrandimento (maggiore)",
           "sa2-VV-W1K.title": "Conserva l'ultima posizione",
           "347.title": "Continuo",
           "SfP-Ak-pn3.title": "Usa finestre separate",
-          "505.title": "Impaginazione anteprima da sinistra a destra",
+          "505.title": "Da sinistra a destra",
           "V7d-ht-Pe3.title": "Destra",
-          "337.title": "Selezione",
-          "tVs-uh-QcM.title": "Scegli una posizione prefissata",
-          "507.title": "Impaginazione anteprima da destra a sinistra",
+          "337.title": "Selezione PDF",
+          "tVs-uh-QcM.title": "Posizione predefinita",
+          "507.title": "Da destra a sinistra",
           "343.title": "Pagine affiancate",
           "332.title": "Ingrandimento",
           "636.title": "Selezione testo",
@@ -14138,7 +14138,7 @@
           "328.title": "Scorrimento",
           "344.title": "Ingrandimento fisso",
           "1uj-kt-7Pj.title": "Sinistra",
-          "48.title": "Scegli una posizione prefissata",
+          "48.title": "Posizione predefinita",
           "333.title": "Pagina singola",
           "45.title": "Conserva l'ultima posizione",
           "637.title": "Dimensioni reali",
@@ -14152,8 +14152,8 @@
           "Mo3-zf-BYT.title": "Mai",
           "927.title": "Esc",
           "ts-aware-spelling.ibShadowedToolTip": "Usa le regole di esclusione per i documenti LaTeX.",
-          "928.title": "Tabulatore",
-          "583.title": "Apple Fine Bar",
+          "928.title": "Tabulazione",
+          "583.title": "Barra di ricerca Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Modifica le regole di esclusione del controllo ortografico per LaTeX.",
           "Xrb-Fe-9cg.title": "Piccola",
           "aI9-3B-vVE.title": "Automaticamente",
@@ -14358,7 +14358,7 @@
           "view": "settings.TUV-ZL-JgG",
           "kind": "matrix",
           "property": "title",
-          "value": "A Fine Carattere",
+          "value": "A fine carattere",
           "row": 2,
           "column": 0
         },
@@ -14438,7 +14438,7 @@
           "view": "settings.TUV-ZL-JgG",
           "kind": "matrix",
           "property": "title",
-          "value": "A Fine Parola",
+          "value": "A fine parola",
           "row": 1,
           "column": 0
         },
@@ -15230,7 +15230,7 @@
           "view": "settings.ssL-3D-6IR",
           "kind": "matrix",
           "property": "title",
-          "value": "una volta al giorno",
+          "value": "Una volta al giorno",
           "row": 0,
           "column": 0
         },
@@ -15281,7 +15281,7 @@
           "view": "settings.ssL-3D-6IR",
           "kind": "matrix",
           "property": "title",
-          "value": "una volta alla settimana",
+          "value": "Una volta alla settimana",
           "row": 1,
           "column": 0
         },
@@ -15297,7 +15297,7 @@
           "view": "settings.ssL-3D-6IR",
           "kind": "matrix",
           "property": "title",
-          "value": "una volta al mese",
+          "value": "Una volta al mese",
           "row": 2,
           "column": 0
         }
@@ -15315,7 +15315,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Continuo, affiancate",
+          "value": "Continuo con pagine affiancate",
           "index": 3
         },
         {
@@ -15383,7 +15383,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Impaginazione anteprima da sinistra a destra",
+          "value": "Da sinistra a destra",
           "row": 0,
           "column": 0
         },
@@ -15448,7 +15448,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Selezione",
+          "value": "Selezione PDF",
           "index": 4
         },
         {
@@ -15477,7 +15477,7 @@
           "view": "settings.4qx-Bg-9Ii",
           "kind": "matrix",
           "property": "title",
-          "value": "Scegli una posizione prefissata",
+          "value": "Posizione predefinita",
           "row": 1,
           "column": 0
         },
@@ -15486,7 +15486,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Impaginazione anteprima da destra a sinistra",
+          "value": "Da destra a sinistra",
           "row": 1,
           "column": 0
         },
@@ -15579,7 +15579,7 @@
           "view": "settings.44",
           "kind": "matrix",
           "property": "title",
-          "value": "Scegli una posizione prefissata",
+          "value": "Posizione predefinita",
           "row": 1,
           "column": 0
         },
@@ -15884,7 +15884,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tabulatore",
+          "value": "Tabulazione",
           "row": 1,
           "column": 0
         },
@@ -15893,7 +15893,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Apple Fine Bar",
+          "value": "Barra di ricerca Apple",
           "row": 1,
           "column": 0
         },
@@ -16892,18 +16892,18 @@
         },
         "SettingsPreview": {
           "346.title": "連続見開きページ",
-          "335.title": "拡大鏡 (大)",
+          "335.title": "拡大鏡（大）",
           "sa2-VV-W1K.title": "閉じたときの位置を保存",
           "347.title": "連続ページ",
           "SfP-Ak-pn3.title": "別々のウインドウで開く",
           "505.title": "左から右",
           "V7d-ht-Pe3.title": "右",
-          "337.title": "範囲指定",
+          "337.title": "範囲選択",
           "tVs-uh-QcM.title": "いつも同じ位置で開く",
           "507.title": "右から左",
           "343.title": "見開きページ",
           "332.title": "拡大鏡",
-          "636.title": "文字選択",
+          "636.title": "テキスト選択",
           "339.title": "ウインドウに合わせる",
           "328.title": "スクロール",
           "344.title": "固定倍率",
@@ -18093,7 +18093,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "拡大鏡 (大)",
+          "value": "拡大鏡（大）",
           "index": 3
         },
         {
@@ -18218,7 +18218,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "範囲指定",
+          "value": "範囲選択",
           "index": 4
         },
         {
@@ -18302,7 +18302,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "文字選択",
+          "value": "テキスト選択",
           "index": 1
         },
         {
@@ -19606,22 +19606,22 @@
     "ko": {
       "Tables": {
         "SettingsConsole": {
-          "831.title": "오류 발생시 보이기",
-          "765.title": "상하로만 리사이즈",
+          "831.title": "오류 발생 시 표시",
+          "765.title": "세로로만 크기 조절",
           "ga2-ik-lSC.title": "닫을 때 위치 저장",
-          "766.title": "상하 좌우로 리사이즈",
+          "766.title": "자유롭게 크기 조절",
           "906.title": "설정...",
           "PqO-5d-lRv.title": "항상 같은 위치에서 열기",
-          "830.title": "항상 보이기"
+          "830.title": "항상 표시"
         },
         "SettingsEditor": {
-          "UXo-9g-NNW.title": "글자기준",
+          "UXo-9g-NNW.title": "글자 기준",
           "inv-955-item-1.title": "¶",
           "inv-957-item-1.title": "·",
           "inv-954-item-1.title": "▹",
           "inv-956-item-1.title": "■",
           "EgL-0e-rdg.title": "없음",
-          "LJw-Jj-VBR.title": "단어기준",
+          "LJw-Jj-VBR.title": "단어 기준",
           "inv-955-item-3.title": "⏎",
           "inv-957-item-0.title": "␣",
           "inv-954-item-0.title": "‣",
@@ -19665,16 +19665,16 @@
           "335.title": "확대경 (크게)",
           "sa2-VV-W1K.title": "닫을 때 위치 저장",
           "347.title": "연속 스크롤",
-          "SfP-Ak-pn3.title": "별도 창으로",
+          "SfP-Ak-pn3.title": "별도 윈도우 사용",
           "505.title": "왼쪽에서 오른쪽으로 페이지 배열",
           "V7d-ht-Pe3.title": "오른쪽",
-          "337.title": "영역 선택",
+          "337.title": "직사각형 선택",
           "tVs-uh-QcM.title": "항상 같은 위치에서 열기",
           "507.title": "오른쪽에서 왼쪽으로 페이지 배열",
           "343.title": "두 페이지",
           "332.title": "확대경",
-          "636.title": "글자 선택",
-          "339.title": "창에 맞추기",
+          "636.title": "텍스트 선택",
+          "339.title": "윈도우에 맞추기",
           "328.title": "스크롤",
           "344.title": "고정 배율",
           "1uj-kt-7Pj.title": "왼쪽",
@@ -19682,7 +19682,7 @@
           "333.title": "단일 페이지",
           "45.title": "닫을 때 위치 저장",
           "637.title": "실제 크기",
-          "vOt-2m-d2s.title": "단일 창으로",
+          "vOt-2m-d2s.title": "한 윈도우 사용",
           "113.ibShadowedToolTip": "새로 여는 PDF의 기본 확대율입니다.",
           "Fc6-Pp-tH1.title": "내용 너비에 맞추기"
         },
@@ -19697,7 +19697,7 @@
           "ts-edit-spelling.ibShadowedToolTip": "LaTeX 맞춤법 검사에 사용하는 제외 규칙을 편집합니다.",
           "Xrb-Fe-9cg.title": "작게",
           "aI9-3B-vVE.title": "자동",
-          "872.title": "선택...",
+          "872.title": "설정...",
           "odm-Dy-TNW.title": "크게",
           "ypQ-Gc-HUa.title": "항상",
           "1080.title": "OgreKit 찾기 패널(레거시)",
@@ -19709,12 +19709,12 @@
           "191.title": "PDF 직접 생성",
           "190.title": "사용자 스크립트",
           "590.title": "엔진 파일",
-          "680.title": "편집 창에서 계속 작업",
+          "680.title": "소스 윈도우에서 계속 편집",
           "786.title": "SyncTeX(권장)",
           "785.title": "PDF 검색",
           "589.title": "LaTeX",
-          "679.title": "보기 창을 전면으로",
-          "bYh-V5-ri6.title": "보기 창을 표시한 후 원래 창으로 돌아가기",
+          "679.title": "미리보기 윈도우를 앞으로",
+          "bYh-V5-ri6.title": "미리보기 윈도우를 표시한 후 원래 윈도우로 돌아가기",
           "588.title": "plain TeX"
         }
       },
@@ -19724,7 +19724,7 @@
           "view": "settings.777",
           "kind": "matrix",
           "property": "title",
-          "value": "오류 발생시 보이기",
+          "value": "오류 발생 시 표시",
           "row": 1,
           "column": 0
         },
@@ -19733,7 +19733,7 @@
           "view": "settings.764",
           "kind": "matrix",
           "property": "title",
-          "value": "상하로만 리사이즈",
+          "value": "세로로만 크기 조절",
           "row": 1,
           "column": 0
         },
@@ -19758,7 +19758,7 @@
           "view": "settings.764",
           "kind": "matrix",
           "property": "title",
-          "value": "상하 좌우로 리사이즈",
+          "value": "자유롭게 크기 조절",
           "row": 0,
           "column": 0
         },
@@ -19839,7 +19839,7 @@
           "view": "settings.777",
           "kind": "matrix",
           "property": "title",
-          "value": "항상 보이기",
+          "value": "항상 표시",
           "row": 0,
           "column": 0
         },
@@ -19898,7 +19898,7 @@
           "view": "settings.TUV-ZL-JgG",
           "kind": "matrix",
           "property": "title",
-          "value": "글자기준",
+          "value": "글자 기준",
           "row": 2,
           "column": 0
         },
@@ -19978,7 +19978,7 @@
           "view": "settings.TUV-ZL-JgG",
           "kind": "matrix",
           "property": "title",
-          "value": "단어기준",
+          "value": "단어 기준",
           "row": 1,
           "column": 0
         },
@@ -20916,7 +20916,7 @@
           "view": "settings.G6V-Sw-jFT",
           "kind": "cell",
           "property": "title",
-          "value": "별도 창으로"
+          "value": "별도 윈도우 사용"
         },
         {
           "key": "505.title",
@@ -20988,7 +20988,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "영역 선택",
+          "value": "직사각형 선택",
           "index": 4
         },
         {
@@ -21072,7 +21072,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "글자 선택",
+          "value": "텍스트 선택",
           "index": 1
         },
         {
@@ -21080,7 +21080,7 @@
           "view": "settings.334",
           "kind": "menuItem",
           "property": "title",
-          "value": "창에 맞추기",
+          "value": "윈도우에 맞추기",
           "index": 2
         },
         {
@@ -21153,7 +21153,7 @@
           "view": "settings.MBq-SG-G54",
           "kind": "cell",
           "property": "title",
-          "value": "단일 창으로"
+          "value": "한 윈도우 사용"
         },
         {
           "key": "preview-cover-note-cell.title",
@@ -21517,7 +21517,7 @@
           "view": "settings.16",
           "kind": "cell",
           "property": "title",
-          "value": "선택..."
+          "value": "설정..."
         },
         {
           "key": "277.title",
@@ -22037,7 +22037,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "편집 창에서 계속 작업",
+          "value": "소스 윈도우에서 계속 편집",
           "row": 1,
           "column": 0
         },
@@ -22094,7 +22094,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "보기 창을 전면으로",
+          "value": "미리보기 윈도우를 앞으로",
           "row": 0,
           "column": 0
         },
@@ -22103,7 +22103,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "보기 창을 표시한 후 원래 창으로 돌아가기",
+          "value": "미리보기 윈도우를 표시한 후 원래 윈도우로 돌아가기",
           "row": 2,
           "column": 0
         },
@@ -22381,7 +22381,7 @@
           "ga2-ik-lSC.title": "Onthoud laatste positie bij sluiten",
           "766.title": "Willekeurig vergroten/verkleinen",
           "906.title": "Stel in...",
-          "PqO-5d-lRv.title": "Alle vensters starten op vaste plaats",
+          "PqO-5d-lRv.title": "Alle consoles openen op vaste positie",
           "830.title": "altijd"
         },
         "SettingsEditor": {
@@ -22407,7 +22407,7 @@
           "441.title": "3",
           "431.title": "5",
           "404.title": "TIFF (PackBits)",
-          "375.title": "JPEG (hoog)",
+          "375.title": "JPEG (hoge kwaliteit)",
           "438.title": "-2",
           "380.title": "TIFF (ongecomprimeerd)",
           "416.title": "PDF",
@@ -22417,8 +22417,8 @@
           "434.ibShadowedToolTip": "Hogere waarden benadrukken tekst bij het kopiëren van rasterafbeeldingen.",
           "437.ibShadowedToolTip": "Zwart en wit aan andere kleuren koppelen.",
           "CBT-8e-Ayl.title": "Rechts",
-          "407.title": "JPEG (laag)",
-          "423.title": "JPEG (gemiddeld)",
+          "407.title": "JPEG (lage kwaliteit)",
+          "423.title": "JPEG (normale kwaliteit)",
           "i6L-IX-ZLk.title": "Eén teken",
           "g92-sP-oZU.title": "Beide zijden",
           "435.title": "-1",
@@ -22431,16 +22431,16 @@
           "naM-Et-WMn.title": "Maandelijks"
         },
         "SettingsPreview": {
-          "346.title": "Doorlopende dubbele pagina’s",
-          "335.title": "Sterk vergroten",
-          "sa2-VV-W1K.title": "Positie bij sluiten bewaren",
-          "347.title": "Doorlopende pagina’s",
-          "SfP-Ak-pn3.title": "In afzonderlijke vensters openen",
-          "505.title": "Pagina’s lopen van links naar rechts",
+          "346.title": "Twee pagina’s doorlopend",
+          "335.title": "Vergroten (groot)",
+          "sa2-VV-W1K.title": "Onthoud laatste positie bij sluiten",
+          "347.title": "Doorlopend",
+          "SfP-Ak-pn3.title": "Gebruik aparte vensters",
+          "505.title": "Van links naar rechts",
           "V7d-ht-Pe3.title": "Rechts",
           "337.title": "PDF selecteren",
-          "tVs-uh-QcM.title": "Alle vensters op vaste positie openen",
-          "507.title": "Pagina’s lopen van rechts naar links",
+          "tVs-uh-QcM.title": "Alle vensters openen op vaste positie",
+          "507.title": "Van rechts naar links",
           "343.title": "Twee pagina’s",
           "332.title": "Vergroten",
           "636.title": "Tekst selecteren",
@@ -22448,17 +22448,17 @@
           "328.title": "Scrollen",
           "344.title": "Vaste vergroting",
           "1uj-kt-7Pj.title": "Links",
-          "48.title": "Alle vensters op vaste positie openen",
+          "48.title": "Alle vensters openen op vaste positie",
           "333.title": "Enkele pagina",
-          "45.title": "Positie bij sluiten bewaren",
+          "45.title": "Onthoud laatste positie bij sluiten",
           "637.title": "Werkelijke grootte",
-          "vOt-2m-d2s.title": "Samenvoegen in één venster",
-          "113.ibShadowedToolTip": "Standaardzoom voor nieuw geopende pdf’s.",
+          "vOt-2m-d2s.title": "Gebruik één venster",
+          "113.ibShadowedToolTip": "Standaardzoom voor nieuw geopende PDF’s.",
           "Fc6-Pp-tH1.title": "Aan inhoudsbreedte aanpassen"
         },
         "SettingsSource": {
-          "31.title": "Alle vensters starten op vaste plaats",
-          "582.title": "Apple zoekpaneel",
+          "31.title": "Alle vensters openen op vaste positie",
+          "582.title": "Apple-zoekpaneel",
           "Mo3-zf-BYT.title": "Nooit",
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Uitsluitingsregels voor LaTeX-documenten gebruiken.",
@@ -22470,7 +22470,7 @@
           "872.title": "Stel in...",
           "odm-Dy-TNW.title": "Groot",
           "ypQ-Gc-HUa.title": "Altijd",
-          "1080.title": "OgreKit zoekpaneel (verouderd)",
+          "1080.title": "OgreKit-zoekpaneel (verouderd)",
           "32.title": "Onthoud laatste positie bij sluiten",
           "adv-Fd-Pnl.title": "Geavanceerd zoekpaneel (aanbevolen)"
         },
@@ -22479,7 +22479,7 @@
           "191.title": "Direct PDF",
           "190.title": "Eigen script",
           "590.title": "Engine-bestand",
-          "680.title": "Doorgaan met editor",
+          "680.title": "Ga door met bewerken",
           "786.title": "SyncTeX (aanbevolen)",
           "785.title": "PDF doorzoeken",
           "589.title": "LaTeX",
@@ -22593,7 +22593,7 @@
           "view": "settings.fMM-Lh-WMT",
           "kind": "matrix",
           "property": "title",
-          "value": "Alle vensters starten op vaste plaats",
+          "value": "Alle consoles openen op vaste positie",
           "row": 1,
           "column": 0
         },
@@ -23217,7 +23217,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "JPEG (hoog)",
+          "value": "JPEG (hoge kwaliteit)",
           "index": 4
         },
         {
@@ -23318,7 +23318,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "JPEG (laag)",
+          "value": "JPEG (lage kwaliteit)",
           "index": 6
         },
         {
@@ -23333,7 +23333,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "JPEG (gemiddeld)",
+          "value": "JPEG (normale kwaliteit)",
           "index": 5
         },
         {
@@ -23625,7 +23625,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Doorlopende dubbele pagina’s",
+          "value": "Twee pagina’s doorlopend",
           "index": 3
         },
         {
@@ -23633,7 +23633,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Sterk vergroten",
+          "value": "Vergroten (groot)",
           "index": 3
         },
         {
@@ -23655,7 +23655,7 @@
           "view": "settings.4qx-Bg-9Ii",
           "kind": "matrix",
           "property": "title",
-          "value": "Positie bij sluiten bewaren",
+          "value": "Onthoud laatste positie bij sluiten",
           "row": 0,
           "column": 0
         },
@@ -23664,7 +23664,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Doorlopende pagina’s",
+          "value": "Doorlopend",
           "index": 2
         },
         {
@@ -23686,14 +23686,14 @@
           "view": "settings.G6V-Sw-jFT",
           "kind": "cell",
           "property": "title",
-          "value": "In afzonderlijke vensters openen"
+          "value": "Gebruik aparte vensters"
         },
         {
           "key": "505.title",
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pagina’s lopen van links naar rechts",
+          "value": "Van links naar rechts",
           "row": 0,
           "column": 0
         },
@@ -23787,7 +23787,7 @@
           "view": "settings.4qx-Bg-9Ii",
           "kind": "matrix",
           "property": "title",
-          "value": "Alle vensters op vaste positie openen",
+          "value": "Alle vensters openen op vaste positie",
           "row": 1,
           "column": 0
         },
@@ -23796,7 +23796,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pagina’s lopen van rechts naar links",
+          "value": "Van rechts naar links",
           "row": 1,
           "column": 0
         },
@@ -23889,7 +23889,7 @@
           "view": "settings.44",
           "kind": "matrix",
           "property": "title",
-          "value": "Alle vensters op vaste positie openen",
+          "value": "Alle vensters openen op vaste positie",
           "row": 1,
           "column": 0
         },
@@ -23906,7 +23906,7 @@
           "view": "settings.44",
           "kind": "matrix",
           "property": "title",
-          "value": "Positie bij sluiten bewaren",
+          "value": "Onthoud laatste positie bij sluiten",
           "row": 0,
           "column": 0
         },
@@ -23923,7 +23923,7 @@
           "view": "settings.MBq-SG-G54",
           "kind": "cell",
           "property": "title",
-          "value": "Samenvoegen in één venster"
+          "value": "Gebruik één venster"
         },
         {
           "key": "preview-cover-note-cell.title",
@@ -23944,7 +23944,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Standaardzoom voor nieuw geopende pdf’s."
+          "value": "Standaardzoom voor nieuw geopende PDF’s."
         },
         {
           "key": "preview-cover-cell.title",
@@ -24130,7 +24130,7 @@
           "view": "settings.30",
           "kind": "matrix",
           "property": "title",
-          "value": "Alle vensters starten op vaste plaats",
+          "value": "Alle vensters openen op vaste positie",
           "row": 1,
           "column": 0
         },
@@ -24147,7 +24147,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Apple zoekpaneel",
+          "value": "Apple-zoekpaneel",
           "row": 0,
           "column": 0
         },
@@ -24355,7 +24355,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit zoekpaneel (verouderd)",
+          "value": "OgreKit-zoekpaneel (verouderd)",
           "row": 3,
           "column": 0
         },
@@ -24807,7 +24807,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Doorgaan met editor",
+          "value": "Ga door met bewerken",
           "row": 1,
           "column": 0
         },
@@ -25148,14 +25148,14 @@
         "SettingsConsole": {
           "831.title": "em caso de erros",
           "765.title": "Redimensionar apenas na vertical",
-          "ga2-ik-lSC.title": "Lembrar-se da última posição",
+          "ga2-ik-lSC.title": "Lembrar a última posição",
           "766.title": "Redimensionar livremente",
           "906.title": "Definir…",
           "PqO-5d-lRv.title": "Abrir sempre numa posição fixa",
           "830.title": "sempre"
         },
         "SettingsEditor": {
-          "UXo-9g-NNW.title": "Por caráter",
+          "UXo-9g-NNW.title": "Por carácter",
           "inv-955-item-1.title": "¶",
           "inv-957-item-1.title": "·",
           "inv-954-item-1.title": "▹",
@@ -25189,10 +25189,10 @@
           "CBT-8e-Ayl.title": "Direita",
           "407.title": "JPEG (baixa)",
           "423.title": "JPEG (média)",
-          "i6L-IX-ZLk.title": "Um caráter",
+          "i6L-IX-ZLk.title": "Um carácter",
           "g92-sP-oZU.title": "Ambos os lados",
           "435.title": "-1",
-          "shH-XU-nyE.title": "Dois carateres",
+          "shH-XU-nyE.title": "Dois caracteres",
           "440.title": "1"
         },
         "SettingsMiscTwo": {
@@ -25203,13 +25203,13 @@
         "SettingsPreview": {
           "346.title": "Duas páginas contínuas",
           "335.title": "Ampliar mais",
-          "sa2-VV-W1K.title": "Guardar a posição ao fechar",
+          "sa2-VV-W1K.title": "Lembrar a última posição",
           "347.title": "Páginas contínuas",
           "SfP-Ak-pn3.title": "Abrir em janelas separadas",
           "505.title": "Da esquerda para a direita",
           "V7d-ht-Pe3.title": "Direita",
           "337.title": "Selecionar PDF",
-          "tVs-uh-QcM.title": "Abrir todas as janelas numa posição fixa",
+          "tVs-uh-QcM.title": "Abrir sempre numa posição fixa",
           "507.title": "Da direita para a esquerda",
           "343.title": "Duas páginas",
           "332.title": "Ampliar",
@@ -25220,7 +25220,7 @@
           "1uj-kt-7Pj.title": "Esquerda",
           "48.title": "Abrir sempre numa posição fixa",
           "333.title": "Uma página",
-          "45.title": "Lembrar-se da última posição",
+          "45.title": "Lembrar a última posição",
           "637.title": "Tamanho real",
           "vOt-2m-d2s.title": "Unir numa única janela",
           "113.ibShadowedToolTip": "Ampliação predefinida dos PDF acabados de abrir.",
@@ -25237,11 +25237,11 @@
           "ts-edit-spelling.ibShadowedToolTip": "Editar as regras de exclusão da verificação ortográfica adaptada ao LaTeX.",
           "Xrb-Fe-9cg.title": "Pequeno",
           "aI9-3B-vVE.title": "Automaticamente",
-          "872.title": "Escolher...",
+          "872.title": "Definir…",
           "odm-Dy-TNW.title": "Grande",
           "ypQ-Gc-HUa.title": "Sempre",
           "1080.title": "Painel de pesquisa OgreKit (legado)",
-          "32.title": "Lembrar-se da última posição",
+          "32.title": "Lembrar a última posição",
           "adv-Fd-Pnl.title": "Painel de pesquisa avançada (recomendado)"
         },
         "SettingsTypesetting": {
@@ -25289,7 +25289,7 @@
           "view": "settings.fMM-Lh-WMT",
           "kind": "matrix",
           "property": "title",
-          "value": "Lembrar-se da última posição",
+          "value": "Lembrar a última posição",
           "row": 0,
           "column": 0
         },
@@ -25438,7 +25438,7 @@
           "view": "settings.TUV-ZL-JgG",
           "kind": "matrix",
           "property": "title",
-          "value": "Por caráter",
+          "value": "Por carácter",
           "row": 2,
           "column": 0
         },
@@ -26125,7 +26125,7 @@
           "view": "settings.uve-Zu-06Q",
           "kind": "matrix",
           "property": "title",
-          "value": "Um caráter",
+          "value": "Um carácter",
           "row": 0,
           "column": 0
         },
@@ -26165,7 +26165,7 @@
           "view": "settings.uve-Zu-06Q",
           "kind": "matrix",
           "property": "title",
-          "value": "Dois carateres",
+          "value": "Dois caracteres",
           "row": 1,
           "column": 0
         },
@@ -26425,7 +26425,7 @@
           "view": "settings.4qx-Bg-9Ii",
           "kind": "matrix",
           "property": "title",
-          "value": "Guardar a posição ao fechar",
+          "value": "Lembrar a última posição",
           "row": 0,
           "column": 0
         },
@@ -26557,7 +26557,7 @@
           "view": "settings.4qx-Bg-9Ii",
           "kind": "matrix",
           "property": "title",
-          "value": "Abrir todas as janelas numa posição fixa",
+          "value": "Abrir sempre numa posição fixa",
           "row": 1,
           "column": 0
         },
@@ -26676,7 +26676,7 @@
           "view": "settings.44",
           "kind": "matrix",
           "property": "title",
-          "value": "Lembrar-se da última posição",
+          "value": "Lembrar a última posição",
           "row": 0,
           "column": 0
         },
@@ -27057,7 +27057,7 @@
           "view": "settings.16",
           "kind": "cell",
           "property": "title",
-          "value": "Escolher..."
+          "value": "Definir…"
         },
         {
           "key": "277.title",
@@ -27143,7 +27143,7 @@
           "view": "settings.30",
           "kind": "matrix",
           "property": "title",
-          "value": "Lembrar-se da última posição",
+          "value": "Lembrar a última posição",
           "row": 0,
           "column": 0
         }
@@ -27972,7 +27972,7 @@
         },
         "SettingsPreview": {
           "346.title": "Várias páginas duplas",
-          "335.title": "Ampliar (amplo)",
+          "335.title": "Lupa (grande)",
           "sa2-VV-W1K.title": "Lembrar-se da última posição",
           "347.title": "Várias páginas",
           "SfP-Ak-pn3.title": "Usar janelas separadas",
@@ -27982,7 +27982,7 @@
           "tVs-uh-QcM.title": "Abrir sempre em uma posição fixa",
           "507.title": "Da direita para a esquerda",
           "343.title": "Página dupla",
-          "332.title": "Ampliar",
+          "332.title": "Lupa",
           "636.title": "Selecionar texto",
           "339.title": "Ajustar à janela",
           "328.title": "Rolar",
@@ -27998,21 +27998,21 @@
         },
         "SettingsSource": {
           "31.title": "Abrir sempre em uma posição fixa",
-          "582.title": "Painel de localizar da Apple",
+          "582.title": "Painel de busca da Apple",
           "Mo3-zf-BYT.title": "Nunca",
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Usar regras de exclusão para documentos LaTeX.",
           "928.title": "Tab",
-          "583.title": "Barra de localizar da Apple",
+          "583.title": "Barra de busca da Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Editar as regras de exclusão da verificação ortográfica adaptada ao LaTeX.",
           "Xrb-Fe-9cg.title": "Pequeno",
           "aI9-3B-vVE.title": "Automaticamente",
           "872.title": "Escolher...",
           "odm-Dy-TNW.title": "Grande",
           "ypQ-Gc-HUa.title": "Sempre",
-          "1080.title": "Painel de localizar OgreKit (legado)",
+          "1080.title": "Painel de busca OgreKit (legado)",
           "32.title": "Lembrar-se da última posição",
-          "adv-Fd-Pnl.title": "Painel de localizar avançado (recomendado)"
+          "adv-Fd-Pnl.title": "Painel de busca avançada (recomendado)"
         },
         "SettingsTypesetting": {
           "187.title": "Via DVI",
@@ -28021,10 +28021,10 @@
           "590.title": "Arquivo de motor",
           "680.title": "Continuar editando",
           "786.title": "SyncTeX (recomendado)",
-          "785.title": "Pesquisar PDF",
+          "785.title": "Buscar no PDF",
           "589.title": "LaTeX",
-          "679.title": "Trazer a visualização para frente",
-          "bYh-V5-ri6.title": "Mostrar a visualização e voltar à janela original",
+          "679.title": "Trazer a pré-visualização para a frente",
+          "bYh-V5-ri6.title": "Mostrar a pré-visualização e voltar à janela original",
           "588.title": "plain TeX"
         }
       },
@@ -29173,7 +29173,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Ampliar (amplo)",
+          "value": "Lupa (grande)",
           "index": 3
         },
         {
@@ -29360,7 +29360,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Ampliar",
+          "value": "Lupa",
           "index": 2
         },
         {
@@ -29687,7 +29687,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Painel de localizar da Apple",
+          "value": "Painel de busca da Apple",
           "row": 0,
           "column": 0
         },
@@ -29743,7 +29743,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Barra de localizar da Apple",
+          "value": "Barra de busca da Apple",
           "row": 1,
           "column": 0
         },
@@ -29879,7 +29879,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Painel de localizar avançado (recomendado)",
+          "value": "Painel de busca avançada (recomendado)",
           "row": 2,
           "column": 0
         },
@@ -29895,7 +29895,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Painel de localizar OgreKit (legado)",
+          "value": "Painel de busca OgreKit (legado)",
           "row": 3,
           "column": 0
         },
@@ -30379,7 +30379,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "Pesquisar PDF",
+          "value": "Buscar no PDF",
           "row": 0,
           "column": 0
         },
@@ -30404,7 +30404,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Trazer a visualização para frente",
+          "value": "Trazer a pré-visualização para a frente",
           "row": 0,
           "column": 0
         },
@@ -30413,7 +30413,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Mostrar a visualização e voltar à janela original",
+          "value": "Mostrar a pré-visualização e voltar à janela original",
           "row": 2,
           "column": 0
         },
@@ -30688,10 +30688,10 @@
         "SettingsConsole": {
           "831.title": "la apariția unei erori",
           "765.title": "Redimensionare doar verticală",
-          "ga2-ik-lSC.title": "Înregistrează ultima poziție la închidere",
+          "ga2-ik-lSC.title": "Rețineți ultima poziție la închidere",
           "766.title": "Redimensionare liberă",
-          "906.title": "Stabilește…",
-          "PqO-5d-lRv.title": "Toate ferestrele apar la poziția fixată",
+          "906.title": "Alegeți…",
+          "PqO-5d-lRv.title": "Toate consolele apar la poziția fixată",
           "830.title": "întotdeauna"
         },
         "SettingsEditor": {
@@ -30741,47 +30741,47 @@
           "naM-Et-WMn.title": "Lunar"
         },
         "SettingsPreview": {
-          "346.title": "Pagină Dublă Multiplă",
+          "346.title": "Două pagini, derulare continuă",
           "335.title": "Lupă (mare)",
-          "sa2-VV-W1K.title": "Păstrează poziția la închidere",
-          "347.title": "Pagină Multiplă",
-          "SfP-Ak-pn3.title": "Deschide în ferestre separate",
+          "sa2-VV-W1K.title": "Rețineți ultima poziție la închidere",
+          "347.title": "Derulare continuă",
+          "SfP-Ak-pn3.title": "Folosiți ferestre separate",
           "505.title": "De la stânga la dreapta",
           "V7d-ht-Pe3.title": "Dreapta",
-          "337.title": "Selectează PDF",
-          "tVs-uh-QcM.title": "Deschide toate ferestrele în poziția fixată",
+          "337.title": "Selecție PDF",
+          "tVs-uh-QcM.title": "Toate ferestrele apar la poziția fixată",
           "507.title": "De la dreapta la stânga",
-          "343.title": "Pagină Dublă",
+          "343.title": "Două pagini",
           "332.title": "Lupă",
-          "636.title": "Selectează textul",
-          "339.title": "Adaptează la Fereastră",
+          "636.title": "Selecție text",
+          "339.title": "Potrivire la fereastră",
           "328.title": "Derulare",
           "344.title": "Mărire fixată",
           "1uj-kt-7Pj.title": "Stânga",
           "48.title": "Toate ferestrele apar la poziția fixată",
-          "333.title": "Pagină Simplă",
-          "45.title": "Înregistrează  ultima poziție la închidere",
+          "333.title": "O singură pagină",
+          "45.title": "Rețineți ultima poziție la închidere",
           "637.title": "Dimensiune efectivă",
-          "vOt-2m-d2s.title": "Unește într-o singură fereastră",
+          "vOt-2m-d2s.title": "Folosiți o singură fereastră",
           "113.ibShadowedToolTip": "Mărirea implicită pentru PDF-urile nou deschise.",
-          "Fc6-Pp-tH1.title": "Adaptează la lățimea conținutului"
+          "Fc6-Pp-tH1.title": "Potrivire la lățimea conținutului"
         },
         "SettingsSource": {
           "31.title": "Toate ferestrele apar la poziția fixată",
           "582.title": "Panoul de căutare Apple",
           "Mo3-zf-BYT.title": "Niciodată",
           "927.title": "Escape",
-          "ts-aware-spelling.ibShadowedToolTip": "Folosește reguli de excludere pentru documentele LaTeX.",
+          "ts-aware-spelling.ibShadowedToolTip": "Folosiți reguli de excludere pentru documentele LaTeX.",
           "928.title": "Tab",
           "583.title": "Bara de căutare Apple",
-          "ts-edit-spelling.ibShadowedToolTip": "Editează regulile de excludere pentru verificarea ortografică LaTeX.",
+          "ts-edit-spelling.ibShadowedToolTip": "Editați regulile de excludere ale verificării adaptate la LaTeX.",
           "Xrb-Fe-9cg.title": "Mic",
           "aI9-3B-vVE.title": "Automat",
-          "872.title": "Alege...",
+          "872.title": "Alegeți…",
           "odm-Dy-TNW.title": "Mare",
           "ypQ-Gc-HUa.title": "Întotdeauna",
           "1080.title": "Panoul de căutare OgreKit (vechi)",
-          "32.title": "Înregistrează ultima poziție la închidere",
+          "32.title": "Rețineți ultima poziție la închidere",
           "adv-Fd-Pnl.title": "Panou de căutare avansată (recomandat)"
         },
         "SettingsTypesetting": {
@@ -30789,12 +30789,12 @@
           "191.title": "PDF direct",
           "190.title": "Script personal",
           "590.title": "Fișier de motor",
-          "680.title": "Continuă editarea",
+          "680.title": "Continuați editarea",
           "786.title": "SyncTeX (recomandat)",
-          "785.title": "Caută în PDF",
+          "785.title": "Căutare în PDF",
           "589.title": "LaTeX",
-          "679.title": "Adu previzualizarea în prim-plan",
-          "bYh-V5-ri6.title": "Arată previzualizarea și revino la fereastra inițială",
+          "679.title": "Aduceți previzualizarea în față",
+          "bYh-V5-ri6.title": "Afișați previzualizarea și reveniți la fereastra inițială",
           "588.title": "plain TeX"
         }
       },
@@ -30829,7 +30829,7 @@
           "view": "settings.fMM-Lh-WMT",
           "kind": "matrix",
           "property": "title",
-          "value": "Înregistrează ultima poziție la închidere",
+          "value": "Rețineți ultima poziție la închidere",
           "row": 0,
           "column": 0
         },
@@ -30875,7 +30875,7 @@
           "view": "settings.755",
           "kind": "cell",
           "property": "title",
-          "value": "Stabilește…"
+          "value": "Alegeți…"
         },
         {
           "key": "924.title",
@@ -30903,7 +30903,7 @@
           "view": "settings.fMM-Lh-WMT",
           "kind": "matrix",
           "property": "title",
-          "value": "Toate ferestrele apar la poziția fixată",
+          "value": "Toate consolele apar la poziția fixată",
           "row": 1,
           "column": 0
         },
@@ -31935,7 +31935,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Pagină Dublă Multiplă",
+          "value": "Două pagini, derulare continuă",
           "index": 3
         },
         {
@@ -31965,7 +31965,7 @@
           "view": "settings.4qx-Bg-9Ii",
           "kind": "matrix",
           "property": "title",
-          "value": "Păstrează poziția la închidere",
+          "value": "Rețineți ultima poziție la închidere",
           "row": 0,
           "column": 0
         },
@@ -31974,7 +31974,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Pagină Multiplă",
+          "value": "Derulare continuă",
           "index": 2
         },
         {
@@ -31996,7 +31996,7 @@
           "view": "settings.G6V-Sw-jFT",
           "kind": "cell",
           "property": "title",
-          "value": "Deschide în ferestre separate"
+          "value": "Folosiți ferestre separate"
         },
         {
           "key": "505.title",
@@ -32068,7 +32068,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Selectează PDF",
+          "value": "Selecție PDF",
           "index": 4
         },
         {
@@ -32097,7 +32097,7 @@
           "view": "settings.4qx-Bg-9Ii",
           "kind": "matrix",
           "property": "title",
-          "value": "Deschide toate ferestrele în poziția fixată",
+          "value": "Toate ferestrele apar la poziția fixată",
           "row": 1,
           "column": 0
         },
@@ -32115,7 +32115,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Pagină Dublă",
+          "value": "Două pagini",
           "index": 1
         },
         {
@@ -32152,7 +32152,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Selectează textul",
+          "value": "Selecție text",
           "index": 1
         },
         {
@@ -32160,7 +32160,7 @@
           "view": "settings.334",
           "kind": "menuItem",
           "property": "title",
-          "value": "Adaptează la Fereastră",
+          "value": "Potrivire la fereastră",
           "index": 2
         },
         {
@@ -32168,7 +32168,7 @@
           "view": "settings.334",
           "kind": "menuItem",
           "property": "title",
-          "value": "Adaptează la lățimea conținutului",
+          "value": "Potrivire la lățimea conținutului",
           "index": 3
         },
         {
@@ -32208,7 +32208,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Pagină Simplă",
+          "value": "O singură pagină",
           "index": 0
         },
         {
@@ -32216,7 +32216,7 @@
           "view": "settings.44",
           "kind": "matrix",
           "property": "title",
-          "value": "Înregistrează  ultima poziție la închidere",
+          "value": "Rețineți ultima poziție la închidere",
           "row": 0,
           "column": 0
         },
@@ -32233,7 +32233,7 @@
           "view": "settings.MBq-SG-G54",
           "kind": "cell",
           "property": "title",
-          "value": "Unește într-o singură fereastră"
+          "value": "Folosiți o singură fereastră"
         },
         {
           "key": "preview-cover-note-cell.title",
@@ -32490,7 +32490,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Folosește reguli de excludere pentru documentele LaTeX."
+          "value": "Folosiți reguli de excludere pentru documentele LaTeX."
         },
         {
           "key": "876.title",
@@ -32522,7 +32522,7 @@
           "view": "settings.ts-edit-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Editează regulile de excludere pentru verificarea ortografică LaTeX."
+          "value": "Editați regulile de excludere ale verificării adaptate la LaTeX."
         },
         {
           "key": "Xrb-Fe-9cg.title",
@@ -32597,7 +32597,7 @@
           "view": "settings.16",
           "kind": "cell",
           "property": "title",
-          "value": "Alege..."
+          "value": "Alegeți…"
         },
         {
           "key": "277.title",
@@ -32683,7 +32683,7 @@
           "view": "settings.30",
           "kind": "matrix",
           "property": "title",
-          "value": "Înregistrează ultima poziție la închidere",
+          "value": "Rețineți ultima poziție la închidere",
           "row": 0,
           "column": 0
         }
@@ -33117,7 +33117,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Continuă editarea",
+          "value": "Continuați editarea",
           "row": 1,
           "column": 0
         },
@@ -33149,7 +33149,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "Caută în PDF",
+          "value": "Căutare în PDF",
           "row": 0,
           "column": 0
         },
@@ -33174,7 +33174,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Adu previzualizarea în prim-plan",
+          "value": "Aduceți previzualizarea în față",
           "row": 0,
           "column": 0
         },
@@ -33183,7 +33183,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Arată previzualizarea și revino la fereastra inițială",
+          "value": "Afișați previzualizarea și reveniți la fereastra inițială",
           "row": 2,
           "column": 0
         },
@@ -33460,12 +33460,12 @@
           "765.title": "仅调整竖直方向",
           "ga2-ik-lSC.title": "关闭时记住上一次位置",
           "766.title": "任意调整",
-          "906.title": "设置...",
-          "PqO-5d-lRv.title": "所有窗口从固定位置打开",
+          "906.title": "设置…",
+          "PqO-5d-lRv.title": "所有控制台从固定位置打开",
           "830.title": "一直显示"
         },
         "SettingsEditor": {
-          "UXo-9g-NNW.title": "按字母",
+          "UXo-9g-NNW.title": "按字符",
           "inv-955-item-1.title": "¶",
           "inv-957-item-1.title": "·",
           "inv-954-item-1.title": "▹",
@@ -33494,7 +33494,7 @@
           "427.title": "4",
           "428.title": "0 (正常)",
           "qMw-aC-Ilj.title": "靠左",
-          "434.ibShadowedToolTip": "复制位图图像时，数值越大，文字越突出。",
+          "434.ibShadowedToolTip": "拷贝位图图像时，数值越大，文字越突出。",
           "437.ibShadowedToolTip": "将黑白映射为其他颜色。",
           "CBT-8e-Ayl.title": "靠右",
           "407.title": "JPEG (低)",
@@ -33512,10 +33512,10 @@
         },
         "SettingsPreview": {
           "346.title": "对开多页",
-          "335.title": "放大镜 (大号)",
+          "335.title": "放大镜（大号）",
           "sa2-VV-W1K.title": "关闭时记住上一次位置",
           "347.title": "多页",
-          "SfP-Ak-pn3.title": "分开窗口",
+          "SfP-Ak-pn3.title": "分离窗口",
           "505.title": "页面顺序从左到右",
           "V7d-ht-Pe3.title": "右",
           "337.title": "选择PDF",
@@ -33541,13 +33541,13 @@
           "582.title": "Apple查找面板",
           "Mo3-zf-BYT.title": "永不",
           "927.title": "Escape",
-          "ts-aware-spelling.ibShadowedToolTip": "对LaTeX文档使用排除规则。",
+          "ts-aware-spelling.ibShadowedToolTip": "对LaTeX文稿使用排除规则。",
           "928.title": "Tab",
           "583.title": "Apple查找栏",
           "ts-edit-spelling.ibShadowedToolTip": "编辑LaTeX拼写检查使用的排除规则。",
           "Xrb-Fe-9cg.title": "小",
           "aI9-3B-vVE.title": "自动",
-          "872.title": "设置...",
+          "872.title": "设置…",
           "odm-Dy-TNW.title": "大",
           "ypQ-Gc-HUa.title": "始终",
           "1080.title": "OgreKit查找面板（旧版）",
@@ -33645,7 +33645,7 @@
           "view": "settings.755",
           "kind": "cell",
           "property": "title",
-          "value": "设置..."
+          "value": "设置…"
         },
         {
           "key": "924.title",
@@ -33673,7 +33673,7 @@
           "view": "settings.fMM-Lh-WMT",
           "kind": "matrix",
           "property": "title",
-          "value": "所有窗口从固定位置打开",
+          "value": "所有控制台从固定位置打开",
           "row": 1,
           "column": 0
         },
@@ -33748,7 +33748,7 @@
           "view": "settings.TUV-ZL-JgG",
           "kind": "matrix",
           "property": "title",
-          "value": "按字母",
+          "value": "按字符",
           "row": 2,
           "column": 0
         },
@@ -34368,7 +34368,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "复制位图图像时，数值越大，文字越突出。"
+          "value": "拷贝位图图像时，数值越大，文字越突出。"
         },
         {
           "key": "377.title",
@@ -34713,7 +34713,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "放大镜 (大号)",
+          "value": "放大镜（大号）",
           "index": 3
         },
         {
@@ -34766,7 +34766,7 @@
           "view": "settings.G6V-Sw-jFT",
           "kind": "cell",
           "property": "title",
-          "value": "分开窗口"
+          "value": "分离窗口"
         },
         {
           "key": "505.title",
@@ -35260,7 +35260,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "对LaTeX文档使用排除规则。"
+          "value": "对LaTeX文稿使用排除规则。"
         },
         {
           "key": "876.title",
@@ -35367,7 +35367,7 @@
           "view": "settings.16",
           "kind": "cell",
           "property": "title",
-          "value": "设置..."
+          "value": "设置…"
         },
         {
           "key": "277.title",

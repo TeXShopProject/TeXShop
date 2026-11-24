@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abrir outros arquivos com o TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="tipos de arquivo; extensões; sty; cls; bib; log; aux; dtx; ins; Rnw; mp; md; dvi; ps; eps; pdf; OtherTeXExtensions; formato de arquivo">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar arquivos pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivência com outras distribuições de TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o arquivo principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar código-fonte e pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover arquivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e soltar</a></li>
+<li><a href="advanced_otherfiles.htm" class="current">Abrir outros arquivos com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto colorido</a></li>
+<li><a href="advanced_plist.htm">Arquivos em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Abrir outros arquivos com o TeXShop</h1>
+<p>O TeXShop abre qualquer arquivo de texto; assim, você pode ler os arquivos de log, os arquivos aux e outros arquivos do TeX que ficam ao lado dos seus documentos. Ele também abre arquivos PDF e imagens.</p>
+
+<h2>Arquivos tratados como código-fonte TeX</h2>
+<p>Os arquivos com as extensões a seguir, e os arquivos sem extensão, são código-fonte TeX para o TeXShop: eles aparecem com destaque de sintaxe e podem ser compostos.</p>
+<pre>asy  bbx  bib  cbx  clo  cls  ctx  def  dtx  fd  fdd  gabc  gtex
+htx  html  ins  lbx  lhs  ltx  lua  lytex  ly  md  mf  mp  ptx
+Rnw  sk  skt  Stex  sty  tex  typ  xml</pre>
+<p>Outros arquivos de texto, como os arquivos <code>.log</code>, <code>.aux</code>, <code>.bst</code>, <code>.engine</code> ou <code>.txt</code>, abrem como texto simples, sem destaque de sintaxe.</p>
+<p>Para que o TeXShop trate arquivos com outra extensão como código-fonte TeX, acrescente a extensão com um ajuste oculto no Terminal; por exemplo, para arquivos do ConTeXt com a extensão <code>mkiv</code>:</p>
+<pre>defaults write TeXShop OtherTeXExtensions -array-add "mkiv"</pre>
+
+<h2>Arquivos PDF e imagens</h2>
+<p>Os arquivos PDF e as imagens com as extensões <code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.tif</code>, <code>.tiff</code> e <code>.eps</code> abrem em uma janela própria. Os arquivos DVI e PostScript (<code>.dvi</code>, <code>.ps</code>) são convertidos em PDF e mostrados.</p>
+
+<h2>Salvar com outra extensão</h2>
+<p>Um arquivo mantém a sua extensão quando o TeXShop o salva. Um documento novo é salvo como arquivo <code>.tex</code>, a menos que você escolha outro tipo no menu Formato do diálogo Salvar, como sty, bib ou mp.</p>
+<p>O TeXShop salva um arquivo na codificação com que ele foi aberto. Ele foi feito para o TeX e arquivos relacionados; um arquivo em um formato incomum pode mudar se for salvo depois de editado no TeXShop. Consulte <a href="advanced_encoding.htm">Codificações</a>.</p>
+</main>
+</body>
+</html>

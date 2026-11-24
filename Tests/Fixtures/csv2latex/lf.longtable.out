@@ -1,0 +1,14 @@
+\begin{longtable}{lll}
+Name & Age & City \\
+\endfirsthead
+Name & Age & City \\
+\endhead
+\multicolumn{3}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+Alice & 30 & Paris \\
+Bob & 25 & Berlin \\
+
+\end{longtable}

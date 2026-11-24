@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commandoaanvulling</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="commandoaanvulling; Escape-toets; activeringstoets; markeerpunten; Volgend markeerpunt; labels en citatiesleutels">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Commandoaanvulling</h1>
+
+<p>Typ de eerste letters van een commando of omgeving en druk op Escape: TeXShop vult het aan vanuit zijn aanvulbestand. Druk nogmaals op Escape om de andere aanvullingen te doorlopen die met dezelfde letters beginnen, van onder naar boven in het bestand; Shift-Escape gaat de andere kant op. Een ervan is de tekst die u hebt getypt. Zo biedt <code>\begin{th</code> gevolgd door Escape <code>\begin{theorem}</code> en andere omgevingen aan.</p>
+
+<p>Een aanvulling kan meer doen dan het woord afmaken. De aanvulling van <code>\begin{theorem}</code> schrijft ook de regel <code>\end{theorem}</code> en zet markeerpunten (•) waar u gaat typen: het eerste markeerpunt is geselecteerd, zodat wat u typt het vervangt. Vaak levert meermaals op Escape drukken hetzelfde commando met meer argumenten op, zoals <code>\newc</code> doet voor <code>\newcommand</code>. Een aanvulling hoeft niet met een backslash te beginnen: aan het begin van een regel of na een spatie levert <code>sec</code> hetzelfde op als <code>\sec</code>.</p>
+
+<p>Als het aanvulbestand niets voor de tekst heeft, toont Escape in plaats daarvan de woordaanvullingen van macOS.</p>
+
+<h2>Instellingen</h2>
+
+<p>In Instellingen › Toetsenbord kiest ‘Activeringstoets’ Escape of Tab als de toets die aanvult. Het bronpaneel van Wijzig › Experiment... gebruikt dezelfde toets als het bronvenster.</p>
+
+<p>Om een woord aan het aanvulbestand toe te voegen, selecteert u het en kiest u Bron › Voeg toe aan lijst voor commandoaanvulling. Om het bestand te bewerken, klikt u op ‘Commandoaanvulling bewerken…’ in Instellingen › Toetsenbord. De aanvullingen die er al in staan bestuderen is de beste manier om te leren hoe u nieuwe schrijft; de map ~/Library/TeXShop/CommandCompletion bevat ook een uitgebreid document erover.</p>
+
+<h2><a name="marks"></a>Markeerpunten</h2>
+
+<p>Een markeerpunt (•) is een plaats om naar terug te keren; een markeerpunt met notitie (•‹notitie›) zegt ook wat er moet komen. Commandoaanvullingen, macro’s en toetsbindingen kunnen markeerpunten bevatten, en u kunt ze zelf invoegen met Wijzig › Markeerpunten › Voeg markeerpunt in (<kbd>⌘8</kbd>) en ‘Voeg markeerpunt met notitie in’ (<kbd>⌃⌘8</kbd>). ‘Voeg markeerpunt met notitie in’ voegt •‹› in met het invoegpunt tussen de haken, of maakt van de geselecteerde tekst de notitie.</p>
+
+<p>‘Volgend markeerpunt’ (<kbd>⌃⌘F</kbd>) en ‘Vorig markeerpunt’ (<kbd>⌃⌘G</kbd>) selecteren het volgende of vorige markeerpunt samen met de notitie, zodat typen het vervangt. Houd Option ingedrukt om alleen de • te verwijderen en in plaats daarvan de notitie te selecteren (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+
+<p>Ook met de activeringstoets gaat u van markeerpunt naar markeerpunt: met Escape als activeringstoets gaat Option-Escape naar het volgende markeerpunt en Control-Escape naar het vorige; met Tab zijn dat Option-Tab en Control-Tab. Als een andere app deze toetsen nodig heeft, schakelt u ‘Naar het volgende of vorige markeerpunt met Option of Control en de activeringstoets’ in Instellingen › Toetsenbord uit.</p>
+
+<h2><a name="labels"></a>Labels en citatiesleutels aanvullen</h2>
+
+<p>Wijzig › Label of citatiesleutel aanvullen (<kbd>F5</kbd>) vult een label of een citatiesleutel aan uit een lijst. Kies het direct na <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> of <code>\autoref{</code>, of na de eerste letters van een label die daar zijn getypt, en de lijst toont de labels die in het bestand met <code>\label</code> zijn gedefinieerd; kies er een met de pijltoetsen en druk op Return. Na <code>\cite{</code> en vergelijkbare commando’s toont de lijst citatiesleutels uit BibDesk als ‘Ook citatiesleutels uit BibDesk aanbieden’ in Instellingen › Toetsenbord aan staat. Elders toont het de woordaanvullingen van macOS. Op veel toetsenborden houdt u de fn-toets (de wereldbol-toets) ingedrukt terwijl u op F5 drukt.</p>
+
+<h2><a name="compare"></a>Toetsbindingen, macro’s en commandoaanvulling</h2>
+
+<p>Deze drie functies zetten allemaal tekst in de bron en worden gemakkelijk met elkaar verward. Elk is geschikt voor een andere taak:</p>
+<dl>
+<dt><a href="basic_autocompletion.htm">Toetsbindingen</a></dt>
+<dd>Het typen van één toets voegt tekst in: <code>_</code> levert <code>_{}</code> rond de selectie op, en ≤ (Option-komma op de Amerikaanse toetsenbordindeling) levert <code>\leq</code> op. Instellingen › Toetsenbord schakelt ze in voor nieuwe documenten en bevat de lijst ervan; Bron › Toetsbindingen schakelt ze in of uit voor het voorste document. Typ eerst <code>\</code> om een toets zoals <code>_</code> of <code>^</code> te houden zoals die is. Een teken dat met een dode toets wordt getypt, zoals é met Option-E en daarna E, kan geen toetsbinding hebben.</dd>
+<dt><a href="basic_macros.htm">Macro’s</a></dt>
+<dd>Onderdelen van het menu Macro’s voegen tekst in of voeren AppleScript-programma’s uit, en kunnen een toetscombinatie hebben met de Command- of Control-toets of een functietoets. Macro’s › Open macro-editor... voegt ze toe, bewerkt ze en zet ze in volgorde. Tekst die u onder een Command-toets wilt hebben, zoals <code>\textbf</code> rond de selectie met ⌘B, kunt u het best als macro maken.</dd>
+<dt>Commandoaanvulling</dt>
+<dd>Typ het begin van een commando of een afkorting en druk op de activeringstoets: <code>\sec</code> levert <code>\section{•}</code> op, nogmaals de activeringstoets levert de volgende overeenkomst op, en <code>\benu</code> levert een hele enumerate-omgeving met markeerpunten op. Anders dan toetsbindingen en macro’s vervangt commandoaanvulling geselecteerde tekst.</dd>
+</dl>
+</main>
+</body>
+</html>

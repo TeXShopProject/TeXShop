@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>同步源文件和预览</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="SyncTeX；同步；按住 Command 键点按；同步方式；搜索PDF；synctex.gz；projectfile；useConTeXtSyncParser">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">高级帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">向 TeX Live 添加个人文件</a></li>
+<li><a href="advanced_moretetex.htm">进一步了解 TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">与其他 TeX 发行版共存</a></li>
+<li><a href="advanced_addengine.htm">添加排版引擎</a></li>
+<li><a href="advanced_formats.htm">制作和使用 TeX 格式</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX 和 LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt 和 MetaPost</a></li>
+<li><a href="advanced_encoding.htm">编码</a></li>
+<li><a href="advanced_Japan.htm">日语排版</a></li>
+<li><a href="advanced_root.htm">设置项目根文件</a></li>
+<li><a href="advanced_pdfsync.htm" class="current">同步源文件和预览</a></li>
+<li><a href="advanced_removeaux.htm">删除辅助文件</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape 保护</a></li>
+<li><a href="advanced_externaleditor.htm">使用外部编辑器</a></li>
+<li><a href="advanced_experiments.htm">实验台</a></li>
+<li><a href="advanced_pdfcopypaste.htm">拷贝粘贴和拖放</a></li>
+<li><a href="advanced_otherfiles.htm">用 TeXShop 打开其他文件</a></li>
+<li><a href="advanced_syntaxcolor.htm">语法高亮</a></li>
+<li><a href="advanced_coloredtext.htm">彩色文本</a></li>
+<li><a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a></li>
+<li><a href="advanced_localization.htm">本地化</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>同步源文件和预览</h1>
+<p>在源代码窗口中按住 Command 键点按一个词，预览窗口就会滚动到相应位置并将其标出。在预览窗口中按住 Command 键点按某个位置，源文件就会打开（如有必要）并显示相应的行，该行会被标出。这两种标记的颜色在“设置”>“主题”>“SyncTeX”中的“预览”和“源文件”下设置。</p>
+
+<h2>SyncTeX</h2>
+<p>TeXShop 使用 SyncTeX 进行同步。用选项 <code>-synctex=1</code> 运行 TeX 时，它会在 PDF 旁边写出一个文件（例如 <code>Galois.synctex.gz</code>），记录源文件的每个部分最终出现在页面上的位置。“设置”>“排版”中的排版命令（按引擎配置所设置的那样），以及 TeXShop 放在 <code>~/Library/TeXShop/Engines</code> 中且运行 TeX 的引擎，已经使用了这个选项。你在那里添加的引擎（包括 Inactive 文件夹中的可选引擎），只有在其命令中带有这个选项时才会使用它。在你自己的引擎中，请在调用 TeX 时加上 <code>-synctex=1</code>（用一个或两个连字符均可；每个引擎都接受这两种写法）。</p>
+<p>synctex 文件中包含源文件的完整路径。项目文件夹被移动、拷贝或发送给他人后，在文稿重新排版之前，同步不会起作用。</p>
+<p>SyncTeX 并不完全精确：你要找的位置可能在标记稍前或稍后的地方。</p>
+
+<h2>包含多个文件的项目</h2>
+<p>在各章节文件用 <code>% !TEX root</code> 指定根文件的项目中（请参阅<a href="advanced_root.htm">设置项目根文件</a>），在章节文件中按住 Command 键点按，会跳到整个文稿预览中的相应位置；在预览中按住 Command 键点按，会打开包含所点按位置的章节文件。打开“设置”>“排版”>“源文件和预览同步”>“在根文件的窗口中以标签页打开通过同步定位的文件”后，以这种方式打开的文件会作为标签页加入根文件的窗口，而不是打开自己的窗口。</p>
+
+<h2>同步方式</h2>
+<p>“设置”>“排版”>“源文件和预览同步”>“同步方式”有两个选项：</p>
+<dl>
+<dt>SyncTeX（推荐）</dt><dd>如上所述，使用 synctex 文件。这是默认选项。</dd>
+<dt>搜索 PDF</dt><dd>在 PDF 中搜索所点按位置周围的文本；在预览中点按时，则在源文件中搜索点按位置周围的文本。它不需要 synctex 文件，但在排版后的文本与源文件不同的地方会失败，例如公式和包含大量命令的文本。为了找出预览中某个位置所属的文件，它会搜索根文件中 <code>\include</code> 和 <code>\input</code> 命令所指定的文件。对于以其他方式包含文件的项目，请在根文件中用如下几行列出这些文件：
+<pre>% !TEX projectfile = chapter2.tex
+% !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
+名称可以是完整路径，也可以是相对于根文件的路径；这些行可以放在根文件中的任何位置。</dd>
+</dl>
+
+<h2>ConTeXt</h2>
+<p>对于 ConTeXt，请在文稿的设置部分加入 <code>\setupsynctex[state=start,method=min]</code>，并在根文件的开头加入 <code>% !TEX useConTeXtSyncParser</code> 一行；这样 TeXShop 会使用 ConTeXt 自己的同步代码。请参阅 <a href="advanced_context.htm">ConTeXt 和 MetaPost</a>。</p>
+<p>要与在其他编辑器中打开的源文件同步，请参阅<a href="advanced_externaleditor.htm">使用外部编辑器</a>。</p>
+</main>
+</body>
+</html>

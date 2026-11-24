@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Écrire des scripts avec les commandes de composition de TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript; bibliographie; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; suite de commandes de composition">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide sur les macros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Préliminaires</a></li>
+<li><a href="macros_default.htm">Comprendre les macros par défaut</a></li>
+<li><a href="macros_rearrange.htm">Réorganiser le menu Macros</a></li>
+<li><a href="macros_define.htm">Définir de nouvelles macros</a></li>
+<li><a href="macros_applescript.htm">Macros AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macros AppleScript par défaut</a></li>
+<li><a href="macros_defapplescript.htm">Définir des macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Créer des zones de dialogue</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">Écrire des scripts avec les commandes de composition de TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Écrire des scripts avec des commandes shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Écrire des scripts avec les commandes de composition de TeXShop</h1>
+<p>Un document comportant une bibliographie nécessite une suite de compositions : LaTeX écrit le fichier .aux, BibTeX l’utilise pour écrire les fichiers .bbl et .blg, LaTeX s’exécute de nouveau pour ajouter la bibliographie au document, puis une fois encore pour mettre à jour les références qui y renvoient. Vos projets peuvent nécessiter des suites semblables, et une macro AppleScript peut les exécuter pour vous.</p>
+<p>La macro Macros › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice, fournie avec TeXShop, montre comment faire. Voici son contenu :</p>
+<pre>--Applescript
+
+set fileName to #FILEPATH#
+if fileName is equal to  ""
+activate
+display dialog "Please save the file first"  buttons {"OK"} default button "OK"
+return
+end if
+
+set frontName to #DOCUMENTNAME#
+
+tell document frontName of application "TeXShop"
+
+    latexinteractive
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    bibtex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+end tell</pre>
+<p>La première ligne fait de ce script une macro AppleScript exécutée par ScriptRunner ; elle peut donc demander à TeXShop de composer (consultez <a href="macros_applescript.htm">Macros AppleScript</a>). Les lignes suivantes vérifient #FILEPATH#, le chemin complet du fichier source. C’est une chaîne vide lorsque le document n’a pas encore été enregistré ; dans ce cas, le script vous demande de l’enregistrer et s’arrête.</p>
+<p>Le script désigne ensuite le document par #DOCUMENTNAME#. TeXShop enregistre lui-même le document au lancement d’une commande de composition ; le script n’a donc pas besoin de l’enregistrer.</p>
+<p>Les commandes restantes exécutent latexinteractive, bibtex, latex et latex. Une commande de composition rend aussitôt la main au script, avant la fin de la composition ; c’est pourquoi, après chaque commande, une boucle <code>repeat</code> attend que <code>taskdone</code> indique que la tâche est terminée. La ligne <code>delay 2</code> fait marquer au script une pause entre deux vérifications, au lieu d’interroger sans cesse et de ralentir l’ordinateur. Les commandes sont listées dans <a href="macros_defapplescript.htm">Définir des macros AppleScript</a>.</p>
+</main>
+</body>
+</html>

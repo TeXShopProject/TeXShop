@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toetsbindingen aanpassen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="toetsbindingen; Lijst met toetsbindingen; toetsbindingen bewerken; Invoerteken; Uitvoertekst; Plak; map Keyboard; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hoe configureer ik TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Inleiding</a></li>
+<li><a href="configure_prefchanges.htm">Aanbevolen wijzigingen in de instellingen</a></li>
+<li><a href="configure_correctinstall.htm">Nieuwe bestanden in de bibliotheek krijgen</a></li>
+<li><a href="configure_hidden.htm">Verborgen instellingen</a></li>
+<li><a href="configure_panel.htm">Het LaTeX-venster aanpassen</a></li>
+<li><a href="configure_autocompletion.htm" class="current">Toetsbindingen aanpassen</a></li>
+<li><a href="configure_menushortcuts.htm">Toetscombinaties van menu’s wijzigen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Toetsbindingen aanpassen</h1>
+<p>Toetsbindingen vervangen een getypt teken door een tekst, bijvoorbeeld ^ door ^{} met het invoegpunt tussen de accolades; <a href="basic_autocompletion.htm">Toetsbindingen</a> legt uit hoe u ze gebruikt. Deze pagina legt uit hoe u de lijst wijzigt.</p>
+
+<h2 id="on-off">Toetsbindingen aanzetten</h2>
+<p>‘Toetsbindingen gebruiken (standaard voor nieuwe documenten)’ in Instellingen › Toetsenbord bepaalt of toetsbindingen aan staan wanneer een document opent; aanvankelijk staat het uit. Bron › Toetsbindingen zet ze alleen voor het actieve document aan of uit, en het optionele knoppenbalkonderdeel ‘Toetsbindingen’ doet hetzelfde.</p>
+
+<h2 id="edit">De lijst bewerken</h2>
+<p>De ‘Lijst met toetsbindingen’ in Instellingen › Toetsenbord toont elk invoerteken met de bijbehorende uitvoertekst. Klik dubbel op een cel om haar ter plekke te bewerken. Klik op + onder de lijst om een toetsbinding toe te voegen en op − om de geselecteerde te verwijderen; sleep rijen om de volgorde te wijzigen. Een invoerteken is één teken. Wijzigingen worden meteen bewaard en gelden direct, ook in documenten die al open zijn; Wijzig › Herstel maakt ze ongedaan.</p>
+<p>Een uitvoertekst kan deze symbolen bevatten, die de lijst als kleine labels toont:</p>
+<dl>
+<dt>#SEL#</dt><dd>de tekst die geselecteerd was toen de toets werd getypt</dd>
+<dt>#INS#</dt><dd>waar het invoegpunt komt</dd>
+<dt>#PASTE#</dt><dd>de tekst op het klembord</dd>
+<dt>•</dt><dd>een markeerpunt, waarnaar Wijzig › Markeerpunten kan gaan</dd>
+</dl>
+<p>Voeg ze toe met het menu ‘Voeg in’ onder de lijst, of typ ze zoals hierboven geschreven; Option-Return typt een regeleinde en Option-Tab een tab. De knop ? naast de lijst toont ze allemaal. Wanneer u een uitvoertekst kopieert, worden de symbolen gekopieerd zoals ze hierboven zijn geschreven.</p>
+<p>Een vinkje in de kolom ‘Plak’ past een toetsbinding ook toe op geplakte tekst: zolang toetsbindingen voor het document aan staan, wordt elk voorkomen van het invoerteken in tekst die in de bron wordt geplakt of neergezet, vervangen door de uitvoertekst. Toetsbindingen waarvan de uitvoertekst #SEL#, #INS#, #PASTE# of een markeerpunt bevat, kunnen niet worden aangevinkt.</p>
+
+<h2 id="reset">Terug naar de standaardlijst</h2>
+<p>De lijst wordt bewaard in de map ~/Library/TeXShop/Keyboard. Om terug te gaan naar de lijst die bij TeXShop hoort, stopt u TeXShop, verplaatst u de map Keyboard naar het bureaublad en start u TeXShop opnieuw; het maakt de map aan met de standaardinhoud.</p>
+</main>
+</body>
+</html>

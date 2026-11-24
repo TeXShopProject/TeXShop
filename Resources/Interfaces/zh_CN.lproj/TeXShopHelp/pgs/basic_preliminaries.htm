@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>简介</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeXShop 是什么; TeX Live; MacTeX; pdfLaTeX; PDF; macOS 14.6; 帮助概览">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm" class="current">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>简介</h1>
+
+<p>TeXShop 是一款用 TeX 和 LaTeX 撰写文稿的 macOS 应用。你在编辑器窗口中编写源代码，点按一下或按下 <kbd>⌘T</kbd> 即可排版，并在旁边的预览窗口中阅读结果。在任一窗口中按住 Command 键点按，都会显示另一窗口中的对应位置。</p>
+
+<p>TeXShop 本身不含 TeX。它运行 TeX 发行版中的程序，通常是由 MacTeX 安装器安装到 Mac 上的 TeX Live；请参阅“<a href="basic_installtetex.htm">安装 TeX Live</a>”。TeXShop 需要 macOS 14.6 或更高版本。</p>
+
+<p>首次启动时，TeXShop 会建议一个引擎配置：如果 macOS 首选语言中的第一个是日语，则为“LuaLaTeX（日语）”，否则为“pdfLaTeX”。点按“好”会应用显示的配置或改选的配置；点按“取消”则保留 pdfLaTeX。pdfLaTeX 直接写出 PDF 文件，预览窗口显示的就是这个文件。它是普通的 PDF 文件，可以发送给他人，并在任何电脑上阅读。要使用 LuaLaTeX 等其他引擎排版，请在“设置”中选择引擎配置，或在文稿开头指定引擎；请参阅“<a href="basic_typesetting.htm#engine">排版文稿</a>”。</p>
+
+<h2>本帮助的内容</h2>
+<dl>
+<dt><a href="basic.htm">基本帮助</a></dt>
+<dd>安装 TeX Live 和 TeXShop、排版、预览窗口、编辑、查找和替换、拼写检查、按键绑定和命令补全、各种面板、宏、打印以及“设置”。</dd>
+<dt><a href="advanced.htm">高级帮助</a></dt>
+<dd>排版引擎、使用根文件的项目、BibTeX 和 MakeIndex、编码、外部编辑器、语法高亮及其他主题。</dd>
+<dt><a href="macros.htm">宏帮助</a></dt>
+<dd>“宏”菜单、宏编辑器以及用 AppleScript 编写的宏。</dd>
+<dt><a href="configure.htm">如何配置 TeXShop？</a></dt>
+<dd>推荐的设置、~/Library/TeXShop 中的新项目、隐藏设置、按键绑定和键盘快捷键。</dd>
+</dl>
+
+<p>“帮助”菜单还可以打开其他文档。“TeXShop 手册（英文）”详细介绍了每项功能。“TeXShop 入门（英文）”是面向新用户的简短介绍。“关于本发行版（英文）”说明更新后需要做些什么（如果需要的话），“更新内容（英文）”列出了每个版本的更改。“魔法注释行和隐藏设置（英文）”列出了 <code>% !TEX program =</code> 等魔法注释行，以及“设置”窗口中没有显示的设置。</p>
+
+<p>TeXShop 网站是 <a href="https://texshop.app/">texshop.app</a>。</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coexister avec d’autres distributions TeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="autres distributions TeX; Détecter les chemins; Moteurs TeX; Ghostscript; Homebrew; MacPorts; Fink; texbin">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm" class="current">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Coexister avec d’autres distributions TeX</h1>
+<p>Plusieurs installations de TeX peuvent cohabiter sur un même Mac : des années de TeX Live installées par MacTeX ou BasicTeX, un TeX Live installé avec son propre programme d’installation, ou TeX provenant de Homebrew ou de MacPorts. TeXShop utilise celle indiquée dans le champ « Moteurs TeX » de Réglages › Composition › Chemins, et Ghostscript d’après le champ « Ghostscript » situé en dessous.</p>
+
+<h2>Détecter les chemins</h2>
+<p>TeXShop peut remplir ces deux champs pour vous. À la première utilisation de TeXShop, et chaque fois que vous cliquez sur « Détecter les chemins… » dans le groupe « Chemins » de Réglages › Composition, il cherche TeX et Ghostscript aux emplacements habituels : les dossiers listés dans <code>/etc/paths</code> et <code>/etc/paths.d</code> et dans le <code>PATH</code> de TeXShop, <code>/Library/TeX/texbin</code>, les dossiers de TeX Live dans <code>/usr/local/texlive</code>, <code>/opt/texlive</code> et <code>/Applications/TeXLive</code>, les dossiers TeX de UpTeX.app et de pTeX.app, <code>/usr/local/teTeX/bin</code>, ainsi que les dossiers de Homebrew, de MacPorts et de Fink. Il vérifie que les programmes s’exécutent et liste les installations trouvées avec leur version, de la plus récente à la plus ancienne. La plus récente est sélectionnée, mais vous pouvez en choisir une autre, séparément pour TeX et pour Ghostscript. Les chemins ne changent que lorsque vous cliquez sur OK. Une installation située ailleurs peut toujours être saisie à la main dans les champs.</p>
+<p>« Détecter les chemins… » ne modifie que « Moteurs TeX » et « Ghostscript ». Les fichiers de moteur qui indiquent leurs propres dossiers et le champ « Seconds moteurs TeX » restent inchangés.</p>
+
+<h2>TeX Live sans MacTeX</h2>
+<p>Les programmes d’installation de MacTeX et de BasicTeX font pointer <code>/Library/TeX/texbin</code> vers le TeX Live qu’ils installent ; les programmes qui utilisent ce chemin suivent donc l’installation la plus récente. Un TeX Live installé avec le programme d’installation de TeX Live lui-même ne modifie pas ce lien. Pour utiliser une telle installation, choisissez-la avec « Détecter les chemins… » ou saisissez le dossier de ses programmes, par exemple <code>/usr/local/texlive/2026/bin/universal-darwin</code>, dans « Moteurs TeX ».</p>
+
+<h2>Variables d’environnement</h2>
+<p>Certaines distributions définissent des variables d’environnement telles que <code>TEXINPUTS</code> ou <code>TEXMFHOME</code> dans les fichiers de démarrage du shell. TeX lit alors des fichiers dans d’autres dossiers que ceux auxquels vous vous attendez, et un même document peut être composé différemment dans Terminal et dans TeXShop. Si TeX utilise une mauvaise version d’un fichier, vérifiez d’abord ces variables ; dans Terminal, <code>kpsewhich</code> suivi du nom du fichier indique quelle copie TeX trouve.</p>
+</main>
+</body>
+</html>

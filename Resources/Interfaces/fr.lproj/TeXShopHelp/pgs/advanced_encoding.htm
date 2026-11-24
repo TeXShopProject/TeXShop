@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Encodages</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="encodage; UTF-8; Unicode; % !TEX encoding; détection automatique; zone de dialogue d’ouverture; zone de dialogue d’enregistrement; IsoLatin9; de droite à gauche; arabe; hébreu; persan; méthodes de saisie">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm" class="current">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Encodages</h1>
+<p>TeXShop modifie le texte en Unicode ; la fenêtre source accepte donc n’importe quel caractère de n’importe quelle langue. L’<em>encodage</em> détermine la façon dont ce texte est écrit dans le fichier sur le disque et relu. UTF-8 peut stocker tous les caractères, et LaTeX, XeLaTeX et LuaLaTeX le lisent par défaut. Les fichiers plus anciens et ceux provenant d’autres systèmes peuvent utiliser un autre encodage, comme ISO Latin 9 ou Shift JIS.</p>
+
+<h2>Nouveaux documents</h2>
+<p>Les nouveaux documents sont enregistrés dans l’encodage choisi dans Réglages › Documents et enregistrement › Encodage › « Encodage des nouveaux documents ». La valeur par défaut est Unicode (UTF-8) ; conservez-la, sauf si vous échangez des fichiers avec des personnes qui ont besoin d’un autre encodage.</p>
+<p>Un document est enregistré dans l’encodage avec lequel il a été ouvert ; un fichier plus ancien conserve donc son encodage. Les caractères que l’encodage d’un fichier ne peut pas représenter sont perdus à l’enregistrement du fichier.</p>
+
+<h2>Ouvrir des fichiers</h2>
+<p>À l’ouverture d’un fichier sans ligne d’encodage (voir ci-dessous), TeXShop détecte son encodage. Une marque d’ordre des octets identifie les fichiers UTF-8 et UTF-16. Un fichier composé uniquement de caractères ASCII est lu dans l’encodage des nouveaux documents. Sinon, TeXShop utilise l’encodage que le programme qui a enregistré le fichier a consigné avec celui-ci, lorsque macOS a conservé cette information, puis essaie UTF-8, puis les encodages de vos langues et l’encodage des nouveaux documents. Un encodage déclaré par la source, par exemple avec <code>\usepackage[latin9]{inputenc}</code>, sert d’indice.</p>
+<p>La détection est une estimation et fonctionne mieux avec des fichiers qui contiennent une bonne quantité de texte. Si elle choisit le mauvais encodage, fermez le fichier sans l’enregistrer, rouvrez-le avec Fichier › Ouvrir..., cliquez sur « Options » dans la zone de dialogue d’ouverture et choisissez l’encodage dans son menu ; l’encodage choisi à cet endroit est utilisé pour les fichiers ouverts à ce moment-là, et le document le conserve. Le menu affiche d’abord l’encodage des nouveaux documents ; laissé sur cet encodage, il ne compte pas comme un choix, et l’encodage est détecté comme d’habitude. Ajoutez ensuite une ligne d’encodage au fichier pour qu’il s’ouvre toujours correctement. La détection peut être désactivée avec le réglage caché</p>
+<pre>defaults write TeXShop EncodingAutoDetection NO</pre>
+<p>Les fichiers sont alors lus dans l’encodage des nouveaux documents.</p>
+
+<h2>La ligne d’encodage</h2>
+<p>Une ligne placée dans l’une des vingt premières lignes d’un fichier source fixe son encodage pour la lecture et pour l’enregistrement, en l’emportant sur tout le reste :</p>
+<pre>% !TEX encoding = UTF-8 Unicode</pre>
+<p>Écrivez la ligne comme ci-dessus, avec une espace avant le signe égal ; <code>%!TEX encoding =</code>, sans espace après <code>%</code>, est également lu. Le nom doit être écrit exactement comme dans le tableau ci-dessous. La macro Set Encoding… du menu Macros insère la ligne pour vous, avec une liste d’encodages parmi lesquels choisir. Les noms qu’utilise TeXworks, tels que <code>UTF-8</code> ou <code>ISO 8859-1</code>, sont également compris.</p>
+<p>Si la ligne indique un encodage que TeXShop ne connaît pas, TeXShop lit le fichier en UTF-8 et le signale. Si la ligne indique UTF-8 mais que le fichier n’est pas de l’UTF-8 valide, TeXShop le signale et ouvre le fichier en ISO Latin 9, qui peut lire n’importe quel fichier ; l’enregistrer sans modifier la ligne réécrit les mêmes octets, si bien que rien n’est perdu. Pour ouvrir un fichier sans appliquer sa ligne d’encodage, maintenez la touche Option enfoncée pendant son ouverture.</p>
+<table>
+<tr><th>Nom dans la ligne d’encodage</th><th>Nom dans les menus</th></tr>
+<tr><td><code>UTF-8 Unicode</code></td><td>Unicode (UTF-8)</td></tr>
+<tr><td><code>Standard Unicode</code></td><td>Unicode (UTF-16)</td></tr>
+<tr><td><code>MacOSRoman</code></td><td>Occidental (Mac OS Roman)</td></tr>
+<tr><td><code>IsoLatin</code></td><td>Occidental (ISO Latin 1)</td></tr>
+<tr><td><code>IsoLatin9</code></td><td>Occidental (ISO Latin 9)</td></tr>
+<tr><td><code>Windows Latin 1</code></td><td>Occidental (Windows Latin 1)</td></tr>
+<tr><td><code>IsoLatin2</code></td><td>Europe centrale (ISO Latin 2)</td></tr>
+<tr><td><code>Mac Central European Roman</code></td><td>Europe centrale (Mac OS)</td></tr>
+<tr><td><code>WindowsCentralEurRoman</code></td><td>Europe centrale (Windows Latin 2)</td></tr>
+<tr><td><code>IsoLatin5</code></td><td>Turc (ISO Latin 5)</td></tr>
+<tr><td><code>IsoLatinGreek</code></td><td>Grec (ISO 8859-7)</td></tr>
+<tr><td><code>Mac Cyrillic</code></td><td>Cyrillique (Mac OS)</td></tr>
+<tr><td><code>DOS Cyrillic</code></td><td>Cyrillique (DOS)</td></tr>
+<tr><td><code>Windows Cyrillic</code></td><td>Cyrillique (Windows)</td></tr>
+<tr><td><code>DOS Russian</code></td><td>Russe (DOS)</td></tr>
+<tr><td><code>KOI8_R</code></td><td>Russe (KOI8-R)</td></tr>
+<tr><td><code>MacJapanese</code></td><td>Japonais (Mac OS, ShiftJIS ¥)</td></tr>
+<tr><td><code>DOSJapanese</code></td><td>Japonais (Windows, DOS, ShiftJIS \)</td></tr>
+<tr><td><code>SJIS_X0213</code></td><td>Japonais (Shift JIS X0213)</td></tr>
+<tr><td><code>EUC_JP</code></td><td>Japonais (EUC)</td></tr>
+<tr><td><code>JISJapanese</code></td><td>Japonais (ISO 2022-JP)</td></tr>
+<tr><td><code>MacKorean</code></td><td>Coréen (Mac OS)</td></tr>
+<tr><td><code>DOSKorean</code></td><td>Coréen (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Traditional</code></td><td>Chinois traditionnel (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Traditional</code></td><td>Chinois traditionnel (Windows, DOS)</td></tr>
+<tr><td><code>Mac Chinese Simplified</code></td><td>Chinois simplifié (Mac OS)</td></tr>
+<tr><td><code>DOS Chinese Simplified</code></td><td>Chinois simplifié (Windows, DOS)</td></tr>
+<tr><td><code>GB 2312</code></td><td>Chinois simplifié (GB 2312)</td></tr>
+<tr><td><code>GBK</code></td><td>Chinois (GBK)</td></tr>
+<tr><td><code>GB 18030</code></td><td>Chinois (GB 18030)</td></tr>
+<tr><td><code>Ascii</code></td><td>Occidental (ASCII)</td></tr>
+</table>
+
+<h2>Enregistrer dans un autre encodage</h2>
+<p>Pour choisir l’encodage au moment de l’enregistrement, activez Réglages › Documents et enregistrement › Encodage › « Afficher l’encodage dans le dialogue d’enregistrement » ; la zone de dialogue d’enregistrement comporte alors un menu des encodages. Édition › Transformations › Changer l’encodage choisit l’encodage dans lequel le document ouvert sera désormais enregistré. Si le fichier comporte une ligne d’encodage, c’est elle qui décide ; modifiez plutôt la ligne. TeXShop conserve la marque d’ordre des octets d’un fichier UTF-8 et l’ordre des octets d’un fichier UTF-16.</p>
+<p>Convertir un fichier dans un autre encodage fait perdre tous les caractères que le nouvel encodage ne peut pas représenter, et lire un fichier dans le mauvais encodage puis l’enregistrer remplace définitivement ses caractères. Conservez une copie de l’original. Le programme en ligne de commande <code>iconv</code> convertit des fichiers sans modifier l’original. Le document « Guide de l'encodage des fichiers » du menu Aide traite ces questions plus en détail.</p>
+
+<h2>Langues de droite à gauche</h2>
+<p>L’arabe, l’hébreu et le persan se saisissent de droite à gauche dans la fenêtre source. Lorsque Réglages › Éditeur › Saisie › « Langues de droite à gauche (arabe, hébreu, persan) » est activé et que le surlignage syntaxique est activé, les lignes qui commencent par de l’écriture arabe ou hébraïque sont alignées à droite, et les autres lignes, par exemple celles qui commencent par une commande LaTeX, à gauche. Avec le réglage caché</p>
+<pre>defaults write TeXShop RightJustifyIfAny YES</pre>
+<p>toute ligne qui contient de tels caractères, à n’importe quel endroit, est alignée à droite. Cet alignement ne sert qu’à l’édition ; TeX met en page le texte composé selon ses propres commandes. Pour composer ces langues, utilisez XeLaTeX ou LuaLaTeX ; consultez <a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a>.</p>
+
+<h2>Saisir d’autres écritures</h2>
+<p>Pour saisir dans une autre écriture, ajoutez une méthode de saisie correspondante dans Réglages Système › Clavier, sous « Entrée de texte », et passez d’une méthode de saisie à l’autre avec le menu de saisie de la barre des menus.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modifier la palette LaTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="palette LaTeX; onglet Personnalisé; completion.plist; dossier LatexPanel; boutons">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Comment configurer TeXShop ?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Préliminaires</a></li>
+<li><a href="configure_prefchanges.htm">Modifications recommandées des réglages</a></li>
+<li><a href="configure_correctinstall.htm">Obtenir les nouveaux éléments de la bibliothèque</a></li>
+<li><a href="configure_hidden.htm">Réglages cachés</a></li>
+<li><a href="configure_panel.htm" class="current">Modifier la palette LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modifier les raccourcis de saisie</a></li>
+<li><a href="configure_menushortcuts.htm">Redéfinir les raccourcis clavier des menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modifier la palette LaTeX</h1>
+<p>La palette LaTeX (Fenêtre › Palette LaTeX...) comporte un onglet « Personnalisé » pouvant accueillir jusqu’à seize boutons de votre choix. Les noms des autres boutons ne peuvent pas être modifiés, mais le texte qu’ils insèrent peut l’être.</p>
+<p>Les deux se règlent dans le fichier ~/Library/TeXShop/LatexPanel/completion.plist. Ouvrez-le dans TeXShop et lisez les commentaires placés en tête, qui expliquent l’organisation du fichier. Chaque onglet possède une liste des textes qu’insèrent ses boutons, dans l’ordre des boutons. Dans ces textes, #SEL# représente le texte sélectionné et #INS# l’endroit où va le point d’insertion.</p>
+<p>Les boutons de l’onglet « Personnalisé » se trouvent dans la liste nommée Customized. Chaque bouton est une paire de chaînes : son nom, puis le texte qu’il insère. Par exemple,</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>crée un bouton nommé Section qui insère <code>\section{}</code> autour du texte sélectionné, avec le point d’insertion entre les accolades.</p>
+<p>Enregistrez le fichier en UTF-8. TeXShop le lit à la première ouverture de la palette LaTeX ; relancez donc TeXShop pour voir vos modifications. Conservez toutes les entrées des listes des autres onglets : si le fichier est inutilisable, TeXShop utilise sa propre copie et, au démarrage suivant, remplace le fichier et conserve le vôtre dans ~/Library/TeXShop/Backups.</p>
+</main>
+</body>
+</html>

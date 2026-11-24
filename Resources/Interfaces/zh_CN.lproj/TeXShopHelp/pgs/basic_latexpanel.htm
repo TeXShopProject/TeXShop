@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LaTeX 面板</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="LaTeX面板; 符号; 希腊字母; 环境; 字体; amssymb; completion.plist; 自定义按钮">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm" class="current">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>LaTeX 面板</h1>
+<p>“窗口”>“LaTeX 面板…”会打开一个 LaTeX 代码面板，其中有数学符号、希腊字母、函数、带重音的字符和各国字符、环境以及字体命令。在源代码中点按要放代码的位置，然后点按面板中的按钮，其代码就会插入到插入点处。工作时，面板一直位于源代码窗口的前面。</p>
+<p>按钮分页排列。用面板各部分顶部的按钮选择页面：“数学”“希腊字母”“符号”“函数”和“国际”，以及“环境”“字样”和“自定义”。</p>
+<p>点按字体或环境按钮时如果选中了文本，所选文本会放入插入的代码中，例如 <code>\textbf{selected text}</code>。</p>
+<p>有些符号需要 amssymb 宏包。在使用这些符号的文稿的导言区中加入这一行：</p>
+<pre>\usepackage{amssymb}</pre>
+
+<h2>自定面板</h2>
+<p>每个按钮插入的代码保存在 <code>~/Library/TeXShop/LatexPanel/completion.plist</code> 中。在 TeXShop 中打开此文件即可更改；文件开头的注释说明了它的组织方式。标准按钮的名称无法更改，但它们插入的代码可以更改。在这些代码中：</p>
+<ul>
+<li><code>#SEL#</code> 代表所选文本；</li>
+<li><code>#INS#</code> 标出插入代码后插入点所在的位置；</li>
+<li><code>#PASTE#</code> 代表剪贴板上的文本。</li>
+</ul>
+<p>“自定义”页面最多可放置十六个你自己的按钮。每个按钮在文件的 <code>Customized</code> 列表中由两个字符串定义，即按钮的名称和它插入的代码：</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>以 UTF-8 保存此文件，然后退出并重新启动 TeXShop，即可在面板中看到更改。如果此文件缺失或损坏，TeXShop 会用自己的副本替换它。请参阅“<a href="configure_panel.htm">修改 LaTeX 面板</a>”和“<a href="advanced_plist.htm">~/Library/TeXShop 中的文件</a>”。</p>
+</main>
+</body>
+</html>

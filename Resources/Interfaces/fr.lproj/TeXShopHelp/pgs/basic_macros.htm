@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macros</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macros; menu Macros; éditeur de macros; raccourci de macro; #SEL#; #INS#; #PASTE#; AppleScript; Macros_Latex.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide de base</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Préliminaires</a></li>
+<li><a href="basic_installtetex.htm">Installer TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installer TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Composer des documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Mode de composition alternatif</a></li>
+<li><a href="basic_preview.htm">La fenêtre d’aperçu</a></li>
+<li><a href="basic_edittricks.htm">Astuces d’édition</a></li>
+<li><a href="basic_find.htm">Rechercher et remplacer</a></li>
+<li><a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a></li>
+<li><a href="basic_spelling.htm">Vérifier l’orthographe</a></li>
+<li><a href="basic_autocompletion.htm">Raccourcis de saisie</a></li>
+<li><a href="basic_commandcompletion.htm">Complétion des commandes</a></li>
+<li><a href="basic_latexpanel.htm">Palette LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Palette Matrice</a></li>
+<li><a href="basic_macros.htm" class="current">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barre d’outils et AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclure des images</a></li>
+<li><a href="basic_printing.htm">Imprimer</a></li>
+<li><a href="basic_preferences.htm">Modifier les réglages</a></li>
+<li><a href="basic_templates.htm">Modèles et papeterie</a></li>
+<li><a href="basic_miscellaneous.htm">Fenêtres et onglets</a></li>
+<li><a href="basic_bugs.htm">Signaler des bogues</a></li>
+<li><a href="basic_websites.htm">Sites web utiles</a></li>
+<li><a href="basic_license.htm">Licence</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Macros</h1>
+<p>Le menu Macros, ainsi que l’élément « Macros » de la barre d’outils, contiennent des commandes qui insèrent du code LaTeX dans la source ou exécutent des scripts AppleScript. Voici quelques-unes des macros fournies avec TeXShop :</p>
+<ul>
+<li>Set Typesetting Program…, Set Encoding… et Set Root File… écrivent les lignes <code>% !TEX</code> qui choisissent le moteur de composition, l’encodage et le fichier racine d’un document. Choisissez le moteur ou l’encodage dans la liste qu’affiche Set Typesetting Program… ou Set Encoding…, ou le fichier racine dans la zone de dialogue qu’ouvre Set Root File… ; la ligne est écrite correctement en tête de la source.</li>
+<li>Insert Begin/End transforme le mot situé au point d’insertion ou le mot sélectionné, comme <code>theorem</code>, en une paire <code>\begin{theorem}</code> … <code>\end{theorem}</code>, avec le point d’insertion entre les deux.</li>
+<li>Des sous-menus comme Headings, Mathematics, Lists, Tables et Figures insèrent du code LaTeX courant.</li>
+</ul>
+
+<h2>L’éditeur de macros</h2>
+<p>Choisissez Macros › Ouvrir l'éditeur de macros... pour voir comment chaque macro est définie, la modifier ou ajouter vos propres macros. La liste de gauche est le menu Macros : faites glisser les éléments pour les réorganiser, et utilisez la barre située sous la liste pour ajouter des éléments, des sous-menus et des séparateurs. Le texte d’une macro est inséré dans la source. Dans ce texte, des jetons arrondis représentent le texte sélectionné, le texte du presse-papiers et l’emplacement du point d’insertion ; choisissez-les dans le menu « Insérer » sous le texte.</p>
+<p>Pour donner un raccourci clavier à une macro, sélectionnez-la dans la liste, cliquez sur son raccourci (ou double-cliquez dessus) et appuyez sur les touches. Un raccourci utilise la touche Commande ou Contrôle, ou est une touche de fonction. Si une commande de menu ou une autre macro l’utilise déjà, l’éditeur de macros le signale.</p>
+<p>Les macros sont conservées dans <code>~/Library/TeXShop/Macros/Macros_Latex.plist</code>. Pour donner des macros à d’autres personnes, sélectionnez-les dans l’éditeur de macros et choisissez Macros › Enregistrer la sélection dans un fichier... ; pour ajouter des macros depuis un tel fichier, choisissez Macros › Ajouter des macros à partir d’un fichier....</p>
+<p>Le chapitre <a href="macros.htm">Aide sur les macros</a> explique les macros en détail, y compris les <a href="macros_applescript.htm">macros AppleScript</a>.</p>
+</main>
+</body>
+</html>

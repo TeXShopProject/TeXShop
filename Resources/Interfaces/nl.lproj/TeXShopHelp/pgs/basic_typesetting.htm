@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documenten zetten</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="zetten; eerste document; Zet; console; fouten; Ga naar fout; Onderbreek; Wis Aux-bestanden; engineprofiel; % !TEX program; hoofdbestand; SyncTeX; Gebruik één venster">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm" class="current">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Documenten zetten</h1>
+
+<h2>Een eerste document</h2>
+
+<p>Kies Archief › Nieuw. Kies in de knoppenbalk van het nieuwe venster LatexTemplate in het venstermenu ‘Sjablonen’; het venster wordt gevuld met de regels die elk LaTeX-document nodig heeft. Schrijf uw tekst tussen <code>\begin{document}</code> en <code>\end{document}</code>. Een lege regel begint een nieuwe alinea.</p>
+
+<p>Klik op ‘Zet’ in de knoppenbalk of druk op <kbd>⌘T</kbd> (Zet › Zet). De eerste keer vraagt TeXShop waar het document moet worden bewaard. TeX schrijft meerdere bestanden naast de bron, dus geef elk document een eigen map. Daarna voert TeXShop TeX uit en opent het een voorvertoningsvenster met het gezette document.</p>
+
+<p>Vanaf dan schrijft u, zet u en bekijkt u het resultaat. TeXShop bewaart de bron vóór elke keer zetten, en de voorvertoning blijft op de pagina die u aan het lezen was. <kbd>⌘T</kbd> werkt in de bron, in de voorvertoning en in de console, en <kbd>⌘1</kbd> (Venster › Bron ⇔ Voorvertoning) wisselt tussen de bron en de voorvertoning ervan. Instellingen › Zetten › Na het zetten bepaalt welk venster naar voren komt als TeX klaar is.</p>
+
+<p>Als u een .tex-bestand opent, wordt ook het PDF-bestand met dezelfde naam geopend, als dat bestaat. Als u het voorvertoningsvenster sluit, blijft de bron open en komt de voorvertoning terug bij de volgende keer zetten; als u het bronvenster sluit, wordt het document gesloten.</p>
+
+<h2>De console</h2>
+
+<p>Terwijl TeX loopt, verschijnen de meldingen ervan in de console. Instellingen › Console › ‘Console tonen’ bepaalt of de console bij elke keer zetten naar voren komt (‘altijd’) of alleen als TeX een fout meldt (‘als er een fout optreedt’). Archief › Toon console (<kbd>⌘0</kbd>) brengt de console van het actieve document naar voren, en <kbd>⌘0</kbd> in de console brengt u terug naar het venster waar u vandaan kwam. De tekst in de console kunt u altijd selecteren en kopiëren.</p>
+
+<p>Als TeX een fout vindt, schrijft het een melding aan het eind van de console en wacht het op een antwoord. Typ dat in het veld onderaan de console en druk op Return; alleen Return gaat door naar de volgende fout, en het veld toont de andere antwoorden die TeX accepteert. Om TeX te stoppen, klikt u op ‘Onderbreek’ in de console of kiest u Archief › Onderbreek zetten (<kbd>⌃⌥⌘A</kbd>).</p>
+
+<h2>Fouten vinden</h2>
+
+<p>‘Ga naar fout’ in de console, of Wijzig › Ga naar fout (<kbd>⌃⌘E</kbd>), scrolt de bron naar de regel van de eerste fout en markeert die; kies het opnieuw voor de volgende fout. Als de fout in een ander bestand van het project zit, wordt dat bestand geopend. Vaak is het het snelst om een paar fouten te herstellen en opnieuw te zetten, omdat één fout verscheidene andere kan veroorzaken. ‘Ga naar fout’ gebruikt de bestandsnamen en regelnummers die TeX met <code>-file-line-error</code> schrijft, wat de commando’s en engine-bestanden van TeXShop gebruiken.</p>
+
+<p>LaTeX schrijft informatie voor de volgende keer, zoals de inhoudsopgave en de kruisverwijzingen, in een .aux-bestand en andere hulpbestanden, zodat een document soms twee of drie keer gezet moet worden voordat elke verwijzing klopt. Een fout kan deze bestanden beschadigen, en het document laat zich dan soms niet meer zetten, ook niet nadat de fout is hersteld. Kies Zet › Wis Aux-bestanden &amp; Zet (<kbd>⌥⌘T</kbd>) om de hulpbestanden naar de prullenmand te verplaatsen en opnieuw te zetten, of Archief › Wis Aux-bestanden (<kbd>⌃⌘A</kbd>), dat ook een knop in de console is. Zie <a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a>.</p>
+
+<h2 id="engine">De engine kiezen</h2>
+
+<p>Instellingen › Zetten › ‘Engineprofiel’ stelt het zetten in één stap in voor een engine. Kies het profiel van de engine die u gebruikt; een venster toont de waarden die het instelt, en ‘OK’ stelt ze in. In dat venster kunt u ‘LaTeX uitvoeren:’ op ‘Met latexmk’ zetten, zodat latexmk BibTeX, de index en verdere doorgangen uitvoert waar nodig. Zodra een van deze waarden wordt gewijzigd, toont het menu ‘Aangepast’. De TeXShop-handleiding (Engels) somt op wat de profielen instellen.</p>
+
+<p>Voor één document kiest u de engine in het venstermenu ‘Programma’ naast ‘Zet’ in de knoppenbalk. Het toont plain TeX, LaTeX, BibTeX, MakeIndex en MetaPost, gevolgd door de engine-bestanden in ~/Library/TeXShop/Engines, zoals LuaLaTeX en XeLaTeX, en de keuze geldt voor dat venster. Om de keuze deel van het document te maken, zet u een regel als deze in de eerste 20 regels van de bron:</p>
+
+<pre>% !TEX program = LuaLaTeX</pre>
+
+<p><kbd>⌘T</kbd> zet het bestand dan altijd met die engine. De naam is die van een engine-bestand, of een van <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> en <code>tex</code> voor de ingebouwde LaTeX en plain TeX (zie <a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a>). Macro’s › Set Typesetting Program… voegt zo’n regel in, met de engine gekozen uit een lijst; het schrijft <code>% !TEX TS-program =</code>, wat hetzelfde betekent. Instellingen › Zetten › ‘Nieuwe documenten zetten met’ bepaalt de engine van documenten zonder zo’n regel. Zie <a href="advanced_addengine.htm">Zet-engines toevoegen</a> voor engine-bestanden.</p>
+
+<p>Het menu Zet voert ook BibTeX, MakeIndex en MetaPost uit op het document; zie <a href="advanced_bibtex.htm">BibTeX</a> en <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
+
+<h2>Documenten in meerdere bestanden</h2>
+
+<p>Een boek wordt vaak opgesplitst in een hoofdbestand, met de preambule, en hoofdstukbestanden die het met <code>\include</code> of <code>\input</code> inleest. Zet bovenaan elk hoofdstukbestand een regel zoals <code>% !TEX root = ../Book.tex</code>, die het hoofdbestand noemt met het pad vanaf het hoofdstukbestand. <kbd>⌘T</kbd> in een hoofdstukbestand zet dan het hoofdbestand, en ‘Ga naar fout’ en SyncTeX vinden het juiste hoofdstukbestand. Zie <a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a>.</p>
+
+<h2>Heen en weer tussen bron en voorvertoning</h2>
+
+<p>Klik met Command ingedrukt op een woord in de bron, en de voorvertoning scrolt naar de gezette tekst en markeert die. Klik met Command ingedrukt in de voorvertoning, en de bron komt naar voren met de overeenkomende tekst gemarkeerd; in een document met hoofdstukbestanden wordt het hoofdstukbestand zo nodig geopend. De overeenkomst is niet altijd precies, dus kijk ook rond de gemarkeerde plaats. De kleuren van de markeringen stelt u in bij Instellingen › Thema’s › SyncTeX.</p>
+
+<p>Dit gebruikt SyncTeX, dat de engines ondersteunen als ze met <code>-synctex=1</code> worden uitgevoerd, zoals de commando’s en engine-bestanden van TeXShop doen; Instellingen › Zetten › ‘Synchroniseermethode’ moet op ‘SyncTeX (aanbevolen)’ staan. Het SyncTeX-bestand van een document legt vast waar de bestanden staan, dus zet het document na het verplaatsen van een projectmap eerst nog eens voordat u synchroniseert.</p>
+
+<h2>De vensters schikken</h2>
+
+<p>Venster › Gebruik één venster zet de bron en de voorvertoning ervan naast elkaar in één venster, en Venster › Gebruik aparte vensters haalt ze weer uit elkaar. Om elk document zo te openen, zet u Instellingen › Algemeen › Vensters › ‘Bron en voorvertoning’ op ‘Gebruik één venster’; ‘Bronpositie in het gecombineerde venster’ zet de bron links of rechts. Sleep de scheidingslijn om de bron meer of minder ruimte te geven; TeXShop opent elk gecombineerd venster met dezelfde verdeling. Een hoofdstukbestand met een regel <code>% !TEX root</code> blijft in aparte vensters; het hoofdbestand zelf kan één venster gebruiken. Archief › Nieuw opent alleen een bronvenster: zet het nieuwe document eerst en kies daarna ‘Gebruik één venster’.</p>
+
+<p>Plaats en vergroot of verklein bij aparte vensters het bron- en het voorvertoningsvenster zoals u wilt, en kies dan Bron › Bewaar bronpositie en Voorvertoning › Bewaar voorvertoningspositie; nieuwe vensters openen dan daar.</p>
+</main>
+</body>
+</html>

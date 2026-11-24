@@ -1,0 +1,11 @@
+\begin{tabular}{ll}
+
+\toprule
+"Name" & "Note" \\
+\midrule
+"Smith, J." & "line one \\
+line two" \\
+"say ""hi""" & 'single' \\
+
+\bottomrule
+\end{tabular}

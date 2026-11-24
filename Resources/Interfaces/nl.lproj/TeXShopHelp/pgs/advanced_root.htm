@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Een hoofdbestand voor een project instellen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="hoofdbestand; % !TEX root; project; hoofdstukbestanden; include; input; Bron ⇔ Voorvertoning; Hoofdbestand van project">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm" class="current">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Een hoofdbestand voor een project instellen</h1>
+<p>Grote documenten worden vaak over meerdere bestanden verdeeld: een hoofdbestand met de preambule dat voor elk hoofdstuk een bestand invoegt. Een hoofdbestand <code>Main.tex</code> kan er bijvoorbeeld zo uitzien:</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p>Wanneer u <code>two.tex</code> bewerkt, moet TeXShop <code>Main.tex</code> zetten en niet het hoofdstuk, dat geen preambule heeft. Om dat aan te geven, zet u deze regel in een van de eerste twintig regels van elk hoofdstukbestand:</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>Het hoofdbestand zelf heeft zo’n regel niet nodig. De naam van het hoofdbestand kan worden opgegeven</p>
+<ul>
+<li>met alleen de naam, <code>Main.tex</code>, als het in dezelfde map staat als het hoofdstukbestand;</li>
+<li>relatief ten opzichte van de map van het hoofdstukbestand, <code>../Main.tex</code> of <code>../../Main.tex</code>;</li>
+<li>met het volledige pad, <code>/Users/me/Book/Main.tex</code>, dat moet worden aangepast als het project wordt verplaatst.</li>
+</ul>
+<p>De macro Set Root File… in het menu Macro’s voegt de regel in: hij vraagt naar het hoofdbestand en biedt een relatieve of een absolute regel aan, die een eerdere root-regel vervangt.</p>
+
+<h2>Wat de root-regel doet</h2>
+<ul>
+<li>Zetten in een hoofdstukbestand zet het hoofdbestand, en het voorvertoningsvenster van het hoofdbestand toont het hele document. Een regel <code>% !TEX program</code> of andere magische regels voor het zetten horen in het hoofdbestand.</li>
+<li>‘Ga naar fout’ opent het bestand met een fout, als het niet open is, en gaat naar de regel.</li>
+<li>Synchronisatie vanuit het voorvertoningsvenster opent het hoofdstukbestand met de plek waarop is geklikt; zie <a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a>.</li>
+<li>‘Wis Aux-bestanden’ verwijdert de hulpbestanden van het hoofdbestand; zie <a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a>.</li>
+<li>Venster › Bron ⇔ Voorvertoning (<kbd>⌘1</kbd>) in een hoofdstukbestand haalt het voorvertoningsvenster van het hoofdbestand naar voren. Gebruikt u het opnieuw in het voorvertoningsvenster, dan keert u terug naar het bronvenster waar u vandaan kwam, of naar het hoofdbestand als u niet uit een bronvenster kwam.</li>
+</ul>
+
+<h2>Een hoofdstukbestand openen</h2>
+<p>Wanneer een hoofdstukbestand met een root-regel wordt geopend, opent TeXShop ook het hoofdbestand en het voorvertoningsvenster ervan. Twee onderdelen in Instellingen › Algemeen › Hoofdbestand van project regelen dit: ‘Hoofdbestand openen bij het openen van een document’ zet het aan of uit, en ‘Geopend venster van hoofdbestand minimaliseren’ stuurt het bronvenster van het hoofdbestand naar het Dock, omdat u het zelden bewerkt terwijl u aan een hoofdstuk werkt.</p>
+
+<h2>Zoeken en vervangen in het hele project</h2>
+<p>Om alle bestanden van een project tegelijk te doorzoeken, kiest u in een van de hoofdstukbestanden Wijzig › Zoek › Zoek in TeX-bronnen met dezelfde TEX root…, of in het hoofdbestand Zoek in TeX-bronnen met dit bestand als TEX root…. Er wordt gezocht in het hoofdbestand en in de <code>.tex</code>-bestanden in de map ervan en daaronder die het in een root-regel in hun eerste 20 regels noemen. Zie <a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a> en <a href="basic_find.htm">Zoeken en vervangen</a>.</p>
+
+<h2>Hoofdbestanden in .texshop-bestanden</h2>
+<p>Een bestand met de extensie <code>.texshop</code> naast een hoofdstukbestand, zoals <code>two.texshop</code> voor <code>two.tex</code>, kan ook het hoofdbestand noemen, en TeXShop leest het nog steeds. Geen enkel menucommando maakt zulke bestanden aan; gebruik een regel <code>% !TEX root</code>, die met de bron meereist.</p>
+</main>
+</body>
+</html>

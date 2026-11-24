@@ -32,7 +32,7 @@
 "MacJapanese"	= "Japanisch (Mac OS, ShiftJIS ¥)";
 
 /* "DOSJapanese" corresponds to code 0x00000420 in TextEncodingNames.string */
-"DOSJapanese"	= "Japanisch (Windows, DOS, ShiftJIS \)";
+"DOSJapanese"	= "Japanisch (Windows, DOS, ShiftJIS \\)";
 
 /* "SJIS_X0213" corresponds to code 0x00000628 in TextEncodingNames.string */
 "SJIS_X0213"	= "Japanisch (Shift JIS X0213)";

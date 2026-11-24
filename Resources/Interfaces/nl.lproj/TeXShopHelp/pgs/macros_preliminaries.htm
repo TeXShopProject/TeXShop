@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inleiding</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macro’s; macro-editor; Macros_Latex.plist; map Macros; macro’s in bestand bewaren; macro’s toevoegen uit bestand; Shishikura">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hulp bij macro’s</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm" class="current">Inleiding</a></li>
+<li><a href="macros_default.htm">De standaardmacro’s</a></li>
+<li><a href="macros_rearrange.htm">Het menu Macro’s herschikken</a></li>
+<li><a href="macros_define.htm">Nieuwe macro’s definiëren</a></li>
+<li><a href="macros_applescript.htm">AppleScript-macro’s</a></li>
+<li><a href="macros_includedscripts.htm">Standaard-AppleScript-macro’s</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript-macro’s definiëren</a></li>
+<li><a href="macros_dialogs.htm">Dialoogvensters maken</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scripts schrijven met zetcommando’s van TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts schrijven met shell-commando’s</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Inleiding</h1>
+<p>De macro’s van TeXShop en de macro-editor zijn oorspronkelijk geschreven door Mitsuhiro Shishikura; de standaardmacro’s voor LaTeX zijn gemaakt door Mitsuhiro Shishikura en Hirokazu Ogawa.</p>
+<p>Macro’s staan in het menu Macro’s en in het venstermenu ‘Macro’s’ van de knoppenbalk van het bronvenster. Er zijn twee soorten. Tekstmacro’s voegen tekst in de bron in, net als de knoppen van het LaTeX-venster. AppleScript-macro’s voeren een AppleScript uit; zie <a href="macros_applescript.htm">AppleScript-macro’s</a>.</p>
+
+<h2 id="files">Waar macro’s worden bewaard</h2>
+<p>De macro’s worden opgeslagen in</p>
+<pre>~/Library/TeXShop/Macros/Macros_Latex.plist</pre>
+<p>en het menu Macro’s toont ze bij elke zet-engine. Voor de ingebouwde engines plain TeX, BibTeX, MakeIndex en MetaPost kan een aparte verzameling worden bijgehouden: wanneer een daarvan voor het document is gekozen, bewaart de macro-editor de macro’s ervan in een eigen bestand, zoals Macros_Tex.plist, en laat hij Macros_Latex.plist ongewijzigd.</p>
+<p>De macrobestanden zijn gewone tekstbestanden, maar u wijzigt ze het best met de macro-editor: kies Macro’s › Open macro-editor.... <a href="macros_define.htm">Nieuwe macro’s definiëren</a> legt uit hoe u macro’s toevoegt, verwijdert en een naam geeft, en hoe u ze toetscombinaties geeft.</p>
+
+<h2 id="missing">Als de map Macros ontbreekt</h2>
+<p>Als de map Macros ontbreekt wanneer TeXShop start, maakt TeXShop haar opnieuw aan met de standaardmacro’s. Als Macros_Latex.plist beschadigd is, vervangt TeXShop het bij het starten zonder melding door een eigen kopie, en bewaart het het beschadigde bestand in ~/Library/TeXShop/Backups. Om opnieuw te beginnen met de standaardmacro’s, stopt u TeXShop, verplaatst u de map Macros naar het bureaublad en start u TeXShop opnieuw; de verplaatste map bevat uw oude macro’s.</p>
+
+<h2 id="sharing">Macro’s delen</h2>
+<p>Zolang de macro-editor open is, heeft het menu Macro’s twee extra commando’s. ‘Sla selectie op als bestand...’ bewaart de geselecteerde macro’s in een eigen bestand, dat u aan anderen kunt geven. ‘Voeg macro’s toe uit bestand...’ voegt de macro’s uit zo’n bestand aan uw lijst toe; orden ze daarna naar wens in de macro-editor.</p>
+</main>
+</body>
+</html>

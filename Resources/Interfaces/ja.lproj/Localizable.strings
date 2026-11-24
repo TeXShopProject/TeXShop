@@ -48,7 +48,7 @@
 "Completion" = "コマンド補完";
 "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "場所： %@\nファイルサイズ： %dバイト\n作成日： %@\n変更日： %@";
 "Info: %@" = "情報: %@";
-"%@\n\nCharacters: %d" = "%@\n\文字数: %d文字";
+"%@\n\nCharacters: %d" = "%@\n\n文字数: %d文字";
 "The file encoding changed; characters can be lost if the wrong encoding is used." = "ファイルのエンコーディングが変更されました。違うエンコーディングを使うと、文字情報が失われることがあります。";
 "Currently open files retain their old encoding." = "現在開かれているファイルのエンコーディングは変更されません。";
 "Drag && Drop" = "ドラッグ＆ドロップ"; // zenitani 1.33
@@ -61,7 +61,7 @@
 "%@ does not exist." = "%@ が見つかりません。";
 "%@ does not have the executable bit set." = "%@ に実行権限がセットされていません。";
 "This file was opened with IsoLatin9 encoding." = "このファイルはIsoLatin9エンコーディングで開かれました。";
-"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "エンコーディングが違うため、ファイルを %@ エンコーディングで開くことができませんでした。ファイルを他のエンコーディングで開きたい場合は、ウインドウを閉じてもう一度開いて下さい。";
+"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "エンコーディングが違うため、ファイルを %@ エンコーディングで開くことができませんでした。ファイルを他のエンコーディングで開きたい場合は、ウインドウを閉じてもう一度開いてください。";
 "Error" = "エラー";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "このバージョンのTeXShopが動作するためにはMac OS X 10.4以上が必要です。代わりにTeXShop 1.37をお使いください。";
 "Hard Wrap" = "改行を挿入";
@@ -214,6 +214,7 @@
 "No command uses this key." = "このキーを使うコマンドはありません。";
 "Press a key" = "キーを押してください";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "ショートカットに使えないキーです。⌘か⌃と組み合わせるか、F1〜F20を使ってください。";
+"Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "地球儀（fn）キーを使うショートカットは、TeXShopのコマンドには割り当てられません。";
 
 
 "This key cannot be assigned to a new shortcut." = "このキーは新しいショートカットには割り当てられません。";

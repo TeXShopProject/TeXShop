@@ -4219,7 +4219,7 @@
 												<object class="NSTextFieldCell" key="NSCell" id="1168">
 													<int key="NSCellFlags">67108864</int>
 													<int key="NSCellFlags2">4194304</int>
-													<string key="NSContents">액센트 기호류</string>
+													<string key="NSContents">악센트 기호류</string>
 													<reference key="NSSupport" ref="26"/>
 													<reference key="NSControlView" ref="1021193847"/>
 													<bool key="NSDrawsBackground">YES</bool>

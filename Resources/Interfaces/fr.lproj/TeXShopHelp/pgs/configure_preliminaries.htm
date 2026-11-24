@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Préliminaires</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="configurer TeXShop; fenêtre Réglages; recherche dans les réglages; ~/Library/TeXShop; fichiers endommagés; Backups; réglages cachés; commentaires magiques">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Comment configurer TeXShop ?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm" class="current">Préliminaires</a></li>
+<li><a href="configure_prefchanges.htm">Modifications recommandées des réglages</a></li>
+<li><a href="configure_correctinstall.htm">Obtenir les nouveaux éléments de la bibliothèque</a></li>
+<li><a href="configure_hidden.htm">Réglages cachés</a></li>
+<li><a href="configure_panel.htm">Modifier la palette LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modifier les raccourcis de saisie</a></li>
+<li><a href="configure_menushortcuts.htm">Redéfinir les raccourcis clavier des menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Préliminaires</h1>
+<p>Ce chapitre explique comment adapter TeXShop à votre façon de travailler : les réglages à vérifier en premier, la façon dont TeXShop tient à jour les fichiers de ~/Library/TeXShop, les réglages cachés, et la façon de modifier la palette LaTeX, les raccourcis de saisie et les raccourcis des menus.</p>
+
+<h2 id="settings">La fenêtre Réglages</h2>
+<p>Choisissez TeXShop › Réglages… pour ouvrir la fenêtre Réglages. Sa barre latérale comporte dix catégories : Général, Documents et enregistrement, Éditeur, Clavier, Orthographe, Thèmes, Composition, Console, Aperçu et Mises à jour. Pour trouver un réglage sans connaître sa catégorie, tapez un mot dans le champ de recherche « Rechercher » en haut de la barre latérale et choisissez un résultat : la fenêtre Réglages affiche le réglage et le met en évidence. Consultez <a href="basic_preferences.htm#settings-search">Rechercher dans les réglages</a>.</p>
+<p>De nombreux réglages ont une commande de menu correspondante, comme Source › Numérotation des lignes et le réglage « Numérotation des lignes » de la catégorie Éditeur. La commande de menu ne modifie que le document actif, tant qu’il est ouvert ; le réglage détermine l’aspect et le comportement des documents à leur ouverture.</p>
+<p>La plupart des éléments conservés dans des fichiers peuvent être modifiés dans TeXShop lui-même. Réglages › Clavier contient les raccourcis de saisie, la liste de complétion des commandes (« Modifier la complétion des commandes… ») et les raccourcis des menus ; les macros se modifient dans l’éditeur de macros (Macros › Ouvrir l'éditeur de macros...), et les thèmes de couleurs dans Réglages › Thèmes.</p>
+
+<h2 id="library">Le dossier ~/Library/TeXShop</h2>
+<p>Les modèles, les macros, les moteurs, le fichier de la palette LaTeX, les raccourcis de saisie, la liste de complétion des commandes, les thèmes et les autres fichiers que vous pouvez modifier sont conservés dans ~/Library/TeXShop, le dossier TeXShop du dossier Bibliothèque de votre dossier de départ. TeXShop › Ouvrir ~/Bibliothèque/TeXShop l’ouvre dans le Finder. Une nouvelle version de TeXShop y conserve vos modifications ; <a href="configure_correctinstall.htm">Obtenir les nouveaux éléments de la bibliothèque</a> explique quels fichiers elle met à jour.</p>
+<p>Lorsqu’un fichier dont TeXShop a besoin, comme les macros, le fichier de la palette LaTeX, les raccourcis de saisie ou un thème, est manquant ou endommagé, TeXShop le remplace par sa propre copie au démarrage, sans message. Le fichier endommagé est conservé dans ~/Library/TeXShop/Backups, afin que vous puissiez y récupérer vos modifications.</p>
+<p>Pour revenir au contenu par défaut d’un dossier, quittez TeXShop, sortez le dossier (Templates, par exemple) de ~/Library/TeXShop, par exemple sur le bureau, puis relancez TeXShop. TeXShop recrée le dossier avec son contenu par défaut ; recopiez depuis le dossier déplacé tout ce que vous voulez conserver.</p>
+
+<h2 id="more">Réglages cachés et commentaires magiques</h2>
+<p>Quelques réglages ne figurent pas dans la fenêtre Réglages ; ils se modifient avec une commande dans Terminal. Consultez <a href="configure_hidden.htm">Réglages cachés</a>. Les commentaires magiques tels que <code>% !TEX program = lualatex</code>, placés en haut d’un fichier source, règlent le moteur, l’encodage, le fichier racine et d’autres choses pour ce fichier uniquement. Aide › Commentaires spéciaux et réglages cachés (en anglais) liste tous les commentaires magiques et tous les réglages cachés.</p>
+</main>
+</body>
+</html>

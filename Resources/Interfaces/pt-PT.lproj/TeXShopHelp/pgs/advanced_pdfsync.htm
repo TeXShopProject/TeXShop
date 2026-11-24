@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sincronizar o código-fonte e a pré-visualização</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="SyncTeX; sincronizar; sincronização; clique com a tecla Comando; Método de sincronização; Pesquisar PDF; synctex.gz; projectfile; useConTeXtSyncParser">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar ficheiros pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistir com outras distribuições TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm" class="current">Sincronizar o código-fonte e a pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover ficheiros AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experiências</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e largar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros ficheiros com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto a cores</a></li>
+<li><a href="advanced_plist.htm">Ficheiros em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Sincronizar o código-fonte e a pré-visualização</h1>
+<p>Clique numa palavra da janela do código-fonte com a tecla Comando premida e a janela de pré-visualização desloca-se para o local correspondente e assinala-o. Clique num local da janela de pré-visualização com a tecla Comando premida e o ficheiro de código-fonte abre, se necessário, na linha correspondente, que fica assinalada. As cores das duas marcas definem-se em Definições › Temas › SyncTeX, em «Pré-visualização» e «Código-fonte».</p>
+
+<h2>SyncTeX</h2>
+<p>O TeXShop sincroniza com o SyncTeX. Quando o TeX é executado com a opção <code>-synctex=1</code>, escreve ao lado do PDF um ficheiro como <code>Galois.synctex.gz</code>, que regista onde cada parte do código-fonte foi parar na página. Os comandos de composição em Definições › Composição, tal como os perfis do motor os definem, e os motores que o TeXShop coloca em <code>~/Library/TeXShop/Engines</code> e que executam o TeX já usam esta opção. Um motor que adicione aí, incluindo um dos motores opcionais da pasta Inactive, só a usa se o seu comando a tiver. Num motor próprio, adicione <code>-synctex=1</code> à chamada do TeX (com um ou dois hífenes; todos os motores aceitam ambos).</p>
+<p>O ficheiro synctex contém os caminhos completos dos ficheiros de código-fonte. Depois de uma pasta de projeto ser movida, copiada ou enviada a outra pessoa, a sincronização não faz nada até o documento ser composto de novo.</p>
+<p>O SyncTeX não é totalmente exato: o local que procura pode estar um pouco antes ou depois da marca.</p>
+
+<h2>Projetos com vários ficheiros</h2>
+<p>Num projeto cujos ficheiros de capítulo indicam o ficheiro principal com <code>% !TEX root</code> (consulte <a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a>), um clique com a tecla Comando premida num ficheiro de capítulo vai para o local correspondente na pré-visualização do documento inteiro, e um clique com a tecla Comando premida na pré-visualização abre o ficheiro de capítulo que contém o ponto clicado. Com Definições › Composição › «Sincronização do código-fonte e da pré-visualização» › «Abrir como separadores na janela do ficheiro principal os ficheiros encontrados pela sincronização» ativo, um ficheiro aberto desta forma junta-se à janela do ficheiro principal como separador, em vez de abrir a sua própria janela.</p>
+
+<h2>Método de sincronização</h2>
+<p>Definições › Composição › «Sincronização do código-fonte e da pré-visualização» › «Método de sincronização» tem duas opções:</p>
+<dl>
+<dt>SyncTeX (recomendado)</dt><dd>Usa o ficheiro synctex, como descrito acima. É a predefinição.</dd>
+<dt>Pesquisar PDF</dt><dd>Procura no PDF o texto à volta do clique e, no código-fonte, o texto à volta de um clique na pré-visualização. Não precisa de ficheiro synctex, mas falha onde o texto composto difere do código-fonte, como nas fórmulas e no texto com muitos comandos. Para encontrar o ficheiro de um ponto da pré-visualização, procura nos ficheiros indicados nos comandos <code>\include</code> e <code>\input</code> do ficheiro principal. Nos projetos que incluem ficheiros de outra forma, enumere-os no ficheiro principal com linhas como
+<pre>% !TEX projectfile = chapter2.tex
+% !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
+Um nome é um caminho completo ou um caminho relativo ao ficheiro principal; estas linhas podem estar em qualquer parte do ficheiro principal.</dd>
+</dl>
+
+<h2>ConTeXt</h2>
+<p>Para o ConTeXt, adicione <code>\setupsynctex[state=start,method=min]</code> à configuração do documento e a linha <code>% !TEX useConTeXtSyncParser</code> no início do ficheiro principal; o TeXShop usa então o código de sincronização do próprio ConTeXt. Consulte <a href="advanced_context.htm">ConTeXt e MetaPost</a>.</p>
+<p>Para sincronizar com um código-fonte aberto noutro editor, consulte <a href="advanced_externaleditor.htm">Usar um editor externo</a>.</p>
+</main>
+</body>
+</html>

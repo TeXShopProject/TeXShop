@@ -1,0 +1,13 @@
+\begin{longtable}{lll}
+表 & ソフト & 能\& \\
+\endfirsthead
+表 & ソフト & 能\& \\
+\endhead
+\multicolumn{3}{r}{{Continued\ldots}} \
+\endfoot
+\hline
+\endlastfoot
+
+十 & 予 & \# \\
+
+\end{longtable}

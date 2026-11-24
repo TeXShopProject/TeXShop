@@ -47,7 +47,7 @@
     "SettingsPreview.strings": {
       "V7d-ht-Pe3.title": "Droite",
       "1uj-kt-7Pj.title": "Gauche",
-      "337.title": "Sélectionner"
+      "337.title": "Sélectionner (PDF)"
     },
     "SettingsTypesetting.strings": {
       "191.title": "PDF direct",
@@ -65,7 +65,7 @@
     "SettingsPreview.strings": {
       "V7d-ht-Pe3.title": "Destra",
       "1uj-kt-7Pj.title": "Sinistra",
-      "337.title": "Selezione"
+      "337.title": "Selezione PDF"
     },
     "SettingsTypesetting.strings": {
       "191.title": "PDF diretto",
@@ -115,12 +115,12 @@
       "catalog.appearance.2.0.column.0": "Voorgrond"
     },
     "SettingsMiscOne.strings": {
-      "375.title": "JPEG (hoog)",
+      "375.title": "JPEG (hoge kwaliteit)",
       "380.title": "TIFF (ongecomprimeerd)",
       "qMw-aC-Ilj.title": "Links",
       "CBT-8e-Ayl.title": "Rechts",
-      "407.title": "JPEG (laag)",
-      "423.title": "JPEG (gemiddeld)",
+      "407.title": "JPEG (lage kwaliteit)",
+      "423.title": "JPEG (normale kwaliteit)",
       "i6L-IX-ZLk.title": "Eén teken",
       "g92-sP-oZU.title": "Beide zijden",
       "shH-XU-nyE.title": "Twee tekens"
@@ -131,14 +131,14 @@
       "naM-Et-WMn.title": "Maandelijks"
     },
     "SettingsPreview.strings": {
-      "346.title": "Doorlopende dubbele pagina’s",
-      "335.title": "Sterk vergroten",
-      "sa2-VV-W1K.title": "Positie bij sluiten bewaren",
-      "347.title": "Doorlopende pagina’s",
-      "SfP-Ak-pn3.title": "In afzonderlijke vensters openen",
+      "346.title": "Twee pagina’s doorlopend",
+      "335.title": "Vergroten (groot)",
+      "sa2-VV-W1K.title": "Onthoud laatste positie bij sluiten",
+      "347.title": "Doorlopend",
+      "SfP-Ak-pn3.title": "Gebruik aparte vensters",
       "V7d-ht-Pe3.title": "Rechts",
       "337.title": "PDF selecteren",
-      "tVs-uh-QcM.title": "Alle vensters op vaste positie openen",
+      "tVs-uh-QcM.title": "Alle vensters openen op vaste positie",
       "343.title": "Twee pagina’s",
       "332.title": "Vergroten",
       "636.title": "Tekst selecteren",
@@ -146,11 +146,11 @@
       "328.title": "Scrollen",
       "344.title": "Vaste vergroting",
       "1uj-kt-7Pj.title": "Links",
-      "48.title": "Alle vensters op vaste positie openen",
+      "48.title": "Alle vensters openen op vaste positie",
       "333.title": "Enkele pagina",
-      "45.title": "Positie bij sluiten bewaren",
+      "45.title": "Onthoud laatste positie bij sluiten",
       "637.title": "Werkelijke grootte",
-      "vOt-2m-d2s.title": "Samenvoegen in één venster"
+      "vOt-2m-d2s.title": "Gebruik één venster"
     },
     "SettingsSource.strings": {
       "Mo3-zf-BYT.title": "Nooit",
@@ -183,7 +183,7 @@
     },
     "SettingsTypesetting.strings": {
       "191.title": "PDF direto",
-      "785.title": "Pesquisar PDF"
+      "785.title": "Buscar no PDF"
     }
   },
   "pt-PT": {
@@ -198,7 +198,7 @@
       "group.typesetting.9.title": "pLaTeX japonês",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Usar a posição atual",
-      "group.editor.5.title": "Carateres invisíveis",
+      "group.editor.5.title": "Caracteres invisíveis",
       "catalog.general.2.0.button": "Usar a posição atual",
       "group.editor.2.title": "Escrita",
       "catalog.general.2.3.button": "Usar a posição atual",
@@ -213,7 +213,7 @@
       "906.title": "Definir…"
     },
     "SettingsEditor.strings": {
-      "UXo-9g-NNW.title": "Por caráter",
+      "UXo-9g-NNW.title": "Por carácter",
       "EgL-0e-rdg.title": "Nenhum",
       "LJw-Jj-VBR.title": "Por palavra"
     },
@@ -224,9 +224,9 @@
       "CBT-8e-Ayl.title": "Direita",
       "407.title": "JPEG (baixa)",
       "423.title": "JPEG (média)",
-      "i6L-IX-ZLk.title": "Um caráter",
+      "i6L-IX-ZLk.title": "Um carácter",
       "g92-sP-oZU.title": "Ambos os lados",
-      "shH-XU-nyE.title": "Dois carateres"
+      "shH-XU-nyE.title": "Dois caracteres"
     },
     "SettingsMiscTwo.strings": {
       "GUV-qt-mM2.title": "Diariamente",
@@ -236,12 +236,12 @@
     "SettingsPreview.strings": {
       "346.title": "Duas páginas contínuas",
       "335.title": "Ampliar mais",
-      "sa2-VV-W1K.title": "Guardar a posição ao fechar",
+      "sa2-VV-W1K.title": "Lembrar a última posição",
       "347.title": "Páginas contínuas",
       "SfP-Ak-pn3.title": "Abrir em janelas separadas",
       "V7d-ht-Pe3.title": "Direita",
       "337.title": "Selecionar PDF",
-      "tVs-uh-QcM.title": "Abrir todas as janelas numa posição fixa",
+      "tVs-uh-QcM.title": "Abrir sempre numa posição fixa",
       "343.title": "Duas páginas",
       "332.title": "Ampliar",
       "636.title": "Selecionar texto",
@@ -277,7 +277,7 @@
   "ro": {
     "SettingsCategories.strings": {
       "catalog.general.2.0.title": "Sursă",
-      "catalog.general.1.2.title": "Deschide ferestrele noi ca file",
+      "catalog.general.1.2.title": "Deschideți ferestrele noi ca file",
       "catalog.console.1.1.title": "Redimensionarea consolei",
       "themes": "Teme",
       "source": "Sursă",
@@ -286,14 +286,14 @@
       "catalog.appearance.3.0.item.0": "Punct de inserare",
       "catalog.editor.0.3.title": "Dimensiunea numerelor de linie",
       "catalog.appearance.5.0.item.0": "( )",
-      "catalog.editor.4.6.title": "Clipește fundalul pentru paranteze izolate",
+      "catalog.editor.4.6.title": "Fundal intermitent pentru paranteze izolate",
       "catalog.editor.1.3.title": "Indentarea rândurilor continuate:",
-      "catalog.spelling.1.4.title": "Omite parametrii selectați",
-      "catalog.console.0.1.title": "Folosește și pentru editorul de macrocomenzi",
-      "catalog.typesetting.0.2.title": "Metoda de tehnoredactare",
+      "catalog.spelling.1.4.title": "Omiteți parametrii selectați",
+      "catalog.console.0.1.title": "Folosiți și pentru Editorul de Macro",
+      "catalog.typesetting.0.2.title": "Metoda de compilare",
       "catalog.appearance.3.0.item.2": "Rândul curent",
       "catalog.appearance.2.0.item.1": "Consolă",
-      "catalog.preview.2.0.title": "Urmărește permanent modificările PDF-ului făcute de alte aplicații",
+      "catalog.preview.2.0.title": "Urmăriți permanent modificările PDF-ului făcute de alte aplicații",
       "catalog.appearance.4.0.item.1": "Comandă",
       "group.editor.6.title": "Punct de inserare",
       "catalog.editor.5.1.title": "Spațiu",
@@ -302,51 +302,51 @@
       "catalog.appearance.7.0.item.0": "Caractere invizibile",
       "catalog.appearance.9.0.item.0": "Comentariu",
       "catalog.appearance.2.0.item.3": "Previzualizare",
-      "catalog.spelling.0.1.title": "Corectează ortografia",
+      "catalog.spelling.0.1.title": "Corectați ortografia",
       "catalog.appearance.4.0.item.3": "Marcaj",
-      "catalog.editor.0.5.title": "Împarte rândurile",
+      "catalog.editor.0.5.title": "Împărțirea rândurilor",
       "catalog.appearance.7.0.item.2": "Acolade",
-      "catalog.typesetting.1.0.title": "După tehnoredactare",
+      "catalog.typesetting.1.0.title": "După compilare",
       "catalog.appearance.9.0.item.2": "Caracter de escape",
       "group.appearance.0.title": "Teme",
       "catalog.editor.4.3.title": "Evidențiere intermitentă",
-      "catalog.preview.1.1.title": "Arată prima pagină separat, ca o copertă",
+      "catalog.preview.1.1.title": "Afișați prima pagină separat, ca o copertă",
       "catalog.editor.6.1.title": "Culoarea cursorului:",
       "group.console.1.title": "Acțiuni",
       "catalog.appearance.9.0.item.4": "Valoare",
       "group.typesetting.9.title": "pLaTeX japonez",
       "catalog.editor.4.1.choice.1": "( )",
-      "catalog.general.2.2.button": "Folosește poziția actuală",
+      "catalog.general.2.2.button": "Folosiți poziția actuală",
       "group.editor.5.title": "Caractere invizibile",
-      "catalog.updates.0.0.title": "Caută automat actualizări",
+      "catalog.updates.0.0.title": "Căutați automat actualizări",
       "catalog.editor.0.2.title": "Numere de linie",
       "catalog.editor.5.3.title": "Rând nou",
-      "catalog.editor.2.0.title": "Selectează la activare",
-      "catalog.spelling.1.3.title": "Omite comenzile LaTeX",
+      "catalog.editor.2.0.title": "Selectați la activare",
+      "catalog.spelling.1.3.title": "Omiteți comenzile LaTeX",
       "catalog.editor.4.5.title": "Semnal sonor pentru paranteze izolate",
       "catalog.typesetting.2.0.title": "Metoda de sincronizare",
       "catalog.editor.1.2.title": "Indentarea rândurilor:",
       "catalog.editor.6.3.title": "Lățimea la stânga sau la dreapta:",
-      "catalog.general.2.0.button": "Folosește poziția actuală",
-      "catalog.editor.5.0.title": "Afișează caracterele invizibile",
+      "catalog.general.2.0.button": "Folosiți poziția actuală",
+      "catalog.editor.5.0.title": "Afișați caracterele invizibile",
       "catalog.appearance.3.0.item.1": "Clipire",
       "group.editor.2.title": "Tastare",
       "catalog.appearance.2.0.item.0": "Sursă",
       "catalog.appearance.4.0.item.0": "Comentariu",
       "catalog.preview.5.0.title": "URL inițial",
-      "catalog.editor.0.4.title": "Evidențiază rândul curent",
+      "catalog.editor.0.4.title": "Evidențiați rândul curent",
       "catalog.typesetting.0.3.title": "Motor alternativ",
-      "catalog.general.3.1.title": "Minimizează fereastra principală deschisă",
+      "catalog.general.3.1.title": "Minimizați fereastra deschisă a fișierului principal",
       "catalog.appearance.2.0.item.2": "Jurnal",
       "catalog.appearance.4.0.item.2": "Notă de subsol",
-      "catalog.editor.4.2.title": "Evidențiază caracterele dintre paranteze",
-      "catalog.general.2.3.button": "Folosește poziția actuală",
+      "catalog.editor.4.2.title": "Evidențiați caracterele dintre paranteze",
+      "catalog.general.2.3.button": "Folosiți poziția actuală",
       "catalog.appearance.7.0.item.1": "Textul dintre paranteze",
-      "catalog.spelling.1.5.title": "Omite comentariile",
-      "catalog.editor.6.0.title": "Folosește un cursor bloc",
+      "catalog.spelling.1.5.title": "Omiteți comentariile",
+      "catalog.editor.6.0.title": "Folosiți un cursor bloc",
       "catalog.appearance.0.1.title": "Tema modului întunecat",
       "catalog.appearance.9.0.item.1": "Etichetă",
-      "catalog.keyboard.3.0.title": "Oferă și cheile de citare din BibDesk",
+      "catalog.keyboard.3.0.title": "Oferiți și cheile de citare din BibDesk",
       "catalog.editor.5.2.title": "Spațiu japonez",
       "catalog.typesetting.4.2.title": "Confirmare la shell-escape",
       "catalog.editor.1.4.title": "Spațierea rândurilor:",
@@ -356,9 +356,9 @@
       "catalog.general.2.2.title": "Consolă",
       "catalog.appearance.0.0.title": "Tema modului luminos",
       "group.editor.1.title": "Stilul editorului",
-      "catalog.general.2.1.button": "Folosește poziția actuală",
+      "catalog.general.2.1.button": "Folosiți poziția actuală",
       "catalog.appearance.2.0.column.0": "Prim-plan",
-      "catalog.editor.4.4.title": "Arată indicatorul la deplasare",
+      "catalog.editor.4.4.title": "Afișați indicatorul la deplasare",
       "catalog.general.2.1.title": "Previzualizare",
       "catalog.editor.6.2.title": "Partea liniei de inserare:"
     },
@@ -366,7 +366,7 @@
       "831.title": "la apariția unei erori",
       "765.title": "Redimensionare doar verticală",
       "766.title": "Redimensionare liberă",
-      "906.title": "Stabilește…",
+      "906.title": "Alegeți…",
       "830.title": "întotdeauna"
     },
     "SettingsEditor.strings": {
@@ -392,17 +392,17 @@
     },
     "SettingsPreview.strings": {
       "335.title": "Lupă (mare)",
-      "sa2-VV-W1K.title": "Păstrează poziția la închidere",
-      "SfP-Ak-pn3.title": "Deschide în ferestre separate",
+      "sa2-VV-W1K.title": "Rețineți ultima poziție la închidere",
+      "SfP-Ak-pn3.title": "Folosiți ferestre separate",
       "V7d-ht-Pe3.title": "Dreapta",
-      "337.title": "Selectează PDF",
-      "tVs-uh-QcM.title": "Deschide toate ferestrele în poziția fixată",
+      "337.title": "Selecție PDF",
+      "tVs-uh-QcM.title": "Toate ferestrele apar la poziția fixată",
       "332.title": "Lupă",
-      "636.title": "Selectează textul",
+      "636.title": "Selecție text",
       "328.title": "Derulare",
       "1uj-kt-7Pj.title": "Stânga",
       "637.title": "Dimensiune efectivă",
-      "vOt-2m-d2s.title": "Unește într-o singură fereastră"
+      "vOt-2m-d2s.title": "Folosiți o singură fereastră"
     },
     "SettingsSource.strings": {
       "582.title": "Panoul de căutare Apple",
@@ -420,10 +420,10 @@
       "191.title": "PDF direct",
       "190.title": "Script personal",
       "590.title": "Fișier de motor",
-      "680.title": "Continuă editarea",
-      "785.title": "Caută în PDF",
-      "679.title": "Adu previzualizarea în prim-plan",
-      "bYh-V5-ri6.title": "Arată previzualizarea și revino la fereastra inițială"
+      "680.title": "Continuați editarea",
+      "785.title": "Căutare în PDF",
+      "679.title": "Aduceți previzualizarea în față",
+      "bYh-V5-ri6.title": "Afișați previzualizarea și reveniți la fereastra inițială"
     }
   },
   "zh_CN": {

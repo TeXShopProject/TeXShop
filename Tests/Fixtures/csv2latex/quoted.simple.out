@@ -1,0 +1,8 @@
+\begin{tabular}{ll}
+
+"Name" & "Note" \\
+"Smith, J." & "line one \\
+line two" \\
+"say ""hi""" & 'single' \\
+
+\end{tabular}

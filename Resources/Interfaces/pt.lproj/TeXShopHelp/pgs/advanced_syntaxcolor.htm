@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Destaque de sintaxe</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="destaque de sintaxe; cores de sintaxe; cores; tema; expl3; entradas de índice; nota de rodapé; marcador; parênteses; largura total; SyntaxColoringEnabled">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar arquivos pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Convivência com outras distribuições de TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos de TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o arquivo principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar código-fonte e pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm">Remover arquivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experimentos</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros arquivos com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm" class="current">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto colorido</a></li>
+<li><a href="advanced_plist.htm">Arquivos em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Destaque de sintaxe</h1>
+<p>A janela do código-fonte mostra o TeX em cores: os comentários, os comandos, as notas de rodapé, os marcadores <code>$</code> e <code>&amp;</code> e os parênteses <code>( )</code>, <code>{ }</code> e <code>[ ]</code> têm cada um a sua cor. Código-fonte › Destaque de sintaxe ativa ou desativa o destaque para o documento ativo. Os documentos abrem com ele ativado; para abri-los com ele desativado, use o ajuste oculto</p>
+<pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
+
+<h2>O que é destacado</h2>
+<ul>
+<li>Os comandos são uma barra invertida seguida de letras. Ajustes › Editor › Destaque de sintaxe › “@ faz parte dos comandos” conta também <code>@</code> como letra, como nos comandos internos dos pacotes.</li>
+<li>O texto de <code>\footnote</code>, <code>\footcite</code> e <code>\autocite</code>, e dos comandos que começam com <code>\cite</code> ou <code>\Cite</code>, como <code>\citep</code> e <code>\citeauthor</code>, aparece na cor “Nota de rodapé”. O ajuste oculto <code>defaults write TeXShop SyntaxColorFootnote NO</code> colore apenas o comando.</li>
+<li>Código-fonte › Destacar as entradas do índice mostra os argumentos de <code>\index</code> e <code>\esindex</code> na cor Índice. Ajustes › Editor › Destaque de sintaxe › “Destacar as entradas do índice por padrão” o ativa quando os documentos são abertos.</li>
+<li>Código-fonte › Destacar o código expl3 colore também as funções, as variáveis e as outras partes do código expl3, a camada de programação do LaTeX, para quem escreve pacotes. “Destacar o código expl3 por padrão”, no mesmo grupo, o ativa quando os documentos são abertos.</li>
+<li>“Destacar letras e símbolos de largura total”, no mesmo grupo, mostra nas cores “Largura total” as letras, os dígitos e os símbolos de largura total, que facilmente se confundem com caracteres ASCII em texto japonês.</li>
+</ul>
+<p>“Destacar as entradas do índice” e “Destacar o código expl3” se aplicam ao documento ativo; cada janela do código-fonte tem a sua própria escolha. Os arquivos que não são código-fonte TeX, como os arquivos de log, não são destacados; consulte <a href="advanced_otherfiles.htm">Abrir outros arquivos com o TeXShop</a> para ver a lista de extensões e como acrescentar uma.</p>
+
+<h2>Alterar as cores</h2>
+<p>As cores pertencem ao tema. Escolha-as em Ajustes › Temas:</p>
+<ul>
+<li>o grupo “Destaque de sintaxe” tem Comentário, Comando, Nota de rodapé, Marcador e Índice;</li>
+<li>o grupo Parênteses tem as cores de <code>( )</code>, <code>{ }</code> e <code>[ ]</code>;</li>
+<li>o grupo expl3 tem function, __function, key, variable, __variable, argument e msg;</li>
+<li>o grupo Destaques tem, entre outras, as cores “Largura total”;</li>
+<li>o grupo “Sintaxe XML” tem as cores para os arquivos HTML e XML.</li>
+</ul>
+<p>Cada tema tem as suas próprias cores; assim, o “Tema modo claro” e o “Tema modo escuro” podem ser diferentes.</p>
+</main>
+</body>
+</html>

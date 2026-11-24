@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Completarea comenzilor</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="completarea comenzilor; tasta Escape; tasta de activare; marcaje; Marcajul următor; etichete și chei de citare">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm" class="current">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Completarea comenzilor</h1>
+
+<p>Tastați primele litere ale unei comenzi sau ale unui mediu și apăsați Escape: TeXShop le completează pe baza fișierului său Completion. Apăsați din nou Escape pentru a parcurge celelalte completări care încep cu aceleași litere, de la sfârșitul fișierului spre început; Shift-Escape merge în sens invers. Una dintre ele este textul pe care l-ați tastat. De exemplu, <code>\begin{th</code> urmat de Escape oferă <code>\begin{theorem}</code> și alte medii.</p>
+
+<p>O completare poate face mai mult decât să termine cuvântul. Completarea lui <code>\begin{theorem}</code> scrie și linia <code>\end{theorem}</code> și pune marcaje (•) acolo unde veți tasta: primul marcaj este selectat, așa că ceea ce tastați îl înlocuiește. Apăsarea repetată a tastei Escape dă adesea aceeași comandă cu mai multe argumente, cum face <code>\newc</code> pentru <code>\newcommand</code>. O completare nu trebuie să înceapă cu o bară oblică inversă: la începutul unei linii sau după un spațiu, <code>sec</code> dă același rezultat ca <code>\sec</code>.</p>
+
+<p>Când fișierul Completion nu are nimic pentru textul respectiv, Escape afișează în schimb completările de cuvinte ale macOS.</p>
+
+<h2>Configurări</h2>
+
+<p>În Configurări › Tastatură, „Tastă de activare” alege Escape sau Tab ca tastă care completează. Panoul pentru sursă din Editare › Experiment... folosește aceeași tastă ca fereastra sursă.</p>
+
+<p>Pentru a adăuga un cuvânt în fișierul Completion, selectați-l și alegeți Sursă › Adăugați la lista de completare a comenzilor. Pentru a edita fișierul, faceți clic pe „Editați completarea comenzilor…” în Configurări › Tastatură. Studierea completărilor existente este cel mai bun mod de a învăța să scrieți altele noi; dosarul ~/Library/TeXShop/CommandCompletion conține și un document detaliat despre ele.</p>
+
+<h2><a name="marks"></a>Marcaje</h2>
+
+<p>Un marcaj (•) este un loc la care să reveniți; un marcaj cu notă (•‹notă›) spune și ce trebuie pus acolo. Completările de comenzi, macrocomenzile și asocierile de taste pot conține marcaje, iar dumneavoastră le puteți insera singur cu Editare › Marcaje › Inserați un marcaj (<kbd>⌘8</kbd>) și „Inserați un marcaj cu notă” (<kbd>⌃⌘8</kbd>). „Inserați un marcaj cu notă” inserează •‹› cu punctul de inserare între paranteze sau transformă textul selectat în notă.</p>
+
+<p>„Marcajul următor” (<kbd>⌃⌘F</kbd>) și „Marcajul anterior” (<kbd>⌃⌘G</kbd>) selectează marcajul următor sau anterior împreună cu nota lui, astfel încât tastarea îl înlocuiește. Țineți apăsată tasta Opțiune pentru a șterge doar • și a selecta în schimb nota (<kbd>⌃⌥⌘F</kbd>, <kbd>⌃⌥⌘G</kbd>).</p>
+
+<p>Tasta de activare trece și ea de la un marcaj la altul: cu Escape ca tastă de activare, Opțiune-Escape merge la marcajul următor, iar Control-Escape la cel anterior; cu Tab, Opțiune-Tab și Control-Tab. Dacă altă aplicație are nevoie de aceste taste, dezactivați „Accesați marcajul următor sau anterior cu Opțiune sau Control și tasta de activare” în Configurări › Tastatură.</p>
+
+<h2><a name="labels"></a>Completarea referințelor și a cheilor de citare</h2>
+
+<p>Editare › Completați referința sau cheia de citare (<kbd>F5</kbd>) completează o etichetă sau o cheie de citare dintr-o listă. Alegeți comanda imediat după <code>\ref{</code>, <code>\pageref{</code>, <code>\eqref{</code> sau <code>\autoref{</code> ori după primele litere ale unei etichete tastate acolo, iar lista afișează etichetele definite cu <code>\label</code> în fișier; alegeți una cu tastele săgeată și apăsați Return. După <code>\cite{</code> și comenzi similare, lista afișează cheile de citare din BibDesk când „Oferiți și cheile de citare din BibDesk” din Configurări › Tastatură este activat. În alte locuri, afișează completările de cuvinte ale macOS. Pe multe tastaturi, țineți apăsată tasta fn (tasta Glob) în timp ce apăsați F5.</p>
+
+<h2><a name="compare"></a>Asocieri de taste, macrocomenzi și completarea comenzilor</h2>
+
+<p>Aceste trei funcții pun toate text în sursă și sunt ușor de confundat. Fiecare se potrivește unei alte sarcini:</p>
+<dl>
+<dt><a href="basic_autocompletion.htm">Asocieri de taste</a></dt>
+<dd>Tastarea unei singure taste inserează text: <code>_</code> dă <code>_{}</code> în jurul selecției, iar ≤ (Opțiune-virgulă pe aranjamentul de tastatură SUA) dă <code>\leq</code>. Configurări › Tastatură le activează pentru documentele noi și conține lista lor; Sursă › Asocieri de taste le activează sau le dezactivează pentru documentul din prim-plan. Tastați mai întâi <code>\</code> pentru a păstra ca atare o tastă precum <code>_</code> sau <code>^</code>. Un caracter tastat cu o tastă moartă, cum ar fi é din Opțiune-E și E, nu poate avea o asociere de taste.</dd>
+<dt><a href="basic_macros.htm">Macrocomenzi</a></dt>
+<dd>Articolele meniului „Macro” inserează text sau rulează programe AppleScript și pot avea o scurtătură de tastatură cu tasta Comandă sau Control ori cu o tastă funcțională. Macro › Deschideți Editorul de Macro... le adaugă, le editează și le ordonează. Textul pe care îl doriți pe o tastă Comandă, cum ar fi <code>\textbf</code> în jurul selecției pe ⌘B, este cel mai bine transformat într-o macrocomandă.</dd>
+<dt>Completarea comenzilor</dt>
+<dd>Tastați începutul unei comenzi sau o abreviere și apăsați tasta de activare: <code>\sec</code> dă <code>\section{•}</code>, tasta de activare apăsată din nou dă următoarea potrivire, iar <code>\benu</code> dă un întreg mediu enumerate cu marcaje. Spre deosebire de asocierile de taste și de macrocomenzi, completarea comenzilor înlocuiește textul selectat.</dd>
+</dl>
+</main>
+</body>
+</html>

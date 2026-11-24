@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>编辑技巧</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="编辑技巧; 括号匹配; 选择行; 注释; 缩进; 标签菜单; 关闭当前环境; 分割源代码; 拖放; 状态栏; 统计; 与剪贴板交换; 带样式拷贝; 字符类型转换; 备份文件">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm" class="current">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>编辑技巧</h1>
+
+<h2>选择</h2>
+
+<p>连按 ( 或 } 等括号，即可选中它与配对括号之间的全部内容；这有助于找出缺失的花括号。按住 Option 键连按则只选中该括号本身。点按或拖过行号可选中整行。“设置”>“编辑器”的“括号匹配”组用于设置键入时如何显示配对的括号。</p>
+
+<h2>注释和缩进</h2>
+
+<p>“源代码”>“注释”（<kbd>⌘{</kbd>）会在所选各行的开头加上 %，“源代码”>“取消注释”（<kbd>⌘}</kbd>）则将其移除。“源代码”>“缩进”和“源代码”>“取消缩进”将所选各行向右或向左移动：在“设置”>“编辑器”>“样式”中打开“用制表符缩进菜单”时移动一个制表符，否则移动“制表符宽度”所设数量的空格。新的一行以与上一行相同的制表符和空格开头；按 Delete 键可将其删除。</p>
+
+<h2>在源代码中移动</h2>
+
+<p>工具栏中的“标签”菜单列出了文稿的章、节和其他结构单元；选取其中一项即可转到那里。以 <code>%:</code> 开头的行会将该行的其余部分作为你自己的标签加入此菜单。“设置”>“编辑器”>“显示”中的“在菜单栏显示标签菜单”会将同样的菜单放到菜单栏中。工具栏中的“引用标签”项目列出文稿中的 <code>\label</code>。“编辑”>“行号…”（<kbd>⌘L</kbd>）可按行号转到某一行。</p>
+
+<p>“窗口”>“分割窗口”（<kbd>⌃2</kbd>）或工具栏中的“分割源代码”项目会将源代码窗口分成两部分，显示相同的文本，这样你可以一边阅读文稿的某一部分，一边编写另一部分。按住 Option 键可将其左右分割。在一部分中键入的内容也会出现在另一部分中。</p>
+
+<h2>少打字</h2>
+
+<p>“源代码”>“关闭当前环境”（<kbd>⌃⌘C</kbd>）会为仍未关闭的环境添加 <code>\end</code> 行，例如在列表之后添加 <code>\end{itemize}</code>。命令补全可补全你已开始键入的命令和环境；请参阅“<a href="basic_commandcompletion.htm">命令补全</a>”。按键绑定会将键入的字符替换为文本；请参阅“<a href="basic_autocompletion.htm">按键绑定</a>”。LaTeX 面板、矩阵面板和“宏”菜单可插入较长的文本。</p>
+
+<h2>将文件拖放到源代码上</h2>
+
+<p>将文件从访达拖到源代码上，即可插入引用该文件的命令：</p>
+
+<table>
+<tr><th>文件</th><th>插入的命令</th></tr>
+<tr><td>.pdf、.png、.jpg、.jpeg、.tif、.tiff、.eps、.ps</td><td><code>\includegraphics[]{<var>路径</var>}</code></td></tr>
+<tr><td>.bib</td><td><code>\bibliography{<var>名称</var>}</code></td></tr>
+<tr><td>.bst</td><td><code>\bibliographystyle{<var>名称</var>}</code></td></tr>
+<tr><td>.sty</td><td><code>\usepackage{<var>名称</var>}</code></td></tr>
+<tr><td>.cls</td><td><code>\documentclass{<var>名称</var>}</code></td></tr>
+<tr><td>其他文件，例如 .tex</td><td><code>\input{<var>路径</var>}</code></td></tr>
+</table>
+
+<p>其中<var>路径</var>是从源文件所在文件夹到该文件的路径，<var>名称</var>是不含扩展名的文件名。拖放的替身会被替换为它所指向的文件，因为 TeX 自己无法找到该文件。路径中含有空格的文件不会被插入；TeXShop 会改为显示警告。</p>
+
+<p>要为某类文件插入其他内容，请打开宏编辑器（“宏”>“打开宏编辑器…”），并添加一个名为 <code>Drag &amp; Drop</code> 的子菜单。在其中添加以扩展名命名的项目，例如 <code>.pdf</code>，其内容就是要插入的文本，例如 <code>\includegraphics[#INS#]{%r}</code>；名为 <code>.*</code> 的项目用于其他所有扩展名，即没有专属项目、也不在上表中的扩展名。内容中可以使用以下缩写：</p>
+
+<dl>
+<dt><code>%F</code></dt><dd>拖放文件的完整路径</dd>
+<dt><code>%f</code></dt><dd>文件名</dd>
+<dt><code>%r</code></dt><dd>从源文件所在文件夹到该文件的路径</dd>
+<dt><code>%n</code></dt><dd>不含扩展名的文件名</dd>
+<dt><code>%e</code></dt><dd>扩展名</dd>
+</dl>
+
+<h2>状态栏和文本统计</h2>
+
+<p>源代码下方的状态栏显示文稿的行数、字符数和单词数，括号中是所选内容中的数量，此外还显示插入点的位置、行和列。字符按看到的样子计数，因此带重音的字母或表情符号都算作一个字符；TeX 命令按书写的样子计数；表情符号也算作一个单词。右侧显示已保存文件的大小。“源代码”>“显示状态栏”用于在所有窗口中显示或隐藏状态栏。</p>
+
+<p>状态栏中的“文本统计…”或“编辑”>“文本统计…”会统计去除 TeX 命令后的文本。TeX Live 的程序 detex 会从文稿或所选内容中去除这些命令，并加入用 <code>\input</code> 和 <code>\include</code> 读入的文件；TeXShop 再以与状态栏相同的方式统计剩下的内容。文稿无需事先保存。统计在弹出窗口打开时以及点按其刷新按钮时进行。</p>
+
+<h2>剪贴板</h2>
+
+<p>“编辑”>“与剪贴板交换”会用剪贴板上的文本替换所选内容，并将所选内容放到剪贴板上。要交换两段文本，请拷贝第一段，选中第二段并选取“与剪贴板交换”，然后选中第一段原来的位置并粘贴。未选中任何内容时，它的作用就是粘贴。</p>
+
+<p>“编辑”>“带样式拷贝”会以源代码的字体和浅色或深色主题的颜色拷贝所选内容（可带或不带背景色），以便粘贴到文字处理应用、演示文稿或电子邮件中。它的四个项目都可以在“设置”>“键盘”中指定快捷键。</p>
+
+<h2>转换字符</h2>
+
+<p>“编辑”菜单中的子菜单“字符类型转换”和“Unicode 规范化”（源代码的快捷菜单中也有）会改写所选内容；如果未选中任何内容，TeXShop 会询问是否改写整份文稿。“字符类型转换”主要用于日语文稿。它可以在平假名和片假名之间、全角和半角数字及字母之间、带圈数字等字符与 ajmacros 宏包的命令之间，以及 JIS X 0208 以外的字符与 otf 宏包的 <code>\UTF</code> 和 <code>\CID</code> 命令之间进行转换。它还可以将弯引号改为 TeX 引号。“Unicode 规范化”会将所选内容转换为 NFC、NFD、NFKC 或 NFKD，或者转换为保留 CJK 兼容汉字不变的 修改 NFC 或 修改 NFD。两者都可以撤销。</p>
+
+<h2>备份文件</h2>
+
+<p>在“设置”>“文稿与保存”中关闭“启用自动保存和版本”时，打开该处的“保存时将之前的文件保留为‘名称~’”，即可在每次保存文件时保留其上一个版本。备份文件在文件名之后、扩展名之前加一个波浪号：paper.tex 的备份为 paper~.tex。</p>
+
+<p>使用正则表达式和批量替换进行查找和替换的方法，请参阅“<a href="basic_find.htm">查找和替换</a>”。</p>
+</main>
+</body>
+</html>

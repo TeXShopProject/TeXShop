@@ -19,7 +19,7 @@
 <li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_encoding.htm">Codierungen</a></li>
 <li><a href="advanced_Japan.htm" class="current">Japanischer Schriftsatz</a></li>
 <li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
 <li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
@@ -49,7 +49,7 @@
 <tr><td>pLaTeX + dvipdfmx</td><td>platex, dann dvipdfmx</td><td>pbibtex, mendex, pmpost</td></tr>
 <tr><td>LuaLaTeX (Japanisch)</td><td>lualatex</td><td>upbibtex, upmendex, mpost</td></tr>
 </table>
-<p>Die japanischen Profile legen außerdem UTF-8 als Kodierung für neue Dokumente fest, stellen das Wörterbuch der Rechtschreibprüfung auf automatische Spracherkennung und schalten „UTF-8-MAC automatisch in UTF-8 umwandeln“ ein. pLaTeX + dvipdfmx schaltet zudem „In \UTF / \CID des otf-Pakets umwandeln“ ein, alle anderen Profile schalten es aus. Ein Dialog listet die Werte auf, die das Profil setzt, bevor Sie bestätigen.</p>
+<p>Die japanischen Profile legen außerdem UTF-8 als Codierung für neue Dokumente fest, stellen das Wörterbuch der Rechtschreibprüfung auf automatische Spracherkennung und schalten „UTF-8-MAC automatisch in UTF-8 umwandeln“ ein. pLaTeX + dvipdfmx schaltet zudem „In \UTF / \CID des otf-Pakets umwandeln“ ein, alle anderen Profile schalten es aus. Ein Dialog listet die Werte auf, die das Profil setzt, bevor Sie bestätigen.</p>
 
 <h2>Zeichen außerhalb von JIS X 0208 mit pLaTeX</h2>
 <p>pTeX liest UTF-8-Quelltext, kennt intern aber nur die Zeichen von JIS X 0208; andere Zeichen, etwa 鷗 in 森鷗外, gehen verloren. Das Paket otf gibt sie mit Befehlen wie <code>\UTF{9DD7}</code> aus. Mit der Einstellung „In \UTF / \CID des otf-Pakets umwandeln“ in der Gruppe „Japanisches pLaTeX“ unter Einstellungen › Satz können Sie diese Zeichen so eingeben, wie sie sind:</p>
@@ -70,15 +70,15 @@
 <p>Manche japanischen Zeichen haben zwei Unicode-Formen. が kann ein einzelnes Zeichen sein (U+304C) oder か (U+304B), gefolgt vom kombinierenden Stimmhaftigkeitszeichen (U+3099). Beide sehen gleich aus, doch TeX behandelt sie als verschieden; ein Befehl, der mit der einen Form definiert ist, wird daher nicht gefunden, wenn er mit der anderen verwendet wird:</p>
 <pre>\def\が{GA}
 \が   % Undefined control sequence, wenn dieses が zerlegt ist</pre>
-<p>Zerlegter Text stammt oft aus Dateinamen, die HFS+-Volumes in zerlegter Form speichern; diese Form heißt UTF-8-MAC. Ist Einstellungen › Dokumente und Sichern › Dokumente sichern › „UTF-8-MAC automatisch in UTF-8 umwandeln“ eingeschaltet, fügt TeXShop solche Zeichen beim Sichern eines Dokuments zu einzelnen Zeichen zusammen. Die CJK-Kompatibilitätsideogramme und andere Zeichen, die die Standardkomposition (NFC) durch andere Zeichen ersetzen würde, lässt es unverändert; diese Form heißt Modified NFC.</p>
-<p>Das Untermenü Bearbeiten › Unicode-Normalisierung wandelt eine Auswahl oder das ganze Dokument in NFC, Modified NFC, NFD, Modified NFD, NFKC oder NFKD um und zeigt danach das Fenster „Info über Zeichen“ für das Ergebnis, da normalisierter Text meist genauso aussieht wie vorher.</p>
+<p>Zerlegter Text stammt oft aus Dateinamen, die HFS+-Volumes in zerlegter Form speichern; diese Form heißt UTF-8-MAC. Ist Einstellungen › Dokumente und Sichern › Dokumente sichern › „UTF-8-MAC automatisch in UTF-8 umwandeln“ eingeschaltet, fügt TeXShop solche Zeichen beim Sichern eines Dokuments zu einzelnen Zeichen zusammen. Die CJK-Kompatibilitätsideogramme und andere Zeichen, die die Standardkomposition (NFC) durch andere Zeichen ersetzen würde, lässt es unverändert; diese Form heißt Modifizierte NFC.</p>
+<p>Das Untermenü Bearbeiten › Unicode-Normalisierung wandelt eine Auswahl oder das ganze Dokument in NFC, Modifizierte NFC, NFD, Modifizierte NFD, NFKC oder NFKD um und zeigt danach das Fenster „Info über Zeichen“ für das Ergebnis, da normalisierter Text meist genauso aussieht wie vorher.</p>
 
 <h2>Yen-Zeichen und Backslash</h2>
 <p>Auf japanischen Tastaturen gibt die Taste an der Stelle des Backslashs das Yen-Zeichen ¥ ein, während TeX-Befehle mit dem Backslash \ beginnen.</p>
 <ul>
-<li>Mit UTF-8, der Kodierung, die die japanischen Profile festlegen, sind ¥ und \ verschiedene Zeichen, und beide bleiben erhalten. Schalten Sie für das Dokument Quelltext › Tastenbelegungen ein: Die mit TeXShop gelieferte Liste der Tastenbelegungen verwandelt ein eingegebenes ¥ in \ und, da ihre Spalte „Einsetzen“ angekreuzt ist, auch das ¥ in Text, der in den Quelltext eingesetzt wird. Siehe <a href="basic_autocompletion.htm">Tastenbelegungen</a>.</li>
-<li>Ist die Kodierung für neue Dokumente eine der japanischen Kodierungen, wandelt TeXShop beim Eingeben und Einsetzen zwischen ¥ und \ um. Mit Japanisch (Mac OS, ShiftJIS ¥) und Japanisch (Shift JIS X0213) zeigt das Quelltextfenster das TeX-Befehlszeichen als ¥, mit den anderen japanischen Kodierungen als \.</li>
-<li>Wird eine Datei in einer japanischen Kodierung gesichert, werden Backslash und Tilde immer als die Bytes 0x5C und 0x7E geschrieben, die TeX erwartet.</li>
+<li>Mit UTF-8, der Codierung, die die japanischen Profile festlegen, sind ¥ und \ verschiedene Zeichen, und beide bleiben erhalten. Schalten Sie für das Dokument Quelltext › Tastenbelegungen ein: Die mit TeXShop gelieferte Liste der Tastenbelegungen verwandelt ein eingegebenes ¥ in \ und, da ihre Spalte „Einsetzen“ angekreuzt ist, auch das ¥ in Text, der in den Quelltext eingesetzt wird. Siehe <a href="basic_autocompletion.htm">Tastenbelegungen</a>.</li>
+<li>Ist die Codierung für neue Dokumente eine der japanischen Codierungen, wandelt TeXShop beim Eingeben und Einsetzen zwischen ¥ und \ um. Mit Japanisch (Mac OS, ShiftJIS ¥) und Japanisch (Shift JIS X0213) zeigt das Quelltextfenster das TeX-Befehlszeichen als ¥, mit den anderen japanischen Codierungen als \.</li>
+<li>Wird eine Datei in einer japanischen Codierung gesichert, werden Backslash und Tilde immer als die Bytes 0x5C und 0x7E geschrieben, die TeX erwartet.</li>
 </ul>
 
 <h2>Weitere Einstellungen für Japanisch</h2>

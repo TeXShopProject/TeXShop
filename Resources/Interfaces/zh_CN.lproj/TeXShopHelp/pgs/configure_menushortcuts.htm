@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>重新定义菜单键盘快捷键</title>
+<meta name="description" content="菜单快捷键；键盘快捷键；“设置”中的“键盘”；按功能搜索；按按键搜索；恢复默认；宏的快捷键；KeyEquivalents.plist；App快捷键">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">如何配置 TeXShop？</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">预备知识</a></li>
+<li><a href="configure_prefchanges.htm">建议更改的设置</a></li>
+<li><a href="configure_correctinstall.htm">获取资源库中的新项目</a></li>
+<li><a href="configure_hidden.htm">隐藏设置</a></li>
+<li><a href="configure_panel.htm">修改 LaTeX 面板</a></li>
+<li><a href="configure_autocompletion.htm">修改按键绑定</a></li>
+<li><a href="configure_menushortcuts.htm" class="current">重新定义菜单键盘快捷键</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>重新定义菜单键盘快捷键</h1>
+<p>在“设置”>“键盘”中，可以为 TeXShop 的任何菜单命令指定你选择的快捷键，或移除它的快捷键。宏的快捷键在宏编辑器中设置。</p>
+
+<h2 id="settings">更改菜单快捷键</h2>
+<p>选取“TeXShop”>“设置…”，然后选择“键盘”。“菜单快捷键”组列出了菜单命令及其快捷键。选择一个命令并点按它的快捷键（或连按该命令，或按 Return 键），然后按下新的快捷键。按 Esc 键或 Return 键会保留原来的快捷键，按 Tab 键则移到下一项。快捷键必须使用 Command 键或 Control 键，或者是功能键 F1–F20 之一。如果另一个命令已在使用该快捷键，TeXShop 会在列表下方提示，并且不做任何更改；请按下其他快捷键。要移除快捷键，请点按栏中的“移除快捷键”（⊖）或按 Delete 键。</p>
+<p>更改会立即生效，并在 TeXShop 重新启动后保留。列表下方的一行显示所选命令的默认快捷键。“恢复默认”会为所选命令恢复默认快捷键，“全部恢复…”则为所有命令执行此操作。如果另一个命令现在正在使用默认快捷键，“恢复默认”不会恢复它；请先更改那个命令。</p>
+<p>当“设置”>“文稿与保存”中的“启用自动保存和版本”打开时，macOS 会在“文件”菜单中添加“复制”和“全部关闭”；它们的快捷键可以像其他命令一样更改。此时“保存为…”保留 macOS 为它指定的快捷键，并在列表中显示为灰色；自动保存关闭时，它的快捷键也可以更改。“窗口”>“进入全屏幕”始终保留 macOS 为它指定的快捷键 <kbd>🌐F</kbd>，并在列表中以灰色显示。</p>
+
+<h2 id="search">查找命令或按键</h2>
+<p>“按功能搜索”按名称或菜单路径查找命令。“按按键搜索”查找某个按键的作用：按下一个快捷键，列表就会显示使用它的菜单命令和宏、哪一个正在生效，以及其他的为何无效。点按结果后会继续录制按键；单独按 Esc 键、再次点按搜索模式、选择其他类别、切换窗口或关闭“设置”都会结束录制。对于宏，请选择“在宏编辑器中显示”来编辑它。用“搜索设置”找到菜单命令时，会打开“键盘”并在“按功能搜索”中显示该命令；请参阅“<a href="basic_preferences.htm#settings-search">搜索设置</a>”。</p>
+
+<h2 id="macros">宏的快捷键</h2>
+<p>宏的快捷键在宏编辑器的列表中设置，详见<a href="macros_define.htm">定义新宏</a>。对于相同的按键和修饰键，菜单命令优先于宏；在宏之间，则由第一个使用该按键的宏取得它。为菜单命令指定某个宏正在使用的快捷键时，会要求确认；该宏仍留在“宏”菜单中，但它的快捷键会失效。宏编辑器会标出失效的快捷键，并显示哪个命令在使用该按键。保存宏时，如果它们的新快捷键已被菜单命令使用，宏编辑器会让你选择返回编辑、在这些快捷键失效的情况下保存，或者移除这些快捷键后保存。</p>
+<p>在预览窗口中，Command-F 和 Command-G 跟随“查找”和“查找下一个”，包括你为它们指定的快捷键。按键绑定（键入单个字符时插入文本）在“设置”>“键盘”的“按键绑定列表”中设置；请参阅<a href="configure_autocompletion.htm">修改按键绑定</a>。</p>
+
+<h2 id="legacy">旧的方法</h2>
+<p>另外两种设置快捷键的方法仍然有效。“设置”>“键盘”更为简便，建议使用它。</p>
+<h3 id="keyequivalents">KeyEquivalents.plist</h3>
+<p>TeXShop 启动时会读取文件 ~/Library/TeXShop/Menus/KeyEquivalents.plist。其中设置的快捷键会成为“设置”>“键盘”中的默认快捷键，因此“恢复默认”会恢复为这些快捷键。文件开头的注释说明了它的格式；请用 TeXShop 编辑它，以 UTF-8 保存，然后再次启动 TeXShop。</p>
+<h3 id="app-shortcuts">macOS 的 App 快捷键</h3>
+<p>在 macOS 的“系统设置”中，“键盘”>“键盘快捷键…”>“App 快捷键”可以按 TeXShop 菜单命令的准确标题（使用你的菜单语言）为它指定快捷键。TeXShop 重新命名该菜单命令后，这样的快捷键就会失效，因此请改为在“设置”>“键盘”中设置快捷键。</p>
+</main>
+</body>
+</html>

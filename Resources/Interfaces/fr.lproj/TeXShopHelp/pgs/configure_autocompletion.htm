@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modifier les raccourcis de saisie</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="raccourcis de saisie; Liste des raccourcis de saisie; modifier les raccourcis de saisie; Caractère saisi; Texte produit; Coller; dossier Keyboard; autocompletion.plist">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Comment configurer TeXShop ?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Préliminaires</a></li>
+<li><a href="configure_prefchanges.htm">Modifications recommandées des réglages</a></li>
+<li><a href="configure_correctinstall.htm">Obtenir les nouveaux éléments de la bibliothèque</a></li>
+<li><a href="configure_hidden.htm">Réglages cachés</a></li>
+<li><a href="configure_panel.htm">Modifier la palette LaTeX</a></li>
+<li><a href="configure_autocompletion.htm" class="current">Modifier les raccourcis de saisie</a></li>
+<li><a href="configure_menushortcuts.htm">Redéfinir les raccourcis clavier des menus</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Modifier les raccourcis de saisie</h1>
+<p>Les raccourcis de saisie remplacent un caractère saisi par un texte, par exemple ^ par ^{} avec le point d’insertion entre les accolades ; <a href="basic_autocompletion.htm">Raccourcis de saisie</a> explique comment les utiliser. Cette page explique comment modifier la liste.</p>
+
+<h2 id="on-off">Activer les raccourcis de saisie</h2>
+<p>« Utiliser les raccourcis de saisie (valeur initiale des nouveaux documents) », dans Réglages › Clavier, détermine si les raccourcis de saisie sont activés à l’ouverture d’un document ; ce réglage est désactivé au départ. Source › Raccourcis de saisie les active ou les désactive pour le document actif seulement, et l’élément facultatif « Raccourcis de saisie » de la barre d’outils fait de même.</p>
+
+<h2 id="edit">Modifier la liste</h2>
+<p>La « Liste des raccourcis de saisie » de Réglages › Clavier affiche chaque caractère saisi avec son texte produit. Double-cliquez sur une cellule pour la modifier sur place. Cliquez sur + sous la liste pour ajouter un raccourci de saisie et sur − pour supprimer ceux qui sont sélectionnés ; faites glisser des lignes pour changer leur ordre. Un caractère saisi est un caractère unique. Les modifications sont enregistrées aussitôt et s’appliquent immédiatement, y compris dans les documents déjà ouverts ; Édition › Annuler les annule.</p>
+<p>Un texte produit peut contenir les symboles suivants, que la liste affiche sous forme de petites étiquettes :</p>
+<dl>
+<dt>#SEL#</dt><dd>le texte qui était sélectionné lorsque la touche a été tapée</dd>
+<dt>#INS#</dt><dd>l’endroit où va le point d’insertion</dd>
+<dt>#PASTE#</dt><dd>le texte du presse-papiers</dd>
+<dt>•</dt><dd>un repère, vers lequel Édition › Repères permet de se déplacer</dd>
+</dl>
+<p>Ajoutez-les avec le menu « Insérer » situé sous la liste, ou tapez-les tels qu’ils sont écrits ci-dessus ; Option-Retour insère un saut de ligne et Option-Tab une tabulation. Le bouton ? situé à côté de la liste les affiche tous. Copier un texte produit copie les symboles tels qu’ils sont écrits ci-dessus.</p>
+<p>Une coche dans la colonne « Coller » applique aussi un raccourci de saisie au texte collé : tant que les raccourcis de saisie sont activés pour le document, chaque occurrence de son caractère saisi dans un texte collé ou déposé dans la source est remplacée par son texte produit. Les raccourcis de saisie dont le texte produit contient #SEL#, #INS#, #PASTE# ou un repère ne peuvent pas être cochés.</p>
+
+<h2 id="reset">Revenir à la liste par défaut</h2>
+<p>La liste est conservée dans le dossier ~/Library/TeXShop/Keyboard. Pour revenir à la liste fournie avec TeXShop, quittez TeXShop, déplacez le dossier Keyboard sur le bureau et relancez TeXShop ; il recrée le dossier avec son contenu par défaut.</p>
+</main>
+</body>
+</html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Writing Scripts with TeXShop Typesetting Commands</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; Bibliography macro; latexinteractive; bibtex; taskdone; sequence of typesetting commands">
+<meta name="description" content="AppleScript; bibliography; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; sequence of typesetting commands">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <main id="content">
 <h1>Writing Scripts with TeXShop Typesetting Commands</h1>
 <p>A document with a bibliography needs a sequence of typesetting runs: LaTeX writes the .aux file, BibTeX uses it to write the .bbl and .blg files, LaTeX runs again to add the bibliography to the document, and once more to update the references to it. Your projects may need similar sequences, and an AppleScript macro can run them for you.</p>
-<p>The macro Macros › Applescript › Bibliography, which comes with TeXShop, shows how. Here are its contents:</p>
+<p>The macro Macros › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice, which comes with TeXShop, shows how. Here are its contents:</p>
 <pre>--Applescript
 
 set fileName to #FILEPATH#

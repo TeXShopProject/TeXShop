@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aux-Dateien entfernen</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-<meta name="description" content="Aux-Dateien löschen; Aux-Dateien löschen &amp; Setzen; aux; log; Hilfsdateien; OtherTrashExtensions; AggressiveTrashAUX">
+<meta name="description" content="Aux-Dateien in den Papierkorb legen; Aux-Dateien in den Papierkorb legen und setzen; aux; log; Hilfsdateien; OtherTrashExtensions; AggressiveTrashAUX">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -19,7 +19,7 @@
 <li><a href="advanced_formats.htm">TeX-Formate erstellen und verwenden</a></li>
 <li><a href="advanced_xetex.htm">XeLaTeX und LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-<li><a href="advanced_encoding.htm">Kodierungen</a></li>
+<li><a href="advanced_encoding.htm">Codierungen</a></li>
 <li><a href="advanced_Japan.htm">Japanischer Schriftsatz</a></li>
 <li><a href="advanced_root.htm">Die Hauptdatei eines Projekts festlegen</a></li>
 <li><a href="advanced_pdfsync.htm">Quelltext und Vorschau synchronisieren</a></li>
@@ -43,8 +43,8 @@
 
 <h2>Die Dateien in den Papierkorb bewegen</h2>
 <ul>
-<li>Ablage › Aux-Dateien löschen (<kbd>⌃⌘A</kbd>) oder die Taste „Aux-Dateien löschen“ in der Konsole bewegt die Hilfsdateien des Dokuments in den Papierkorb.</li>
-<li>Setzen › Aux-Dateien löschen &amp; Setzen (<kbd>⌥⌘T</kbd>) tut dies und setzt danach. Im Menü „Setzen“ erscheint der Eintrag anstelle von „Setzen“, solange Sie die Wahltaste gedrückt halten.</li>
+<li>Ablage › Aux-Dateien in den Papierkorb legen (<kbd>⌃⌘A</kbd>) oder die Taste „Aux-Dateien in den Papierkorb legen“ in der Konsole bewegt die Hilfsdateien des Dokuments in den Papierkorb.</li>
+<li>Setzen › Aux-Dateien in den Papierkorb legen und setzen (<kbd>⌥⌘T</kbd>) tut dies und setzt danach. Im Menü „Setzen“ erscheint der Eintrag anstelle von „Setzen“, solange Sie die Wahltaste gedrückt halten.</li>
 </ul>
 <p>In den Papierkorb kommen die Dateien im Ordner der Quelltextdatei, die deren Namen und eine der folgenden Endungen haben:</p>
 <pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
@@ -56,14 +56,14 @@ ttt  wrm  xref</pre>
 
 <h2>Varianten</h2>
 <ul>
-<li>Halten Sie beim Wählen von „Aux-Dateien löschen“ oder beim Klicken auf die Taste die Umschalttaste gedrückt, um auch die PDF-Datei des Dokuments in den Papierkorb zu bewegen. Gewöhnlich bleibt das alte PDF erhalten, damit das Vorschaufenster etwas anzeigen kann, wenn das Setzen scheitert.</li>
-<li>Halten Sie beim Wählen von „Aux-Dateien löschen“ oder beim Klicken auf die Taste die Wahltaste gedrückt, um ein ganzes Projekt aufzuräumen: Jede Datei mit einer der obigen Endungen im Ordner der Hauptdatei und in allen Ordnern darunter kommt in den Papierkorb, gleich wie sie heißt. Damit werden auch die <code>.aux</code>-Dateien entfernt, die <code>\include</code> für Kapitel in Unterordnern schreibt.</li>
+<li>Halten Sie beim Wählen von „Aux-Dateien in den Papierkorb legen“ oder beim Klicken auf die Taste die Umschalttaste gedrückt, um auch die PDF-Datei des Dokuments in den Papierkorb zu bewegen. Gewöhnlich bleibt das alte PDF erhalten, damit das Vorschaufenster etwas anzeigen kann, wenn das Setzen scheitert.</li>
+<li>Halten Sie beim Wählen von „Aux-Dateien in den Papierkorb legen“ oder beim Klicken auf die Taste die Wahltaste gedrückt, um ein ganzes Projekt aufzuräumen: Jede Datei mit einer der obigen Endungen im Ordner der Hauptdatei und in allen Ordnern darunter kommt in den Papierkorb, gleich wie sie heißt. Damit werden auch die <code>.aux</code>-Dateien entfernt, die <code>\include</code> für Kapitel in Unterordnern schreibt.</li>
 </ul>
 <p>Zwei versteckte Einstellungen ändern das Verhalten. Um der Liste Endungen hinzuzufügen, etwa <code>dvi</code>, geben Sie im Terminal ein:</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
 <p>und um zur Standardliste zurückzukehren:</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array</pre>
-<p>Um das Verhalten mit der Wahltaste zum Standardverhalten von „Aux-Dateien löschen“ zu machen:</p>
+<p>Um das Verhalten mit der Wahltaste zum Standardverhalten von „Aux-Dateien in den Papierkorb legen“ zu machen:</p>
 <pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
 </main>
 </body>

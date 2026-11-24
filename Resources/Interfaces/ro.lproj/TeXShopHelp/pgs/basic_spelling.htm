@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verificarea ortografiei</title>
+<meta name="description" content="verificarea ortografiei; verificare adaptată la LaTeX; reguli de excludere pentru ortografie; metoda anterioară; dicționar; Afișați ortografia și gramatica; % !TEX spellcheck">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor de bază</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="basic_installtetex.htm">Instalarea TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Instalarea TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Compilarea documentelor</a></li>
+<li><a href="basic_alternatetypeset.htm">Modul de compilare alternativ</a></li>
+<li><a href="basic_preview.htm">Fereastra de previzualizare</a></li>
+<li><a href="basic_edittricks.htm">Trucuri de editare</a></li>
+<li><a href="basic_find.htm">Căutare și înlocuire</a></li>
+<li><a href="basic_texrootsearch.htm">Căutare în sursele TeX</a></li>
+<li><a href="basic_spelling.htm" class="current">Verificarea ortografiei</a></li>
+<li><a href="basic_autocompletion.htm">Asocieri de taste</a></li>
+<li><a href="basic_commandcompletion.htm">Completarea comenzilor</a></li>
+<li><a href="basic_latexpanel.htm">Panoul LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panoul de matrice</a></li>
+<li><a href="basic_macros.htm">Macrocomenzi</a></li>
+<li><a href="basic_toolbar.htm">Bara de instrumente și AppleScript</a></li>
+<li><a href="basic_graphics.htm">Includerea imaginilor</a></li>
+<li><a href="basic_printing.htm">Tipărirea</a></li>
+<li><a href="basic_preferences.htm">Modificarea configurărilor</a></li>
+<li><a href="basic_templates.htm">Modele și șabloane</a></li>
+<li><a href="basic_miscellaneous.htm">Ferestre și file</a></li>
+<li><a href="basic_bugs.htm">Trimiterea rapoartelor de erori</a></li>
+<li><a href="basic_websites.htm">Site-uri web utile</a></li>
+<li><a href="basic_license.htm">Licență</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Verificarea ortografiei</h1>
+
+<p>TeXShop verifică ortografia cu verificatorul ortografic și dicționarele macOS. Verificarea adaptată la LaTeX este activată de la început: verifică textul și omite comenzile TeX, formulele matematice, comentariile și argumentele unor comenzi precum <code>\label</code>, <code>\ref</code>, <code>\cite</code> și <code>\usepackage</code>, precum și argumentele care nu sunt text propriu-zis, cum ar fi cheile, culorile și unitățile, ale pachetelor uzuale. Comenzile pe care documentul le definește cu <code>\newcommand</code>, <code>\def</code> și altele asemănătoare sunt citite, astfel încât un argument pe care o definiție îl transmite lui <code>\ref</code> sau într-o formulă matematică este și el omis. Textul marcat ca fiind în altă limbă, de exemplu cu <code>\foreignlanguage</code>, este verificat în acea limbă, dar nu este subliniat în timp ce tastați.</p>
+
+<h2>Verificarea unui document</h2>
+
+<p>Cuvintele scrise greșit sunt subliniate în timp ce tastați, cât timp Editare › Ortografie și gramatică › Verificați ortografia în timpul scrierii este activat. Pentru a parcurge documentul cuvânt cu cuvânt, alegeți Editare › Ortografie și gramatică › Afișați ortografia și gramatica (<kbd>⌘:</kbd>): panoul afișează primul cuvânt scris greșit după punctul de inserare. Faceți clic pe „Găsiți următorul” în panou sau alegeți „Verificați documentul acum” (<kbd>⌘;</kbd>) pentru a trece la următorul. Țineți apăsată tasta Opțiune în timp ce faceți acest lucru pentru a folosi căutarea macOS, care nu omite niciun marcaj.</p>
+
+<p>Pentru a înlocui un cuvânt peste tot, tastați înlocuirea în câmpul „Înlocuire pentru Schimbați tot” din panou sau selectați o sugestie și faceți clic pe „Schimbați tot”; o singură comandă „Infirmați” retrage modificarea. După ce editați documentul sau selectați alt text, faceți din nou clic pe „Găsiți următorul” înainte de a schimba un cuvânt. Dacă ați editat câmpul „Înlocuire pentru Schimbați tot” și doriți o sugestie care era selectată, selectați mai întâi altă sugestie și apoi pe aceea; când există o singură sugestie, tastați-o. „Uitați cuvintele învățate…” din submeniul „Ortografie și gramatică” enumeră cuvintele documentului care au fost învățate pentru limba curentă și le elimină din dicționar pe cele pe care le selectați. „Corectați ortografia automat” din același submeniu schimbă cuvintele în timp ce tastați; inițial este dezactivat, ceea ce se potrivește cu TeX, unde ar schimba și comenzile.</p>
+
+<h2>Configurări › Ortografie</h2>
+
+<p>În grupul „Verificarea ortografiei”, „Verificați ortografia în timpul scrierii” stabilește dacă într-un document cuvintele scrise greșit sunt subliniate atunci când acesta se deschide, „Corectați ortografia” stabilește dacă „Corectați ortografia automat” este activat într-un document atunci când acesta se deschide, iar „Dicționar” este descris mai jos. Grupul „Metodă” alege cum este verificată sursa TeX:</p>
+<dl>
+<dt>„Folosiți verificarea adaptată la LaTeX (recomandat)”</dt>
+<dd>Metoda descrisă mai sus. „Editați excluderile LaTeX…” de la capătul liniei sale deschide regulile care spun ce se omite.</dd>
+<dt>„Metoda anterioară”</dt>
+<dd>macOS verifică tot, cu excepția a ceea ce omit cele trei opțiuni de sub ea: „Omiteți comenzile LaTeX”, „Omiteți parametrii selectați”, care omite parametrii unor comenzi cu cuvinte speciale, cum ar fi <code>\usepackage</code>, și „Omiteți comentariile”. Aceste opțiuni funcționează doar cât timp evidențierea sintaxei este activată, iar „Verificați documentul acum” nu ține cont de ele.</dd>
+</dl>
+<p>Metoda adaptată la LaTeX verifică documentele care nu au fost încă salvate și fișierele cu extensiile tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx și lbx. Celelalte fișiere, cum ar fi fișierele Sweave, sunt verificate întotdeauna cu metoda anterioară.</p>
+
+<h2>Reguli de excludere</h2>
+
+<p>Regulile verificării adaptate la LaTeX se află în fișierul ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Deschideți-l cu „Editați excluderile LaTeX…” din Configurări sau cu Editare › Ortografie și gramatică › Editați excluderile de ortografie…; se deschide în TeXShop, iar începutul lui explică formatul. De exemplu, aceste linii omit primul argument al unei comenzi <code>\mycommand</code> și conținutul mediului <code>proof</code>:</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>Modificările intră în vigoare la următoarea verificare a ortografiei. Dacă fișierul este șters, TeXShop creează o copie nouă a fișierului implicit la următoarea pornire. Pentru a nu omite absolut nimic, lăsați în el doar linii de comentariu.</p>
+
+<h2>Dicționare</h2>
+
+<p>„Dicționar” din Configurări › Ortografie alege dicționarul documentelor. O alegere nouă se aplică și documentelor deschise, cu excepția celor al căror dicționar a fost ales cu o linie <code>% !TEX spellcheck</code> sau în panoul „Ortografie și gramatică”. Meniul afișează fiecare limbă sub numele ei propriu, de exemplu Deutsch sau Français, cu codul ei, de exemplu de sau fr_CA, ca indicație. „Detectare automată a limbii” lasă macOS să aleagă limba după text.</p>
+
+<p>Pentru a folosi alt dicționar pentru un singur document, alegeți-l din meniul pop-up din partea de jos a panoului „Ortografie și gramatică”, cât timp acel document este în prim-plan. Fiecare document deschis își păstrează propriul dicționar, iar panoul se schimbă când treceți la alt document. Alegerea nu se păstrează după închiderea documentului.</p>
+
+<p>Pentru ca un document să primească dicționarul său de fiecare dată când se deschide, puneți o linie ca aceasta printre primele lui 20 de linii:</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>Valoarea este un cod de limbă, ca în indicațiile meniului „Dicționar”: <code>fr</code> pentru franceză sau <code>fr_CA</code> pentru franceza din Canada; poate fi scris și cu cratimă, ca <code>fr-CA</code>. Linia este citită la deschiderea documentului, așa că, după ce o adăugați, salvați, închideți și deschideți din nou documentul. Într-un document cu fișiere de capitol, puneți linia în fiecare fișier.</p>
+
+<p>Consultați <a href="basic_preferences.htm#settings-search">Căutarea în configurări</a> pentru găsirea configurărilor în fereastra Configurări.</p>
+</main>
+</body>
+</html>

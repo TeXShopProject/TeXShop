@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TeXShop 조판 명령으로 스크립트 작성하기</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="AppleScript; Bibliography 매크로; latexinteractive; bibtex; taskdone; 연속 조판 명령">
+<meta name="description" content="AppleScript; 참고 문헌; Run LaTeX, BibTeX, Then LaTeX Twice; latexinteractive; bibtex; taskdone; 연속 조판 명령">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <main id="content">
 <h1>TeXShop 조판 명령으로 스크립트 작성하기</h1>
 <p>참고 문헌 목록이 있는 문서는 여러 번 차례로 조판해야 합니다. LaTeX가 .aux 파일을 기록하면 BibTeX가 그 파일을 사용하여 .bbl 파일과 .blg 파일을 기록하고, LaTeX를 다시 실행하여 문서에 참고 문헌 목록을 추가한 뒤, 한 번 더 실행하여 목록에 대한 참조를 갱신합니다. 다른 프로젝트에도 이와 비슷한 순서가 필요할 수 있으며, AppleScript 매크로로 이를 자동으로 실행할 수 있습니다.</p>
-<p>TeXShop에 들어 있는 매크로 › Applescript › Bibliography가 그 방법을 보여 줍니다. 내용은 다음과 같습니다.</p>
+<p>TeXShop에 들어 있는 매크로 › Applescript › Run LaTeX, BibTeX, Then LaTeX Twice가 그 방법을 보여 줍니다. 내용은 다음과 같습니다.</p>
 <pre>--Applescript
 
 set fileName to #FILEPATH#

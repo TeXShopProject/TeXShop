@@ -95,12 +95,12 @@ tiToolTipAutoComplete			= "키 바인딩 켜기/끄기";
 
 tiLabelSplit				= "소스 분할";
 tiPaletteLabelSplit			= "소스 분할";
-tiToolTipSplit				= "소스 분할 켜기/끄기(Option-클릭은 세로로 나누기)";
+tiToolTipSplit				= "소스 분할 켜기/끄기(Option-클릭은 세로로 분할)";
 
 tiLabelSplitKIT				= "미리보기 분할";
 tiPaletteLabelSplitKIT		= "미리보기 분할";
-tiToolTipSplitKIT			= "미리보기 분할 켜기/끄기(Option-클릭은 세로로 나누기)";
-"tiToolTipSplitKITContinuous" = "미리보기 분할 켜기/끄기(Option-클릭은 세로로 나누기, Shift-클릭은 아래에 페이지 이어서 보기)";
+tiToolTipSplitKIT			= "미리보기 분할 켜기/끄기(Option-클릭은 세로로 분할)";
+"tiToolTipSplitKITContinuous" = "미리보기 분할 켜기/끄기(Option-클릭은 세로로 분할, Shift-클릭은 아래에 페이지 이어서 보기)";
 
 tiLabelMacros				= "매크로";
 tiPaletteLabelMacros		= "매크로";
@@ -160,7 +160,7 @@ tiToolTipMouseModeScroll = "스크롤: 드래그하여 문서 이동";
 tiToolTipMouseModeSelectText = "텍스트 선택: 드래그하여 복사할 텍스트 선택";
 tiToolTipMouseModeMagnify = "확대경: 누르고 있는 동안 작은 확대경으로 보기";
 tiToolTipMouseModeMagnifyLarge = "확대경 (크게): 누르고 있는 동안 큰 확대경으로 보기";
-tiToolTipMouseModeSelectPDF = "범위 선택: 드래그하여 이미지로 복사할 영역 선택";
+tiToolTipMouseModeSelectPDF = "직사각형 선택: 드래그하여 이미지로 복사할 영역 선택";
 
 tiLabelSyncMarksKIT				= "동기화 마크";
 tiPaletteLabelSyncMarksKIT		= "동기화 마크";
@@ -253,9 +253,9 @@ tiToolTipHtmlSearch           = "검색";
 
 /* Experiment preview tools */
 "ExperimentToolScroll" = "스크롤";
-"ExperimentToolSelectText" = "글자 선택";
+"ExperimentToolSelectText" = "텍스트 선택";
 "ExperimentToolMagnify" = "확대경";
-"ExperimentToolSelectPDF" = "영역 선택";
+"ExperimentToolSelectPDF" = "직사각형 선택";
 "ExperimentZoomOut" = "축소";
 "ExperimentZoomIn" = "확대";
 "ExperimentZoomToContent" = "내용에 맞게 확대/축소";

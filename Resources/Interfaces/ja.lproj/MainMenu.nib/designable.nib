@@ -572,7 +572,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="TCp-I6-1As"/>
-                                        <menuItem title="全角引用符 → 半角引用符" tag="11" id="BBe-tY-EcP" identifier="TSShortcut.convertCharacterType:.11">
+                                        <menuItem title="“ ” ‘ ’ → TeXの引用符" tag="11" id="BBe-tY-EcP" identifier="TSShortcut.convertCharacterType:.11">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="convertCharacterType:" target="-1" id="JiB-F0-YNz"/>
@@ -591,7 +591,7 @@
                                                 <action selector="normalizeSelectedString:" target="-1" id="OSq-UW-xQn"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Modified NFC" tag="2" id="dSP-3T-qjs" identifier="TSShortcut.normalizeSelectedString:.2">
+                                        <menuItem title="修正NFC" tag="2" id="dSP-3T-qjs" identifier="TSShortcut.normalizeSelectedString:.2">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="normalizeSelectedString:" target="-1" id="4gR-V4-gp3"/>
@@ -603,7 +603,7 @@
                                                 <action selector="normalizeSelectedString:" target="-1" id="M5f-WZ-Xrr"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Modified NFD" tag="4" id="Bz8-dv-IYi" identifier="TSShortcut.normalizeSelectedString:.4">
+                                        <menuItem title="修正NFD" tag="4" id="Bz8-dv-IYi" identifier="TSShortcut.normalizeSelectedString:.4">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="normalizeSelectedString:" target="-1" id="27u-oA-DGH"/>
@@ -745,12 +745,12 @@
                                                 <action selector="setLineBreakMode:" target="-1" id="662"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="ワード毎" tag="1" id="658" identifier="TSShortcut.setLineBreakMode:.1">
+                                        <menuItem title="単語単位で" tag="1" id="658" identifier="TSShortcut.setLineBreakMode:.1">
                                             <connections>
                                                 <action selector="setLineBreakMode:" target="-1" id="663"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="文字毎" tag="2" id="656" identifier="TSShortcut.setLineBreakMode:.2">
+                                        <menuItem title="文字単位で" tag="2" id="656" identifier="TSShortcut.setLineBreakMode:.2">
                                             <connections>
                                                 <action selector="setLineBreakMode:" target="-1" id="664"/>
                                             </connections>
@@ -838,18 +838,6 @@
                                                 <action selector="orderFrontFontPanel:" target="202" id="319"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="ボールド" tag="2" id="287" identifier="TSShortcut.addFontTrait:.2">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="202" id="318"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="イタリック" tag="1" id="296" identifier="TSShortcut.addFontTrait:.1">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="addFontTrait:" target="202" id="333"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="782">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
@@ -861,113 +849,6 @@
                                         <menuItem title="小さく" tag="4" keyEquivalent="-" id="780" identifier="TSShortcut.modifyFont:.4">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="784"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="6Mj-Rh-pok">
-                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                                        </menuItem>
-                                        <menuItem title="カーニング" id="S1c-sb-GQ8">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="カーニング" id="mtZ-Yj-NEa">
-                                                <items>
-                                                    <menuItem title="デフォルト" id="j6y-lA-FdL" identifier="TSShortcut.useStandardKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardKerning:" target="-1" id="fnd-vw-sEU"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="使用しない" id="cCa-ad-9av" identifier="TSShortcut.turnOffKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffKerning:" target="-1" id="ygZ-YS-N2A"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="きつく" id="NOu-ZY-CYT" identifier="TSShortcut.tightenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="tightenKerning:" target="-1" id="wmY-1o-PGQ"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="ゆるく" id="Spr-Q3-s2V" identifier="TSShortcut.loosenKerning:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="loosenKerning:" target="-1" id="c1d-Qj-j7p"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="リガチャ" id="ST6-Mr-CZL">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="リガチャ" id="hfC-HD-Aff">
-                                                <items>
-                                                    <menuItem title="デフォルト" id="CjS-6X-5Zs" identifier="TSShortcut.useStandardLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useStandardLigatures:" target="-1" id="O5o-Eh-nbE"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="使用しない" id="fmg-lI-D7F" identifier="TSShortcut.turnOffLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="turnOffLigatures:" target="-1" id="DX1-61-Fdc"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="すべて使用" id="sGM-DZ-veu" identifier="TSShortcut.useAllLigatures:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="useAllLigatures:" target="-1" id="KYt-t6-gKq"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem title="ベースライン" id="jk5-NR-cnB">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="ベースライン" id="YAa-jA-ac5">
-                                                <items>
-                                                    <menuItem title="デフォルト" id="BKh-is-5Gc" identifier="TSShortcut.unscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="unscript:" target="-1" id="4bn-s9-S7D"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="上付き" id="wkk-aU-OST" identifier="TSShortcut.superscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="superscript:" target="-1" id="LfL-K1-1eU"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="下付き" id="qKn-hT-zyq" identifier="TSShortcut.subscript:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="subscript:" target="-1" id="Mq3-yP-7GB"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="上げる" keyEquivalent="5" id="Zay-jO-yyw" identifier="TSShortcut.raiseBaseline:.0">
-                                                        <connections>
-                                                            <action selector="raiseBaseline:" target="-1" id="Un5-Si-A2W"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="下げる" keyEquivalent="6" id="6EJ-1d-S7U" identifier="TSShortcut.lowerBaseline:.0">
-                                                        <connections>
-                                                            <action selector="lowerBaseline:" target="-1" id="UJv-2g-cuW"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="OTY-Uk-oSs"/>
-                                        <menuItem title="スタイルをコピー" keyEquivalent="c" id="Wv3-RU-coH" identifier="TSShortcut.copyFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="copyFont:" target="-1" id="WLr-ge-vk8"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="スタイルをペースト" keyEquivalent="v" id="pES-Zc-1Qb" identifier="TSShortcut.pasteFont:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="pasteFont:" target="-1" id="XFM-d8-Srg"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1208,12 +1089,12 @@
                                                 <action selector="changePageStyle:" target="-1" id="593"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="複数ページ" tag="3" id="566" identifier="TSShortcut.changePageStyle:.3">
+                                        <menuItem title="連続ページ" tag="3" id="566" identifier="TSShortcut.changePageStyle:.3">
                                             <connections>
                                                 <action selector="changePageStyle:" target="-1" id="594"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="複数見開きページ" tag="4" id="567" identifier="TSShortcut.changePageStyle:.4">
+                                        <menuItem title="連続見開きページ" tag="4" id="567" identifier="TSShortcut.changePageStyle:.4">
                                             <connections>
                                                 <action selector="changePageStyle:" target="-1" id="595"/>
                                             </connections>
@@ -1317,8 +1198,7 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="フルスクリーンにする" keyEquivalent="f" id="1025" identifier="TSShortcut.toggleFullScreen:.0">
-                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                            <menuItem title="フルスクリーンにする" id="1025" identifier="TSShortcut.toggleFullScreen:.0">
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="1026"/>
                                 </connections>
@@ -1346,7 +1226,7 @@
                                     <action selector="switchSplitViews:" target="-1" id="rs5-cB-ypo"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="ソース／プレビューを切換" keyEquivalent="1" id="605" identifier="TSShortcut.associatedWindow:.0">
+                            <menuItem title="ソース／プレビューを切り替え" keyEquivalent="1" id="605" identifier="TSShortcut.associatedWindow:.0">
                                 <connections>
                                     <action selector="associatedWindow:" target="-1" id="606"/>
                                 </connections>

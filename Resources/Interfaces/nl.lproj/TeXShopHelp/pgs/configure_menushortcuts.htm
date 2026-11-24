@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toetscombinaties van menu’s wijzigen</title>
+<meta name="description" content="menutoetscombinaties; toetscombinaties; Instellingen Toetsenbord; Zoeken op functie; Zoeken op toets; Herstel standaard; toetscombinaties van macro’s; KeyEquivalents.plist; toetscombinaties voor apps">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Hoe configureer ik TeXShop?</span></header>
+<nav id="menu">
+<ul>
+<li><a href="configure_preliminaries.htm">Inleiding</a></li>
+<li><a href="configure_prefchanges.htm">Aanbevolen wijzigingen in de instellingen</a></li>
+<li><a href="configure_correctinstall.htm">Nieuwe bestanden in de bibliotheek krijgen</a></li>
+<li><a href="configure_hidden.htm">Verborgen instellingen</a></li>
+<li><a href="configure_panel.htm">Het LaTeX-venster aanpassen</a></li>
+<li><a href="configure_autocompletion.htm">Toetsbindingen aanpassen</a></li>
+<li><a href="configure_menushortcuts.htm" class="current">Toetscombinaties van menu’s wijzigen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Toetscombinaties van menu’s wijzigen</h1>
+<p>Elk menucommando van TeXShop kan in Instellingen › Toetsenbord een toetscombinatie naar keuze krijgen, of zijn toetscombinatie kwijtraken. Toetscombinaties van macro’s stelt u in de macro-editor in.</p>
+
+<h2 id="settings">Een toetscombinatie van een menu wijzigen</h2>
+<p>Kies TeXShop › Instellingen… en selecteer ‘Toetsenbord’. De groep ‘Menutoetscombinaties’ toont de menucommando’s met hun toetscombinaties. Selecteer een commando en klik op de toetscombinatie ervan (of klik dubbel op het commando, of druk op Return), en druk dan de nieuwe toetscombinatie in. Escape of Return behoudt de oude, en Tab gaat verder. Een toetscombinatie moet de Command- of Control-toets gebruiken, of een van de functietoetsen F1–F20 zijn. Als een ander commando de toetscombinatie al gebruikt, meldt TeXShop dat onder de lijst en wijzigt het niets; druk een andere toetscombinatie in. Om een toetscombinatie te verwijderen, klikt u in het veld op ‘Verwijder toetscombinatie’ (⊖) of drukt u op Delete.</p>
+<p>Wijzigingen gelden meteen en blijven behouden wanneer TeXShop opnieuw start. De regel onder de lijst toont de standaardtoetscombinatie van het geselecteerde commando. ‘Herstel standaard’ geeft het geselecteerde commando zijn standaardtoetscombinatie terug, en ‘Herstel alles…’ doet dat voor alle commando’s. Als een ander commando de standaardtoetscombinatie inmiddels gebruikt, herstelt ‘Herstel standaard’ haar niet; wijzig dan eerst het andere commando.</p>
+<p>Wanneer ‘Automatisch bewaren en versies inschakelen’ in Instellingen › Documenten en bewaren aan staat, voegt macOS ‘Dupliceer’ en ‘Sluit alles’ toe aan het menu Archief; hun toetscombinaties kunt u wijzigen zoals die van andere commando’s. ‘Bewaar als…’ behoudt dan de toetscombinatie die macOS eraan geeft en is in de lijst grijs weergegeven; met automatisch bewaren uit kan ook die worden gewijzigd. ‘Venster’ › ‘Schakel schermvullende weergave in’ behoudt altijd de toetscombinatie die macOS eraan geeft, <kbd>🌐F</kbd>, en is in de lijst grijs weergegeven.</p>
+
+<h2 id="search">Een commando of een toets vinden</h2>
+<p>‘Zoeken op functie’ vindt een commando aan de hand van de naam of het menupad. ‘Zoeken op toets’ vindt wat een toets doet: druk een toetscombinatie in, en de lijst toont de menucommando’s en macro’s die haar gebruiken, welke ervan actief is en waarom de andere niet actief zijn. Als u op een resultaat klikt, blijft de opname aan; alleen Escape, opnieuw op de zoekmodus klikken, een andere categorie kiezen, van venster wisselen of Instellingen sluiten beëindigt haar. Kies bij een macro ‘Toon in macro-editor’ om haar te bewerken. Een menucommando dat met ‘Zoek in instellingen’ is gevonden, opent ‘Toetsenbord’ met het commando in ‘Zoeken op functie’; zie <a href="basic_preferences.htm#settings-search">Zoek in instellingen</a>.</p>
+
+<h2 id="macros">Toetscombinaties van macro’s</h2>
+<p>Toetscombinaties van macro’s stelt u in de lijst van de macro-editor in, zoals beschreven in <a href="macros_define.htm">Nieuwe macro’s definiëren</a>. Bij dezelfde toets en dezelfde speciale toetsen gaat een menucommando voor een macro, en van de macro’s krijgt de eerste met die toets haar. Als u een menucommando een toetscombinatie geeft die een macro gebruikt, wordt om bevestiging gevraagd; de macro blijft in het menu Macro’s, maar de toetscombinatie ervan wordt inactief. De macro-editor markeert inactieve toetscombinaties en toont welk commando de toets gebruikt. Wanneer u macro’s bewaart waarvan de nieuwe toetscombinaties door menucommando’s worden gebruikt, kunt u in de macro-editor teruggaan naar het bewerken, bewaren met die toetscombinaties inactief, of ze verwijderen en bewaren.</p>
+<p>In het voorvertoningsvenster volgen Command-F en Command-G de commando’s Zoek… en Zoek volgende, ook de toetscombinaties die u ze geeft. Toetsbindingen, die tekst invoegen wanneer één teken wordt getypt, stelt u in bij de ‘Lijst met toetsbindingen’ van Instellingen › Toetsenbord; zie <a href="configure_autocompletion.htm">Toetsbindingen aanpassen</a>.</p>
+
+<h2 id="legacy">Oudere methoden</h2>
+<p>Twee andere manieren om toetscombinaties in te stellen werken nog steeds. Instellingen › Toetsenbord is eenvoudiger en wordt aanbevolen.</p>
+<h3 id="keyequivalents">KeyEquivalents.plist</h3>
+<p>TeXShop leest het bestand ~/Library/TeXShop/Menus/KeyEquivalents.plist bij het starten. De toetscombinaties die daarin zijn ingesteld, worden de standaardtoetscombinaties in Instellingen › Toetsenbord, zodat ‘Herstel standaard’ ernaar terugkeert. Het commentaar bovenaan het bestand legt de opbouw uit; bewerk het met TeXShop, bewaar het in UTF-8 en start TeXShop opnieuw.</p>
+<h3 id="app-shortcuts">Toetscombinaties voor apps in macOS</h3>
+<p>In Systeeminstellingen van macOS kan Toetsenbord › Toetscombinaties… › Apps een menucommando van TeXShop een toetscombinatie geven aan de hand van de exacte titel, in de taal van uw menu’s. Zo’n toetscombinatie werkt niet meer wanneer TeXShop het menucommando een andere naam geeft; stel toetscombinaties daarom liever in bij Instellingen › Toetsenbord.</p>
+</main>
+</body>
+</html>

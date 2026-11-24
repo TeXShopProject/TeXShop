@@ -277,7 +277,7 @@
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="286">
                         <rect key="frame" x="-1" y="398" width="140" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="Mergi la Eroare ^⌘E" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3825">
+                        <buttonCell key="cell" type="square" title="Accesați eroarea ^⌘E" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3825">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -461,7 +461,7 @@ DQ
                 </subviews>
             </view>
         </window>
-        <window title="Mergi la" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="214" userLabel="LinePanel" customClass="NSPanel">
+        <window title="Accesați linia" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="214" userLabel="LinePanel" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="311" y="495" width="261" height="107"/>
@@ -617,7 +617,7 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selectează" tag="5" inset="2" id="791">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selecție" tag="5" inset="2" id="791">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -863,7 +863,7 @@ DQ
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="393">
                     <rect key="frame" x="14" y="91" width="93" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="Anter." bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3852">
+                    <buttonCell key="cell" type="push" title="Anterior" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3852">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -874,7 +874,7 @@ DQ
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="392">
                     <rect key="frame" x="107" y="91" width="84" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="Următ." bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3851">
+                    <buttonCell key="cell" type="push" title="Următor" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3851">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1214,7 +1214,7 @@ DQ
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="kWA-Vg-dFh">
                             <items>
-                                <menuItem title="Labels" state="mixed" hidden="YES" id="oug-Q0-pPc">
+                                <menuItem title="Referințe" state="mixed" hidden="YES" id="oug-Q0-pPc">
                                     <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 </menuItem>
                             </items>
@@ -1232,7 +1232,7 @@ DQ
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="S0a-7L-90o">
                             <items>
-                                <menuItem title="Labels" state="mixed" hidden="YES" id="z1k-I5-CqL">
+                                <menuItem title="Referințe" state="mixed" hidden="YES" id="z1k-I5-CqL">
                                     <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 </menuItem>
                             </items>
@@ -1452,7 +1452,7 @@ DQ
                         <action selector="changeMouseMode:" target="675" id="3695"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Selectează textul" tag="2" id="838">
+                <menuItem title="Selecție text" tag="2" id="838">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3696"/>
                     </connections>
@@ -1467,7 +1467,7 @@ DQ
                         <action selector="changeMouseMode:" target="675" id="3698"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Selectează PDF" tag="5" id="579">
+                <menuItem title="Selecție PDF" tag="5" id="579">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3699"/>
                     </connections>
@@ -1931,7 +1931,7 @@ DQ
                         <action selector="changeMouseMode:" target="314" id="3693"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Selectează" state="on" tag="4" id="832">
+                <menuItem title="Selecție" state="on" tag="4" id="832">
                     <connections>
                         <action selector="changeMouseMode:" target="314" id="3694"/>
                     </connections>
@@ -2525,7 +2525,7 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selectează" tag="5" inset="2" id="bxN-cf-Njy">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selecție" tag="5" inset="2" id="bxN-cf-Njy">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2583,7 +2583,7 @@ Gw
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selectează" tag="5" inset="2" id="0F9-DC-sn5">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selecție" tag="5" inset="2" id="0F9-DC-sn5">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>

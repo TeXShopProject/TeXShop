@@ -9,14 +9,14 @@
 "AdvancedFind.Cheat.AnyCharacter" = "cualquier carácter salvo un salto de línea";
 "AdvancedFind.Cheat.AnyOf" = "a, b o c";
 "AdvancedFind.Cheat.AtMost" = "hasta n veces ({,n} es un error)";
-"AdvancedFind.Cheat.Backslash" = "una \\ (escribe \\\\section para \\section)";
+"AdvancedFind.Cheat.Backslash" = "una \\ (escriba \\\\section para \\section)";
 "AdvancedFind.Cheat.Between" = "de n a m veces";
 "AdvancedFind.Cheat.CaseFlag" = "ignorar mayúsculas/minúsculas desde aquí";
 "AdvancedFind.Cheat.Characters" = "Caracteres";
 "AdvancedFind.Cheat.Conforms" = "La sintaxis es la de las expresiones regulares de ICU.";
 "AdvancedFind.Cheat.Differences" = "Diferencias con OgreKit";
 "AdvancedFind.Cheat.Digit" = "un dígito, también los de ancho completo";
-"AdvancedFind.Cheat.Dollar" = "un $ (en fórmulas TeX, escribe \\$…\\$)";
+"AdvancedFind.Cheat.Dollar" = "un $ (en fórmulas TeX, escriba \\$…\\$)";
 "AdvancedFind.Cheat.DollarAsIs" = "un $ tal cual (las fórmulas TeX, también)";
 "AdvancedFind.Cheat.Escaped" = "el carácter . \\ ( literal";
 "AdvancedFind.Cheat.Exactly" = "n veces";
@@ -26,7 +26,7 @@
 "AdvancedFind.Cheat.Groups" = "Grupos";
 "AdvancedFind.Cheat.Han" = "un kanji (igual con \\p{Hiragana}, \\p{Katakana})";
 "AdvancedFind.Cheat.ICUGuide" = "Guía del usuario de ICU";
-"AdvancedFind.Cheat.ICUStyle" = "sintaxis ICU: elígela en “Más opciones”";
+"AdvancedFind.Cheat.ICUStyle" = "sintaxis ICU: elíjala en «Más opciones»";
 "AdvancedFind.Cheat.Lazy" = "el menor número de veces posible";
 "AdvancedFind.Cheat.LineBreak" = "un salto de línea (LF, CR LF, CR …)";
 "AdvancedFind.Cheat.LineBreakTab" = "un salto de línea y una tabulación";
@@ -39,7 +39,7 @@
 "AdvancedFind.Cheat.NamedReference" = "el grupo llamado “name”";
 "AdvancedFind.Cheat.NonCapturing" = "un grupo sin número";
 "AdvancedFind.Cheat.NoneOf" = "cualquier carácter salvo a, b y c";
-"AdvancedFind.Cheat.OgreKitStyle" = "sintaxis OgreKit: elígela en “Más opciones”";
+"AdvancedFind.Cheat.OgreKitStyle" = "sintaxis OgreKit: elíjala en «Más opciones»";
 "AdvancedFind.Cheat.OneOrMore" = "1 o más veces";
 "AdvancedFind.Cheat.Quantifiers" = "Repetición";
 "AdvancedFind.Cheat.Range" = "un carácter entre a y z";

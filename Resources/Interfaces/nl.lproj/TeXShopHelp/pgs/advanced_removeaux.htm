@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aux-bestanden verwijderen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Wis Aux-bestanden; Wis Aux-bestanden &amp; Zet; aux; log; hulpbestanden; OtherTrashExtensions; AggressiveTrashAUX">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm" class="current">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Aux-bestanden verwijderen</h1>
+<p>Wanneer LaTeX <code>Galois.tex</code> zet, schrijft het hulpbestanden zoals <code>Galois.aux</code>, <code>Galois.toc</code> en <code>Galois.log</code>, die de volgende ronde leest voor kruisverwijzingen, de inhoudsopgave en dergelijke. Als het zetten halverwege wordt gestopt, bijvoorbeeld na een fout, kunnen deze bestanden beschadigd achterblijven, en meldt de volgende ronde fouten die niet in de bron staan, vaak vlak voor <code>\begin{document}</code>. Door de hulpbestanden naar de prullenmand te verplaatsen en opnieuw te zetten, is dat verholpen.</p>
+
+<h2>De bestanden weggooien</h2>
+<ul>
+<li>Archief › Wis Aux-bestanden (<kbd>⌃⌘A</kbd>), of de knop ‘Wis Aux-bestanden’ in de console, verplaatst de hulpbestanden van het document naar de prullenmand.</li>
+<li>Zet › Wis Aux-bestanden &amp; Zet (<kbd>⌥⌘T</kbd>) doet dat en zet daarna. In het menu Zet verschijnt het onderdeel in plaats van ‘Zet’ zolang u Option ingedrukt houdt.</li>
+</ul>
+<p>De bestanden die worden weggegooid, zijn de bestanden in de map van de bron die dezelfde naam hebben en een van deze extensies:</p>
+<pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
+gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
+lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
+ttt  wrm  xref</pre>
+<p>Bestanden die SyncTeX met <code>(busy)</code> aan het eind van de naam achterlaat wanneer het zetten wordt onderbroken, worden ook weggegooid. Het <code>.bbl</code>-bestand van BibTeX blijft behouden.</p>
+<p>In een project waarvan de hoofdstukbestanden een hoofdbestand noemen met <code>% !TEX root</code>, worden de bestanden van het hoofdbestand weggegooid, ook als het commando in een hoofdstukbestand wordt gegeven.</p>
+
+<h2>Varianten</h2>
+<ul>
+<li>Houd Shift ingedrukt terwijl u ‘Wis Aux-bestanden’ kiest of op de knop klikt om ook het PDF-bestand van het document weg te gooien. Gewoonlijk blijft de oude PDF behouden, zodat het voorvertoningsvenster iets te tonen heeft als het zetten mislukt.</li>
+<li>Houd Option ingedrukt terwijl u ‘Wis Aux-bestanden’ kiest of op de knop klikt om een heel project op te ruimen: elk bestand met een van de bovenstaande extensies in de map van het hoofdbestand en in alle mappen daaronder wordt weggegooid, ongeacht de naam. Zo worden ook de <code>.aux</code>-bestanden verwijderd die <code>\include</code> voor hoofdstukken in submappen schrijft.</li>
+</ul>
+<p>Twee verborgen instellingen veranderen het gedrag. Om extensies aan de lijst toe te voegen, bijvoorbeeld <code>dvi</code>, typt u in Terminal</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
+<p>en om terug te keren naar de standaardlijst</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array</pre>
+<p>Om het gedrag met Option het standaardgedrag van ‘Wis Aux-bestanden’ te maken:</p>
+<pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
+</main>
+</body>
+</html>

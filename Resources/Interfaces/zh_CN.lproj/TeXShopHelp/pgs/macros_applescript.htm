@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppleScript 宏</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="宏；AppleScript；--AppleScript；--AppleScript direct；ScriptRunner；View pdf with Preview">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">宏帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">预备知识</a></li>
+<li><a href="macros_default.htm">了解默认宏</a></li>
+<li><a href="macros_rearrange.htm">重新排列“宏”菜单</a></li>
+<li><a href="macros_define.htm">定义新宏</a></li>
+<li><a href="macros_applescript.htm" class="current">AppleScript 宏</a></li>
+<li><a href="macros_includedscripts.htm">默认 AppleScript 宏</a></li>
+<li><a href="macros_defapplescript.htm">定义 AppleScript 宏</a></li>
+<li><a href="macros_dialogs.htm">创建对话框</a></li>
+<li><a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a></li>
+<li><a href="macros_writingcommandscripts.htm">用 Shell 命令编写脚本</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>AppleScript 宏</h1>
+<p>内容以</p>
+<pre>--AppleScript</pre>
+<p>或</p>
+<pre>--AppleScript direct</pre>
+<p>开头的宏，在被选取时会作为 AppleScript 运行；字母的大小写无关紧要。例如，在 PDF 排版完成后，“宏”>“Applescript”>“View pdf with Preview”会在“预览”App 中打开当前文稿的 PDF。它的内容是</p>
+<pre>--AppleScript direct
+
+tell application "Preview"
+  activate
+  open POSIX file #PDFPATH#
+end tell</pre>
+<p>在脚本运行之前，TeXShop 会把 #PDFPATH# 替换为 PDF 的路径；<a href="macros_defapplescript.htm">定义 AppleScript 宏</a>列出了所有这样的字符串。同一子菜单中的“View pdf with Adobe Acrobat Reader DC”则用 Adobe Acrobat 执行同样的操作。</p>
+
+<h2 id="direct">--AppleScript direct 和 --AppleScript</h2>
+<p>以 <code>--AppleScript direct</code> 开头的脚本由 TeXShop 自己运行。在脚本运行期间，TeXShop 不响应其他任何操作，因此脚本不能要求 TeXShop 执行可能需要你输入的操作。例如，它不能要求 TeXShop 运行 LaTeX：如果文件中有错误，控制台会等待你的输入，而 TeXShop 无法接收这一输入。</p>
+<p>以 <code>--AppleScript</code> 开头的脚本由 ScriptRunner 运行，这是 TeXShop 内部的一个小程序。这样的脚本可以要求 TeXShop 执行可能需要你输入的操作，因为 ScriptRunner 会等待，而 TeXShop 保持活跃。</p>
+<p>因此，<code>--AppleScript direct</code> 适合简单的宏，而排版或以其他方式与 TeXShop 协同工作的脚本需要使用 <code>--AppleScript</code>。</p>
+</main>
+</body>
+</html>

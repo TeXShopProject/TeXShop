@@ -235,7 +235,7 @@
 "TeXRootSearch.Report.Replaced" = "Substituídos: %@";
 "TeXRootSearch.Report.SomeTitle" = "Não foi possível substituir em alguns arquivos";
 "TeXRootSearch.Root" = "Raiz: %@";
-"TeXRootSearch.Rule" = "O arquivo raiz e os arquivos .tex da pasta e das inferiores que o indicam com % !TEX root (ou %!TEX root) nas primeiras 20 linhas.";
+"TeXRootSearch.Rule" = "O arquivo principal e os arquivos .tex da pasta e das subpastas que o indicam com % !TEX root (ou %!TEX root) nas primeiras 20 linhas.";
 "TeXRootSearch.RuleCount" = "Regras: %lu";
 "TeXRootSearch.RuleJoin" = "%1$@ %2$@";
 "TeXRootSearch.RuleSourceDoc" = "Também os que o indicam com %SourceDoc.";
@@ -248,7 +248,7 @@
 "TeXRootSearch.Status.Limit" = "O limite foi atingido: nem todas as ocorrências estão na lista.";
 "TeXRootSearch.Status.Replaced" = "%1$lu ocorrências substituídas em %2$lu arquivos";
 "TeXRootSearch.Status.Replacing" = "Substituindo…";
-"TeXRootSearch.Status.RootMissing" = "O arquivo raiz não foi encontrado.";
+"TeXRootSearch.Status.RootMissing" = "O arquivo principal não foi encontrado.";
 "TeXRootSearch.Status.Stopped" = "Parado";
 "TeXRootSearch.Status.ToReplace" = "A substituir: %1$lu · Arquivos: %2$lu";
 "TeXRootSearch.Stop" = "Parar";

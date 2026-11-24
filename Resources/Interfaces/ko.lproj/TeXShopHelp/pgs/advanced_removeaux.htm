@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>부수 파일 삭제</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="부수파일 삭제; 부수 파일 삭제 후 조판; aux; log; 보조 파일; OtherTrashExtensions; AggressiveTrashAUX">
+<meta name="description" content="부수 파일 삭제; 부수 파일 삭제 후 조판; aux; log; 보조 파일; OtherTrashExtensions; AggressiveTrashAUX">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +27,7 @@
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
 <li><a href="advanced_shellescape.htm">Shell Escape 보호</a></li>
-<li><a href="advanced_externaleditor.htm">외부 에디터 사용하기</a></li>
+<li><a href="advanced_externaleditor.htm">외부 편집기 사용하기</a></li>
 <li><a href="advanced_experiments.htm">실험</a></li>
 <li><a href="advanced_pdfcopypaste.htm">복사하여 붙여넣기와 드래그 앤 드롭</a></li>
 <li><a href="advanced_otherfiles.htm">TeXShop으로 다른 파일 열기</a></li>
@@ -43,8 +43,8 @@
 
 <h2>파일을 휴지통으로 옮기기</h2>
 <ul>
-<li>파일 › 부수파일 삭제(<kbd>⌃⌘A</kbd>)를 선택하거나 콘솔의 부수파일 삭제 버튼을 누르면 문서의 부수 파일이 휴지통으로 옮겨집니다.</li>
-<li>조판 › 부수 파일 삭제 후 조판(<kbd>⌥⌘T</kbd>)은 이 작업을 한 다음 조판합니다. 조판 메뉴에서는 Option 키를 누르고 있는 동안 조판하기 대신 이 항목이 나타납니다.</li>
+<li>파일 › 부수 파일 삭제(<kbd>⌃⌘A</kbd>)를 선택하거나 콘솔의 부수 파일 삭제 버튼을 누르면 문서의 부수 파일이 휴지통으로 옮겨집니다.</li>
+<li>조판 › 부수 파일 삭제 후 조판(<kbd>⌥⌘T</kbd>)은 이 작업을 한 다음 조판합니다. 조판 메뉴에서는 Option 키를 누르고 있는 동안 조판 항목 대신 이 항목이 나타납니다.</li>
 </ul>
 <p>휴지통으로 옮겨지는 파일은 소스와 같은 폴더에 있고, 소스와 이름이 같으며, 확장자가 다음 중 하나인 파일입니다.</p>
 <pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
@@ -56,14 +56,14 @@ ttt  wrm  xref</pre>
 
 <h2>다른 동작</h2>
 <ul>
-<li>부수파일 삭제를 선택하거나 버튼을 누를 때 Shift 키를 누르고 있으면 문서의 PDF 파일도 휴지통으로 옮겨집니다. 평소에는 조판이 실패해도 미리보기 윈도우에 보여 줄 것이 있도록 이전 PDF를 남겨 둡니다.</li>
-<li>부수파일 삭제를 선택하거나 버튼을 누를 때 Option 키를 누르고 있으면 프로젝트 전체를 정리합니다. 루트 파일의 폴더와 그 아래의 모든 폴더에서, 이름과 관계없이 위 확장자 중 하나를 가진 파일이 모두 휴지통으로 옮겨집니다. 하위 폴더에 있는 장에 대해 <code>\include</code>가 기록하는 <code>.aux</code> 파일도 이렇게 정리됩니다.</li>
+<li>부수 파일 삭제를 선택하거나 버튼을 누를 때 Shift 키를 누르고 있으면 문서의 PDF 파일도 휴지통으로 옮겨집니다. 평소에는 조판이 실패해도 미리보기 윈도우에 보여 줄 것이 있도록 이전 PDF를 남겨 둡니다.</li>
+<li>부수 파일 삭제를 선택하거나 버튼을 누를 때 Option 키를 누르고 있으면 프로젝트 전체를 정리합니다. 루트 파일의 폴더와 그 아래의 모든 폴더에서, 이름과 관계없이 위 확장자 중 하나를 가진 파일이 모두 휴지통으로 옮겨집니다. 하위 폴더에 있는 장에 대해 <code>\include</code>가 기록하는 <code>.aux</code> 파일도 이렇게 정리됩니다.</li>
 </ul>
 <p>두 가지 숨겨진 설정으로 동작을 바꿀 수 있습니다. 목록에 확장자(예: <code>dvi</code>)를 추가하려면 터미널에서 다음과 같이 입력합니다.</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
 <p>표준 목록으로 되돌리려면 다음과 같이 입력합니다.</p>
 <pre>defaults write TeXShop OtherTrashExtensions -array</pre>
-<p>Option 키를 누를 때의 동작을 부수파일 삭제의 기본 동작으로 하려면 다음과 같이 입력합니다.</p>
+<p>Option 키를 누를 때의 동작을 부수 파일 삭제의 기본 동작으로 하려면 다음과 같이 입력합니다.</p>
 <pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
 </main>
 </body>

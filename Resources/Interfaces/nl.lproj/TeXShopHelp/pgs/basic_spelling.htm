@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spelling controleren</title>
+<meta name="description" content="spellingcontrole; LaTeX-bewuste spellingcontrole; uitsluitingsregels; oorspronkelijke methode; woordenboek; Toon spelling en grammatica; % !TEX spellcheck">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm" class="current">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Spelling controleren</h1>
+
+<p>TeXShop controleert de spelling met de spellingcontrole en de woordenboeken van macOS. LaTeX-bewuste spellingcontrole staat vanaf het begin aan: die controleert de tekst en slaat TeX-commando’s, wiskunde, commentaar en de argumenten van commando’s zoals <code>\label</code>, <code>\ref</code>, <code>\cite</code> en <code>\usepackage</code> over, en ook argumenten van veelgebruikte pakketten die geen lopende tekst zijn, zoals sleutels, kleuren en eenheden. Commando’s die het document met <code>\newcommand</code>, <code>\def</code> en dergelijke definieert, worden gelezen, zodat ook een argument dat een definitie doorgeeft aan <code>\ref</code> of aan wiskunde wordt overgeslagen. Tekst die als een andere taal is gemarkeerd, bijvoorbeeld met <code>\foreignlanguage</code>, wordt in die taal gecontroleerd, maar niet onderstreept terwijl u typt.</p>
+
+<h2>Een document controleren</h2>
+
+<p>Verkeerd gespelde woorden worden tijdens het typen onderstreept zolang Wijzig › Spelling en grammatica › Controleer spelling tijdens typen aan staat. Om het document woord voor woord door te lopen, kiest u Wijzig › Spelling en grammatica › Toon spelling en grammatica (<kbd>⌘:</kbd>): het paneel toont het eerste verkeerd gespelde woord na het invoegpunt. Klik op ‘Zoek volgende’ in het paneel, of kies ‘Controleer document nu’ (<kbd>⌘;</kbd>), om naar het volgende te gaan. Houd daarbij Option ingedrukt om de zoekfunctie van macOS te gebruiken, die geen opmaakcode overslaat.</p>
+
+<p>Om een woord overal te vervangen, typt u de vervanging in het veld ‘Vervanging voor Wijzig alles’ van het paneel, of selecteert u een suggestie, en klikt u op ‘Wijzig alles’; één keer ‘Herstel’ maakt de wijziging ongedaan. Klik, nadat u het document hebt bewerkt of andere tekst hebt geselecteerd, eerst opnieuw op ‘Zoek volgende’ voordat u een woord wijzigt. Als u het veld ‘Vervanging voor Wijzig alles’ hebt bewerkt en een suggestie wilt die al geselecteerd was, selecteert u eerst een andere suggestie en daarna die; als er maar één suggestie is, typt u die. ‘Geleerde woorden vergeten…’ in het submenu Spelling en grammatica toont de woorden van het document die voor de huidige taal zijn geleerd, en verwijdert de woorden die u selecteert uit het woordenboek. ‘Corrigeer spelling automatisch’ in hetzelfde submenu verandert woorden terwijl u typt; het staat eerst uit, wat goed is voor TeX, waar het ook commando’s zou veranderen.</p>
+
+<h2>Instellingen › Spellingcontrole</h2>
+
+<p>In de groep ‘Spelling controleren’ bepaalt ‘Spelling controleren tijdens het typen’ of verkeerd gespelde woorden in een document worden onderstreept als het wordt geopend, bepaalt ‘Spelling corrigeren’ of ‘Corrigeer spelling automatisch’ aan staat in een document als het wordt geopend, en ‘Woordenboek’ wordt hieronder beschreven. De groep ‘Methode’ bepaalt hoe TeX-bron wordt gecontroleerd:</p>
+<dl>
+<dt>‘LaTeX-bewuste spellingcontrole gebruiken (aanbevolen)’</dt>
+<dd>De methode die hierboven is beschreven. ‘LaTeX-uitsluitingsregels bewerken…’ aan het eind van die regel opent de regels die bepalen wat wordt overgeslagen.</dd>
+<dt>‘Oorspronkelijke methode’</dt>
+<dd>macOS controleert alles, behalve wat de drie opties eronder weglaten: ‘LaTeX-commando’s overslaan’, ‘Geselecteerde parameters overslaan’, dat de parameters overslaat van enkele commando’s met speciale woorden, zoals <code>\usepackage</code>, en ‘Commentaar overslaan’. Deze opties werken alleen als syntaxmarkering aan staat, en ‘Controleer document nu’ houdt er geen rekening mee.</dd>
+</dl>
+<p>De LaTeX-bewuste methode controleert documenten die nog niet zijn bewaard en bestanden met de extensies tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx en lbx. Andere bestanden, zoals Sweave-bestanden, worden altijd met de oorspronkelijke methode gecontroleerd.</p>
+
+<h2>Uitsluitingsregels</h2>
+
+<p>De regels van LaTeX-bewuste spellingcontrole staan in het bestand ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Open het met ‘LaTeX-uitsluitingsregels bewerken…’ in Instellingen of met Wijzig › Spelling en grammatica › Spellinguitzonderingen bewerken…; het opent in TeXShop, en bovenaan wordt de indeling uitgelegd. Deze regels slaan bijvoorbeeld het eerste argument van een commando <code>\mycommand</code> en de inhoud van de omgeving <code>proof</code> over:</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>Wijzigingen gelden vanaf de volgende keer dat de spelling wordt gecontroleerd. Als het bestand wordt verwijderd, maakt TeXShop bij de volgende start een nieuw exemplaar van het standaardbestand. Om helemaal niets over te slaan, laat u er alleen commentaarregels in staan.</p>
+
+<h2>Woordenboeken</h2>
+
+<p>‘Woordenboek’ in Instellingen › Spellingcontrole kiest het woordenboek van documenten. Een nieuwe keuze geldt ook voor geopende documenten, behalve die waarvan het woordenboek met een regel <code>% !TEX spellcheck</code> of in het paneel Spelling en grammatica is gekozen. Het menu toont elke taal onder haar eigen naam, zoals Deutsch of Français, met de code ervan, zoals de of fr_CA, als knopinfo. ‘Automatische taalherkenning’ laat macOS de taal uit de tekst bepalen.</p>
+
+<p>Om voor één document een ander woordenboek te gebruiken, kiest u het in het venstermenu onderaan het paneel Spelling en grammatica terwijl dat document vooraan staat. Elk geopend document houdt zijn eigen woordenboek, en het paneel wisselt mee als u van document wisselt. De keuze wordt niet bewaard als het document wordt gesloten.</p>
+
+<p>Om een document bij elke keer openen zijn woordenboek te geven, zet u een regel als deze in de eerste 20 regels:</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>De waarde is een taalcode, zoals in de knopinfo van het menu ‘Woordenboek’: <code>fr</code> voor Frans, of <code>fr_CA</code> voor het Frans van Canada; u kunt ook een streepje gebruiken, zoals <code>fr-CA</code>. De regel wordt gelezen als het document wordt geopend, dus bewaar het document na het toevoegen, sluit het en open het opnieuw. Zet in een document met hoofdstukbestanden de regel in elk bestand.</p>
+
+<p>Zie <a href="basic_preferences.htm#settings-search">Zoek in instellingen</a> om instellingen te vinden in het venster Instellingen.</p>
+</main>
+</body>
+</html>

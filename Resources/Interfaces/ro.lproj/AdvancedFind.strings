@@ -234,7 +234,7 @@
 "TeXRootSearch.Report.Partly" = "Înlocuite parțial: %@";
 "TeXRootSearch.Report.Replaced" = "Înlocuite: %@";
 "TeXRootSearch.Report.SomeTitle" = "În unele fișiere nu s-a putut înlocui";
-"TeXRootSearch.Root" = "Rădăcină: %@";
+"TeXRootSearch.Root" = "Fișier principal: %@";
 "TeXRootSearch.Rule" = "Fișierul rădăcină și fișierele .tex din dosarul lui și de mai jos care îl indică prin % !TEX root (sau %!TEX root) în primele 20 de rânduri.";
 "TeXRootSearch.RuleCount" = "Reguli: %lu";
 "TeXRootSearch.RuleJoin" = "%1$@ %2$@";
@@ -248,7 +248,7 @@
 "TeXRootSearch.Status.Limit" = "S-a atins limita: nu sunt afișate toate potrivirile.";
 "TeXRootSearch.Status.Replaced" = "Au fost înlocuite %1$lu potriviri în %2$lu fișiere";
 "TeXRootSearch.Status.Replacing" = "Se înlocuiește…";
-"TeXRootSearch.Status.RootMissing" = "Fișierul rădăcină nu a fost găsit.";
+"TeXRootSearch.Status.RootMissing" = "Fișierul principal nu a fost găsit.";
 "TeXRootSearch.Status.Stopped" = "Oprit";
 "TeXRootSearch.Status.ToReplace" = "De înlocuit: %1$lu · Fișiere: %2$lu";
 "TeXRootSearch.Stop" = "Opriți";

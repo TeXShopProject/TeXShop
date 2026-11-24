@@ -12,8 +12,8 @@ tiLabelTypeset				= "Compila";
 tiPaletteLabelTypeset			= "Compila";
 tiToolTipTypeset			= "Esegui il programma di compilazione";
 
-tiLabelSharing				= "Condividi";
-tiPaletteLabelSharing		= "Condividi";
+tiLabelSharing				= "Condividi sorgente";
+tiPaletteLabelSharing		= "Condividi sorgente";
 tiToolTipSharing			= "Condividi testo e immagini";
 
 
@@ -69,16 +69,16 @@ tiLabelTemplates			= "Modelli";
 tiPaletteLabelTemplates			= "Modelli";
 tiToolTipTemplates			= "Seleziona un modello da inserire alla posizione del cursore";
 
-tiLabelTags				= "Etichette";
-tiPaletteLabelTags			= "Etichette";
-tiToolTipTags				= "Seleziona un'etichetta su cui spostarsi";
+tiLabelTags				= "Tag";
+tiPaletteLabelTags			= "Tag";
+tiToolTipTags				= "Seleziona un tag a cui andare";
 
 tiLabelPreviousPageButton		= "Precedente";
 tiPaletteLabelPreviousPageButton	= "Pagina precedente";
 tiToolTipPreviousPageButton		= "Mostra pagina precedente";
 
 tiLabelNextPageButton			= "Successiva";
-tiPaletteLabelNextPageButton		= "Pagina Successiva";
+tiPaletteLabelNextPageButton		= "Pagina successiva";
 tiToolTipNextPageButton			= "Mostra pagina successiva";
 
 tiLabelTypesetEE			= "Compila";
@@ -122,8 +122,8 @@ tiLabelTypesetKIT				= "Compila";
 tiPaletteLabelTypesetKIT		= "Compila";
 tiToolTipTypesetKIT				= "Esegui il programma di compilazione";
 
-tiLabelSharingKIT				= "Condividi";
-tiPaletteLabelSharingKIT		= "Condividi";
+tiLabelSharingKIT				= "Condividi anteprima";
+tiPaletteLabelSharingKIT		= "Condividi anteprima";
 tiToolTipSharingKIT				= "Condividi testo e immagini";
 
 
@@ -163,9 +163,9 @@ tiLabelSyncMarksKIT				= "Segni sync";
 tiPaletteLabelSyncMarksKIT		= "Segni sync";
 tiToolTipSyncMarksKIT			= "Mostra i segni di sincronizzazione";
 
-tiLabelSearchKIT				= "Ricerca";
-tiPaletteLabelSearchKIT         = "Ricerca";
-tiToolTipSearchKIT				= "Ricerca";
+tiLabelSearchKIT				= "Cerca nel PDF";
+tiPaletteLabelSearchKIT         = "Cerca nel PDF";
+tiToolTipSearchKIT				= "Cerca nel PDF";
 
 tiLabelBackForthKIT				= "Indietro/Avanti";
 tiPaletteLabelBackForthKIT		= "Indietro/Avanti";
@@ -193,9 +193,9 @@ tiLabelMacrosSplit				= "Macro";
 tiPaletteLabelMacrosSplit		= "Macro";
 tiToolTipMacrosSplit			= "Inserisci macro";
 
-tiLabelTagsSplit				= "Etichette";
-tiPaletteLabelTagsSplit         = "Etichette";
-tiToolTipTagsSplit              = "Seleziona un'etichetta su cui spostarsi";
+tiLabelTagsSplit				= "Tag";
+tiPaletteLabelTagsSplit         = "Tag";
+tiToolTipTagsSplit              = "Seleziona un tag a cui andare";
 
 tiLabelGotoPageSplit			= "Vai alla pagina";
 tiPaletteLabelGotoPageSplit     = "Vai alla pagina";
@@ -220,9 +220,9 @@ tiToolTipSharingSplit            = "Condividi testo e immagini";
 tiLabelMouseModeKITSplit                = "Funzione mouse";
 tiPaletteLabelMouseModeKITSplit        = "Funzione mouse";
 
-tiLabelSearchKITSplit                = "Ricerca";
-tiPaletteLabelSearchKITSplit         = "Ricerca";
-tiToolTipSearchKITSplit                = "Ricerca";
+tiLabelSearchKITSplit                = "Cerca nel PDF";
+tiPaletteLabelSearchKITSplit         = "Cerca nel PDF";
+tiToolTipSearchKITSplit                = "Cerca nel PDF";
 
 tiLabelTypesetSplit                = "Compila";
 tiPaletteLabelTypesetSplit            = "Compila";
@@ -230,11 +230,11 @@ tiToolTipTypesetSplit            = "Esegui il programma di compilazione";
 
 tiLabelLabels                = "Etichette";
 tiPaletteLabelLabels            = "Etichette";
-tiToolTipLabels                = "Vai all’etichetta";
+tiToolTipLabels                = "Seleziona un’etichetta a cui andare";
 
 tiLabelLabelsSplit                = "Etichette";
 tiPaletteLabelLabelsSplit         = "Etichette";
-tiToolTipLabelsSplit              = "Vai all’etichetta";
+tiToolTipLabelsSplit              = "Seleziona un’etichetta a cui andare";
 
 tiLabelHtmlPreviousPageButton                = "Indietro";
 tiPaletteLabelHtmlPreviousPageButton            = "Indietro";
@@ -246,7 +246,7 @@ tiToolTipHtmlNextPageButton           = "Avanti";
 
 tiLabelHtmlURLField                = "URL";
 tiPaletteLabelHtmlURLField            = "URL";
-tiToolTipHtmlURLField            = "URL principale";
+tiToolTipHtmlURLField            = "Vai a questo URL";
 
 tiLabelHtmlSearch             = "Cerca";
 tiPaletteLabelHtmlSearch      = "Cerca";
@@ -256,7 +256,7 @@ tiToolTipHtmlSearch           = "Cerca";
 "ExperimentToolScroll" = "Scorrimento";
 "ExperimentToolSelectText" = "Selezione testo";
 "ExperimentToolMagnify" = "Ingrandimento";
-"ExperimentToolSelectPDF" = "Selezione";
+"ExperimentToolSelectPDF" = "Selezione PDF";
 "ExperimentZoomOut" = "Riduci";
 "ExperimentZoomIn" = "Ingrandisci";
 "ExperimentZoomToContent" = "Zoom sul contenuto";

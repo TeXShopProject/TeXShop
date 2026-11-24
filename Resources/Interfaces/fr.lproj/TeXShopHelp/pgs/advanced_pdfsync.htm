@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Synchroniser la source et l’aperçu</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="SyncTeX; synchro; synchroniser; synchronisation; Commande-clic; Méthode de synchronisation; Rechercher dans le PDF; synctex.gz; projectfile; useConTeXtSyncParser">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm" class="current">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Synchroniser la source et l’aperçu</h1>
+<p>Cliquez sur un mot de la fenêtre source en maintenant la touche Commande enfoncée : la fenêtre d’aperçu défile jusqu’à l’endroit correspondant et le signale. Cliquez sur un endroit de la fenêtre d’aperçu en maintenant la touche Commande enfoncée : le fichier source s’ouvre, si nécessaire, à la ligne correspondante, qui est signalée. Les couleurs de ces deux marques se règlent dans Réglages › Thèmes › SyncTeX, sous « Aperçu » et « Source ».</p>
+
+<h2>SyncTeX</h2>
+<p>TeXShop synchronise avec SyncTeX. Lorsque TeX est exécuté avec l’option <code>-synctex=1</code>, il écrit à côté du PDF un fichier tel que <code>Galois.synctex.gz</code>, qui enregistre où chaque partie de la source a abouti sur la page. Les commandes de composition de Réglages › Composition, telles que les règlent les profils du moteur, et les moteurs que TeXShop place dans <code>~/Library/TeXShop/Engines</code> et qui exécutent TeX utilisent déjà cette option. Un moteur que vous y ajoutez, y compris l’un des moteurs facultatifs du dossier Inactive, ne l’utilise que si sa commande la contient. Dans un moteur de votre cru, ajoutez <code>-synctex=1</code> à l’appel de TeX (avec un ou deux tirets ; tous les moteurs acceptent les deux).</p>
+<p>Le fichier synctex contient les chemins complets des fichiers source. Après le déplacement, la copie ou l’envoi d’un dossier de projet à quelqu’un d’autre, la synchronisation ne fait rien tant que le document n’a pas été recomposé.</p>
+<p>SyncTeX n’est pas d’une exactitude absolue : l’endroit que vous cherchez peut se trouver un peu avant ou après la marque.</p>
+
+<h2>Projets à plusieurs fichiers</h2>
+<p>Dans un projet dont les fichiers de chapitre désignent le fichier racine avec <code>% !TEX root</code> (consultez <a href="advanced_root.htm">Définir le fichier racine d’un projet</a>), un Commande-clic dans un fichier de chapitre mène à l’endroit correspondant dans l’aperçu du document entier, et un Commande-clic dans l’aperçu ouvre le fichier de chapitre qui contient l’endroit cliqué. Lorsque Réglages › Composition › « Synchronisation de la source et de l’aperçu » › « Ouvrir les fichiers atteints par la synchro dans des onglets de la fenêtre du fichier racine » est activé, un fichier ouvert de cette façon s’ajoute sous forme d’onglet à la fenêtre du fichier racine au lieu de s’ouvrir dans sa propre fenêtre.</p>
+
+<h2>Méthode de synchronisation</h2>
+<p>Réglages › Composition › « Synchronisation de la source et de l’aperçu » › « Méthode de synchronisation » propose deux choix :</p>
+<dl>
+<dt>SyncTeX (recommandé)</dt><dd>Utilise le fichier synctex, comme décrit ci-dessus. C’est le choix par défaut.</dd>
+<dt>Rechercher dans le PDF</dt><dd>Cherche dans le PDF le texte qui entoure le clic, et dans la source le texte qui entoure un clic dans l’aperçu. Cette méthode n’a pas besoin de fichier synctex, mais elle échoue là où le texte composé diffère de la source, comme dans les formules et dans le texte chargé de commandes. Pour trouver le fichier d’un endroit de l’aperçu, elle cherche dans les fichiers désignés par les commandes <code>\include</code> et <code>\input</code> du fichier racine. Pour les projets qui incluent des fichiers d’une autre manière, listez-les dans le fichier racine avec des lignes telles que
+<pre>% !TEX projectfile = chapter2.tex
+% !TEX projectfile = /Users/me/Book/chapter3.tex</pre>
+Un nom est un chemin complet ou un chemin relatif au fichier racine ; ces lignes peuvent se trouver n’importe où dans le fichier racine.</dd>
+</dl>
+
+<h2>ConTeXt</h2>
+<p>Pour ConTeXt, ajoutez <code>\setupsynctex[state=start,method=min]</code> à la configuration du document et la ligne <code>% !TEX useConTeXtSyncParser</code> en haut du fichier racine ; TeXShop utilise alors le code de synchronisation propre à ConTeXt. Consultez <a href="advanced_context.htm">ConTeXt et MetaPost</a>.</p>
+<p>Pour synchroniser avec une source ouverte dans un autre éditeur, consultez <a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a>.</p>
+</main>
+</body>
+</html>

@@ -11,8 +11,8 @@
     tiLabelMacros = "\U5b8f";
     tiLabelMacrosEE = "\U5b8f";
     tiLabelMacrosKIT = "\U5b8f";
-    tiLabelMagnification = "\U653e\U5927";
-    tiLabelMagnificationKIT = "\U653e\U5927";
+    tiLabelMagnification = "放大率";
+    tiLabelMagnificationKIT = "放大率";
     tiLabelMakeIndex = "MakeIndex";
     tiLabelMetaFont = MetaFont;
     tiLabelMetaPost = MetaPost;
@@ -29,8 +29,8 @@
     tiLabelProgramKIT = "\U7a0b\U5e8f";
     tiLabelSave = "保存";
     tiLabelShowFullPath = "\U5b8c\U6574\U8def\U5f84";
-    tiLabelSplit = "\U5206\U5272\U7a97\U53e3";
-    tiLabelSplitKIT = "\U5206\U5272\U7a97\U53e3";
+    tiLabelSplit = "分割源代码";
+    tiLabelSplitKIT = "分割预览";
     tiLabelSyncMarks = "\U540c\U6b65\U6807\U8bb0";
     tiLabelSyncMarksKIT = "\U540c\U6b65\U6807\U8bb0";
     tiLabelTags = "\U6807\U7b7e";
@@ -51,8 +51,8 @@
     tiPaletteLabelMacros = "\U5b8f";
     tiPaletteLabelMacrosEE = "\U5b8f";
     tiPaletteLabelMacrosKIT = "\U5b8f";
-    tiPaletteLabelMagnification = "\U653e\U5927";
-    tiPaletteLabelMagnificationKIT = "\U653e\U5927";
+    tiPaletteLabelMagnification = "放大率";
+    tiPaletteLabelMagnificationKIT = "放大率";
     tiPaletteLabelMakeIndex = "MakeIndex";
     tiPaletteLabelMetaFont = MetaFont;
     tiPaletteLabelMetaPost = MetaPost;
@@ -69,8 +69,8 @@
     tiPaletteLabelProgramKIT = "\U7a0b\U5e8f";
     tiPaletteLabelSave = "保存";
     tiPaletteLabelShowFullPath = "\U5b8c\U6574\U8def\U5f84";
-    tiPaletteLabelSplit = "\U5206\U5272\U7a97\U53e3";
-    tiPaletteLabelSplitKIT = "\U5206\U5272\U7a97\U53e3";
+    tiPaletteLabelSplit = "分割源代码";
+    tiPaletteLabelSplitKIT = "分割预览";
     tiPaletteLabelSyncMarks = "\U540c\U6b65\U6807\U8bb0";
     tiPaletteLabelSyncMarksKIT = "\U540c\U6b65\U6807\U8bb0";
     tiPaletteLabelTags = "\U6807\U7b7e";
@@ -102,7 +102,7 @@
     tiToolTipMouseModeScroll = "滚动：拖移以移动文稿";
     tiToolTipMouseModeSelectText = "选择文本：拖移以选择要拷贝的文本";
     tiToolTipMouseModeMagnify = "放大镜：按住以通过小放大镜查看";
-    tiToolTipMouseModeMagnifyLarge = "放大镜 (大号)：按住以通过大放大镜查看";
+    tiToolTipMouseModeMagnifyLarge = "放大镜（大号）：按住以通过大放大镜查看";
     tiToolTipMouseModeSelectPDF = "选择PDF：拖移以选择要作为图像拷贝的区域";
     tiToolTipNextPage = "\U663e\U793a\U4e0b\U4e00\U9875";
     tiToolTipNextPageButton = "\U663e\U793a\U4e0b\U4e00\U9875";
@@ -122,21 +122,21 @@
     "tiToolTipSplitKITContinuous" = "切换窗口分割；按住Option键点按以垂直分割，按住Shift键点按以在下方接续显示页面";
     tiToolTipSyncMarks = "\U663e\U793a\U540c\U6b65\U6807\U8bb0";
     tiToolTipSyncMarksKIT = "\U663e\U793a\U540c\U6b65\U6807\U8bb0";
-    tiToolTipTags = "\U6eda\U52a8\U5230\U9009\U62e9\U7684\U6807\U7b7e";
+    tiToolTipTags = "选择要滚动到的标签";
     tiToolTipTeX = "\U4f7f\U7528plain TeX\U5de5\U5177\U5904\U7406\U6e90\U4ee3\U7801";
     tiToolTipTemplates = "\U5728\U5149\U6807\U4f4d\U7f6e\U63d2\U5165\U9009\U62e9\U7684\U6a21\U677f";
     tiToolTipTypeset = "\U8fd0\U884c\U6392\U7248\U7a0b\U5e8f";
     tiToolTipTypesetEE = "\U8fd0\U884c\U6392\U7248\U7a0b\U5e8f";
     tiToolTipTypesetKIT = "\U8fd0\U884c\U6392\U7248\U7a0b\U5e8f";
-    tiLabelSharing				= "分享";
-    tiPaletteLabelSharing		= "分享";
-    tiToolTipSharing			= "分享文本和图片";
-    tiLabelSharingKIT				= "分享";
-    tiPaletteLabelSharingKIT		= "分享";
-    tiToolTipSharingKIT				= "分享文本和图片";
+    tiLabelSharing				= "共享源代码";
+    tiPaletteLabelSharing		= "共享源代码";
+    tiToolTipSharing			= "共享文本和图像";
+    tiLabelSharingKIT				= "共享预览";
+    tiPaletteLabelSharingKIT		= "共享预览";
+    tiToolTipSharingKIT				= "共享文本和图像";
     
-    tiLabelSearchKIT				= "搜索";
-    tiPaletteLabelSearchKIT         = "搜索";
+    tiLabelSearchKIT				= "搜索PDF";
+    tiPaletteLabelSearchKIT         = "搜索PDF";
     tiToolTipSearchKIT				= "搜索";
     
     tiLabelProgramSplit				= "\U7a0b\U5e8f";
@@ -155,40 +155,40 @@
     tiPaletteLabelGotoPageSplit     = "\U8f6c\U5230\U9875";
     tiToolTipGotoPageSplit          = "\U8f6c\U5230\U9875";
     
-    tiLabelMagnificationSplit		= "\U653e\U5927";
-    tiPaletteLabelMagnificationSplit   = "\U653e\U5927";
-    tiToolTipMagnificationSplit     = "\U653e\U5927";
+    tiLabelMagnificationSplit		= "放大率";
+    tiPaletteLabelMagnificationSplit   = "放大率";
+    tiToolTipMagnificationSplit     = "放大率";
     
     tiLabelTemplatesSplit            = "\U6a21\U677f";
     tiPaletteLabelTemplatesSplit            = "\U6a21\U677f";
     tiToolTipTemplatesSplit            = "\U6a21\U677f";
     
-    tiLabelSharingSplit                = "分享";
-    tiPaletteLabelSharingSplit        = "分享";
-    tiToolTipSharingSplit            = "分享";
+    tiLabelSharingSplit                = "共享源代码";
+    tiPaletteLabelSharingSplit        = "共享源代码";
+    tiToolTipSharingSplit            = "共享";
     
     tiLabelMouseModeKITSplit                = "\U9f20\U6807\U6a21\U5f0f";
     tiPaletteLabelMouseModeKITSplit        = "\U9f20\U6807\U6a21\U5f0f";
     
-    tiLabelSearchKITSplit                = "搜索";
-    tiPaletteLabelSearchKITSplit         = "搜索";
+    tiLabelSearchKITSplit                = "搜索PDF";
+    tiPaletteLabelSearchKITSplit         = "搜索PDF";
     tiToolTipSearchKITSplit                = "搜索";
     
     tiLabelTypesetSplit                = "\U6392\U7248";
     tiPaletteLabelTypesetSplit            = "\U6392\U7248";
     tiToolTipTypesetSplit            = "\U6392\U7248";
     
-    tiLabelLabels                = "标签";
-    tiPaletteLabelLabels            = "标签";
-    tiToolTipLabels                = " 选择以滚动至标签";
+    tiLabelLabels                = "引用标签";
+    tiPaletteLabelLabels            = "引用标签";
+    tiToolTipLabels                = "选择要滚动到的引用标签";
 
-    tiLabelLabelsSplit                = "标签";
-    tiPaletteLabelLabelsSplit         = "标签";
-    tiToolTipLabelsSplit              = " 选择以滚动至标签";
+    tiLabelLabelsSplit                = "引用标签";
+    tiPaletteLabelLabelsSplit         = "引用标签";
+    tiToolTipLabelsSplit              = "选择要滚动到的引用标签";
     
     tiLabelHtmlPreviousPageButton                = "返回";
     tiPaletteLabelHtmlPreviousPageButton            = "返回";
-    tiToolTipHtmlPreviousPageButton            = "后退";
+    tiToolTipHtmlPreviousPageButton            = "返回";
 
     tiLabelHtmlNextPageButton                = "前进";
     tiPaletteLabelHtmlNextPageButton            = "前进";

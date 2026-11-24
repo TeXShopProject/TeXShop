@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macrocomenzi AppleScript</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="macrocomenzi; AppleScript; --AppleScript; --AppleScript direct; ScriptRunner; View pdf with Preview">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor pentru macrocomenzi</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Noțiuni preliminare</a></li>
+<li><a href="macros_default.htm">Înțelegerea macrocomenzilor implicite</a></li>
+<li><a href="macros_rearrange.htm">Rearanjarea meniului Macro</a></li>
+<li><a href="macros_define.htm">Definirea macrocomenzilor noi</a></li>
+<li><a href="macros_applescript.htm" class="current">Macrocomenzi AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macrocomenzile AppleScript implicite</a></li>
+<li><a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Crearea dialogurilor</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrierea scripturilor cu comenzile de compilare ale TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrierea scripturilor cu comenzi shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Macrocomenzi AppleScript</h1>
+<p>O macrocomandă al cărei conținut începe cu</p>
+<pre>--AppleScript</pre>
+<p>sau</p>
+<pre>--AppleScript direct</pre>
+<p>rulează ca script AppleScript când este aleasă; nu contează dacă literele sunt mari sau mici. De exemplu, Macro › Applescript › View pdf with Preview deschide PDF-ul documentului activ în Previzualizare, după ce PDF-ul a fost compilat. Conținutul ei este</p>
+<pre>--AppleScript direct
+
+tell application "Preview"
+  activate
+  open POSIX file #PDFPATH#
+end tell</pre>
+<p>Înainte ca scriptul să ruleze, TeXShop înlocuiește #PDFPATH# cu calea PDF-ului; <a href="macros_defapplescript.htm">Definirea macrocomenzilor AppleScript</a> listează toate șirurile de acest fel. „View pdf with Adobe Acrobat Reader DC” din același submeniu face același lucru cu Adobe Acrobat.</p>
+
+<h2 id="direct">--AppleScript direct și --AppleScript</h2>
+<p>Un script care începe cu <code>--AppleScript direct</code> este rulat chiar de TeXShop. Cât timp rulează, TeXShop nu răspunde la nimic altceva, așa că scriptul nu îi poate cere lui TeXShop să facă ceva care ar putea necesita intervenția dvs. De exemplu, nu îi poate cere lui TeXShop să ruleze LaTeX: dacă fișierul ar avea o eroare, consola ar aștepta un răspuns de la dvs., pe care TeXShop nu l-ar putea primi.</p>
+<p>Un script care începe cu <code>--AppleScript</code> este rulat de ScriptRunner, un program mic din interiorul TeXShop. Un astfel de script îi poate cere lui TeXShop să facă lucruri care ar putea necesita intervenția dvs., deoarece ScriptRunner așteaptă, iar TeXShop rămâne activ.</p>
+<p>Așadar, <code>--AppleScript direct</code> se potrivește macrocomenzilor simple, în timp ce <code>--AppleScript</code> este necesar pentru scripturile care compilează sau lucrează în alt mod cu TeXShop.</p>
+</main>
+</body>
+</html>

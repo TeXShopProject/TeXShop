@@ -3,7 +3,7 @@
 "AdvancedFind.AnchorsMatchLines" = "^ und $ gelten für jede Zeile";
 "AdvancedFind.Cancel" = "Abbrechen";
 "AdvancedFind.Cancelled" = "Abgebrochen";
-"AdvancedFind.Cancelling" = "Abbrechen …";
+"AdvancedFind.Cancelling" = "Wird abgebrochen …";
 "AdvancedFind.Cheat.Alternation" = "a oder b";
 "AdvancedFind.Cheat.Anchors" = "Positionen";
 "AdvancedFind.Cheat.AnyCharacter" = "jedes Zeichen außer einem Zeilenumbruch";
@@ -120,8 +120,8 @@
 "AdvancedFind.Results.Line" = "Zeile";
 "AdvancedFind.Results.LiveUpdate" = "Automatisch aktualisieren";
 "AdvancedFind.Results.Text" = "Gefundener Text";
-"AdvancedFind.Searching" = "Suchen …";
-"AdvancedFind.SearchingCount" = "Suchen … %lu";
+"AdvancedFind.Searching" = "Wird gesucht …";
+"AdvancedFind.SearchingCount" = "Wird gesucht … %lu";
 "AdvancedFind.Section.Common" = "Für beide";
 "AdvancedFind.Section.Regex" = "Regulärer Ausdruck";
 "AdvancedFind.Section.Text" = "Textsuche";
@@ -167,7 +167,7 @@
 "MultipleReplace.SetOptions" = "Optionen des Regelsatzes";
 "MultipleReplace.SetOptionsTitle" = "Optionen für „%@“";
 "MultipleReplace.Sets" = "Regelsätze";
-"MultipleReplace.ShowInFinder" = "Im Finder anzeigen";
+"MultipleReplace.ShowInFinder" = "Im Finder zeigen";
 "MultipleReplace.SkippedRules" = "(Regel %@ übersprungen; siehe ⚠︎)";
 "MultipleReplace.Title" = "Mehrfach ersetzen";
 "MultipleReplace.Untitled" = "Ohne Titel";
@@ -234,8 +234,8 @@
 "TeXRootSearch.Report.Partly" = "Teilweise ersetzt: %@";
 "TeXRootSearch.Report.Replaced" = "Ersetzt: %@";
 "TeXRootSearch.Report.SomeTitle" = "In einigen Dateien konnte nicht ersetzt werden";
-"TeXRootSearch.Root" = "Root-Datei: %@";
-"TeXRootSearch.Rule" = "Die Root-Datei und die .tex-Dateien in ihrem Ordner und darunter, die sie in ihren ersten 20 Zeilen mit % !TEX root (oder %!TEX root) angeben.";
+"TeXRootSearch.Root" = "Hauptdatei: %@";
+"TeXRootSearch.Rule" = "Die Hauptdatei und die .tex-Dateien in ihrem Ordner und darunter, die sie in ihren ersten 20 Zeilen mit % !TEX root (oder %!TEX root) angeben.";
 "TeXRootSearch.RuleCount" = "Regeln: %lu";
 "TeXRootSearch.RuleJoin" = "%1$@ %2$@";
 "TeXRootSearch.RuleSourceDoc" = "Auch die, die sie mit %SourceDoc angeben.";
@@ -247,8 +247,8 @@
 "TeXRootSearch.Status.Found" = "Gefunden: %3$lu · Dateien: %2$lu von %1$lu";
 "TeXRootSearch.Status.Limit" = "Die Höchstzahl wurde erreicht: Nicht alle Treffer sind aufgeführt.";
 "TeXRootSearch.Status.Replaced" = "%1$lu Treffer in %2$lu Dateien ersetzt";
-"TeXRootSearch.Status.Replacing" = "Ersetzen …";
-"TeXRootSearch.Status.RootMissing" = "Die Root-Datei wurde nicht gefunden.";
+"TeXRootSearch.Status.Replacing" = "Wird ersetzt …";
+"TeXRootSearch.Status.RootMissing" = "Die Hauptdatei wurde nicht gefunden.";
 "TeXRootSearch.Status.Stopped" = "Gestoppt";
 "TeXRootSearch.Status.ToReplace" = "Zu ersetzen: %1$lu · Dateien: %2$lu";
 "TeXRootSearch.Stop" = "Stoppen";

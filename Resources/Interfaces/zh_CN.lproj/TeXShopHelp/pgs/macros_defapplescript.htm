@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>定义 AppleScript 宏</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScript；#FILEPATH#；#PDFPATH#；#TEXPATH#；#FOLDERPATH#；#NAMEPATH#；#DOCUMENTNAME#；typeset；latexinteractive；taskdone；refreshpdf；goto line">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">宏帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">预备知识</a></li>
+<li><a href="macros_default.htm">了解默认宏</a></li>
+<li><a href="macros_rearrange.htm">重新排列“宏”菜单</a></li>
+<li><a href="macros_define.htm">定义新宏</a></li>
+<li><a href="macros_applescript.htm">AppleScript 宏</a></li>
+<li><a href="macros_includedscripts.htm">默认 AppleScript 宏</a></li>
+<li><a href="macros_defapplescript.htm" class="current">定义 AppleScript 宏</a></li>
+<li><a href="macros_dialogs.htm">创建对话框</a></li>
+<li><a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a></li>
+<li><a href="macros_writingcommandscripts.htm">用 Shell 命令编写脚本</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>定义 AppleScript 宏</h1>
+<p>AppleScript 是一种独立的语言。Apple 开发者网站上的《<cite>AppleScript Language Guide</cite>》对它有完整的介绍。</p>
+
+<h2 id="paths">路径和文稿名称</h2>
+<p>在运行 AppleScript 宏之前，TeXShop 会把以下字符串替换为当前文稿某个文件的路径，并加上双引号：</p>
+<dl>
+<dt>#FILEPATH#</dt><dd>源文件</dd>
+<dt>#TEXPATH#</dt><dd>.tex 文件</dd>
+<dt>#NAMEPATH#</dt><dd>不带扩展名的源文件</dd>
+<dt>#FOLDERPATH#</dt><dd>包含源文件的文件夹，以斜杠结尾</dd>
+<dt>#PDFPATH#, #DVIPATH#, #PSPATH#, #LOGPATH#, #AUXPATH#</dt><dd>.pdf、.dvi、.ps、.log 和 .aux 文件</dd>
+<dt>#INDPATH#, #BBLPATH#, #HTMLPATH#</dt><dd>.ind、.bbl 和 .html 文件</dd>
+</dl>
+<p>例如，如果 #FILEPATH# 给出 /Users/name/Projects/Fourier/Fourier.tex，那么 #FOLDERPATH# 给出 /Users/name/Projects/Fourier/。如果文稿从未保存过，#FILEPATH# 是空字符串。</p>
+<p>#DOCUMENTNAME# 会被替换为源代码窗口标题中显示的文稿名称：带扩展名；如果扩展名被隐藏，则不带扩展名。脚本用它来指向调用它的文稿：</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  latex
+end tell</pre>
+
+<h2 id="commands">TeXShop 命令</h2>
+<p>AppleScript 可以用两种方式完成工作：运行 shell 命令（如<a href="macros_writingcommandscripts.htm">用 Shell 命令编写脚本</a>中所述），或者调用 TeXShop 自己的命令（如<a href="macros_writingcompletescripts.htm">用 TeXShop 排版命令编写脚本</a>中所述）。TeXShop 能理解的命令包括以下这些：</p>
+<pre>typeset
+latex
+tex
+bibtex
+makeindex
+metapost
+typesetinteractive
+latexinteractive
+texinteractive
+bibtexinteractive
+makeindexinteractive
+metapostinteractive
+taskdone
+refreshpdf
+refreshtext
+goto line</pre>
+<p>前六个命令连续排版，遇到错误时不停止。接下来的六个命令也会排版，但遇到错误时会停止，以便你在控制台中作答。排版命令会立即返回，不等排版完成。<code>taskdone</code> 在排版仍在进行时返回 NO，完成后返回 YES。<code>refreshpdf</code> 和 <code>refreshtext</code> 让 PDF 窗口和文本窗口显示其文件的最新版本。<code>goto line</code> 会在源文件中选择一行：</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  goto line 37
+end tell</pre>
+</main>
+</body>
+</html>

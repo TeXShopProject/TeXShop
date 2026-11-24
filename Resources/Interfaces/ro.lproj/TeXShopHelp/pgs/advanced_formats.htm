@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crearea și utilizarea formatelor TeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="format; fișier fmt; initex; -ini; -fmt; dump; fișier de motor; preambul">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajutor TeXShop"></a><span class="chapter">Ajutor avansat</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adăugarea fișierelor personale în TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mai multe despre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistența cu alte distribuții TeX</a></li>
+<li><a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a></li>
+<li><a href="advanced_formats.htm" class="current">Crearea și utilizarea formatelor TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX și LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt și MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificări</a></li>
+<li><a href="advanced_Japan.htm">Compilarea textelor în japoneză</a></li>
+<li><a href="advanced_root.htm">Stabilirea fișierului principal al proiectului</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizarea sursei cu previzualizarea</a></li>
+<li><a href="advanced_removeaux.htm">Ștergerea fișierelor AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecția față de shell escape</a></li>
+<li><a href="advanced_externaleditor.htm">Folosirea unui editor extern</a></li>
+<li><a href="advanced_experiments.htm">Experimente</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiere și lipire, tragere și plasare</a></li>
+<li><a href="advanced_otherfiles.htm">Deschiderea altor fișiere cu TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Evidențierea sintaxei</a></li>
+<li><a href="advanced_coloredtext.htm">Text colorat</a></li>
+<li><a href="advanced_plist.htm">Fișierele din ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizări</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Crearea și utilizarea formatelor TeX</h1>
+<p>Un fișier de format (extensia <code>.fmt</code>) este o imagine a stării lui TeX după ce a citit un set de macrocomenzi. LaTeX însuși este un format: TeX îl încarcă într-o clipă, în loc să citească de fiecare dată sursele LaTeX. Puteți crea un format propriu dintr-un preambul lung, astfel încât compilarea să pornească mai repede, sau puteți folosi un format oferit de un proiect ori de o organizație.</p>
+<p>Un format funcționează numai cu motorul și cu versiunea TeX Live care l-au creat. Un format creat cu pdfLaTeX din TeX Live 2026 nu poate fi folosit de XeLaTeX sau de alt an al TeX Live; creați-l din nou după instalarea unui TeX Live nou.</p>
+
+<h2>Crearea unui format</h2>
+<p>Puneți într-un fișier liniile pe care trebuie să le conțină formatul, terminând cu <code>\dump</code>. De exemplu, <code>uo.tex</code>:</p>
+<pre>\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\dump</pre>
+<p>În Terminal, treceți în dosarul acestui fișier și tastați</p>
+<pre>pdflatex -ini -jobname=uo "&amp;pdflatex" uo.tex</pre>
+<p>Comanda încarcă formatul LaTeX, citește <code>uo.tex</code> și scrie <code>uo.fmt</code>. Un document compilat cu acest format omite liniile care sunt în format și începe cu <code>\begin{document}</code>.</p>
+
+<h2>Folosirea unui format în TeXShop</h2>
+<ol>
+<li>Mutați <code>uo.fmt</code> în dosarul <code>~/Library/texmf/web2c</code>, creând dosarele dacă este nevoie, pentru ca TeX să îl găsească din orice dosar.</li>
+<li>În Finder, deschideți <code>~/Library/TeXShop/Engines</code> (TeXShop › Deschideți ~/Library/TeXShop), duplicați un motor precum <code>XeLaTeX.engine</code> și redenumiți copia, de exemplu <code>Oregon.engine</code>. Numele apare în TeXShop și nu trebuie să corespundă formatului.</li>
+<li>Deschideți copia în TeXShop și modificați ultima linie, astfel încât motorul să arate așa:
+<pre>#!/bin/tcsh
+
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
+</ol>
+<p>Documentele deschise după aceea listează Oregon în meniul pop-up de lângă butonul „Compilare”. Pentru a folosi formatul într-un document indiferent de ce este ales acolo, adăugați această linie la începutul sursei:</p>
+<pre>% !TEX program = Oregon</pre>
+<p>Pentru a-l face implicit, alegeți „Fișier de motor” în Configurări › Compilare › Motor › „Compilați documentele noi cu”, iar în meniul „Fișier de motor” alegeți Oregon. Consultați <a href="advanced_addengine.htm">Adăugarea motoarelor de compilare</a>.</p>
+<p>Pentru un format plain TeX, folosiți în motor <code>pdftex</code> în loc de <code>pdflatex</code>. Pentru un format folosit „Prin DVI”, motorul trebuie să convertească și fișierul DVI în PDF, de exemplu cu <code>dvipdfmx "${1:r}.dvi"</code> într-un script zsh, deoarece TeXShop afișează fișierul PDF cu numele sursei.</p>
+</main>
+</body>
+</html>

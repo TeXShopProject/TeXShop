@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Définir le fichier racine d’un projet</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="fichier racine; % !TEX root; projet; fichiers de chapitre; include; input; Source ⇔ Aperçu; Fichier racine du projet">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aide TeXShop"></a><span class="chapter">Aide avancée</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Ajouter des fichiers personnels à TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">En savoir plus sur TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexister avec d’autres distributions TeX</a></li>
+<li><a href="advanced_addengine.htm">Ajouter des moteurs de composition</a></li>
+<li><a href="advanced_formats.htm">Créer et utiliser des formats TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX et LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt et MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodages</a></li>
+<li><a href="advanced_Japan.htm">Composition en japonais</a></li>
+<li><a href="advanced_root.htm" class="current">Définir le fichier racine d’un projet</a></li>
+<li><a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a></li>
+<li><a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protection contre le shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Utiliser un éditeur externe</a></li>
+<li><a href="advanced_experiments.htm">Expériences</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copier-coller et glisser-déposer</a></li>
+<li><a href="advanced_otherfiles.htm">Ouvrir d’autres fichiers avec TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Surlignage syntaxique</a></li>
+<li><a href="advanced_coloredtext.htm">Texte en couleur</a></li>
+<li><a href="advanced_plist.htm">Les fichiers de ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localisations</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Définir le fichier racine d’un projet</h1>
+<p>Les documents volumineux sont souvent répartis en plusieurs fichiers : un fichier racine contenant le préambule, qui inclut un fichier par chapitre. Par exemple, un fichier racine <code>Main.tex</code> pourrait contenir</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p>Lorsque vous modifiez <code>two.tex</code>, TeXShop doit composer <code>Main.tex</code>, et non le chapitre, qui n’a pas de préambule. Pour le lui indiquer, placez cette ligne dans l’une des vingt premières lignes de chaque fichier de chapitre :</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>Le fichier racine lui-même n’a pas besoin d’une telle ligne. Le nom du fichier racine peut être indiqué</p>
+<ul>
+<li>par son nom seul, <code>Main.tex</code>, lorsqu’il se trouve dans le même dossier que le fichier de chapitre ;</li>
+<li>par rapport au dossier du fichier de chapitre, <code>../Main.tex</code> ou <code>../../Main.tex</code> ;</li>
+<li>par son chemin complet, <code>/Users/me/Book/Main.tex</code>, qu’il faut modifier lorsque le projet est déplacé.</li>
+</ul>
+<p>La macro Set Root File… du menu Macros insère la ligne : elle demande le fichier racine et propose une ligne relative ou absolue, qui remplace une éventuelle ligne root précédente.</p>
+
+<h2>Ce que fait la ligne root</h2>
+<ul>
+<li>Composer dans un fichier de chapitre compose le fichier racine, et la fenêtre d’aperçu du fichier racine affiche le document entier. Une ligne <code>% !TEX program</code> et les autres lignes magiques relatives à la composition se placent dans le fichier racine.</li>
+<li>Édition › Aller à l’erreur ouvre le fichier qui contient une erreur, s’il n’est pas ouvert, et va à la ligne concernée.</li>
+<li>La synchronisation depuis la fenêtre d’aperçu ouvre le fichier de chapitre qui contient l’endroit cliqué ; consultez <a href="advanced_pdfsync.htm">Synchroniser la source et l’aperçu</a>.</li>
+<li>« Fichiers AUX à la corbeille » supprime les fichiers auxiliaires du fichier racine ; consultez <a href="advanced_removeaux.htm">Supprimer les fichiers AUX</a>.</li>
+<li>Fenêtre › Source ⇔ Aperçu (<kbd>⌘1</kbd>) dans un fichier de chapitre amène au premier plan la fenêtre d’aperçu du fichier racine. La même commande dans la fenêtre d’aperçu ramène à la fenêtre source d’où vous veniez, ou au fichier racine si vous ne veniez pas d’une fenêtre source.</li>
+</ul>
+
+<h2>Ouvrir un fichier de chapitre</h2>
+<p>À l’ouverture d’un fichier de chapitre comportant une ligne root, TeXShop ouvre aussi le fichier racine et sa fenêtre d’aperçu. Deux options de Réglages › Général › « Fichier racine du projet » le contrôlent : « Ouvrir le fichier racine à l’ouverture d’un document » active ou désactive ce comportement, et « Minimiser la fenêtre du fichier racine ouverte » place la fenêtre source du fichier racine dans le Dock, puisqu’on la modifie rarement pendant le travail sur un chapitre.</p>
+
+<h2>Rechercher et remplacer dans tout le projet</h2>
+<p>Pour chercher dans tous les fichiers d’un projet à la fois, choisissez Édition › Rechercher › Rechercher dans les sources TeX de même TEX root… dans l’un de ses fichiers de chapitre, ou Rechercher dans les sources TeX ayant ce fichier pour TEX root… dans le fichier racine. La recherche porte sur le fichier racine et sur les fichiers <code>.tex</code> de son dossier et des dossiers inférieurs qui le désignent par une ligne root dans leurs 20 premières lignes. Consultez <a href="basic_texrootsearch.htm">Rechercher dans les sources TeX</a> et <a href="basic_find.htm">Rechercher et remplacer</a>.</p>
+
+<h2>Fichiers racine indiqués dans des fichiers .texshop</h2>
+<p>Un fichier portant l’extension <code>.texshop</code> placé à côté d’un fichier de chapitre, par exemple <code>two.texshop</code> pour <code>two.tex</code>, peut aussi indiquer le fichier racine, et TeXShop le lit toujours. Aucune commande de menu ne crée de tels fichiers ; utilisez une ligne <code>% !TEX root</code>, qui accompagne la source partout.</p>
+</main>
+</body>
+</html>

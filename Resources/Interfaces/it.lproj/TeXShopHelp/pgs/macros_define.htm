@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Definire nuove macro</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="nuove macro; Editor delle macro; sottomenu; separatore; scorciatoie da tastiera; F1–F20; segnaposto; menu Inserisci">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Aiuto di TeXShop"></a><span class="chapter">Aiuto sulle macro</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminari</a></li>
+<li><a href="macros_default.htm">Le macro predefinite</a></li>
+<li><a href="macros_rearrange.htm">Riordinare il menu Macro</a></li>
+<li><a href="macros_define.htm" class="current">Definire nuove macro</a></li>
+<li><a href="macros_applescript.htm">Macro AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macro AppleScript predefinite</a></li>
+<li><a href="macros_defapplescript.htm">Definire macro AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Creare finestre di dialogo</a></li>
+<li><a href="macros_writingcompletescripts.htm">Scrivere script con i comandi di compilazione di TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scrivere script con comandi della shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Definire nuove macro</h1>
+<p>Nell’Editor delle macro (Macro › Apri Editor delle macro...), fai clic su + sotto l’elenco per aggiungere un elemento. Il menu all’estremità destra della barra sotto l’elenco (⋯) aggiunge un sottomenu o un separatore e duplica gli elementi selezionati; − li elimina. A un nuovo elemento o sottomenu si dà subito un nome: digitalo e premi A capo. I sottomenu possono essere annidati a qualsiasi livello. Con un po’ di pratica si capisce come si comporta l’editor.</p>
+
+<h2 id="shortcuts">Scorciatoie</h2>
+<p>Per assegnare una scorciatoia da tastiera a un elemento, selezionalo e fai clic sulla sua scorciatoia nell’elenco (oppure fai doppio clic sulla scorciatoia), poi premi la nuova scorciatoia: Comando o Controllo con un tasto, oppure uno dei tasti F1–F20, con Maiuscole e Opzione se servono. Se un comando di menu o un’altra macro usa già la scorciatoia, TeXShop lo segnala sotto il contenuto e non la cambia; premi un’altra scorciatoia. Per rimuovere una scorciatoia, fai clic su «Rimuovi scorciatoia» (⊖) nel campo oppure premi Elimina; Esc mantiene quella che c’era. Una scorciatoia inattiva perché la usa un comando di menu o una macro precedente è contrassegnata nell’elenco da un triangolo di avviso; seleziona l’elemento per vedere il motivo sotto il contenuto. Consulta <a href="configure_menushortcuts.htm">Ridefinire le scorciatoie da tastiera dei menu</a> per sapere come funzionano insieme le scorciatoie dei menu e quelle delle macro.</p>
+
+<h2 id="tokens">Segnaposto</h2>
+<p>Nel contenuto, i segnaposto che una macro sostituisce sono mostrati come etichette arrotondate che dicono che cosa rappresentano, per esempio «Testo selezionato»: #SEL#, #INS#, #PASTE# e i marcatori • di una macro di testo (consulta <a href="macros_default.htm">Le macro predefinite</a>), e #FILEPATH# e gli altri percorsi di una macro AppleScript (consulta <a href="macros_defapplescript.htm">Definire macro AppleScript</a>). La macro li conserva così come sono scritti, quindi copia e salvataggio funzionano come di consueto. Digita un segnaposto oppure sceglilo dal menu «Inserisci» sotto il contenuto; il pulsante di aiuto alla sua destra li elenca tutti. Cancellando accanto a un’etichetta, la si cancella per intero.</p>
+</main>
+</body>
+</html>

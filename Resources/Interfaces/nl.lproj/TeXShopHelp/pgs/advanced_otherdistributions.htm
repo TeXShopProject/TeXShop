@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Samenwerken met andere TeX-distributies</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="andere TeX-distributies; Paden detecteren; TeX-engines; Ghostscript; Homebrew; MacPorts; Fink; texbin">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Geavanceerde hulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Eigen bestanden aan TeX Live toevoegen</a></li>
+<li><a href="advanced_moretetex.htm">Meer over TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm" class="current">Samenwerken met andere TeX-distributies</a></li>
+<li><a href="advanced_addengine.htm">Zet-engines toevoegen</a></li>
+<li><a href="advanced_formats.htm">TeX-formaten maken en gebruiken</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX en LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt en MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Coderingen</a></li>
+<li><a href="advanced_Japan.htm">Japans zetten</a></li>
+<li><a href="advanced_root.htm">Een hoofdbestand voor een project instellen</a></li>
+<li><a href="advanced_pdfsync.htm">Bron en voorvertoning synchroniseren</a></li>
+<li><a href="advanced_removeaux.htm">Aux-bestanden verwijderen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Bescherming tegen shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Een externe editor gebruiken</a></li>
+<li><a href="advanced_experiments.htm">Experimenten</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopiëren en plakken, slepen en neerzetten</a></li>
+<li><a href="advanced_otherfiles.htm">Andere bestanden openen met TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxmarkering</a></li>
+<li><a href="advanced_coloredtext.htm">Gekleurde tekst</a></li>
+<li><a href="advanced_plist.htm">Bestanden in ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Lokalisaties</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Samenwerken met andere TeX-distributies</h1>
+<p>Er kunnen meerdere TeX-installaties op één Mac staan: jaargangen van TeX Live die met MacTeX of BasicTeX zijn geïnstalleerd, een TeX Live die met het eigen installatieprogramma van TeX Live is geïnstalleerd, of TeX uit Homebrew of MacPorts. TeXShop gebruikt de installatie in het veld ‘TeX-engines’ van Instellingen › Zetten › Paden, en Ghostscript uit het veld ‘Ghostscript’ daaronder.</p>
+
+<h2>Paden detecteren</h2>
+<p>TeXShop kan beide velden voor u invullen. Wanneer TeXShop voor het eerst wordt gebruikt, en telkens wanneer u in de groep ‘Paden’ van Instellingen › Zetten op ‘Paden detecteren…’ klikt, zoekt het TeX en Ghostscript op de gebruikelijke plaatsen: de mappen in <code>/etc/paths</code> en <code>/etc/paths.d</code> en in het <code>PATH</code> van TeXShop, <code>/Library/TeX/texbin</code>, de mappen van TeX Live in <code>/usr/local/texlive</code>, <code>/opt/texlive</code> en <code>/Applications/TeXLive</code>, de TeX-mappen van UpTeX.app en pTeX.app, <code>/usr/local/teTeX/bin</code>, en de mappen van Homebrew, MacPorts en Fink. Het controleert of de programma’s werken en toont de gevonden installaties met hun versies, de nieuwste bovenaan. De nieuwste is geselecteerd, maar u kunt een andere kiezen, afzonderlijk voor TeX en voor Ghostscript. De paden veranderen pas als u op ‘OK’ klikt. Een installatie op een andere plaats kunt u nog altijd met de hand in de velden invullen.</p>
+<p>‘Paden detecteren…’ wijzigt alleen ‘TeX-engines’ en ‘Ghostscript’. Engine-bestanden die hun eigen mappen noemen, en het veld ‘Tweede TeX-engines’, blijven zoals ze zijn.</p>
+
+<h2>TeX Live zonder MacTeX</h2>
+<p>De installatieprogramma’s van MacTeX en BasicTeX laten <code>/Library/TeX/texbin</code> wijzen naar de TeX Live die ze installeren, zodat programma’s die dit pad gebruiken de nieuwste installatie volgen. Een TeX Live die met het installatieprogramma van TeX Live zelf is geïnstalleerd, wijzigt deze koppeling niet. Om zo’n installatie te gebruiken, kiest u die met ‘Paden detecteren…’ of vult u de map met de programma’s ervan, bijvoorbeeld <code>/usr/local/texlive/2026/bin/universal-darwin</code>, in bij ‘TeX-engines’.</p>
+
+<h2>Omgevingsvariabelen</h2>
+<p>Sommige distributies stellen omgevingsvariabelen zoals <code>TEXINPUTS</code> of <code>TEXMFHOME</code> in de opstartbestanden van de shell in. TeX leest dan bestanden uit andere mappen dan u verwacht, en hetzelfde document kan in Terminal anders worden gezet dan in TeXShop. Als TeX een verkeerde versie van een bestand gebruikt, controleer dan eerst deze variabelen; in Terminal toont <code>kpsewhich</code> gevolgd door de bestandsnaam welke kopie TeX vindt.</p>
+</main>
+</body>
+</html>

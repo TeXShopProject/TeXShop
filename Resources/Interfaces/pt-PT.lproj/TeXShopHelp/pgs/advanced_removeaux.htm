@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remover ficheiros AUX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Apagar ficheiros auxiliares; Apagar aux. e compor; aux; log; ficheiros auxiliares; OtherTrashExtensions; AggressiveTrashAUX">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ajuda do TeXShop"></a><span class="chapter">Ajuda avançada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Adicionar ficheiros pessoais ao TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">Mais sobre o TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistir com outras distribuições TeX</a></li>
+<li><a href="advanced_addengine.htm">Adicionar motores de composição</a></li>
+<li><a href="advanced_formats.htm">Criar e usar formatos TeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX e LuaLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt e MetaPost</a></li>
+<li><a href="advanced_encoding.htm">Codificações</a></li>
+<li><a href="advanced_Japan.htm">Composição em japonês</a></li>
+<li><a href="advanced_root.htm">Definir o ficheiro principal de um projeto</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizar o código-fonte e a pré-visualização</a></li>
+<li><a href="advanced_removeaux.htm" class="current">Remover ficheiros AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Proteção contra shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Usar um editor externo</a></li>
+<li><a href="advanced_experiments.htm">Experiências</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar e colar, arrastar e largar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir outros ficheiros com o TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Destaque de sintaxe</a></li>
+<li><a href="advanced_coloredtext.htm">Texto a cores</a></li>
+<li><a href="advanced_plist.htm">Ficheiros em ~/Library/TeXShop</a></li>
+<li><a href="advanced_localization.htm">Localizações</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Remover ficheiros AUX</h1>
+<p>Quando o LaTeX compõe <code>Galois.tex</code>, escreve ficheiros auxiliares como <code>Galois.aux</code>, <code>Galois.toc</code> e <code>Galois.log</code>, que a execução seguinte lê para as referências cruzadas, o índice geral e outros elementos semelhantes. Se a composição for interrompida a meio, por exemplo depois de um erro, estes ficheiros podem ficar danificados, e a execução seguinte comunica erros que não estão no código-fonte, muitas vezes logo antes de <code>\begin{document}</code>. Mover os ficheiros auxiliares para o Lixo e compor de novo resolve o problema.</p>
+
+<h2>Mover os ficheiros para o Lixo</h2>
+<ul>
+<li>Ficheiro › Apagar ficheiros auxiliares (<kbd>⌃⌘A</kbd>), ou o botão «Apagar ficheiros aux.» da consola, move para o Lixo os ficheiros auxiliares do documento.</li>
+<li>Compor › Apagar aux. e compor (<kbd>⌥⌘T</kbd>) faz isto e depois compõe. No menu Compor, o item aparece em vez de Compor enquanto mantém premida a tecla Opção.</li>
+</ul>
+<p>Os ficheiros movidos para o Lixo são os que estão na pasta do código-fonte, têm o seu nome e uma destas extensões:</p>
+<pre>4ct  4tc  aux  bcf  blg  brf  css  ent  fdb_latexmk  fff  fls
+gaux  glo  glog  gtex  idv  idx  ilg  ind  lg  loa  lof  log
+lot  mlf  mtc  out  pdfsync  run.xml  synctex  synctex.gz  toc
+ttt  wrm  xref</pre>
+<p>Os ficheiros que o SyncTeX deixa com <code>(busy)</code> no fim do nome quando a composição é interrompida também são movidos para o Lixo. O ficheiro <code>.bbl</code> do BibTeX é mantido.</p>
+<p>Num projeto cujos ficheiros de capítulo indicam um ficheiro principal com <code>% !TEX root</code>, são movidos para o Lixo os ficheiros do ficheiro principal, também quando o comando é dado num ficheiro de capítulo.</p>
+
+<h2>Variantes</h2>
+<ul>
+<li>Mantenha premida a tecla Shift ao escolher «Apagar ficheiros auxiliares» ou ao clicar no botão para mover também para o Lixo o ficheiro PDF do documento. Normalmente o PDF antigo é mantido, para que a janela de pré-visualização tenha algo para mostrar quando a composição falha.</li>
+<li>Mantenha premida a tecla Opção ao escolher «Apagar ficheiros auxiliares» ou ao clicar no botão para limpar um projeto inteiro: todos os ficheiros com uma das extensões acima na pasta do ficheiro principal e em todas as pastas abaixo dela são movidos para o Lixo, seja qual for o nome. Isto remove também os ficheiros <code>.aux</code> que <code>\include</code> escreve para os capítulos em subpastas.</li>
+</ul>
+<p>Duas definições ocultas alteram este comportamento. Para adicionar extensões à lista, por exemplo <code>dvi</code>, escreva no Terminal</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</pre>
+<p>e, para voltar à lista padrão,</p>
+<pre>defaults write TeXShop OtherTrashExtensions -array</pre>
+<p>Para tornar o comportamento com Opção o comportamento padrão de «Apagar ficheiros auxiliares»:</p>
+<pre>defaults write TeXShop AggressiveTrashAUX YES</pre>
+</main>
+</body>
+</html>

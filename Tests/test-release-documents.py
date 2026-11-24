@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def plain_markdown(text):
     text = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', text).replace('`', '').replace('**', '')
+    text = re.sub(r'\\([\[\]])', r'\1', text)
     return re.sub(r'\s+', ' ', text).strip()
 
 
@@ -56,6 +57,10 @@ class ReleaseDocuments(unittest.TestCase):
     def test_code_is_literal_and_bold_is_formatted(self):
         self.assertEqual(documents.inline('**Fix:** `a_b * [x]`'),
                          r'\textbf{Fix:} \texttt{a\_b * [x]}')
+
+    def test_escaped_brackets_are_shown(self):
+        self.assertEqual(documents.inline('**Keys:** Control-Command-\\] and Control-Command-\\[.'),
+                         r'\textbf{Keys:} Control-Command-] and Control-Command-[.')
 
     def test_unsupported_markdown_is_rejected(self):
         for text in ('[site](texshop.app)', '[site](https://example.org/a%20b)', '*emphasis*', '_emphasis_',

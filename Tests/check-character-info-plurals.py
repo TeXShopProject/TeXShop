@@ -36,7 +36,7 @@ EXPECTED = {
     'pt': ['1 caractere, 1 palavra, 1 linha', '2 caracteres, 1 palavra, 3 linhas', '<um caractere formado por 2 pontos de código>', '<um caractere formado por 20 pontos de código>'],
     'pt-PT': ['1 carácter, 1 palavra, 1 linha', '2 caracteres, 1 palavra, 3 linhas', '<um carácter composto por 2 pontos de código>', '<um carácter composto por 20 pontos de código>'],
     'ro': ['Caractere: 1, cuvinte: 1, linii: 1', 'Caractere: 2, cuvinte: 1, linii: 3', '<un caracter format din 2 puncte de cod>', '<un caracter format din 20 de puncte de cod>'],
-    'zh_CN': ['1个字符, 1个单词, 共 1行', '2个字符, 1个单词, 共 3行', '<由2个码位组成的字符>', '<由20个码位组成的字符>'],
+    'zh_CN': ['1个字符，1个单词，共1行', '2个字符，1个单词，共3行', '<由2个码位组成的字符>', '<由20个码位组成的字符>'],
 }
 
 # The status bar's words for characters, words and lines, which the counts use too.

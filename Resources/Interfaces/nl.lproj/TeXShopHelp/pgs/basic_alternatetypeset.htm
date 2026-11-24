@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alternatieve zetmethode</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Via DVI; Direct PDF; dvips; Ghostscript; PostScript; pstricks; Zetmethode; % !TEX program; Eigen script">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-help"></a><span class="chapter">Basishulp</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Inleiding</a></li>
+<li><a href="basic_installtetex.htm">TeX Live installeren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop installeren</a></li>
+<li><a href="basic_typesetting.htm">Documenten zetten</a></li>
+<li><a href="basic_alternatetypeset.htm" class="current">Alternatieve zetmethode</a></li>
+<li><a href="basic_preview.htm">Het voorvertoningsvenster</a></li>
+<li><a href="basic_edittricks.htm">Handige bewerkingstips</a></li>
+<li><a href="basic_find.htm">Zoeken en vervangen</a></li>
+<li><a href="basic_texrootsearch.htm">Zoeken in TeX-bronnen</a></li>
+<li><a href="basic_spelling.htm">Spelling controleren</a></li>
+<li><a href="basic_autocompletion.htm">Toetsbindingen</a></li>
+<li><a href="basic_commandcompletion.htm">Commandoaanvulling</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX-venster</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix-venster</a></li>
+<li><a href="basic_macros.htm">Macro’s</a></li>
+<li><a href="basic_toolbar.htm">Knoppenbalk en AppleScript</a></li>
+<li><a href="basic_graphics.htm">Afbeeldingen invoegen</a></li>
+<li><a href="basic_printing.htm">Afdrukken</a></li>
+<li><a href="basic_preferences.htm">Instellingen wijzigen</a></li>
+<li><a href="basic_templates.htm">Sjablonen en sjabloondocumenten</a></li>
+<li><a href="basic_miscellaneous.htm">Vensters en tabbladen</a></li>
+<li><a href="basic_bugs.htm">Fouten melden</a></li>
+<li><a href="basic_websites.htm">Nuttige websites</a></li>
+<li><a href="basic_license.htm">Licentie</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Alternatieve zetmethode</h1>
+
+<p>TeXShop zet normaal met de methode Direct PDF: pdfLaTeX of pdfTeX schrijft het PDF-bestand direct. De alternatieve methode, Via DVI, voert LaTeX of TeX uit om een DVI-bestand te maken, zet dat met dvips om in PostScript en zet de PostScript met Ghostscript om in PDF. Het script simpdftex van TeX Live voert deze stappen uit.</p>
+
+<p>Via DVI is nodig voor documenten die PostScript-code in de uitvoer zetten, bijvoorbeeld met het pakket pstricks. EPS-afbeeldingen hebben het niet nodig: TeX Live zet ze tijdens het zetten met Direct PDF om in PDF.</p>
+
+<h2>De methode kiezen</h2>
+
+<p>Zet › Via DVI en Zet › Direct PDF wijzigen de methode van het actieve document; andere geopende documenten houden hun eigen methode. Instellingen › Zetten › ‘Zetmethode’ bepaalt de methode waarmee documenten beginnen. De derde keuze, ‘Eigen script’, voert in plaats daarvan de commando’s van de groep Eigen script uit. De commando’s van Via DVI, één voor plain TeX en één voor LaTeX, staan in de groep Via DVI van Instellingen › Zetten. Het engineprofiel LaTeX + dvips + Ghostscript, onder ‘Overige’ in het menu ‘Engineprofiel’, stelt zetten Via DVI in.</p>
+
+<h2>De methode in het document kiezen</h2>
+
+<p>Een regel in de eerste 20 regels van de bron bepaalt het programma en de methode voor dat document, wat de instellingen ook zijn:</p>
+
+<table>
+<tr><th>Regel</th><th>Zet met</th></tr>
+<tr><td><code>% !TEX program = pdflatex</code></td><td>LaTeX, Direct PDF</td></tr>
+<tr><td><code>% !TEX program = latex</code></td><td>LaTeX, Via DVI</td></tr>
+<tr><td><code>% !TEX program = pdftex</code></td><td>plain TeX, Direct PDF</td></tr>
+<tr><td><code>% !TEX program = tex</code></td><td>plain TeX, Via DVI</td></tr>
+<tr><td><code>% !TEX program = personallatex</code></td><td>LaTeX, Eigen script</td></tr>
+<tr><td><code>% !TEX program = personaltex</code></td><td>plain TeX, Eigen script</td></tr>
+</table>
+
+<h2>Opties voor Via DVI</h2>
+
+<p>Ghostscript negeert transparantie in PostScript standaard. Om die te behouden, voegt u <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code> toe aan het eind van het commando in de groep Via DVI. Om het tussenliggende PostScript-bestand te bewaren, voegt u <code>--keep-psfile</code> toe. Ghostscript wordt uitgevoerd vanuit de map in Instellingen › Zetten › Paden › ‘Ghostscript’.</p>
+</main>
+</body>
+</html>

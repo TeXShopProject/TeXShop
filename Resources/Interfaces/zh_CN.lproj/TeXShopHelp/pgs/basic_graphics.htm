@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>插入图形</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="插入图形; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; 转换TIFF格式">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 帮助"></a><span class="chapter">基本帮助</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">简介</a></li>
+<li><a href="basic_installtetex.htm">安装 TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">安装 TeXShop</a></li>
+<li><a href="basic_typesetting.htm">排版文稿</a></li>
+<li><a href="basic_alternatetypeset.htm">替代排版方式</a></li>
+<li><a href="basic_preview.htm">预览窗口</a></li>
+<li><a href="basic_edittricks.htm">编辑技巧</a></li>
+<li><a href="basic_find.htm">查找和替换</a></li>
+<li><a href="basic_texrootsearch.htm">在 TeX 源文件中查找</a></li>
+<li><a href="basic_spelling.htm">拼写检查</a></li>
+<li><a href="basic_autocompletion.htm">按键绑定</a></li>
+<li><a href="basic_commandcompletion.htm">命令补全</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX 面板</a></li>
+<li><a href="basic_matrixpanel.htm">矩阵面板</a></li>
+<li><a href="basic_macros.htm">宏</a></li>
+<li><a href="basic_toolbar.htm">工具栏和 AppleScript</a></li>
+<li><a href="basic_graphics.htm" class="current">插入图形</a></li>
+<li><a href="basic_printing.htm">打印</a></li>
+<li><a href="basic_preferences.htm">更改设置</a></li>
+<li><a href="basic_templates.htm">模板和样板</a></li>
+<li><a href="basic_miscellaneous.htm">窗口和标签页</a></li>
+<li><a href="basic_bugs.htm">报告问题</a></li>
+<li><a href="basic_websites.htm">实用网站</a></li>
+<li><a href="basic_license.htm">许可协议</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>插入图形</h1>
+<p>直接排版为 PDF 时，LaTeX 可以插入 PDF、PNG 和 JPEG 格式的图形。PDF 在任何尺寸下都能保持线条和文字清晰，因此适合示意图和函数图像；PNG 和 JPEG 适合屏幕快照和照片。</p>
+<p>在导言区载入 graphicx 宏包：</p>
+<pre>\usepackage{graphicx}</pre>
+<p>然后在图形要出现的位置插入它：</p>
+<pre>\includegraphics[width=0.8\textwidth]{diagram}</pre>
+<p>扩展名可以省略；这时 LaTeX 会查找 <code>diagram.pdf</code>、<code>diagram.png</code>、<code>diagram.jpg</code> 以及它能识别的其他格式。更改宽度即可更改图形的大小。请将图形文件放在文稿所在的文件夹中，或者给出相对于该文件夹的路径，例如 <code>figures/diagram</code>。</p>
+
+<h2>EPS 文件</h2>
+<p>只要文稿载入了 graphicx，TeX Live 就会在排版时使用 epstopdf 自动将 EPS 图形转换为 PDF。转换后的文件 <code>diagram-eps-converted-to.pdf</code> 写在 EPS 文件旁边，此后就会使用它。</p>
+<p>在 TeXShop 中打开的 EPS 文件也会被转换：TeXShop 会在它旁边写出同名的 PDF 文件（如果 EPS 文件所在的文件夹无法写入，则写到临时文件夹中），并显示该 PDF 文件。</p>
+
+<h2>TIFF 文件</h2>
+<p>LaTeX 无法插入 TIFF 文件。在源代码窗口处于活跃状态时选取“文件”>“转换 TIFF 格式”：会出现一个显示文稿所在文件夹的对话框，其中只能选择 TIFF 文件。选择一个或多个文件，然后点按“转换”。每个文件都会被转换为同一文件夹中的同名 PNG 文件；TIFF 文件保持不变。</p>
+
+<h2>经由 DVI 排版</h2>
+<p>使用 PostScript 代码的文稿（例如使用 pstricks 宏包的文稿）以“经由 DVI”方式排版，默认运行 dvips。此时图形以 EPS 格式插入，无法使用 PDF、PNG 和 JPEG 文件。名称以“+ dvipdfmx”结尾的引擎配置也以“经由 DVI”方式排版，但运行的是 dvipdfmx 而不是 dvips；使用 <code>\usepackage[dvipdfmx]{graphicx}</code> 时，就可以使用 PDF、PNG 和 JPEG 文件。请参阅“<a href="basic_alternatetypeset.htm">替代排版方式</a>”。</p>
+</main>
+</body>
+</html>
