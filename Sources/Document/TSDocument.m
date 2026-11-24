@@ -8477,7 +8477,7 @@ if (! useFullSplitWindow) {
 	if (path == nil && url != nil)
 		path = [[[url path] stringByDeletingPathExtension] stringByAppendingPathExtension: @"pdf"];
 	if (path != nil && self.pdfKitWindow != nil) {
-		// タイトルと親パスメニューが、移動後や単一ウィンドウでの更新後も同じ PDF を指す。
+		// Keep the title and path menu on the same PDF after moves and updates in the combined window.
 		[self.pdfKitWindow setRepresentedURL:[NSURL fileURLWithPath:path]];
 		[self.pdfKitWindow setTitle: TSPreviewWindowTitle(path, showFullPath)];
 	}

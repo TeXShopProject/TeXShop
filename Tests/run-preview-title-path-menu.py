@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""実際の AppKit タイトルで、親パスメニューへの転送範囲を検証する。画面には表示しない。"""
+"""Check path-menu event routing with real AppKit titles in windows kept off screen."""
 from pathlib import Path
 import subprocess
 import tempfile
