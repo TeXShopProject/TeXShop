@@ -241,6 +241,28 @@ static void edges(MyPDFKitView *view, NSUInteger index, CGFloat *left, CGFloat *
     PDFPage *page = [view.document pageAtIndex:index];
     *left = shown(view, page, 0, .5).x; *right = shown(view, page, 1, .5).x;
 }
+// Moves stored raw ink. dx is added to the origin. leftGrow and rightGrow widen that side.
+static void nudgeInk(PDFView *view, CGFloat dx, CGFloat leftGrow, CGFloat rightGrow) {
+    PDFDocument *document = view.document;
+    PDFDisplayBox box = view.displayBox;
+    for (NSUInteger i = 0; i < document.pageCount; i++) {
+        PDFPage *page = [document pageAtIndex:i];
+        BOOL known = NO;
+        NSRect ink = TSContentWidthRawInk(document, box, page, &known);
+        if (!known || NSIsEmptyRect(ink)) continue;
+        ink.origin.x += dx - leftGrow;
+        ink.size.width += leftGrow + rightGrow;
+        TSContentWidthStoreRaw(document, box, page, ink);
+    }
+}
+static NSRect contentClip(PDFView *view) {
+    NSMutableArray<PDFPage *> *all = [NSMutableArray array];
+    for (NSUInteger i = 0; i < view.document.pageCount; i++) {
+        PDFPage *page = [view.document pageAtIndex:i];
+        if (page) [all addObject:page];
+    }
+    return [clipOf(view) convertRect:TSContentFitRectInView(view, all) fromView:view];
+}
 
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
@@ -514,6 +536,114 @@ int main(int argc, char **argv) { @autoreleasepool {
         check(fabs(settled - atOnce) < 0.6, [NSString stringWithFormat:@"the place gone to stays (%.2f, then %.2f below the top edge)", atOnce, settled]);
         [p.window close];
     }
+    // One page at a time, before every page is stored: the current page must not move sideways.
+    context = @"unfinished single page";
+    {
+        PDFDocument *document = makeDocument(NO, NO);
+        Preview p = makePreview(document, kPDFDisplaySinglePage);
+        MyPDFKitView *view = p.view;
+        view.autoScales = NO;
+        view.scaleFactor = 2;
+        show(view, 0);
+        TSContentWidthStoreRaw(document, view.displayBox, [document pageAtIndex:0], NSUnionRect(OddBody, Number));
+        NSClipView *clip = clipOf(view);
+        NSRect bounds = clip.bounds;
+        bounds.origin.x = 50;
+        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+        [clip.enclosingScrollView reflectScrolledClipView:clip];
+        settle(p.window);
+        CGFloat x = NSMinX(clip.bounds);
+        check(!TSContentWidthIsComplete(document, view.displayBox) && fabs(x - 50) < 1, @"one stored page, scrolled sideways");
+        TSContentPlaceSideways(view);
+        settle(p.window);
+        check(fabs(NSMinX(clip.bounds) - x) < 0.5 && fabs(view.scaleFactor - 2) < 1e-6,
+              @"an unfinished document does not move sideways");
+        view.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH;
+        [view centreContentRowLater];
+        settle(p.window);
+        check(fabs(NSMinX(clip.bounds) - x) < 0.5 && fabs(view.scaleFactor - 2) < 1e-6,
+              @"a page change of an unfinished document does not move it");
+        [p.window close];
+    }
+    context = @"unfinished two-up";
+    {
+        PDFDocument *document = makeDocument(NO, NO);
+        Preview p = makePreview(document, kPDFDisplayTwoUp);
+        MyPDFKitView *view = p.view;
+        view.autoScales = NO;
+        view.scaleFactor = 2;
+        show(view, 0);
+        TSContentWidthStoreRaw(document, view.displayBox, [document pageAtIndex:0], NSUnionRect(OddBody, Number));
+        NSClipView *clip = clipOf(view);
+        NSRect bounds = clip.bounds;
+        bounds.origin.x = 50;
+        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+        [clip.enclosingScrollView reflectScrolledClipView:clip];
+        settle(p.window);
+        CGFloat x = NSMinX(clip.bounds);
+        check(!TSContentWidthIsComplete(document, view.displayBox) && fabs(x - 50) < 1, @"one stored page of a two-up row, scrolled sideways");
+        TSContentPlaceSideways(view);
+        settle(p.window);
+        check(fabs(NSMinX(clip.bounds) - x) < 0.5 && fabs(view.scaleFactor - 2) < 1e-6,
+              @"an unfinished two-up document does not move sideways");
+        view.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH;
+        [view centreContentRowLater];
+        settle(p.window);
+        check(fabs(NSMinX(clip.bounds) - x) < 0.5 && fabs(view.scaleFactor - 2) < 1e-6,
+              @"a page change of an unfinished two-up document does not move it");
+        [p.window close];
+    }
+
+    // The dead band is one screen point on an edge, not one clip-view unit and not the width.
+    context = @"screen point threshold";
+    {
+        PDFDocument *document = makeDocument(NO, NO);
+        Preview p = makePreview(document, kPDFDisplaySinglePageContinuous);
+        MyPDFKitView *view = p.view;
+        show(view, 2);
+        fit(view); measureAll(view);
+        check(!TSContentWidthShouldRefit(view), @"a view that already fits does not refit");
+        NSClipView *clip = clipOf(view);
+        CGFloat toScreen = NSWidth(clip.frame) / NSWidth(clip.bounds);
+        NSRect atRest = contentClip(view);
+        nudgeInk(view, 1, 0, 0);
+        CGFloat perPage = NSMinX(contentClip(view)) - NSMinX(atRest);
+        nudgeInk(view, -1, 0, 0);
+        check(fabs(perPage) > 0.01 && !TSContentWidthShouldRefit(view), @"a page unit of ink can be put back");
+        CGFloat over = 1.3 / toScreen / perPage;
+        nudgeInk(view, over, 0, 0);
+        check(TSContentWidthShouldRefit(view), @"more than one screen point refits");
+        nudgeInk(view, -over, 0, 0);
+        CGFloat under = 0.6 / toScreen / fabs(perPage);
+        nudgeInk(view, 0, under, under);
+        check(!TSContentWidthShouldRefit(view), @"each edge under one screen point does not refit");
+        nudgeInk(view, 0, -under, -under);
+        nudgeInk(view, 0, 0, 1.3 / toScreen / fabs(perPage));
+        check(TSContentWidthShouldRefit(view), @"one edge past one screen point refits");
+        [p.window close];
+    }
+
+    // The page in view is blank. Other pages have ink, so finishing the measurement sets the
+    // magnification. A document that is blank throughout still does not.
+    context = @"blank row still sets the magnification";
+    {
+        PDFDocument *document = makeDocument(NO, NO);
+        Preview p = makePreview(document, kPDFDisplaySinglePage);
+        MyPDFKitView *view = p.view;
+        view.autoScales = NO;
+        view.scaleFactor = 0.7;
+        show(view, BlankPage);
+        fit(view); measureAll(view);
+        CGFloat fitted = view.scaleFactor;
+        check(fitted > 1.0, [NSString stringWithFormat:@"a blank page still sets the magnification (%.3f)", fitted]);
+        show(view, 2);
+        NSRect content = [view convertRect:inkOf(2, NO) fromPage:[document pageAtIndex:2]];
+        NSRect area = [view convertRect:TSContentVisibleArea(view) fromView:clipOf(view)];
+        check(fabs(view.scaleFactor - fitted) < 1e-4 && fabs(NSMidX(content) - NSMidX(area)) < 2,
+              @"the next page keeps that magnification and is centred");
+        [p.window close];
+    }
+
     context = @"";
     printf("PASS: %lu checks\n", (unsigned long)checks);
     return 0;

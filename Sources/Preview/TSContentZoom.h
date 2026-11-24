@@ -392,10 +392,11 @@ static inline NSArray<NSArray<PDFPage *> *> *TSContentKnownGroups(PDFView *view)
 }
 
 // Puts the content of the page or row in view in the middle, sideways (one page or one row at
-// a time).
+// a time). An unfinished store does not move the view: the current row can be known while
+// later pages are not (#62).
 static inline void TSContentCentreRow(PDFView *view)
 {
-    if (TSContentContinuous(view)) return;
+    if (TSContentContinuous(view) || !TSContentWidthIsComplete(view.document, view.displayBox)) return;
     NSRect shown = TSContentFitRectInView(view, TSContentRow(view, TSContentMiddlePage(view)));
     if (NSIsEmptyRect(shown)) return;
     TSContentScrollTo(view, shown, NO, NO);
@@ -479,9 +480,12 @@ static inline BOOL TSContentFitWidth(PDFView *view, CGFloat (^setScale)(CGFloat 
 }
 
 // Whether finishing a measurement should move this view. A window resize does not ask:
-// it fits from the stored rects whenever they are complete. The margin box is compared
-// with the visible edges in view points. Raw ink, before the margin, forces a fit when
-// it crosses the visible edge by a fraction of a point.
+// it fits from the stored rects whenever they are complete.
+// The left and right edges are compared in screen points. One point of the page, and one
+// point of the clip view, are not that unit (#62). A blank row does not skip the decision:
+// the widest row still sets the magnification. Raw ink, before the margin, forces a fit
+// when it crosses the visible edge by a fraction of a screen point. A symmetric change of
+// the width is the same test, not a second one: each edge has to move by more than a point.
 static inline BOOL TSContentWidthShouldRefit(PDFView *view)
 {
     PDFDocument *document = view.document;
@@ -489,35 +493,46 @@ static inline BOOL TSContentWidthShouldRefit(PDFView *view)
     if (!TSContentWidthIsComplete(document, box)) return NO;
     NSClipView *clip = view.documentView.enclosingScrollView.contentView;
     NSRect visible = TSContentVisibleArea(view);
-    if (!clip || NSWidth(visible) <= 0) return NO;
+    if (!clip || NSWidth(visible) <= 0 || NSWidth(clip.frame) <= 0 || NSWidth(clip.bounds) <= 0) return NO;
     NSArray<NSArray<PDFPage *> *> *groups = TSContentGroups(view);
     CGFloat widest = 0;
-    NSRect placed = NSZeroRect, raw = NSZeroRect;
+    NSRect placed = NSZeroRect, raw = NSZeroRect, widestRect = NSZeroRect;
     if (TSContentContinuous(view)) {
         NSMutableArray<PDFPage *> *all = [NSMutableArray array];
         for (NSArray<PDFPage *> *group in groups) [all addObjectsFromArray:group];
         placed = TSContentFitRectInView(view, all);
         raw = TSContentRawRectInView(view, all);
-        widest = NSWidth(placed);
+        widestRect = placed;
     } else {
-        for (NSArray<PDFPage *> *group in groups)
-            widest = MAX(widest, NSWidth([clip convertRect:TSContentFitRectInView(view, group) fromView:view]));
+        for (NSArray<PDFPage *> *group in groups) {
+            NSRect fit = TSContentFitRectInView(view, group);
+            CGFloat width = NSWidth([clip convertRect:fit fromView:view]);
+            if (width > widest) {
+                widest = width;
+                widestRect = fit;
+            }
+        }
         NSArray<PDFPage *> *row = TSContentRow(view, TSContentMiddlePage(view));
         placed = TSContentFitRectInView(view, row);
         raw = TSContentRawRectInView(view, row);
+        // The row in view may be blank. The magnification still follows the widest row.
+        if (NSIsEmptyRect(placed)) placed = widestRect;
     }
-    if (widest <= 0 || NSIsEmptyRect(placed)) return NO;
+    if (NSIsEmptyRect(placed)) return NO;
     NSRect placedClip = [clip convertRect:placed fromView:view];
     if (TSContentContinuous(view)) widest = NSWidth(placedClip);
+    if (widest <= 0) return NO;
+    CGFloat toScreen = NSWidth(clip.frame) / NSWidth(clip.bounds);
     CGFloat targetWidth = NSWidth(placedClip) * NSWidth(visible) / widest;
     CGFloat targetLeft = NSMidX(visible) - targetWidth / 2.0;
     CGFloat delta = MAX(fabs(targetLeft - NSMinX(placedClip)), fabs(targetLeft + targetWidth - NSMaxX(placedClip)));
     BOOL rawClipped = NO;
     if (!NSIsEmptyRect(raw)) {
         NSRect rawClip = [clip convertRect:raw fromView:view];
-        rawClipped = NSMinX(rawClip) < NSMinX(visible) - 0.05 || NSMaxX(rawClip) > NSMaxX(visible) + 0.05;
+        rawClipped = (NSMinX(visible) - NSMinX(rawClip)) * toScreen > 0.05 ||
+            (NSMaxX(rawClip) - NSMaxX(visible)) * toScreen > 0.05;
     }
-    return delta > 1.0 || fabs(widest - NSWidth(visible)) > 1.0 || rawClipped;
+    return delta * toScreen > 1.0 || rawClipped;
 }
 
 // Names and symbols of the two buttons, in both previews.
