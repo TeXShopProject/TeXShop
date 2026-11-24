@@ -212,7 +212,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     typed.values[@"LatexGSCommand"] = @"latexmkfoo"; check(!TSEngineProfileSettingsUseLatexmk(typed), @"only the program latexmk counts");
     typed.values[@"DefaultScript"] = @100; typed.values[@"LatexCommand"] = @"latexmk"; check(TSEngineProfileSettingsUseLatexmk(typed), @"the command of the default method decides");
     // 5. The first-launch choice.
-    check(TSEngineProfileForLanguages(@[@"ja-JP", @"en"]) == 7 && TSEngineProfileForLanguages(@[@"ja"]) == 7, @"Japanese first: upLaTeX + dvipdfmx");
+    check(TSEngineProfileForLanguages(@[@"ja-JP", @"en"]) == 5 && TSEngineProfileForLanguages(@[@"ja"]) == 5, @"Japanese first: LuaLaTeX (Japanese)");
     check(TSEngineProfileForLanguages(@[@"en-JP", @"ja"]) == 1 && TSEngineProfileForLanguages(@[]) == 1 && TSEngineProfileForLanguages(@[@"jv"]) == 1, @"otherwise pdfLaTeX");
     // 6. The factory engine file became LuaLaTeX in 6.00; an earlier choice of the factory one keeps XeLaTeX.
     check([factory[@"DefaultEngine"] isEqual:@"LuaLaTeX"] && [factory[@"DefaultCommand"] integerValue] == 1, @"the factory engine file is LuaLaTeX and new documents use LaTeX");
@@ -350,7 +350,8 @@ MUTATIONS = {
     'every key reported changed': ('if (!TSEngineProfileSame([defaults objectForKey:key], value)) [changed addObject:key];', '[changed addObject:key];'),
     'pLaTeX before upLaTeX': ('@[@(TSEngineProfileLuaLaTeXJapanese), @(TSEngineProfileUpLaTeXDvipdfmx), @(TSEngineProfilePLaTeXDvipdfmx)]',
                               '@[@(TSEngineProfileLuaLaTeXJapanese), @(TSEngineProfilePLaTeXDvipdfmx), @(TSEngineProfileUpLaTeXDvipdfmx)]'),
-    'every language Japanese': ('? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX', '? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfileUpLaTeXDvipdfmx'),
+    'every language Japanese': ('? TSEngineProfileLuaLaTeXJapanese : TSEngineProfilePdfLaTeX', '? TSEngineProfileLuaLaTeXJapanese : TSEngineProfileLuaLaTeXJapanese'),
+    'Japanese offered upLaTeX': ('? TSEngineProfileLuaLaTeXJapanese : TSEngineProfilePdfLaTeX', '? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX'),
     'latexmk by prefix only': ('    return [command isEqualToString:@"latexmk"] || [command hasPrefix:@"latexmk "];', '    return [command hasPrefix:@"latexmk"];'),
     'latexmk of the other method': ('[defaults integerForKey:DefaultScriptKey] == TSEngineProfileViaDVI ? LatexGSCommandKey : LatexCommandKey;', 'LatexGSCommandKey;'),
     'earlier engine file lost': ('    [defaults setObject:@"XeLaTeX" forKey:DefaultEngineKey];', ''),
