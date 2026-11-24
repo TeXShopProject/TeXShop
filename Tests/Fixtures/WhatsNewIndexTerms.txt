@@ -275,6 +275,7 @@ bowen
 box
 boxes
 brackets
+brazil
 break
 bring
 brings
@@ -325,6 +326,7 @@ check
 checked
 checking
 checks
+chinese
 choice
 choices
 choose
@@ -367,7 +369,6 @@ commands
 commas
 comment
 comments
-commercial
 common
 compare
 compilation
@@ -545,7 +546,6 @@ drag
 dragged
 draw
 drawer
-drawer's
 drawn
 dread
 drive
@@ -555,6 +555,7 @@ duplicate
 duplicated
 duplicating
 during
+dutch
 dvi
 dvipath
 dvips
@@ -590,7 +591,6 @@ empire
 enable
 encoding
 encodings
-encrypted
 end
 endings
 ends
@@ -731,6 +731,7 @@ four
 fourier
 fraction
 fractional
+french
 friend
 from
 front
@@ -926,6 +927,7 @@ issue
 issues
 it
 it's
+italian
 item
 items
 its
@@ -1002,7 +1004,6 @@ lines
 link
 linkcolor
 linked
-linking
 linkpopups
 links
 link’s
@@ -1331,6 +1332,8 @@ popups
 popups''
 portion
 portions
+portugal
+portuguese
 position
 positioning
 positions
@@ -1383,7 +1386,6 @@ propagating
 proposal
 propositions
 prose
-protected
 prove
 proved
 proves
@@ -1710,7 +1712,6 @@ substitute
 subtab
 subtle
 succeeds
-such
 suddenly
 suggested
 suggestions
@@ -1871,7 +1872,6 @@ under
 underfull
 underline
 underlying
-understand
 undesirable
 undo
 unexpected
