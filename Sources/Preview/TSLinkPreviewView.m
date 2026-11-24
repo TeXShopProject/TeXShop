@@ -454,6 +454,164 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     return copy;
 }
 
+- (void)encodeContentWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
+{
+    PDFDocument *document = _pageCount ? _pages[0].document : nil;
+    if (!document) return;
+    NSMutableArray<NSNumber *> *indices = [NSMutableArray array];
+    for (NSUInteger i = 0; i < _pageCount; i++) {
+        NSUInteger index = [document indexForPage:_pages[i]];
+        if (index == NSNotFound) return;
+        [indices addObject:@(index)];
+    }
+    [coder encodeObject:indices forKey:[prefix stringByAppendingString:@"Pages"]];
+    // The part in view, from the corner of the page it shows most of: the linked page, or the next
+    // one when it was scrolled there. That keeps it when the next page is gone or the pages change
+    // size; the size of the whole image tells whether they did.
+    NSUInteger anchor = 0;
+    CGFloat nearest = CGFLOAT_MAX;
+    for (NSUInteger i = 0; i < _pageCount; i++) {
+        CGFloat shared = NSWidth(NSIntersectionRect(_source, _pageRects[i])) * NSHeight(NSIntersectionRect(_source, _pageRects[i]));
+        CGFloat distance = shared > 0 ? -shared
+            : hypot(MAX(MAX(NSMinX(_pageRects[i]) - NSMidX(_source), NSMidX(_source) - NSMaxX(_pageRects[i])), 0),
+                    MAX(MAX(NSMinY(_pageRects[i]) - NSMidY(_source), NSMidY(_source) - NSMaxY(_pageRects[i])), 0));
+        if (distance < nearest) {
+            nearest = distance;
+            anchor = i;
+        }
+    }
+    [coder encodeInteger:(NSInteger)anchor forKey:[prefix stringByAppendingString:@"SourcePage"]];
+    [coder encodeRect:NSOffsetRect(_source, -NSMinX(_pageRects[anchor]), -NSMinY(_pageRects[anchor]))
+               forKey:[prefix stringByAppendingString:@"SourceOnPage"]];
+    // The size of each page, which tells whether the pages changed: the whole image can keep its
+    // size when only one of them does.
+    for (NSUInteger i = 0; i < _pageCount; i++)
+        [coder encodeSize:_pageRects[i].size forKey:[prefix stringByAppendingFormat:@"PageSize%lu", (unsigned long)i]];
+    // Whether the part in view lay within that page from top to bottom, or went on across the gap;
+    // then its height is kept from the gap, the top of the next page, which it straddles.
+    BOOL within = NSMinY(_source) >= NSMinY(_pageRects[anchor]) - 0.5 && NSMaxY(_source) <= NSMaxY(_pageRects[anchor]) + 0.5;
+    [coder encodeBool:within forKey:[prefix stringByAppendingString:@"SourceWithinPage"]];
+    if (!within && _pageCount == 2)
+        [coder encodeDouble:NSMinY(_source) - NSMaxY(_pageRects[1]) forKey:[prefix stringByAppendingString:@"SourceFromGap"]];
+    if (self.pageLabel)
+        [coder encodeObject:self.pageLabel forKey:[prefix stringByAppendingString:@"Label"]];
+}
+
+// The part in view moved, and if needed made smaller keeping its proportions, to lie within
+// `bounds`: the popup then shows its text and figures as before, never stretched.
+static NSRect TSLinkPreviewFitSource(NSRect source, NSRect bounds)
+{
+    if (!(NSWidth(source) > 0 && NSHeight(source) > 0 && NSWidth(bounds) > 0 && NSHeight(bounds) > 0)) return NSZeroRect;
+    CGFloat scale = MIN(1, MIN(NSWidth(bounds) / NSWidth(source), NSHeight(bounds) / NSHeight(source)));
+    NSSize part = NSMakeSize(NSWidth(source) * scale, NSHeight(source) * scale);
+    CGFloat x = MIN(MAX(NSMinX(source), NSMinX(bounds)), NSMaxX(bounds) - part.width);
+    CGFloat y = MIN(MAX(NSMinY(source), NSMinY(bounds)), NSMaxY(bounds) - part.height);
+    return NSMakeRect(x, y, part.width, part.height);
+}
+
++ (TSLinkPreviewView *)linkPreviewWithCoder:(NSCoder *)coder prefix:(NSString *)prefix
+                                    document:(PDFDocument *)document frame:(NSRect)frame
+{
+    NSArray *indices = [coder decodeObjectOfClasses:[NSSet setWithObjects:[NSArray class], [NSNumber class], nil]
+                                             forKey:[prefix stringByAppendingString:@"Pages"]];
+    if (![indices isKindOfClass:[NSArray class]] || indices.count < 1 || indices.count > TSLinkPreviewMaximumPages)
+        return nil;
+    NSMutableArray<PDFPage *> *pages = [NSMutableArray array];
+    NSSize sizes[TSLinkPreviewMaximumPages];
+    for (id index in indices) {
+        BOOL there = [index isKindOfClass:[NSNumber class]] && [index integerValue] >= 0
+            && (NSUInteger)[index integerValue] < document.pageCount;
+        // Without the linked page there is nothing to show; without the next one, the linked
+        // page is shown alone, as when a popup first appears at the end of the PDF.
+        if (!there) {
+            if (pages.count == 0) return nil;
+            break;
+        }
+        PDFPage *page = [document pageAtIndex:[index integerValue]];
+        CGAffineTransform transform;
+        if (!TSLinkPreviewPageGeometry(page, &sizes[pages.count], &transform)) {
+            if (pages.count == 0) return nil;
+            break;
+        }
+        [pages addObject:page];
+    }
+    // Drawn as when the popup first appeared: the linked page, or it above the next one.
+    NSRect rects[TSLinkPreviewMaximumPages] = {NSZeroRect, NSZeroRect};
+    NSSize size;
+    NSImage *image;
+    if (pages.count == 2) {
+        size = TSLinkPreviewStrip(sizes[0], sizes[1], &rects[0], &rects[1]);
+        image = TSLinkPreviewStripImage(pages, rects, size);
+    } else {
+        size = sizes[0];
+        rects[0] = NSMakeRect(0, 0, size.width, size.height);
+        image = TSLinkPreviewImage(pages[0], size);
+    }
+    NSRect onPage = [coder decodeRectForKey:[prefix stringByAppendingString:@"SourceOnPage"]];
+    NSInteger anchor = [coder decodeIntegerForKey:[prefix stringByAppendingString:@"SourcePage"]];
+    // Without the next page, the part in view goes onto the linked page.
+    if (anchor < 0 || (NSUInteger)anchor >= pages.count) anchor = 0;
+    NSRect source = NSOffsetRect(onPage, NSMinX(rects[anchor]), NSMinY(rects[anchor]));
+    BOOL same = pages.count == indices.count;
+    for (NSUInteger i = 0; same && i < pages.count; i++) {
+        NSString *key = [prefix stringByAppendingFormat:@"PageSize%lu", (unsigned long)i];
+        same = [coder containsValueForKey:key] && NSEqualSizes([coder decodeSizeForKey:key], rects[i].size);
+    }
+    NSRect bounds;
+    BOOL acrossGap = NO;
+    CGFloat fromGap = 0;
+    if (same)
+        // The same pages: the part in view is the one shown before, wherever it was scrolled to.
+        bounds = NSMakeRect(0, 0, size.width, size.height);
+    else if ([coder decodeBoolForKey:[prefix stringByAppendingString:@"SourceWithinPage"]])
+        // Pages of another size: on the page it showed, which in the strip may be narrower or lower
+        // than the other one and lie beside gray margins.
+        bounds = rects[anchor];
+    else {
+        // A part that went on across the gap: across the width of its page, down the whole strip,
+        // still straddling the gap.
+        bounds = NSMakeRect(NSMinX(rects[anchor]), 0, NSWidth(rects[anchor]), size.height);
+        NSString *gap = [prefix stringByAppendingString:@"SourceFromGap"];
+        if (pages.count == 2 && [coder containsValueForKey:gap]) {
+            acrossGap = YES;
+            fromGap = [coder decodeDoubleForKey:gap];
+            source.origin.y = NSMaxY(rects[1]) + fromGap;
+        }
+    }
+    CGFloat height = NSHeight(source);
+    source = TSLinkPreviewFitSource(source, bounds);
+    // Made smaller to fit a narrower page, the part keeps the gap within it, so that the text on
+    // both sides of the gap is still in view. The gap keeps its height; what is left of the part is
+    // shared between the next page below the gap and the linked page above it as before.
+    if (acrossGap && height > 0 && !NSIsEmptyRect(source) && NSHeight(source) < height) {
+        CGFloat top = NSMaxY(rects[1]), gapHeight = NSMinY(rects[0]) - top;
+        CGFloat below = MAX(0, -fromGap), above = MAX(0, height + fromGap - gapHeight);
+        CGFloat room = NSHeight(source) - gapHeight;
+        CGFloat y = (below + above > 0 && room > 0) ? top - room * below / (below + above)
+                                                    : top + fromGap * NSHeight(source) / height;
+        source.origin.y = MIN(MAX(y, NSMinY(bounds)), NSMaxY(bounds) - NSHeight(source));
+    }
+    if (!image || NSIsEmptyRect(source)) return nil;
+    TSLinkPreviewView *preview = [[self alloc] initWithFrame:frame image:image source:source pageSize:size
+                                                       pages:pages pageRects:rects];
+    preview.pageLabel = [coder decodeObjectOfClass:[NSString class] forKey:[prefix stringByAppendingString:@"Label"]];
+    return preview;
+}
+
+- (PDFPage *)awayPlaceOnPage:(NSRect *)rect
+{
+    if (!_awayFromPlace || !_placePage) return nil;
+    if (rect) *rect = _placeOnPage;
+    return _placePage;
+}
+
+- (void)setAwayPlaceOnPage:(PDFPage *)page rect:(NSRect)rect
+{
+    _placePage = page;
+    _placeOnPage = rect;
+    _awayFromPlace = page != nil;
+}
+
 - (BOOL)returnToPlaceIfAway
 {
     return _awayFromPlace && [self returnToPlaceOnPage];
@@ -653,6 +811,8 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // A click that moved nothing clears the selection, as in the preview.
     if (_drag == TSLinkPreviewDragMove && NSEqualRects(self.frame, _startFrame)) self.selection = nil;
     _drag = TSLinkPreviewDragNone;
+    // Its place, size and the part in view are kept for the next launch of TeXShop (#71).
+    [self.window invalidateRestorableState];
     // A drag can end outside the popup, as when its edge stops below the toolbar and the
     // pointer goes on: the drag's cursor must not stay there (#14).
     NSCursor *cursor = [self cursorAtPoint:[self locationOfEvent:event]];
@@ -674,6 +834,7 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // Positive deltas move content right and down, as in a scroll view.
     _source = TSLinkPreviewPan(_source, NSMakeSize(dx * factor, -dy * factor), _pageSize);
     [self setNeedsDisplay:YES];
+    [self.window invalidateRestorableState];
 }
 
 @end

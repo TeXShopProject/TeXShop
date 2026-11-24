@@ -1782,4 +1782,167 @@ if (! self.windowIsSplit)
 */
 
 
+
+#pragma mark - The Preview on the next launch (#71)
+
+NSUserInterfaceItemIdentifier const TSPreviewWindowRestorationIdentifier = @"TSPreviewWindowOfPDF";
+static NSString *const TSPreviewRestorationBookmarkKey = @"TSPreviewDocumentBookmark";
+static NSString *const TSPreviewRestorationURLKey = @"TSPreviewDocumentURL";
+static NSString *const TSPreviewRestorationFrameKey = @"TSPreviewWindowFrame";
+
+// A choice of the Two-Page Arrangement menu: -1 when the document's own is used.
+static NSInteger TSPreviewOverrideCode(NSNumber *value)
+{
+    return value ? (value.boolValue ? 1 : 0) : -1;
+}
+
+static NSNumber *TSPreviewOverrideValue(NSInteger code)
+{
+    return code < 0 ? nil : @(code == 1);
+}
+
+- (void)encodePreviewStateWithCoder:(NSCoder *)coder
+{
+    MyPDFKitView *first = (MyPDFKitView *)self.myPDFKitView, *second = (MyPDFKitView *)self.myPDFKitView2;
+    if (![[first document] pageCount]) return;
+    [first encodePreviewStateWithCoder:coder prefix:@"TSPreviewFirst"];
+    [coder encodeInteger:[first previewRotation] forKey:@"TSPreviewRotation"];
+    [coder encodeInteger:TSPreviewOverrideCode(self.myDocument.previewDirectionOverride) forKey:@"TSPreviewDirection"];
+    [coder encodeInteger:TSPreviewOverrideCode(self.myDocument.previewBookOverride) forKey:@"TSPreviewBook"];
+    NSSplitView *splitView = self.pdfKitSplitView;
+    BOOL split = self.windowIsSplit && second && splitView.subviews.count >= 2;
+    [coder encodeBool:split forKey:@"TSPreviewSplit"];
+    if (!split) return;
+    [coder encodeBool:self.horizontal forKey:@"TSPreviewSplitHorizontal"];
+    // The share of the first part, so that the divider keeps its place in a window of another size;
+    // 0 and 1 when it was pushed to an end.
+    NSRect a = splitView.subviews[0].frame, b = splitView.subviews[1].frame;
+    CGFloat one = splitView.isVertical ? NSWidth(a) : NSHeight(a);
+    CGFloat two = splitView.isVertical ? NSWidth(b) : NSHeight(b);
+    if (one + two > 0)
+        [coder encodeDouble:one / (one + two) forKey:@"TSPreviewSplitShare"];
+    [coder encodeBool:self.activeView == second forKey:@"TSPreviewSecondInUse"];
+    [second encodePreviewStateWithCoder:coder prefix:@"TSPreviewSecond"];
+}
+
+- (BOOL)restorePreviewStateWithCoder:(NSCoder *)coder
+{
+    MyPDFKitView *first = (MyPDFKitView *)self.myPDFKitView, *second = (MyPDFKitView *)self.myPDFKitView2;
+    if (![[first document] pageCount] || ![coder containsValueForKey:@"TSPreviewFirstPageStyle"]) return NO;
+
+    TSDocument *document = self.myDocument;
+    if ([coder containsValueForKey:@"TSPreviewDirection"]) {
+        document.previewDirectionOverride = TSPreviewOverrideValue([coder decodeIntegerForKey:@"TSPreviewDirection"]);
+        document.previewBookOverride = TSPreviewOverrideValue([coder decodeIntegerForKey:@"TSPreviewBook"]);
+        [first applyPreviewArrangement];
+        [second applyPreviewArrangement];
+    }
+    // The pages turned as they were, before any place on them is put back.
+    if ([coder containsValueForKey:@"TSPreviewRotation"])
+        [first restorePreviewRotation:[coder decodeIntegerForKey:@"TSPreviewRotation"]];
+    [first restorePreviewDisplayWithCoder:coder prefix:@"TSPreviewFirst"];
+    BOOL secondRestoring = NO, secondInUse = NO;
+    if ([coder decodeBoolForKey:@"TSPreviewSplit"] && second) {
+        if (!self.windowIsSplit) {
+            BOOL horizontal = [coder decodeBoolForKey:@"TSPreviewSplitHorizontal"];
+            [self.pdfKitSplitView setVertical:!horizontal];
+            self.horizontal = horizontal;
+            [self mainSplitPdfKitWindow];
+            TSSplitToggleItemsFollowSplit();
+        }
+        NSSplitView *splitView = self.pdfKitSplitView;
+        if (self.windowIsSplit && splitView.subviews.count >= 2) {
+            double share = [coder decodeDoubleForKey:@"TSPreviewSplitShare"];
+            if ([coder containsValueForKey:@"TSPreviewSplitShare"] && share >= 0 && share <= 1) {
+                CGFloat whole = (splitView.isVertical ? NSWidth(splitView.bounds) : NSHeight(splitView.bounds)) - splitView.dividerThickness;
+                [splitView setPosition:round(whole * share) ofDividerAtIndex:0];
+                [splitView adjustSubviews];
+            }
+            secondRestoring = [second restorePreviewDisplayWithCoder:coder prefix:@"TSPreviewSecond"];
+            [second layoutDocumentView];
+            secondInUse = [coder decodeBoolForKey:@"TSPreviewSecondInUse"];
+        }
+    }
+    // The places and pinned popups are put back once the window and its parts are laid out.
+    __weak TSPreviewWindow *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        TSPreviewWindow *window = weakSelf;
+        if (!window) return;
+        [window layoutIfNeeded];
+        MyPDFKitView *one = (MyPDFKitView *)window.myPDFKitView, *two = (MyPDFKitView *)window.myPDFKitView2;
+        [one finishRestoringPreview];
+        if (window.windowIsSplit) {
+            if (secondRestoring)
+                [two finishRestoringPreview];
+            [(secondInUse ? two : one) becomeActiveView];
+            [window showActivePart];
+        }
+        [window.myDocument updatePreviewLayoutControls];
+    });
+    return YES;
+}
+
+// The state of a source's Preview is kept with the source: whatever renews the window's state
+// renews the document's as well.
+- (void)invalidateRestorableState
+{
+    static BOOL forwarding = NO;
+    [super invalidateRestorableState];
+    if (forwarding) return;
+    forwarding = YES;
+    [self.myDocument invalidateRestorableState];
+    forwarding = NO;
+}
+
+// The Preview window of a PDF opened by itself is the PDF's only window: macOS keeps it, with the
+// file it shows, and opens the file again on the next launch.
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder
+{
+    [super encodeRestorableStateWithCoder:coder];
+    NSURL *url = self.myDocument.fileURL;
+    if (self.restorationClass != [TSPreviewWindow class] || !url.isFileURL) return;
+    NSData *bookmark = [url bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:NULL];
+    if (bookmark)
+        [coder encodeObject:bookmark forKey:TSPreviewRestorationBookmarkKey];
+    [coder encodeObject:url forKey:TSPreviewRestorationURLKey];
+    [coder encodeObject:[self stringWithSavedFrame] forKey:TSPreviewRestorationFrameKey];
+    [self encodePreviewStateWithCoder:coder];
+}
+
+- (void)restoreStateWithCoder:(NSCoder *)coder
+{
+    [super restoreStateWithCoder:coder];
+    if (self.restorationClass != [TSPreviewWindow class])
+        return;
+    // The window was placed by the settings for Preview windows when the PDF was opened.
+    NSString *frame = [coder decodeObjectOfClass:[NSString class] forKey:TSPreviewRestorationFrameKey];
+    if (frame.length)
+        [self setFrameFromString:frame];
+    [self restorePreviewStateWithCoder:coder];
+}
+
++ (void)restoreWindowWithIdentifier:(NSUserInterfaceItemIdentifier)identifier state:(NSCoder *)state
+                  completionHandler:(void (^)(NSWindow *, NSError *))completionHandler
+{
+    NSURL *url = nil;
+    NSData *bookmark = [state decodeObjectOfClass:[NSData class] forKey:TSPreviewRestorationBookmarkKey];
+    if (bookmark) {
+        BOOL stale = NO;
+        // The bookmark finds the file also after it was moved or renamed.
+        url = [NSURL URLByResolvingBookmarkData:bookmark options:NSURLBookmarkResolutionWithoutUI
+                                  relativeToURL:nil bookmarkDataIsStale:&stale error:NULL];
+    }
+    if (!url)
+        url = [state decodeObjectOfClass:[NSURL class] forKey:TSPreviewRestorationURLKey];
+    if (![identifier isEqualToString:TSPreviewWindowRestorationIdentifier] || !url.isFileURL) {
+        completionHandler(nil, nil);
+        return;
+    }
+    [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES
+        completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
+            TSDocument *opened = [document isKindOfClass:[TSDocument class]] ? (TSDocument *)document : nil;
+            completionHandler(opened.skipTextWindow ? opened.pdfKitWindow : nil, error);
+        }];
+}
+
 @end
