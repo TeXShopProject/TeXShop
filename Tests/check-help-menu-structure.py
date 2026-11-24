@@ -65,6 +65,8 @@ MUTATIONS = {
     'older-name': ('Resources/Interfaces/ja.lproj/MainMenu.nib/designable.nib', 'title="過去の資料" id="HlO-Dc-Mnu"', 'title="以前の資料" id="HlO-Dc-Mnu"'),
     # The release notes come first again.
     'release-first': ('Resources/Interfaces/Base.lproj/MainMenu.nib/designable.nib', '<action selector="showHelp:"', '<action selector="displayThisRelease:"'),
+    # First Steps sends readers to the former Help Panel.
+    'first-steps-panel': ('DocumentSources/First Steps Source/First Steps with TeXShop.tex', 'documentation in TeXShop Help under', 'documentation in the TeXShop Help Panel under'),
     # Spell Checking Help comes back as an item of its own.
     'spell-help-item': ('Sources/Editor/TSSpellSupport.m', '+ (void)installMenuItems\n{', '+ (void)installMenuItems\n{\n    // showSpellCheckingHelp:'),
     # The menu is not the application's Help menu.
@@ -150,6 +152,11 @@ def run(overrides):
     check('displayTeXShopConfusion' not in sources, 'HelpDocuments has no displayTeXShopConfusion:')
     check(not list((root / 'Resources/Interfaces').glob('*.lproj/TeXShop Feature Confusion.pdf')), 'TeXShop Feature Confusion is removed')
     check('Feature Confusion' not in (root / 'TeXShop.xcodeproj/project.pbxproj').read_text(), 'the project no longer copies TeXShop Feature Confusion')
+    # Current documents opened from the Help menu name TeXShop Help by its menu name, not the former Help Panel.
+    for doc in ('DocumentSources/First Steps Source/First Steps with TeXShop.tex', 'DocumentSources/CommentLinesRevised/CommentLines.tex',
+                'DocumentSources/Manual Source/Manual.tex'):
+        text = overrides.get(doc) or (root / doc).read_text(errors='replace')
+        check('Help Panel' not in text, f'{doc} names TeXShop Help, not the Help Panel')
     check('supplementsToDesktop' not in sources, 'HelpDocuments has no supplementsToDesktop:')
     check(not (root / 'Resources/Course Supplements').exists(), 'the 4th edition supplements are removed')
     check('Course Supplements' not in (root / 'TeXShop.xcodeproj/project.pbxproj').read_text(), 'the project no longer copies the supplements')
