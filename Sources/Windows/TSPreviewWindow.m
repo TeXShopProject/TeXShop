@@ -568,7 +568,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     
 
 
-	if ([self.myDocument fromKit] && ([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+	// A dead key, such as ^ on a French keyboard, gives no characters.
+	if ([self.myDocument fromKit] && ([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSCommandKeyMask) && [[theEvent characters] length] > 0) {
 		if ([[theEvent characters] characterAtIndex:0] == '[') {
 			// [[self.myDocument pdfKitView] goBack: self];
 			[self.activeView zoomOut:nil];
