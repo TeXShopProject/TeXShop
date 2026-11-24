@@ -96,6 +96,37 @@ static NSData *pdfAnnotated(NSString *annotation, NSString *extra) {
     return buf.finish;
 }
 
+// Enough blank pages that rereading the stored prefix from page 0 takes longer than one slice.
+static NSData *manyBlankPages(NSUInteger count) {
+    PDFBuf *buf = [PDFBuf new];
+    [buf add:@"<< /Type /Catalog /Pages 2 0 R >>"];
+    NSMutableString *kids = [NSMutableString string];
+    for (NSUInteger i = 0; i < count; i++)
+        [kids appendFormat:@"%lu 0 R ", (unsigned long)(3 + i)];
+    [buf add:[NSString stringWithFormat:@"<< /Type /Pages /Kids [%@] /Count %lu >>", kids, (unsigned long)count]];
+    NSUInteger contents = 3 + count;
+    for (NSUInteger i = 0; i < count; i++)
+        [buf add:[NSString stringWithFormat:@"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 100] /Contents %lu 0 R >>", (unsigned long)contents]];
+    [buf add:@"<< /Length 1 >>\nstream\n\nendstream"];
+    return buf.finish;
+}
+
+// Borderless links, then one popup. The walk has to yield in the middle and still see the popup.
+static NSData *manyLinks(NSUInteger count) {
+    PDFBuf *buf = [PDFBuf new];
+    [buf add:@"<< /Type /Catalog /Pages 2 0 R >>"];
+    [buf add:@"<< /Type /Pages /Kids [3 0 R] /Count 1 >>"];
+    NSMutableString *annots = [NSMutableString string];
+    for (NSUInteger i = 0; i < count + 1; i++)
+        [annots appendFormat:@"%lu 0 R ", (unsigned long)(5 + i)];
+    [buf add:[NSString stringWithFormat:@"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 100] /Contents 4 0 R /Annots [%@] >>", annots]];
+    [buf add:@"<< /Length 1 >>\nstream\n\nendstream"];
+    for (NSUInteger i = 0; i < count; i++)
+        [buf add:@"<< /Type /Annot /Subtype /Link /Rect [1 1 2 2] /Border [0 0 0] >>"];
+    [buf add:@"<< /Type /Annot /Subtype /Popup /Rect [1 1 20 20] >>"];
+    return buf.finish;
+}
+
 static BOOL near(CGFloat value, CGFloat expected) { return fabs(value - expected) <= 1.0; }
 static BOOL sameRect(NSRect a, NSRect b) {
     return near(a.origin.x, b.origin.x) && near(a.origin.y, b.origin.y) && near(NSMaxX(a), NSMaxX(b)) && near(NSMaxY(a), NSMaxY(b));
@@ -234,6 +265,7 @@ int main(int argc, char **argv) {
         NSMutableArray *keep = [NSMutableArray array];
         NSData *plainPage = pdfPages(@[@{@"media": @"[0 0 200 100]", @"rotate": @0, @"stream": @"0 g\n10 20 30 40 re f"}]);
         PDFDocument *fast = cloneAt(root, @"fast", plainPage, keep);
+        check(!TSContentWidthDrawingDiverged(fast), @"opening a clone is not a structural edit");
         ProbeView *view = [ProbeView new];
         view.displayBox = kPDFDisplayBoxCropBox;
         view.document = fast;
@@ -305,6 +337,70 @@ int main(int argc, char **argv) {
                       @"a borderless link leaves the ink unchanged");
             }
         }
+
+        NSData *twoPages = pdfPages(@[
+            @{@"media": @"[0 0 200 100]", @"rotate": @0, @"stream": @"0 g\n10 20 30 40 re f"},
+            @{@"media": @"[0 0 200 100]", @"rotate": @0, @"stream": @"0 g\n120 15 60 20 re f"},
+        ]);
+        PDFDocument *reordered = cloneAt(root, @"reordered", twoPages, keep);
+        ProbeView *reorderView = [ProbeView new];
+        reorderView.displayBox = kPDFDisplayBoxCropBox;
+        reorderView.document = reordered;
+        TSContentWidthWatch(reorderView);
+        __block TSContentWidthResult reorderResult = (TSContentWidthResult)-1;
+        check(TSContentWidthScheduleFast(reorderView, ^(TSContentWidthResult result) { reorderResult = result; }),
+              @"a measurement of the old page order can start");
+        [reordered exchangePageAtIndex:0 withPageAtIndex:1];
+        check(TSContentWidthDrawingDiverged(reordered), @"reordering pages leaves the clone");
+        for (int i = 0; i < 300 && reorderResult < 0; i++)
+            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+        check(reorderResult == TSContentWidthResultRetry && !TSContentWidthIsComplete(reordered, kPDFDisplayBoxCropBox),
+              @"a reorder writes nothing from the old page order");
+        known = NO;
+        NSRect moved = TSContentWidthRawInk(reordered, kPDFDisplayBoxCropBox, [reordered pageAtIndex:0], &known);
+        check(!known || !sameRect(moved, NSMakeRect(10, 20, 30, 40)),
+              @"the first page does not keep the ink of the page that left it");
+        check(!TSContentWidthScheduleFast(reorderView, nil), @"a reordered document stays on PDFKit");
+        PDFDocument *inserted = cloneAt(root, @"inserted", plainPage, keep);
+        [inserted insertPage:[[PDFPage alloc] init] atIndex:0];
+        ProbeView *insertedView = [ProbeView new];
+        insertedView.document = inserted;
+        check(TSContentWidthDrawingDiverged(inserted) && !TSContentWidthScheduleFast(insertedView, nil),
+              @"inserting a page leaves the clone");
+        PDFDocument *removed = cloneAt(root, @"removed", twoPages, keep);
+        [removed removePageAtIndex:0];
+        check(TSContentWidthDrawingDiverged(removed), @"deleting a page leaves the clone");
+        NSData *rotatedFile = pdfPages(@[@{@"media": @"[0 0 180 240]", @"rotate": @90, @"stream": @"0 g\n12 18 25 36 re f"}]);
+        PDFDocument *fileRotate = cloneAt(root, @"file-rotate", rotatedFile, keep);
+        check(!TSContentWidthDrawingDiverged(fileRotate) &&
+              TSContentWidthPrepareFast(fileRotate, kPDFDisplayBoxCropBox, 1) == TSContentWidthScanAllow,
+              @"a file /Rotate stays eligible for the background measurement");
+
+        PDFDocument *dense = cloneAt(root, @"dense", manyLinks(12000), keep);
+        [[dense pageAtIndex:0].annotations count];
+        TSContentWidthScan denseScan = TSContentWidthPrepareFast(dense, kPDFDisplayBoxCropBox, 0.001);
+        check(denseScan == TSContentWidthScanPending, @"a page of links yields before the walk is finished");
+        for (int i = 0; i < 80 && denseScan == TSContentWidthScanPending; i++)
+            denseScan = TSContentWidthPrepareFast(dense, kPDFDisplayBoxCropBox, 0.001);
+        check(denseScan == TSContentWidthScanDeny, @"the walk resumes and still refuses a popup");
+
+        const NSUInteger prefix = 48000;
+        NSData *blanks = manyBlankPages(prefix);
+        NSString *blankPath = [root stringByAppendingPathComponent:@"blanks.pdf"];
+        [blanks writeToFile:blankPath atomically:YES];
+        PDFDocument *longDocument = [[PDFDocument alloc] initWithData:blanks];
+        check(longDocument.pageCount == prefix, @"the long document opens");
+        for (NSUInteger i = 0; i + 1 < prefix; i++)
+            TSContentWidthStoreRaw(longDocument, kPDFDisplayBoxCropBox, [longDocument pageAtIndex:i], NSZeroRect);
+        BOOL sliceFailed = NO;
+        BOOL firstSlice = TSContentWidthMeasureSlice(longDocument, kPDFDisplayBoxCropBox, 0.008, &sliceFailed);
+        check(!sliceFailed && !firstSlice, @"one short slice does not finish a long stored prefix");
+        BOOL done = NO;
+        for (int i = 0; i < 40 && !done; i++)
+            done = TSContentWidthMeasureSlice(longDocument, kPDFDisplayBoxCropBox, 0.008, &sliceFailed);
+        known = NO;
+        TSContentWidthRawInk(longDocument, kPDFDisplayBoxCropBox, [longDocument pageAtIndex:prefix - 1], &known);
+        check(!sliceFailed && done && known, @"later short slices reach the page that was not measured");
         printf("PASS: %lu checks\n", (unsigned long)checks);
         return 0;
     }
@@ -330,7 +426,7 @@ with tempfile.TemporaryDirectory(dir='/private/tmp') as temp:
                     '-I', str(root / 'Tests'), *include_args(root), str(temp / 'test.m'), str(temp / 'TSContentWidth.m'),
                     str(root / 'Sources/Preview/TSExternalPDFSnapshot.m'), '-o', str(temp / 'test')], check=True)
     env = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home), TMPDIR=str(work) + '/')
-    result = subprocess.run([str(temp / 'test'), str(work)], capture_output=True, text=True, env=env, timeout=120)
+    result = subprocess.run([str(temp / 'test'), str(work)], capture_output=True, text=True, env=env, timeout=300)
     output = result.stdout + result.stderr
     if args.mutation:
         assert result.returncode != 0, 'mutation not detected: ' + args.mutation + '\n' + output

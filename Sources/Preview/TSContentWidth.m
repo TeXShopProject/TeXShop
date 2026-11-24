@@ -187,8 +187,9 @@ static BOOL TSContentWidthFastPathDocument(PDFDocument *document, PDFDisplayBox 
     return TSExternalPDFCloneURL(document) != nil;
 }
 
-// The walk is the slow part on a long PDF. A slice stops between pages. A direct caller that
-// does not slice gets one long walk, and the result is kept for this generation.
+// The walk is the slow part on a long PDF. A slice stops between annotations, not only
+// between pages: one page of links can take longer than the slice by itself. A direct
+// caller that does not slice gets one long walk, and the result is kept for this generation.
 static TSContentWidthScan TSContentWidthAdvanceAnnotationScan(PDFDocument *document, NSTimeInterval seconds)
 {
     NSMutableDictionary *state = TSContentWidthState(document);
@@ -196,28 +197,34 @@ static TSContentWidthScan TSContentWidthAdvanceAnnotationScan(PDFDocument *docum
     if (decision == TSContentWidthScanAllow || decision == TSContentWidthScanDeny)
         return (TSContentWidthScan)decision;
     NSUInteger index = [state[@"noteIndex"] unsignedIntegerValue];
+    NSUInteger annotationIndex = [state[@"noteAnnot"] unsignedIntegerValue];
     NSDate *end = [NSDate dateWithTimeIntervalSinceNow:MAX(seconds, 0)];
     BOOL allow = YES;
     TSContentWidthSuppressNotes = YES;
     @try {
         for (; index < document.pageCount; index++) {
-            if (end.timeIntervalSinceNow < 0) {
-                state[@"noteIndex"] = @(index);
-                return TSContentWidthScanPending;
-            }
             PDFPage *page = [document pageAtIndex:index];
-            for (PDFAnnotation *annotation in page.annotations) {
-                if (!TSContentWidthAnnotationIgnored(annotation)) {
+            NSArray<PDFAnnotation *> *annotations = page.annotations;
+            NSUInteger count = annotations.count;
+            for (; annotationIndex < count; annotationIndex++) {
+                if (end.timeIntervalSinceNow < 0) {
+                    state[@"noteIndex"] = @(index);
+                    state[@"noteAnnot"] = @(annotationIndex);
+                    return TSContentWidthScanPending;
+                }
+                if (!TSContentWidthAnnotationIgnored(annotations[annotationIndex])) {
                     allow = NO;
                     break;
                 }
             }
             if (!allow) break;
+            annotationIndex = 0;
         }
     } @finally {
         TSContentWidthSuppressNotes = NO;
     }
     [state removeObjectForKey:@"noteIndex"];
+    [state removeObjectForKey:@"noteAnnot"];
     state[@"noteDecision"] = @(allow ? TSContentWidthScanAllow : TSContentWidthScanDeny);
     return allow ? TSContentWidthScanAllow : TSContentWidthScanDeny;
 }
@@ -301,7 +308,12 @@ static void TSContentWidthAdvance(PDFDocument *document, BOOL diverged)
     state[@"generation"] = @([state[@"generation"] integerValue] + 1);
     [state[@"stores"] removeAllObjects];
     [state removeObjectForKey:@"noteIndex"];
+    [state removeObjectForKey:@"noteAnnot"];
     [state removeObjectForKey:@"noteDecision"];
+    NSMutableArray<NSString *> *scanKeys = [NSMutableArray array];
+    for (id key in state)
+        if ([key isKindOfClass:[NSString class]] && [(NSString *)key hasPrefix:@"scan:"]) [scanKeys addObject:key];
+    [state removeObjectsForKeys:scanKeys];
     NSMutableArray<NSString *> *keys = [NSMutableArray array];
     for (NSString *key in TSContentWidthJobs) {
         TSContentWidthJob *job = TSContentWidthJobs[key];
@@ -326,7 +338,19 @@ void TSContentWidthNoteAnnotationChange(PDFDocument *document)
 
 void TSContentWidthNoteDrawingDiverged(PDFDocument *document)
 {
+    if (!document) return;
+    // A page draw or an annotation walk sets the flag. A structural change during one of
+    // those still has to drop the clone. Starting another measurement from inside the walk
+    // would re-enter the slice that is already on the main thread.
+    BOOL suppressed = TSContentWidthSuppressNotes;
+    TSContentWidthSuppressNotes = NO;
     TSContentWidthAdvance(document, YES);
+    TSContentWidthSuppressNotes = suppressed;
+    if (suppressed) return;
+    for (PDFView *view in TSContentWidthViews.allObjects) {
+        if (view.document == document && [view respondsToSelector:@selector(measureContentLater)])
+            [(id<TSContentWidthMeasuring>)view measureContentLater];
+    }
 }
 
 void TSContentWidthWatch(PDFView *view)
@@ -482,8 +506,20 @@ BOOL TSContentWidthMeasureSlice(PDFDocument *document, PDFDisplayBox box, NSTime
 {
     if (failed) *failed = NO;
     if (!document || document.isLocked || document.pageCount == 0) return NO;
-    NSDate *end = [NSDate dateWithTimeIntervalSinceNow:seconds];
-    for (NSUInteger index = 0; index < document.pageCount; index++) {
+    NSDate *end = [NSDate dateWithTimeIntervalSinceNow:MAX(seconds, 0)];
+    NSInteger generation = TSContentWidthGeneration(document);
+    // Continue after the stored prefix. Rereading it from page 0 used the whole slice on a
+    // long document, and the next slice started there again. A generation change clears the
+    // pages already stored, so the remembered index belongs to the old generation.
+    for (NSUInteger index = TSContentWidthScanIndex(document, box); index < document.pageCount; index++) {
+        if (TSContentWidthGeneration(document) != generation) {
+            TSContentWidthClearScanIndex(document, box);
+            return NO;
+        }
+        if (end.timeIntervalSinceNow < 0) {
+            TSContentWidthSetScanIndex(document, box, index);
+            return NO;
+        }
         PDFPage *page = [document pageAtIndex:index];
         if (!page) {
             TSContentWidthClearBox(document, box);
@@ -493,7 +529,6 @@ BOOL TSContentWidthMeasureSlice(PDFDocument *document, PDFDisplayBox box, NSTime
         BOOL known = NO;
         TSContentWidthRawInk(document, box, page, &known);
         if (known) continue;
-        if (end.timeIntervalSinceNow < 0) return NO;
         NSRect ink = NSZeroRect;
         TSContentInkStatus status = TSContentInkMeasure(page, box, 1.0, &ink);
         if (status == TSContentInkFailed) {
@@ -503,7 +538,11 @@ BOOL TSContentWidthMeasureSlice(PDFDocument *document, PDFDisplayBox box, NSTime
         }
         TSContentWidthStoreRaw(document, box, page, status == TSContentInkBlank ? NSZeroRect : ink);
     }
-    // A generation change during the slice clears pages already stored. Those pages are not done.
+    if (TSContentWidthGeneration(document) != generation) {
+        TSContentWidthClearScanIndex(document, box);
+        return NO;
+    }
+    TSContentWidthSetScanIndex(document, box, document.pageCount);
     return TSContentWidthIsComplete(document, box);
 }
 
@@ -519,6 +558,14 @@ static void TSContentWidthSwizzle(Class cls, SEL original, SEL replacement)
 @interface PDFPage (TSContentWidthAnnotations)
 - (void)ts_contentWidth_addAnnotation:(PDFAnnotation *)annotation;
 - (void)ts_contentWidth_removeAnnotation:(PDFAnnotation *)annotation;
+@end
+
+// Inserting, deleting or reordering pages leaves the clone file behind. The fast path
+// would store the old page's ink under the new page and mark the document complete.
+@interface PDFDocument (TSContentWidthStructure)
+- (void)ts_contentWidth_insertPage:(PDFPage *)page atIndex:(NSUInteger)index;
+- (void)ts_contentWidth_removePageAtIndex:(NSUInteger)index;
+- (void)ts_contentWidth_exchangePageAtIndex:(NSUInteger)index withPageAtIndex:(NSUInteger)other;
 @end
 
 @implementation PDFPage (TSContentWidthAnnotations)
@@ -537,5 +584,30 @@ static void TSContentWidthSwizzle(Class cls, SEL original, SEL replacement)
     PDFDocument *document = self.document;
     [self ts_contentWidth_removeAnnotation:annotation];
     TSContentWidthNoteAnnotationChange(document);
+}
+@end
+
+@implementation PDFDocument (TSContentWidthStructure)
++ (void)load
+{
+    TSContentWidthSwizzle(self, @selector(insertPage:atIndex:), @selector(ts_contentWidth_insertPage:atIndex:));
+    TSContentWidthSwizzle(self, @selector(removePageAtIndex:), @selector(ts_contentWidth_removePageAtIndex:));
+    TSContentWidthSwizzle(self, @selector(exchangePageAtIndex:withPageAtIndex:),
+                          @selector(ts_contentWidth_exchangePageAtIndex:withPageAtIndex:));
+}
+- (void)ts_contentWidth_insertPage:(PDFPage *)page atIndex:(NSUInteger)index
+{
+    [self ts_contentWidth_insertPage:page atIndex:index];
+    TSContentWidthNoteDrawingDiverged(self);
+}
+- (void)ts_contentWidth_removePageAtIndex:(NSUInteger)index
+{
+    [self ts_contentWidth_removePageAtIndex:index];
+    TSContentWidthNoteDrawingDiverged(self);
+}
+- (void)ts_contentWidth_exchangePageAtIndex:(NSUInteger)index withPageAtIndex:(NSUInteger)other
+{
+    [self ts_contentWidth_exchangePageAtIndex:index withPageAtIndex:other];
+    TSContentWidthNoteDrawingDiverged(self);
 }
 @end

@@ -79,6 +79,32 @@ static inline BOOL TSContentWidthDrawingDiverged(PDFDocument *document)
     return [TSContentWidthExistingState(document)[@"diverged"] boolValue];
 }
 
+// The next page that may still be unmeasured, for this display box and generation.
+// Pages before it are in the store. A short slice continues here instead of rereading
+// every earlier page (#62).
+static inline NSString *TSContentWidthScanKey(PDFDisplayBox box, NSInteger generation)
+{
+    return [NSString stringWithFormat:@"scan:%ld:%ld", (long)box, (long)generation];
+}
+
+static inline NSUInteger TSContentWidthScanIndex(PDFDocument *document, PDFDisplayBox box)
+{
+    NSNumber *index = TSContentWidthExistingState(document)[TSContentWidthScanKey(box, TSContentWidthGeneration(document))];
+    NSUInteger value = index.unsignedIntegerValue;
+    return document && value <= document.pageCount ? value : 0;
+}
+
+static inline void TSContentWidthSetScanIndex(PDFDocument *document, PDFDisplayBox box, NSUInteger index)
+{
+    if (!document) return;
+    TSContentWidthState(document)[TSContentWidthScanKey(box, TSContentWidthGeneration(document))] = @(index);
+}
+
+static inline void TSContentWidthClearScanIndex(PDFDocument *document, PDFDisplayBox box)
+{
+    [TSContentWidthExistingState(document) removeObjectForKey:TSContentWidthScanKey(box, TSContentWidthGeneration(document))];
+}
+
 // YES when every page of this display box has a raw-ink rect. A locked document, and a document
 // with no pages, is not complete: an empty page count is not a finished blank document.
 static inline BOOL TSContentWidthIsComplete(PDFDocument *document, PDFDisplayBox box)
@@ -86,10 +112,17 @@ static inline BOOL TSContentWidthIsComplete(PDFDocument *document, PDFDisplayBox
     if (!document || document.isLocked || document.pageCount == 0) return NO;
     NSMapTable *store = TSContentWidthStore(document, box, NO);
     if (!store) return NO;
-    for (NSUInteger index = 0; index < document.pageCount; index++) {
+    // Pages before the remembered index are stored. Remember the first page that is not,
+    // so the next look at a long document does not walk the stored prefix again.
+    NSUInteger start = TSContentWidthScanIndex(document, box);
+    for (NSUInteger index = start; index < document.pageCount; index++) {
         PDFPage *page = [document pageAtIndex:index];
-        if (!page || ![store objectForKey:page]) return NO;
+        if (!page || ![store objectForKey:page]) {
+            if (index != start) TSContentWidthSetScanIndex(document, box, index);
+            return NO;
+        }
     }
+    if (start != document.pageCount) TSContentWidthSetScanIndex(document, box, document.pageCount);
     return YES;
 }
 
@@ -118,6 +151,7 @@ static inline void TSContentWidthStoreRaw(PDFDocument *document, PDFDisplayBox b
 static inline void TSContentWidthClearBox(PDFDocument *document, PDFDisplayBox box)
 {
     [TSContentWidthStore(document, box, NO) removeAllObjects];
+    TSContentWidthClearScanIndex(document, box);
 }
 
 static inline void TSContentWidthRecordFailure(PDFDocument *document, PDFDisplayBox box)
@@ -138,12 +172,15 @@ void TSContentWidthDocumentVisibilityChanged(PDFDocument *document);
 // An annotation was added, removed or changed. The generation advances either way, so a job
 // that read the old page cannot write its rects back. Link-only edits advance it too.
 void TSContentWidthNoteAnnotationChange(PDFDocument *document);
-// The displayed document no longer matches the clone it was opened from. It stays on the
-// PDFKit measurement for the rest of its life.
+// The displayed document no longer matches the clone it was opened from. Rotation, and
+// inserting, deleting or reordering pages, do this. It stays on the PDFKit measurement
+// for the rest of its life. File /Rotate at open does not.
 void TSContentWidthNoteDrawingDiverged(PDFDocument *document);
 
 // Measures pages that are not stored yet, until the time is up. YES when every page is stored.
-// *failed is YES only when a page could not be drawn; the store for the box is then empty.
+// The next unmeasured page is kept for this document, box and generation, so a later slice
+// does not reread the pages already stored. *failed is YES only when a page could not be
+// drawn; the store for the box is then empty.
 BOOL TSContentWidthMeasureSlice(PDFDocument *document, PDFDisplayBox box, NSTimeInterval seconds, BOOL *failed);
 
 // Whether the annotation walk may still use the background measurement.
