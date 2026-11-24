@@ -619,7 +619,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 		
 		unichar	theChar;
 
-		if ([theEvent type] == NSEventTypeKeyDown) {
+		// A dead key gives no characters; such a key goes on to the window as any other.
+		if ([theEvent type] == NSEventTypeKeyDown && [[theEvent characters] length] > 0) {
 
 			/*
 			if (([theEvent modifierFlags] & NSControlKeyMask) &&

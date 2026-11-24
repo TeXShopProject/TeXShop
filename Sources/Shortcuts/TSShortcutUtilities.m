@@ -26,6 +26,15 @@ TSShortcutBinding *TSBinding(NSString *key, NSEventModifierFlags flags) {
     }
     return [[TSShortcutBinding alloc] initWithKey:key modifiers:flags];
 }
+// The Globe (fn) key, which TSBinding leaves out, as key search compares it: with a character key only,
+// as for Enter Full Screen's 🌐︎F. Arrows, the function keys, Forward Delete and Enter carry the flag of their own.
+NSEventModifierFlags TSGlobeModifier(NSString *key, NSEventModifierFlags flags) {
+    unichar c = key.length ? [key characterAtIndex:0] : 0;
+    return (flags & NSEventModifierFlagFunction) && c >= 0x20 && c != 0x7f && c < 0xf700 ? NSEventModifierFlagFunction : 0;
+}
+NSEventModifierFlags TSEventGlobeModifier(NSEvent *event) {
+    return TSGlobeModifier(TSShortcutCharacterForEvent(event), event.modifierFlags);
+}
 // With automatic key-equivalent localization, AppKit reports the key it shows on the current
 // keyboard layout (on a French layout, & for the 1 the item was given) and works it out again
 // whenever the item changes. The key and modifiers the item was given are read with the

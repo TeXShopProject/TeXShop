@@ -383,7 +383,8 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
         TSShortcutBinding *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
         NSString *key = binding[@"key"];
         NSEventModifierFlags flags = binding.modifiers;
-        self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags];
+        // With the Globe key, as the list shows Enter Full Screen's 🌐︎F.
+        self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags | TSEventGlobeModifier(event)];
         NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
         self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
         // The trigger key with Shift (the previous candidate), Option or Control (the next or

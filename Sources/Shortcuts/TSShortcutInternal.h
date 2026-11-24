@@ -6,6 +6,9 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT const NSEventModifierFlags TSShortcutModifiers;
 NSString * _Nullable TSTranslateKey(CFDataRef _Nullable data, UInt16 keyCode, BOOL shifted, UInt32 keyboardType);
 TSShortcutBinding *TSBinding(NSString * _Nullable key, NSEventModifierFlags flags);
+// NSEventModifierFlagFunction when flags hold the Globe (fn) key and key is a character key, else 0.
+NSEventModifierFlags TSGlobeModifier(NSString * _Nullable key, NSEventModifierFlags flags);
+NSEventModifierFlags TSEventGlobeModifier(NSEvent *event);
 // The key a menu item was given, before AppKit adapts it to the keyboard layout.
 TSShortcutBinding *TSGivenBinding(NSMenuItem *item);
 // The key AppKit shows for a menu item on the current keyboard layout.

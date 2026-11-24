@@ -5,7 +5,8 @@
 -- filename is the PDF without .pdf. For each selection, filename-i.pdf is made with the pages
 -- it lists: 5:8 is pages 5 to 8; 3:4,6,8:12 is pages 3, 4, 6 and 8 to 12. A page may be listed
 -- more than once and in any order. Each page keeps its own size (the crop box, as a PDF viewer
--- shows the page) and orientation. Links, annotations and the outline of the PDF are not kept.
+-- shows the page, scaled by the page's UserUnit) and orientation. Links, annotations and the
+-- outline of the PDF are not kept.
 --
 -- The PDF is read with pdfe, the PDF library of LuaTeX, and every selection is checked before
 -- any file is made; a wrong selection stops with a message and exit status 1. The pages are put
@@ -44,8 +45,22 @@ local function inherited(page, get, key)
     end
 end
 
--- Width and height of each page in PostScript points, as a viewer shows it: the crop box inside
--- the media box, turned by the Rotate entry.
+-- UserUnit (PDF 1.6) is the length of the page's unit in PostScript points, 1 when it is missing.
+-- It is an entry of the page itself and is not inherited from the page tree. luatex places a page
+-- by its boxes alone and leaves UserUnit out, so the sizes below are scaled here.
+local function userunit(page)
+    local unit = pdfe.getnumber(page, "UserUnit")
+    if type(unit) ~= "number" or not (unit > 0) or unit == math.huge then return 1 end
+    return unit
+end
+
+-- PDF 1.7 (ISO 32000-1, Annex C) allows pages up to 14400 units on a side.
+local largest = 14400
+local withunits = false
+
+-- Width and height of each page as a viewer shows it: the crop box inside the media box, turned
+-- by the Rotate entry, in PostScript points, and 1 as the unit of the new page. A page that is
+-- too large in points keeps its own unit: the sizes are then in that unit, written as UserUnit.
 local sizes = {}
 local function pagesize(number)
     if sizes[number] then return sizes[number] end
@@ -62,7 +77,13 @@ local function pagesize(number)
     if width <= 0 or height <= 0 then fail(string.format("page %d of %s has an empty crop box", number, input)) end
     local rotate = (inherited(page, pdfe.getinteger, "Rotate") or 0) % 360
     if rotate == 90 or rotate == 270 then width, height = height, width end
-    sizes[number] = {width, height}
+    local unit = userunit(page)
+    if unit ~= 1 and math.max(width, height) * unit > largest then
+        withunits = true
+        sizes[number] = {width, height, unit}
+    else
+        sizes[number] = {width * unit, height * unit, 1}
+    end
     return sizes[number]
 end
 
@@ -100,9 +121,15 @@ local function bp(value)
     return string.format("%.5fbp", value)
 end
 
+local function decimal(value)
+    local text = string.format("%.6f", value):gsub("0+$", ""):gsub("%.$", "")
+    return text
+end
+
 local major, minor = pdfe.getversion(document)
 major, minor = tonumber(major) or 1, tonumber(minor) or 4
-if major < 1 or (major == 1 and minor < 5) then major, minor = 1, 5 end
+local lowest = withunits and 6 or 5
+if major < 1 or (major == 1 and minor < lowest) then major, minor = 1, lowest end
 
 local luatex = (os.selfdir and (os.selfdir .. "/luatex")) or "luatex"
 if not lfs.isfile(luatex) then luatex = "luatex" end
@@ -149,11 +176,13 @@ for index, pages in ipairs(selections) do
         "\\pdfvariable horigin=0pt \\pdfvariable vorigin=0pt",
     }
     for _, number in ipairs(pages) do
-        local width, height = sizes[number][1], sizes[number][2]
+        local width, height, unit = sizes[number][1], sizes[number][2], sizes[number][3]
+        local attributes = unit ~= 1 and ("/UserUnit " .. decimal(unit)) or ""
         lines[#lines + 1] = string.format(
             "\\saveimageresource page %d cropbox {in.pdf}\\pagewidth=%s \\pageheight=%s " ..
+            "\\pdfvariable pageattr{%s}" ..
             "\\shipout\\hbox{\\useimageresource width %s height %s \\lastsavedimageresourceindex}",
-            number, bp(width), bp(height), bp(width), bp(height))
+            number, bp(width), bp(height), attributes, bp(width), bp(height))
     end
     lines[#lines + 1] = "\\end"
     local file = io.open(work .. "/select.tex", "w")

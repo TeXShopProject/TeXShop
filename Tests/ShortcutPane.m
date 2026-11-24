@@ -568,6 +568,27 @@ int main(int argc,char **argv){@autoreleasepool{
    REQUIRE([fullScreen.keyEquivalent isEqual:@"f"] && fullScreen.keyEquivalentModifierMask==FSFunction && earlierStore.unavailableCommands.count==0);
    REQUIRE([nextMark.keyEquivalent isEqual:@"f"] && (nextMark.keyEquivalentModifierMask&(C|FSControl))==(C|FSControl));
   }
+  // Key search tells F from 🌐︎F (fn-F): F does not find Enter Full Screen; 🌐︎F finds it alone and the field shows 🌐︎F
+  // as the list does. Control-Command-F still finds Next Mark.
+  {
+   BOOL wasSearching=pane.searchingByKey;
+   if(!wasSearching){pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];}
+   REQUIRE(pane.searchingByKey && pane.editingCommand==nil);
+   fixtureCharacters=@"f";
+   REQUIRE([pane handleKeySearchEvent:Event(@"f",0,3)]);
+   BOOL bareFFindsFullScreen=NO;for(TSShortcutMatch *hit in pane.searchMatches)if(hit.menuItem==fullScreen)bareFFindsFullScreen=YES;
+   REQUIRE(!bareFFindsFullScreen && [pane.search.stringValue isEqual:@"F"]);
+   REQUIRE([pane handleKeySearchEvent:Event(@"f",FSFunction,3)]);
+   REQUIRE(pane.searchMatches.count==1 && pane.searchMatches[0].menuItem==fullScreen && pane.searchMatches[0].winner);
+   REQUIRE([pane.search.stringValue isEqual:globeF]);
+   REQUIRE([pane handleKeySearchEvent:Event(@"f",C|FSControl,3)]);
+   BOOL controlCommandFFindsNextMark=NO;for(TSShortcutMatch *hit in pane.searchMatches){REQUIRE(hit.menuItem!=fullScreen);if(hit.menuItem==nextMark)controlCommandFFindsNextMark=YES;}
+   REQUIRE(controlCommandFFindsNextMark && [pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"f" modifiers:C|FSControl]]);
+   NSArray<TSShortcutMatch *> *bareF=[TSShortcutSearch matchesKey:@"f" modifiers:0 store:store macros:@[]];
+   NSArray<TSShortcutMatch *> *globeFHits=[TSShortcutSearch matchesKey:@"f" modifiers:FSFunction store:store macros:@[]];
+   REQUIRE(bareF.count==0 && globeFHits.count==1 && globeFHits[0].menuItem==fullScreen);
+   if(!wasSearching){pane.searchMode.selectedSegment=0;[pane changeSearchMode:pane.searchMode];REQUIRE(!pane.searchingByKey);}
+  }
   [first.menu removeItem:fullScreen];[first.menu removeItem:nextMark];[coordinator refreshMenuAndMacros];[pane reloadCommands];
  }
  puts("PASS: in-cell recording starts from the selected shortcut, double click, Return and VoiceOver; Escape, Tab and focus elsewhere end it; keys in use are refused under the list; free keys apply at once; macro keys confirm; Delete and the field button remove; Save As… under autosave is dimmed and kept");
