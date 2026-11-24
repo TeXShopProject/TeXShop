@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShopヘルプ"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
@@ -44,7 +44,7 @@
 <h2>色分けされるもの</h2>
 <ul>
 <li>コマンドは、バックスラッシュに続く英字の並びです。「設定」→「エディタ」→「シンタックスハイライト」の「@ をコマンド名の一部と見なす」をオンにすると、パッケージの内部コマンドのように<code>@</code>も英字として扱います。</li>
-<li><code>\footnote</code>、<code>\footcite</code>、<code>\autocite</code>の中の文字列は「脚注」の色で表示されます。隠し設定<code>defaults write TeXShop SyntaxColorFootnote NO</code>を使うと、コマンドだけに色を付けます。</li>
+<li><code>\footnote</code>、<code>\footcite</code>、<code>\autocite</code>と、<code>\citep</code>や<code>\citeauthor</code>のように<code>\cite</code>か<code>\Cite</code>で始まるコマンドの中の文字列は「脚注」の色で表示されます。隠し設定<code>defaults write TeXShop SyntaxColorFootnote NO</code>を使うと、コマンドだけに色を付けます。</li>
 <li>「ソース」→「索引をハイライト」を選ぶと、<code>\index</code>と<code>\esindex</code>の引数が「索引」の色で表示されます。「設定」→「エディタ」→「シンタックスハイライト」の「索引を既定でハイライト」をオンにすると、書類を開いたときにオンになります。</li>
 <li>「ソース」→「expl3コードをハイライト」を選ぶと、LaTeXのプログラミング層であるexpl3のコードの関数、変数などにも色を付けます。パッケージを書く人のための機能です。同じグループの「expl3コードを既定でハイライト」をオンにすると、書類を開いたときにオンになります。</li>
 <li>同じグループの「全角英数記号を強調」をオンにすると、日本語の文章でASCII文字と見間違えやすい全角の英字、数字、記号を「全角英数記号」の色で表示します。</li>

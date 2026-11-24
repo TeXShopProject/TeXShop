@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda para macros</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda para macros</span></header>
 <nav id="menu">
 <ul>
 <li><a href="macros_preliminaries.htm">Preliminares</a></li>
@@ -74,22 +74,22 @@ end tell</pre>
 tell document frontName of application "TeXShop"
     save
 end tell</pre>
-<p>La receta tiene dos ventajas. También funciona cuando el documento de delante no es el que debe recibir las órdenes posteriores, por ejemplo un archivo log como /Users/name/Examples/myfile.log. Y si el archivo no se ha guardado nunca, la receta devuelve un error, mientras que la orden <code>save</code> dejaría el script esperando detrás de un diálogo de guardar.</p>
+<p>La receta tiene dos ventajas. También funciona cuando el documento de delante no es el que debe recibir los comandos posteriores, por ejemplo un archivo log como /Users/name/Examples/myfile.log. Y si el archivo no se ha guardado nunca, la receta devuelve un error, mientras que el comando <code>save</code> dejaría el script esperando detrás de un diálogo de guardar.</p>
 <p>Las seis líneas siguientes establecen las variables <code>dirName</code> y <code>baseName</code>. Si el archivo fuente es /Users/name/My Papers/Stuff/myfile.tex, <code>dirName</code> es <code>'/Users/name/My Papers/Stuff'</code>, entre comillas para la shell por el espacio del nombre de una carpeta, y <code>baseName</code> es <code>myfile.tex</code>. El nombre del archivo se pone entre comillas de la misma manera al pasarlo al script de shell, así que ambos pueden contener espacios.</p>
 <p>Las tres líneas siguientes llaman al script de shell. El resultado es el mismo que escribir <code>cd '/Users/name/My Papers/Stuff'; ~/Library/TeXShop/bin/pdflatexc 'myfile.tex'</code> en Terminal. Las tres últimas líneas actualizan la ventana de vista previa.</p>
 <p>Varias de estas líneas son complicadas, pero se pueden copiar sin cambios en scripts nuevos.</p>
 
-<h2 id="do-shell-script">Ejecutar órdenes de shell desde AppleScript</h2>
-<p>AppleScript ejecuta una orden de shell de esta forma:</p>
+<h2 id="do-shell-script">Ejecutar comandos de shell desde AppleScript</h2>
+<p>AppleScript ejecuta un comando de shell de esta forma:</p>
 <pre>do shell script "cmd input"</pre>
-<p>Para construir una orden a partir de partes, escríbala de esta forma equivalente:</p>
+<p>Para construir un comando a partir de partes, escríbalo de esta forma equivalente:</p>
 <pre>do shell script "cmd " &amp; "input"</pre>
 <p>Observe el espacio después de <code>cmd</code>. El signo &amp; une dos cadenas:</p>
 <pre>"cmd " &amp; "input" = "cmd input"</pre>
-<p>Una shell iniciada por AppleScript empieza en la carpeta raíz. La orden</p>
+<p>Una shell iniciada por AppleScript empieza en la carpeta raíz. El comando</p>
 <pre>do shell script "cd " &amp; dirName</pre>
 <p>cambia a la carpeta de <code>dirName</code>, que ya está entre comillas, así que no hacen falta más comillas.</p>
-<p>Cada <code>do shell script</code> inicia una shell nueva, de modo que una orden posterior no estaría en esa carpeta. Para ejecutar más órdenes en la misma carpeta, únalas con punto y coma en una sola orden, como en Terminal:</p>
+<p>Cada <code>do shell script</code> inicia una shell nueva, de modo que un comando posterior no estaría en esa carpeta. Para ejecutar más comandos en la misma carpeta, únalos con punto y coma en un solo comando, como en Terminal:</p>
 <pre>do shell script "cmd1 " &amp; "input1" &amp; ";" &amp; "cmd2 " &amp; "input2"</pre>
 <p>El script anterior hace esto con cmd1 = <code>cd</code>, input1 = <code>dirName</code>, cmd2 = <code>~/Library/TeXShop/bin/pdflatexc</code> e input2 = <code>baseName</code>. Las líneas</p>
 <pre>set shellScript to "cd " &amp; dirName &amp; ";"

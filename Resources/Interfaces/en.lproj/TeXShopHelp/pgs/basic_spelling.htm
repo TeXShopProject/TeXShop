@@ -50,7 +50,7 @@
 
 <h2>Settings › Spell Checking</h2>
 
-<p>In the Check Spelling group, “Check spelling while typing” sets whether misspelled words are underlined in a document when it opens, and “Dictionary” is described below. The Method group chooses how TeX source is checked:</p>
+<p>In the Check Spelling group, “Check spelling while typing” sets whether misspelled words are underlined in a document when it opens, “Correct Spelling” sets whether Correct Spelling Automatically is on in a document when it opens, and “Dictionary” is described below. The Method group chooses how TeX source is checked:</p>
 <dl>
 <dt>“Use LaTeX-aware spell checking (recommended)”</dt>
 <dd>The method described above. “Edit LaTeX exclusion rules…” at the end of its line opens the rules that say what is skipped.</dd>
@@ -68,13 +68,13 @@ skip-body  proof</pre>
 
 <h2>Dictionaries</h2>
 
-<p>“Dictionary” in Settings › Spell Checking chooses the dictionary of documents that are opened from then on; documents already open keep theirs. The menu shows each language under its own name, such as Deutsch or Français, with its code, such as de or fr_CA, as the tool tip. Automatic Language lets macOS choose the language from the text.</p>
+<p>“Dictionary” in Settings › Spell Checking chooses the dictionary of documents. A new choice applies to open documents too, except those whose dictionary was chosen with a <code>% !TEX spellcheck</code> line or in the Spelling and Grammar panel. The menu shows each language under its own name, such as Deutsch or Français, with its code, such as de or fr_CA, as the tool tip. Automatic Language lets macOS choose the language from the text.</p>
 
 <p>To use another dictionary for one document, choose it in the pop-up menu at the bottom of the Spelling and Grammar panel while that document is in front. Each open document keeps its own dictionary, and the panel switches when you switch documents. The choice is not kept when the document is closed.</p>
 
 <p>To give a document its dictionary every time it opens, put a line like this among its first 20 lines:</p>
 <pre>% !TEX spellcheck = de-DE</pre>
-<p>The value is a language code, as in the tool tips of the Dictionary menu: <code>fr</code> for French, or <code>fr-CA</code> for the French of Canada. The line is read when the document is opened, so save, close and open the document again after adding it. In a document with chapter files, put the line in each file.</p>
+<p>The value is a language code, as in the tool tips of the Dictionary menu: <code>fr</code> for French, or <code>fr_CA</code> for the French of Canada; it may also be written with a hyphen, as <code>fr-CA</code>. The line is read when the document is opened, so save, close and open the document again after adding it. In a document with chapter files, put the line in each file.</p>
 
 <p>See <a href="basic_preferences.htm#settings-search">Search Settings</a> for finding settings in the Settings window.</p>
 </main>

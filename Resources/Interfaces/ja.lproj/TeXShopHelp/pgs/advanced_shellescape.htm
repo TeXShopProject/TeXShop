@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShopヘルプ"></a><span class="chapter">上級向けのヘルプ</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">個人用のファイルをTeX Liveに追加する</a></li>
@@ -47,6 +47,7 @@
 <li>エンジンファイルに加えると、そのエンジンでタイプセットするすべての書類に働きます。<a href="advanced_addengine.htm">タイプセットエンジンを追加する</a>を参照してください。</li>
 <li>pdflatexmkなどのlatexmkのエンジンでタイプセットする書類では、ソースの先頭に<code>% !TEX parameter = -shell-escape</code>の行を書くと、その書類だけに働きます。</li>
 </ul>
+<p>オプションをすでに持っているエンジンが1つあります。TeXShopに付属していて最初からEnginesフォルダにあるsepdflatexmkは、いつも<code>--shell-escape</code>付きでタイプセットします。ソースのウインドウのツールバーで選ぶか、<code>% !TEX program = sepdflatexmk</code>の行を書くだけで働くので、信頼できる書類にだけ使ってください。</p>
 
 <h2>shell-escapeのとき確認</h2>
 <p>「設定」→「タイプセット」→「PDF直接生成」の「shell-escapeのとき確認」（初期値はオフ）は、「PDF直接生成」のグループのコマンドを見張ります。これがオンで、そこにあるplain TeXまたはLaTeXのコマンドに<code>-shell-escape</code>か<code>--shell-escape</code>が含まれていると、TeXShopは書類を開いてから初めてタイプセットする前に確認します。</p>
@@ -55,7 +56,7 @@
 <li>「Shell Escapeを無視する」は、オプションなしでタイプセットします。</li>
 <li>「キャンセル」は、タイプセットしません。</li>
 </ul>
-<p>「OK」か「Shell Escapeを無視する」を選ぶと、その答えは書類を閉じるまで有効です。自分の書類はオプション付きで、ほかの人の書類はオプションなしでタイプセットできます。エンジンファイルは、<code>-shell-escape</code>を含んでいても確認の対象になりません。</p>
+<p>「OK」か「Shell Escapeを無視する」を選ぶと、その答えは書類を閉じるまで有効です。自分の書類はオプション付きで、ほかの人の書類はオプションなしでタイプセットできます。エンジンファイルは、<code>-shell-escape</code>を含んでいても確認の対象になりません。そのため、sepdflatexmkは確認なしでオプション付きのタイプセットをします。</p>
 </main>
 </body>
 </html>

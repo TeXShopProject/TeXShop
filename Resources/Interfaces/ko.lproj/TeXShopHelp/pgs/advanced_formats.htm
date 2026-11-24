@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 도움말"></a><span class="chapter">고급 도움말</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
@@ -49,7 +49,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \dump</pre>
-<p>터미널에서 이 파일이 있는 폴더로 이동한 다음 다음과 같이 입력합니다.</p>
+<p>터미널에서 이 파일이 있는 폴더로 이동하여 아래와 같이 입력합니다.</p>
 <pre>pdflatex -ini -jobname=uo "&amp;pdflatex" uo.tex</pre>
 <p>이 명령은 LaTeX 포맷을 불러온 뒤 <code>uo.tex</code>를 읽어 <code>uo.fmt</code>를 만듭니다. 이 포맷으로 조판하는 문서에서는 포맷에 들어 있는 줄을 빼고 <code>\begin{document}</code>로 시작합니다.</p>
 
@@ -65,7 +65,7 @@ pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
 </ol>
 <p>그 뒤에 여는 문서에서는 조판 버튼 옆의 팝업 메뉴에 Oregon이 나타납니다. 그 메뉴에서 무엇을 선택했든 한 문서에 이 포맷을 사용하려면 소스 첫머리에 다음 줄을 추가합니다.</p>
 <pre>% !TEX program = Oregon</pre>
-<p>이 포맷을 기본으로 사용하려면 설정 › 조판 › 엔진 › 새 문서 조판에서 “엔진 파일”을 선택하고, 엔진 파일 메뉴에서 Oregon을 선택합니다. <a href="advanced_addengine.htm">조판 엔진 추가하기</a>를 참고하십시오.</p>
+<p>이 포맷을 기본으로 사용하려면 설정 › 조판 › 엔진 › 새 문서 조판에서 “엔진 파일”을 선택하고, 엔진 파일 메뉴에서 Oregon을 선택합니다. <a href="advanced_addengine.htm">조판 엔진 추가하기</a>를 참조하십시오.</p>
 <p>plain TeX 포맷이라면 엔진에서 <code>pdflatex</code> 대신 <code>pdftex</code>를 사용합니다. DVI 경유로 사용할 포맷이라면 엔진에서 DVI 파일을 PDF로 변환하는 일도 해야 합니다. 예를 들어 zsh 스크립트에서는 <code>dvipdfmx "${1:r}.dvi"</code>를 추가합니다. TeXShop은 소스와 이름이 같은 PDF 파일을 보여 주기 때문입니다.</p>
 </main>
 </body>

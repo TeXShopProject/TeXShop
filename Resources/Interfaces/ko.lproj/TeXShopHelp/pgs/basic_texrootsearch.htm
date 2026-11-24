@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 도움말"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
@@ -41,11 +41,11 @@
 <main id="content">
 <h1>TeX 소스에서 찾기</h1>
 
-<p><a name="texroot_search"></a>루트 파일과 장 파일로 나뉜 문서는 모든 파일에서 한꺼번에 찾고 대치할 수 있습니다. 문서의 파일 하나를 앞에 두고 편집 › 찾기 › 같은 TEX root를 가진 TeX 소스에서 찾기…를 선택합니다. 루트 파일 자체가 앞에 있으면 이 항목은 이 파일을 TEX root로 하는 TeX 소스에서 찾기…가 됩니다. 고급 찾기 패널의 모두 찾기 메뉴에도 같은 항목이 있으며, 일괄 대치 윈도우의 모두 대치 메뉴에 있는 같은 TEX root를 가진 TeX 소스에 적용…은 거기서 선택한 세트로 이 윈도우를 엽니다. 이름이 없는 문서나 이름이 .tex로 끝나지 않는 파일에서는 이 항목들이 흐리게 표시됩니다.</p>
+<p><a name="texroot_search"></a>루트 파일과 장 파일로 나뉜 문서는 모든 파일에서 한꺼번에 찾고 대치할 수 있습니다. 문서의 파일 하나를 앞에 두고 편집 › 찾기 › 같은 TEX root를 가진 TeX 소스에서 찾기…를 선택합니다. 루트 파일 자체가 앞에 있으면 이 항목은 이 파일을 TEX root로 하는 TeX 소스에서 찾기…가 됩니다. 고급 찾기 패널의 모두 찾기 메뉴에도 같은 항목이 있으며, 일괄 대치 윈도우의 모두 대치 메뉴에 있는 같은 TEX root를 가진 TeX 소스에 적용…은 거기서 선택한 세트로 이 윈도우를 엽니다. 루트 파일 자체에서는 이 항목이 이 파일을 TEX root로 하는 TeX 소스에 적용…이 됩니다. 이름이 없는 문서나 이름이 소문자 .tex로 끝나지 않는 파일에서는 이 항목들이 흐리게 표시되며, 적용 항목은 일괄 대치 윈도우에서 세트를 선택하지 않았을 때도 흐리게 표시됩니다.</p>
 
 <h2>찾는 파일</h2>
 
-<p>이 윈도우는 루트 파일, 그리고 루트 파일의 폴더와 그 하위 폴더에 있는 .tex 파일 중 처음 20행 안의 <code>% !TEX root</code> 행에서 그 루트 파일을 지정한 파일을 찾습니다. <a href="advanced_root.htm">프로젝트 루트 파일 설정</a>을 참조하십시오. 모드 아래의 행에는 어느 루트 파일을 찾는지 표시되며, 그 옆의 ? 버튼에서도 이 규칙을 볼 수 있습니다. <code>\input</code>이나 <code>\include</code>로 지정한 파일은 따라가지 않으며, .texshop 파일에 지정된 루트 파일은 사용하지 않습니다. 파일에 대한 심볼릭 링크, 심볼릭 링크나 별칭을 거쳐 도달하는 폴더, TeXShop Backups 폴더는 제외됩니다.</p>
+<p>이 윈도우는 루트 파일, 그리고 루트 파일의 폴더와 그 하위 폴더에 있는 .tex 파일 중 처음 20행 안의 <code>% !TEX root</code> 행에서 그 루트 파일을 지정한 파일을 찾습니다. <a href="advanced_root.htm">프로젝트 루트 파일 설정</a>을 참조하십시오. 숨겨진 설정 <code>UseOldHeadingCommands</code>가 켜져 있으면, 예전 형식의 <code>%SourceDoc</code> 행으로 그 루트 파일을 지정한 파일도 찾습니다. 모드 아래의 행에는 어느 루트 파일을 찾는지 표시되며, 그 옆의 ? 버튼에서도 이 규칙을 볼 수 있습니다. <code>\input</code>이나 <code>\include</code>로 지정한 파일은 따라가지 않으며, .texshop 파일에 지정된 루트 파일은 사용하지 않습니다. 파일에 대한 심볼릭 링크, 심볼릭 링크나 별칭을 거쳐 도달하는 폴더, TeXShop Backups 폴더는 제외됩니다.</p>
 
 <p>왼쪽 목록에 파일이 표시됩니다. 목록에서 파일이나 폴더를 끄면 제외됩니다. 읽지 못한 파일이나 폴더가 있으면 아래쪽의 읽지 못한 파일 버튼이 그 목록을 이유와 함께 보여 줍니다.</p>
 

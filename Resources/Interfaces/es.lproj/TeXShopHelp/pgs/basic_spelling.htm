@@ -52,7 +52,7 @@
 
 <h2>Ajustes › Ortografía</h2>
 
-<p>En el grupo «Comprobar ortografía», «Comprobar ortografía mientras se escribe» establece si las palabras mal escritas se subrayan en un documento cuando se abre, y «Diccionario» se describe más abajo. El grupo Método elige cómo se comprueba el código TeX:</p>
+<p>En el grupo «Comprobar ortografía», «Comprobar ortografía mientras se escribe» establece si las palabras mal escritas se subrayan en un documento cuando se abre, «Autocorregir ortografía» establece si «Corregir ortografía automáticamente» está activado en un documento cuando se abre, y «Diccionario» se describe más abajo. El grupo Método elige cómo se comprueba el código TeX:</p>
 <dl>
 <dt>«Usar corrección adaptada a LaTeX (recomendado)»</dt>
 <dd>El método descrito arriba. «Editar exclusiones de LaTeX…», al final de su línea, abre las reglas que indican qué se omite.</dd>
@@ -70,13 +70,13 @@ skip-body  proof</pre>
 
 <h2>Diccionarios</h2>
 
-<p>«Diccionario», en Ajustes › Ortografía, elige el diccionario de los documentos que se abran a partir de entonces; los documentos ya abiertos conservan el suyo. El menú muestra cada idioma con su propio nombre, como Deutsch o Français, con su código, como de o fr_CA, como texto de ayuda. «Detección automática del idioma» deja que macOS elija el idioma a partir del texto.</p>
+<p>«Diccionario», en Ajustes › Ortografía, elige el diccionario de los documentos. Una nueva elección se aplica también a los documentos abiertos, salvo a aquellos cuyo diccionario se eligió con una línea <code>% !TEX spellcheck</code> o en el panel Ortografía y gramática. El menú muestra cada idioma con su propio nombre, como Deutsch o Français, con su código, como de o fr_CA, como texto de ayuda. «Detección automática del idioma» deja que macOS elija el idioma a partir del texto.</p>
 
 <p>Para usar otro diccionario en un documento, elíjalo en el menú desplegable de la parte inferior del panel Ortografía y gramática mientras ese documento está al frente. Cada documento abierto conserva su propio diccionario, y el panel cambia cuando usted cambia de documento. La elección no se conserva al cerrar el documento.</p>
 
 <p>Para dar a un documento su diccionario cada vez que se abra, ponga una línea como esta entre sus 20 primeras líneas:</p>
 <pre>% !TEX spellcheck = de-DE</pre>
-<p>El valor es un código de idioma, como en los textos de ayuda del menú Diccionario: <code>fr</code> para el francés, o <code>fr-CA</code> para el francés de Canadá. La línea se lee cuando se abre el documento, así que, después de añadirla, guarde, cierre y vuelva a abrir el documento. En un documento con archivos de capítulo, ponga la línea en cada archivo.</p>
+<p>El valor es un código de idioma, como en los textos de ayuda del menú Diccionario: <code>fr</code> para el francés, o <code>fr_CA</code> para el francés de Canadá; también se puede escribir con guion, como <code>fr-CA</code>. La línea se lee cuando se abre el documento, así que, después de añadirla, guarde, cierre y vuelva a abrir el documento. En un documento con archivos de capítulo, ponga la línea en cada archivo.</p>
 
 <p>Consulte <a href="basic_preferences.htm#settings-search">Buscar ajustes</a> para encontrar ajustes en la ventana de Ajustes.</p>
 </main>

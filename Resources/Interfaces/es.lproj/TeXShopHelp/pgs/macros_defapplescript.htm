@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda para macros</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda para macros</span></header>
 <nav id="menu">
 <ul>
 <li><a href="macros_preliminaries.htm">Preliminares</a></li>
@@ -44,8 +44,8 @@
   latex
 end tell</pre>
 
-<h2 id="commands">Órdenes de TeXShop</h2>
-<p>Un AppleScript puede hacer su trabajo de dos maneras: puede ejecutar órdenes de shell, como se describe en <a href="macros_writingcommandscripts.htm">Scripts con comandos de shell</a>, o puede llamar a las órdenes propias de TeXShop, como se describe en <a href="macros_writingcompletescripts.htm">Scripts con los comandos de composición de TeXShop</a>. TeXShop entiende estas órdenes:</p>
+<h2 id="commands">Comandos de TeXShop</h2>
+<p>Un AppleScript puede hacer su trabajo de dos maneras: puede ejecutar comandos de shell, como se describe en <a href="macros_writingcommandscripts.htm">Scripts con comandos de shell</a>, o puede llamar a los comandos propios de TeXShop, como se describe en <a href="macros_writingcompletescripts.htm">Scripts con los comandos de composición de TeXShop</a>. Entre otros, TeXShop entiende estos comandos:</p>
 <pre>typeset
 latex
 tex
@@ -62,7 +62,7 @@ taskdone
 refreshpdf
 refreshtext
 goto line</pre>
-<p>Las seis primeras órdenes componen de forma continua, sin detenerse en los errores. Las seis siguientes también componen, pero se detienen en un error para que pueda responder en la consola. Una orden de composición vuelve de inmediato, antes de que termine la composición. <code>taskdone</code> devuelve NO mientras la composición sigue en marcha y YES cuando ha terminado. <code>refreshpdf</code> y <code>refreshtext</code> hacen que las ventanas de PDF y de texto muestren la última versión de sus archivos. <code>goto line</code> selecciona una línea del archivo fuente:</p>
+<p>Los seis primeros comandos componen de forma continua, sin detenerse en los errores. Los seis siguientes también componen, pero se detienen en un error para que pueda responder en la consola. Un comando de composición vuelve de inmediato, antes de que termine la composición. <code>taskdone</code> devuelve NO mientras la composición sigue en marcha y YES cuando ha terminado. <code>refreshpdf</code> y <code>refreshtext</code> hacen que las ventanas de PDF y de texto muestren la última versión de sus archivos. <code>goto line</code> selecciona una línea del archivo fuente:</p>
 <pre>tell document #DOCUMENTNAME# of application "TeXShop"
   goto line 37
 end tell</pre>

@@ -8,7 +8,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-Hilfe"></a><span class="chapter">Grundlagen</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">Einführung</a></li>
@@ -48,7 +48,7 @@
 
 <p>Bei „Einzelseiten“ und „Doppelseiten“ blättert das Scrollen über den oberen oder unteren Rand einer Seite hinaus um; schalten Sie „Beim Scrollen nicht umblättern“ unter Einstellungen › Vorschau › Darstellung und Navigation ein, um stattdessen am Seitenrand anzuhalten. Die Pfeiltasten nach oben und unten scrollen innerhalb der Seite. Die Pfeiltasten nach links und rechts scrollen seitwärts, wenn eine vergrößerte Seite breiter als das Fenster ist, und blättern sonst um; mit „Mit den Pfeiltasten links und rechts immer umblättern“ blättern sie immer um.</p>
 
-<p>Mit Fenster › Symbolleiste anpassen... lassen sich zwei Menüs zur Symbolleiste hinzufügen. „Seitenlayout“ wählt die PDF-Darstellung. „Doppelseiten-Anordnung“ legt nur für dieses Dokument fest, ob ein Seitenpaar von links nach rechts oder von rechts nach links gelesen wird und ob die erste Seite einzeln als Deckblatt erscheint; der Eintrag „Dokumenteinstellungen wiederherstellen“ kehrt zu den Einstellungen zurück. Die Einstellungen sind „Seitenrichtung“ und „Erste Seite einzeln als Deckblatt anzeigen“ unter „Beim Öffnen eines Dokuments“; die magischen Zeilen <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> und <code>% !TEX standardDisplay</code> legen sie für ein einzelnes Dokument fest.</p>
+<p>Die Symbolleiste hat zwei Menüs für die Seiten; wurden sie entfernt, fügt Fenster › Symbolleiste anpassen... sie wieder hinzu. „Seitenlayout“ wählt die PDF-Darstellung. „Doppelseiten-Anordnung“ legt nur für dieses Dokument fest, ob ein Seitenpaar von links nach rechts oder von rechts nach links gelesen wird und ob die erste Seite einzeln als Deckblatt erscheint; der Eintrag „Dokumenteinstellungen wiederherstellen“ kehrt zu den Einstellungen zurück. Die Einstellungen sind „Seitenrichtung“ und „Erste Seite einzeln als Deckblatt anzeigen“ unter „Beim Öffnen eines Dokuments“; die magischen Zeilen <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> und <code>% !TEX standardDisplay</code> legen sie für ein einzelnes Dokument fest.</p>
 
 <h2>Vergrößerung</h2>
 
@@ -59,7 +59,7 @@
 <dt>An Inhaltsbreite anpassen</dt>
 <dd>Wie „An Fenster anpassen“, aber ohne die weißen Ränder: Der gesetzte Teil der Seiten füllt die Breite des Fensters.</dd>
 <dt>Feste Vergrößerung</dt>
-<dd>Die Vergrößerung bleibt so, wie sie im Feld „Vergrößerung“ der Symbolleiste oder mit „Vergrößern“ (<kbd>⇧⌘=</kbd>) und „Verkleinern“ (<kbd>⇧⌘-</kbd>) eingestellt wurde.</dd>
+<dd>Die Vergrößerung bleibt so, wie sie im Feld „Vergrößerung“ der Symbolleiste oder mit „Vergrößern“ (<kbd>⇧⌘+</kbd>) und „Verkleinern“ (<kbd>⇧⌘_</kbd>) eingestellt wurde.</dd>
 <dt>Originalgröße</dt>
 <dd>Die Seiten in der Größe des Papiers.</dd>
 </dl>
@@ -68,7 +68,7 @@
 
 <h2>Die Mauswerkzeuge</h2>
 
-<p>Das Objekt „Maus-Modus“ der Symbolleiste legt fest, was der Zeiger auf der Seite bewirkt. „Verschieben“ bewegt die Seite. „Textauswahl“ wählt Text zum Kopieren aus. „Lupe“ und „Lupe (groß)“ zeigen eine Lupe, solange die Maustaste gedrückt ist: Doppelklicken und halten Sie für eine größere Lupe, dreifachklicken und halten Sie, um das ganze Fenster zu vergrößern; drücken Sie die Befehls-, Wahl- oder Control-Taste für eine stärkere, die Umschalttaste für eine schwächere Vergrößerung. „PDF-Auswahl“ wählt einen Bereich der Seite aus, der als Bild kopiert wird. „Standard Maus-Modus“ unter „Beim Öffnen eines Dokuments“ legt das Werkzeug fest, mit dem ein Fenster beginnt.</p>
+<p>Das Objekt „Maus-Modus“ der Symbolleiste legt fest, was der Zeiger auf der Seite bewirkt. „Verschieben“ bewegt die Seite. „Textauswahl“ wählt Text zum Kopieren aus. „Lupe“ und „Lupe (groß)“ zeigen eine Lupe, solange die Maustaste gedrückt ist: Doppelklicken und halten Sie für eine größere Lupe, dreifachklicken und halten Sie, um das ganze Fenster zu vergrößern; drücken Sie die Befehls-, Wahl- oder Control-Taste für eine stärkere Vergrößerung und zusätzlich die Umschalttaste für eine schwächere. „PDF-Auswahl“ wählt einen Bereich der Seite aus, der als Bild kopiert wird. „Standard Maus-Modus“ unter „Beim Öffnen eines Dokuments“ legt das Werkzeug fest, mit dem ein Fenster beginnt.</p>
 
 <p>Ziehen Sie mit „PDF-Auswahl“ über einen Bereich der Seite und kopieren Sie ihn dann mit <kbd>⌘C</kbd> oder ziehen Sie ihn in ein anderes Programm oder auf den Schreibtisch; Vorschau › Auswahl als Datei sichern... sichert ihn in einer Datei. Vorschau › Kopierformat legt fest, ob die Kopie PDF oder ein Bild wie PNG, TIFF oder JPEG ist; „Bild-Kopierformat“ unter Einstellungen › Vorschau › Bilder kopieren legt die Vorgabe fest. Siehe <a href="advanced_pdfcopypaste.htm">Kopieren und Einsetzen, Ziehen und Ablegen</a>.</p>
 
@@ -80,7 +80,7 @@
 
 <h2>Links und Link-Popups</h2>
 
-<p>Links, die das Paket hyperref erzeugt, funktionieren in der Vorschau: Klicken Sie auf einen Verweis, um zum Satz oder zum Literaturverzeichniseintrag zu gelangen; der linke Winkelpfeil von „Zurück/Vorwärts“ kehrt zurück. Eine Webadresse wird in Ihrem Webbrowser geöffnet.</p>
+<p>Links, die das Paket hyperref erzeugt, funktionieren in der Vorschau: Klicken Sie auf einen Verweis, um zum Theorem oder zum Literaturverzeichniseintrag zu gelangen; der linke Winkelpfeil von „Zurück/Vorwärts“ kehrt zurück. Eine Webadresse wird in Ihrem Webbrowser geöffnet.</p>
 
 <p>Halten Sie den Zeiger über einen Link, um die verlinkte Stelle in einem Popup zu sehen, mit der Seitenzahl in der rechten unteren Ecke. Das Popup verschwindet nach einigen Sekunden. Tasten, die beim Erscheinen des Popups gedrückt sind, verändern es:</p>
 <dl>
@@ -116,7 +116,7 @@
 
 <h2>Weiteres</h2>
 
-<p>Klicken Sie mit gedrückter Befehlstaste in die Vorschau, um zur passenden Stelle im Quelltext zu gelangen; siehe <a href="basic_typesetting.htm">Dokumente setzen</a>. „Drehen im Uhrzeigersinn“ und „Drehen gegen den Uhrzeigersinn“ im Menü „Vorschau“ drehen die Seiten. Schreibt ein anderes Programm wie latexmk die PDF-Datei neu, lädt die Vorschau sie an derselben Stelle neu; schalten Sie „PDF-Änderungen durch andere Apps ständig überwachen“ unter Einstellungen › Vorschau › Aktualisierung ein, damit sie auch neu geladen wird, während TeXShop im Hintergrund ist. Vorschau › Position des Vorschau-Fensters sichern lässt neue Vorschaufenster an der Stelle und in der Größe des vordersten Fensters öffnen.</p>
+<p>Klicken Sie mit gedrückter Befehlstaste in die Vorschau, um zur passenden Stelle im Quelltext zu gelangen; siehe <a href="basic_typesetting.htm">Dokumente setzen</a>. „Drehen im Uhrzeigersinn“ und „Drehen gegen den Uhrzeigersinn“ im Menü „Vorschau“ drehen die Seiten. Schreibt ein anderes Programm wie latexmk die PDF-Datei neu, lädt die Vorschau sie an derselben Stelle neu, wenn Sie zu TeXShop oder zum Vorschaufenster zurückkehren; schalten Sie „PDF-Änderungen durch andere Apps ständig überwachen“ unter Einstellungen › Vorschau › Aktualisierung ein, damit sie sofort neu geladen wird, auch während TeXShop im Hintergrund ist. Vorschau › Position des Vorschau-Fensters sichern lässt neue Vorschaufenster an der Stelle und in der Größe des vordersten Fensters öffnen.</p>
 </main>
 </body>
 </html>

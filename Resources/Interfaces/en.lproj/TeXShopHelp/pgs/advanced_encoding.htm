@@ -47,14 +47,14 @@
 
 <h2>Opening files</h2>
 <p>When a file without an encoding line (see below) is opened, TeXShop detects its encoding. A byte order mark identifies UTF-8 and UTF-16 files. A file of ASCII characters only is read in the encoding for new documents. Otherwise TeXShop uses the encoding that the program which saved the file recorded with it, when macOS has kept this information, and then tries UTF-8, and then the encodings of your languages and the encoding for new documents. An encoding that the source declares, for instance with <code>\usepackage[latin9]{inputenc}</code>, is used as a hint.</p>
-<p>Detection is a guess and works best with files that contain a fair amount of text. If it chooses the wrong encoding, close the file without saving, open it again with File › Open…, press Options in the Open dialog, and choose the encoding in its menu; the encoding chosen there is used for the files opened at that time, and the document keeps it. Then add an encoding line to the file so that it always opens correctly. Detection can be turned off with the hidden setting</p>
+<p>Detection is a guess and works best with files that contain a fair amount of text. If it chooses the wrong encoding, close the file without saving, open it again with File › Open…, press Options in the Open dialog, and choose the encoding in its menu; the encoding chosen there is used for the files opened at that time, and the document keeps it. The menu first shows the encoding for new documents; left at that encoding, it does not count as a choice, and the encoding is detected as usual. Then add an encoding line to the file so that it always opens correctly. Detection can be turned off with the hidden setting</p>
 <pre>defaults write TeXShop EncodingAutoDetection NO</pre>
 <p>Files are then read in the encoding for new documents.</p>
 
 <h2>The encoding line</h2>
 <p>A line in one of the first twenty lines of a source file fixes its encoding for reading and for saving, overriding everything else:</p>
 <pre>% !TEX encoding = UTF-8 Unicode</pre>
-<p>The line must start at the left margin, with one space after <code>%</code> and one space on each side of the equals sign, and the name must be written exactly as in the table below. The Encoding macro in the Macros menu lists the encodings and inserts the line for you. The names that TeXworks uses, such as <code>UTF-8</code> or <code>ISO 8859-1</code>, are also understood.</p>
+<p>Write the line as shown, with one space before the equals sign; <code>%!TEX encoding =</code>, without the space after <code>%</code>, is read too. The name must be written exactly as in the table below. The Encoding macro in the Macros menu inserts the line for you, with a list of encodings to choose from. The names that TeXworks uses, such as <code>UTF-8</code> or <code>ISO 8859-1</code>, are also understood.</p>
 <p>If the line names an encoding that TeXShop does not know, TeXShop reads the file as UTF-8 and says so. If the line names UTF-8 but the file is not valid UTF-8, TeXShop reports it and opens the file in ISO Latin 9, which reads any file; saving it without changing the line writes the same bytes back, so nothing is lost. To open a file without applying its encoding line, hold down Option while it opens.</p>
 <table>
 <tr><th>Name in the encoding line</th><th>Name in menus</th></tr>
@@ -88,6 +88,7 @@
 <tr><td><code>GB 2312</code></td><td>Simplified Chinese (GB 2312)</td></tr>
 <tr><td><code>GBK</code></td><td>Chinese (GBK)</td></tr>
 <tr><td><code>GB 18030</code></td><td>Chinese (GB 18030)</td></tr>
+<tr><td><code>Ascii</code></td><td>Ascii</td></tr>
 </table>
 
 <h2>Saving in another encoding</h2>

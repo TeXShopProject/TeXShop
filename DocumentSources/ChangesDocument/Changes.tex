@@ -71,7 +71,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Experiment typesets with the document’s pictures and references, and its source looks like the document’s source. Suggested and reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/8}{\#8}, \href{https://github.com/TeXShopProject/TeXShop/issues/20}{\#20}).
 \item Complete the reference names that the document defines, and BibDesk citations, with a new item in the Edit menu. Settings \(\rightarrow\) Keyboard shows the Option and Control mark keys, and Experiment uses the same completion key as the source window.
 \item The Tags menu is always up to date, and Character Info shows details of a character.
-\item The Matrix panel is easier to use: type entries directly in its table, move with Return, Tab and the arrow keys, and copy and paste entries with other applications. A matrix can be as large as needed, and so can the panel.
+\item The Matrix panel is easier to use: type entries directly in its table, move with Return, Tab and the arrow keys, and copy and paste entries with other applications. A matrix can be far bigger, and so can the panel.
 \end{itemize}
 
 \subsection{Settings window}
@@ -150,7 +150,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 
 \begin{itemize}
 \item The cursor no longer jumps in files synced by OneDrive, Google Drive and similar services, document windows open again in Romanian, and TeXShop notices changes saved by other editors. Reported by \href{https://github.com/Steuard}{Steuard} and \href{https://github.com/yo3iti}{Tom} (\href{https://github.com/TeXShopProject/TeXShop/issues/29}{\#29}, \href{https://github.com/TeXShopProject/TeXShop/issues/42}{\#42}), with a contribution from \href{https://github.com/ddd3h}{Daisuke Nishihama} in \href{https://github.com/TeXShopProject/TeXShop/pull/1}{PR \#1}.
-\item Fix reading and saving in several encodings: UTF-8 with a byte order mark, UTF-16, GB 2312, the backslash and the tilde in Japanese encodings, the encoding menu in the Save dialog, Automatic UTF-8-Mac to UTF-8 Conversion and conversion to otf package \texttt{\textbackslash{}UTF} / \texttt{\textbackslash{}CID} work correctly, and Make Default Editor works for \texttt{.tex} files.
+\item Fix reading and saving in several encodings: UTF-8 with a byte order mark, UTF-16, GB 2312, the backslash and the tilde in Japanese encodings, the encoding menu in the Save dialog, the automatic conversion of UTF-8-MAC to UTF-8 and the conversion to otf package \texttt{\textbackslash{}UTF} / \texttt{\textbackslash{}CID} work correctly, and Select TeXShop as Default TeX Editor works for \texttt{.tex} files.
 \item With Show Full Path in Window Title on in the toolbar, the source window, the Preview window and the console show the full path in their title, and it no longer goes back to the file name after an autosave or when the PDF is read again.
 \end{itemize}
 
@@ -189,7 +189,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Help \(\rightarrow\) TeX Live Documentation opens in every language, in English where there is no version in that language, and links to the current documents on the web instead of files that only MacTeX has.
 \item Users of earlier versions also get the html engine that Help \(\rightarrow\) HTML Commands needs, and that page no longer points to the removed demo movies.
 \item The bundled ConTeXt macro that opened an old web page opens the TeX Live home page instead.
-\item Bundled macros that run shell commands, such as Bibliography, work with names of files and folders that have a space. The macros already in \texttt{\textasciitilde{}/Library/TeXShop/Macros} are not changed.
+\item Bundled macros that run shell commands, such as the macros that typeset with pdflatex or change line endings, work with names of files and folders that have a space. The macros already in \texttt{\textasciitilde{}/Library/TeXShop/Macros} are not changed.
 \item Add help for LaTeX-aware spell checking.
 \item The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.
 \item Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.

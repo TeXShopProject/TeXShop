@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-Hilfe"></a><span class="chapter">Erweitert</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
@@ -48,7 +48,7 @@
 <tr><td><code>Keyboard/autocompletion.plist</code>, mit <code>autocompletionPaste.plist</code> und <code>autocompletionDisplayOrder.plist</code></td><td>Tastenbelegungen</td><td>Einstellungen › Tastatur › Liste der Tastenbelegungen</td></tr>
 <tr><td><code>CommandCompletion/CommandCompletion.txt</code></td><td>Liste der Befehlsvervollständigung</td><td>Einstellungen › Tastatur › Befehlsvervollständigung bearbeiten…</td></tr>
 <tr><td><code>Menus/KeyEquivalents.plist</code></td><td>Vorgaben der Menükurzbefehle</td><td>Einstellungen › Tastatur, Liste der Menükurzbefehle</td></tr>
-<tr><td><code>Macros/Macros_Latex.plist</code></td><td>Menü „Makros“</td><td>Makros › Makro-Editor öffnen…</td></tr>
+<tr><td><code>Macros/Macros_Latex.plist</code></td><td>Menü „Makros“</td><td>Makros › Makro-Editor öffnen...</td></tr>
 <tr><td><code>Themes/</code></td><td>Farbthemen</td><td>Einstellungen › Themen</td></tr>
 <tr><td><code>SpellCheck/SpellingExclusions.txt</code></td><td>Was die LaTeX-bewusste Rechtschreibprüfung überspringt</td><td>Einstellungen › Rechtschreibung › LaTeX-Ausschlussregeln bearbeiten…</td></tr>
 <tr><td><code>Engines/</code></td><td>Satz-Engines</td><td>Einstellungen › Satz › Engine-Liste bearbeiten…</td></tr>
@@ -60,11 +60,11 @@
 
 <h2>Eine Datei von Hand bearbeiten</h2>
 <p>Dateien mit der Endung <code>.plist</code> sind XML-Text. Sie lassen sich in TeXShop, in einem anderen Texteditor oder in Xcode öffnen und bearbeiten. Mehrere beginnen mit Kommentaren, die ihr Format erklären. Behalten Sie UTF-8 bei, die Kodierung, in der sie geschrieben sind. Bearbeiten Sie die Farben von Themen unter Einstellungen › Themen statt in ihren Dateien.</p>
-<p>Funktioniert eine bearbeitete Datei nicht mehr, bewegen Sie sie aus dem Ordner oder bewegen Sie ihren Ordner auf den Schreibtisch, und starten Sie TeXShop neu: Es legt die Datei mit ihrem ursprünglichen Inhalt neu an.</p>
+<p>Funktioniert eine bearbeitete Datei nicht mehr, verschieben Sie sie aus dem Ordner oder verschieben Sie ihren Ordner auf den Schreibtisch, und starten Sie TeXShop neu: Es legt die Datei mit ihrem ursprünglichen Inhalt neu an.</p>
 
 <h2>Fehlende oder beschädigte Dateien</h2>
 <p>Fehlt eine der Dateien, die TeXShop braucht, etwa die Makros, die Tastenbelegungen, die Texte der LaTeX Palette und der Matrix Palette, die Menükurzbefehle, die Liste der Befehlsvervollständigung, die Ausschlussregeln der Rechtschreibprüfung oder die Standardthemen, oder wird sie beim Start von TeXShop als beschädigt erkannt, ersetzt TeXShop sie ohne Fehlermeldung durch eine eigene Kopie. Eine beschädigte Datei wird in den Ordner <code>~/Library/TeXShop/Backups</code> bewegt, in einen nach Datum und Uhrzeit benannten Ordner, damit Sie Ihre Änderungen daraus zurückholen können.</p>
-<p>Dateien, die Sie absichtlich löschen könnten, etwa Vorlagen, Stationery-Dateien, Engines und eigene Themen, werden nicht wiederhergestellt.</p>
+<p>Dateien, die Sie absichtlich löschen könnten, etwa Vorlagen, die Muster im Ordner <code>Stationery</code> für Ablage › Neue Datei aus Vorlagen, Engines und eigene Themen, werden nicht wiederhergestellt.</p>
 </main>
 </body>
 </html>

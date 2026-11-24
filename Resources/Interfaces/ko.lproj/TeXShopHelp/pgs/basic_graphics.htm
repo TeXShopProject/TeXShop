@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">기본 도움말</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 도움말"></a><span class="chapter">기본 도움말</span></header>
 <nav id="menu">
 <ul>
 <li><a href="basic_preliminaries.htm">시작하기 전에</a></li>
@@ -49,13 +49,13 @@
 
 <h2>EPS 파일</h2>
 <p>문서가 graphicx를 읽어 들이면 TeX Live는 조판하는 동안 epstopdf로 EPS 그림을 자동으로 PDF로 변환합니다. 변환된 파일 <code>diagram-eps-converted-to.pdf</code>는 EPS 파일 옆에 저장되며, 이후에는 이 파일이 사용됩니다.</p>
-<p>TeXShop에서 EPS 파일을 열 때도 변환됩니다. TeXShop은 같은 이름의 PDF 파일을 옆에 저장하고 표시합니다.</p>
+<p>TeXShop에서 EPS 파일을 열 때도 변환됩니다. TeXShop은 같은 이름의 PDF 파일을 EPS 파일 옆에, 또는 EPS 파일의 폴더에 쓸 수 없으면 임시 폴더에 저장하고 표시합니다.</p>
 
 <h2>TIFF 파일</h2>
 <p>LaTeX는 TIFF 파일을 넣을 수 없습니다. 소스 윈도우가 활성화된 상태에서 파일 › TIFF 파일 변환을 선택하면, 문서의 폴더가 대화상자에 표시되며 TIFF 파일만 선택할 수 있습니다. 하나 이상을 선택하고 변환을 클릭하십시오. 각 파일이 같은 폴더에 같은 이름의 PNG 파일로 변환되며, TIFF 파일은 그대로 남습니다.</p>
 
 <h2>DVI 경유 조판</h2>
-<p>pstricks 패키지처럼 PostScript 코드를 사용하는 문서는 DVI 경유 방식으로 조판하며, 이 방식은 기본적으로 dvips를 실행합니다. 이때 그림은 EPS 형식으로 넣으며, PDF, PNG, JPEG 파일은 사용할 수 없습니다. <a href="basic_alternatetypeset.htm">대체 조판 방식</a>을 참조하십시오.</p>
+<p>pstricks 패키지처럼 PostScript 코드를 사용하는 문서는 DVI 경유 방식으로 조판하며, 이 방식은 기본적으로 dvips를 실행합니다. 이때 그림은 EPS 형식으로 넣으며, PDF, PNG, JPEG 파일은 사용할 수 없습니다. 이름이 “+ dvipdfmx”로 끝나는 엔진 프로파일도 DVI 경유로 조판하지만, dvips 대신 dvipdfmx를 실행합니다. 이 경우에는 <code>\usepackage[dvipdfmx]{graphicx}</code>로 PDF, PNG, JPEG 파일을 사용할 수 있습니다. <a href="basic_alternatetypeset.htm">대체 조판 방식</a>을 참조하십시오.</p>
 </main>
 </body>
 </html>

@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop-Hilfe"></a><span class="chapter">Erweitert</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Persönliche Dateien zu TeX Live hinzufügen</a></li>
@@ -40,7 +40,7 @@
 <main id="content">
 <h1>ConTeXt und MetaPost</h1>
 <h2>ConTeXt</h2>
-<p>ConTeXt ist ein Makropaket von Hans Hagen, eine Alternative zu LaTeX mit eigenen Befehlen und einem starken Schwerpunkt auf typografischer Gestaltung. TeX Live enthält ConTeXt, und das ConTeXt Garden verteilt eine häufig aktualisierte Version, die in Ihrem Benutzerordner installiert wird.</p>
+<p>ConTeXt ist ein Makropaket von Hans Hagen, eine Alternative zu LaTeX mit eigenen Befehlen und einem starken Schwerpunkt auf typografischer Gestaltung. TeX Live enthält ConTeXt, und die Website ConTeXt Garden verteilt eine häufig aktualisierte Version, die in Ihrem Benutzerordner installiert wird.</p>
 <p>Die Engines für ConTeXt liegen in <code>~/Library/TeXShop/Engines/Inactive/ConTeXt</code>, zusammen mit der Anleitung <code>Setting-Up-ConTeXt.pdf</code> und Beispieldokumenten:</p>
 <table>
 <tr><th>Engine</th><th>Setzt mit</th></tr>
@@ -56,9 +56,9 @@
 <p>Um Gliederungsbefehle von ConTeXt wie <code>\title</code> und <code>\subject</code> im Menü „Markierungen“ aufzuführen, schalten Sie die versteckte Einstellung ConTeXtTags ein; siehe <a href="configure_hidden.htm">Versteckte Einstellungen</a>.</p>
 
 <h2>MetaPost</h2>
-<p>MetaPost von John Hobby zeichnet Abbildungen nach einer Beschreibung in einer Programmiersprache, die von Knuths METAFONT abgeleitet ist. Sein Handbuch gehört zu TeX Live: Wählen Sie Hilfe › Hilfe für Paket einblenden… und geben Sie <code>metapost</code> ein.</p>
-<p>Setzen › MetaPost (<kbd>⇧⌘M</kbd>) oder MetaPost im Einblendmenü neben der Taste „Setzen“ startet MetaPost für das aktive Dokument, eine Datei mit der Endung <code>.mp</code>. Ausgeführt wird der Befehl unter Einstellungen › Satz › Zugehörige Programme › MetaPost, als Vorgabe <code>mpost</code>. Die Engine-Profile setzen dieses Feld: <code>pmpost</code> für pLaTeX + dvipdfmx und <code>upmpost</code> für upLaTeX + dvipdfmx, die japanischen Text in Beschriftungen setzen, und <code>mpost</code> für die übrigen Profile. LuaLaTeX kann keine Abbildungen einbinden, deren Beschriftungen pmpost oder upmpost auf Japanisch gesetzt haben; zeichnen Sie solche Abbildungen mit LuaLaTeX im Dokument selbst mit dem Paket luamplib.</p>
-<p>Um eine neue Datei als MetaPost-Datei zu sichern, wählen Sie im Sichern-Dialog im Menü „Dateityp“ den Typ mp.</p>
+<p>MetaPost von John Hobby zeichnet Abbildungen nach einer Beschreibung in einer Programmiersprache, die von Knuths METAFONT abgeleitet ist. Sein Handbuch gehört zu TeX Live: Wählen Sie Hilfe › Hilfe für Paket einblenden... und geben Sie <code>metapost</code> ein.</p>
+<p>Setzen › MetaPost (<kbd>⇧⌘M</kbd>) oder MetaPost im Einblendmenü neben der Taste „Setzen“ startet MetaPost für die Datei mit dem Namen des aktiven Dokuments und der Endung <code>.mp</code>: für das Dokument selbst, wenn es eine <code>.mp</code>-Datei ist, sonst für die <code>.mp</code>-Datei daneben, etwa die, die das Paket mfpic für ein <code>.tex</code>-Dokument schreibt. Ausgeführt wird der Befehl unter Einstellungen › Satz › Zugehörige Programme › MetaPost, als Vorgabe <code>mpost</code>. Die Engine-Profile setzen dieses Feld: <code>pmpost</code> für pLaTeX + dvipdfmx und <code>upmpost</code> für upLaTeX + dvipdfmx, die japanischen Text in Beschriftungen setzen, und <code>mpost</code> für die übrigen Profile. LuaLaTeX kann keine Abbildungen einbinden, deren Beschriftungen pmpost oder upmpost auf Japanisch gesetzt haben; zeichnen Sie solche Abbildungen mit LuaLaTeX im Dokument selbst mit dem Paket luamplib.</p>
+<p>Um eine neue Datei als MetaPost-Datei zu sichern, wählen Sie im Sichern-Dialog im Menü „Dateiformat“ den Typ mp.</p>
 <p>Die Engines nv-metapost und nv-metafun von Nicola Vitacolonna erleichtern die Arbeit mit MetaPost und MetaFun und zeigen die Abbildungen einer Datei im Vorschaufenster. Sie liegen in <code>~/Library/TeXShop/Engines/Inactive/MetaPostEngines-1.4.7/Engines</code>; die Datei <code>README.pdf</code> und der Ordner <code>examples</code> eine Ebene höher in <code>MetaPostEngines-1.4.7</code> erklären, wie man sie installiert und verwendet, und enthalten Beispieldateien. Eine Datei, die zum Beispiel so beginnt,</p>
 <pre>% !TEX program = nv-metafun
 beginfig(1);

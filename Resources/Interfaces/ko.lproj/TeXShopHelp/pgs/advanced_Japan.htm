@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">고급 도움말</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop 도움말"></a><span class="chapter">고급 도움말</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">TeX Live에 개인 파일 추가하기</a></li>
@@ -64,7 +64,7 @@
 森鷗外 was a famous novelist in Japan.
 \end{document}</pre>
 <p>파일에는 <code>森\UTF{9DD7}外</code>가 들어 있습니다. upLaTeX와 LuaLaTeX는 유니코드를 직접 다루므로 변환이 필요 없습니다.</p>
-<p>텍스트의 일부를 직접 변환하려면 그 부분을 선택하고 편집 › 문자 종류 변환 › 유니코드 문자 → \UTF / \CID 또는 \UTF / \CID → 유니코드 문자를 사용합니다. 같은 하위 메뉴에서 히라가나와 가타카나, 전각과 반각 숫자 및 영문자, 원 숫자 같은 문자와 ajmacros 패키지의 명령을 서로 변환하고, 둥근 따옴표를 TeX 따옴표로 바꿀 수 있습니다. 아무것도 선택하지 않으면 TeXShop은 문서 전체를 변환할지 묻습니다. 모든 변환은 실행 취소할 수 있습니다.</p>
+<p>텍스트의 일부를 직접 변환하려면 그 부분을 선택하고 편집 › 문자 종류 변환 › 유니코드 문자 → \UTF / \CID 또는 \UTF / \CID → 유니코드 문자를 사용합니다. 같은 하위 메뉴에서 히라가나와 가타카나, 전각과 반각 숫자 및 영문자, 원 숫자 같은 문자와 ajmacros 패키지의 명령을 서로 변환하고, 전각 따옴표 → 반각 따옴표 항목으로 둥근 따옴표를 TeX 따옴표로 바꿀 수 있습니다. 아무것도 선택하지 않으면 TeXShop은 문서 전체를 변환할지 묻습니다. 모든 변환은 실행 취소할 수 있습니다.</p>
 
 <h2>조합형 문자와 분해형 문자</h2>
 <p>일본어 문자 중에는 유니코드 형태가 두 가지인 것이 있습니다. が는 하나의 문자(U+304C)일 수도 있고, か(U+304B) 뒤에 결합용 탁음 부호(U+3099)가 붙은 것일 수도 있습니다. 둘은 똑같아 보이지만 TeX는 서로 다른 것으로 취급하므로, 한 형태로 정의한 명령을 다른 형태로 사용하면 찾지 못합니다.</p>
@@ -76,18 +76,18 @@
 <h2>엔화 기호와 백슬래시</h2>
 <p>일본어 키보드에서는 백슬래시 자리에 있는 키를 누르면 엔화 기호 ¥가 입력되지만, TeX 명령은 백슬래시 \로 시작합니다.</p>
 <ul>
-<li>일본어 프로파일이 설정하는 인코딩인 UTF-8에서는 ¥와 \가 서로 다른 문자이며 둘 다 그대로 유지됩니다. 그 문서에서 소스 › 키 바인딩을 켜십시오. TeXShop에 들어 있는 키 바인딩 목록은 입력한 ¥를 \로 바꾸며, 붙여넣기 열이 체크되어 있으므로 소스에 붙여 넣은 텍스트의 ¥도 바꿉니다. <a href="basic_autocompletion.htm">키 바인딩</a>을 참고하십시오.</li>
+<li>일본어 프로파일이 설정하는 인코딩인 UTF-8에서는 ¥와 \가 서로 다른 문자이며 둘 다 그대로 유지됩니다. 그 문서에서 소스 › 키 바인딩을 켜십시오. TeXShop에 들어 있는 키 바인딩 목록은 입력한 ¥를 \로 바꾸며, 붙여넣기 열이 체크되어 있으므로 소스에 붙여 넣은 텍스트의 ¥도 바꿉니다. <a href="basic_autocompletion.htm">키 바인딩</a>을 참조하십시오.</li>
 <li>새 문서의 인코딩이 일본어 인코딩 중 하나이면, TeXShop은 입력하거나 붙여 넣을 때 ¥와 \를 변환합니다. 일본어(Mac OS, ShiftJIS ¥)와 일본어(Shift JIS X0213)에서는 소스 윈도우에 TeX 명령 문자가 ¥로 표시되고, 그 밖의 일본어 인코딩에서는 \로 표시됩니다.</li>
 <li>일본어 인코딩으로 파일을 저장할 때 백슬래시와 물결표는 항상 TeX가 기대하는 바이트 0x5C와 0x7E로 기록됩니다.</li>
 </ul>
 
 <h2>그 밖의 일본어 관련 설정</h2>
 <ul>
-<li>설정 › 편집기 › 보이지 않는 문자 › 전각 스페이스 (일본어)를 켜면, 숨김 문자를 표시할 때 전각 공백도 표시됩니다.</li>
+<li>설정 › 편집기 › 보이지 않는 문자 › 전각 스페이스 (일본어)를 켜면, 숨김문자를 표시할 때 전각 공백도 표시됩니다.</li>
 <li>설정 › 편집기 › 구문 하이라이트 › 전각 영숫자·기호 강조는 ASCII 문자와 혼동하기 쉬운 전각 영문자, 숫자, 기호를 테마의 전각 영숫자·기호 색상으로 표시합니다.</li>
 <li>설정 › 미리보기 › 페이지 방향으로 세로쓰기 문서에 필요한 대로 페이지를 오른쪽에서 왼쪽으로 배열할 수 있습니다. <code>% !TEX PageDirectionR2L</code> 줄과 <code>% !TEX PageDirectionL2R</code> 줄은 한 문서의 방향을 정합니다.</li>
 </ul>
-<p>\UTF / \CID 변환과 유니코드 정규화는 Yusuke Terada의 TUG 2013 발표 자료 <a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>에서 자세히 설명합니다.</p>
+<p><code>\UTF</code> / <code>\CID</code> 변환과 유니코드 정규화는 Yusuke Terada의 TUG 2013 발표 자료 <a href="https://tug.org/tug2013/slides/Terada-TeXShop.pdf">https://tug.org/tug2013/slides/Terada-TeXShop.pdf</a>에서 자세히 설명합니다.</p>
 </main>
 </body>
 </html>

@@ -70,7 +70,7 @@
 <p>When a chapter file with a root line is opened, TeXShop also opens the root file and its Preview window. Two items in Settings › General › Project Root File control this: “Open the root file when opening a document” turns it on or off, and “Miniaturize the opened root window” sends the source window of the root file to the Dock, since it is rarely edited while you work on a chapter.</p>
 
 <h2>Finding and replacing in the whole project</h2>
-<p>To search all files of a project at once, choose Edit › Find › Find in TeX Sources with the Same TEX root… in one of its files. It searches the root file and the files that name it in a root line. See <a href="basic_texrootsearch.htm">Find in TeX Sources</a> and <a href="basic_find.htm">Find and Replace</a>.</p>
+<p>To search all files of a project at once, choose Edit › Find › Find in TeX Sources with the Same TEX root… in one of its chapter files, or Find in TeX Sources with This File as TEX root… in the root file. It searches the root file and the <code>.tex</code> files in its folder and below that name it in a root line in their first 20 lines. See <a href="basic_texrootsearch.htm">Find in TeX Sources</a> and <a href="basic_find.htm">Find and Replace</a>.</p>
 
 <h2>Root files named in .texshop files</h2>
 <p>A file with the extension <code>.texshop</code> next to a chapter file, such as <code>two.texshop</code> for <code>two.tex</code>, can also name the root file, and TeXShop still reads it. No menu command creates such files; use a <code>% !TEX root</code> line, which travels with the source.</p>

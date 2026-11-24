@@ -67,11 +67,11 @@
 
 <p>Settings › Typesetting › Engine Profile sets up typesetting for an engine in one step. Choose the profile of the engine you use; a sheet lists the values it sets, and OK sets them. In the sheet, “Run LaTeX” can be set to With latexmk, so that latexmk runs BibTeX, the index and further passes as needed. Once one of these values is changed, the menu shows Custom. The TeXShop Manual lists what the profiles set.</p>
 
-<p>For a single document, choose the engine in the Program pop-up menu next to Typeset in the toolbar. It lists LaTeX, plain TeX and the engine files in ~/Library/TeXShop/Engines, such as LuaLaTeX and XeLaTeX, and the choice holds for that window. To make it part of the document, put a line like this among the first 20 lines of the source:</p>
+<p>For a single document, choose the engine in the Program pop-up menu next to Typeset in the toolbar. It lists plain TeX, LaTeX, BibTeX, MakeIndex and MetaPost, followed by the engine files in ~/Library/TeXShop/Engines, such as LuaLaTeX and XeLaTeX, and the choice holds for that window. To make it part of the document, put a line like this among the first 20 lines of the source:</p>
 
 <pre>% !TEX program = LuaLaTeX</pre>
 
-<p><kbd>⌘T</kbd> then always typesets the file with that engine. The name is that of an engine file, or one of <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> and <code>tex</code> for the built-in LaTeX and plain TeX (see <a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>). Macros › Program inserts the line, with the engine chosen from a list. Settings › Typesetting › Typeset New Documents With sets the engine of documents without such a line. See <a href="advanced_addengine.htm">Adding Typesetting Engines</a> for engine files.</p>
+<p><kbd>⌘T</kbd> then always typesets the file with that engine. The name is that of an engine file, or one of <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> and <code>tex</code> for the built-in LaTeX and plain TeX (see <a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>). Macros › Program inserts such a line, with the engine chosen from a list; it writes <code>% !TEX TS-program =</code>, which means the same. Settings › Typesetting › Typeset New Documents With sets the engine of documents without such a line. See <a href="advanced_addengine.htm">Adding Typesetting Engines</a> for engine files.</p>
 
 <p>The Typeset menu also runs BibTeX, MakeIndex and MetaPost on the document; see <a href="advanced_bibtex.htm">BibTeX</a> and <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
 
@@ -87,7 +87,7 @@
 
 <h2>Arranging the windows</h2>
 
-<p>Window › Use One Window puts the source and its Preview side by side in a single window, and Window › Use Separate Windows separates them again. To open every document this way, set Settings › General › Windows › Source and Preview to Use One Window; “Source position in the combined window” puts the source on the left or the right. Drag the divider to give the source more or less room; TeXShop opens every combined window with the same share. Documents with chapter files do not work in a single window, so keep separate windows for them. File › New opens only a source window: typeset the new document first, then choose Use One Window.</p>
+<p>Window › Use One Window puts the source and its Preview side by side in a single window, and Window › Use Separate Windows separates them again. To open every document this way, set Settings › General › Windows › Source and Preview to Use One Window; “Source position in the combined window” puts the source on the left or the right. Drag the divider to give the source more or less room; TeXShop opens every combined window with the same share. A chapter file with a <code>% !TEX root</code> line stays in separate windows; the root file itself can use one window. File › New opens only a source window: typeset the new document first, then choose Use One Window.</p>
 
 <p>With separate windows, place and size the source and Preview windows as you like, then choose Source › Save Source Position and Preview › Save Preview Position; new windows open there.</p>
 </main>

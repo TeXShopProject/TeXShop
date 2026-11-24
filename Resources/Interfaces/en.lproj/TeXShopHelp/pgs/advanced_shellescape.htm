@@ -48,6 +48,7 @@
 <li>In an engine file, for every document typeset with that engine; see <a href="advanced_addengine.htm">Adding Typesetting Engines</a>.</li>
 <li>For one document typeset with one of the latexmk engines, such as pdflatexmk, with the line <code>% !TEX parameter = -shell-escape</code> at the top of the source.</li>
 </ul>
+<p>One engine already has the option: sepdflatexmk, which comes with TeXShop and is in the Engines folder from the start, always typesets with <code>--shell-escape</code>. Choosing it in the toolbar of the source window or with a <code>% !TEX program = sepdflatexmk</code> line is enough, so use it only for documents you trust.</p>
 
 <h2>Confirm Shell Escape</h2>
 <p>Settings › Typesetting › Direct PDF › “Confirm Shell Escape”, off by default, guards the commands of the Direct PDF group. When it is on and the plain TeX or LaTeX command there contains <code>-shell-escape</code> or <code>--shell-escape</code>, TeXShop asks before it typesets a document for the first time after the document is opened:</p>
@@ -56,7 +57,7 @@
 <li>Omit Shell Escape typesets without it.</li>
 <li>Cancel does not typeset.</li>
 </ul>
-<p>Once you choose OK or Omit Shell Escape, the answer holds for that document until it is closed, so you can typeset your own documents with the option and documents from others without it. Engine files are not checked, even if they contain <code>-shell-escape</code>.</p>
+<p>Once you choose OK or Omit Shell Escape, the answer holds for that document until it is closed, so you can typeset your own documents with the option and documents from others without it. Engine files are not checked, even if they contain <code>-shell-escape</code>, so sepdflatexmk typesets with the option without asking.</p>
 </main>
 </body>
 </html>

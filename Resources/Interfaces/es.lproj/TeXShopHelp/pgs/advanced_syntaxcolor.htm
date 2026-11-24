@@ -9,7 +9,7 @@
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="Ayuda TeXShop"></a><span class="chapter">Ayuda avanzada</span></header>
 <nav id="menu">
 <ul>
 <li><a href="advanced_personaltetex.htm">Añadir archivos personales a TeX Live</a></li>
@@ -39,13 +39,13 @@
 </nav>
 <main id="content">
 <h1>Resaltado de sintaxis</h1>
-<p>La ventana de código muestra TeX en colores: los comentarios, las órdenes, las notas al pie, los marcadores <code>$</code> y <code>&amp;</code>, y los delimitadores <code>( )</code>, <code>{ }</code> y <code>[ ]</code> tienen cada uno su color. Código › Resaltado de sintaxis activa o desactiva el resaltado en el documento activo. Los documentos se abren con el resaltado activado; para abrirlos con él desactivado, use el ajuste oculto</p>
+<p>La ventana de código muestra TeX en colores: los comentarios, los comandos, las notas al pie, los marcadores <code>$</code> y <code>&amp;</code>, y los delimitadores <code>( )</code>, <code>{ }</code> y <code>[ ]</code> tienen cada uno su color. Código › Resaltado de sintaxis activa o desactiva el resaltado en el documento activo. Los documentos se abren con el resaltado activado; para abrirlos con él desactivado, use el ajuste oculto</p>
 <pre>defaults write TeXShop SyntaxColoringEnabled NO</pre>
 
 <h2>Qué se resalta</h2>
 <ul>
-<li>Las órdenes son una barra invertida seguida de letras. Ajustes › Editor › Resaltado de sintaxis › «@ en nombres de comando» cuenta también <code>@</code> como letra, como en las órdenes internas de los paquetes.</li>
-<li>El texto de <code>\footnote</code>, <code>\footcite</code> y <code>\autocite</code> se muestra con el color «Nota al pie». El ajuste oculto <code>defaults write TeXShop SyntaxColorFootnote NO</code> colorea solo la orden.</li>
+<li>Los comandos son una barra invertida seguida de letras. Ajustes › Editor › Resaltado de sintaxis › «@ en nombres de comando» cuenta también <code>@</code> como letra, como en los comandos internos de los paquetes.</li>
+<li>El texto de <code>\footnote</code>, <code>\footcite</code> y <code>\autocite</code>, y de los comandos que empiezan por <code>\cite</code> o <code>\Cite</code>, como <code>\citep</code> y <code>\citeauthor</code>, se muestra con el color «Nota al pie». El ajuste oculto <code>defaults write TeXShop SyntaxColorFootnote NO</code> colorea solo el comando.</li>
 <li>Código › Resaltar las entradas del índice muestra los argumentos de <code>\index</code> y <code>\esindex</code> con el color «Índice». Ajustes › Editor › Resaltado de sintaxis › «Resaltar las entradas del índice por omisión» lo activa al abrir los documentos.</li>
 <li>Código › Resaltar el código expl3 colorea además las funciones, variables y otras partes del código expl3, la capa de programación de LaTeX, para quienes escriben paquetes. «Resaltar el código expl3 por omisión», del mismo grupo, lo activa al abrir los documentos.</li>
 <li>«Realzar letras y símbolos de ancho completo», del mismo grupo, muestra con los colores «Ancho completo» las letras, dígitos y símbolos de ancho completo, que en un texto japonés se confunden fácilmente con caracteres ASCII.</li>
