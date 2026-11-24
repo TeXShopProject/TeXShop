@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Trucos de edición</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-<meta name="description" content="trucos de edición; paréntesis correspondientes; seleccionar líneas; comentar; sangrar; menú Marcas; Cerrar el entorno actual; dividir el código; arrastrar y soltar; barra de estado; estadísticas; Intercambiar con el portapapeles; Copiar con estilo; Conversión de tipo de carácter; archivo de copia de seguridad">
+<meta name="description" content="trucos de edición; paréntesis correspondientes; seleccionar líneas; comentar; sangrar; menú Marcas; Cerrar el entorno actual; dividir el código; arrastrar y soltar; barra de estado; estadísticas; opciones del recuento de caracteres; Intercambiar con el portapapeles; Copiar con estilo; Conversión de tipo de carácter; archivo de copia de seguridad">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -91,6 +91,8 @@
 <p>La barra de estado, bajo el código fuente, muestra las líneas, los caracteres y las palabras del documento, con las cifras de la selección entre paréntesis, y la posición, la línea y la columna del punto de inserción. Los caracteres se cuentan tal como se ven, de modo que una letra acentuada o un emoji cuentan como uno, y los comandos de TeX se cuentan tal como están escritos; un emoji cuenta además como una palabra. El tamaño del archivo guardado se muestra a la derecha. Código › Mostrar barra de estado muestra u oculta la barra de estado en todas las ventanas.</p>
 
 <p>«Estadísticas del texto…», en la barra de estado, o Edición › Estadísticas..., cuenta el texto sin los comandos de TeX. El programa detex de TeX Live los quita del documento, o de la selección, y añade los archivos leídos con <code>\input</code> e <code>\include</code>; TeXShop cuenta lo que queda del mismo modo que la barra de estado. No hace falta guardar el documento. El recuento se hace cuando se abre la ventana emergente y cuando se hace clic en su botón de actualizar.</p>
+
+<p>El botón de opciones, junto al botón de actualizar, muestra cómo se cuentan los caracteres. «Ignorar los finales de línea», «Ignorar los espacios en blanco» y «Tratar los espacios en blanco consecutivos como uno solo» dejan fuera los finales de línea y los espacios, o cuentan una serie de ellos como uno. «Normalización» aplica antes NFC, NFD, NFKC, NFKD, NFKC Case-Fold, Modified NFC o Modified NFD. «Unidad» cuenta clústeres de grafemas (los caracteres tal como se ven, como en la barra de estado), escalares Unicode, unidades de UTF-16 o bytes; para los bytes, «Codificación» elige la codificación. Las dos columnas se vuelven a contar al instante, sin ejecutar detex de nuevo. Las opciones son las mismas para todos los documentos; la codificación es la del documento cada vez que se abre la ventana emergente. Cuando las opciones están ocultas y los caracteres no se cuentan como en la barra de estado, el botón de opciones aparece en color.</p>
 
 <h2>El portapapeles</h2>
 
