@@ -627,7 +627,7 @@ static TSGlyphPopoverGlyphView *GlyphView(NSString *text, CGFloat size, NSColor 
     NSTextField *nameField;
     NSString *name = ScalarName(first);
     if (complex) {
-        name = [NSString stringWithFormat:NSLocalizedString(@"<a letter consisting of %d characters>", nil), (int)codePoints.count];
+        name = [NSString localizedStringWithFormat:NSLocalizedString(@"<a character consisting of %d code points>", @"Character Info: the name line of a character made of several code points, such as an accented letter or an emoji sequence"), (int)codePoints.count];
         nameField = Label(name, [NSFont systemFontOfSize:NSFont.systemFontSize], NSColor.labelColor, kNameMaxWidth, YES, @"name");
     } else if (name) {
         if (variant)
@@ -663,7 +663,7 @@ static TSGlyphPopoverGlyphView *GlyphView(NSString *text, CGFloat size, NSColor 
 - (NSView *)multipleCharactersView
 {
     NSString *character = self.character;
-    NSString *counts = [NSString stringWithFormat:NSLocalizedString(@"%d letters, %d words, %d lines", nil),
+    NSString *counts = [NSString localizedStringWithFormat:NSLocalizedString(@"%d characters, %d words, %d lines", @"Character Info: the characters, words and lines of the selection, counted as the status bar counts them"),
                         (int)self.counts.selectedCharacters, (int)self.counts.selectedWords, (int)self.counts.selectedLines];
     NSTextField *countsField = Label(counts, [NSFont systemFontOfSize:NSFont.systemFontSize], NSColor.labelColor, kMultiWidth, YES, @"counts");
 

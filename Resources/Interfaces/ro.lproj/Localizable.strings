@@ -76,8 +76,8 @@
 " does not exist." = " nu există.";
 "failed to copy selection." = "copierea selecției a eșuat.";
 "failed to save selection to the file." = "salvarea selecției în fișier a eșuat.";
-"<a letter consisting of %d characters>" = "<un caracter format din %d caractere>";
-"%d letters, %d words, %d lines" = "Litere: %d, cuvinte: %d, linii: %d";
+"<a character consisting of %d code points>" = "<un caracter format din %d de puncte de cod>";
+"%d characters, %d words, %d lines" = "Caractere: %d, cuvinte: %d, linii: %d";
 "Emoji Style" = "Stil emoji";
 "Text Style" = "Stil text";
 "Character Info" = "Informații despre caracter";

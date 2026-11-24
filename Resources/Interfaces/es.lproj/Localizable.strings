@@ -75,8 +75,8 @@
 " does not exist." = " no existe.";
 "failed to copy selection." = "fallado al copiar selección.";
 "failed to save selection to the file." = "fallado al guardar selección en archivo.";
-"<a letter consisting of %d characters>" = "<un carácter compuesto por %d caracteres>";
-"%d letters, %d words, %d lines" = "%d letras, %d palabras, %d líneas";
+"<a character consisting of %d code points>" = "<un carácter compuesto por %d puntos de código>";
+"%d characters, %d words, %d lines" = "%d caracteres, %d palabras, %d líneas";
 "Emoji Style" = "Estilo emoji";
 "Text Style" = "Estilo texto";
 "Character Info" = "Información caracteres";

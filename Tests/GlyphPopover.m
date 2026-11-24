@@ -322,7 +322,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         // One character of several code points: a variation sequence, an emoji with a skin tone, a combining
         // sequence, a ZWJ sequence, CR LF. A variation sequence keeps the table of its base, with what the selector does.
         NSString *style = LocalizedStrings[@"Emoji Style"] ?: @"Emoji Style", *variant = LocalizedStrings[@"Variant"] ?: @"Variant", *tone = LocalizedStrings[@"Skin Tone IV"] ?: @"Skin Tone IV";
-        NSString *(^consisting)(int) = ^(int n) { return [NSString stringWithFormat:LocalizedStrings[@"<a letter consisting of %d characters>"] ?: @"<a letter consisting of %d characters>", n]; };
+        NSString *(^consisting)(int) = ^(int n) { return [NSString stringWithFormat:LocalizedStrings[@"<a character consisting of %d code points>"] ?: @"<a character consisting of %d code points>", n]; };
         struct { NSString *name, *text, *title, *codePoint; NSArray<NSString *> *rows; } multiples[] = {
             {@"variation", variation, [NSString stringWithFormat:@"CJK UNIFIED IDEOGRAPH-845B (%@)", variant], @"U+845B",
              @[@"U+845B|CJK UNIFIED IDEOGRAPH-845B", @"U+E0100|(U+DB40 U+DD00)|VARIATION SELECTOR-17"]},
@@ -401,7 +401,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
 
         // Several characters: the counts and the code points; a long selection scrolls.
-        NSString *letters = LocalizedStrings[@"%d letters, %d words, %d lines"] ?: @"%d letters, %d words, %d lines";
+        NSString *letters = LocalizedStrings[@"%d characters, %d words, %d lines"] ?: @"%d characters, %d words, %d lines";
         // The numbers the status bar shows for a selection (TSStatusBarCount, as TSSourceStatusBar calls it),
         // and, for the plain cases, the numbers themselves: "あああ" is one word, not none.
         NSString *(^statusBar)(NSString *, NSRange) = ^(NSString *text, NSRange range) {
