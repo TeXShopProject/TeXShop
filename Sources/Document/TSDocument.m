@@ -2484,7 +2484,9 @@ in other code when an external editor is being used. */
 				// NSLog(spellcheckString);
                 
                 self.automaticSpelling = NO;
-                self.spellLanguage = spellcheckString;
+                // As in Settings › Spell Checking: "de-DE" is read as "de_DE", the name the checker uses.
+                self.spellLanguage = TSSpellingLanguageMatching(spellcheckString, [[NSSpellChecker sharedSpellChecker] availableLanguages])
+                    ?: TSSpellingLanguageNormalized(spellcheckString);
                 self.spellLanguageFollowsDefault = NO;
                 // While a file is being opened, another document's window is main.
                 if ([self spellingWindowIsMain])

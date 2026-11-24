@@ -267,9 +267,9 @@ tiToolTipHtmlSearch           = "Search";
 "Show first page alone as cover" = "Show first page alone as cover";
 "Restore Document Settings" = "Restore Document Settings";
 "Single Page" = "Single Page";
-"Two Pages" = "Two Pages";
-"Continuous" = "Continuous";
-"Continuous Two Pages" = "Continuous Two Pages";
+"Two Pages" = "Double Page";
+"Continuous" = "MultiPage";
+"Continuous Two Pages" = "Double MultiPage";
 
 /* Experiment preview tools */
 "ExperimentToolScroll" = "Scroll";

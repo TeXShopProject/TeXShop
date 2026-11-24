@@ -41,7 +41,7 @@ tell application "TeXShop"
 		-- Shell script to get the names of the engines installed in ~/Library/TeXShop/Engines/
 		set command to "ls ~/Library/TeXShop/Engines/ | egrep -e '^.*\\.engine$' | sed 's/\\.engine//'"
 		set engines to paragraphs of (do shell script command)
-		set engines to sort({"tex", "latex", "pdflatex", "pdftex", "personaltex", "personallatex", "metapost", "metafont", "context"} &amp; engines)
+		set engines to sort({"tex", "latex", "pdflatex", "pdftex", "personaltex", "personallatex", "metapost"} &amp; engines)
 	end tell
 	
 	-- Figure out which is the index of the "default_engine" in the "engines" list
@@ -209,7 +209,7 @@ tell application "TeXShop"
 	
 	-- Get a sorted list of the TeXShop encodings
 	tell me
-		set encodings to {"MacOSRoman", "IsoLatin", "IsoLatin2", "IsoLatin5", "IsoLatin9", "IsoLatinGreek", "Mac Central European Roman", "MacJapanese", "DOSJapanese", "SJIS_X0213", "EUC_JP", "JISJapanese", "MacKorean", "UTF-8 Unicode", "Standard Unicode", "Mac Cyrillic", "DOS Cyrillic", "DOS Russian", "Windows Latin 1", "WindowsCentralEurRoman", "Windows Cyrillic", "KOI8_R", "Mac Chinese Traditional", "Mac Chinese Simplified", "DOS Chinese Traditional", "DOS Chinese Simplified", "GBK", "GB 2312", "GB 18030", "Ascii"}
+		set encodings to {"MacOSRoman", "IsoLatin", "IsoLatin2", "IsoLatin5", "IsoLatin9", "IsoLatinGreek", "Mac Central European Roman", "MacJapanese", "DOSJapanese", "SJIS_X0213", "EUC_JP", "JISJapanese", "MacKorean", "DOSKorean", "UTF-8 Unicode", "Standard Unicode", "Mac Cyrillic", "DOS Cyrillic", "DOS Russian", "Windows Latin 1", "WindowsCentralEurRoman", "Windows Cyrillic", "KOI8_R", "Mac Chinese Traditional", "Mac Chinese Simplified", "DOS Chinese Traditional", "DOS Chinese Simplified", "GBK", "GB 2312", "GB 18030", "Ascii"}
 		set encodings to sort(encodings)
 	end tell
 	

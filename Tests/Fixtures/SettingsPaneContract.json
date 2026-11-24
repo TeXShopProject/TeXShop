@@ -3041,17 +3041,17 @@
           "naM-Et-WMn.title": "Monthly"
         },
         "SettingsPreview": {
-          "346.title": "Double Multi-Page",
+          "346.title": "Double MultiPage",
           "335.title": "Magnify (Large)",
           "sa2-VV-W1K.title": "Remember last position on close",
-          "347.title": "Multi-Page",
+          "347.title": "MultiPage",
           "SfP-Ak-pn3.title": "Use Separate Windows",
           "505.title": "Left to Right",
           "V7d-ht-Pe3.title": "Right",
           "337.title": "Select PDF",
           "tVs-uh-QcM.title": "All windows start at fixed position",
           "507.title": "Right to Left",
-          "343.title": "Two Page",
+          "343.title": "Double Page",
           "332.title": "Magnify",
           "636.title": "Select Text",
           "339.title": "Fit to Window",
@@ -4235,7 +4235,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Double Multi-Page",
+          "value": "Double MultiPage",
           "index": 3
         },
         {
@@ -4274,7 +4274,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Multi-Page",
+          "value": "MultiPage",
           "index": 2
         },
         {
@@ -4415,7 +4415,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Two Page",
+          "value": "Double Page",
           "index": 1
         },
         {

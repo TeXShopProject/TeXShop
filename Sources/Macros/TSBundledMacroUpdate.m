@@ -13,10 +13,16 @@ static NSArray<NSString *> *TSFormerHomePages(void)
 // Bundled macros reworded since earlier versions: the current name, the changes from each
 // earlier text to the current one (current text, earlier text), and the earlier name when the
 // macro was renamed too. "TeX Live" is written with the space, and the ConTeXt macro that
-// opened the teTeX page of Gerben Wierda opens the TeX Live home page.
+// opened the teTeX page of Gerben Wierda opens the TeX Live home page. Program no longer offers
+// metafont and context, which typesetting does not know without an engine file of that name, and
+// Encoding offers DOSKorean, as the encoding menus do.
 static NSArray<NSDictionary *> *TSRewordedMacros(void)
 {
     return @[
+        @{@"name": @"Program",
+          @"changes": @[@[@"\"personallatex\", \"metapost\"} & engines", @"\"personallatex\", \"metapost\", \"metafont\", \"context\"} & engines"]]},
+        @{@"name": @"Encoding",
+          @"changes": @[@[@"\"MacKorean\", \"DOSKorean\", \"UTF-8 Unicode\"", @"\"MacKorean\", \"UTF-8 Unicode\""]]},
         @{@"name": @"View TeX Live file",
           @"changes": @[@[@"-- OPEN TeX Live FILE", @"-- OPEN TeXLive FILE"],
                         @[@"a file in the TeX Live tree, for", @"a file in the TeXLive tree, for"],

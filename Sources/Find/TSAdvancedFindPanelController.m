@@ -198,7 +198,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
 
 /// As in CotEditor: the actions on all matches on the left, those on the current match on the right, ending with
 /// previous / next. A button with ▾ has more actions of its kind: Highlight All and Select All under Find All, with
-/// Remove Highlights after them (TeXShop's Find menu has no item for it), Replace (without finding on) under
+/// Remove Highlights after them (also in the Find menu, ⌃⇧⌘H), Replace (without finding on) under
 /// Replace & Find. Return in the find field is "Next".
 - (NSView *)makeButtonRow
 {

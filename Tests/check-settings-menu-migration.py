@@ -22,13 +22,27 @@ added_items={('zoomToContentWidth:','0'),('zoomToContent:','0'),('changePDFViewS
 added_outside_base={'performTextFinderAction:'}
 # Change Encoding joined Edit > Transformations of the Base menu in 6.00; the other languages always had it.
 added_to_base={'changeEncoding:'}
+# Next Mark and Previous Mark, with their Option alternates, moved from Control-Command-F and G to Control-Command-]
+# and [ in 6.00: Control-Command-F was Enter Full Screen too. Their modifiers stay; the contract keeps the former keys.
+rekeyed={'doNextBullet:':(']','f'),'doNextBulletAndDelete:':(']','f'),'doPreviousBullet:':('[','g'),'doPreviousBulletAndDelete:':('[','g')}
+# The Korean Show Annotation Toolbar and the Portuguese (Brazil) Check Grammar With Spelling had Command-V, the key
+# of Paste, since 5.58 (check-menu-key-collisions.py). Without it they keep their place in the contract.
+stale={('ko','displayChoicesPanel:'):'v',('pt','toggleGrammarChecking:'):'v'}
 def records(tree,language='Base'):
  result=[]
  skipped=added|(added_outside_base if language!='Base' else added_to_base)
  for item in tree.iter('menuItem'):
   action=item.find('connections/action')
   if action is None or action.get('selector') in removed|retired|skipped or (action.get('selector'),item.get('tag','0')) in added_items:continue
-  result.append({'identifier':item.get('identifier'),'selector':action.get('selector'),'tag':item.get('tag','0'),'key':item.get('keyEquivalent',''),'mask':[child.attrib for child in item if child.tag=='modifierMask']})
+  key=item.get('keyEquivalent','')
+  if action.get('selector') in rekeyed:
+   assert key==rekeyed[action.get('selector')][0],(language,action.get('selector'),'key',key)
+   key=rekeyed[action.get('selector')][1]
+  mask=[child.attrib for child in item if child.tag=='modifierMask']
+  if (language,action.get('selector')) in stale:
+   assert key in ('',stale[(language,action.get('selector'))]),(language,action.get('selector'),'key',key)
+   key,mask=stale[(language,action.get('selector'))],[]
+  result.append({'identifier':item.get('identifier'),'selector':action.get('selector'),'tag':item.get('tag','0'),'key':key,'mask':mask})
  return sorted(result,key=lambda entry:json.dumps(entry,sort_keys=True))
 def digest(tree,language='Base'):return hashlib.sha256(json.dumps(records(tree,language),sort_keys=True,ensure_ascii=False).encode()).hexdigest()
 def main():

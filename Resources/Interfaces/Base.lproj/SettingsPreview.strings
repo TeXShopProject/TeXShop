@@ -7,10 +7,10 @@
 "335.title" = "Magnify (Large)";
 "337.title" = "Select PDF";
 "339.title" = "Fit to Window";
-"343.title" = "Two Page";
+"343.title" = "Double Page";
 "344.title" = "Fixed Magnification";
-"346.title" = "Double Multi-Page";
-"347.title" = "Multi-Page";
+"346.title" = "Double MultiPage";
+"347.title" = "MultiPage";
 "45.title" = "Remember last position on close";
 "48.title" = "All windows start at fixed position";
 "505.title" = "Left to Right";
