@@ -103,8 +103,9 @@ ps2pdf "$work/$name.ps" "$work/$name.pdf" >"$work/ps2pdf.err" 2>&1 && [ -s "$wor
     fail "ps2pdf could not make $name.pdf: $(tail -n 5 "$work/ps2pdf.err")"
 
 # The PDF is put in place at once, so that a viewer never sees half of it. The file it is copied
-# to first is made new beside the PDF by mktemp, so that no file of the user's is written over.
-pdf_tmp=$(/usr/bin/mktemp "./.$name.pdf.XXXXXX") || fail "cannot write $name.pdf"
+# to first is made new beside the PDF by mktemp, with a short name that fits beside any document
+# name, so that no file of the user's is written over.
+pdf_tmp=$(/usr/bin/mktemp "./.altpdflatexc.XXXXXX") || fail "cannot write $name.pdf"
 # mktemp makes the file readable by its owner only; the PDF gets the permissions of any new file.
 /bin/chmod "$(printf '%o' $((0666 & ~0$(umask))))" "$pdf_tmp" || fail "cannot write $name.pdf"
 /bin/cp "$work/$name.pdf" "$pdf_tmp" && /bin/mv -f "$pdf_tmp" "$n.pdf" || fail "cannot write $name.pdf"

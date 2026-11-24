@@ -47,9 +47,12 @@ PARTIAL = (r'\documentclass{article}\begin{document}PARTIAL PAGE\newpage' + '\n'
 MUTATIONS = {
     # The copy before the PDF is put in place goes to a fixed name of the PDF and a number,
     # which writes over a file of the user's of that name.
-    'fixed-temporary-name': [('pdf_tmp=$(/usr/bin/mktemp "./.$name.pdf.XXXXXX") || fail "cannot write $name.pdf"\n',
+    'fixed-temporary-name': [('pdf_tmp=$(/usr/bin/mktemp "./.altpdflatexc.XXXXXX") || fail "cannot write $name.pdf"\n',
                               'pdf_tmp="$n.pdf.4242"\n')],
     # The copy keeps the owner-only permissions of mktemp.
+    # The copy is named after the document, so that a long document name gives a name too long to make.
+    'named-after-document': [('pdf_tmp=$(/usr/bin/mktemp "./.altpdflatexc.XXXXXX") || fail "cannot write $name.pdf"\n',
+                              'pdf_tmp=$(/usr/bin/mktemp "./.$name.pdf.XXXXXX") || fail "cannot write $name.pdf"\n')],
     'owner-only-pdf': [('/bin/chmod "$(printf \'%o\' $((0666 & ~0$(umask))))" "$pdf_tmp" || fail "cannot write $name.pdf"\n', '')],
     # dvips takes the DVI file the earlier run left (the bug found in the third audit)
     'stale-dvi': [('if [ -f "$n.dvi" ]; then\n'
@@ -95,8 +98,10 @@ def run_macro_command(script, folder, tex, tmp):
     command = 'cd ' + quoted_form(str(folder)) + ';' + quoted_form(str(script)) + '  ' + quoted_form(tex)
     env = {'PATH': f'{TEXBIN}:{GSBIN}:/usr/bin:/bin:/usr/sbin:/sbin', 'HOME': os.environ.get('HOME', str(tmp)),
            'TMPDIR': str(tmp) + '/', 'CFFIXED_USER_HOME': os.environ.get('CFFIXED_USER_HOME', str(tmp))}
-    return subprocess.run(['/bin/sh', '-c', command], env=env, capture_output=True, text=True, stdin=subprocess.DEVNULL,
-                          timeout=300)
+    # The macro runs under the umask of TeXShop; the test fixes it at 022, so that the PDF's
+    # permissions are the same in any shell the test is run from.
+    return subprocess.run(['/bin/sh', '-c', 'umask 022; ' + command], env=env, capture_output=True, text=True,
+                          stdin=subprocess.DEVNULL, timeout=300)
 
 
 def pdf_facts(pdf):
@@ -161,8 +166,8 @@ def script_checks(script, top):
     check(not list(folder.glob('a b.pdf.*')), 'no partial PDF is left')
     check(not any(tmp.iterdir()), f'nothing is left in TMPDIR: {list(tmp.iterdir())}')
     check(dvi.exists(), 'the good run leaves a b.dvi beside the document (the reruns below need it)')
-    check(pdf.exists() and (pdf.stat().st_mode & 0o777) == 0o644, f'a b.pdf has the permissions of a new file: {oct(pdf.stat().st_mode & 0o777) if pdf.exists() else None}')
-    check(not list(folder.glob('.a b.pdf.*')), 'no temporary copy of the PDF is left beside it')
+    check(pdf.exists() and (pdf.stat().st_mode & 0o777) == 0o644, f'a b.pdf has the permissions of a new file under umask 022: {oct(pdf.stat().st_mode & 0o777) if pdf.exists() else None}')
+    check(not list(folder.glob('.altpdflatexc.*')), 'no temporary copy of the PDF is left beside it')
     # A file of the user's whose name looks like the old temporary copy (the PDF's name and a
     # number) is never written over or removed by a run.
     bystander = folder / 'a b.pdf.4242'
@@ -171,9 +176,19 @@ def script_checks(script, top):
     check(rerun.returncode == 0, f'a second good run works: {rerun.stderr[-300:]}')
     check(bystander.exists() and bystander.read_text() == 'keep me', 'a b.pdf.4242 of the user is left as it was')
     bystander.unlink(missing_ok=True)
-    check(not list(folder.glob('.a b.pdf.*')), 'no temporary copy is left after the second run')
+    check(not list(folder.glob('.altpdflatexc.*')), 'no temporary copy is left after the second run')
     good_pdf = pdf.read_bytes() if pdf.exists() else b''
     good_dvi = dvi.read_bytes() if dvi.exists() else b''
+
+    # A document name of 245 letters, whose PDF name still fits in 255 bytes, is made.
+    long_dir = top / 'long'
+    long_dir.mkdir()
+    long_name = 'L' * 245
+    (long_dir / (long_name + '.tex')).write_text(GOOD)
+    result = run_macro_command(script, long_dir, long_name + '.tex', tmp)
+    check(result.returncode == 0 and (long_dir / (long_name + '.pdf')).exists(),
+          f'a 245-letter document name makes its PDF: {result.returncode} {result.stderr[-300:]}')
+    check(not list(long_dir.glob('.altpdflatexc.*')), 'no temporary copy is left beside the long-named PDF')
 
     # A name that starts with - is not read as an option by basename, mv, rm or the TeX programs.
     dash = top / 'dash'
