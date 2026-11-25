@@ -1650,6 +1650,10 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
     NSMutableDictionary *typingAttributes = [[self typingAttributes] mutableCopy];
     typingAttributes[NSParagraphStyleAttributeName] = paragraphStyle;
     typingAttributes[NSFontAttributeName] = [self font];
+    // A font change writes these attributes over the whole text. Without the theme color,
+    // that write drops the foreground and the text draws black.
+    if (self.textColor)
+        typingAttributes[NSForegroundColorAttributeName] = self.textColor;
     self.typingAttributes = typingAttributes;
     
     // The other half of a split source shows the same text; it takes the same style for what is
@@ -1661,6 +1665,8 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
         NSMutableDictionary *otherTypingAttributes = [other.typingAttributes mutableCopy];
         otherTypingAttributes[NSParagraphStyleAttributeName] = paragraphStyle;
         otherTypingAttributes[NSFontAttributeName] = [self font];
+        if (other.textColor)
+            otherTypingAttributes[NSForegroundColorAttributeName] = other.textColor;
         other.typingAttributes = otherTypingAttributes;
     }
     
