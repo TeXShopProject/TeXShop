@@ -10,6 +10,7 @@ from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 editor = (root / 'Sources/Macros/TSMacroEditor.m').read_text()
 menu = (root / 'Sources/Macros/TSMacroMenuController.m').read_text()
+delegate = (root / 'Sources/App/TSAppDelegate.m').read_text()
 
 def between(text, start, end):
     return text[text.index(start):text.index(end, text.index(start))]
@@ -17,12 +18,29 @@ def between(text, start, end):
 # Compile the actual methods; unrelated document/AppleScript subsystems are omitted.
 parts = {
     'MacroEditorProduction.inc': between(editor, '- (void)collectShortcutCandidates:', '// action for Cancel button')
-        + between(editor, '- (BOOL)windowShouldClose:', '// delegate method for window\n- (void) windowWillClose:')
+        + between(editor, '- (void)setPendingShortcut:', '// Below the contents, as in the key binding list')
+        + between(editor, '- (IBAction)nameFieldAction:', '// delegate method for contentTextView')
+        + between(editor, '- (IBAction)textDidChange:', "// The nib's key field")
+        + between(editor, '- (void)outlineViewSelectionChanged:', '// a method called on "Items changed"')
+        + between(editor, '- (void)outlineViewItemsChanged:', '// interation bewteen outline')
+        + between(editor, '- (void)writeMacrosBeforeTermination:', '// delegate method for window\n- (void) windowWillClose:')
         + between(editor, '- (BOOL)saveNodes:', '// action for "save selection'),
     'MacroMenuProduction.inc': between(menu, '- (void)setupMainMacroMenu', '// reload') + between(menu, '- (void)addItemsToMenu:', '// build a menu for popup')
         + between(menu, '- (void)listKeyEquivalents:', '\n@end'),
     'MacroKeyProduction.inc': menu[menu.index('NSString *getKeyEquivalentFromString('):],
+    'TSAppDelegate.m': delegate,
 }
+def quit_gate_inc(delegate_text):
+    start = delegate_text.index('- (NSApplicationTerminateReply)applicationShouldTerminate:')
+    method = delegate_text[start:delegate_text.index('- (void)applicationWillTerminate:', start)]
+    ask = 'if (![[TSMacroEditor sharedInstance] prepareMacrosBeforeTermination])\n        return NSTerminateCancel;'
+    replace = 'if (![TSTeXRootReplaceGuard isApplying])'
+    # The ask has to win before Replace All decides whether quitting waits.
+    if ask in method and replace in method and method.index(ask) < method.index(replace):
+        return 'static void CheckQuitGate(void) {\n    puts("PASS: quitting asks before the other termination checks");\n}\n'
+    return ('static void CheckQuitGate(void) {\n'
+            '    REQUIRE(0 && "applicationShouldTerminate asks, and cancelling that cancels quitting, before the other checks");\n'
+            '}\n')
 def run_case(name, changes=()):
     sources = dict(parts)
     sources['TSKeyboardShortcuts.m'] = production_source(root)
@@ -32,13 +50,14 @@ def run_case(name, changes=()):
     with tempfile.TemporaryDirectory(prefix='texshop-macro-conflicts-') as td:
         for filename, value in sources.items():
             (Path(td) / filename).write_text(value)
+        (Path(td) / 'QuitGate.inc').write_text(quit_gate_inc(sources['TSAppDelegate.m']))
         binary = Path(td) / 'conflicts'
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-Wno-incomplete-implementation',
                         '-Wno-deprecated-declarations', '-Wno-nullability-completeness', '-framework', 'Cocoa', '-framework', 'Carbon',
                         '-I', td, *include_args(root),
                         str(root / 'Tests/MacroShortcutConflicts.m'),
                         str(root / 'Sources/Macros/TSMacroTreeNode.m'), *companion_sources(root), '-o', str(binary)], check=True)
-        result = subprocess.run([str(binary), td], capture_output=True, text=True, timeout=20)
+        result = subprocess.run([str(binary), td], capture_output=True, text=True, timeout=40)
         if changes:
             assert result.returncode != 0 and 'FAIL ' in result.stderr, (name, result.stdout, result.stderr)
             print('DETECTED:', name, result.stderr.strip().splitlines()[-1])
@@ -62,7 +81,7 @@ if '--mutations' in sys.argv:
         'warn on unchanged keys': [(e, 'if (original && [original isEqual:binding]) continue;', 'if (NO) continue;')],
         'ignore save cancellation': [(e, 'if (![self validateMacroShortcutsBeforeSaving]) {\n\t\t\treviewPending = YES;\n\t\t\treturn NO;\n\t\t}', '[self validateMacroShortcutsBeforeSaving];')],
         'ignore field commit refusal': [(e, 'if (![window makeFirstResponder:window]) return;', '[window makeFirstResponder:window];')],
-        'do not remove changed conflicts': [(e, '[nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@""]', '[nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@"F"]')],
+        'do not remove changed conflicts': [(e, '    if (response == NSAlertThirdButtonReturn) {\n        for (NSDictionary *conflict in changed) [nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@""];\n', '    if (response == NSAlertThirdButtonReturn) {\n        for (NSDictionary *conflict in changed) [nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@"F"];\n')],
         'ignore write failure': [(e, 'if (![self saveNodes: [outlineController rootOfTree] toFile: pathStr]) return NO;', '[self saveNodes: [outlineController rootOfTree] toFile: pathStr];')],
         'do not select conflicting macro': [(e, '[outlineView selectItems:@[node] byExtendingSelection:NO];', '[outlineView selectItems:@[] byExtendingSelection:NO];')],
         'no Escape handling': [(k, 'event.keyCode == kVK_Escape', 'event.keyCode == 99')],
@@ -78,8 +97,9 @@ if '--mutations' in sys.argv:
         'monitor never removed': [(k, '@finally { [NSEvent removeMonitor:monitor]; }', '@finally { }')],
         'pending key not restored after preview': [(e, '    [self refreshShortcutConflicts];\n    self.previousItem.key = saved;', '    [self refreshShortcutConflicts];')],
         'accepted macro not recorded as owner (no tooltip for later duplicate)': [(m, '                    self.keyOwners[binding] = @{', '                    if (NO) self.keyOwners[binding] = @{')],
+        'hidden Show All Tabs copy takes the command': [(k, '        if (item.action == NSSelectorFromString(@"toggleTabOverview:") && item.hidden && !item.allowsKeyEquivalentWhenHidden) {\n', '        if (NO) {\n')],
         'close ignores a refused save': [(e, 'if (![self autosaveMacroEdits]) return NO;\n', '[self autosaveMacroEdits];\n')],
-        'attachedSheet guard removed in windowShouldClose': [(e, '    if ([window attachedSheet]) return NO;\n', '')],
+        'attachedSheet guard removed in windowShouldClose': [(e, '    if (sender == self) return YES;\n    if ([window attachedSheet]) return NO;\n', '    if (sender == self) return YES;\n')],
         'macrosAffectedByRestoringAll empty': [(k, '                [result addObjectsFromArray:[self macrosUsingKey:binding.key modifiers:binding.modifiers]];', '                ;')],
         'applyCapturedShortcut ignores macro confirmation refusal': [(k, '        if (!accepted || strongSelf.layoutChanges != changes) { [strongSelf endRecording]; return; }\n        NSString *error = [strongSelf conflictForCapturedShortcut];', '        NSString *error = [strongSelf conflictForCapturedShortcut];')],
         'beginMenuRebuild does not reapply menu keys': [(k, '    self.rebuildingMacros = YES;\n    [self.store refreshMenu];', '    self.rebuildingMacros = YES;')],
@@ -103,6 +123,29 @@ if '--mutations' in sys.argv:
         'refused keys explained as a conflict': [(k, '    if ([conflict[@"refused"] boolValue])\n        return', '    if (NO)\n        return')],
         'saving reports refused keys as conflicts': [(e, '        if ([conflict[@"refused"] boolValue]) continue;\n', '')],
         'leave Shift for dead keys': [(k, 'key.length == 1 &&\n        ![key isEqual:unshifted]', 'key.length == 1 && unshifted.length == 1 &&\n        ![key isEqual:unshifted]')],
+        'hidden Show All Tabs copy is not a command': [(k, '    if (![seen containsObject:@"TSShortcut.toggleTabOverview:.0"] && hiddenTabCopies.count)\n        addCommand(hiddenTabCopies[0], hiddenTabPaths[0]);\n', '')],
+        'system commands can be removed': [(k, '            if (!command.managedBySystem) [removable setObject:command.commandID forKey:command.item];', '            if (YES) [removable setObject:command.commandID forKey:command.item];')],
+        'Cancel confirms removing a shortcut': [(e, '    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];\n    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];', '    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];\n    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];')],
+        'clearing a menu shortcut does not refresh': [(e, '    NSString *error = command ? [store setKey:@"" modifiers:0 forCommand:command] : NSLocalizedString(@"This command is no longer available.", @"");\n    [[TSKeyboardShortcuts sharedController] refreshMenuAndMacros];\n', '    NSString *error = command ? [store setKey:@"" modifiers:0 forCommand:command] : NSLocalizedString(@"This command is no longer available.", @"");\n')],
+        'recording still offers Remove': [(e, '    if (self.recordingItem || message.length == 0 || !self.previousItem) return nil;', '    if (message.length == 0 || !self.previousItem) return nil;')],
+        'any status text offers Remove': [(e, '    if (!reason.length || ![message isEqualToString:reason]) return nil;', '    if (!reason.length) return nil;')],
+        'yielding defaults stay reserved': [(k, '        NSString *commandID = entry[@"commandID"];\n        if (commandID && [TSYieldingDefaultCommands() containsObject:commandID] && !self.overrides[commandID]) continue;\n', '')],
+        'removing a menu shortcut leaves the macro unsaved': [(e, '    // The menu key is gone. Write the macro, and ask again only if another conflict remains.\n    reviewPending = NO;\n    [self autosaveMacroEdits];', '    // The menu key is gone. Write the macro, and ask again only if another conflict remains.\n    [self autosaveMacroEdits];')],
+        'a failed automatic save asks again': [(e, '\t\tif (coalesceWriteAlerts && reportedWriteFailure) return NO;\n', '')],
+        'sent back to editing asks on the next automatic save': [(e, '\t\tif (pending.count) return NO;\n', '')],
+        'closing does not ask again': [(e, '    [self reflectChangesInEditor:YES];\n    reviewPending = NO;\n    reportedWriteFailure = NO;\n    if (![self autosaveMacroEdits]) return NO;\n', '    [self reflectChangesInEditor:YES];\n    reportedWriteFailure = NO;\n    if (![self autosaveMacroEdits]) return NO;\n')],
+        'Save Anyway does not remember the key': [(e, '\t\t[self rememberOriginalShortcutKeys];\n', '')],
+        'close never finishes': [(e, '- (BOOL)windowShouldClose:(id)sender\n{\n    if (sender == self) return YES;\n', '- (BOOL)windowShouldClose:(id)sender\n{\n    return NO;\n    if (sender == self) return YES;\n')],
+        'quit does not ask again after Return to Editing': [(e, '    if (!dataTouched) return YES;\n    reviewPending = NO;\n    reportedWriteFailure = NO;\n    return [self autosaveMacroEdits];\n', '    if (!dataTouched) return YES;\n    reportedWriteFailure = NO;\n    return [self autosaveMacroEdits];\n')],
+        'closing stays quiet after a write failure': [(e, '    [self reflectChangesInEditor:YES];\n    reviewPending = NO;\n    reportedWriteFailure = NO;\n    if (![self autosaveMacroEdits]) return NO;\n', '    [self reflectChangesInEditor:YES];\n    reviewPending = NO;\n    if (![self autosaveMacroEdits]) return NO;\n')],
+        'a successful save leaves the next failure quiet': [(e, '\t\tdataTouched = NO;\n\t\tsaved = YES;\n\t\treportedWriteFailure = NO;\n', '\t\tdataTouched = NO;\n\t\tsaved = YES;\n')],
+        'quit notification keeps a displaced key': [(e, '    for (NSDictionary *conflict in changed) {\n        [nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@""];\n    }\n', '')],
+        'applicationShouldTerminate does not ask': [('TSAppDelegate.m', '    if (![[TSMacroEditor sharedInstance] prepareMacrosBeforeTermination])\n        return NSTerminateCancel;\n', '')],
+        'pending shortcut is not saved': [(e, '    [self updatePendingShortcutStatus];\n    [self reflectChangesInEditor:YES];\n    [self autosaveMacroEdits];\n', '    [self updatePendingShortcutStatus];\n    [self reflectChangesInEditor:YES];\n')],
+        'name edit is not saved': [(e, '\tnameTouched = YES;\n\t[self reflectChangesInEditor: YES];\n\t[self autosaveMacroEdits];\n', '\tnameTouched = YES;\n\t[self reflectChangesInEditor: YES];\n')],
+        'content edit is not saved': [(e, '\t\tcontentTouched = NO;\n\t}\n\t[self autosaveMacroEdits];\n', '\t\tcontentTouched = NO;\n\t}\n')],
+        'selection change is not saved': [(e, '\t[self endShortcutRecordingUnlessSelected];\n\t[self reflectChangesInEditor: NO];\n\t[self autosaveMacroEdits];\n', '\t[self endShortcutRecordingUnlessSelected];\n\t[self reflectChangesInEditor: NO];\n')],
+        'list change is not saved': [(e, '    [self refreshShortcutConflicts];\n\t[self autosaveMacroEdits];\n', '    [self refreshShortcutConflicts];\n')],
     }
     for name, changes in cases.items():
         if "--shift-only" not in sys.argv or name=="ignore Shift on both comparison sides": run_case(name, changes)

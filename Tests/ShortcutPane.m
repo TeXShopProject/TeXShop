@@ -199,7 +199,7 @@ static void CheckKeySearchDisplayMatchesMenu(void) {
  void (^requireColumn)(NSString *,NSString *,BOOL (^)(TSShortcutMatch *))=^(NSString *name,NSString *expected,BOOL (^select)(TSShortcutMatch *match)) {
   NSString *column=ShortcutColumnText(pane,select);
   if (column==nil || ![column isEqual:expected] || ![pane.search.stringValue isEqual:column]) {
-   fprintf(stderr,"FAIL display %s: menu %s field %s expected %s matches %lu\n",name.UTF8String,column.UTF8String ?: "(none)",pane.search.stringValue.UTF8String,expected.UTF8String,(unsigned long)pane.searchMatches.count);
+   fprintf(stderr,"FAIL: display %s: menu %s field %s expected %s matches %lu\n",name.UTF8String,column.UTF8String ?: "(none)",pane.search.stringValue.UTF8String,expected.UTF8String,(unsigned long)pane.searchMatches.count);
    exit(1);
   }
   shown++;
@@ -288,6 +288,23 @@ static void CheckKeySearchDisplayMatchesMenu(void) {
  requireColumn(@"winner pipe",@"⌘|",^BOOL(TSShortcutMatch *match){ return match.menuItem==alias && match.winner; });
  REQUIRE([ShortcutColumnText(pane,^BOOL(TSShortcutMatch *match){ return match.menuItem==pattern; }) isEqual:@"⇧⌘\\"]);
  [menu removeItem:alias];
+ // A refused macro is not a winner. The field still follows the row the list selects.
+ {
+  TSShortcutMacro *refusedYen=Macro(@"refused yen",@"\u00a5",S,92);
+  macros=@[refusedYen];
+  SetShownKey(macroItem,@"\u00a5",S); macroItem.identifier=TSMacroItemIdentifier(refusedYen.indexPath);
+  search(@"|",@"\u00a5",S);
+  NSString *menuYen=[TSShortcutStore displayKey:@"\u00a5" modifiers:S];
+  requireColumn(@"refused yen",menuYen,^BOOL(TSShortcutMatch *match){ return match.macro==refusedYen && !match.winner; });
+  REQUIRE(pane.searchMatches.count==1 && !pane.searchMatches[0].winner && [pane.search.stringValue isEqual:menuYen]);
+  TSShortcutMacro *refusedDigit=Macro(@"refused digit",@"2",S,93);
+  macros=@[refusedDigit];
+  SetShownKey(macroItem,@"2",S); macroItem.identifier=TSMacroItemIdentifier(refusedDigit.indexPath);
+  search(@"@",@"2",S);
+  requireColumn(@"refused digit",@"⇧2",^BOOL(TSShortcutMatch *match){ return match.macro==refusedDigit && !match.winner; });
+  REQUIRE(pane.searchMatches.count==1 && [pane.search.stringValue isEqual:@"⇧2"]);
+ }
+ macros=@[]; SetShownKey(macroItem,@"",0);
  SetShownKey(pattern,@"",0);
  for (NSMenuItem *item in @[letter,equals,digit,backslash,yen]) [menu addItem:item];
  // Commands, whose column is the store's display of the menu key.
@@ -331,6 +348,8 @@ static void CheckKeySearchDisplayMatchesMenu(void) {
 // The arrow sits between the status words and the link, and that group shares the guide's center.
 static void RequireSystemSettingsLine(TSShortcutPaneController *pane) {
   REQUIRE(!pane.systemSettingsArrow.hidden && !pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
+  REQUIRE(![NSAccessibilityUnignoredChildren(pane.systemSettingsArrow.superview.accessibilityChildren) containsObject:pane.systemSettingsArrow.cell]);
+  REQUIRE(!pane.systemSettingsArrow.cell.accessibilityElement);
   REQUIRE([pane.systemSettingsArrow.stringValue isEqual:@"→"]);
   [pane.view layoutSubtreeIfNeeded];
   NSRect statusWords=[pane.statusText convertRect:pane.statusText.bounds toView:pane.view];
@@ -635,7 +654,10 @@ int main(int argc,char **argv){@autoreleasepool{
  fixtureCharacters=@"]";REQUIRE([shell.window performKeyEquivalent:Event(@"6",C|O,22)] && [shell.history.currentIdentifier isEqual:TSSettingsCategoryKeyboard]);
  pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];fixtureCharacters=@"[";
  [shell.window performKeyEquivalent:Event(@"5",C|O,23)];REQUIRE([shell.history.currentIdentifier isEqual:TSSettingsCategoryKeyboard]);
- __block TSShortcutMacro *shown=nil;coordinator.showMacro=^(TSShortcutMacro *macro){shown=macro;};fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];[pane showSelectedMacro:nil];REQUIRE(shown==macros[1] && !pane.searchingByKey);
+ __block TSShortcutMacro *shown=nil;coordinator.showMacro=^(TSShortcutMacro *macro){shown=macro;};fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];
+ REQUIRE(pane.table.selectedRow>=0 && [pane matchAtRow:pane.table.selectedRow].macro!=nil);
+ REQUIRE(pane.systemSettingsArrow.hidden && pane.systemSettingsLink.hidden && pane.systemSettingsGuide.hidden);
+ [pane showSelectedMacro:nil];REQUIRE(shown==macros[1] && !pane.searchingByKey);
  puts("PASS: embedded pane, function/key search, all command keys intercepted, five exits, macro rows and Option-bracket navigation");
  TSReplaceTestMethod(class_getInstanceMethod(NSAlert.class,@selector(beginSheetModalForWindow:completionHandler:)),(IMP)CaptureSheet);
  // Parented asynchronous confirmation cannot write before the user answers.
@@ -879,6 +901,15 @@ int main(int argc,char **argv){@autoreleasepool{
      minimizeAll.hidden=YES;[pane reloadCommands];REQUIRE(pane.functionRows.count==0 && pane.table.numberOfRows==0);
      minimizeAll.allowsKeyEquivalentWhenHidden=YES;[pane reloadCommands];REQUIRE(pane.functionRows.count==1 && pane.functionRows[0].item==minimizeAll);
      minimizeAll.allowsKeyEquivalentWhenHidden=NO;minimizeAll.hidden=NO;
+     NSMenuItem *noKey=[[NSMenuItem alloc] initWithTitle:@"No Key Item" action:@selector(arrangeInFront:) keyEquivalent:@""];
+     [first.menu addItem:noKey];
+     NSMenuItem *macroRowItem=[[NSMenuItem alloc] initWithTitle:@"Macro Item" action:TSMacroAction() keyEquivalent:@"q"];
+     macroRowItem.keyEquivalentModifierMask=C;[first.menu addItem:macroRowItem];
+     pane.search.stringValue=@"No Key Item";[pane reloadCommands];
+     REQUIRE(pane.functionRows.count==0 && noKey.action!=nil);
+     pane.search.stringValue=@"Macro Item";[pane reloadCommands];
+     REQUIRE(pane.functionRows.count==0 && macroRowItem.action!=nil);
+     [first.menu removeItem:noKey];[first.menu removeItem:macroRowItem];
      pane.search.stringValue=@"";[pane reloadCommands];
      if(wasKey){pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];}
     }

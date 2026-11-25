@@ -407,7 +407,7 @@ static void TSContentWidthFinish(TSContentWidthJob *job)
             result = TSContentWidthResultRetry;
         else if (atomic_load(&job->notesDenied)) {
             // Slots already drawn stay in this job. PDFKit measures the document instead.
-            // This is not a draw failure, so a later generation can try the workers again.
+            // The denial stays on this document, so a later generation does not try the workers again.
             TSContentWidthState(job.document)[@"noteDecision"] = @(TSContentWidthScanDeny);
             result = TSContentWidthResultPDFKit;
         } else if (atomic_load(&job->failed) || atomic_load(&job->ineligible)) {

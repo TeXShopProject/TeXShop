@@ -113,7 +113,7 @@ BOOL TSDocumentWindowsUseFullSizeContent(void)
 
 // underToolbar is the macOS 26 full-size content view: the pages or the text scroll
 // under the title bar and the toolbar. Without it the content view starts below the
-// toolbar, and a line is drawn at the bottom of the toolbar.
+// toolbar, and the nib's separator is left as it was.
 static void TSDocumentWindowPrepareChrome(NSWindow *window, BOOL underToolbar)
 {
     if (!window)
@@ -141,8 +141,6 @@ static void TSDocumentWindowPrepareChrome(NSWindow *window, BOOL underToolbar)
         }
         [window setFrame:frame display:NO];
     }
-    if (!underToolbar)
-        window.titlebarSeparatorStyle = NSTitlebarSeparatorStyleLine;
 }
 
 void TSDocumentWindowPrepare(NSWindow *window)
@@ -152,7 +150,19 @@ void TSDocumentWindowPrepare(NSWindow *window)
 
 void TSDocumentWindowPrepareSolidToolbar(NSWindow *window)
 {
-    TSDocumentWindowPrepareChrome(window, NO);
+    TSDocumentWindowPrepare(window);
+}
+
+void TSDocumentWindowPrepareTrio(NSWindow *textWindow, NSWindow *previewWindow, NSWindow *combinedWindow)
+{
+    for (NSWindow *window in @[textWindow ?: (id)NSNull.null, previewWindow ?: (id)NSNull.null, combinedWindow ?: (id)NSNull.null]) {
+        if (![window isKindOfClass:[NSWindow class]])
+            continue;
+        if (window == previewWindow)
+            TSDocumentWindowPrepareSolidToolbar(window);
+        else
+            TSDocumentWindowPrepare(window);
+    }
 }
 
 CGFloat TSDocumentWindowHiddenTop(NSView *view)
