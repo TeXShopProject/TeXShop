@@ -4,10 +4,64 @@
  */
 
 #import "TSDocumentWindowGlass.h"
+#import <objc/message.h>
 #import <objc/runtime.h>
 
 static const void *TSDrawerBaseOffsetKey = &TSDrawerBaseOffsetKey;
 static const void *TSPreparedWindowKey = &TSPreparedWindowKey;
+static const void *TSSolidToolbarKey = &TSSolidToolbarKey;
+static const void *TSSolidPocketKey = &TSSolidPocketKey;
+
+// On macOS 26 and later the title bar samples a page that has scrolled up to it,
+// so the toolbar takes on the page color. Preview.app keeps that bar a solid
+// color. AppKit stores the choice on a private pocket in the title bar. The
+// selectors are checked at runtime and do nothing if this system does not have them.
+static BOOL TSPocketIsSolid(id pocket)
+{
+    SEL getter = sel_registerName("prefersSolidColorHardPocket");
+    if (![pocket respondsToSelector:getter])
+        return NO;
+    return ((BOOL (*)(id, SEL))objc_msgSend)(pocket, getter);
+}
+
+static NSView *TSTitlebarPocket(NSWindow *window)
+{
+    Class pocketClass = NSClassFromString(@"NSScrollPocket");
+    if (!pocketClass)
+        return nil;
+    NSView *root = window.contentView;
+    while (root.superview)
+        root = root.superview;
+    if (!root)
+        return nil;
+    NSMutableArray<NSView *> *views = [NSMutableArray arrayWithObject:root];
+    for (NSUInteger index = 0; index < views.count; index++) {
+        NSView *view = views[index];
+        for (NSView *subview in view.subviews)
+            [views addObject:subview];
+        if ([view isKindOfClass:pocketClass] && view.frame.size.height >= 10)
+            return view;
+    }
+    return nil;
+}
+
+static void TSDocumentWindowSolidifyTitlebarPocket(NSWindow *window)
+{
+    if (!window || !objc_getAssociatedObject(window, TSSolidToolbarKey))
+        return;
+    if (@available(macOS 26.0, *)) {
+        NSView *pocket = objc_getAssociatedObject(window, TSSolidPocketKey);
+        if (pocket.window == window && TSPocketIsSolid(pocket))
+            return;
+        pocket = TSTitlebarPocket(window);
+        if (!pocket)
+            return;
+        SEL setter = sel_registerName("setPrefersSolidColorHardPocket:");
+        if ([pocket respondsToSelector:setter])
+            ((void (*)(id, SEL, BOOL))objc_msgSend)(pocket, setter, YES);
+        objc_setAssociatedObject(window, TSSolidPocketKey, pocket, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
 
 // The height of the band of the content view that lies under the title bar and the toolbar.
 static CGFloat TSHiddenTopBand(NSWindow *window)
@@ -128,6 +182,12 @@ static void TSDocumentWindowPrepareChrome(NSWindow *window, BOOL underToolbar)
         for (NSNotificationName name in @[NSWindowDidEnterFullScreenNotification, NSWindowDidExitFullScreenNotification])
             [NSNotificationCenter.defaultCenter addObserverForName:name object:nil queue:nil
                                                         usingBlock:^(NSNotification *notification) { TSDocumentWindowPlaceDrawers(notification.object); }];
+        // The title-bar pocket appears when the window is shown, which can be after preparation.
+        [NSNotificationCenter.defaultCenter addObserverForName:NSWindowDidUpdateNotification object:nil queue:nil
+                                                    usingBlock:^(NSNotification *notification) {
+            if ([notification.object isKindOfClass:NSWindow.class])
+                TSDocumentWindowSolidifyTitlebarPocket(notification.object);
+        }];
     });
     BOOL hasFullSize = (window.styleMask & NSWindowStyleMaskFullSizeContentView) != 0;
     if (hasFullSize != underToolbar) {
@@ -150,7 +210,16 @@ void TSDocumentWindowPrepare(NSWindow *window)
 
 void TSDocumentWindowPrepareSolidToolbar(NSWindow *window)
 {
-    TSDocumentWindowPrepare(window);
+    // The page stays below the toolbar, so it does not show through the glass.
+    // On macOS 26 and later Preview.app ends that toolbar with a hard edge and
+    // no line. Earlier systems leave the nib's separator.
+    TSDocumentWindowPrepareChrome(window, NO);
+    if (!window)
+        return;
+    objc_setAssociatedObject(window, TSSolidToolbarKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (@available(macOS 26.0, *))
+        window.titlebarSeparatorStyle = NSTitlebarSeparatorStyleNone;
+    TSDocumentWindowSolidifyTitlebarPocket(window);
 }
 
 void TSDocumentWindowPrepareTrio(NSWindow *textWindow, NSWindow *previewWindow, NSWindow *combinedWindow)

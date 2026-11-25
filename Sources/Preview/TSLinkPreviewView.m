@@ -730,8 +730,8 @@ static NSRect TSLinkPreviewFitSource(NSRect source, NSRect bounds)
 {
     PDFView *owner = [self ownerPDFView];
     NSPoint point = owner ? [owner convertPoint:event.locationInWindow fromView:nil] : NSZeroPoint;
-    // A view that does not clip has a visible rect beyond its bounds, up to the toolbar, and
-    // on macOS 26 and later the preview itself runs under the toolbar (#44).
+    // A view that does not clip has a visible rect beyond its bounds, up to the toolbar.
+    // A point in the band under the toolbar belongs to the toolbar (#44).
     if (owner && owner.window == event.window && NSPointInRect(point, NSIntersectionRect(owner.bounds, owner.visibleRect))
         && !TSDocumentWindowPointIsUnderToolbar(event.window, event.locationInWindow)
         && [owner respondsToSelector:@selector(showToolCursorOutsideLinkPreviewWithEvent:)])
