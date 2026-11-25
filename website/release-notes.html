@@ -123,12 +123,12 @@
 <li>Clicking an entry of the outline in the drawer goes to its page again after the Preview window is closed and opened again, and after a new document is typeset for the first time. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/59">#59</a>).</li>
 <li>A closed Preview window opens again at the same place, with Command-1 or after typesetting, and with its pinned link previews if the PDF has not changed. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/70">#70</a>).</li>
 <li>When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and each Preview window comes back as before. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/71">#71</a>).</li>
-<li>Fit to Content Width works for a long document, once. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/62">#62</a>).</li>
-<li>While the Preview is active, the Find commands use the search of the Preview.</li>
-<li>On macOS 26 and later, a Preview window has its pages below the toolbar.</li>
+<li>Fit to Content Width fits a long document in one step. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/62">#62</a>).</li>
+<li>Fix the Find commands so they use the search of the Preview while it is active.</li>
+<li>Fix Preview pages that were drawn under the toolbar on macOS 26 and later.</li>
 <li>Command-click on the title of a Preview window opens its path menu again (<a href="https://github.com/TeXShopProject/TeXShop/issues/73">#73</a>).</li>
 <li>Holding Command with a dead key no longer makes the Preview crash. Images in the Preview stay as before.</li>
-<li>A file named Only.PDF opens as a PDF when the extension is written in capital letters.</li>
+<li>Fix opening a PDF file whose extension is written in capital letters, such as Only.PDF.</li>
 </ul>
 <h3 id="v6.00-fixes-opening-and-saving-documents">Fixes: opening and saving documents</h3>
 <ul>
@@ -149,7 +149,7 @@
 <li>Fix a crash when a setting or file that TeXShop reads is missing or damaged, such as a font that was removed or a damaged macros file, or when you sync from a page without SyncTeX information. The Previous Page and Next Page buttons of an image window turn its pages.</li>
 <li>Fix text that was cut off or drawn over other text, buttons and menus that did not work, texts left in English, and wrong names and words, in some languages.</li>
 <li>Replace All in the Advanced Find panel no longer moves the source. Reported by <a href="https://github.com/ralphrmartin">Ralph Martin</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/72">#72</a>).</li>
-<li>A new source has the text color as you type.</li>
+<li>Fix the text color of a new window, which was not the theme color for a moment after it opened.</li>
 </ul>
 <h3 id="v6.00-manual-help-and-bundled-tools">Manual, help and bundled tools</h3>
 <ul>

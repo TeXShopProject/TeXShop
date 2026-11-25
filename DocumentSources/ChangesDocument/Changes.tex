@@ -155,12 +155,12 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Clicking an entry of the outline in the drawer goes to its page again after the Preview window is closed and opened again, and after a new document is typeset for the first time. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/59}{\#59}).
 \item A closed Preview window opens again at the same place, with Command-1 or after typesetting, and with its pinned link previews if the PDF has not changed. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/70}{\#70}).
 \item When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and each Preview window comes back as before. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/71}{\#71}).
-\item Fit to Content Width works for a long document, once. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/62}{\#62}).
-\item While the Preview is active, the Find commands use the search of the Preview.
-\item On macOS 26 and later, a Preview window has its pages below the toolbar.
+\item Fit to Content Width fits a long document in one step. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/62}{\#62}).
+\item Fix the Find commands so they use the search of the Preview while it is active.
+\item Fix Preview pages that were drawn under the toolbar on macOS 26 and later.
 \item Command-click on the title of a Preview window opens its path menu again (\href{https://github.com/TeXShopProject/TeXShop/issues/73}{\#73}).
 \item Holding Command with a dead key no longer makes the Preview crash. Images in the Preview stay as before.
-\item A file named Only.PDF opens as a PDF when the extension is written in capital letters.
+\item Fix opening a PDF file whose extension is written in capital letters, such as Only.PDF.
 \end{itemize}
 
 \subsection{Fixes: opening and saving documents}
@@ -185,7 +185,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Fix a crash when a setting or file that TeXShop reads is missing or damaged, such as a font that was removed or a damaged macros file, or when you sync from a page without SyncTeX information. The Previous Page and Next Page buttons of an image window turn its pages.
 \item Fix text that was cut off or drawn over other text, buttons and menus that did not work, texts left in English, and wrong names and words, in some languages.
 \item Replace All in the Advanced Find panel no longer moves the source. Reported by \href{https://github.com/ralphrmartin}{Ralph Martin} (\href{https://github.com/TeXShopProject/TeXShop/issues/72}{\#72}).
-\item A new source has the text color as you type.
+\item Fix the text color of a new window, which was not the theme color for a moment after it opened.
 \end{itemize}
 
 \subsection{Manual, help and bundled tools}
