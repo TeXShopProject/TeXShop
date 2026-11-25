@@ -190,8 +190,8 @@
 "Show in Macro Editor" = "Afișați în Editorul de Macro";
 "Assigned" = "Atribuit";
 "Cannot Be Changed" = "Neschimbabil";
-"[Change in System Settings…]" = "[Schimbați în Configurări Sistem…]";
-"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "Alegeți „Scurtături aplicații” în bara laterală. Dacă pagina Tastatură este încă deschisă, deschideți mai întâi „Scurtături din tastatură…”.";
+"Change in System Settings…" = "Schimbați în Configurări Sistem…";
+"To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Pentru a schimba în Configurări Sistem, alegeți „Scurtături aplicații” în bara laterală.";
 "Inactive for this key" = "Inactiv pentru această tastă";
 "No command uses this key." = "Nicio comandă nu folosește această tastă.";
 "Press a key" = "Apăsați o tastă";

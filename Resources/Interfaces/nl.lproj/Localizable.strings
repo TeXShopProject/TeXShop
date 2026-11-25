@@ -187,8 +187,8 @@
 "Show in Macro Editor" = "Toon in macro-editor";
 "Assigned" = "Toegewezen";
 "Cannot Be Changed" = "Niet wijzigbaar";
-"[Change in System Settings…]" = "[Wijzigen in Systeeminstellingen…]";
-"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "Kies ‘Apps’ in de navigatiekolom. Als de toetsenbordpagina nog open is, open dan eerst ‘Toetscombinaties…’.";
+"Change in System Settings…" = "Wijzigen in Systeeminstellingen…";
+"To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Om dit in Systeeminstellingen te wijzigen, kies je ‘Apps’ in de navigatiekolom.";
 "Inactive for this key" = "Inactief voor deze toets";
 "No command uses this key." = "Geen commando gebruikt deze toets.";
 "Press a key" = "Druk op een toets";

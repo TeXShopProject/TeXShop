@@ -226,8 +226,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     self.status.arrangedSubviews[0].hidden = YES;
     self.systemSettingsLink = [self systemSettingsLinkField];
     self.systemSettingsGuide = [self systemSettingsGuideField];
+    // Beside the status words, on that line. Hidden, it leaves the line as it was.
+    [self.status addArrangedSubview:self.systemSettingsLink];
+    [self.status setCustomSpacing:12 afterView:self.statusText];
     // Hidden rows leave this column the height of the status line alone.
-    NSStackView *statusColumn = [NSStackView stackViewWithViews:@[self.status, self.systemSettingsLink, self.systemSettingsGuide]];
+    NSStackView *statusColumn = [NSStackView stackViewWithViews:@[self.status, self.systemSettingsGuide]];
     statusColumn.orientation = NSUserInterfaceLayoutOrientationVertical;
     statusColumn.alignment = NSLayoutAttributeCenterX;
     statusColumn.spacing = 2;
@@ -325,9 +328,12 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     if (row < 0 || row >= (NSInteger)self.functionRows.count) return nil;
     return self.functionRows[(NSUInteger)row];
 }
-// Gray rows of the function list have no shortcut Settings can restore. Key search says so on the row.
-- (BOOL)selectedFunctionRowCannotChange {
-    if (self.searchingByKey && self.searchEvent != nil) return NO;
+// A selected function-search row, or a selected key-search row, whose shortcut Settings cannot record.
+- (BOOL)selectedRowCannotChange {
+    if (self.searchingByKey && self.searchEvent != nil) {
+        TSShortcutMatch *match = [self matchAtRow:self.table.selectedRow];
+        return match != nil && match.macro == nil && (match.command == nil || match.command.managedBySystem);
+    }
     TSShortcutFunctionRow *row = [self functionRowAtIndex:self.table.selectedRow];
     return row != nil && (row.command == nil || row.command.managedBySystem);
 }
@@ -866,35 +872,38 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 }
 // Keyboard Shortcuts opens from this anchor. App Shortcuts is a section inside that window and has no anchor:
 // x-apple.systempreferences:...?applications stays on the Keyboard page. An unknown anchor does the same,
-// so the guide names the sidebar item and the Keyboard Shortcuts button.
+// The guide only names App Shortcuts. This anchor already opens the Keyboard Shortcuts sheet.
 - (NSURL *)systemShortcutSettingsURL {
     return [NSURL URLWithString:@"x-apple.systempreferences:com.apple.Keyboard-Settings.extension?Shortcuts"];
 }
 - (NSTextField *)systemSettingsLinkField {
     NSFont *font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
-    NSString *title = NSLocalizedString(@"[Change in System Settings…]", @"");
+    NSString *title = NSLocalizedString(@"Change in System Settings…", @"");
     NSTextField *link = [NSTextField labelWithString:title];
     link.identifier = @"shortcut.system-settings";
     link.font = font;
-    link.alignment = NSTextAlignmentCenter;
+    link.alignment = NSTextAlignmentNatural;
     link.selectable = YES;
     link.editable = NO;
     link.allowsEditingTextAttributes = YES;
     link.drawsBackground = NO;
     link.bordered = NO;
     link.hidden = YES;
+    [link setContentHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [link setContentCompressionResistancePriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
     NSMutableAttributedString *styled = [link.attributedStringValue mutableCopy];
     NSRange whole = NSMakeRange(0, styled.length);
     [styled addAttribute:NSFontAttributeName value:font range:whole];
-    // A foreground color would replace the link color. NSWorkspace opens this URL with no permission prompt.
+    // A foreground color would replace the link color, and an underline is drawn in that color. NSWorkspace opens this URL with no permission prompt.
     [styled removeAttribute:NSForegroundColorAttributeName range:whole];
     [styled addAttribute:NSLinkAttributeName value:[self systemShortcutSettingsURL] range:whole];
-    [styled addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:whole];
+    [styled addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleNone) range:whole];
     link.attributedStringValue = styled;
     return link;
 }
 - (NSTextField *)systemSettingsGuideField {
-    NSTextField *guide = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first.", @"")];
+    // Conditional, so it describes the link rather than telling everyone to change the shortcut.
+    NSTextField *guide = [NSTextField wrappingLabelWithString:NSLocalizedString(@"To change it in System Settings, choose “App Shortcuts” in the sidebar.", @"")];
     guide.identifier = @"shortcut.system-settings-guide";
     guide.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     guide.textColor = NSColor.secondaryLabelColor;
@@ -911,14 +920,14 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     if (width > 80 && fabs(self.systemSettingsGuide.preferredMaxLayoutWidth - width) > 0.5)
         self.systemSettingsGuide.preferredMaxLayoutWidth = width;
 }
-// The line under the list: why a recorded key was refused, that a gray row of the function list cannot
-// be changed, or otherwise the selected command's default.
+// The line under the list: why a recorded key was refused, that the selected function-search or
+// key-search row cannot be changed, or otherwise the selected command's default.
 - (void)updateStatus {
     if (self.statusText == nil) { return; }
     NSString *error = self.editingCommand != nil ? self.recordingError : nil;
     TSShortcutCommand *command = self.editingCommand ?: [self selectedCommand];
     NSString *text = error;
-    if (text == nil && self.editingCommand == nil && [self selectedFunctionRowCannotChange])
+    if (text == nil && self.editingCommand == nil && [self selectedRowCannotChange])
         text = NSLocalizedString(@"Cannot Be Changed", @"");
     if (text == nil && command != nil) {
         TSShortcutBinding *shownDefault = [self.store shownDefaultForCommand:command];
@@ -928,7 +937,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     // A blank line keeps the list and the buttons where they are.
     self.statusText.stringValue = text.length ? text : @" ";
     self.status.arrangedSubviews[0].hidden = error == nil;
-    BOOL showSystemSettings = self.systemSettingsLink != nil && error == nil && self.editingCommand == nil && [self selectedFunctionRowCannotChange];
+    BOOL showSystemSettings = self.systemSettingsLink != nil && error == nil && self.editingCommand == nil && [self selectedRowCannotChange];
     self.systemSettingsLink.hidden = !showSystemSettings;
     self.systemSettingsGuide.hidden = !showSystemSettings;
 }
