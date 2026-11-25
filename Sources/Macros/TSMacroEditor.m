@@ -140,6 +140,9 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		nameTouched = NO;
 		contentTouched = NO;
 		keyTouched = NO;
+		reviewPending = NO;
+		macrosBackedUp = NO;
+		writingMacros = NO;
 		// set up menu items
 		NSMenu *macroMenu = [[[NSApp mainMenu] itemWithTitle:
 					NSLocalizedString(@"Macros", @"Macros")] submenu];
@@ -550,8 +553,9 @@ static const NSSize TSMacroContentsInset = {8, 8};
     [self layoutShortcutStatusInBand:NSMakeRect(TSDialogMargin, NSMinY(status), width - 2 * TSDialogMargin, NSHeight(status))];
     self.editorView = main;
     // The buttons as the Multiple Replace window's: AppKit's own style at its own height, 20
-    // points above the bottom edge. Save is the default button (Return), Cancel takes
-    // Escape; in the contents both keys stay with the text (keyForContents:).
+    // points above the bottom edge. Save and Cancel are removed (layoutDialogButtons);
+    // Test is the button at the trailing edge. In the contents, Return, Enter and Escape
+    // stay with the text (keyForContents:).
     for (NSButton *button in @[saveButton, cancelButton, testButton]) {
         button.bezelStyle = NSBezelStyleAutomatic;
         NSRect frame = button.frame;
@@ -559,10 +563,9 @@ static const NSSize TSMacroContentsInset = {8, 8};
         frame.origin.y = TSDialogMargin;
         button.frame = frame;
     }
-    saveButton.keyEquivalent = @"\r";
-    cancelButton.keyEquivalent = @"\033";
     [self layoutDialogButtons];
-    // As narrow as the fields and the buttons allow: what the nib's window allowed for the fields.
+    // As narrow as the fields allow, and still wide enough for the warning in its four lines.
+    // That width is the old Save, Cancel and Test row: a lone Test button is narrower than the warning.
     CGFloat narrowest = MAX(MAX(editor.minSize.width, editor.contentMinSize.width) + widened,
                             TSDialogButtonsWidth(@[saveButton, cancelButton], @[testButton]));
     NSView *pane = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, width, NSHeight(editor.frame))];
@@ -603,14 +606,14 @@ static const NSSize TSMacroContentsInset = {8, 8};
     }];
     [self syncListControls];
 }
-// Return, Enter and Escape go where the keyboard focus is before the window looks for a
-// button with that key (Save, Cancel), as in Finder and the source:
+// Return, Enter and Escape go where the keyboard focus is, as in Finder and the source:
 // - in the list, Return and Enter start renaming the selected item, and Escape does nothing;
 // - while an item is renamed, Return and Enter keep the new name, Escape keeps the old one;
 // - in the contents, Return and Enter start a new line and Escape completes.
-// Elsewhere (Insert, the buttons) Return saves and Escape cancels. Save also takes Command-S
-// (saveDocument:). While a shortcut is recorded, every key goes to the recording first, Command-S,
-// Command-W and Command-Q too (handleShortcutRecordingEvent:).
+// Elsewhere they do not close the window: there is no Save or Cancel. Command-S writes the
+// macros and leaves the window open (saveDocument:). While a shortcut is recorded, every key
+// goes to the recording first, Command-S, Command-W and Command-Q too
+// (handleShortcutRecordingEvent:).
 - (NSEvent *)keyForContents:(NSEvent *)event
 {
     NSWindow *editor = window;
@@ -966,8 +969,10 @@ static void TSSendButtonAction(NSButton *button)
     if (!self.previousItem.isStandardItem) return;
     self.pendingShortcutKey = key;
     keyTouched = YES;
+    reviewPending = NO;
     [self updatePendingShortcutStatus];
     [self reflectChangesInEditor:YES];
+    [self autosaveMacroEdits];
 }
 // Below the contents, as in the key binding list of Settings › Keyboard: Insert
 // adds a placeholder (shown as a token), and the help button lists them.
@@ -1158,11 +1163,17 @@ static void TSSendButtonAction(NSButton *button)
         [stack.widthAnchor constraintGreaterThanOrEqualToAnchor:child.widthAnchor constant:stack.edgeInsets.left + stack.edgeInsets.right].active = YES;
     return stack;
 }
-// Save is the default button at the trailing edge with Cancel before it; Test,
-// which does not close the window, starts the row at the leading edge.
+// The editor saves as the fields change, as Settings does, so Save and Cancel are not shown.
+// Test, which does not close the window, is the button at the trailing edge.
 - (void)layoutDialogButtons
 {
-    TSLayoutDialogButtons(self.editorView ?: [window contentView], @[saveButton, cancelButton], @[testButton]);
+    for (NSButton *button in @[saveButton, cancelButton]) {
+        button.keyEquivalent = @"";
+        [button removeFromSuperview];
+    }
+    [window setDefaultButtonCell:nil];
+    testButton.keyEquivalent = @"";
+    TSLayoutDialogButtons(self.editorView ?: [window contentView], @[testButton], @[]);
 }
 
 - (void)collectShortcutCandidates:(TSMacroTreeNode *)parent path:(NSString *)path
@@ -1403,33 +1414,36 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
     return NO;
 }
 
-// action for Save button
-- (IBAction)savePressed:(id)sender
+- (NSString *)macroFilePath
 {
-	NSString *pathStr, *defaultPathStr;
-	
-	defaultPathStr = [MacrosPath stringByStandardizingPath];
-	defaultPathStr = [defaultPathStr stringByAppendingPathComponent:@"Macros_Latex"];
-	defaultPathStr = [defaultPathStr stringByAppendingPathExtension:@"plist"];
-	
-	pathStr = [MacrosPath stringByStandardizingPath];
+	NSString *pathStr = [MacrosPath stringByStandardizingPath];
 	switch (g_macroType) {
 		case TexEngine: pathStr = [pathStr stringByAppendingPathComponent:@"Macros_Tex"]; break;
 		case LatexEngine: pathStr = [pathStr stringByAppendingPathComponent:@"Macros_Latex"]; break;
 		case BibtexEngine: pathStr = [pathStr stringByAppendingPathComponent:@"Macros_Bibtex"]; break;
 		case IndexEngine: pathStr = [pathStr stringByAppendingPathComponent:@"Macros_Index"]; break;
 		case MetapostEngine: pathStr = [pathStr stringByAppendingPathComponent:@"Macros_Metapost"]; break;
-	//	case ContextEngine: pathStr = [pathStr stringByAppendingPathComponent:@"Macros_Context"]; break;
 		default: pathStr = [pathStr stringByAppendingPathComponent:@"Macros_Latex"]; break;
 	}
-	pathStr = [pathStr stringByAppendingPathExtension:@"plist"];
-	
-	if (![window makeFirstResponder:window]) return; // finish editing fields
-										//[outlineView deselectAll: sender];
-		[self reflectChangesInEditor: YES];
-		if (dataTouched) {	// save only if data was touched
-            if (![self validateMacroShortcutsBeforeSaving]) return;
-			// mitsu 1.29 (U)-- back up old macro file, so that you can recover it manually if needed
+	return [pathStr stringByAppendingPathExtension:@"plist"];
+}
+// Writes the macros when they have changed and reports whether that finished.
+// A shortcut sent back to editing is not asked about again until it changes, Command-S, or the window closes.
+// The backup beside the file is the macros as this opening found them.
+- (BOOL)autosaveMacroEdits
+{
+	if (!dataTouched || writingMacros) return YES;
+	if (reviewPending) return NO;
+	writingMacros = YES;
+	BOOL saved = NO;
+	@try {
+		if (![self validateMacroShortcutsBeforeSaving]) {
+			reviewPending = YES;
+			return NO;
+		}
+		NSString *pathStr = [self macroFilePath];
+		// mitsu 1.29 (U)-- back up old macro file, so that you can recover it manually if needed
+		if (!macrosBackedUp) {
 			NS_DURING
 				if ([[NSFileManager defaultManager] fileExistsAtPath:pathStr]) {
 					NSString *backupPath = [pathStr stringByDeletingPathExtension];
@@ -1438,19 +1452,33 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 					[[NSFileManager defaultManager] removeItemAtPath:backupPath error:NULL];
 					[[NSFileManager defaultManager] copyItemAtPath:pathStr toPath:backupPath error:NULL];
 				}
-				NS_HANDLER
-					NS_ENDHANDLER
-					// end mitsu 1.29
-					// save the node data to a file
-					if (![self saveNodes: [outlineController rootOfTree] toFile: pathStr]) return;
-					// reload macros
-					[[TSMacroMenuController sharedInstance] reloadMacros: self];
+			NS_HANDLER
+			NS_ENDHANDLER
+			macrosBackedUp = YES;
 		}
-				[window close];
+		// end mitsu 1.29
+		if (![self saveNodes: [outlineController rootOfTree] toFile: pathStr]) return NO;
+		[[TSMacroMenuController sharedInstance] reloadMacros: self];
+		[self rememberOriginalShortcutKeys];
+		dataTouched = NO;
+		saved = YES;
+	} @finally {
+		writingMacros = NO;
+	}
+	return saved;
 }
 
-// File › Save (Command-S) saves the macros, as Save does: the editor is not a document, and
-// without this the document behind it would be saved.
+// Command-S and any leftover Save action write the macros and leave the window open.
+- (IBAction)savePressed:(id)sender
+{
+	if (![window makeFirstResponder:window]) return; // finish editing fields
+	[self reflectChangesInEditor:YES];
+	reviewPending = NO;
+	[self autosaveMacroEdits]; // stay open
+}
+
+// File › Save (Command-S) saves the macros: the editor is not a document, and
+// without this the document behind it would be saved. The window stays open.
 - (IBAction)saveDocument:(id)sender
 {
 	[self savePressed:sender];
@@ -1475,9 +1503,9 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 }
 
 // action for Cancel button
+// The button is removed. A stale nib action must not close the window or drop edits.
 - (IBAction)cancelPressed:(id)sender
 {
-	[window close];
 }
 
 // action for Test button
@@ -1498,12 +1526,21 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 {
 	nameTouched = YES;
 	[self reflectChangesInEditor: YES];
+	[self autosaveMacroEdits];
 }
 
 // delegate method for contentTextView
+// The node takes the text here. reflectChangesInEditor: would copy it back into the view and drop the insertion point.
 - (IBAction)textDidChange:(id)sender
 {
 	contentTouched = YES;
+	if (self.previousItem && [self.previousItem isStandardItem]) {
+		NSString *contentString = savedFilter == kMacJapaneseFilterMode ? filterYenToBackslash([contentTextView string]) : [NSString stringWithString:[contentTextView string]];
+		[self.previousItem setContent:contentString];
+		dataTouched = YES;
+		contentTouched = NO;
+	}
+	[self autosaveMacroEdits];
 }
 
 // The nib's key field and Shift/Option/Control boxes are hidden: the shortcut is recorded in
@@ -1526,6 +1563,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 {
 	[self endShortcutRecordingUnlessSelected];
 	[self reflectChangesInEditor: NO];
+	[self autosaveMacroEdits];
 }
 
 // a method called on "Items changed" (added/removed) notification
@@ -1534,6 +1572,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 	dataTouched = YES;	// user may have changed the order or dropped an item
     [self endShortcutRecording];
     [self refreshShortcutConflicts];
+	[self autosaveMacroEdits];
 }
 
 // interation bewteen outline data and nameField/contentTextView/etc
@@ -1606,34 +1645,24 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 }
 
 // delegate method for window
+// Edits are already stored, or stored now. A conflicting shortcut is asked about once more;
+// refusing it leaves the window open. Nothing is discarded.
 - (BOOL)windowShouldClose:(id)sender
 {
     if (sender == self) return YES;
+    if ([window attachedSheet]) return NO;
     if (![window makeFirstResponder:window]) return NO;
     [self reflectChangesInEditor:YES];
-    if (!dataTouched) return YES;
-    if ([window attachedSheet]) return NO;
-    NSAlert *alert = [NSAlert new];
-    alert.messageText = NSLocalizedString(@"Do you want to save macros?", @"");
-    [alert addButtonWithTitle:NSLocalizedString(@"Save", @"")];
-    [alert addButtonWithTitle:NSLocalizedString(@"Don't Save", @"")];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
-    [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse response) {
-        [alert.window orderOut:nil];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (response == NSAlertFirstButtonReturn) [self savePressed:self];
-            else if (response == NSAlertSecondButtonReturn) [self cancelPressed:self];
-        });
-    }];
-    return NO;
+    reviewPending = NO;
+    if (![self autosaveMacroEdits]) return NO;
+    return YES;
 }
-// Compatibility for any older nib callback; defer until the sheet has gone.
+// Compatibility for any older nib callback. Saving writes the macros; the window is not closed here.
 - (void)saveMacrosSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
         if (returnCode == NSAlertDefaultReturn) [self savePressed:self];
-        else if (returnCode == NSAlertAlternateReturn) [self cancelPressed:self];
     });
 }
 
