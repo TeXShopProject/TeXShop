@@ -40,7 +40,6 @@
 <h3 id="v6.00-advanced-find-panel">詳細検索パネル</h3>
 <ul>
 <li>正規表現を使える新しい検索パネル「詳細検索パネル」が加わりました。「すべて検索」で一致を一覧にし、「すべてハイライト」で本文に示せます。<figure class="note-shot"><img class="shot-light" src="assets/whats-new/ja/advanced-find.png" width="600" height="494" alt="正規表現を入れた詳細検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"><img class="shot-dark" src="assets/whats-new/ja/advanced-find-dark.png" width="600" height="494" alt="正規表現を入れた詳細検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"></figure></li>
-<li>「すべてハイライト」は、正規表現のグループを「すべて検索」の一覧と同じ色で示します。グループの中にあるグループも、その色で示します。グループのないパターンと「複数置換」は、ハイライトの色だけを使います。</li>
 <li>「複数置換」で、登録した検索と置換の組をまとめて適用できるようになりました。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/multiple-replace.png" width="600" height="269" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/multiple-replace-dark.png" width="600" height="269" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"></figure></li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、同じ親ファイルを持つファイル群をまとめて検索・置換できるようになりました。「TeXソースの検索と置換」の窓で、ルートファイルと、それをTEX rootに指定しているTeXソースの一致を一覧にし、置換の前後を確かめてから、バックアップを保存して一度に置換できます（「編集」→「検索」→「同じTEX rootを持つTeXソースを検索…」）（<a href="https://github.com/TeXShopProject/TeXShop/issues/45">#45</a>）。<figure class="note-shot"><a class="shot-light" href="assets/release-notes/ja/texroot-entry-menu.png"><img src="assets/release-notes/ja/texroot-entry-menu.png" width="442" height="520" alt="「編集」メニューの「検索」サブメニューを開き、「同じTEX rootを持つTeXソースを検索…」を選んだところ" loading="lazy"></a><a class="shot-dark" href="assets/release-notes/ja/texroot-entry-menu-dark.png"><img src="assets/release-notes/ja/texroot-entry-menu-dark.png" width="442" height="520" alt="「編集」メニューの「検索」サブメニューを開き、「同じTEX rootを持つTeXソースを検索…」を選んだところ" loading="lazy"></a><figcaption>「編集」→「検索」→「同じTEX rootを持つTeXソースを検索…」</figcaption></figure><figure class="note-shot"><a class="shot-light" href="assets/release-notes/ja/texroot-entry-panel.png"><img src="assets/release-notes/ja/texroot-entry-panel.png" width="649" height="468" alt="詳細検索パネルの「すべて検索」のメニューを開き、「同じTEX rootを持つTeXソースを検索…」を選んだところ" loading="lazy"></a><a class="shot-dark" href="assets/release-notes/ja/texroot-entry-panel-dark.png"><img src="assets/release-notes/ja/texroot-entry-panel-dark.png" width="649" height="469" alt="詳細検索パネルの「すべて検索」のメニューを開き、「同じTEX rootを持つTeXソースを検索…」を選んだところ" loading="lazy"></a><figcaption>詳細検索パネルの「すべて検索」のメニュー</figcaption></figure><figure class="note-shot"><a class="shot-light" href="assets/release-notes/ja/texroot-entry-mr.png"><img src="assets/release-notes/ja/texroot-entry-mr.png" width="800" height="341" alt="複数置換の窓の「すべて置き換え」のメニューを開き、「同じTEX rootを持つTeXソースに適用…」を選んだところ" loading="lazy"></a><a class="shot-dark" href="assets/release-notes/ja/texroot-entry-mr-dark.png"><img src="assets/release-notes/ja/texroot-entry-mr-dark.png" width="800" height="341" alt="複数置換の窓の「すべて置き換え」のメニューを開き、「同じTEX rootを持つTeXソースに適用…」を選んだところ" loading="lazy"></a><figcaption>複数置換の窓の「すべて置き換え」のメニュー</figcaption></figure></li>
 <li>正規表現の早見表を開けるようになり、コンソール、ログ、「実験」のウインドウでも検索できるようになりました。</li>
@@ -107,8 +106,8 @@
 <li><strong>プレビューの矢印キー</strong>：<a href="https://github.com/svb-bit">svb-bit</a>氏の提案により、単ページ・見開き表示では、上下矢印キーでページを送らず、ページの中をスクロールするようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。</li>
 <li><strong>macOSで設定したメニューのショートカット</strong>：macOSの「システム設定」で登録したTeXShopのショートカットは、「設定」→「キーボード」で設定し直してください。</li>
 <li><strong>マクロのショートカット</strong>：マクロのショートカットは、マクロエディタの一覧で設定するようになりました。</li>
-<li><strong>変更できないショートカット</strong>：「機能で検索」には、macOSが加えるメニュー項目がメニューの順に並びます。「すべてをしまう」もその一つです。一覧の下の行は「変更不可」と示します。「キーで検索」でその項目を選んだときも「変更不可」と示します。その行には矢印と「システム設定で変更…」が続き、システム設定のキーボードショートカットを開きます。次の行は、サイドバーで「アプリのショートカット」を選ぶことを示します。リンクのある行と、その下の行は、窓の中央にそろえます。</li>
-<li><strong>マクロエディタ</strong>：欄、一覧、またはショートカットを変えると保存します。「保存」と「キャンセル」はありません。Command-Sで保存し、窓は開いたままです。ReturnとEscapeでは閉じません。設定で外せるメニューコマンドに同じショートカットが付いているときは、「解除…」でそのメニューのショートカットを外します。</li>
+<li><strong>変更できないショートカット</strong>：変更できないメニュー項目は、そうと分かるようにし、システム設定への案内を出します。</li>
+<li><strong>マクロエディタ</strong>：変更のたびに保存します。「保存」と「キャンセル」のボタンはありません。</li>
 <li><strong>地球儀キー</strong>：地球儀キーを含むショートカットは、TeXShopのコマンドにもマクロにも保存しません。</li>
 <li><strong>古いメニュー名のショートカット</strong>：TeXShop 5.59または6.00 RC2のメニュー名で保存したショートカットは、名前が変わったあともその項目に働きます。</li>
 <li><strong>マーク</strong>：マークの操作は「編集」→「マーク」に移りました。</li>
@@ -122,11 +121,11 @@
 <li><strong>「PostScriptファイルを保存」と「-dALLOWPSTRANSPARENCY」</strong>：この2つの設定は取り除きました。</li>
 <li><strong>古い設定</strong>：効果のない古い設定を取り除きました。</li>
 <li><strong>旧バージョンの設定から移行</strong>：「設定」→「テーマ」のこのボタンと、マクロの「Colored source」を取り除きました。</li>
-<li><strong>クリップボードの¥と<code>\</code>の変換</strong>：「編集」メニューのこの2項目は取り除きました。「設定」の「新しい書類のエンコーディング」がUTF-8のときは、otfパッケージの変換を使うときも、ペーストした文字列の¥と<code>\</code>はそのままです（日本語のエンコーディングでは、以前どおりその変換が働きます）。UTF-8のときに¥を<code>\</code>にするには、その書類でキーバインドをオンにしてください。初めてインストールした場合は、¥のキーバインドが最初から<code>\</code>になっていて「ペースト」にもチェックが入っています。以前の版から使っている場合は、¥の出力文字列を半角の<code>\</code>1文字にして「ペースト」にチェックを入れてください。</li>
+<li><strong>クリップボードの¥と<code>\</code>の変換</strong>：「編集」メニューのこの2項目は取り除きました。¥をバックスラッシュにするには、キーバインドを使います。</li>
 <li><strong><code>\UTF</code>コマンド</strong>：otfパッケージの<code>\UTF</code>コマンドは、ファイルを開くときに文字に戻るようになりました。</li>
 <li><strong>改行コード</strong>：Windows形式などの改行コードのファイルを開くと、LFに揃えたことが知らされるようになりました。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/line-endings.png" width="534" height="520" alt="書類の改行コードがWindows形式で、LFに揃えたことを知らせる画面" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/line-endings-dark.png" width="534" height="520" alt="書類の改行コードがWindows形式で、LFに揃えたことを知らせる画面" loading="lazy"></figure></li>
 <li><strong>統計情報</strong>：「編集」→「統計情報…」は、ステータスバーの「本文の統計」を開きます。</li>
-<li><strong>同梱のマクロの名前</strong>：同梱のマクロを、用途の分かる名前にしました：Program → Set Typesetting Program…; Encoding → Set Encoding…; Root → Set Root File…; Numbering → Page Number Correction; PreText Personal Mark → PreTeXt Tag Comment; Root (Short Version) → Root File Line; GetFontSet → Insert Font Set…; SaveFontSet → Save Font Set; TestFontSet → Test Font Set Sizes; Tabularize → Align Table Columns; Tabularize +space → Align Table Columns with Spaces; Show files → Show Source and PDF in Finder; Convert to MAC → Save Copy with Classic Mac Line Endings; Convert to Unix → Save Copy with Unix Line Endings; Convert to Windows → Save Copy with Windows Line Endings; Bibliography → Run LaTeX, BibTeX, Then LaTeX Twice; bibtexc → Run BibTeX, Then pdfLaTeX Twice; bibtexcpl → Run pdfLaTeX, BibTeX, Then pdfLaTeX Twice; mpostc → Run MetaPost, Then pdfLaTeX; mpostcpl → Run pdfLaTeX, MetaPost, Then pdfLaTeX; htlatexc → Make HTML with TeX4ht; htlatexr → Make HTML with TeX4ht, Remaking Images; altpdflatexc → Run LaTeX, dvips and ps2pdf; pdflatexc → Run pdfLaTeX with Shell Escape; pdfselectc → Extract Pages from PDF…; openpdf → Open PDF; latex-makeindex-mpost → Run pdfLaTeX, MakeIndex, MetaPost, Then pdfLaTeX; regular → figure。編集していないマクロは、TeXShopのアップデートで新しい名前になり、ショートカットはそのまま残ります。macOSの「システム設定」→「キーボード」→「キーボードショートカット」→「アプリのショートカット」で古い名前に付けたショートカットは、新しい名前に付け直してください。</li>
+<li><strong>同梱のマクロの名前</strong>：同梱のマクロを、用途の分かる名前にしました。編集していないマクロは、TeXShopのアップデートで新しい名前になり、ショートカットはそのまま残ります。システム設定で古い名前に付けたショートカットは、新しい名前に付け直してください。</li>
 </ul>
 <h3 id="v6.00-fixes-typesetting-and-the-console">不具合の修正：タイプセットとコンソール</h3>
 <ul>
@@ -140,13 +139,13 @@
 <li><a href="https://github.com/svb-bit">svb-bit</a>氏、<a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏、<a href="https://github.com/ethanphil4-a11y">ethanphil4-a11y</a>氏の報告により、プレビューの位置と表示の不具合を直しました。macOS 26・27での再読み込みやページ送り、分割や境界線の操作、ウインドウの幅の変更、タイプセット中の開き直しで表示がずれることはなくなり、リンクのポップアップの周りにページの一部が見えることもなくなりました。ページには再びテーマの色が付き、ダークモードで明るい帯が出ることもありません。パスワード付きのPDFも、分割したプレビューウインドウの両方の部分にページが表示されます（<a href="https://github.com/TeXShopProject/TeXShop/issues/5">#5</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/21">#21</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/23">#23</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/24">#24</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/39">#39</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/53">#53</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/55">#55</a>）。</li>
 <li>SyncTeXで違う場所へ移る問題、再読み込みで落ちる問題、大きなページでスペースキーのスクロールがおかしい問題を修正しました。</li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、macOS 26以降で、拡大鏡のツールを選んでいてもプレビューの窓のツールバーが効き、ツールバーの上にリンクのポップアップが出ないようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/44">#44</a>）。</li>
-<li>macOS 27で、単ページ・見開き表示のPage UpとPage Downが効かない問題を修正しました。ページがウインドウに収まっていればページを送り、収まっていなければ1画面ずつスクロールして、ページの端からは前後のページへ移ります（macOS 15・26の「プレビュー」アプリと同じ動き）。</li>
+<li>macOS 27で、単ページ・見開き表示の Page Up と Page Down が再びページを送るようになりました。</li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、プレビューの窓を閉じて開き直したあとや、新しい書類を初めてタイプセットしたあとも、ドロワーのアウトラインの項目をクリックするとそのページへ移るようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/59">#59</a>）。</li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、閉じたプレビューの窓を⌘1やタイプセットで開き直すと、閉じる前と同じ位置で表示され、PDFが変わっていなければ固定したリンクのポップアップもそのまま残るようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/70">#70</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、ウインドウを残してTeXShopを終了すると、次に起動したときに、それだけで開いていたPDFも開き直し、プレビューの窓は表示形式・拡大率・分割・位置・ページの回転・固定したリンクのポップアップ・「ビューを切り替え」のもう一方のビューもそのままで戻るようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/71">#71</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、長い書類では「内容の幅に合わせる」が、すべてのページを測り終えてから一度だけ合わせるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/62">#62</a>）。</li>
-<li>プレビューがアクティブなとき、「検索」「次を検索」「前を検索」は、プレビューのツールバーの検索欄を使います。「前を検索」はメニュー項目の向きのままなので、ショートカットは逆方向に検索します。「すべて検索」はドロワーを開き、その検索欄を選びます。ソースとコンソールの検索は、これまでどおりです。</li>
-<li>macOS 26以降では、プレビューのページはツールバーより下にあり、ツールバーの下端は線になります。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、ウインドウを残してTeXShopを終了すると、次に起動したときに、それだけで開いていたPDFも開き直し、プレビューの窓は閉じていたときのまま戻るようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/71">#71</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、長い書類でも、「内容の幅に合わせる」が一度で合わせるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/62">#62</a>）。</li>
+<li>プレビューがアクティブなとき、検索のコマンドはプレビュー自身の検索を使います。</li>
+<li>macOS 26以降では、プレビューのページはツールバーの下に収まります。</li>
 <li>プレビューウインドウのタイトルをCommand-クリックすると、パスのメニューが再び開きます（<a href="https://github.com/TeXShopProject/TeXShop/issues/73">#73</a>）。</li>
 <li>Commandキーを押したままデッドキーを押しても、プレビューは落ちません。プレビューの画像もそのままです。</li>
 <li>拡張子を大文字で書いたファイル（Only.PDF）も、PDFとして開きます。</li>
@@ -170,7 +169,7 @@
 <li>読み込む設定やファイルがないときや壊れているとき（削除したフォントや壊れたマクロのファイルなど）と、SyncTeXの情報がないページから同期したときに、TeXShopが落ちる問題を修正しました。画像のウインドウの「前のページ」「次のページ」ボタンでページを移れるようになりました。</li>
 <li>いくつかの言語で、欠けたり重なったりしていた文字、働かなかったボタンやメニュー、英語のまま残っていた文字、誤った名前や綴りを直しました。</li>
 <li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の報告により、詳細検索パネルの「すべて置き換え」をしても、ソースは見ていた位置のままになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/72">#72</a>）。</li>
-<li>新しいソースは、タブを直すときも文字色を保ちます。色を付け直す前に打った文字も、その色で表示します。</li>
+<li>新しいソースは、打ち始めた文字の色が途中で変わりません。</li>
 </ul>
 <h3 id="v6.00-manual-help-and-bundled-tools">マニュアル・ヘルプ・同梱ツール</h3>
 <ul>
@@ -196,7 +195,7 @@
 <li>「Paste Spreadsheet Cells」が、日本語などどんな文字を含むセルでも動くようにしました。</li>
 <li>「Set Root File…」が、ルートファイルのパスにどんな文字があっても動くようにしました。</li>
 <li>「Run LaTeX, dvips and ps2pdf」がTeX LiveとGhostscriptで動くようにし、途中で失敗したときはメッセージを出すようにしました。</li>
-<li>「Run LaTeX, dvips and ps2pdf」は、LaTeXが新しいDVIを作らなかったときは終わります。新しいDVIの一部だけを作って終わったときは、以前のDVIが残ります。長い書類名でもタイプセットできます。一時的なPDFには短い名前を付けます。</li>
+<li>「Run LaTeX, dvips and ps2pdf」は、DVI ができないときはそこで止まり、長い書類名でも動きます。</li>
 <li>「PreTeXt-Validate」は、正しくない文書であることを知らせます。</li>
 <li>「Extract Pages from PDF…」が TeX Live 2026 で動くようになり、各ページの UserUnit を保ち、CropBox が MediaBox をはみ出すページはページの箱に合わせて配置します。</li>
 <li>TeX LiveとmacOSにないプログラムが必要な非アクティブなエンジンなどのファイル（jing.jarなど）を同梱しないようにしました。<code>~/Library/TeXShop</code>にすでにあるファイルはそのまま残ります。</li>
