@@ -2,7 +2,8 @@
 """The Help menu has the same structure in every language.
 
 In 6.00 the Help menu starts with TeXShop Help (named as Apple names an application's help in each
-language), the manual and First Steps, then the guides to TeXShop features, the TeX documentation with George
+language), the manual and First Steps, then the guides to TeXShop features (the quick start guide to
+command completion first), the TeX documentation with George
 Grätzer's Short Course, the notes of the release, and an Older Documents submenu with the documents written for
 earlier versions by Herbert Schulz, Michael Sharpe and Richard Koch. Spell checking and the differences between
 key bindings, macros and command completion are pages of TeXShop Help, not items of their own. Short Course Supplements --> Desktop, which copied the files of the 4th edition
@@ -16,8 +17,8 @@ import subprocess
 import sys
 
 root = Path(__file__).resolve().parents[1]
-TOP = ['showHelp', 'displayManual', 'displayGettingStartedTeXShop', '-', 'displayCommentLines', 'displayFileEncoding',
-       'displayHTMLHelp', '-', 'displayHelpForPackage', 'displayTeXLiveDocumentation', 'SHORT', '-', 'displayThisRelease',
+TOP = ['showHelp', 'displayManual', 'displayGettingStartedTeXShop', '-', 'displayCommandCompletionQuickStart', 'displayCommentLines',
+       'displayFileEncoding', 'displayHTMLHelp', '-', 'displayHelpForPackage', 'displayTeXLiveDocumentation', 'SHORT', '-', 'displayThisRelease',
        'displayChanges', '-', 'OLDER']
 # TeXShop Help as Apple names an application's help in each language, and the Older Documents submenu.
 HELP = {'Base': 'TeXShop Help', 'ja': 'TeXShopヘルプ', 'de': 'TeXShop-Hilfe', 'es': 'Ayuda de TeXShop', 'fr': 'Aide TeXShop',
@@ -38,7 +39,7 @@ MARK = {'de': ' (Englisch)', 'ja': '（英語）', 'ko': ' (영문)', 'es': ' (e
         'it': ' (in inglese)', 'nl': ' (Engels)', 'pt': ' (em inglês)', 'pt-PT': ' (em inglês)',
         'ro': ' (în engleză)', 'zh_CN': '（英文）'}
 ENGLISH_ONLY = {'displayThisRelease', 'displayChanges', 'displayTeXLiveDocumentation', 'displayGettingStartedTeXShop',
-                'displayManual', 'displayHTMLHelp', 'displayFileEncoding', 'displayTipsandTricks',
+                'displayManual', 'displayHTMLHelp', 'displayCommandCompletionQuickStart', 'displayFileEncoding', 'displayTipsandTricks',
                 'displayCommentLines', 'displayRecentTeXFonts', 'displayNotesonApplescript', 'displayGettingStartedXeTeX',
                 'displayGettingStartedLatex'}
 # Documents a language has in its own words (TeX Live Documentation of pt-PT falls back to pt).
@@ -55,6 +56,10 @@ MUTATIONS = {
     'mark-on-own': ('Resources/Interfaces/fr.lproj/MainMenu.nib/designable.nib', 'title="Trucs et astuces pour TeXShop"', 'title="Trucs et astuces pour TeXShop (en anglais)"'),
     # The English menu marks a document as English.
     'mark-in-english': ('Resources/Interfaces/Base.lproj/MainMenu.nib/designable.nib', 'title="TeXShop Manual"', 'title="TeXShop Manual (English)"'),
+    # Japanese loses the English mark on the command completion quick start.
+    'quickstart-mark-missing': ('Resources/Interfaces/ja.lproj/MainMenu.nib/designable.nib', 'title="コマンド補完クイックスタート（英語）"', 'title="コマンド補完クイックスタート"'),
+    # The command completion quick start item is not connected to its action.
+    'quickstart-action': ('Resources/Interfaces/de.lproj/MainMenu.nib/designable.nib', '<action selector="displayCommandCompletionQuickStart:"', '<action selector="displayCommandCompletionQuickStar:"'),
     # A symbol table leaves the Short Course.
     'table-missing': ('Resources/Interfaces/ja.lproj/MainMenu.nib/designable.nib', '<action selector="displayArrows:"', '<action selector="displayArrowz:"'),
     # The Short Course submenu loses its mark.

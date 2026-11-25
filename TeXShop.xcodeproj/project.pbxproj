@@ -122,6 +122,7 @@
 		401EF0770D0B3F8800203D7B /* MyDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 401EF0750D0B3F8800203D7B /* MyDragView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4020276525D06FD70039F253 /* TeX.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4020276425D06FD70039F253 /* TeX.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		402613E52144902500DE43FB /* CommentLines.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 402613E32144902500DE43FB /* CommentLines.pdf */; };
+		C0C0C001C0C0C0C0C0C0C0C0 /* Command Completion Quick Start.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C0C0C002C0C0C0C0C0C0C0C0 /* Command Completion Quick Start.pdf */; };
 		40328ADC1340380800AD2EA7 /* TSToolbar.h in Headers */ = {isa = PBXBuildFile; fileRef = 40328ADA1340380800AD2EA7 /* TSToolbar.h */; };
 		40328ADD1340380800AD2EA7 /* TSToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 40328ADB1340380800AD2EA7 /* TSToolbar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40356AD01F8D157F0093399B /* synctex_parser_old.h in Headers */ = {isa = PBXBuildFile; fileRef = 40356ACC1F8D157F0093399B /* synctex_parser_old.h */; };
@@ -670,6 +671,7 @@
 		400E8FBB26067D6B009AA6C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = Base.lproj/Changes.pdf; sourceTree = "<group>"; };
 		400E8FBC26067D6B009AA6C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/About This Release.pdf"; sourceTree = "<group>"; };
 		400E8FBD26067D6B009AA6C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = Base.lproj/CommentLines.pdf; sourceTree = "<group>"; };
+		C0C0C003C0C0C0C0C0C0C0C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/Command Completion Quick Start.pdf"; sourceTree = "<group>"; };
 		40143F70156F52B600CAFAFC /* sipswrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = sipswrap; sourceTree = "<group>"; };
 		40154D56131C060500526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = zh_CN.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		40154D57131C061F00526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = zh_CN.lproj/TSDocument.nib; sourceTree = "<group>"; };
@@ -931,6 +933,7 @@
 		4089E4AC2604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = "en.lproj/About This Release.pdf"; sourceTree = "<group>"; };
 		4089E4AD2604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/Changes.pdf; sourceTree = "<group>"; };
 		4089E4AE2604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/CommentLines.pdf; sourceTree = "<group>"; };
+		C0C0C004C0C0C0C0C0C0C0C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = "en.lproj/Command Completion Quick Start.pdf"; sourceTree = "<group>"; };
 		4089E4AF2604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4B12604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4B22604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = "en.lproj/File Encoding.pdf"; sourceTree = "<group>"; };
@@ -1700,6 +1703,7 @@
 				40A6859D11125D0A00C67A9E /* About This Release.pdf */,
 				40F80CAC1FAD3A2E00377616 /* Changes.pdf */,
 				402613E32144902500DE43FB /* CommentLines.pdf */,
+				C0C0C002C0C0C0C0C0C0C0C0 /* Command Completion Quick Start.pdf */,
 				4062E2901D7BC08300DC1518 /* GPLv2 License.pdf */,
 				52B13E4D08A8183B00756E5E /* completionpanel1.2.nib */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
@@ -2192,6 +2196,7 @@
 				40A6859F11125D0A00C67A9E /* About This Release.pdf in Resources */,
 				40415E3D131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf in Resources */,
 				402613E52144902500DE43FB /* CommentLines.pdf in Resources */,
+				C0C0C001C0C0C0C0C0C0C0C0 /* Command Completion Quick Start.pdf in Resources */,
 				40367BB513DFB3B70098E009 /* TeXShopHelp in Resources */,
 				40DD04301C23893C00422219 /* File Encoding.pdf in Resources */,
 			);
@@ -2642,6 +2647,15 @@
 				400E8FBD26067D6B009AA6C9 /* Base */,
 			);
 			name = CommentLines.pdf;
+			sourceTree = "<group>";
+		};
+		C0C0C002C0C0C0C0C0C0C0C0 /* Command Completion Quick Start.pdf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C0C0C004C0C0C0C0C0C0C0C0 /* en */,
+				C0C0C003C0C0C0C0C0C0C0C0 /* Base */,
+			);
+			name = "Command Completion Quick Start.pdf";
 			sourceTree = "<group>";
 		};
 		40367BB313DFB3B70098E009 /* TeXShopHelp */ = {
