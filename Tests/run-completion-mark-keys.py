@@ -51,7 +51,14 @@ def mutate(text, old, new):
     assert text.count(old) == 1, args.mutation
     return text.replace(old, new)
 if args.mutation == 'yield-off':
-    production = mutate(production, 'return [NSSet setWithObject:@"TSShortcut.completeLabelOrCitationKey:.0"];', 'return [NSSet set];')
+    production = mutate(production, '''return [NSSet setWithObjects:
+        @"TSShortcut.completeLabelOrCitationKey:.0",
+        @"TSShortcut.performFindPanelAction:.106",
+        @"TSShortcut.performFindPanelAction:.101",
+        @"TSShortcut.performFindPanelAction:.6",
+        @"TSShortcut.performFindPanelAction:.102",
+        @"TSShortcut.performFindPanelAction:.103",
+        nil];''', 'return [NSSet set];')
 elif args.mutation == 'hold-back':
     production = mutate(production, ': [yielding containsObject:command.commandID] ? [NSSet set] : [defaults objectForKey:command.item];', ': [defaults objectForKey:command.item];')
 elif args.mutation == 'swallow-off':

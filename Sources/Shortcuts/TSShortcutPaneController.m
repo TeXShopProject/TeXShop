@@ -1035,7 +1035,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     NSString *conflict = [self conflictForCapturedShortcut];
     if (conflict != nil) { [self showRecordingError:conflict]; return; }
     self.recordingError = nil; [self updateRecorder]; [self updateStatus];
-    // The yielding default of Edit › Complete Label or Citation Key is refused while a macro
+    // A yielding default (F5, and the Advanced Find shortcuts) is refused while a macro
     // has it, rather than taken from the macro after a confirmation.
     if ([self.store commandYieldsDefault:command] && [key isEqualToString:command.defaultKey] && flags == command.defaultModifiers) {
         NSString *error = [self.store setKey:key modifiers:flags forCommand:command];
