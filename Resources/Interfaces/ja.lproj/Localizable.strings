@@ -171,6 +171,8 @@
 "These macro shortcuts will become inactive:" = "次のマクロのショートカットは無効になります：";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "このキーはマクロ“%@”（%@）が先に使っているため無効です。";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "このキーは“%@”（%@）と重なっているため無効です。";
+"Remove…" = "解除…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "メニュー項目「%1$@」のショートカット %2$@ を解除してよろしいですか？";
 "Macro shortcut conflicts" = "マクロのショートカットが競合しています";
 "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "新しく割り当てた・変更したキーがほかの割り当てと重なっています。無効になるキーを一覧に示します。編集に戻るか、このまま保存するか、変更した競合キーだけを外して保存できます。マクロの名前と内容は保持されます。";
 "Return to Editing" = "編集に戻る";
@@ -210,6 +212,7 @@
 "Search by Key" = "キーで検索";
 "Show in Macro Editor" = "マクロエディタで表示";
 "Assigned" = "割り当て有効";
+"Cannot Be Changed" = "変更不可";
 "Inactive for this key" = "このキーでは無効";
 "No command uses this key." = "このキーを使うコマンドはありません。";
 "Press a key" = "キーを押してください";

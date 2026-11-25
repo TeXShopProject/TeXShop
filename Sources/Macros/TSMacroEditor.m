@@ -388,19 +388,31 @@ static TSFilterMode savedFilter = kNoFilterMode;
     mark.hidden = YES;
     mark.autoresizingMask = NSViewMaxXMargin | NSViewMaxYMargin;
     self.shortcutStatusMark = mark;
+    // At the trailing end of the warning, when the menu command can be cleared.
+    NSButton *remove = [NSButton buttonWithTitle:NSLocalizedString(@"Remove…", @"") target:self action:@selector(removeConflictingMenuShortcut:)];
+    remove.bezelStyle = NSBezelStylePush;
+    remove.controlSize = NSControlSizeSmall;
+    remove.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    remove.hidden = YES;
+    remove.identifier = @"macro.shortcut.remove";
+    remove.autoresizingMask = NSViewMinXMargin | NSViewMaxYMargin;
+    self.removeMenuShortcutButton = remove;
     [self layoutShortcutStatusInBand:NSMakeRect(20, statusY, NSWidth(host.bounds)-40, statusHeight)];
     self.shortcutStatus.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
     [host addSubview:self.shortcutStatus];
     [host addSubview:mark];
+    [host addSubview:remove];
 }
 
 // Between the warning triangle and the message, as in the warnings of Settings.
 static const CGFloat TSMacroWarningSpacing = 4;
 // The triangle where the message would begin, the message after it; the lines that follow begin under its first.
+// Remove…, when it is showing, takes the trailing end of that text and the message keeps the gap before it.
 - (void)layoutShortcutStatusInBand:(NSRect)band
 {
     NSTextField *label = self.shortcutStatus;
     NSImageView *mark = self.shortcutStatusMark;
+    NSButton *button = self.removeMenuShortcutButton;
     NSRect text = [label alignmentRectForFrame:band];
     NSSize size = mark.intrinsicContentSize;
     mark.frame = [mark frameForAlignmentRect:NSMakeRect(NSMinX(text), 0, size.width, size.height)];
@@ -408,6 +420,15 @@ static const CGFloat TSMacroWarningSpacing = 4;
     text.size.width -= size.width + TSMacroWarningSpacing;
     label.frame = [label frameForAlignmentRect:text];
     [self alignShortcutStatusMark];
+    // Hidden, Remove… sits at the trailing end of the message (it does not take any of the
+    // message's width). Showing it keeps that trailing edge and leaves a gap before it.
+    if (button && button.hidden) {
+        NSSize fit = button.fittingSize;
+        button.frame = NSMakeRect(NSMaxX(label.frame) - fit.width, NSMaxY(label.frame) - fit.height, fit.width, fit.height);
+    } else if (button) {
+        button.hidden = YES;
+        [self placeRemoveMenuShortcutButton:YES];
+    }
 }
 
 // At first as wide as the sidebar of the Multiple Replace window.
@@ -663,7 +684,7 @@ static const NSSize TSMacroContentsInset = {8, 8};
     [self endShortcutRecording];
     [self.placeholdersPopover close];
     self.placeholdersPopover = nil;
-    self.shortcutStatus = nil; self.shortcutStatusMark = nil;
+    self.shortcutStatus = nil; self.shortcutStatusMark = nil; self.removeMenuShortcutButton = nil;
     self.sidebar = nil; self.listBar = nil; self.editorView = nil;
     self.insertPlaceholderButton = nil; self.placeholdersButton = nil;
     self.recordingCell = nil;
@@ -1184,7 +1205,84 @@ static void TSSendButtonAction(NSButton *button)
 {
     self.shortcutStatus.stringValue = message ?: @"";
     self.shortcutStatusMark.hidden = message.length == 0;
+    [self placeRemoveMenuShortcutButton:[self removableMenuShortcutForStatus:message] != nil];
+}
+// The menu command of the warning now showing, when Settings › Keyboard can clear its shortcut.
+// Nothing while a recording error replaces that warning, or when the other use is a macro,
+// a command macOS keeps, or an item with no command.
+- (NSDictionary *)removableMenuShortcutForStatus:(NSString *)message
+{
+    if (self.recordingItem || message.length == 0 || !self.previousItem) return nil;
+    NSString *reason = [self shortcutConflictForNode:self.previousItem];
+    if (!reason.length || ![message isEqualToString:reason]) return nil;
+    NSDictionary *other = [self.shortcutConflictInfo objectForKey:self.previousItem][@"other"];
+    NSString *commandID = other[@"commandID"];
+    if (![commandID isKindOfClass:NSString.class] || !commandID.length) return nil;
+    return other;
+}
+// Between the message and Remove…, when that button is showing.
+static const CGFloat TSMacroRemoveShortcutGap = 8;
+// Show or hide Remove… at the trailing end of the message. The label grows and shrinks with
+// the window; the button stays at the trailing end, and the gap between them stays.
+- (void)placeRemoveMenuShortcutButton:(BOOL)show
+{
+    NSButton *button = self.removeMenuShortcutButton;
+    NSTextField *label = self.shortcutStatus;
+    if (button == nil || label == nil || button.hidden == !show) {
+        [self alignShortcutStatusMark];
+        return;
+    }
+    NSRect labelFrame = label.frame;
+    if (show) {
+        // Keep the size from the last layout. Measuring again can differ by half a point
+        // once the button is in the window, and the message would not come back exactly.
+        NSSize fit = button.frame.size;
+        if (fit.width < 1 || fit.height < 1) fit = button.fittingSize;
+        CGFloat trailing = NSMaxX(labelFrame);
+        labelFrame.size.width = MAX(0, NSWidth(labelFrame) - fit.width - TSMacroRemoveShortcutGap);
+        NSRect buttonFrame = NSMakeRect(NSMaxX(labelFrame) + TSMacroRemoveShortcutGap, NSMaxY(labelFrame) - fit.height, fit.width, fit.height);
+        if (NSMaxX(buttonFrame) > trailing + 0.5) buttonFrame.origin.x = trailing - fit.width;
+        button.frame = buttonFrame;
+        button.hidden = NO;
+    } else {
+        labelFrame.size.width = NSMaxX(button.frame) - NSMinX(labelFrame);
+        button.hidden = YES;
+    }
+    label.frame = labelFrame;
     [self alignShortcutStatusMark];
+}
+// Cancel is first, so Return and Escape leave the shortcut (TSRunShortcutAlert sends Escape to
+// the first button). OK removes it.
+- (NSModalResponse)confirmRemovingShortcut:(NSString *)shown fromMenuItem:(NSString *)path
+{
+    NSAlert *alert = [NSAlert new];
+    alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Remove the shortcut %2$@ from the menu item “%1$@”?", @""), path ?: @"", shown ?: @""];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
+    return TSRunShortcutAlert(alert);
+}
+- (void)clearMenuShortcutWithID:(NSString *)commandID
+{
+    TSShortcutStore *store = [TSKeyboardShortcuts sharedController].store;
+    TSShortcutCommand *command = nil;
+    for (TSShortcutCommand *candidate in store.commands)
+        if ([candidate.commandID isEqualToString:commandID]) { command = candidate; break; }
+    NSString *error = command ? [store setKey:@"" modifiers:0 forCommand:command] : NSLocalizedString(@"This command is no longer available.", @"");
+    [[TSKeyboardShortcuts sharedController] refreshMenuAndMacros];
+    if (error.length) {
+        NSAlert *alert = [NSAlert new];
+        alert.messageText = error;
+        [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
+        TSRunShortcutAlert(alert);
+    }
+}
+- (IBAction)removeConflictingMenuShortcut:(id)sender
+{
+    NSDictionary *other = [self removableMenuShortcutForStatus:self.shortcutStatus.stringValue];
+    if (!other) return;
+    NSString *shown = [TSShortcutStore displayKey:other[@"key"] ?: @"" modifiers:[other[@"modifiers"] unsignedIntegerValue]];
+    if ([self confirmRemovingShortcut:shown fromMenuItem:other[@"path"]] != NSAlertSecondButtonReturn) return;
+    [self clearMenuShortcutWithID:other[@"commandID"]];
 }
 // END shortcut status
 
@@ -1215,8 +1313,12 @@ static void TSSendButtonAction(NSButton *button)
     NSMutableArray *nodes = [NSMutableArray array], *candidates = [NSMutableArray array];
     NSArray *conflicts = [self currentShortcutConflictsWithNodes:nodes candidates:candidates];
     self.shortcutConflicts = [NSMapTable strongToStrongObjectsMapTable];
-    for (NSDictionary *conflict in conflicts)
-        [self.shortcutConflicts setObject:[TSShortcutStore reasonForMacroConflict:conflict] forKey:nodes[[conflict[@"index"] unsignedIntegerValue]]];
+    self.shortcutConflictInfo = [NSMapTable strongToStrongObjectsMapTable];
+    for (NSDictionary *conflict in conflicts) {
+        TSMacroTreeNode *node = nodes[[conflict[@"index"] unsignedIntegerValue]];
+        [self.shortcutConflicts setObject:[TSShortcutStore reasonForMacroConflict:conflict] forKey:node];
+        [self.shortcutConflictInfo setObject:conflict forKey:node];
+    }
     [self updateShortcutStatus];
     // Repaint cells without rebuilding the tree or changing its current selection.
     [outlineView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfRows])]
@@ -1543,7 +1645,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 		self.previousItem = nil;
 	self.previousItem = nil;
 	[outlineController setRootOfTree: nil]; // this release the tree structure
-    self.originalShortcutKeys = nil; self.shortcutConflicts = nil;
+    self.originalShortcutKeys = nil; self.shortcutConflicts = nil; self.shortcutConflictInfo = nil;
     [self releaseWindowControls];
     [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:TSMacroContentAppearanceContext];
 	outlineView = nil;

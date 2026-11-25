@@ -186,6 +186,7 @@
 "Search by Key" = "Zoeken op toets";
 "Show in Macro Editor" = "Toon in macro-editor";
 "Assigned" = "Toegewezen";
+"Cannot Be Changed" = "Niet wijzigbaar";
 "Inactive for this key" = "Inactief voor deze toets";
 "No command uses this key." = "Geen commando gebruikt deze toets.";
 "Press a key" = "Druk op een toets";
@@ -256,6 +257,8 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Deze toetscombinatie conflicteert met macro ‘%@’ (%@), waarvan de toetscombinatie inactief wordt omdat die verderop staat.";
 "This shortcut is already used by:\n%@" = "Deze toetscombinatie wordt al gebruikt door:\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "Deze toetscombinatie is inactief omdat ze conflicteert met ‘%@’ (%@).";
+"Remove…" = "Verwijderen…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "Toetscombinatie %2$@ van ‘%1$@’ verwijderen?";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "Deze toetscombinatie is inactief omdat macro ‘%@’ (%@) haar als eerste gebruikt.";
 "Your current setting of %@ will be replaced. OK?" = "Uw huidige instelling van %@ wordt vervangen. Akkoord?";
 

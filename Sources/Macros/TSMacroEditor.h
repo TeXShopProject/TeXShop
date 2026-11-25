@@ -64,9 +64,14 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 
 @property (retain) NSMapTable *originalShortcutKeys;
 @property (retain) NSMapTable *shortcutConflicts;
+// The same conflicts, so a warning about a menu command Keyboard settings can clear
+// can remove that command's shortcut.
+@property (retain) NSMapTable *shortcutConflictInfo;
 @property (retain) NSTextField *shortcutStatus;
 // The warning triangle before the message (hidden without one).
 @property (retain) NSImageView *shortcutStatusMark;
+// Beside that warning when the menu command can be cleared. Hidden otherwise.
+@property (retain) NSButton *removeMenuShortcutButton;
 // The sidebar: the list and the bar under it (＋, − and the menu of the other commands).
 @property (retain) NSVisualEffectView *sidebar;
 @property (retain) TSListBottomBar *listBar;
@@ -123,6 +128,11 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 - (void)layoutShortcutStatusInBand:(NSRect)band;
 - (void)updateShortcutStatus;
 - (void)showShortcutStatus:(NSString *)message;
+// The menu command behind the warning now showing, when Keyboard settings can clear it.
+- (NSDictionary *)removableMenuShortcutForStatus:(NSString *)message;
+// Cancel is the first button. OK, the second, removes the menu shortcut.
+- (NSModalResponse)confirmRemovingShortcut:(NSString *)shown fromMenuItem:(NSString *)path;
+- (IBAction)removeConflictingMenuShortcut:(id)sender;
 // Colors the contents as the source is colored.
 @property (retain) TSSyntaxHighlighter *contentHighlighter;
 @property (retain) TSMacroTreeNode *previousItem;	// record previously selected item

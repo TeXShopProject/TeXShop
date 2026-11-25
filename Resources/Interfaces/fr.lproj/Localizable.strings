@@ -189,6 +189,7 @@
 "Search by Key" = "Rechercher par touche";
 "Show in Macro Editor" = "Afficher dans l’éditeur de macros";
 "Assigned" = "Attribué";
+"Cannot Be Changed" = "Non modifiable";
 "Inactive for this key" = "Inactif pour cette touche";
 "No command uses this key." = "Aucune commande n’utilise cette touche.";
 "Press a key" = "Appuyez sur une touche";
@@ -257,6 +258,8 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Ce raccourci est en conflit avec la macro « %@ » (%@), dont le raccourci sera inactif, car elle apparaît plus loin.";
 "This shortcut is already used by:\n%@" = "Ce raccourci est déjà utilisé par :\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "Ce raccourci est inactif, car il est en conflit avec « %@ » (%@).";
+"Remove…" = "Retirer…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "Retirer le raccourci %2$@ de l’élément « %1$@ » ?";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "Ce raccourci est inactif, car la macro « %@ » (%@) l’utilise en premier.";
 
 

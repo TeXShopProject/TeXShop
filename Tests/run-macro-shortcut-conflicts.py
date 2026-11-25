@@ -62,7 +62,7 @@ if '--mutations' in sys.argv:
         'warn on unchanged keys': [(e, 'if (original && [original isEqual:binding]) continue;', 'if (NO) continue;')],
         'ignore save cancellation': [(e, 'if (![self validateMacroShortcutsBeforeSaving]) return;', '[self validateMacroShortcutsBeforeSaving];')],
         'ignore field commit refusal': [(e, 'if (![window makeFirstResponder:window]) return;', '[window makeFirstResponder:window];')],
-        'do not remove changed conflicts': [(e, 'setKey:@""', 'setKey:@"F"')],
+        'do not remove changed conflicts': [(e, '[nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@""]', '[nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@"F"]')],
         'ignore write failure': [(e, 'if (![self saveNodes: [outlineController rootOfTree] toFile: pathStr]) return;', '[self saveNodes: [outlineController rootOfTree] toFile: pathStr];')],
         'do not select conflicting macro': [(e, '[outlineView selectItems:@[node] byExtendingSelection:NO];', '[outlineView selectItems:@[] byExtendingSelection:NO];')],
         'no Escape handling': [(k, 'event.keyCode == kVK_Escape', 'event.keyCode == 99')],
