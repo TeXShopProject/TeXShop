@@ -1,5 +1,6 @@
 #import "TSPreferenceProfile.h"
 #import "TSKeyboardShortcuts.h"
+#import "TSAdvancedFindController.h"
 #import "TSOlderPanelLayout.h"
 #import "TSPDFScreenRendering.h" // added by Terada
 /*
@@ -112,6 +113,42 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
 
 @end
 
+@interface MyPDFKitView ()
+- (BOOL)performPreviewFindKeyEquivalent:(NSEvent *)theEvent;
+- (NSText *)previewFindFieldEditorForWindow:(NSWindow *)window;
+- (void)doFindAgainBackwards;
+- (void)previewDrawerDidOpen:(NSNotification *)notification;
+@end
+
+// Field editor of the Preview search fields. The ordinary editor would run Edit › Find
+// inside the few characters of the field, and would enable Replace and the other source commands.
+@interface TSPreviewSearchFieldEditor : NSTextView
+@property (weak) MyPDFKitView *owner;
+@end
+
+@implementation TSPreviewSearchFieldEditor
+
+- (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+    if (item.action == @selector(performFindPanelAction:))
+        return [self.owner validateMenuItem:item];
+    return [super validateMenuItem:item];
+}
+
+- (void)performFindPanelAction:(id)sender
+{
+    [self.owner performFindPanelAction:sender];
+}
+
+- (BOOL)performKeyEquivalent:(NSEvent *)theEvent
+{
+    if ([self.owner performPreviewFindKeyEquivalent:theEvent])
+        return YES;
+    return [super performKeyEquivalent:theEvent];
+}
+
+@end
+
 @implementation MyPDFKitView : PDFView
 {
     TSExternalPDFPosition secondViewport;
@@ -145,6 +182,13 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     TSLinkPreviewView *restoringPopup;
     PDFPage *restoringPopupPage, *restoringPopupHome;
     NSRect restoringPopupOnPage, restoringPopupHomeOnPage;
+    // One field editor per window. The editor points back here weakly.
+    NSMapTable *previewFindFieldEditors;
+    // Set for the one call of doFindAgain that is Find Previous. The menu tag decides, not Shift:
+    // a customized Find Previous need not include Shift, and a customized Find Next might.
+    BOOL previewFindBackwards;
+    // Find All opens the drawer, then this focuses its search field once the drawer is open.
+    BOOL focusDrawerSearchWhenOpen;
 }
 
 + (void)initialize
@@ -169,6 +213,8 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
 {
     // Breaks retain cycles to prevent memory leaks.
     [self cleanupMarquee: YES];
+    if (_drawer.contentView.window.delegate == self)
+        _drawer.contentView.window.delegate = nil;
     [self.myPDFWindow setDelegate:nil];
     [[self document] setDelegate:nil];
     [self setDocument:nil];
@@ -744,6 +790,7 @@ static PDFPage *TSPreviewDecodePopupHome(NSCoder *coder, NSString *prefix, PDFDo
     [self setDisplayMode: kPDFDisplaySinglePage];
     
     [self.myPDFWindow setDelegate: self];
+    [self observePreviewDrawerFind];
     
 	downOverLink = NO;
 	
@@ -3680,27 +3727,234 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 }
 
 
+// The toolbar search field of the window that is actually showing the PDF.
+- (NSSearchField *)previewToolbarSearchField
+{
+    if ([self.myDocument useFullSplitWindow])
+        return [self.myDocument myFullSearchField];
+    return [self.myDocument mySearchField];
+}
+
+// Only the first Preview view is connected to the drawer's search field.
+- (MyPDFKitView *)drawerSearchOwner
+{
+    if (_searchField)
+        return self;
+    MyPDFKitView *first = (MyPDFKitView *)self.myPDFWindow.myPDFKitView;
+    if (first != self && [first isKindOfClass:[MyPDFKitView class]] && first->_searchField)
+        return first;
+    return nil;
+}
+
+- (BOOL)isPreviewSearchClient:(id)client
+{
+    if (![client isKindOfClass:[NSSearchField class]])
+        return NO;
+    if (client == [self.myDocument mySearchField] || client == [self.myDocument myFullSearchField])
+        return YES;
+    MyPDFKitView *owner = [self drawerSearchOwner];
+    return owner != nil && client == owner->_searchField;
+}
+
+// The part whose selection the next toolbar search starts from.
+- (MyPDFKitView *)previewFindView
+{
+    MyPDFKitView *active = (MyPDFKitView *)self.myDocument.pdfKitWindow.activeView;
+    if ([active isKindOfClass:[MyPDFKitView class]])
+        return active;
+    return self;
+}
+
+// The text in the toolbar search field, including a query that has not been committed with Return.
+// An empty field that is being edited means the user cleared it: do not reuse the previous query.
+- (NSString *)previewToolbarSearchString
+{
+    NSSearchField *field = [self previewToolbarSearchField];
+    id responder = field.window.firstResponder;
+    if ([responder isKindOfClass:[NSTextView class]]) {
+        NSTextView *editor = responder;
+        if (editor.isFieldEditor && editor.delegate == (id)field)
+            return editor.string.length ? editor.string : nil;
+    }
+    if (field.stringValue.length)
+        return field.stringValue;
+    if (self.oneOffSearchString.length)
+        return self.oneOffSearchString;
+    MyPDFKitView *first = (MyPDFKitView *)[self.myDocument pdfKitView];
+    if ([first isKindOfClass:[MyPDFKitView class]] && first != self && first.oneOffSearchString.length)
+        return first.oneOffSearchString;
+    return nil;
+}
+
+- (NSText *)previewFindFieldEditorForWindow:(NSWindow *)window
+{
+    if (!window)
+        return nil;
+    if (!previewFindFieldEditors)
+        previewFindFieldEditors = [NSMapTable weakToStrongObjectsMapTable];
+    TSPreviewSearchFieldEditor *editor = [previewFindFieldEditors objectForKey:window];
+    if (!editor) {
+        editor = [[TSPreviewSearchFieldEditor alloc] initWithFrame:NSZeroRect];
+        editor.fieldEditor = YES;
+        editor.owner = self;
+        [previewFindFieldEditors setObject:editor forKey:window];
+    }
+    return editor;
+}
+
+- (NSText *)previewFindFieldEditorForWindow:(NSWindow *)window client:(id)client
+{
+    if (![self isPreviewSearchClient:client])
+        return nil;
+    return [self previewFindFieldEditorForWindow:window];
+}
+
+// The Preview window's own text fields, and the drawer's, use the Preview search commands.
+- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client
+{
+    if (sender == self.myPDFWindow)
+        return [self previewFindFieldEditorForWindow:sender];
+    if (_searchField && _drawer && sender == _drawer.contentView.window)
+        return [self previewFindFieldEditorForWindow:sender];
+    return nil;
+}
+
+- (void)attachDrawerFindFieldEditor
+{
+    NSWindow *drawerWindow = _drawer.contentView.window;
+    if (!drawerWindow || !_searchField)
+        return;
+    if (drawerWindow.delegate != self)
+        drawerWindow.delegate = self;
+}
+
+- (void)observePreviewDrawerFind
+{
+    if (!_drawer || !_searchField)
+        return;
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center removeObserver:self name:NSDrawerDidOpenNotification object:_drawer];
+    [center addObserver:self selector:@selector(previewDrawerDidOpen:) name:NSDrawerDidOpenNotification object:_drawer];
+    [self attachDrawerFindFieldEditor];
+}
+
+- (void)focusSearchField:(NSSearchField *)field
+{
+    NSWindow *window = field.window;
+    if (!field || !window)
+        return;
+    [window makeFirstResponder:field];
+    NSText *editor = (NSText *)window.firstResponder;
+    if ([editor isKindOfClass:[NSText class]] && editor.isFieldEditor)
+        editor.selectedRange = NSMakeRange(0, editor.string.length);
+}
+
+- (void)focusPreviewToolbarSearchField
+{
+    [self focusSearchField:[self previewToolbarSearchField]];
+}
+
+// Edit › Find › Find All: the existing item. Show the drawer and edit the search field in its lower half.
+- (void)focusDrawerSearchField
+{
+    MyPDFKitView *owner = [self drawerSearchOwner];
+    if (!owner)
+        return;
+    NSSearchField *field = owner->_searchField;
+    NSDrawer *drawer = owner->_drawer;
+    if (!field || !drawer)
+        return;
+    [owner observePreviewDrawerFind];
+    if (drawer.state == NSDrawerOpenState) {
+        owner->focusDrawerSearchWhenOpen = NO;
+        [owner attachDrawerFindFieldEditor];
+        [owner focusSearchField:field];
+        return;
+    }
+    owner->focusDrawerSearchWhenOpen = YES;
+    if (drawer && drawer.state != NSDrawerOpeningState)
+        [drawer open:owner];
+    [owner attachDrawerFindFieldEditor];
+}
+
+- (void)previewDrawerDidOpen:(NSNotification *)notification
+{
+    [self attachDrawerFindFieldEditor];
+    if (!focusDrawerSearchWhenOpen)
+        return;
+    focusDrawerSearchWhenOpen = NO;
+    [self focusSearchField:_searchField];
+}
+
+- (void)performPreviewFindTag:(NSInteger)tag
+{
+    if (tag == NSFindPanelActionShowFindPanel)
+        [self focusPreviewToolbarSearchField];
+    else if (tag == NSFindPanelActionNext)
+        [[self previewFindView] doFindAgain];
+    else if (tag == NSFindPanelActionPrevious)
+        [[self previewFindView] doFindAgainBackwards];
+    else if (tag == TSAdvancedFindActionFindAll)
+        [self focusDrawerSearchField];
+}
+
+- (void)performFindPanelAction:(id)sender
+{
+    [self performPreviewFindTag:[sender tag]];
+}
+
+- (BOOL)performPreviewFindKeyEquivalent:(NSEvent *)theEvent
+{
+    if ([TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:1]) {
+        [self performPreviewFindTag:NSFindPanelActionShowFindPanel];
+        return YES;
+    }
+
+    if ([TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:2]) {
+        [self performPreviewFindTag:NSFindPanelActionNext];
+        return YES;
+    }
+
+    if ([TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:3]) {
+        [self performPreviewFindTag:NSFindPanelActionPrevious];
+        return YES;
+    }
+
+    if ([TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:TSAdvancedFindActionFindAll]) {
+        [self performPreviewFindTag:TSAdvancedFindActionFindAll];
+        return YES;
+    }
+
+    return NO;
+}
+
+- (void)doFindAgainBackwards
+{
+    previewFindBackwards = YES;
+    [self doFindAgain];
+}
+
 - (void) doFindAgain
 {
     PDFSelection                    *searchSelection;
-    
+    BOOL                            backwards;
+
+    backwards = previewFindBackwards;
+    previewFindBackwards = NO;
     self.toolbarFind = YES;
-    
-    NSUInteger flags = [[NSApp currentEvent] modifierFlags];
-    
+
+    NSString *string = [self previewToolbarSearchString];
+    if (!string.length || [self document] == nil)
+        return;
+    self.oneOffSearchString = string;
+
     searchSelection = [self currentSelection];
-    
-    if (flags & NSShiftKeyMask)
-        
-        searchSelection = [[self document] findString: self.oneOffSearchString
-                                        fromSelection:searchSelection withOptions:(NSCaseInsensitiveSearch | NSBackwardsSearch)];
-    
-    else
-        
-        searchSelection = [[self document] findString: self.oneOffSearchString
-                                        fromSelection:searchSelection withOptions:NSCaseInsensitiveSearch];
-    
-    
+
+    searchSelection = [[self document] findString:string
+                                    fromSelection:searchSelection
+                                      withOptions:backwards ? (NSCaseInsensitiveSearch | NSBackwardsSearch) : NSCaseInsensitiveSearch];
+
+
     if (searchSelection != NULL)
     {
         NSArray *thePages = [searchSelection pages];
@@ -3710,7 +3964,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
         [self setCurrentSelection: searchSelection];
         [self.myDocument.pdfKitWindow.activeView scrollSelectionToVisible:self];
     }
-    
+
     if (searchSelection == NULL)
     {
         [self clearSelection];
@@ -5816,6 +6070,17 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
         return self.document.pageCount > 0;
     if (anItem.action == @selector(copy:) && pinnedLinkPreview.selectionIsRecent && pinnedLinkPreview.selection.string.length)
         return YES;
+
+    // Find, Find Next, Find Previous and the existing Find All. The other Find commands stay disabled:
+    // they belong to the source editor, which validates them itself when it is first responder.
+    if (anItem.action == @selector(performFindPanelAction:)) {
+        NSInteger tag = anItem.tag;
+        if (tag == NSFindPanelActionShowFindPanel || tag == NSFindPanelActionNext || tag == NSFindPanelActionPrevious)
+            return [self previewToolbarSearchField] != nil;
+        if (tag == TSAdvancedFindActionFindAll)
+            return [self drawerSearchOwner] != nil;
+        return NO;
+    }
 	
 		
 		return [super validateMenuItem: anItem];	
@@ -8862,28 +9127,12 @@ else
 
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
+    // In the combined window the source editor is another view of this window. Its own Find
+    // commands run only when it is first responder; these run only for the Preview view.
     if (([self.myDocument useFullSplitWindow]) && (! ([[self window] firstResponder] == self)))
         return NO;
-    
-    if ([TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:1]) {
-        // [self.drawer open];
-        // [[self window] makeFirstResponder:_searchField ];
-       if ([self.myDocument useFullSplitWindow])
-            [[self.myDocument fullSplitWindow] makeFirstResponder: [self.myDocument myFullSearchField ]];
-       else {
-             [[self window] makeFirstResponder: [self.myDocument mySearchField ]];
-       }
-        return YES;
-    }
-    
-    if ([TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:2]) {
-        [self doFindAgain];
-        return YES;
-    }
-    
-    else
-        
-        return NO;
+
+    return [self performPreviewFindKeyEquivalent:theEvent];
 }
 
     

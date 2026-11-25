@@ -462,5 +462,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([TSKeyboardShortcuts event:Event(@"f",cmd) matchesAction:@selector(performFindPanelAction:) tag:1]);
     REQUIRE([TSKeyboardShortcuts event:LayoutEvent(@"g",@"п",kVK_ANSI_G,cmd) matchesAction:@selector(performFindPanelAction:) tag:2]);
     REQUIRE(![TSKeyboardShortcuts event:Event(@"f",cmd|shift) matchesAction:@selector(performFindPanelAction:) tag:1]);
+    REQUIRE([TSKeyboardShortcuts event:Event(@"g",cmd|shift) matchesAction:@selector(performFindPanelAction:) tag:3]);
+    REQUIRE(![TSKeyboardShortcuts event:Event(@"g",cmd) matchesAction:@selector(performFindPanelAction:) tag:3]);
+    NSMenuItem *previous = Item(@"TSShortcut.performFindPanelAction:.3", @"j", cmd);
+    previous.action = @selector(performFindPanelAction:);
+    previous.tag = 3;
+    [NSApp.mainMenu addItem:previous];
+    REQUIRE([TSKeyboardShortcuts event:Event(@"j", cmd) matchesAction:@selector(performFindPanelAction:) tag:3]);
+    REQUIRE(![TSKeyboardShortcuts event:Event(@"g", cmd|shift) matchesAction:@selector(performFindPanelAction:) tag:3]);
     puts("PASS: non-Latin PDF search and capture, conflict detection, Option character preservation, absent-menu fallback");
 } return 0; }

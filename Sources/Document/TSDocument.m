@@ -12073,6 +12073,15 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
     return useFullSplitWindow;
 }
 
+// Combined window only. The source editor is not a field editor, so this does not change its Find commands.
+// A search field of the source, the console or the separate source window keeps the ordinary editor.
+- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client
+{
+    if (sender != fullSplitWindow)
+        return nil;
+    return [(MyPDFKitView *)self.myPDFKitView previewFindFieldEditorForWindow:sender client:client];
+}
+
 - (IBAction) doPDFSearch: sender
 {
     [[self pdfKitView] doFindOne:sender];
