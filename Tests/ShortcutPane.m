@@ -128,6 +128,206 @@ static void CaptureSheet(id self,SEL cmd,NSWindow *parent,void (^reply)(NSModalR
 @implementation ProbePane
 - (void)showError:(NSString *)error {self.lastError=error;}
 @end
+static NSString *DisplayChar(unichar c) { return [NSString stringWithCharacters:&c length:1]; }
+static void SetShownKey(NSMenuItem *item, NSString *key, NSEventModifierFlags flags) {
+ item.allowsAutomaticKeyEquivalentLocalization=NO;
+ item.keyEquivalent=@"";
+ item.keyEquivalentModifierMask=flags;
+ if (key.length) item.keyEquivalent=key;
+}
+static NSString *ShortcutColumnText(TSShortcutPaneController *pane, BOOL (^select)(TSShortcutMatch *match)) {
+ NSTableColumn *shortcut=nil;
+ for (NSTableColumn *column in pane.table.tableColumns) if ([column.identifier isEqual:@"shortcut"]) shortcut=column;
+ for (NSInteger row=0; row<pane.table.numberOfRows; row++) {
+  TSShortcutMatch *match=[pane matchAtRow:row];
+  if (match==nil || !select(match)) continue;
+  id cell=[pane tableView:pane.table viewForTableColumn:shortcut row:row];
+  return [cell isKindOfClass:NSTextField.class] ? [(NSTextField *)cell stringValue] : nil;
+ }
+ return nil;
+}
+// Tab, Escape and the mark key clear the result list when only Shift, Option or Control is held.
+// The field is filled before that clear, from the menu item the key would have run.
+static BOOL ReservedCompletionKey(NSUserDefaults *defaults, NSString *key, NSEventModifierFlags flags) {
+ BOOL escapeTrigger=[[defaults stringForKey:TSCommandCompletionCharacterKey] isEqualToString:@"ESCAPE"];
+ BOOL trigger=escapeTrigger ? [key isEqualToString:@"\033"] : ([key isEqualToString:@"\t"] || [key isEqualToString:@"\031"]);
+ NSEventModifierFlags completion=flags & (NSEventModifierFlagShift|NSEventModifierFlagOption|NSEventModifierFlagControl|NSEventModifierFlagCommand);
+ return trigger && (completion==0 || completion==NSEventModifierFlagShift || completion==NSEventModifierFlagOption || completion==NSEventModifierFlagControl);
+}
+// The key-search field shows the same string as the shortcut column. Shifted
+// punctuation is still compared in its translated spelling (@ for Shift-2, | for
+// JIS Shift+¥); the field follows the menu item that runs.
+static void CheckKeySearchDisplayMatchesMenu(void) {
+ const NSEventModifierFlags C=NSEventModifierFlagCommand,S=NSEventModifierFlagShift,O=NSEventModifierFlagOption,K=NSEventModifierFlagControl;
+ NSMenu *main=[NSMenu new],*menu=[NSMenu new];
+ NSMenuItem *root=[[NSMenuItem alloc] initWithTitle:@"Actions" action:NULL keyEquivalent:@""];
+ root.submenu=menu; [main addItem:root];
+ NSMenuItem *pattern=[[NSMenuItem alloc] initWithTitle:@"Pattern" action:@selector(description) keyEquivalent:@""];
+ pattern.identifier=@"pattern.display"; pattern.allowsAutomaticKeyEquivalentLocalization=NO;
+ NSMenuItem *letter=[[NSMenuItem alloc] initWithTitle:@"Letter" action:@selector(description) keyEquivalent:@"b"];
+ letter.identifier=@"TSShortcut.displayLetter:.0"; letter.keyEquivalentModifierMask=C; letter.allowsAutomaticKeyEquivalentLocalization=NO;
+ NSMenuItem *equals=[[NSMenuItem alloc] initWithTitle:@"Equals" action:@selector(description) keyEquivalent:@"="];
+ equals.identifier=@"TSShortcut.displayEquals:.0"; equals.keyEquivalentModifierMask=C; equals.allowsAutomaticKeyEquivalentLocalization=NO;
+ NSMenuItem *digit=[[NSMenuItem alloc] initWithTitle:@"Digit" action:@selector(description) keyEquivalent:@"2"];
+ digit.identifier=@"TSShortcut.displayDigit:.0"; digit.keyEquivalentModifierMask=C|S; digit.allowsAutomaticKeyEquivalentLocalization=NO;
+ NSMenuItem *backslash=[[NSMenuItem alloc] initWithTitle:@"Backslash" action:@selector(description) keyEquivalent:@"\\"];
+ backslash.identifier=@"TSShortcut.displayBackslash:.0"; backslash.keyEquivalentModifierMask=C|S; backslash.allowsAutomaticKeyEquivalentLocalization=NO;
+ NSMenuItem *yen=[[NSMenuItem alloc] initWithTitle:@"Yen" action:@selector(description) keyEquivalent:@"\u00a5"];
+ yen.identifier=@"TSShortcut.displayYen:.0"; yen.keyEquivalentModifierMask=C|S; yen.allowsAutomaticKeyEquivalentLocalization=NO;
+ [menu addItem:pattern];
+ for (NSMenuItem *item in @[letter,equals,digit,backslash,yen]) [menu addItem:item];
+ TSKeyboardShortcuts *local=[TSKeyboardShortcuts new];
+ TSShortcutStore *store=[[TSShortcutStore alloc] initWithMenu:main defaults:[TSMemoryDefaults new]];
+ local.store=store;
+ __block NSArray<TSShortcutMacro *> *macros=@[];
+ local.macroProvider=^{ return macros; };
+ NSMenuItem *macroItem=[[NSMenuItem alloc] initWithTitle:@"Macro" action:@selector(doMacro:) keyEquivalent:@""];
+ macroItem.allowsAutomaticKeyEquivalentLocalization=NO;
+ [menu addItem:macroItem];
+ TSShortcutPaneController *pane=[[TSShortcutPaneController alloc] initWithShortcuts:local];
+ [pane loadView];
+ pane.searchMode.selectedSegment=1; [pane changeSearchMode:pane.searchMode];
+ REQUIRE(pane.searchingByKey);
+ // The five commands stay out of the menu until their own cases. A shared key would
+ // make another row the winner, and the field would follow that row.
+ for (NSMenuItem *item in @[letter,equals,digit,backslash,yen]) [menu removeItem:item];
+ __block NSUInteger shown=0;
+ void (^search)(NSString *,NSString *,NSEventModifierFlags)=^(NSString *characters,NSString *plain,NSEventModifierFlags flags) {
+  fixtureCharacters=plain;
+  REQUIRE([pane handleKeySearchEvent:Event(characters,flags,0)]);
+ };
+ void (^requireColumn)(NSString *,NSString *,BOOL (^)(TSShortcutMatch *))=^(NSString *name,NSString *expected,BOOL (^select)(TSShortcutMatch *match)) {
+  NSString *column=ShortcutColumnText(pane,select);
+  if (column==nil || ![column isEqual:expected] || ![pane.search.stringValue isEqual:column]) {
+   fprintf(stderr,"FAIL display %s: menu %s field %s expected %s matches %lu\n",name.UTF8String,column.UTF8String ?: "(none)",pane.search.stringValue.UTF8String,expected.UTF8String,(unsigned long)pane.searchMatches.count);
+   exit(1);
+  }
+  shown++;
+ };
+ NSEventModifierFlags sets[]={C,C|S,C|O,C|K,C|O|S,C|K|S,C|K|O,C|K|O|S,K,K|S,K|O,O|S,O,S,K|O|S};
+ // Letters, digits, the ASCII symbols, and the editing keys, held as the menu stores them.
+ NSMutableArray<NSString *> *direct=[NSMutableArray array];
+ for (unichar c=0x20; c<0x7f; c++) {
+  if (c>='A' && c<='Z') continue;
+  [direct addObject:DisplayChar(c)];
+ }
+ for (NSString *key in @[@"\t",@"\r",@"\033",@"\031",@"\177",@"\uf700",@"\uf701",@"\uf702",@"\uf703",
+   DisplayChar(NSHomeFunctionKey),DisplayChar(NSEndFunctionKey),DisplayChar(NSPageUpFunctionKey),DisplayChar(NSPageDownFunctionKey),DisplayChar(NSDeleteFunctionKey)]) [direct addObject:key];
+ for (int f=1; f<=20; f++) [direct addObject:DisplayChar(NSF1FunctionKey+f-1)];
+ unichar symbols[]={0x00a5,0xff0c,0x3001,0x00b7,0x2014,0xff0d};
+ for (size_t s=0; s<sizeof symbols/sizeof *symbols; s++) [direct addObject:DisplayChar(symbols[s])];
+ for (NSString *key in direct) {
+  for (size_t i=0; i<sizeof sets/sizeof *sets; i++) {
+   if (ReservedCompletionKey(store.defaults,key,sets[i])) continue;
+   SetShownKey(pattern,key,sets[i]);
+   search(key,key,sets[i]);
+   TSShortcutBinding *live=TSShownBinding(pattern);
+   NSString *expected=[TSShortcutStore displayKey:live.key modifiers:live.modifiers];
+   requireColumn([NSString stringWithFormat:@"direct U+%04X", [key characterAtIndex:0]],expected,^BOOL(TSShortcutMatch *match){ return match.menuItem==pattern && match.winner; });
+   REQUIRE([live isEqual:TSBinding(key,sets[i])]);
+  }
+ }
+ // The same keys with only Shift, Option or Control: command completion hides the rows, and the field keeps the menu spelling.
+ for (NSString *key in @[@"\t",@"\033",@"\031"]) {
+  NSEventModifierFlags alone[]={S,O,K};
+  for (size_t a=0; a<sizeof alone/sizeof *alone; a++) {
+   NSEventModifierFlags flags=alone[a];
+   if (!ReservedCompletionKey(store.defaults,key,flags)) continue;
+   SetShownKey(pattern,key,flags);
+   search(key,key,flags);
+   TSShortcutBinding *live=TSShownBinding(pattern);
+   NSString *expected=[TSShortcutStore displayKey:live.key modifiers:live.modifiers];
+   if (pane.searchMatches.count!=0 || ![pane.search.stringValue isEqual:expected] || ![live isEqual:TSBinding(key,flags)]) {
+    fprintf(stderr,"FAIL reserved U+%04X: menu %s field %s matches %lu\n",[key characterAtIndex:0],expected.UTF8String,pane.search.stringValue.UTF8String,(unsigned long)pane.searchMatches.count);
+    exit(1);
+   }
+   shown++;
+  }
+ }
+ // A capital letter in the menu is Shift, including when the item omitted the flag.
+ SetShownKey(pattern,@"A",C);
+ search(@"a",@"a",C|S);
+ requireColumn(@"uppercase command",@"⇧⌘A",^BOOL(TSShortcutMatch *match){ return match.menuItem==pattern; });
+ // Shifted symbols. The menu may store the symbol without Shift (@), the base
+ // key with Shift (2), or the symbol with Shift as well (⇧@).
+ struct { unichar base, shifted; } pairs[]={
+  {'1','!'},{'2','@'},{'3','#'},{'4','$'},{'5','%'},{'6','^'},{'7','&'},{'8','*'},{'9','('},{'0',')'},
+  {'-','_'},{'=','+'},{'[','{'},{']','}'},{'\\','|'},{';',':'},{'\'','"'},{',','<'},{'.','>'},{'/','?'},{'`','~'},
+  {0x00a5,'|'}
+ };
+ NSEventModifierFlags extras[]={0,O,K,K|O};
+ for (size_t p=0; p<sizeof pairs/sizeof *pairs; p++) {
+  NSString *base=DisplayChar(pairs[p].base),*shifted=DisplayChar(pairs[p].shifted);
+  for (size_t e=0; e<sizeof extras/sizeof *extras; e++) {
+   NSEventModifierFlags extra=extras[e];
+   SetShownKey(pattern,shifted,C|extra);
+   search(shifted,base,C|S|extra);
+   requireColumn([NSString stringWithFormat:@"symbol U+%04X",pairs[p].shifted],[TSShortcutStore displayKey:shifted modifiers:C|extra],^BOOL(TSShortcutMatch *match){ return match.menuItem==pattern; });
+   SetShownKey(pattern,base,C|S|extra);
+   search(shifted,base,C|S|extra);
+   NSString *shiftedMenu=[TSShortcutStore displayKey:base modifiers:C|S|extra];
+   TSShortcutBinding *recorded=TSRecordedBinding(Event(shifted,C|S|extra,0),base);
+   NSString *translated=[TSShortcutStore displayKey:recorded.key modifiers:recorded.modifiers];
+   REQUIRE(![shiftedMenu isEqual:translated]);
+   requireColumn([NSString stringWithFormat:@"base U+%04X",pairs[p].base],shiftedMenu,^BOOL(TSShortcutMatch *match){ return match.menuItem==pattern; });
+   SetShownKey(pattern,shifted,C|S|extra);
+   search(shifted,base,C|S|extra);
+   requireColumn([NSString stringWithFormat:@"shifted U+%04X",pairs[p].shifted],[TSShortcutStore displayKey:shifted modifiers:C|S|extra],^BOOL(TSShortcutMatch *match){ return match.menuItem==pattern; });
+  }
+ }
+ // Two spellings of one keypress. The field follows the item that runs.
+ NSMenuItem *alias=[[NSMenuItem alloc] initWithTitle:@"Alias" action:@selector(description) keyEquivalent:@""];
+ alias.allowsAutomaticKeyEquivalentLocalization=NO; [menu addItem:alias];
+ SetShownKey(pattern,@"2",C|S); SetShownKey(alias,@"@",C);
+ search(@"@",@"2",C|S);
+ requireColumn(@"winner at",@"⌘@",^BOOL(TSShortcutMatch *match){ return match.menuItem==alias && match.winner; });
+ REQUIRE([ShortcutColumnText(pane,^BOOL(TSShortcutMatch *match){ return match.menuItem==pattern; }) isEqual:@"⇧⌘2"]);
+ REQUIRE(![pane.search.stringValue isEqual:@"⇧⌘2"]);
+ SetShownKey(pattern,@"\\",C|S); SetShownKey(alias,@"|",C);
+ search(@"|",@"\\",C|S);
+ requireColumn(@"winner pipe",@"⌘|",^BOOL(TSShortcutMatch *match){ return match.menuItem==alias && match.winner; });
+ REQUIRE([ShortcutColumnText(pane,^BOOL(TSShortcutMatch *match){ return match.menuItem==pattern; }) isEqual:@"⇧⌘\\"]);
+ [menu removeItem:alias];
+ SetShownKey(pattern,@"",0);
+ for (NSMenuItem *item in @[letter,equals,digit,backslash,yen]) [menu addItem:item];
+ // Commands, whose column is the store's display of the menu key.
+ struct { NSMenuItem *item; NSString *characters,*plain,*shown; NSEventModifierFlags flags; } commands[]={
+  {letter,@"b",@"b",@"⌘B",C},
+  {equals,@"=",@"0",@"⌘=",C|S},
+  {digit,@"@",@"2",@"⇧⌘2",C|S},
+  {backslash,@"|",@"\\",@"⇧⌘\\",C|S},
+  {yen,@"|",@"\u00a5",@"⇧⌘\u00a5",C|S}
+ };
+ for (size_t i=0; i<sizeof commands/sizeof *commands; i++) {
+  NSMenuItem *item=commands[i].item;
+  search(commands[i].characters,commands[i].plain,commands[i].flags);
+  requireColumn(item.title,commands[i].shown,^BOOL(TSShortcutMatch *match){ return match.menuItem==item && match.winner; });
+ }
+ for (NSMenuItem *item in @[letter,equals,digit,backslash,yen]) [menu removeItem:item];
+ // Macros keep the key the file names. JIS Shift+¥ stays on the yen key there.
+ for (size_t p=0; p<sizeof pairs/sizeof *pairs; p++) {
+  NSString *base=DisplayChar(pairs[p].base);
+  TSShortcutMacro *macro=Macro([NSString stringWithFormat:@"macro %u",pairs[p].base],base,C|S,90);
+  macros=@[macro];
+  SetShownKey(macroItem,base,C|S); macroItem.identifier=TSMacroItemIdentifier(macro.indexPath);
+  search(DisplayChar(pairs[p].shifted),base,C|S);
+  TSShortcutBinding *menuShown=[store shownBindingForGivenKey:base modifiers:C|S];
+  NSString *menuDisplay=[TSShortcutStore displayKey:menuShown.key modifiers:menuShown.modifiers];
+  TSShortcutBinding *recorded=TSRecordedBinding(Event(DisplayChar(pairs[p].shifted),C|S,0),base);
+  REQUIRE(![menuDisplay isEqual:[TSShortcutStore displayKey:recorded.key modifiers:recorded.modifiers]]);
+  requireColumn(macro.name,menuDisplay,^BOOL(TSShortcutMatch *match){ return match.macro==macro && match.winner; });
+ }
+ for (NSString *key in @[@"q",@"m",@"5"]) {
+  NSEventModifierFlags flags=[key isEqual:@"m"]?C|S:C;
+  TSShortcutMacro *macro=Macro(key,key,flags,91);
+  macros=@[macro];
+  SetShownKey(macroItem,key,flags); macroItem.identifier=TSMacroItemIdentifier(macro.indexPath);
+  search(key,key,flags);
+  requireColumn(macro.name,[TSShortcutStore displayKey:key modifiers:flags],^BOOL(TSShortcutMatch *match){ return match.macro==macro && match.winner; });
+ }
+ macros=@[]; SetShownKey(macroItem,@"",0);
+ printf("PASS: key search matches the menu display for %lu shortcut patterns\n",(unsigned long)shown);
+}
 // The arrow sits between the status words and the link, and that group shares the guide's center.
 static void RequireSystemSettingsLine(TSShortcutPaneController *pane) {
   REQUIRE(!pane.systemSettingsArrow.hidden && !pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
@@ -373,6 +573,50 @@ int main(int argc,char **argv){@autoreleasepool{
  [menu removeItem:rotate];[menu removeItem:switchViews];
  fixtureCharacters=@"0";[shell.window performKeyEquivalent:german];
  REQUIRE([pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"=" modifiers:C]]);
+ // JIS Shift+¥ produces | . Comparison keeps that absolute-value spelling.
+ // The field shows the menu spelling of the command that runs: Shift and the
+ // yen key (backslash or ¥), the same string as the shortcut column.
+ {
+  NSArray<TSShortcutMacro *> * (^provider)(void)=coordinator.macroProvider;
+  BOOL wasRebuilding=coordinator.rebuildingMacros;
+  coordinator.rebuildingMacros=YES;
+  fixtureCharacters=@"\\";
+  REQUIRE([pane handleKeySearchEvent:Event(@"|",C|S,93)]);
+  REQUIRE(pane.searchMatches.count==0 && [pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"|" modifiers:C]]);
+  NSTableColumn *shortcutColumn=nil;
+  for(NSTableColumn *column in pane.table.tableColumns) if([column.identifier isEqual:@"shortcut"]) shortcutColumn=column;
+  REQUIRE(shortcutColumn!=nil);
+  struct { NSString *stored, *plain, *shown; } yenKeys[]={{@"\\",@"\\",@"⇧⌘\\"},{@"\u00a5",@"\u00a5",@"⇧⌘\u00a5"}};
+  for(size_t i=0;i<2;i++){
+   TSShortcutMacro *yenMacro=Macro(@"Absolute value",yenKeys[i].stored,C|S,80);
+   coordinator.macroProvider=^{return @[yenMacro];};
+   NSMenuItem *yenItem=Item(yenMacro.name,yenMacro.key,yenMacro.modifiers);
+   yenItem.action=@selector(doMacro:);yenItem.identifier=TSMacroItemIdentifier(yenMacro.indexPath);
+   [menu addItem:yenItem];
+   fixtureCharacters=yenKeys[i].plain;
+   NSEvent *yenEvent=Event(@"|",C|S,93);
+   TSShortcutBinding *recorded=TSRecordedBinding(yenEvent,yenKeys[i].plain);
+   REQUIRE([recorded.key isEqual:@"|"] && (recorded.modifiers&S)==0);
+   REQUIRE([pane handleKeySearchEvent:yenEvent]);
+   REQUIRE(pane.searchMatches.count==1 && pane.searchMatches[0].macro==yenMacro && pane.searchMatches[0].winner);
+   NSTextField *column=(NSTextField *)[pane tableView:pane.table viewForTableColumn:shortcutColumn row:1];
+   REQUIRE([column.stringValue isEqual:yenKeys[i].shown] && [pane.search.stringValue isEqual:column.stringValue]);
+   // A command that stores the absolute value still shows that spelling; it runs.
+   NSMenuItem *pipe=Item(@"Pipe",@"|",C);[menu addItem:pipe];
+   REQUIRE([pane handleKeySearchEvent:yenEvent]);
+   BOOL pipeWins=NO,yenListed=NO;
+   for(TSShortcutMatch *hit in pane.searchMatches){
+    if(hit.menuItem==pipe){pipeWins=hit.winner;REQUIRE([pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"|" modifiers:C]]);}
+    if(hit.macro==yenMacro)yenListed=YES;
+   }
+   REQUIRE(pipeWins && yenListed);
+   [menu removeItem:pipe];[menu removeItem:yenItem];
+  }
+  coordinator.macroProvider=provider;coordinator.rebuildingMacros=wasRebuilding;
+ }
+ fixtureCharacters=@"0";[shell.window performKeyEquivalent:german];
+ REQUIRE([pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"=" modifiers:C]]);
+ CheckKeySearchDisplayMatchesMenu();
  fixtureCharacters=@"\033";[shell.window performKeyEquivalent:Event(@"\033",S,53)];
  REQUIRE(pane.searchingByKey && [pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"\033" modifiers:S]]);
  REQUIRE([TSIsolatedAppKitDefaults.values isEqual:saved]);
