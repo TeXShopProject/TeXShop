@@ -3,8 +3,10 @@
 
 Synthetic PDFs are generated while the probe runs. Core Graphics and PDFKit must agree within
 one page point on each edge. A borderless link may use the background measurement; a popup,
-highlight, ink mark, bordered link or unknown annotation may not. The three benchmark PDFs
-stay outside this repository.
+highlight, ink mark, bordered link or unknown annotation may not. The workers reject those
+annotations themselves, and a rejection stores nothing. A highlight or ink mark added to
+the open document leaves the clone for the rest of its life. The three benchmark PDFs stay
+outside this repository.
 """
 from pathlib import Path
 import argparse, os, subprocess, sys, tempfile
@@ -340,21 +342,76 @@ int main(int argc, char **argv) {
             ProbeView *annotatedView = [ProbeView new];
             annotatedView.displayBox = kPDFDisplayBoxCropBox;
             annotatedView.document = annotated;
-            BOOL started = TSContentWidthScheduleFast(annotatedView, nil);
             BOOL allow = [name isEqualToString:@"link"];
-            check(started == allow, [NSString stringWithFormat:@"%@ %@ the background measurement", name, allow ? @"uses" : @"stays off"]);
+            __block TSContentWidthResult result = (TSContentWidthResult)-1;
+            BOOL started = TSContentWidthScheduleFast(annotatedView, ^(TSContentWidthResult next) { result = next; });
+            check(started, [NSString stringWithFormat:@"%@ starts a background measurement", name]);
+            for (int i = 0; i < 300 && result < 0; i++)
+                [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+            known = NO;
+            NSRect ink = TSContentWidthRawInk(annotated, kPDFDisplayBoxCropBox, [annotated pageAtIndex:0], &known);
             if (allow) {
-                __block TSContentWidthResult result = (TSContentWidthResult)-1;
-                // The call above already joined a job without a callback. Ask again and wait.
-                TSContentWidthScheduleFast(annotatedView, ^(TSContentWidthResult next) { result = next; });
-                for (int i = 0; i < 300 && result < 0; i++)
-                    [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
-                known = NO;
-                NSRect ink = TSContentWidthRawInk(annotated, kPDFDisplayBoxCropBox, [annotated pageAtIndex:0], &known);
                 check(result == TSContentWidthResultReady && known && sameRect(ink, NSMakeRect(30, 20, 40, 30)),
                       @"a borderless link leaves the ink unchanged");
+            } else {
+                check(result == TSContentWidthResultPDFKit && !known,
+                      [NSString stringWithFormat:@"%@ stays off the stored measurement", name]);
+                check(!TSContentWidthScheduleFast(annotatedView, nil),
+                      [NSString stringWithFormat:@"%@ is not measured in the background again", name]);
             }
         }
+
+        NSData *mixed = pdfPages(@[
+            @{@"media": @"[0 0 200 100]", @"rotate": @0, @"stream": @"0 g\n10 20 30 40 re f"},
+            @{@"media": @"[0 0 200 100]", @"rotate": @0, @"stream": @"0 g\n12 18 20 16 re f",
+              @"extra": @"/Annots [<< /Type /Annot /Subtype /Popup /Rect [1 1 20 20] >>]"},
+        ]);
+        PDFDocument *mixedDocument = cloneAt(root, @"mixed", mixed, keep);
+        ProbeView *mixedView = [ProbeView new];
+        mixedView.displayBox = kPDFDisplayBoxCropBox;
+        mixedView.document = mixedDocument;
+        __block TSContentWidthResult mixedResult = (TSContentWidthResult)-1;
+        check(TSContentWidthScheduleFast(mixedView, ^(TSContentWidthResult next) { mixedResult = next; }),
+              @"a later popup can start a background measurement");
+        for (int i = 0; i < 300 && mixedResult < 0; i++)
+            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+        known = NO;
+        TSContentWidthRawInk(mixedDocument, kPDFDisplayBoxCropBox, [mixedDocument pageAtIndex:0], &known);
+        BOOL secondKnown = NO;
+        TSContentWidthRawInk(mixedDocument, kPDFDisplayBoxCropBox, [mixedDocument pageAtIndex:1], &secondKnown);
+        check(mixedResult == TSContentWidthResultPDFKit && !known && !secondKnown,
+              @"a popup on a later page stores neither page");
+
+        // The clone file has no annotation added or removed after it was copied. Finishing
+        // the fast path again would fit without that ink.
+        for (NSString *kind in @[@"highlight", @"ink"]) {
+            PDFDocument *live = cloneAt(root, [@"live-" stringByAppendingString:kind], plainPage, keep);
+            ProbeView *liveView = [ProbeView new];
+            liveView.displayBox = kPDFDisplayBoxCropBox;
+            liveView.document = live;
+            check(finish(liveView) == TSContentWidthResultReady && TSContentWidthIsComplete(live, kPDFDisplayBoxCropBox),
+                  [NSString stringWithFormat:@"%@ starts from a clone with no annotations", kind]);
+            PDFAnnotationSubtype type = [kind isEqualToString:@"highlight"] ? PDFAnnotationSubtypeHighlight : PDFAnnotationSubtypeInk;
+            PDFAnnotation *mark = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(4, 4, 36, 14) forType:type withProperties:nil];
+            mark.color = NSColor.blackColor;
+            [[live pageAtIndex:0] addAnnotation:mark];
+            check(TSContentWidthDrawingDiverged(live) && !TSContentWidthIsComplete(live, kPDFDisplayBoxCropBox),
+                  [NSString stringWithFormat:@"adding %@ in memory leaves the clone", kind]);
+            check(!TSContentWidthScheduleFast(liveView, nil),
+                  [NSString stringWithFormat:@"%@ added in memory is not measured from the clone", kind]);
+        }
+        PDFDocument *removedLink = cloneAt(root, @"live-remove", pdfAnnotated(annotations[@"link"], nil), keep);
+        ProbeView *removedLinkView = [ProbeView new];
+        removedLinkView.displayBox = kPDFDisplayBoxCropBox;
+        removedLinkView.document = removedLink;
+        check(finish(removedLinkView) == TSContentWidthResultReady,
+              @"a borderless link can be measured before it is removed");
+        PDFAnnotation *link = [removedLink pageAtIndex:0].annotations.firstObject;
+        check(link != nil, @"the borderless link is on the page");
+        [[removedLink pageAtIndex:0] removeAnnotation:link];
+        check(TSContentWidthDrawingDiverged(removedLink) && !TSContentWidthIsComplete(removedLink, kPDFDisplayBoxCropBox) &&
+              !TSContentWidthScheduleFast(removedLinkView, nil),
+              @"removing an annotation in memory leaves the clone");
 
         NSData *twoPages = pdfPages(@[
             @{@"media": @"[0 0 200 100]", @"rotate": @0, @"stream": @"0 g\n10 20 30 40 re f"},
@@ -395,12 +452,23 @@ int main(int argc, char **argv) {
               @"a file /Rotate stays eligible for the background measurement");
 
         PDFDocument *dense = cloneAt(root, @"dense", manyLinks(12000), keep);
-        [[dense pageAtIndex:0].annotations count];
+        NSDate *denseStart = [NSDate date];
         TSContentWidthScan denseScan = TSContentWidthPrepareFast(dense, kPDFDisplayBoxCropBox, 0.001);
-        check(denseScan == TSContentWidthScanPending, @"a page of links yields before the walk is finished");
-        for (int i = 0; i < 80 && denseScan == TSContentWidthScanPending; i++)
-            denseScan = TSContentWidthPrepareFast(dense, kPDFDisplayBoxCropBox, 0.001);
-        check(denseScan == TSContentWidthScanDeny, @"the walk resumes and still refuses a popup");
+        NSTimeInterval denseElapsed = -denseStart.timeIntervalSinceNow;
+        check(denseScan == TSContentWidthScanAllow && denseElapsed < 0.05,
+              [NSString stringWithFormat:@"thousands of links do not occupy the main thread (%.3f s)", denseElapsed]);
+        ProbeView *denseView = [ProbeView new];
+        denseView.displayBox = kPDFDisplayBoxCropBox;
+        denseView.document = dense;
+        __block TSContentWidthResult denseResult = (TSContentWidthResult)-1;
+        check(TSContentWidthScheduleFast(denseView, ^(TSContentWidthResult next) { denseResult = next; }),
+              @"a page of links can start a background measurement");
+        for (int i = 0; i < 300 && denseResult < 0; i++)
+            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+        check(denseResult == TSContentWidthResultPDFKit && !TSContentWidthIsComplete(dense, kPDFDisplayBoxCropBox),
+              @"the workers still refuse a popup");
+        check(TSContentWidthPrepareFast(dense, kPDFDisplayBoxCropBox, 1) == TSContentWidthScanDeny,
+              @"the refusal is remembered");
 
         const NSUInteger prefix = 48000;
         NSData *blanks = manyBlankPages(prefix);
@@ -420,16 +488,13 @@ int main(int argc, char **argv) {
         TSContentWidthRawInk(longDocument, kPDFDisplayBoxCropBox, [longDocument pageAtIndex:prefix - 1], &known);
         check(!sliceFailed && done && known, @"later short slices reach the page that was not measured");
 
-        // No annotations: the deadline has to be reached before the next page is opened.
+        // No annotations: the main thread must not open every page before the workers start.
         PDFDocument *quiet = cloneAt(root, @"quiet", manyBlankPages(2000), keep);
         NSDate *quietStart = [NSDate date];
         TSContentWidthScan quietScan = TSContentWidthPrepareFast(quiet, kPDFDisplayBoxCropBox, 0.008);
         NSTimeInterval quietElapsed = -quietStart.timeIntervalSinceNow;
-        check(quietScan == TSContentWidthScanPending && quietElapsed < 0.2,
-              [NSString stringWithFormat:@"a long document with no annotations yields (%.3f s)", quietElapsed]);
-        for (int i = 0; i < 100 && quietScan == TSContentWidthScanPending; i++)
-            quietScan = TSContentWidthPrepareFast(quiet, kPDFDisplayBoxCropBox, 0.008);
-        check(quietScan == TSContentWidthScanAllow, @"the walk resumes and still allows a document with no annotations");
+        check(quietScan == TSContentWidthScanAllow && quietElapsed < 0.05,
+              [NSString stringWithFormat:@"a long document does not open its pages on the main thread (%.3f s)", quietElapsed]);
 
         // A page inserted during the draw advances the generation. The ink of that draw stays out.
         PDFDocument *edited = [[PDFDocument alloc] initWithData:pdfPages(@[
