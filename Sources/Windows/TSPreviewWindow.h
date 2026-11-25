@@ -136,6 +136,7 @@ extern NSUserInterfaceItemIdentifier const TSPreviewWindowRestorationIdentifier;
 #endif
 - (void) splitPdfKitWindow: (id)sender; 
 // In a window whose content runs under the toolbar, parts side by side start below it.
+// The Preview window keeps its pages below the toolbar, so this placement is not used there.
 // Called after the window was split or unsplit, and when the split view comes back to it.
 - (void) placeSplitViewForToolbar;
 // Hands the split view back to its frame, before it moves to another window.

@@ -2,19 +2,24 @@
 """Document windows whose content runs under the toolbar (macOS 26 and later).
 
 The windows of the compiled TSDocument nibs of every language, which are never
-ordered on screen, get an Expanded toolbar and then the production
-TSDocumentWindowPrepare, as setupToolbar does. The test checks:
+ordered on screen, get an Expanded toolbar and then the production preparation
+setupToolbar uses. The source window and the combined window use
+TSDocumentWindowPrepare. The Preview window uses TSDocumentWindowPrepareSolidToolbar,
+so its pages stay below the toolbar and the toolbar ends in a line. The test checks:
 
-- the source window, the Preview window and the combined window use a full-size
-  content view, and the text and the first page start below the toolbar;
+- the source window and the combined window use a full-size content view, and the
+  text starts below the toolbar; the Preview window does not, and its first page
+  starts below the toolbar;
 - splitting the source (the production splitWindow:) puts the divider in the
   middle of the area that can be seen, in the source window and in the combined
   window, with and without a full-size content view (the combined window used to
   leave the lower part far smaller);
-- a drawer at the side of the Preview window starts where the rounding of the window's
-  top corner ends, beside the title bar and the toolbar (#67), and not higher than the
-  area below the toolbar where that area starts higher, as in full screen, also when it
-  is left open into and out of full screen; on macOS 27
+- a drawer at the side of the Preview window stays where AppKit put it, below the
+  title bar, because that window's pages do not run under the toolbar; the same drawer
+  beside the combined window, whose content does run under the toolbar, starts where
+  the rounding of the window's top corner ends, beside the title bar and the toolbar
+  (#67), and not higher than the area below the toolbar where that area starts higher,
+  as in full screen, also when it is left open into and out of full screen; on macOS 27
   and later the window's corner radius that AppKit reports still gives that place; the
   drawer's frame takes the window's colors in Dark Mode, on every system.
 
@@ -29,7 +34,7 @@ from production_fragments import method, verify_embedded
 
 MUTATIONS = {
     # The windows keep their content below the toolbar.
-    'not-full-size': ('TSDocumentWindowGlass.m', '        window.styleMask |= NSWindowStyleMaskFullSizeContentView;\n', ''),
+    'not-full-size': ('TSDocumentWindowGlass.m', '            window.styleMask |= NSWindowStyleMaskFullSizeContentView;\n', ''),
     # The window keeps its content size and gets lower by the height of the toolbar.
     'frame-not-kept': ('TSDocumentWindowGlass.m', '        [window setFrame:frame display:NO];\n', ''),
     # Splitting the source leaves the parts where AppKit puts them.
@@ -197,7 +202,10 @@ static TSDocument *Open(BOOL prepare) {
     if (prepare)
         for (NSWindow *w in @[doc->textWindow, doc.pdfKitWindow, doc->fullSplitWindow]) {
             NSRect frame = w.frame;
-            TSDocumentWindowPrepare(w);
+            if (w == doc.pdfKitWindow)
+                TSDocumentWindowPrepareSolidToolbar(w);
+            else
+                TSDocumentWindowPrepare(w);
             Check(NSEqualRects(frame, w.frame), [NSString stringWithFormat:@"%@ keeps its frame (%@, %@)", NSStringFromClass(w.class),
                                                  NSStringFromRect(frame), NSStringFromRect(w.frame)]);
         }
@@ -285,9 +293,13 @@ int main(int argc, char **argv) { @autoreleasepool {
 
         TSDocument *doc = Open(YES);
         Check(doc && doc->textWindow && doc.pdfKitWindow && doc->fullSplitWindow && doc->myDrawer, [@"the nib has the document windows" stringByAppendingString:nibName]);
-        for (NSWindow *w in @[doc->textWindow, doc.pdfKitWindow, doc->fullSplitWindow])
+        for (NSWindow *w in @[doc->textWindow, doc->fullSplitWindow])
             Check(((w.styleMask & NSWindowStyleMaskFullSizeContentView) != 0) == glass,
                   [NSString stringWithFormat:@"%@ uses a full-size content view on macOS 26 and later%@", NSStringFromClass(w.class), nibName]);
+        Check((doc.pdfKitWindow.styleMask & NSWindowStyleMaskFullSizeContentView) == 0
+              && doc.pdfKitWindow.titlebarSeparatorStyle == NSTitlebarSeparatorStyleLine
+              && Band(doc.pdfKitWindow) < 0.5,
+              [@"the Preview window keeps its pages below a toolbar that ends in a line" stringByAppendingString:nibName]);
         if (!glass) continue;
 
         // The source window: the first line starts below the toolbar.
@@ -327,20 +339,28 @@ int main(int argc, char **argv) { @autoreleasepool {
         [doc splitWindow:nil]; Settle(doc->textWindow);
         Check(doc->scrollView2.superview == nil, [@"the source window is unsplit again" stringByAppendingString:nibName]);
 
-        // The drawer of the Preview window starts where the rounding of the window's top corner
-        // ends (24 points below the top), beside the title bar and the toolbar (#67), with a frame
-        // in the window's colors.
+        // The Preview window's pages stay below the toolbar, so its drawer stays where AppKit put it.
+        CGFloat previewBase = doc->myDrawer.leadingOffset;
+        NSDrawer *previewDrawer = OpenDrawer(doc);
+        Check(fabs(previewDrawer.leadingOffset - previewBase) < 0.5,
+              [NSString stringWithFormat:@"the Preview window's drawer stays below the title bar (%.1f)%@",
+               previewDrawer.leadingOffset, nibName]);
+        // The same drawer beside the combined window, whose content still runs under the toolbar,
+        // starts where the rounding of that window's top corner ends (24 points below the top),
+        // beside the title bar and the toolbar (#67).
+        NSWindow *host = doc->fullSplitWindow;
+        [doc->myDrawer setParentWindow:host];
         CGFloat base = doc->myDrawer.leadingOffset;
         NSDrawer *drawer = OpenDrawer(doc);
-        Check(TitleBar(pw) > 24 && TitleBar(pw) < Band(pw) - 20 &&
+        Check(TitleBar(host) > 24 && TitleBar(host) < Band(host) - 20 &&
               fabs(drawer.leadingOffset - (base + 24)) < 0.5,
               [NSString stringWithFormat:@"the drawer starts where the rounding of the corner ends (%.1f, title bar %.1f, band %.1f)%@",
-               drawer.leadingOffset, TitleBar(pw), Band(pw), nibName]);
+               drawer.leadingOffset, TitleBar(host), Band(host), nibName]);
         // macOS 27 and later tell the corner radius: the rounding (a continuous curve) ends at
         // 1.5 times it, where the drawer starts.
         if (@available(macOS 27.0, *)) {
-            CornerProbe *probe = [[CornerProbe alloc] initWithFrame:NSMakeRect(0, NSHeight(pw.contentView.bounds) - 80, 80, 80)];
-            [pw.contentView addSubview:probe];
+            CornerProbe *probe = [[CornerProbe alloc] initWithFrame:NSMakeRect(0, NSHeight(host.contentView.bounds) - 80, 80, 80)];
+            [host.contentView addSubview:probe];
             [probe invalidateCornerConfiguration];
             CGFloat radius = probe.effectiveCornerRadii.topLeft;
             [probe removeFromSuperview];
@@ -355,21 +375,21 @@ int main(int argc, char **argv) { @autoreleasepool {
             originalDrawerState = method_setImplementation(class_getInstanceMethod(NSDrawer.class, @selector(state)), (IMP)DrawerState);
         }
         for (NSNumber *band in @[@9, @21]) {
-            shortBandWindow = pw; shortBand = band.doubleValue;
+            shortBandWindow = host; shortBand = band.doubleValue;
             OpenDrawer(doc);
-            Check(fabs(Band(pw) - shortBand) < 0.5 && fabs(drawer.leadingOffset - (base + shortBand)) < 0.5,
+            Check(fabs(Band(host) - shortBand) < 0.5 && fabs(drawer.leadingOffset - (base + shortBand)) < 0.5,
                   [NSString stringWithFormat:@"with a band of %.0f the drawer starts below the band (%.1f)%@",
                    shortBand, drawer.leadingOffset, nibName]);
         }
         // A drawer left open into and out of full screen (where the band is 0) is placed again
         // when the window has gone in or out, without being opened again.
         drawerLooksOpen = drawer;
-        shortBandWindow = pw; shortBand = 0;
-        [NSNotificationCenter.defaultCenter postNotificationName:NSWindowDidEnterFullScreenNotification object:pw];
+        shortBandWindow = host; shortBand = 0;
+        [NSNotificationCenter.defaultCenter postNotificationName:NSWindowDidEnterFullScreenNotification object:host];
         Check(fabs(drawer.leadingOffset - base) < 0.5,
               [NSString stringWithFormat:@"an open drawer goes to the top in full screen (%.1f)%@", drawer.leadingOffset, nibName]);
         shortBandWindow = nil;
-        [NSNotificationCenter.defaultCenter postNotificationName:NSWindowDidExitFullScreenNotification object:pw];
+        [NSNotificationCenter.defaultCenter postNotificationName:NSWindowDidExitFullScreenNotification object:host];
         Check(fabs(drawer.leadingOffset - (base + 24)) < 0.5,
               [NSString stringWithFormat:@"out of full screen an open drawer goes back below the rounded corner (%.1f)%@", drawer.leadingOffset, nibName]);
         drawerLooksOpen = nil;

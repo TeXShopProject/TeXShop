@@ -111,7 +111,10 @@ BOOL TSDocumentWindowsUseFullSizeContent(void)
     return NO;
 }
 
-void TSDocumentWindowPrepare(NSWindow *window)
+// underToolbar is the macOS 26 full-size content view: the pages or the text scroll
+// under the title bar and the toolbar. Without it the content view starts below the
+// toolbar, and a line is drawn at the bottom of the toolbar.
+static void TSDocumentWindowPrepareChrome(NSWindow *window, BOOL underToolbar)
 {
     if (!window)
         return;
@@ -126,13 +129,30 @@ void TSDocumentWindowPrepare(NSWindow *window)
             [NSNotificationCenter.defaultCenter addObserverForName:name object:nil queue:nil
                                                         usingBlock:^(NSNotification *notification) { TSDocumentWindowPlaceDrawers(notification.object); }];
     });
-    if (TSDocumentWindowsUseFullSizeContent() && !(window.styleMask & NSWindowStyleMaskFullSizeContentView)) {
-        // AppKit keeps the content size and makes the window lower by the height of the title
-        // bar and the toolbar; the window keeps the frame it was given instead.
+    BOOL hasFullSize = (window.styleMask & NSWindowStyleMaskFullSizeContentView) != 0;
+    if (hasFullSize != underToolbar) {
+        // AppKit keeps the content size and makes the window lower or taller by the height
+        // of the title bar and the toolbar; the window keeps the frame it was given instead.
         NSRect frame = window.frame;
-        window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+        if (underToolbar) {
+            window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+        } else {
+            window.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
+        }
         [window setFrame:frame display:NO];
     }
+    if (!underToolbar)
+        window.titlebarSeparatorStyle = NSTitlebarSeparatorStyleLine;
+}
+
+void TSDocumentWindowPrepare(NSWindow *window)
+{
+    TSDocumentWindowPrepareChrome(window, TSDocumentWindowsUseFullSizeContent());
+}
+
+void TSDocumentWindowPrepareSolidToolbar(NSWindow *window)
+{
+    TSDocumentWindowPrepareChrome(window, NO);
 }
 
 CGFloat TSDocumentWindowHiddenTop(NSView *view)
