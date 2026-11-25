@@ -76,6 +76,15 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     TSShortcutSearchByKey
 };
 
+// One row of the function list: a command Settings can list, or a menu item AppKit keeps.
+@interface TSShortcutFunctionRow : NSObject
+@property (strong, nullable) TSShortcutCommand *command;
+@property (strong, nullable) NSMenuItem *item;
+@property (copy) NSString *path;
+@end
+@implementation TSShortcutFunctionRow
+@end
+
 @interface TSShortcutPaneController () <NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate>
 @property (strong) TSKeyboardShortcuts *shortcuts;
 @property BOOL runningAfterLayoutKeys;
@@ -100,6 +109,8 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property (nullable) NSView *highlightedCompletionRow;
 @property NSSearchField *search;
 @property NSArray<TSShortcutCommand *> *visibleCommands;
+// The function list, in menu order. A command Settings lists, and a menu item with a shortcut and no command.
+@property NSArray<TSShortcutFunctionRow *> *functionRows;
 @property NSArray<NSButton *> *selectionButtons;
 @property (nullable) TSShortcutCommand *editingCommand;
 @property TSShortcutKeyRecorder *recorder;
@@ -268,21 +279,46 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     [self.table reloadData];
     [self updateStatus];
 }
+// The function list in menu order. Commands Settings lists stay as they are. A menu item AppKit inserts, such as
+// Minimize All, has a shortcut and no command: key search already shows it as unchangeable, and so does this list.
 - (void)reloadFunctionCommands {
     self.hint.stringValue = @"";
     if (self.store.unavailableCommands.count)
         self.hint.stringValue = [self.hint.stringValue stringByAppendingFormat:@"\n%@: %@", NSLocalizedString(@"Shortcut Unavailable", @""), [self.store.unavailableCommands componentsJoinedByString:@", "]];
     NSString *query = self.search.stringValue ?: @"";
     NSArray<NSString *> *tokens = TSSettingsQueryTokens(query);
-    NSMutableArray *visible = [NSMutableArray array];
-    for (TSShortcutCommand *command in self.store.commands) {
-        if (command.item.hidden && !command.item.allowsKeyEquivalentWhenHidden) continue;
-        if (!tokens.count || TSSettingsTextMatches(command.path, tokens)) [visible addObject:command];
-    }
+    NSMapTable<NSMenuItem *, TSShortcutCommand *> *byItem = [NSMapTable strongToStrongObjectsMapTable];
+    for (TSShortcutCommand *command in self.store.commands) [byItem setObject:command forKey:command.item];
+    NSMutableArray<TSShortcutCommand *> *visible = [NSMutableArray array];
+    NSMutableArray<TSShortcutFunctionRow *> *rows = [NSMutableArray array];
+    TSVisitMenu(self.store.menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (item.submenu != nil || item.action == TSMacroAction()) return;
+        if (item.hidden) { if (!item.allowsKeyEquivalentWhenHidden) return; }
+        TSShortcutCommand *command = [byItem objectForKey:item];
+        // An item with no command and no shortcut is not a row of this list.
+        if (command == nil && item.keyEquivalent.length == 0) return;
+        NSString *name = command != nil ? command.path : path;
+        if (tokens.count && !TSSettingsTextMatches(name, tokens)) return;
+        TSShortcutFunctionRow *row = [TSShortcutFunctionRow new];
+        row.command = command; row.item = item; row.path = name;
+        [rows addObject:row];
+        if (command != nil) [visible addObject:command];
+    });
     self.visibleCommands = visible;
+    self.functionRows = rows;
     [self reloadTable];
     for (NSButton *button in self.selectionButtons) button.enabled = [self selectedCommand] != nil && ![self selectedCommand].managedBySystem;
     [self updateStatus];
+}
+- (TSShortcutFunctionRow *)functionRowAtIndex:(NSInteger)row {
+    if (row < 0 || row >= (NSInteger)self.functionRows.count) return nil;
+    return self.functionRows[(NSUInteger)row];
+}
+// Gray rows of the function list have no shortcut Settings can restore. Key search says so on the row.
+- (BOOL)selectedFunctionRowCannotChange {
+    if (self.searchingByKey && self.searchEvent != nil) return NO;
+    TSShortcutFunctionRow *row = [self functionRowAtIndex:self.table.selectedRow];
+    return row != nil && (row.command == nil || row.command.managedBySystem);
 }
 - (void)controlTextDidChange:(NSNotification *)notification { if (!self.searchingByKey) { [self reloadCommands]; } }
 - (void)reloadCommands {
@@ -455,7 +491,7 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
     [self updateStatus];
 }
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return self.searchingByKey && self.searchEvent != nil ? (NSInteger)self.searchMatches.count + ([self macroHeaderRow] >= 0 ? 1 : 0) : (NSInteger)self.visibleCommands.count;
+    return self.searchingByKey && self.searchEvent != nil ? (NSInteger)self.searchMatches.count + ([self macroHeaderRow] >= 0 ? 1 : 0) : (NSInteger)self.functionRows.count;
 }
 - (BOOL)tableView:(NSTableView *)tableView isGroupRow:(NSInteger)row { return self.searchingByKey && row == [self macroHeaderRow]; }
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row { return ![self tableView:tableView isGroupRow:row]; }
@@ -535,9 +571,20 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
             [warning.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor]]];
         return cell;
     }
-    if (row < 0 || row >= (NSInteger)self.visibleCommands.count) { return nil; }
-    TSShortcutCommand *command = self.visibleCommands[(NSUInteger)row];
+    TSShortcutFunctionRow *functionRow = [self functionRowAtIndex:row];
+    if (functionRow == nil) { return nil; }
+    TSShortcutCommand *command = functionRow.command;
     BOOL isCommand = [column.identifier isEqualToString:@"command"];
+    // A menu item with no command is dimmed, like a command whose shortcut macOS keeps, and is not recorded.
+    if (command == nil) {
+        TSShortcutBinding *shown = functionRow.item != nil ? TSShownBinding(functionRow.item) : TSBinding(@"", 0);
+        NSString *fixedText = isCommand ? functionRow.path : [TSShortcutStore displayKey:shown.key modifiers:shown.modifiers];
+        NSTextField *fixed = [NSTextField labelWithString:fixedText];
+        fixed.textColor = NSColor.disabledControlTextColor;
+        fixed.lineBreakMode = NSLineBreakByTruncatingMiddle;
+        fixed.toolTip = functionRow.path;
+        return fixed;
+    }
     if (!isCommand && command == self.editingCommand) { return self.recordingCell; }
     NSString *text = isCommand ? command.path : [self.store displayKeyForCommand:command];
     // A command whose shortcut macOS keeps is dimmed and not recorded, as alternates are in Xcode.
@@ -560,7 +607,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 - (TSShortcutCommand *)selectedCommand {
     NSInteger row = self.table.selectedRow;
     if (self.searchingByKey && self.searchEvent != nil) { return [self matchAtRow:row].command; }
-    return row >= 0 && row < (NSInteger)self.visibleCommands.count ? self.visibleCommands[row] : nil;
+    return [self functionRowAtIndex:row].command;
 }
 - (void)tableViewSelectionDidChange:(NSNotification *)notification { [self updateSelectionButtons]; }
 - (void)showError:(NSString *)error {
@@ -706,7 +753,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 }
 - (TSShortcutCommand *)commandAtRow:(NSInteger)row {
     if (self.searchingByKey && self.searchEvent != nil) { return [self matchAtRow:row].command; }
-    return row >= 0 && row < (NSInteger)self.visibleCommands.count ? self.visibleCommands[(NSUInteger)row] : nil;
+    return [self functionRowAtIndex:row].command;
 }
 - (NSInteger)rowForCommand:(TSShortcutCommand *)command {
     if (command == nil) { return -1; }
@@ -806,12 +853,15 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     self.recorder.removeButton.hidden = command.item.keyEquivalent.length == 0;
     self.recordingWarning.hidden = self.recordingError == nil;
 }
-// The line under the list: why a recorded key was refused, otherwise the selected command's default.
+// The line under the list: why a recorded key was refused, that a gray row of the function list cannot
+// be changed, or otherwise the selected command's default.
 - (void)updateStatus {
     if (self.statusText == nil) { return; }
     NSString *error = self.editingCommand != nil ? self.recordingError : nil;
     TSShortcutCommand *command = self.editingCommand ?: [self selectedCommand];
     NSString *text = error;
+    if (text == nil && self.editingCommand == nil && [self selectedFunctionRowCannotChange])
+        text = NSLocalizedString(@"Cannot Be Changed", @"");
     if (text == nil && command != nil) {
         TSShortcutBinding *shownDefault = [self.store shownDefaultForCommand:command];
         text = shownDefault.key.length == 0 ? NSLocalizedString(@"Default shortcut: None", @"")
