@@ -2,10 +2,13 @@
 /*
  * TSDocumentWindowGlass.h
  *
- * On macOS 26 and later, document windows let their content run under the title
- * bar and the toolbar. The toolbar's glass then shows what scrolls beneath it,
- * as Preview does. Earlier systems keep every window's content below the toolbar
- * and leave the separator the nib built.
+ * On macOS 26 and later, the source window and the window that shows both let
+ * their content run under the title bar and the toolbar. The Preview window
+ * keeps its pages below the toolbar on every system, so a page does not show
+ * through the glass. On macOS 26 and later that toolbar ends in a hard edge
+ * with no line, and stays a solid color when a page scrolls, as Preview.app
+ * does. Earlier systems leave the separator the nib built, the line and short
+ * shadow Preview.app uses there.
  */
 
 #import <Cocoa/Cocoa.h>
@@ -22,8 +25,9 @@ BOOL TSDocumentWindowsUseFullSizeContent(void);
 // takes the window's colors.
 void TSDocumentWindowPrepare(NSWindow * _Nullable window);
 
-// The Preview window. It is prepared like the other document windows: on macOS 26 and
-// later a page scrolls under the toolbar, and earlier systems leave the nib's separator.
+// The Preview window. Its pages stay below the toolbar on every system. On macOS 26 and
+// later the toolbar ends in a hard edge with no line, and stays a solid color when a
+// page scrolls. Earlier systems leave the nib's separator.
 void TSDocumentWindowPrepareSolidToolbar(NSWindow * _Nullable window);
 
 // The source window, the Preview window and the window that shows both. The Preview
