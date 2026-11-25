@@ -27,6 +27,7 @@
 - (IBAction)displayHelpForPackage:sender;
 - (IBAction)displayStyleFile:sender;
 - (IBAction)displayFileEncoding:sender;
+- (IBAction)displayCommandCompletionQuickStart:sender;
 - (IBAction)displayTipsandTricks:sender;
 - (IBAction)displayNotesonApplescript:sender;
 - (IBAction)displayRecentTeXFonts:sender;

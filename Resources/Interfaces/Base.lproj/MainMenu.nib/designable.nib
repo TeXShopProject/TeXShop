@@ -1306,6 +1306,12 @@
                             <menuItem isSeparatorItem="YES" id="892">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="Command Completion Quick Start" id="CcQ-St-Itm" identifier="TSShortcut.displayCommandCompletionQuickStart:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayCommandCompletionQuickStart:" target="705" id="CcQ-St-Act"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Comment Lines and Hidden Settings" id="A3v-6c-2F4" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

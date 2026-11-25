@@ -1310,6 +1310,12 @@
                             <menuItem isSeparatorItem="YES" id="tDL-cD-YX6">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="命令补全快速入门（英文）" id="CcQ-St-Itm" identifier="TSShortcut.displayCommandCompletionQuickStart:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayCommandCompletionQuickStart:" target="705" id="CcQ-St-Act"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="魔法注释行和隐藏设置（英文）" id="572-je-Eqd" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

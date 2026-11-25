@@ -1309,6 +1309,12 @@
                             <menuItem isSeparatorItem="YES" id="EWi-dq-Fqg">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="Início rápido da conclusão de comandos (em inglês)" id="CcQ-St-Itm" identifier="TSShortcut.displayCommandCompletionQuickStart:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayCommandCompletionQuickStart:" target="671" id="CcQ-St-Act"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Linhas de comentário e definições ocultas (em inglês)" id="no4-PK-1TO" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
