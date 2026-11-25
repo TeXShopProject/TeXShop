@@ -189,6 +189,7 @@
 "Search by Key" = "Cerca per tasto";
 "Show in Macro Editor" = "Mostra nell’Editor delle macro";
 "Assigned" = "Assegnato";
+"Cannot Be Changed" = "Non modificabile";
 "Inactive for this key" = "Inattivo per questo tasto";
 "No command uses this key." = "Nessun comando usa questo tasto.";
 "Press a key" = "Premi un tasto";
@@ -257,6 +258,8 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Questa scorciatoia è in conflitto con la macro “%@” (%@), la cui scorciatoia sarà inattiva perché compare più avanti.";
 "This shortcut is already used by:\n%@" = "Questa scorciatoia è già usata da:\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "Questa scorciatoia è inattiva perché è in conflitto con “%@” (%@).";
+"Remove…" = "Rimuovi…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "Rimuovere la scorciatoia %2$@ dalla voce «%1$@»?";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "Questa scorciatoia è inattiva perché la macro “%@” (%@) la usa per prima.";
 
 

@@ -1127,6 +1127,41 @@ static void DumpControls(TSMacroEditor *owner) {
     DumpControl(@"code-label",[NSTextField labelWithString:@"x"]);
     NSButton *help=[NSButton buttonWithTitle:@"" target:nil action:NULL]; help.bezelStyle=NSBezelStyleHelpButton; DumpControl(@"code-help",help);
 }
+// Remove… appears for a warning whose menu command Settings can clear, and stays out of the message.
+// A recording error, and any other warning, hide it and give the message its width back.
+static void CheckRemoveMenuShortcut(TSMacroEditor *owner) {
+    NSButton *button=owner.removeMenuShortcutButton; NSTextField *label=owner.shortcutStatus;
+    REQUIRE(button && button.hidden && button.superview==label.superview && [button.title isEqual:NSLocalizedString(@"Remove…", @"")]);
+    REQUIRE(button.controlSize==NSControlSizeSmall && button.bezelStyle==NSBezelStylePush);
+    TSMacroTreeNode *node=[TSMacroTreeNode nodeWithName:@"Boxed" content:@"" key:@"I+ControlKey"];
+    NSString *reason=[NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).", @""), @"Source › Show Invisible Characters", @"⌃⌘I"];
+    [Conflicts setObject:reason forKey:node];
+    NSMapTable *info=[NSMapTable strongToStrongObjectsMapTable];
+    [info setObject:@{@"other":@{@"path":@"Source › Show Invisible Characters", @"key":@"i", @"modifiers":@(NSEventModifierFlagCommand|NSEventModifierFlagControl), @"macro":@NO, @"commandID":@"TSShortcut.example"}} forKey:node];
+    TSMacroTreeNode *savedItem=owner.previousItem; id savedRecording=owner.recordingItem; NSString *savedMessage=label.stringValue;
+    owner.shortcutConflictInfo=info; owner.previousItem=node; owner.recordingItem=nil;
+    [owner showShortcutStatus:reason];
+    REQUIRE(!button.hidden && !NSIntersectsRect(label.frame, button.frame) && NSContainsRect(owner.editorView.bounds, button.frame));
+    if (fabs(NSMinX(button.frame)-NSMaxX(label.frame)-8)>=1 || fabs(NSMaxY(button.frame)-NSMaxY(label.frame))>=1)
+        fprintf(stderr,"REMOVE button %s label %s\n", NSStringFromRect(button.frame).UTF8String, NSStringFromRect(label.frame).UTF8String);
+    REQUIRE(fabs(NSMinX(button.frame)-NSMaxX(label.frame)-8)<1 && fabs(NSMaxY(button.frame)-NSMaxY(label.frame))<1);
+    NSWindow *window=owner.editorView.window; NSRect frame=window.frame; NSRect wide=frame; wide.size.width+=180;
+    [window setFrame:wide display:NO]; [window.contentView layoutSubtreeIfNeeded];
+    REQUIRE(!button.hidden && !NSIntersectsRect(label.frame, button.frame) && NSContainsRect(owner.editorView.bounds, button.frame));
+    REQUIRE(fabs(NSMinX(button.frame)-NSMaxX(label.frame)-8)<1.5 && fabs(NSMaxY(button.frame)-NSMaxY(label.frame))<1.5);
+    [window setFrame:frame display:NO]; [window.contentView layoutSubtreeIfNeeded];
+    CGFloat narrow=NSWidth(label.frame);
+    owner.recordingItem=node; [owner showShortcutStatus:reason];
+    REQUIRE(button.hidden && NSWidth(label.frame)>narrow+8);
+    owner.recordingItem=nil; [owner showShortcutStatus:reason];
+    REQUIRE(!button.hidden);
+    [owner showShortcutStatus:@"another macro"];
+    REQUIRE(button.hidden && NSWidth(label.frame)>narrow+8);
+    [Conflicts removeObjectForKey:node];
+    owner.previousItem=savedItem; owner.recordingItem=savedRecording; owner.shortcutConflictInfo=nil;
+    [owner showShortcutStatus:savedMessage.length?savedMessage:nil];
+    REQUIRE(button.hidden);
+}
 // The editor is shared and outlives its window: closed and opened again, each new window gets
 // its own sidebar, fields, buttons and key monitor, as the first did. Closing does what the
 // editor's windowWillClose: does with the controls (releaseWindowControls; the runner checks
@@ -1246,6 +1281,7 @@ int main(int argc,char **argv) { @autoreleasepool {
     }
     [owner showShortcutStatus:nil]; host.appearance=nil;
     [window setFrame:frame display:NO]; [window.contentView layoutSubtreeIfNeeded];
+    CheckRemoveMenuShortcut(owner);
     { NSRect again=window.frame; [owner installShortcutStatus]; REQUIRE(NSEqualRects(again,window.frame)); }
     smallest=window.frame; smallest.size.height=window.minSize.height; [window setFrame:smallest display:NO];
     CheckEditor(owner,window);

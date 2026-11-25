@@ -512,10 +512,14 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         BOOL isCommand = [column.identifier isEqualToString:@"command"];
         if (!isCommand && match.command != nil && match.command == self.editingCommand) { return self.recordingCell; }
         TSShortcutCommand *matchCommand = match.command;
+        // The row that runs. A command or macro Settings can edit says Assigned. A command macOS
+        // keeps, and a menu item with no command, says it cannot be changed.
+        BOOL unchangeable = match.macro == nil && (match.command == nil || match.command.managedBySystem);
+        NSString *status = unchangeable ? NSLocalizedString(@"Cannot Be Changed", @"") : NSLocalizedString(@"Assigned", @"");
         NSString *text = !isCommand ? (matchCommand != nil ? [self.store displayKeyForCommand:matchCommand] : [TSShortcutStore displayKey:key modifiers:flags])
-            : reason == nil ? [match.path stringByAppendingFormat:@" — %@", NSLocalizedString(@"Assigned", @"")] : match.path;
+            : reason == nil ? [match.path stringByAppendingFormat:@" — %@", status] : match.path;
         NSTextField *label = isCommand || match.command == nil || match.command.managedBySystem ? [NSTextField labelWithString:text] : [self shortcutLabel:text]; label.lineBreakMode = NSLineBreakByTruncatingMiddle; label.toolTip = text;
-        if (match.command.managedBySystem) label.textColor = NSColor.disabledControlTextColor;
+        if (unchangeable) label.textColor = NSColor.disabledControlTextColor;
         if (!isCommand || reason == nil) { return label; }
         NSView *cell = [NSView new]; cell.identifier = @"shortcut.inactive-command";
         NSStackView *warning = [self warningWithText:reason];

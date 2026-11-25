@@ -188,6 +188,7 @@
 "Search by Key" = "Pesquisar por tecla";
 "Show in Macro Editor" = "Mostrar no editor de macros";
 "Assigned" = "Atribuído";
+"Cannot Be Changed" = "Não alterável";
 "Inactive for this key" = "Inativo para esta tecla";
 "No command uses this key." = "Nenhum comando usa esta tecla.";
 "Press a key" = "Prima uma tecla";
@@ -256,6 +257,8 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Este atalho entra em conflito com a macro «%@» (%@), cujo atalho ficará inativo por aparecer depois.";
 "This shortcut is already used by:\n%@" = "Este atalho já é usado por:\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "Este atalho está inativo porque entra em conflito com «%@» (%@).";
+"Remove…" = "Remover…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "Remover o atalho %2$@ do comando «%1$@»?";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "Este atalho está inativo porque a macro «%@» (%@) o usa primeiro.";
 "Variant" = "Variante";
 

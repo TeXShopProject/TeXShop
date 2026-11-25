@@ -120,6 +120,7 @@ static void (^sheetReply)(NSModalResponse);
 static void CaptureSheet(id self,SEL cmd,NSWindow *parent,void (^reply)(NSModalResponse)){sheetParent=parent;sheetReply=[reply copy];}
 @interface TSShortcutPaneController (InactiveReason)
 - (NSString *)inactiveReasonForMatch:(TSShortcutMatch *)match;
+- (TSShortcutMatch *)matchAtRow:(NSInteger)row;
 @end
 @interface ProbePane:TSShortcutPaneController
 @property NSString *lastError;
@@ -288,6 +289,8 @@ int main(int argc,char **argv){@autoreleasepool{
  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];[pane updateSelectionButtons];
  REQUIRE(!pane.selectionButtons[0].enabled && pane.macroButton.enabled);
  fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];REQUIRE(pane.searchMatches.count==2 && pane.searchMatches[0].winner && !pane.searchMatches[1].winner && pane.table.selectedRow==1 && [pane macroHeaderRow]==0);
+ NSTextField *macroWinner=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:1];
+ REQUIRE(pane.searchMatches[0].macro!=nil && [macroWinner.stringValue hasSuffix:@" — Assigned"]);
  fixtureCharacters=@"x";[shell.window performKeyEquivalent:Event(@"x",C,7)];REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"No command"]);
  REQUIRE([shell.window makeFirstResponder:pane.table]);fixtureCharacters=@"x";
  IMP appKitSendEvent=method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(sendEvent:)),(IMP)AppKitSendEventProbe);
@@ -581,6 +584,25 @@ int main(int argc,char **argv){@autoreleasepool{
    REQUIRE([pane handleKeySearchEvent:Event(@"f",FSFunction,3)]);
    REQUIRE(pane.searchMatches.count==1 && pane.searchMatches[0].menuItem==fullScreen && pane.searchMatches[0].winner);
    REQUIRE([pane.search.stringValue isEqual:globeF]);
+   NSTextField *fullScreenLabel=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:0];
+   REQUIRE([fullScreenLabel.stringValue hasSuffix:@" — Cannot Be Changed"] && [fullScreenLabel.textColor isEqual:NSColor.disabledControlTextColor]);
+   // Minimize All is AppKit's Option alternate and has no command: key search says it cannot be changed.
+   {
+    NSMenuItem *minimizeAll=[[NSMenuItem alloc] initWithTitle:@"Minimize All" action:@selector(miniaturizeAll:) keyEquivalent:@"m"];
+    minimizeAll.keyEquivalentModifierMask=C|O;
+    [first.menu addItem:minimizeAll];[coordinator refreshMenuAndMacros];
+    REQUIRE([pane handleKeySearchEvent:Event(@"m",C|O,46)]);
+    NSInteger miniRow=-1;
+    for(NSInteger row=0;row<(NSInteger)pane.table.numberOfRows;row++){
+     TSShortcutMatch *hit=[pane matchAtRow:row];
+     if(hit.menuItem!=minimizeAll)continue;
+     miniRow=row;REQUIRE(hit.winner && hit.command==nil && hit.macro==nil);
+    }
+    REQUIRE(miniRow>=0);
+    NSTextField *miniLabel=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:miniRow];
+    REQUIRE([miniLabel isKindOfClass:NSTextField.class] && ![miniLabel isKindOfClass:TSShortcutKeyLabel.class] && [miniLabel.stringValue isEqual:@"Actions › Minimize All — Cannot Be Changed"] && [miniLabel.textColor isEqual:NSColor.disabledControlTextColor]);
+    [first.menu removeItem:minimizeAll];[coordinator refreshMenuAndMacros];
+   }
    REQUIRE([pane handleKeySearchEvent:Event(@"f",C|FSControl,3)]);
    BOOL controlCommandFFindsNextMark=NO;for(TSShortcutMatch *hit in pane.searchMatches){REQUIRE(hit.menuItem!=fullScreen);if(hit.menuItem==nextMark)controlCommandFFindsNextMark=YES;}
    REQUIRE(controlCommandFFindsNextMark && [pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"f" modifiers:C|FSControl]]);

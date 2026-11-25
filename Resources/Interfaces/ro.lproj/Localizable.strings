@@ -189,6 +189,7 @@
 "Search by Key" = "Căutați după tastă";
 "Show in Macro Editor" = "Afișați în Editorul de Macro";
 "Assigned" = "Atribuit";
+"Cannot Be Changed" = "Neschimbabil";
 "Inactive for this key" = "Inactiv pentru această tastă";
 "No command uses this key." = "Nicio comandă nu folosește această tastă.";
 "Press a key" = "Apăsați o tastă";
@@ -257,6 +258,8 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Această scurtătură intră în conflict cu macrocomanda „%@” (%@), a cărei scurtătură va fi inactivă deoarece apare mai jos.";
 "This shortcut is already used by:\n%@" = "Această scurtătură este deja folosită de:\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "Această scurtătură este inactivă deoarece intră în conflict cu „%@” (%@).";
+"Remove…" = "Eliminați…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "Eliminați scurtătura %2$@ a comenzii „%1$@”?";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "Această scurtătură este inactivă deoarece macrocomanda „%@” (%@) o folosește prima.";
 
 
