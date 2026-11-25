@@ -62,6 +62,12 @@ MUTATIONS = {
         'Sources/Preview/MyPDFKitView.m', '- (void)attachDrawerFindFieldEditor',
         '        drawerWindow.delegate = self.drawerFieldEditorSource;\n',
         '        drawerWindow.delegate = self;\n'),
+    # The small delegate must forward the field editor. Returning nil restores the ordinary editor.
+    'drawer-source-returns-nil': (
+        'Sources/Preview/MyPDFKitView.m',
+        '- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client',
+        '    return [self.owner windowWillReturnFieldEditor:sender toObject:client];\n',
+        '    return nil;\n'),
 }
 
 root = Path(__file__).resolve().parents[1]
@@ -206,6 +212,11 @@ expect('drawerWindow.delegate = self.drawerFieldEditorSource' in attach and
        'TSPreviewDrawerFieldEditorSource' in source(kit) and
        'windowWillReturnFieldEditor:' in source(kit),
        'the drawer window uses the Preview view as its delegate')
+forwarder = method(kit, '- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client',
+                   contains='self.owner')
+expect('[self.owner windowWillReturnFieldEditor:sender toObject:client]' in forwarder and
+       'return nil' not in forwarder,
+       'the drawer field editor does not forward to the Preview view')
 broken = method(kit, '- (void) breakConnections')
 expect('drawerFieldEditorSource' in broken and 'delegate = nil' in broken,
        'closing the Preview leaves the drawer window delegate in place')
