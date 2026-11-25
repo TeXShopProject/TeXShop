@@ -189,8 +189,8 @@
 "Show in Macro Editor" = "Im Makro-Editor anzeigen";
 "Assigned" = "Zugewiesen";
 "Cannot Be Changed" = "Nicht änderbar";
-"[Change in System Settings…]" = "[In den Systemeinstellungen ändern…]";
-"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "Wählen Sie in der Seitenleiste „App-Kurzbefehle“. Wenn noch die Seite Tastatur angezeigt wird, öffnen Sie zuerst „Tastaturkurzbefehle …“.";
+"Change in System Settings…" = "In den Systemeinstellungen ändern…";
+"To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Zum Ändern in den Systemeinstellungen „App-Kurzbefehle“ in der Seitenleiste wählen.";
 "Inactive for this key" = "Für diese Taste inaktiv";
 "No command uses this key." = "Kein Befehl verwendet diese Taste.";
 "Press a key" = "Taste drücken";

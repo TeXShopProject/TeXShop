@@ -587,6 +587,7 @@ int main(int argc,char **argv){@autoreleasepool{
    REQUIRE([pane.search.stringValue isEqual:globeF]);
    NSTextField *fullScreenLabel=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:0];
    REQUIRE([fullScreenLabel.stringValue hasSuffix:@" — Cannot Be Changed"] && [fullScreenLabel.textColor isEqual:NSColor.disabledControlTextColor]);
+   REQUIRE(pane.table.selectedRow==0 && [pane.statusText.stringValue isEqual:NSLocalizedString(@"Cannot Be Changed",@"")] && !pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
    // Minimize All is AppKit's Option alternate and has no command: key search says it cannot be changed.
    {
     NSMenuItem *minimizeAll=[[NSMenuItem alloc] initWithTitle:@"Minimize All" action:@selector(miniaturizeAll:) keyEquivalent:@"m"];
@@ -607,10 +608,16 @@ int main(int argc,char **argv){@autoreleasepool{
      [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
      REQUIRE([pane.statusText.stringValue isEqual:NSLocalizedString(@"Cannot Be Changed",@"")] && pane.status.arrangedSubviews[0].hidden);
      REQUIRE(!pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
-     REQUIRE([pane.systemSettingsLink.attributedStringValue.string isEqual:NSLocalizedString(@"[Change in System Settings…]",@"")]);
-     REQUIRE([pane.systemSettingsGuide.stringValue isEqual:NSLocalizedString(@"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first.",@"")]);
+     REQUIRE([pane.systemSettingsLink.attributedStringValue.string isEqual:NSLocalizedString(@"Change in System Settings…",@"")]);
+     REQUIRE([pane.systemSettingsGuide.stringValue isEqual:NSLocalizedString(@"To change it in System Settings, choose “App Shortcuts” in the sidebar.",@"")]);
      id systemURL=[pane.systemSettingsLink.attributedStringValue attribute:NSLinkAttributeName atIndex:0 effectiveRange:NULL];
+     id underline=[pane.systemSettingsLink.attributedStringValue attribute:NSUnderlineStyleAttributeName atIndex:0 effectiveRange:NULL];
      REQUIRE([systemURL isKindOfClass:NSURL.class] && [[(NSURL *)systemURL absoluteString] isEqual:pane.systemShortcutSettingsURL.absoluteString] && [pane.systemShortcutSettingsURL.absoluteString isEqual:@"x-apple.systempreferences:com.apple.Keyboard-Settings.extension?Shortcuts"]);
+     REQUIRE(underline==nil || [underline integerValue]==NSUnderlineStyleNone);
+     [pane.view layoutSubtreeIfNeeded];
+     NSRect statusWords=[pane.statusText convertRect:pane.statusText.bounds toView:pane.view];
+     NSRect linkWords=[pane.systemSettingsLink convertRect:pane.systemSettingsLink.bounds toView:pane.view];
+     REQUIRE(NSMinX(linkWords)+.5>=NSMaxX(statusWords) && NSMaxY(linkWords)>NSMidY(statusWords) && NSMinY(linkWords)<NSMidY(statusWords));
      for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
      [pane beginRecordingAtRow:0];REQUIRE(pane.editingCommand==nil);
      minimizeAll.hidden=YES;[pane reloadCommands];REQUIRE(pane.functionRows.count==0 && pane.table.numberOfRows==0);
@@ -630,11 +637,16 @@ int main(int argc,char **argv){@autoreleasepool{
     REQUIRE(miniRow>=0);
     NSTextField *miniLabel=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:miniRow];
     REQUIRE([miniLabel isKindOfClass:NSTextField.class] && ![miniLabel isKindOfClass:TSShortcutKeyLabel.class] && [miniLabel.stringValue isEqual:@"Actions › Minimize All — Cannot Be Changed"] && [miniLabel.textColor isEqual:NSColor.disabledControlTextColor]);
+    [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)miniRow] byExtendingSelection:NO];
+    REQUIRE([pane.statusText.stringValue isEqual:NSLocalizedString(@"Cannot Be Changed",@"")] && !pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
     [first.menu removeItem:minimizeAll];[coordinator refreshMenuAndMacros];
    }
    REQUIRE([pane handleKeySearchEvent:Event(@"f",C|FSControl,3)]);
    BOOL controlCommandFFindsNextMark=NO;for(TSShortcutMatch *hit in pane.searchMatches){REQUIRE(hit.menuItem!=fullScreen);if(hit.menuItem==nextMark)controlCommandFFindsNextMark=YES;}
    REQUIRE(controlCommandFFindsNextMark && [pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"f" modifiers:C|FSControl]]);
+   NSInteger nextMarkRow=-1;for(NSInteger row=0;row<(NSInteger)pane.table.numberOfRows;row++)if([pane matchAtRow:row].menuItem==nextMark)nextMarkRow=row;
+   REQUIRE(nextMarkRow>=0);[pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)nextMarkRow] byExtendingSelection:NO];
+   REQUIRE(pane.systemSettingsLink.hidden && pane.systemSettingsGuide.hidden);
    NSArray<TSShortcutMatch *> *bareF=[TSShortcutSearch matchesKey:@"f" modifiers:0 store:store macros:@[]];
    NSArray<TSShortcutMatch *> *globeFHits=[TSShortcutSearch matchesKey:@"f" modifiers:FSFunction store:store macros:@[]];
    REQUIRE(bareF.count==0 && globeFHits.count==1 && globeFHits[0].menuItem==fullScreen);
@@ -842,8 +854,10 @@ int main(int argc,char **argv){@autoreleasepool{
    translated.systemSettingsLink.hidden=NO;translated.systemSettingsGuide.hidden=NO;[translated viewDidLayout];[translated.view layoutSubtreeIfNeeded];
    NSRect linkLine=[translated.systemSettingsLink convertRect:translated.systemSettingsLink.bounds toView:translated.view];
    NSRect guideLine=[translated.systemSettingsGuide convertRect:translated.systemSettingsGuide.bounds toView:translated.view];
+   NSRect statusWords=[translated.statusText convertRect:translated.statusText.bounds toView:translated.view];
    NSRect buttonLine=[translated.selectionButtons[0] convertRect:translated.selectionButtons[0].bounds toView:translated.view];
    REQUIRE(NSContainsRect(NSInsetRect(translated.view.bounds,-.5,-.5),linkLine) && NSContainsRect(NSInsetRect(translated.view.bounds,-.5,-.5),guideLine));
+   REQUIRE(NSMinX(linkLine)+.5>=NSMaxX(statusWords) && NSMaxY(linkLine)>NSMidY(statusWords) && NSMinY(linkLine)<NSMidY(statusWords));
    REQUIRE(!NSIntersectsRect(linkLine,buttonLine) && !NSIntersectsRect(guideLine,buttonLine));
    REQUIRE(NSHeight(guideLine)+.5>=translated.systemSettingsGuide.intrinsicContentSize.height);
    [translated updateStatus];
