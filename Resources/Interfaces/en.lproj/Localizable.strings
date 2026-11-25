@@ -171,6 +171,8 @@
 "Show in Macro Editor" = "Show in Macro Editor";
 "Assigned" = "Assigned";
 "Cannot Be Changed" = "Cannot Be Changed";
+"[Change in System Settings…]" = "[Change in System Settings…]";
+"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first.";
 "Inactive for this key" = "Inactive for this key";
 "No command uses this key." = "No command uses this key.";
 "Press a key" = "Press a key";

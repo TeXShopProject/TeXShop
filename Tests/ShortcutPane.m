@@ -525,10 +525,11 @@ int main(int argc,char **argv){@autoreleasepool{
   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)saveAsRow] byExtendingSelection:NO];
   for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
   REQUIRE([pane.statusText.stringValue isEqual:NSLocalizedString(@"Cannot Be Changed",@"")]);
+  REQUIRE(!pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
   [pane beginRecordingAtRow:saveAsRow];REQUIRE(pane.editingCommand==nil);
   [pane removeShortcut:nil];[pane restoreShortcut:nil];REQUIRE([saveAsItem.keyEquivalent isEqual:@"S"] && saveAsItem.keyEquivalentModifierMask==(C|O));
   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)duplicateRow] byExtendingSelection:NO];
-  REQUIRE(pane.selectionButtons[0].enabled);
+  REQUIRE(pane.selectionButtons[0].enabled && pane.systemSettingsLink.hidden && pane.systemSettingsGuide.hidden);
   [first.menu removeItem:saveAsItem];[first.menu removeItem:duplicateItem];[coordinator refreshMenuAndMacros];[pane reloadCommands];
   // Enter Full Screen has Globe-F, which macOS gives only its own items: shown as AppKit 27 shows it (🌐︎F), dimmed,
   // not recorded, no buttons, found by its name; Control-Command-F is Next Mark's, and a key saved for it before is left out.
@@ -605,6 +606,11 @@ int main(int argc,char **argv){@autoreleasepool{
      }
      [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
      REQUIRE([pane.statusText.stringValue isEqual:NSLocalizedString(@"Cannot Be Changed",@"")] && pane.status.arrangedSubviews[0].hidden);
+     REQUIRE(!pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
+     REQUIRE([pane.systemSettingsLink.attributedStringValue.string isEqual:NSLocalizedString(@"[Change in System Settings…]",@"")]);
+     REQUIRE([pane.systemSettingsGuide.stringValue isEqual:NSLocalizedString(@"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first.",@"")]);
+     id systemURL=[pane.systemSettingsLink.attributedStringValue attribute:NSLinkAttributeName atIndex:0 effectiveRange:NULL];
+     REQUIRE([systemURL isKindOfClass:NSURL.class] && [[(NSURL *)systemURL absoluteString] isEqual:pane.systemShortcutSettingsURL.absoluteString] && [pane.systemShortcutSettingsURL.absoluteString isEqual:@"x-apple.systempreferences:com.apple.Keyboard-Settings.extension?Shortcuts"]);
      for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
      [pane beginRecordingAtRow:0];REQUIRE(pane.editingCommand==nil);
      minimizeAll.hidden=YES;[pane reloadCommands];REQUIRE(pane.functionRows.count==0 && pane.table.numberOfRows==0);
@@ -832,6 +838,14 @@ int main(int argc,char **argv){@autoreleasepool{
     NSRect buttons=[translated.selectionButtons[0] convertRect:translated.selectionButtons[0].bounds toView:translated.view];
     REQUIRE(!NSIntersectsRect(line,buttons) && !NSIntersectsRect(line,[translated.table.enclosingScrollView convertRect:translated.table.enclosingScrollView.bounds toView:translated.view]));
    }
+   [translated updateStatus];
+   translated.systemSettingsLink.hidden=NO;translated.systemSettingsGuide.hidden=NO;[translated viewDidLayout];[translated.view layoutSubtreeIfNeeded];
+   NSRect linkLine=[translated.systemSettingsLink convertRect:translated.systemSettingsLink.bounds toView:translated.view];
+   NSRect guideLine=[translated.systemSettingsGuide convertRect:translated.systemSettingsGuide.bounds toView:translated.view];
+   NSRect buttonLine=[translated.selectionButtons[0] convertRect:translated.selectionButtons[0].bounds toView:translated.view];
+   REQUIRE(NSContainsRect(NSInsetRect(translated.view.bounds,-.5,-.5),linkLine) && NSContainsRect(NSInsetRect(translated.view.bounds,-.5,-.5),guideLine));
+   REQUIRE(!NSIntersectsRect(linkLine,buttonLine) && !NSIntersectsRect(guideLine,buttonLine));
+   REQUIRE(NSHeight(guideLine)+.5>=translated.systemSettingsGuide.intrinsicContentSize.height);
    [translated updateStatus];
    NSView *cell=translated.recordingCell;cell.frame=NSMakeRect(0,0,translated.table.tableColumns[1].width,translated.table.rowHeight);[cell layoutSubtreeIfNeeded];
    translated.recorder.shortcut=@"⌃⌥⇧⌘F12";[cell layoutSubtreeIfNeeded];

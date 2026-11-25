@@ -190,6 +190,8 @@
 "Show in Macro Editor" = "Mostra nell’Editor delle macro";
 "Assigned" = "Assegnato";
 "Cannot Be Changed" = "Non modificabile";
+"[Change in System Settings…]" = "[Modifica in Impostazioni di Sistema…]";
+"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "Scegli «Scorciatoie app» nella barra laterale. Se è ancora aperta la pagina Tastiera, apri prima «Scorciatoie da tastiera…».";
 "Inactive for this key" = "Inattivo per questo tasto";
 "No command uses this key." = "Nessun comando usa questo tasto.";
 "Press a key" = "Premi un tasto";
