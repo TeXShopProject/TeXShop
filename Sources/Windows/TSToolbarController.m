@@ -737,9 +737,16 @@ if (@available(macOS 11.0, *))
     [self updatePreviewLayoutControls];
    [[self htmlWindow] setToolbar: [self makeToolbar: kHtmlWindowToolbarIdentifier]];
     for (NSWindow *window in @[(NSWindow *)[self textWindow] ?: NSNull.null, (NSWindow *)self.pdfKitWindow ?: NSNull.null,
-                               (NSWindow *)[self fullSplitWindow] ?: NSNull.null])
-        if ([window isKindOfClass:NSWindow.class])
+                               (NSWindow *)[self fullSplitWindow] ?: NSNull.null]) {
+        if (![window isKindOfClass:NSWindow.class])
+            continue;
+        // The Preview window keeps its pages below the toolbar. The source window and the
+        // window that shows both still let their content run under the toolbar on macOS 26.
+        if (window == (NSWindow *)self.pdfKitWindow)
+            TSDocumentWindowPrepareSolidToolbar(window);
+        else
             TSDocumentWindowPrepare(window);
+    }
 }
 
 // -----------------------------------------------------------------------------
