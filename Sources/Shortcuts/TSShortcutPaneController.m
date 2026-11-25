@@ -902,6 +902,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 - (NSTextField *)systemSettingsArrowField {
     NSTextField *arrow = [NSTextField labelWithString:@"→"];
     arrow.identifier = @"shortcut.system-settings-arrow";
+    arrow.accessibilityElement = NO;
     arrow.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     arrow.textColor = NSColor.labelColor;
     arrow.hidden = YES;

@@ -348,6 +348,7 @@ static void CheckKeySearchDisplayMatchesMenu(void) {
 // The arrow sits between the status words and the link, and that group shares the guide's center.
 static void RequireSystemSettingsLine(TSShortcutPaneController *pane) {
   REQUIRE(!pane.systemSettingsArrow.hidden && !pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
+  REQUIRE(!pane.systemSettingsArrow.accessibilityElement);
   REQUIRE([pane.systemSettingsArrow.stringValue isEqual:@"→"]);
   [pane.view layoutSubtreeIfNeeded];
   NSRect statusWords=[pane.statusText convertRect:pane.statusText.bounds toView:pane.view];
@@ -899,6 +900,15 @@ int main(int argc,char **argv){@autoreleasepool{
      minimizeAll.hidden=YES;[pane reloadCommands];REQUIRE(pane.functionRows.count==0 && pane.table.numberOfRows==0);
      minimizeAll.allowsKeyEquivalentWhenHidden=YES;[pane reloadCommands];REQUIRE(pane.functionRows.count==1 && pane.functionRows[0].item==minimizeAll);
      minimizeAll.allowsKeyEquivalentWhenHidden=NO;minimizeAll.hidden=NO;
+     NSMenuItem *noKey=[[NSMenuItem alloc] initWithTitle:@"No Key Item" action:@selector(arrangeInFront:) keyEquivalent:@""];
+     [first.menu addItem:noKey];
+     NSMenuItem *macroRowItem=[[NSMenuItem alloc] initWithTitle:@"Macro Item" action:TSMacroAction() keyEquivalent:@"q"];
+     macroRowItem.keyEquivalentModifierMask=C;[first.menu addItem:macroRowItem];
+     pane.search.stringValue=@"No Key Item";[pane reloadCommands];
+     REQUIRE(pane.functionRows.count==0 && noKey.action!=nil);
+     pane.search.stringValue=@"Macro Item";[pane reloadCommands];
+     REQUIRE(pane.functionRows.count==0 && macroRowItem.action!=nil);
+     [first.menu removeItem:noKey];[first.menu removeItem:macroRowItem];
      pane.search.stringValue=@"";[pane reloadCommands];
      if(wasKey){pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];}
     }
