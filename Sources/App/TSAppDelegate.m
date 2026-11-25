@@ -168,6 +168,9 @@ static void TSInstallAdvancedFindFieldStyle(void)
 // holding the main thread; the answer is given when it ends, however it ends (Issue #45, spec §2.5.3a).
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
+    // The same question as closing the macro editor. Return to Editing cancels quitting.
+    if (![[TSMacroEditor sharedInstance] prepareMacrosBeforeTermination])
+        return NSTerminateCancel;
     if (![TSTeXRootReplaceGuard isApplying])
         return NSTerminateNow;
     [TSTeXRootReplaceGuard performWhenNotApplying:^{

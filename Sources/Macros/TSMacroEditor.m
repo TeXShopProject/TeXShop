@@ -1409,8 +1409,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 {
     NSMutableArray *nodes = [NSMutableArray array], *changed = [NSMutableArray array], *lines = [NSMutableArray array];
     [self collectChangedShortcutConflicts:changed nodes:nodes lines:lines];
-    // Quit keeps the keys as written. They stay inactive until the overlap is gone.
-    if (acceptShortcutConflicts || !changed.count) return YES;
+    if (!changed.count) return YES;
     NSModalResponse response = [self showShortcutConflicts:[lines componentsJoinedByString:@"\n\n"]];
     if (response == NSAlertThirdButtonReturn) {
         for (NSDictionary *conflict in changed) [nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@""];
@@ -1483,6 +1482,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 		[self rememberOriginalShortcutKeys];
 		dataTouched = NO;
 		saved = YES;
+		reportedWriteFailure = NO;
 	} @finally {
 		coalesceWriteAlerts = NO;
 		writingMacros = NO;
@@ -1667,16 +1667,36 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 	//	[outlineView reloadData];// this caused a crash if a node and its child are selected and the disclosure triangle is pressed
 }
 
-// Quit does not close this window, so the edits would otherwise be dropped.
-// Conflicting keys are written and stay inactive, as Save Anyway does.
+// WillTerminate cannot cancel quitting. applicationShouldTerminate: already asked.
+// If that step was skipped, drop the new conflicting keys so the ones already in the file stay.
 - (void)writeMacrosBeforeTermination:(NSNotification *)notification
 {
-    if (window == nil || !dataTouched) return;
-    acceptShortcutConflicts = YES;
+    if (window == nil) return;
+    if ([window makeFirstResponder:window] == NO) return;
+    [self reflectChangesInEditor:YES];
+    if (!dataTouched) return;
+    NSMutableArray *nodes = [NSMutableArray array], *changed = [NSMutableArray array];
+    [self collectChangedShortcutConflicts:changed nodes:nodes lines:nil];
+    for (NSDictionary *conflict in changed) {
+        [nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@""];
+    }
+    if (changed.count) [self reflectChangesInEditor:YES];
     reviewPending = NO;
     reportedWriteFailure = NO;
     [self autosaveMacroEdits];
-    acceptShortcutConflicts = NO;
+}
+// Quit asks the way closing does. Return to Editing cancels termination.
+// A typed name is not in the node, and dataTouched stays NO, until the field is committed.
+- (BOOL)prepareMacrosBeforeTermination
+{
+    if (window == nil) return YES;
+    if ([window attachedSheet]) return NO;
+    if (![window makeFirstResponder:window]) return NO;
+    [self reflectChangesInEditor:YES];
+    if (!dataTouched) return YES;
+    reviewPending = NO;
+    reportedWriteFailure = NO;
+    return [self autosaveMacroEdits];
 }
 // delegate method for window
 // Edits are already stored, or stored now. A conflicting shortcut is asked about once more;
@@ -1809,7 +1829,8 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
         [NSException raise:@"Macro write failed" format:@"%@", pathStr];
 
 	NS_HANDLER
-		// An automatic save says this once. Command-S, closing, and saving a selection say it again.
+		// An automatic save says this once. A later success clears that, so the next failure says it again.
+		// Command-S and closing clear it before they save. Saving a selection always says it.
 		if (coalesceWriteAlerts && reportedWriteFailure) return NO;
 		if (coalesceWriteAlerts) reportedWriteFailure = YES;
 		// The path is shown as text, never read as a format.

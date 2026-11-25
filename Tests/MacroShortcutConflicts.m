@@ -110,11 +110,12 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
 @end
 @interface TestWindow : NSObject
 @property int closes;
+@property int commits;
 @property BOOL rejectCommit;
 @property NSWindow *attachedSheet;
 @end
 @implementation TestWindow
-- (BOOL)makeFirstResponder:(id)item { return !self.rejectCommit; }
+- (BOOL)makeFirstResponder:(id)item { self.commits++; return !self.rejectCommit; }
 - (void)close { self.closes++; }
 
 @end
@@ -128,7 +129,9 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
 @property int recordingRequests;
 @property TSMacroTreeNode *recordingRequest;
 @property BOOL conflictClearedBeforeSave;
+@property int reflectCalls;
 - (void)rememberOriginalShortcutKeys;
+- (void)dropWindowForTest;
 - (BOOL)validateMacroShortcutsBeforeSaving;
 - (void)updatePendingShortcutStatus;
 - (BOOL)windowShouldClose:(id)sender;
@@ -140,7 +143,8 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
     dataTouched=YES;
 } return self; }
 - (NSModalResponse)showShortcutConflicts:(NSString *)details { self.prompts++; self.details=details; return self.answer; }
-- (void)reflectChangesInEditor:(BOOL)force {} // No live field editor in these save-path tests.
+- (void)reflectChangesInEditor:(BOOL)force { self.reflectCalls++; } // No live field editor in these save-path tests.
+- (void)dropWindowForTest { window = nil; }
 // Return to Editing records the shortcut of the item it selects; the list is not built in these tests.
 - (BOOL)beginRecordingShortcutForItem:(TSMacroTreeNode *)item { self.recordingRequests++; self.recordingRequest=item; return YES; }
 - (BOOL)saveNodes:(id)nodes toFile:(NSString *)path { return [super saveNodes:nodes toFile:self.failWrite ? [path stringByAppendingPathComponent:@"missing/file"] : path]; }
@@ -192,6 +196,22 @@ static NSMutableArray *assignments;
     [super setKeyEquivalent:key];
 }
 @end
+static TestEditor *EditorSentBackToEditing(NSString *firstName, NSString *laterName, TSMacroTreeNode **firstOut, TSMacroTreeNode **laterOut) {
+    TSMacroTreeNode *first=[TSMacroTreeNode nodeWithName:firstName content:@"KEEP" key:@"X"];
+    TSMacroTreeNode *later=[TSMacroTreeNode nodeWithName:laterName content:@"KEEP" key:@"Z"];
+    TSMacroTreeNode *root=[TSMacroTreeNode submenuNodeWithName:@"ROOT"];
+    [root addChildren:@[first, later]];
+    TestEditor *editor=[TestEditor new];
+    editor.testOutline.rootOfTree=root;
+    [editor rememberOriginalShortcutKeys];
+    first.key=@"Z";
+    [editor setValue:@YES forKey:@"dataTouched"];
+    editor.answer=NSAlertFirstButtonReturn;
+    [editor savePressed:nil];
+    REQUIRE(editor.prompts==1 && [first.key isEqual:@"Z"] && [later.key isEqual:@"Z"]);
+    *firstOut=first; *laterOut=later;
+    return editor;
+}
 static void CheckAssignmentOrder(void) {
     NSMenu *menu=[NSMenu new];
     for(NSString *key in @[@"f",@"g"]) {
@@ -701,17 +721,76 @@ int main(int argc, char **argv) { @autoreleasepool {
     touchLoads=reloads; [touch setValue:@YES forKey:@"dataTouched"]; [touch outlineViewSelectionChanged:nil]; REQUIRE(reloads==touchLoads+1);
     touchLoads=reloads; [touch setValue:@YES forKey:@"dataTouched"]; [touch outlineViewItemsChanged:nil]; REQUIRE(reloads==touchLoads+1);
     puts("PASS: editing the name, contents, shortcut, selection, or list writes the macros");
-    // Quit writes a conflicting key without asking.
-    TSMacroTreeNode *quitNode=[TSMacroTreeNode nodeWithName:@"Quit" content:@"KEEP" key:@"Y"];
-    TSMacroTreeNode *quitRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"]; [quitRoot addChild:quitNode];
-    TestEditor *quitter=[TestEditor new]; quitter.testOutline.rootOfTree=quitRoot;
-    [quitter rememberOriginalShortcutKeys]; quitNode.key=@"F";
-    [quitter setValue:@YES forKey:@"dataTouched"]; quitter.answer=NSAlertFirstButtonReturn;
-    int quitPrompts=quitter.prompts;
-    [quitter writeMacrosBeforeTermination:nil];
-    NSDictionary *quitSaved=[NSDictionary dictionaryWithContentsOfFile:plist];
-    REQUIRE(quitter.prompts==quitPrompts && [quitNode.key isEqual:@"F"] && [quitSaved[@"submenu"][0][@"key"] isEqual:@"F"]);
-    puts("PASS: quitting writes a conflicting shortcut without asking");
+    // After Return to Editing, quitting asks again. Each answer is the same as closing.
+    NSString *plistBeforeQuit=[NSString stringWithContentsOfFile:plist encoding:NSUTF8StringEncoding error:NULL];
+    TSMacroTreeNode *stayFirst=nil, *stayLater=nil;
+    TestEditor *stay=EditorSentBackToEditing(@"Stay first", @"Stay later", &stayFirst, &stayLater);
+    int stayPrompts=stay.prompts, stayLoads=reloads, stayReflects=stay.reflectCalls, stayCommits=stay.testWindow.commits;
+    stay.answer=NSAlertFirstButtonReturn;
+    REQUIRE(![stay prepareMacrosBeforeTermination]);
+    REQUIRE(stay.prompts==stayPrompts+1 && reloads==stayLoads && [stay.details containsString:@"Stay later"]);
+    // Return to Editing reflects again when it selects the macro. The commit itself is checked on Save Anyway.
+    REQUIRE(stay.reflectCalls>stayReflects && stay.testWindow.commits==stayCommits+1);
+    REQUIRE([stayFirst.key isEqual:@"Z"] && [stayLater.key isEqual:@"Z"]);
+    REQUIRE([[NSString stringWithContentsOfFile:plist encoding:NSUTF8StringEncoding error:NULL] isEqual:plistBeforeQuit]);
+    stay.testWindow.attachedSheet=[InvisibleSheetWindow new];
+    int blockedPrompts=stay.prompts;
+    REQUIRE(![stay prepareMacrosBeforeTermination] && stay.prompts==blockedPrompts);
+    stay.testWindow.attachedSheet=nil;
+    stay.testWindow.rejectCommit=YES;
+    REQUIRE(![stay prepareMacrosBeforeTermination] && stay.prompts==blockedPrompts);
+    stay.testWindow.rejectCommit=NO;
+    TSMacroTreeNode *anywayFirst=nil, *anywayLater=nil;
+    TestEditor *anywayQuit=EditorSentBackToEditing(@"Anyway first", @"Anyway later", &anywayFirst, &anywayLater);
+    anywayQuit.answer=NSAlertSecondButtonReturn;
+    int anywayQuitPrompts=anywayQuit.prompts, anywayQuitLoads=reloads;
+    int anywayReflects=anywayQuit.reflectCalls, anywayCommits=anywayQuit.testWindow.commits;
+    REQUIRE([anywayQuit prepareMacrosBeforeTermination] && anywayQuit.prompts==anywayQuitPrompts+1 && reloads==anywayQuitLoads+1);
+    REQUIRE(anywayQuit.reflectCalls==anywayReflects+1 && anywayQuit.testWindow.commits==anywayCommits+1);
+    NSDictionary *anywayQuitSaved=[NSDictionary dictionaryWithContentsOfFile:plist];
+    REQUIRE([anywayFirst.key isEqual:@"Z"] && [anywayLater.key isEqual:@"Z"]);
+    REQUIRE([anywayQuitSaved[@"submenu"][0][@"name"] isEqual:@"Anyway first"] && [anywayQuitSaved[@"submenu"][0][@"key"] isEqual:@"Z"]);
+    REQUIRE([anywayQuitSaved[@"submenu"][1][@"name"] isEqual:@"Anyway later"] && [anywayQuitSaved[@"submenu"][1][@"key"] isEqual:@"Z"]);
+    int afterLoads=reloads;
+    [anywayQuit writeMacrosBeforeTermination:nil];
+    REQUIRE(anywayQuit.prompts==anywayQuitPrompts+1 && reloads==afterLoads);
+    TSMacroTreeNode *dropFirst=nil, *dropLater=nil;
+    TestEditor *drop=EditorSentBackToEditing(@"Drop first", @"Drop later", &dropFirst, &dropLater);
+    drop.answer=NSAlertThirdButtonReturn;
+    int dropPrompts=drop.prompts, dropLoads=reloads;
+    REQUIRE([drop prepareMacrosBeforeTermination] && drop.prompts==dropPrompts+1 && reloads==dropLoads+1);
+    NSDictionary *dropSaved=[NSDictionary dictionaryWithContentsOfFile:plist];
+    REQUIRE(!dropFirst.key.length && [dropLater.key isEqual:@"Z"]);
+    REQUIRE([dropSaved[@"submenu"][0][@"key"] isEqual:@""] && [dropSaved[@"submenu"][1][@"key"] isEqual:@"Z"]);
+    // The notification cannot cancel. It drops the new key instead of taking the later one.
+    TSMacroTreeNode *noteFirst=[TSMacroTreeNode nodeWithName:@"Note first" content:@"KEEP" key:@"X"];
+    TSMacroTreeNode *noteLater=[TSMacroTreeNode nodeWithName:@"Note later" content:@"KEEP" key:@"Z"];
+    TSMacroTreeNode *noteRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"]; [noteRoot addChildren:@[noteFirst, noteLater]];
+    TestEditor *noteEditor=[TestEditor new]; noteEditor.testOutline.rootOfTree=noteRoot;
+    [noteEditor rememberOriginalShortcutKeys]; noteFirst.key=@"Z";
+    [noteEditor setValue:@YES forKey:@"dataTouched"]; noteEditor.answer=NSAlertFirstButtonReturn;
+    int notePrompts=noteEditor.prompts, noteLoads=reloads;
+    [noteEditor writeMacrosBeforeTermination:nil];
+    NSDictionary *noteSaved=[NSDictionary dictionaryWithContentsOfFile:plist];
+    REQUIRE(noteEditor.prompts==notePrompts && reloads==noteLoads+1 && !noteFirst.key.length && [noteLater.key isEqual:@"Z"]);
+    REQUIRE([noteSaved[@"submenu"][0][@"key"] isEqual:@""] && [noteSaved[@"submenu"][1][@"key"] isEqual:@"Z"]);
+    TestEditor *closed=[TestEditor new]; [closed dropWindowForTest];
+    REQUIRE([closed prepareMacrosBeforeTermination] && closed.prompts==0);
+    puts("PASS: quitting asks about a displaced shortcut; Return to Editing cancels, and the notification keeps the later key");
+    // A successful save clears the failure, so the next failure and a following close each ask once.
+    TSMacroTreeNode *failNode=[TSMacroTreeNode nodeWithName:@"Fail again" content:@"KEEP" key:@"Y"];
+    TSMacroTreeNode *failRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"]; [failRoot addChild:failNode];
+    TestEditor *failEditor=[TestEditor new]; failEditor.testOutline.rootOfTree=failRoot;
+    [failEditor rememberOriginalShortcutKeys]; failEditor.failWrite=YES;
+    [failEditor setValue:@YES forKey:@"dataTouched"];
+    int failAlerts=writeAlerts;
+    REQUIRE(![failEditor autosaveMacroEdits] && writeAlerts==failAlerts+1);
+    failEditor.failWrite=NO; [failEditor setValue:@YES forKey:@"dataTouched"];
+    REQUIRE([failEditor autosaveMacroEdits] && writeAlerts==failAlerts+1);
+    failEditor.failWrite=YES; [failEditor setValue:@YES forKey:@"dataTouched"];
+    REQUIRE(![failEditor autosaveMacroEdits] && writeAlerts==failAlerts+2);
+    REQUIRE(![failEditor windowShouldClose:failEditor.testWindow] && writeAlerts==failAlerts+3 && failEditor.testWindow.closes==0);
+    puts("PASS: a successful automatic save reports the next failure, and closing reports it too");
     // A yielding default is not a warning and not a shortcut to remove, until an override reserves it.
     NSMenuItem *complete=[[NSMenuItem alloc] initWithTitle:@"Complete" action:NSSelectorFromString(@"completeLabelOrCitationKey:") keyEquivalent:@"j"];
     complete.identifier=@"TSShortcut.completeLabelOrCitationKey:.0"; complete.keyEquivalentModifierMask=cmd; [menu addItem:complete];
