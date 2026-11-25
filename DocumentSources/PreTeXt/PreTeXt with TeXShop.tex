@@ -386,32 +386,23 @@ Currently the PreTeXt-LaTeX engine uses pdflatex to typeset the tex file produce
 
 Similarly, the PreTeXt-LaTeX engine can be edited to use pdflatexmk rather than pdflatex. Latexmk is a make script which keeps track of files that have changed and typesets as many times as necessary to give updated documents. For instance, it will typeset twice if there are references that require the aux file and a second pass to correctly update. 
 
+\section{\label{validate}The Validate Engine}
+
+There are  rules governing the placement of tags in a PreTeXt document. For example, only selected tags are allowed between $<$section$>$ and $<$/section$>$; one of the prohibited tags is another $<$section$>$ because it does not make sense to start a new section inside an existing section. That's what ``subsections'' are for.
+
+Tools are available to check your xml source and report placement errors for tags. These tools consult a file in mathbook, mathbook/schema/pretext.rng, to learn the PreTeXt rules for tags. The PreTeXt authors recommend running a validation tool regularly. TeXShop has a typesetting engine that does this with xmllint, a program that comes with macOS, so nothing has to be installed. Reach up to the magic comment line near the top and change ``LaTeX'' or ``HTML'' to ``Validate''. The engine expects the schema at $\sim$/Documents/mathbook/schema/pretext.rng. If the document is valid, the console says so, for example ``Finished. MyBook.xml is valid.'' Otherwise xmllint describes the errors there, and if the schema file is missing, the console says where the engine looked for it.
+
 \section{End of Revision of 2019 Document}
 
-This ends my revision of the original document for PreTeXt 2022. At this point, the old document described using Java to activate the Validate Engine. I haven't used Java in years and don't want to install it on my new machine. Think of the remaining paragraphs as suggestions that might or might not work today. If you don't decide to use PreTeXt, these paragraphs won't make a difference. If you do decide to use it, you'll know more than I do after two or three days. 
+This ends my revision of the original document for PreTeXt 2022. Think of the remaining paragraphs as suggestions that might or might not work today. If you don't decide to use PreTeXt, these paragraphs won't make a difference. If you do decide to use it, you'll know more than I do after two or three days. 
 
 \newpage
 
 Here is the historical material:
 \begin{quotation}
 
-\section{\label{validate}The Validate Engine}
-
-There are  rules governing the placement of tags in a PreTeXt document. For example, only selected tags are allowed between $<$section$>$ and $<$/section$>$; one of the prohibited tags is another $<$section$>$ because it does not make sense to start a new section inside an existing section. That's what ``subsections'' are for.
-
-Tools are available to check your xml source and report placement errors for tags. These tools consult a file in mathbook, mathbook/schema/pretext.rng, to learn the PreTeXt rules for tags.  The PreTeXt authors recommend running a validation tool regularly, and recommend ``jing'', a Java program.   TeXShop has a typesetting engine to run this specific tool. Reach up to the magic comment line near the top and change ``LaTeX'' or ``HTML'' to ``Validate''. If there are errors, this tool will print very clear descriptions of the errors in the console. If there are no errors, it will write a  soothing message.
-
-The jing applet is included in $\sim$/Library/TeXShop/bin. It was obtained from the web site  \url{https://relaxng.org/jclark/jing.html}. In the middle of this web page, the following text occurs: ``The latest version of Jing will always be available in the Downloads section of the project site.'' The word ``Downloads'' is a link; clicking it leads to a link to download ``jing-20091111.zip''. The jing in TeXShop is the applet provided by this link.
-
-If you do not already have Java, then you must also download and install it. Apple used to supply Java, but now it is maintained by Oracle. Go to the web site \url{https://www.java.com/en/download/mac\_download.jsp}. Click the red link titled ``Agree and Start Free Download''. This will produce a Macintosh install package. Double click to install. You have Java, but you are not yet done.
-
-The Macintosh will not run this Java until you obtain a Java Runtime. Go to the site  {\url 
-https://www.oracle.com/technetwork/java/javase/downloads/jdk12-downloads-5295953.html}. Download the file jdk-12.0.2\_osx-x64\_bin.dmg from the table toward the bottom of the page. This will lead to another Macintosh install package. Install this package. 
-
-On April 16, 2019, Oracle substantially changed the Oracle Java License. Use of these files is permitted for personal and development use, but apparently not for businesses. The sites  claim to have OpenJDK packages released under the GPL license. If this is a matter of concern, you probably should examine the sites more carefully to find the GPL versions, or read the new license carefully.
-
 \section{PreTeXt Projects with Several Source Files} 
-Some PreTeXT projects, particularly books, tend to divide the source file into several files which are input by a master file. TeXShop has a magic line to handle this situation. Each source file {\em except the master file} should have an extra line at the top similar to the third line of the example below. In the TeXShop Macro menu, the item "Root (Short Version)" will produce the start of this line.
+Some PreTeXT projects, particularly books, tend to divide the source file into several files which are input by a master file. TeXShop has a magic line to handle this situation. Each source file {\em except the master file} should have an extra line at the top similar to the third line of the example below. In the TeXShop Macro menu, the item "Root File Line" will produce the start of this line.
 
 \begin{verbatim}
      <!--

@@ -843,9 +843,9 @@ An engine profile sets all the commands that one way of typesetting needs. Choos
 
 \section{Preview}\label{sec:SettingsPreview}
 
-{\bf When a Document Opens} sets how new Preview windows show a document: the \mnu{Default Page Style} (Single Page, Two Page, Multi-Page or Double Multi-Page), what happens to the magnification \mnu{After resizing the window}, the \mnu{Magnification}, the \mnu{Default Mouse Mode}, whether \mnu{Link Popups} are shown, and, for two-page styles, the \mnu{Page direction} and \mnu{Show first page alone as cover}. Magic comment lines in a document take precedence over the last two (\cref{MagicCommentsChapter}), and the reading direction stored in a PDF file over the page direction.
+{\bf When a Document Opens} sets how new Preview windows show a document: the \mnu{Default Display Format} (Single Page, Double Page, MultiPage or Double MultiPage), what happens to the magnification \mnu{After resizing the window}, the \mnu{Magnification}, the \mnu{Default Mouse Mode}, whether \mnu{Link Popups} are shown, and, for the formats with two pages side by side, the \mnu{Page direction} and \mnu{Show first page alone as cover}. Magic comment lines in a document take precedence over the last two (\cref{MagicCommentsChapter}), and the reading direction stored in a PDF file over the page direction.
 
-{\bf Display and Navigation} \mnu{Do not turn pages by scrolling} keeps scrolling within the page in the Single Page and Two Page styles. \mnu{Always turn pages with the left and right arrow keys} makes these keys turn pages even when a zoomed page is wider than the window. \mnu{Show page number in link popups} and \mnu{Keep magnification, display format and split when entering full screen} do what they say.
+{\bf Display and Navigation} \mnu{Do not turn pages by scrolling} keeps scrolling within the page in the Single Page and Double Page formats. \mnu{Always turn pages with the left and right arrow keys} makes these keys turn pages even when a zoomed page is wider than the window. \mnu{Show page number in link popups} and \mnu{Keep magnification, display format and split when entering full screen} do what they say.
 
 {\bf Refresh} With \mnu{Always Watch for PDF Changes by Other Apps} on, the preview reloads as soon as another application, such as an external editor or latexmk, rewrites the PDF file, even while TeXShop is in the background.
 
@@ -1594,11 +1594,11 @@ The lines that set the program, its parameter, the BibTeX program and the root f
 \section{Preview}
 
 \begin{description}
-\item[\texttt{\% !TEX pdfSinglePage}] Opens the Preview window of this document in Single Page display format, whatever page style is chosen in the Preview category of Settings. Slides, made with Beamer or another slide package, are best seen one page per screen and paged through slide by slide, while articles and books are easier to read in the Multi-Page style.
-\item[\texttt{\% !TEX bookDisplay}] In the two-page styles, the first page stands alone, as the cover, and the pairs of pages after it are those of an open book.
-\item[\texttt{\% !TEX standardDisplay}] In the two-page styles, the pairs begin with the first page.
-\item[\texttt{\% !TEX PageDirectionL2R}] In the two-page styles, pages run from left to right, as for languages written from left to right.
-\item[\texttt{\% !TEX PageDirectionR2L}] In the two-page styles, pages run from right to left, as for vertical Japanese text and languages written from right to left.
+\item[\texttt{\% !TEX pdfSinglePage}] Opens the Preview window of this document in Single Page display format, whatever display format is chosen in the Preview category of Settings. Slides, made with Beamer or another slide package, are best seen one page per screen and paged through slide by slide, while articles and books are easier to read in the MultiPage format.
+\item[\texttt{\% !TEX bookDisplay}] In Double Page and Double MultiPage, the first page stands alone, as the cover, and the pairs of pages after it are those of an open book.
+\item[\texttt{\% !TEX standardDisplay}] In Double Page and Double MultiPage, the pairs begin with the first page.
+\item[\texttt{\% !TEX PageDirectionL2R}] In Double Page and Double MultiPage, pages run from left to right, as for languages written from left to right.
+\item[\texttt{\% !TEX PageDirectionR2L}] In Double Page and Double MultiPage, pages run from right to left, as for vertical Japanese text and languages written from right to left.
 \end{description}
 The last four lines override \mnu{Show first page alone as cover} and \mnu{Page direction} in the Preview category of Settings for this document.
 
@@ -3075,7 +3075,7 @@ format most people use.
 \item[\mnu{Double Page}] one pair of pages side by side.
 \end{description}
 The \mnu{Page Layout} item of the toolbar opens a menu with the same four formats, each with an icon that shows how the
-pages are laid out (\cref{fig:PageLayoutMenu}). \mnu{Default Page Style} under \mnu{When a Document Opens} sets the
+pages are laid out (\cref{fig:PageLayoutMenu}). \mnu{Default Display Format} under \mnu{When a Document Opens} sets the
 format a window starts with.
 
 \begin{figure}[htbp]
@@ -3959,7 +3959,7 @@ The folder \path{~/Library/TeXShop/Engines/Inactive/PreTeXt} contains:
 \item[\cmd{PreTeXt-LaTeX.engine}] converts the source to LaTeX, typesets it with pdfLaTeX and shows the PDF;
 \item[\cmd{PreTeXt-HTML.engine}] converts the source to HTML and shows it in the HTML window;
 \item[\cmd{PreTeXt-Both.engine}] does both, and shows the source, the PDF and the web page together;
-\item[\cmd{PreTeXt-Validate.engine}] checks the source against the PreTeXt schema and reports errors (it needs Java);
+\item[\cmd{PreTeXt-Validate.engine}] checks the source against the PreTeXt schema with the \cmd{xmllint} program of macOS and reports errors;
 \item[\cmd{updatemathbook.sh}] a script that downloads the PreTeXt files;
 \item[\cmd{Extras}] stationery, macros and a command completion file for PreTeXt;
 \item[\cmd{PreTeXt with TeXShop.pdf}] a detailed guide;
@@ -4118,7 +4118,7 @@ Typst source files have the extension \cmd{.typ}. TeXShop opens them like other 
 \end{verbatim}
 Comments in Typst begin with \verb|//|, not \verb|%|, so the magic line is put inside a Typst comment. Then typeset as usual; the engine runs \verb|typst compile| and TeXShop shows the resulting PDF in the Preview window.
 
-When you save a new Typst document, choose \cmd{typ} in the \mnu{File Type} menu of the Save dialog, rather than typing the extension in the file name. Once the file has the extension \cmd{.typ}, TeXShop keeps it.
+When you save a new Typst document, choose \cmd{typ} in the \mnu{File Format} menu of the Save dialog, rather than typing the extension in the file name. Once the file has the extension \cmd{.typ}, TeXShop keeps it.
 
 \section{Packages and Templates}\label{TypstPackagesSection}
 
@@ -4326,7 +4326,7 @@ PDF files and pictures with the extensions \texttt{.png}, \texttt{.jpg}, \texttt
 
 \subsection{Saving}
 
-A file keeps its extension when TeXShop saves it. A new document is saved as a \texttt{.tex} file unless you choose another type in the \mnu{File Type} menu of the Save dialog. TeXShop saves a file in the encoding it was opened with. It is meant for \TeX\ and related files; a file in an unusual format may change if it is saved after editing in TeXShop.
+A file keeps its extension when TeXShop saves it. A new document is saved as a \texttt{.tex} file unless you choose another format in the \mnu{File Format} menu of the Save dialog. TeXShop saves a file in the encoding it was opened with. It is meant for \TeX\ and related files; a file in an unusual format may change if it is saved after editing in TeXShop.
 
 \subsection{TeXShop as the Default Editor for TeX Files}
 
@@ -4386,11 +4386,13 @@ The quickest way to set up TeXShop for Japanese documents is an engine profile (
 \begin{center}
 \begin{tabular}{lll}
 Profile & Typesetting & BibTeX, index, MetaPost \\ \hline
+LuaLaTeX (Japanese) & lualatex & upbibtex, upmendex, mpost \\
 upLaTeX + dvipdfmx & uplatex, then dvipdfmx & upbibtex, upmendex, upmpost \\
 pLaTeX + dvipdfmx & platex, then dvipdfmx & pbibtex, mendex, pmpost \\
-LuaLaTeX (Japanese) & lualatex & upbibtex, upmendex, mpost \\
 \end{tabular}
 \end{center}
+
+LuaLaTeX (Japanese) is the profile that TeXShop suggests when it starts for the first time on a Mac whose first preferred language is Japanese.
 
 The Japanese profiles also set UTF-8 as the encoding for new documents, set the spelling dictionary to automatic language detection, and turn on \mnu{Automatically convert UTF-8-MAC to UTF-8}. pLaTeX + dvipdfmx also turns on \mnu{Convert to otf Package \textbackslash UTF / \textbackslash CID}, and every other profile turns it off. A sheet lists the values the profile sets before you confirm.
 
