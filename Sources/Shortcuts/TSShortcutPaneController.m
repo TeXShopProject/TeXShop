@@ -121,7 +121,8 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property BOOL confirmingRecording;
 @property NSStackView *status;
 @property NSTextField *statusText;
-// Shown with "Cannot Be Changed": a link into Keyboard Shortcuts, and where to go next.
+// Shown with "Cannot Be Changed": an arrow, a link into Keyboard Shortcuts, and where to go next.
+@property NSTextField *systemSettingsArrow;
 @property NSTextField *systemSettingsLink;
 @property NSTextField *systemSettingsGuide;
 @property (nullable) NSString *capturedKey;
@@ -224,17 +225,30 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     self.statusText = (NSTextField *)self.status.arrangedSubviews[1];
     self.statusText.identifier = @"shortcut.status-text"; self.statusText.alignment = NSTextAlignmentCenter;
     self.status.arrangedSubviews[0].hidden = YES;
+    self.systemSettingsArrow = [self systemSettingsArrowField];
     self.systemSettingsLink = [self systemSettingsLinkField];
     self.systemSettingsGuide = [self systemSettingsGuideField];
-    // Beside the status words, on that line. Hidden, it leaves the line as it was.
-    [self.status addArrangedSubview:self.systemSettingsLink];
-    [self.status setCustomSpacing:12 afterView:self.statusText];
+    // Center the words, the arrow, and the link as one group. Leading gravity packs that group to the
+    // guide's left edge, because this line is stretched to the guide's width.
+    NSView *mark = self.status.arrangedSubviews[0];
+    for (NSView *view in @[mark, self.statusText]) [self.status removeArrangedSubview:view];
+    for (NSView *view in @[mark, self.statusText, self.systemSettingsArrow, self.systemSettingsLink])
+        [self.status addView:view inGravity:NSStackViewGravityCenter];
+    // A short gap on each side of the arrow. Alignment insets take about 4pt of this spacing.
+    [self.status setCustomSpacing:8 afterView:self.statusText];
+    [self.status setCustomSpacing:8 afterView:self.systemSettingsArrow];
+    [self.status setContentHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [self.statusText setContentHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
     // Hidden rows leave this column the height of the status line alone.
     NSStackView *statusColumn = [NSStackView stackViewWithViews:@[self.status, self.systemSettingsGuide]];
     statusColumn.orientation = NSUserInterfaceLayoutOrientationVertical;
     statusColumn.alignment = NSLayoutAttributeCenterX;
     statusColumn.spacing = 2;
     statusColumn.identifier = @"shortcut.status-column";
+    // The stack's own centering is only priority 250, so a wide guide would keep this line on the left.
+    NSLayoutConstraint *statusCenter = [self.status.centerXAnchor constraintEqualToAnchor:statusColumn.centerXAnchor];
+    statusCenter.priority = NSLayoutPriorityDefaultHigh;
+    statusCenter.active = YES;
     for (NSView *view in @[self.searchMode,self.search,hint,scroll,statusColumn,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
     content.identifier = @"shortcut.commands"; self.commandsView = content;
     hint.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
@@ -876,6 +890,16 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 - (NSURL *)systemShortcutSettingsURL {
     return [NSURL URLWithString:@"x-apple.systempreferences:com.apple.Keyboard-Settings.extension?Shortcuts"];
 }
+- (NSTextField *)systemSettingsArrowField {
+    NSTextField *arrow = [NSTextField labelWithString:@"→"];
+    arrow.identifier = @"shortcut.system-settings-arrow";
+    arrow.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    arrow.textColor = NSColor.labelColor;
+    arrow.hidden = YES;
+    [arrow setContentHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [arrow setContentCompressionResistancePriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+    return arrow;
+}
 - (NSTextField *)systemSettingsLinkField {
     NSFont *font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     NSString *title = NSLocalizedString(@"Change in System Settings…", @"");
@@ -938,6 +962,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     self.statusText.stringValue = text.length ? text : @" ";
     self.status.arrangedSubviews[0].hidden = error == nil;
     BOOL showSystemSettings = self.systemSettingsLink != nil && error == nil && self.editingCommand == nil && [self selectedRowCannotChange];
+    self.systemSettingsArrow.hidden = !showSystemSettings;
     self.systemSettingsLink.hidden = !showSystemSettings;
     self.systemSettingsGuide.hidden = !showSystemSettings;
 }
