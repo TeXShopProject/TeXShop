@@ -129,6 +129,8 @@
 "These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
+"Remove…" = "Remove…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "Remove the shortcut %2$@ from the menu item “%1$@”?";
 "Macro shortcut conflicts" = "Macro shortcut conflicts";
 "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
 "Return to Editing" = "Return to Editing";
@@ -168,6 +170,7 @@
 "Search by Key" = "Search by Key";
 "Show in Macro Editor" = "Show in Macro Editor";
 "Assigned" = "Assigned";
+"Cannot Be Changed" = "Cannot Be Changed";
 "Inactive for this key" = "Inactive for this key";
 "No command uses this key." = "No command uses this key.";
 "Press a key" = "Press a key";

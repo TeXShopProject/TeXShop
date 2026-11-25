@@ -508,9 +508,17 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
 // participate while present; only those TSFindCommandID names can be customized.
 // Each item reserves its key as shown on this keyboard layout and as given: macros are
 // given keys too, which AppKit adapts in the same way.
+// A command Keyboard settings can clear carries its commandID, so the macro editor can
+// remove that key. A command macOS keeps, and an item with no command, do not.
 + (NSArray<NSDictionary *> *)menuBindings:(NSMenu *)menu {
     TSShortcutStore *store = TSKeyboardShortcuts.sharedController.store;
     NSMapTable *known = store.menu == menu ? store.itemBindings : nil;
+    NSMapTable<NSMenuItem *, NSString *> *removable = nil;
+    if (store.menu == menu) {
+        removable = [NSMapTable strongToStrongObjectsMapTable];
+        for (TSShortcutCommand *command in store.commands)
+            if (!command.managedBySystem) [removable setObject:command.commandID forKey:command.item];
+    }
     NSMutableArray *result = [NSMutableArray array];
     TSVisitMenu(menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item.hidden && !item.allowsKeyEquivalentWhenHidden) return;
@@ -519,9 +527,17 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
         NSSet *previous = [known objectForKey:item];
         if (previous) [bindings addObjectsFromArray:previous.allObjects];
         else [bindings addObject:TSGivenBinding(item)];
+        NSString *commandID = [removable objectForKey:item];
+        NSUInteger added = result.count;
         for (TSShortcutBinding *binding in bindings)
             if (binding.key.length)
                 [result addObject:@{@"path":path, @"key":binding.key, @"modifiers":@(binding.modifiers), @"macro":@NO}];
+        if (commandID)
+            for (NSUInteger index = added; index < result.count; index++) {
+                NSMutableDictionary *entry = [result[index] mutableCopy];
+                entry[@"commandID"] = commandID;
+                result[index] = entry;
+            }
     });
     return result;
 }

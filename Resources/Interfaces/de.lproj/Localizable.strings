@@ -188,6 +188,7 @@
 "Search by Key" = "Nach Taste suchen";
 "Show in Macro Editor" = "Im Makro-Editor anzeigen";
 "Assigned" = "Zugewiesen";
+"Cannot Be Changed" = "Nicht änderbar";
 "Inactive for this key" = "Für diese Taste inaktiv";
 "No command uses this key." = "Kein Befehl verwendet diese Taste.";
 "Press a key" = "Taste drücken";
@@ -257,6 +258,8 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Dieser Kurzbefehl kollidiert mit dem Makro „%@“ (%@), dessen Kurzbefehl inaktiv wird, weil es weiter hinten steht.";
 "This shortcut is already used by:\n%@" = "Dieser Kurzbefehl wird bereits verwendet von:\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "Dieser Kurzbefehl ist inaktiv, weil er mit „%@“ (%@) kollidiert.";
+"Remove…" = "Entfernen…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "Kurzbefehl %2$@ des Menüobjekts „%1$@“ entfernen?";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "Dieser Kurzbefehl ist inaktiv, weil das Makro „%@“ (%@) ihn zuerst verwendet.";
 
 

@@ -64,6 +64,9 @@ enum { TexEngine, LatexEngine, BibtexEngine, IndexEngine, MetapostEngine };
 static NSInteger TestWriteAlert(NSString *title, NSString *format, ...) { writeAlerts++; return 0; }
 static void (^sheetCompletion)(NSModalResponse);
 static int sheetStarts, sheetDismissals;
+static NSModalResponse sheetRunModal = NSAlertFirstButtonReturn;
+static NSString *sheetMessage;
+static NSArray *sheetButtonTitles;
 @interface InvisibleSheetWindow : NSWindow @end
 @implementation InvisibleSheetWindow
 - (void)orderOut:(id)sender { sheetDismissals++; }
@@ -73,6 +76,13 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
 @interface TestSheetAlert : NSAlert
 @end
 @implementation TestSheetAlert
+- (NSModalResponse)runModal {
+    sheetMessage=[self.messageText copy];
+    NSMutableArray *titles=[NSMutableArray array];
+    for (NSButton *button in self.buttons) [titles addObject:button.title];
+    sheetButtonTitles=[titles copy];
+    return sheetRunModal;
+}
 - (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse))handler { CaptureSheet(self,_cmd,window,handler); }
 - (NSWindow *)window { static NSWindow *w; if (!w) w=[InvisibleSheetWindow new]; return w; }
 @end
@@ -438,4 +448,66 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(!mixedFirst.key.length && [mixedLater.key isEqual:@"Z"] && [mixedRefused.key isEqual:controlEscape] && fourth.testWindow.closes==1);
     puts("PASS: saving does not report a key that cannot be a shortcut as a conflict, alone or with a real one; the key is kept");
     puts("PASS: existing conflicts save without prompting; new/imported keys have three choices; cancellation and write errors preserve content");
+    // A macro warning can remove a menu shortcut Settings can clear. Cancel leaves it.
+    // Full Screen is kept by macOS, Minimize All has no command, and a later macro loses to an earlier one.
+    NSMenuItem *minimizeAll=[[NSMenuItem alloc] initWithTitle:@"Minimize All" action:@selector(miniaturizeAll:) keyEquivalent:@"m"];
+    minimizeAll.keyEquivalentModifierMask=cmd|option;
+    [menu addItem:minimizeAll];
+    NSMenuItem *fullScreen=[[NSMenuItem alloc] initWithTitle:@"Enter Full Screen" action:@selector(toggleFullScreen:) keyEquivalent:@"g"];
+    fullScreen.identifier=@"TSShortcut.toggleFullScreen:.0";
+    fullScreen.keyEquivalentModifierMask=cmd;
+    [menu addItem:fullScreen];
+    [coordinator refreshMenuAndMacros];
+    BOOL sawFind=NO, sawMini=NO, sawFull=NO;
+    for (NSDictionary *entry in [TSShortcutStore menuBindings:menu]) {
+        if ([entry[@"path"] isEqual:@"Find"] && [entry[@"key"] isEqual:@"f"]) { REQUIRE([entry[@"commandID"] isEqual:findCommand.commandID]); sawFind=YES; }
+        if ([entry[@"path"] isEqual:@"Minimize All"]) { REQUIRE(entry[@"commandID"]==nil); sawMini=YES; }
+        if ([entry[@"path"] isEqual:@"Enter Full Screen"]) { REQUIRE(entry[@"commandID"]==nil); sawFull=YES; }
+    }
+    REQUIRE(sawFind && sawMini && sawFull);
+    TSMacroTreeNode *removableRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"];
+    TSMacroTreeNode *takesFind=[TSMacroTreeNode nodeWithName:@"Takes Find" content:@"KEEP" key:@"F"];
+    TSMacroTreeNode *takesMini=[TSMacroTreeNode nodeWithName:@"Takes Minimize" content:@"KEEP" key:@"M+OptionKey"];
+    TSMacroTreeNode *takesFull=[TSMacroTreeNode nodeWithName:@"Takes Full Screen" content:@"KEEP" key:@"G"];
+    TSMacroTreeNode *earlierMacro=[TSMacroTreeNode nodeWithName:@"Earlier" content:@"KEEP" key:@"Y"];
+    TSMacroTreeNode *laterMacro=[TSMacroTreeNode nodeWithName:@"Later" content:@"KEEP" key:@"Y"];
+    [removableRoot addChildren:@[takesFind, takesMini, takesFull, earlierMacro, laterMacro]];
+    TestEditor *remover=[TestEditor new];
+    remover.testOutline.rootOfTree=removableRoot;
+    remover.shortcutStatus=[NSTextField wrappingLabelWithString:@""];
+    [remover rememberOriginalShortcutKeys];
+    id removerObserver=[[NSNotificationCenter defaultCenter] addObserverForName:TSMacroShortcutsChangedNotification object:nil queue:nil usingBlock:^(NSNotification *note){ [remover menuShortcutsChanged:note]; }];
+    [remover refreshShortcutConflicts];
+    NSString *findReason=[remover shortcutConflictForNode:takesFind];
+    REQUIRE([findReason containsString:@"Find"] && [findReason containsString:@"⌘F"]);
+    remover.previousItem=takesFind;
+    [remover showShortcutStatus:findReason];
+    NSDictionary *findOther=[remover removableMenuShortcutForStatus:remover.shortcutStatus.stringValue];
+    REQUIRE([findOther[@"commandID"] isEqual:findCommand.commandID] && remover.removeMenuShortcutButton==nil);
+    sheetRunModal=NSAlertFirstButtonReturn;
+    [remover removeConflictingMenuShortcut:nil];
+    NSString *question=[NSString stringWithFormat:NSLocalizedString(@"Remove the shortcut %2$@ from the menu item “%1$@”?", @""), @"Find", @"⌘F"];
+    REQUIRE([sheetMessage isEqual:question] && sheetButtonTitles.count==2);
+    REQUIRE([sheetButtonTitles[0] isEqual:NSLocalizedString(@"Cancel", @"")] && [sheetButtonTitles[1] isEqual:NSLocalizedString(@"OK", @"")]);
+    REQUIRE([find.keyEquivalent isEqual:@"f"]);
+    sheetRunModal=NSAlertSecondButtonReturn;
+    [remover removeConflictingMenuShortcut:nil];
+    REQUIRE(!find.keyEquivalent.length && [remover shortcutConflictForNode:takesFind]==nil);
+    REQUIRE(remover.shortcutStatus.stringValue.length==0 && [remover removableMenuShortcutForStatus:findReason]==nil);
+    REQUIRE([minimizeAll.keyEquivalent isEqual:@"m"] && [fullScreen.keyEquivalent isEqual:@"g"]);
+    remover.previousItem=takesMini;
+    NSString *miniReason=[remover shortcutConflictForNode:takesMini];
+    REQUIRE(miniReason.length && [miniReason containsString:@"Minimize All"] && [remover removableMenuShortcutForStatus:miniReason]==nil);
+    remover.previousItem=takesFull;
+    NSString *fullReason=[remover shortcutConflictForNode:takesFull];
+    REQUIRE(fullReason.length && [fullReason containsString:@"Enter Full Screen"] && [remover removableMenuShortcutForStatus:fullReason]==nil);
+    remover.previousItem=laterMacro;
+    NSString *macroReason=[remover shortcutConflictForNode:laterMacro];
+    REQUIRE([macroReason containsString:@"Earlier"] && [remover removableMenuShortcutForStatus:macroReason]==nil);
+    remover.previousItem=takesMini;
+    remover.recordingItem=takesMini;
+    [remover showShortcutStatus:miniReason];
+    REQUIRE([remover removableMenuShortcutForStatus:remover.shortcutStatus.stringValue]==nil);
+    [[NSNotificationCenter defaultCenter] removeObserver:removerObserver];
+    puts("PASS: the macro editor removes a menu shortcut Settings can clear, after OK, and offers that for nothing else");
 } return 0; }

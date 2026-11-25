@@ -186,6 +186,7 @@
 "Search by Key" = "按按键搜索";
 "Show in Macro Editor" = "在宏编辑器中显示";
 "Assigned" = "已分配";
+"Cannot Be Changed" = "不可更改";
 "Inactive for this key" = "此按键无效";
 "No command uses this key." = "没有命令使用此按键。";
 "Press a key" = "请按键";
@@ -254,6 +255,8 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "此快捷键与宏“%@”（%@）冲突。由于该宏位置靠后，它的快捷键将停用。";
 "This shortcut is already used by:\n%@" = "此快捷键已被以下项目使用：\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "此快捷键与“%@”（%@）冲突，因此已停用。";
+"Remove…" = "移除…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "要移除菜单项“%1$@”的快捷键 %2$@ 吗？";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "宏“%@”（%@）先使用了此快捷键，因此此快捷键已停用。";
 
 

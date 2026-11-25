@@ -189,6 +189,7 @@
 "Search by Key" = "키로 검색";
 "Show in Macro Editor" = "매크로 편집기에서 보기";
 "Assigned" = "할당됨";
+"Cannot Be Changed" = "변경 불가";
 "Inactive for this key" = "이 키에서는 비활성";
 "No command uses this key." = "이 키를 사용하는 명령이 없습니다.";
 "Press a key" = "키를 누르세요";
@@ -257,6 +258,8 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "이 단축키는 매크로 “%@”(%@)과(와) 충돌합니다. 해당 매크로가 뒤에 있으므로 그 단축키는 비활성화됩니다.";
 "This shortcut is already used by:\n%@" = "이 단축키는 이미 다음에서 사용 중입니다:\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "이 단축키는 “%@”(%@)과(와) 충돌하므로 비활성화되어 있습니다.";
+"Remove…" = "제거…";
+"Remove the shortcut %2$@ from the menu item “%1$@”?" = "메뉴 항목 “%1$@”의 단축키 %2$@을(를) 제거하시겠습니까?";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "매크로 “%@”(%@)이(가) 먼저 사용하므로 이 단축키는 비활성화되어 있습니다.";
 
 
