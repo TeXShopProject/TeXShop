@@ -9249,7 +9249,8 @@ else
         if (fabs(end - origin.y) * magnification > 0.5) {
             // A screen, less the part that stays in view, as AppKit pages a scroll view.
             NSEdgeInsets insets = scroll.contentInsets;
-            CGFloat visible = NSHeight(clip.bounds) - (fabs(insets.top) + fabs(insets.bottom)) / magnification;
+            // The top inset is in clip bounds. The bottom inset stays in screen points.
+            CGFloat visible = NSHeight(clip.bounds) - fabs(insets.top) - fabs(insets.bottom) / magnification;
             CGFloat overlap = scroll.verticalPageScroll / magnification;
             CGFloat step = visible - overlap > 0 ? visible - overlap : visible;
             origin.y = fmin(fmax(origin.y + (towardMaximum ? step : -step), minimum), maximum);

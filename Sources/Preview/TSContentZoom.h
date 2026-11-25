@@ -156,8 +156,12 @@ static inline NSRect TSContentVisibleArea(PDFView *view)
     NSEdgeInsets insets = scroll.contentInsets;
     area.origin.x += insets.left * unit;
     area.size.width -= (insets.left + insets.right) * unit;
-    area.origin.y += (clip.isFlipped ? insets.top : insets.bottom) * unit;
-    area.size.height -= (insets.top + insets.bottom) * unit;
+    // The top inset is already in clip bounds. PDFKit magnifies it, so dividing again
+    // would leave the toolbar band inside the area that is fitted.
+    CGFloat top = insets.top;
+    CGFloat bottom = insets.bottom * unit;
+    area.origin.y += clip.isFlipped ? top : bottom;
+    area.size.height -= top + bottom;
     return area;
 }
 
@@ -168,7 +172,9 @@ static inline NSSize TSContentVisibleSize(PDFView *view)
     NSClipView *clip = scroll.contentView;
     if (!clip) return NSZeroSize;
     NSEdgeInsets insets = scroll.contentInsets;
-    return NSMakeSize(NSWidth(clip.frame) - insets.left - insets.right, NSHeight(clip.frame) - insets.top - insets.bottom);
+    CGFloat magnification = NSHeight(clip.bounds) > 0 ? NSHeight(clip.frame) / NSHeight(clip.bounds) : 1;
+    return NSMakeSize(NSWidth(clip.frame) - insets.left - insets.right,
+                       NSHeight(clip.frame) - insets.top * magnification - insets.bottom);
 }
 
 static inline BOOL TSContentTwoUp(PDFView *view)

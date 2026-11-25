@@ -13,7 +13,13 @@ The test checks:
 - the three document windows use a full-size content view on macOS 26 and
   later, and none is given a toolbar line; the text and the first page start
   at the toolbar. Earlier systems keep the nib's separator, and the Preview
-  clip view clips;
+  clip view clips. At twice the scale the first page stays within one PDF
+  margin of the toolbar (under 16 points): the top inset times the
+  magnification is the toolbar band, and a view over that band draws the
+  window color. Offscreen drawing has no glass; those pixels are the ones
+  behind it. The stand-in preview is a PDFView, so the test installs
+  TSPreviewScrollerKeeper itself; the production preview installs it when
+  the document is set and when the view moves to a window;
 - splitting the source (the production splitWindow:) puts the divider in the
   middle of the area that can be seen, in the source window and in the combined
   window, with and without a full-size content view (the combined window used to
@@ -73,6 +79,20 @@ MUTATIONS = {
     'preview-clip-open': ('TSDocumentWindowGlass.m',
         '            view.clipsToBounds = YES;\n',
         '            view.clipsToBounds = NO;\n'),
+    # A magnified scroll view keeps the toolbar band in unmagnified bounds, so the
+    # gap under the toolbar grows by the band times (magnification - 1).
+    'toolbar-inset-unscaled': ('TSPreviewScrollerKeeper.m',
+        '    CGFloat wanted = band / magnification;\n',
+        '    CGFloat wanted = band;\n'),
+    # Nothing paints the window color over the light gutter in the toolbar band.
+    'toolbar-shield-missing': ('TSPreviewScrollerKeeper.m',
+        '    if (shield.superview != scroll)\n        [scroll addSubview:shield positioned:NSWindowAbove relativeTo:clip];\n',
+        ''),
+    # The scroll stops where the clip view divides the top inset by the magnification,
+    # short of the top of the document.
+    'toolbar-top-clamped': ('TSPreviewScrollerKeeper.m',
+        '        if (proposed.origin.y < rect.origin.y)\n            rect.origin.y = fmax(proposed.origin.y, limit);\n',
+        ''),
     # setupToolbar's trio skips the Preview window, so it is never prepared.
     'preview-not-prepared': ('TSDocumentWindowGlass.m',
         '        TSDocumentWindowPrepare(window);\n',
@@ -83,8 +103,10 @@ parser.add_argument('--mutation', choices=sorted(MUTATIONS))
 parser.add_argument('--images', type=Path, help='write offscreen pictures of the windows here')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-names = ('TSDocumentWindowGlass.m', 'TSDocument.m')
+names = ('TSDocumentWindowGlass.m', 'TSDocument.m', 'TSPreviewScrollerKeeper.m')
 text = {name: source_file(root, name).read_text(encoding='latin1') for name in names}
+preview = source_file(root, 'MyPDFKitView.m').read_text(encoding='latin1')
+assert preview.count('[TSPreviewScrollerKeeper installInView:self];') >= 2, 'the preview installs the scroller keeper'
 split_method = method(text['TSDocument.m'], '- (void) splitWindow: sender')
 fragments = [('complete method: splitWindow:', text['TSDocument.m'], split_method)]
 if args.mutation:
@@ -103,6 +125,7 @@ program = r'''
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
 #import "TSDocumentWindowGlass.h"
+#import "TSPreviewScrollerKeeper.h"
 static int failures, checks;
 static void Check(BOOL ok, NSString *name) { checks++; if (!ok) { printf("FAIL: %s\n", name.UTF8String); failures++; } }
 static void TSSplitToggleItemsFollowSplit(void) {}
@@ -276,6 +299,12 @@ static NSDrawer *OpenDrawer(TSDocument *doc) {
     return drawer;
 }
 static NSView *DrawerFrame(NSDrawer *drawer) { return drawer.contentView.superview; }
+static NSView *ToolbarShield(NSView *scroll) {
+    for (NSView *subview in scroll.subviews)
+        if ([NSStringFromClass(subview.class) containsString:@"TSPreviewToolbarShield"])
+            return subview;
+    return nil;
+}
 static NSColor *DrawerEdge(NSDrawer *drawer) {
     NSView *frame = DrawerFrame(drawer);
     frame.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
@@ -326,10 +355,13 @@ int main(int argc, char **argv) { @autoreleasepool {
               [NSString stringWithFormat:@"the source's top inset is the band under the toolbar (%.1f, %.1f)%@", doc->scrollView.contentInsets.top, band, nibName]);
         Check(fabs(NSMaxY(first) - NSMaxY(doc->textWindow.contentLayoutRect)) <= 1.5,
               [NSString stringWithFormat:@"the first line starts below the toolbar (%.1f, %.1f)%@", NSMaxY(first), NSMaxY(doc->textWindow.contentLayoutRect), nibName]);
-        // The Preview window runs under the toolbar. PDFView keeps its own margin
-        // above the page, about five points on this system.
+        // The Preview window runs under the toolbar. The keeper is installed here:
+        // this stand-in is a PDFView, and the production view installs it itself.
         NSWindow *pw = doc.pdfKitWindow; PDFView *pv = doc.myPDFKitView;
-        [pv goToFirstPage:nil]; ScrollTop(pv.documentView.enclosingScrollView); Settle(pw);
+        [pv goToFirstPage:nil];
+        [TSPreviewScrollerKeeper installInView:pv];
+        ScrollTop(pv.documentView.enclosingScrollView); Settle(pw);
+        TSPreviewViewDidLayout(pv);
         PDFPage *page = [pdf pageAtIndex:0];
         NSRect pageRect = [pv convertRect:[pv convertRect:[page boundsForBox:kPDFDisplayBoxCropBox] fromPage:page] toView:nil];
         CGFloat previewBand = Band(pw);
@@ -346,6 +378,45 @@ int main(int argc, char **argv) { @autoreleasepool {
                 Save(pw, images, [NSString stringWithFormat:@"%@-after-05-preview-top-%@", lang, look]);
             }
         }
+
+        // At unit scale the magnified inset and the old unscaled inset are the same
+        // size on screen. Twice the scale separates them: an unscaled inset leaves a
+        // gap of about the whole band.
+        pv.autoScales = NO;
+        [pv setScaleFactor:2];
+        ScrollTop(pv.documentView.enclosingScrollView);
+        Settle(pw);
+        TSPreviewViewDidLayout(pv);
+        NSScrollView *previewScroll = pv.documentView.enclosingScrollView;
+        CGFloat magnification = previewScroll.magnification;
+        pageRect = [pv convertRect:[pv convertRect:[page boundsForBox:kPDFDisplayBoxCropBox] fromPage:page] toView:nil];
+        CGFloat gap = NSMaxY(pw.contentLayoutRect) - NSMaxY(pageRect);
+        Check(fabs(pv.scaleFactor - 2) < 0.05 && fabs(magnification - 2) < 0.05,
+              [NSString stringWithFormat:@"the preview is at twice the scale (%.2f, %.2f)%@", pv.scaleFactor, magnification, nibName]);
+        Check(gap > 0 && gap < 16,
+              [NSString stringWithFormat:@"at twice the scale the page stays within one margin of the toolbar (%.1f)%@", gap, nibName]);
+        Check(fabs(previewScroll.contentInsets.top * magnification - previewBand) < 1.5,
+              [NSString stringWithFormat:@"the top inset times the magnification is the toolbar band (%.1f, %.1f)%@",
+               previewScroll.contentInsets.top * magnification, previewBand, nibName]);
+        NSView *shield = ToolbarShield(previewScroll);
+        BOOL shieldOK = shield && !shield.hidden && shield.clipsToBounds
+            && NSHeight(shield.bounds) >= previewBand && NSHeight(shield.bounds) <= previewBand + 30;
+        Check(shieldOK, [NSString stringWithFormat:@"the window color covers the band above the first page (%.1f, band %.1f)%@",
+                         shield ? NSHeight(shield.bounds) : 0, previewBand, nibName]);
+        NSColor *bandColor = nil;
+        if (shieldOK) {
+            pw.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+            NSBitmapImageRep *rep = [shield bitmapImageRepForCachingDisplayInRect:shield.bounds];
+            [shield cacheDisplayInRect:shield.bounds toBitmapImageRep:rep];
+            bandColor = [[rep colorAtX:MIN(2, (NSInteger)rep.pixelsWide - 1) y:MIN(2, (NSInteger)rep.pixelsHigh - 1)]
+                colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+            pw.appearance = nil;
+        }
+        Check(bandColor && bandColor.redComponent < 0.3 && bandColor.greenComponent < 0.3 && bandColor.blueComponent < 0.3,
+              [NSString stringWithFormat:@"in Dark Mode the band behind the toolbar is the window color (%.2f, %.2f, %.2f)%@",
+               bandColor.redComponent, bandColor.greenComponent, bandColor.blueComponent, nibName]);
+        [pv setScaleFactor:1];
+        TSPreviewViewDidLayout(pv);
 
         // Splitting the source window: the parts share the area below the toolbar.
         [doc splitWindow:nil]; Settle(doc->textWindow);
@@ -498,8 +569,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-full-size-') as tmp:
                    check=True, stdout=subprocess.DEVNULL, cwd=tmp)
     (tmp / 'probe.m').write_text(program, encoding='latin1')
     (tmp / 'TSDocumentWindowGlass.m').write_text(text['TSDocumentWindowGlass.m'], encoding='latin1')
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', *include_args(root),
+    (tmp / 'TSPreviewScrollerKeeper.m').write_text(text['TSPreviewScrollerKeeper.m'], encoding='latin1')
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'PDFKit', *include_args(root),
                     '-I', str(root / 'Tests'), str(tmp / 'probe.m'), str(tmp / 'TSDocumentWindowGlass.m'),
+                    str(tmp / 'TSPreviewScrollerKeeper.m'),
                     '-o', str(tmp / 'probe')], check=True)
     env = None
     if args.images:

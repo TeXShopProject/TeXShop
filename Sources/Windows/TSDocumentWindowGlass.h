@@ -3,10 +3,12 @@
  * TSDocumentWindowGlass.h
  *
  * On macOS 26 and later, document windows, including Preview, let their content
- * run under the title bar and the toolbar. The glass takes on the page color and
- * ends in a hard edge, with no separator line, as Preview.app does. Earlier
- * systems leave the content below the toolbar and leave the separator the nib
- * built, the line and short shadow Preview.app uses there. Clip views clip to
+ * run under the title bar and the toolbar. When a page has scrolled under the
+ * toolbar, the glass takes on the page color and ends in a hard edge, with no
+ * separator line, as Preview.app does. At the top of the document the band under
+ * the toolbar stays the window color, so a light page does not light the bar.
+ * Earlier systems leave the content below the toolbar and leave the separator the
+ * nib built, the line and short shadow Preview.app uses there. Clip views clip to
  * their bounds, so a scrolled page cannot paint into that toolbar.
  */
 

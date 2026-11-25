@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Overlay scrollers take a knob that contrasts with the pages.
+"""Scrollers take a knob that contrasts with the pages.
 
 A light page gets a dark knob, so Dark Mode does not draw white on white.
-An inverted page gets a light knob. A legacy scroller keeps the system knob.
+An inverted page gets a light knob. A legacy scroller does the same: on a
+light page its system knob is nearly the color of the light gutter.
 The document preview and the Experiment preview apply that choice again when
 the system scroller style changes.
 """
@@ -18,8 +19,8 @@ MUTATIONS = {
     ),
     'overlay-knob-swapped': (
         'TSPreviewAppearance.h',
-        '        style = invert ? NSScrollerKnobStyleLight : NSScrollerKnobStyleDark;\n',
-        '        style = invert ? NSScrollerKnobStyleDark : NSScrollerKnobStyleLight;\n',
+        '    NSScrollerKnobStyle style = invert ? NSScrollerKnobStyleLight : NSScrollerKnobStyleDark;\n',
+        '    NSScrollerKnobStyle style = invert ? NSScrollerKnobStyleDark : NSScrollerKnobStyleLight;\n',
     ),
 }
 parser = argparse.ArgumentParser(description=__doc__)
@@ -66,10 +67,11 @@ int main(void) {
         check(overlay.verticalScroller.knobStyle == NSScrollerKnobStyleLight && overlay.horizontalScroller.knobStyle == NSScrollerKnobStyleLight, "both inverted knobs are light");
         NSScrollView *legacy = Scroll(NSScrollerStyleLegacy);
         TSApplyPreviewInversion(legacy, NO);
-        check(legacy.scrollerKnobStyle == NSScrollerKnobStyleDefault, "a legacy scroller keeps the system knob");
-        check(legacy.verticalScroller.knobStyle == NSScrollerKnobStyleDefault && legacy.horizontalScroller.knobStyle == NSScrollerKnobStyleDefault, "both legacy knobs stay with the system");
+        check(legacy.scrollerKnobStyle == NSScrollerKnobStyleDark, "a light page has a dark legacy knob");
+        check(legacy.verticalScroller.knobStyle == NSScrollerKnobStyleDark && legacy.horizontalScroller.knobStyle == NSScrollerKnobStyleDark, "both legacy knobs are dark");
         TSApplyPreviewInversion(legacy, YES);
-        check(legacy.scrollerKnobStyle == NSScrollerKnobStyleDefault, "inverting does not restyle a legacy scroller");
+        check(legacy.scrollerKnobStyle == NSScrollerKnobStyleLight, "an inverted page has a light legacy knob");
+        check(legacy.verticalScroller.knobStyle == NSScrollerKnobStyleLight && legacy.horizontalScroller.knobStyle == NSScrollerKnobStyleLight, "both inverted legacy knobs are light");
         printf("PASS: %d scroller knob checks\n", checks);
     }
     return 0;
