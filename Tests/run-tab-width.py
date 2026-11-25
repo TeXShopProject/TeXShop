@@ -42,6 +42,13 @@ MUTATIONS = {
     # New characters after the tabs are fixed have no foreground, so they draw black.
     'drop-typing-text-color': (DOCUMENT,
         '\t\tif (typedColor)\n\t\t\t[typing setObject:typedColor forKey:NSForegroundColorAttributeName];\n', ''),
+    # The font in the typing attributes is what a new source types with. setFont: runs first,
+    # and setTypingAttributes: then replaces the whole dictionary.
+    'drop-typing-font': (DOCUMENT,
+        '\t\tif (typedFont)\n\t\t\t[typing setObject:typedFont forKey:NSFontAttributeName];\n', ''),
+    # The paragraph style in the typing attributes is what a tab typed on a new line uses.
+    'drop-typing-tab-style': (DOCUMENT,
+        '\t\t[typing setObject:newStyle forKey:NSParagraphStyleAttributeName];\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -290,6 +297,21 @@ int main(void) { @autoreleasepool {
                   fabs(stored.greenComponent - want.greenComponent) < 0.01 &&
                   fabs(stored.blueComponent - want.blueComponent) < 0.01,
                   @"a character typed after the tabs are fixed keeps the theme color");
+            NSFont *typedFace = [view.textStorage attribute:NSFontAttributeName atIndex:at effectiveRange:NULL];
+            Check(typedFace && [typedFace.fontName isEqual:kept.fontName] && typedFace.pointSize == kept.pointSize,
+                  @"a character typed after the tabs are fixed keeps the font from Settings");
+            [view insertText:@"\t" replacementRange:NSMakeRange(0, 0)];
+            NSParagraphStyle *typedStyle = [view.textStorage attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL];
+            NSParagraphStyle *wantStyle = view.defaultParagraphStyle;
+            BOOL sameStops = typedStyle && wantStyle && typedStyle.tabStops.count == wantStyle.tabStops.count;
+            if (sameStops) {
+                for (NSUInteger stop = 0; stop < typedStyle.tabStops.count; stop++)
+                    if (fabs(typedStyle.tabStops[stop].location - wantStyle.tabStops[stop].location) > 0.01)
+                        sameStops = NO;
+            }
+            Check(sameStops && typedStyle && wantStyle &&
+                  fabs(typedStyle.defaultTabInterval - wantStyle.defaultTabInterval) < 0.01,
+                  @"a tab typed after the tabs are fixed keeps the tab stops");
         }
     }
 
