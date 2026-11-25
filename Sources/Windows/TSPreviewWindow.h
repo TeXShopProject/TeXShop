@@ -135,9 +135,9 @@ extern NSUserInterfaceItemIdentifier const TSPreviewWindowRestorationIdentifier;
 - (void)saveSelectionToFile: (id)sender; // mitsu 1.29 (O)
 #endif
 - (void) splitPdfKitWindow: (id)sender; 
-// In a window whose content runs under the toolbar, parts side by side start below it.
-// The Preview window keeps its pages below the toolbar, so this placement is not used there.
-// Called after the window was split or unsplit, and when the split view comes back to it.
+// In a full-size window, parts side by side start below the toolbar. On macOS 26 and later
+// the Preview window is full-size too, so this placement is used there. Called after the
+// window was split or unsplit, and when the split view comes back to it.
 - (void) placeSplitViewForToolbar;
 // Hands the split view back to its frame, before it moves to another window.
 - (void) releaseSplitViewPlacement;

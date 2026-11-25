@@ -97,15 +97,17 @@ static void TSClearAppKitTabOverviewKey(NSMenu *menu) {
     for (TSShortcutCommand *command in self.commands) [previous setObject:command forKey:command.item];
     NSMutableArray *commands = [NSMutableArray array];
     NSMutableSet *seen = [NSMutableSet set];
+    NSMutableArray<NSMenuItem *> *hiddenTabCopies = [NSMutableArray array];
+    NSMutableArray<NSString *> *hiddenTabPaths = [NSMutableArray array];
     // When documents autosave, AppKit adds Duplicate and resets Save As… to ⌥⇧⌘S whenever
     // it updates the menu, so Save As… keeps the shortcut macOS gives it, as in Xcode.
     __block BOOL appKitSaveAs = NO;
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item.action == @selector(duplicateDocument:)) appKitSaveAs = YES;
     });
-    TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
+    void (^addCommand)(NSMenuItem *, NSString *) = ^(NSMenuItem *item, NSString *path) {
         NSString *identifier = item.identifier ?: @"";
-        if (![identifier hasPrefix:@"TSShortcut."] || !item.action || item.submenu || [seen containsObject:identifier]) return;
+        if ([seen containsObject:identifier]) return;
         [seen addObject:identifier];
         TSShortcutCommand *command = [previous objectForKey:item];
         if (!command) {
@@ -114,7 +116,21 @@ static void TSClearAppKitTabOverviewKey(NSMenu *menu) {
         // Enter Full Screen has Globe-F, which macOS gives only its own items (TSGiveFullScreenGlobeKey).
         command.path = path; command.managedBySystem = (appKitSaveAs && item.action == @selector(saveDocumentAs:)) || item.action == @selector(toggleFullScreen:);
         [commands addObject:command];
+    };
+    TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
+        NSString *identifier = item.identifier ?: @"";
+        if (![identifier hasPrefix:@"TSShortcut."] || !item.action || item.submenu) return;
+        // A hidden Show All Tabs copy cannot show a key. Prefer a visible copy, so a key
+        // saved in Settings is attached to the item the user can see.
+        if (item.action == NSSelectorFromString(@"toggleTabOverview:") && item.hidden && !item.allowsKeyEquivalentWhenHidden) {
+            [hiddenTabCopies addObject:item];
+            [hiddenTabPaths addObject:path ?: @""];
+            return;
+        }
+        addCommand(item, path);
     });
+    if (![seen containsObject:@"TSShortcut.toggleTabOverview:.0"] && hiddenTabCopies.count)
+        addCommand(hiddenTabCopies[0], hiddenTabPaths[0]);
     self.commands = commands;
     [self adoptRenamedCommands];
     [self applySavedOverrides];
@@ -574,6 +590,10 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
 - (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates {
     NSMutableDictionary *reserved = [NSMutableDictionary dictionary];
     for (NSDictionary *entry in [TSShortcutStore menuBindings:self.menu]) {
+        // A yielding default is given up when the macro is saved. Warning about it, or
+        // offering to remove it, would store an empty key that does not come back.
+        NSString *commandID = entry[@"commandID"];
+        if (commandID && [TSYieldingDefaultCommands() containsObject:commandID] && !self.overrides[commandID]) continue;
         TSShortcutBinding *binding = TSBinding(entry[@"key"], [entry[@"modifiers"] unsignedIntegerValue]);
         if (!reserved[binding]) reserved[binding] = entry;
     }

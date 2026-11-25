@@ -360,11 +360,9 @@ static TSDocument *Open(NSString *string) {
         w.toolbarStyle = NSWindowToolbarStyleExpanded;
         NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:[@"bar-" stringByAppendingString:NSStringFromClass(w.class)]];
         toolbar.delegate = toolbarDelegate; w.toolbar = toolbar;
-        if (w == doc.pdfKitWindow)
-            TSDocumentWindowPrepareSolidToolbar(w);
-        else
-            TSDocumentWindowPrepare(w);
     }
+    // The same call setupToolbar makes.
+    TSDocumentWindowPrepareTrio(doc->textWindow, doc.pdfKitWindow, doc->fullSplitWindow);
     [doc installStatusBar];
     WaitForCount(doc.sourceStatusBar);
     return doc;

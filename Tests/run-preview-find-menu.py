@@ -32,6 +32,42 @@ MUTATIONS = {
         'Sources/Preview/MyPDFKitView.m', '- (void)doFindAgainBackwards',
         '    previewFindBackwards = YES;\n',
         ''),
+    # Find All must not run a search.
+    'all-runs-search': (
+        'Sources/Preview/MyPDFKitView.m', '- (void)focusDrawerSearchField',
+        '        [owner focusSearchField:field];\n        return;\n',
+        '        [owner focusSearchField:field];\n        [owner doFind:field];\n        return;\n'),
+    # An open drawer still moves focus to its search field.
+    'open-drawer-no-focus': (
+        'Sources/Preview/MyPDFKitView.m', '- (void)focusDrawerSearchField',
+        '        [owner focusSearchField:field];\n',
+        ''),
+    # The Preview window itself validates Find.
+    'preview-window-disables-find': (
+        'Sources/Windows/TSPreviewWindow.m', '- (BOOL)validateMenuItem:(NSMenuItem *)anItem',
+        '\t\t\treturn [view validateMenuItem:anItem];\n',
+        '\t\t\treturn NO;\n'),
+    # Find All still focuses the drawer field.
+    'find-all-key-dropped': (
+        'Sources/Preview/MyPDFKitView.m', '- (void)performPreviewFindTag:(NSInteger)tag',
+        '    else if (tag == TSAdvancedFindActionFindAll)\n        [self focusDrawerSearchField];\n',
+        ''),
+    # The combined window's field editor is only for the Preview search fields.
+    'any-client-in-combined': (
+        'Sources/Preview/MyPDFKitView.m', '- (BOOL)isPreviewSearchClient:(id)client',
+        '    if (![client isKindOfClass:[NSSearchField class]])\n        return NO;\n',
+        '    return YES;\n'),
+    # The drawer window's delegate must not be the Preview view.
+    'drawer-delegate-is-view': (
+        'Sources/Preview/MyPDFKitView.m', '- (void)attachDrawerFindFieldEditor',
+        '        drawerWindow.delegate = self.drawerFieldEditorSource;\n',
+        '        drawerWindow.delegate = self;\n'),
+    # The small delegate must forward the field editor. Returning nil restores the ordinary editor.
+    'drawer-source-returns-nil': (
+        'Sources/Preview/MyPDFKitView.m',
+        '- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client',
+        '    return [self.owner windowWillReturnFieldEditor:sender toObject:client];\n',
+        '    return nil;\n'),
 }
 
 root = Path(__file__).resolve().parents[1]
@@ -133,8 +169,60 @@ drawer = method(kit, '- (void)focusDrawerSearchField')
 expect('[drawer open:owner]' in drawer and 'focusDrawerSearchWhenOpen = YES' in drawer and
        'NSDrawerOpenState' in drawer and 'focusSearchField:' in method(kit, '- (void)previewDrawerDidOpen:'),
        'Find All does not open a closed drawer and focus its search field')
+open_at = drawer.find('NSDrawerOpenState')
+open_return = drawer.find('return;', open_at)
+open_branch = drawer[open_at:open_return] if open_at >= 0 and open_return > open_at else ''
+expect('focusSearchField:' in open_branch, 'an open drawer does not focus its search field')
+for signature in ('- (void)focusDrawerSearchField', '- (void)previewDrawerDidOpen:', '- (void)focusSearchField:'):
+    body = method(kit, signature)
+    for banned in ('doFind', 'findString', 'beginFind', 'performClick'):
+        expect(banned not in body, f'{signature} runs a search ({banned})')
 
-editor = method(kit, '- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client')
+tags = method(kit, '- (void)performPreviewFindTag:')
+show = tags.find('NSFindPanelActionShowFindPanel')
+focus_toolbar = tags.find('focusPreviewToolbarSearchField')
+nxt = tags.find('NSFindPanelActionNext')
+again = tags.find('doFindAgain]')
+prev = tags.find('NSFindPanelActionPrevious')
+back = tags.find('doFindAgainBackwards')
+find_all = tags.find('TSAdvancedFindActionFindAll')
+focus_drawer = tags.find('focusDrawerSearchField')
+expect(0 <= show < focus_toolbar < nxt < again < prev < back < find_all < focus_drawer,
+       'Find, Find Next, Find Previous and Find All do not call their own commands')
+
+preview = 'Sources/Windows/TSPreviewWindow.m'
+preview_validate = method(preview, '- (BOOL)validateMenuItem:(NSMenuItem *)anItem')
+find_validate = preview_validate[preview_validate.find('performFindPanelAction:'):]
+expect('return [view validateMenuItem:anItem]' in find_validate and
+       find_validate.find('return [view validateMenuItem:anItem]') < find_validate.find('return NO'),
+       'the Preview window does not validate Find through the PDF view')
+preview_perform = method(preview, '- (void)performFindPanelAction:')
+expect('self.activeView' in preview_perform and 'self.myPDFKitView' in preview_perform and
+       preview_perform.find('self.activeView') < preview_perform.find('self.myPDFKitView') and
+       '[view performFindPanelAction:sender]' in preview_perform,
+       'the Preview window does not forward Find to the active view, then the first view')
+
+client = method(kit, '- (BOOL)isPreviewSearchClient:')
+expect(client.count('return YES') == 1 and 'mySearchField' in client and 'myFullSearchField' in client and
+       'owner->_searchField' in client and client.find('return YES') > client.find('mySearchField'),
+       'the combined window uses the Preview field editor for something other than a Preview search field')
+attach = method(kit, '- (void)attachDrawerFindFieldEditor')
+expect('drawerWindow.delegate = self.drawerFieldEditorSource' in attach and
+       'drawerWindow.delegate = self;' not in attach and
+       'TSPreviewDrawerFieldEditorSource' in source(kit) and
+       'windowWillReturnFieldEditor:' in source(kit),
+       'the drawer window uses the Preview view as its delegate')
+forwarder = method(kit, '- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client',
+                   contains='self.owner')
+expect('[self.owner windowWillReturnFieldEditor:sender toObject:client]' in forwarder and
+       'return nil' not in forwarder,
+       'the drawer field editor does not forward to the Preview view')
+broken = method(kit, '- (void) breakConnections')
+expect('drawerFieldEditorSource' in broken and 'delegate = nil' in broken,
+       'closing the Preview leaves the drawer window delegate in place')
+
+editor = method(kit, '- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client',
+               contains='myPDFWindow')
 expect('myPDFWindow' in editor and '_drawer.contentView.window' in editor,
        'the Preview search fields keep the ordinary field editor')
 combined = method('Sources/Document/TSDocument.m',

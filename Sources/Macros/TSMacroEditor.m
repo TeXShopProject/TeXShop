@@ -143,6 +143,8 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		reviewPending = NO;
 		macrosBackedUp = NO;
 		writingMacros = NO;
+		reportedWriteFailure = NO;
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(writeMacrosBeforeTermination:) name:NSApplicationWillTerminateNotification object:nil];
 		// set up menu items
 		NSMenu *macroMenu = [[[NSApp mainMenu] itemWithTitle:
 					NSLocalizedString(@"Macros", @"Macros")] submenu];
@@ -1272,7 +1274,7 @@ static const CGFloat TSMacroRemoveShortcutGap = 8;
     [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
     return TSRunShortcutAlert(alert);
 }
-- (void)clearMenuShortcutWithID:(NSString *)commandID
+- (BOOL)clearMenuShortcutWithID:(NSString *)commandID
 {
     TSShortcutStore *store = [TSKeyboardShortcuts sharedController].store;
     TSShortcutCommand *command = nil;
@@ -1285,7 +1287,9 @@ static const CGFloat TSMacroRemoveShortcutGap = 8;
         alert.messageText = error;
         [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
         TSRunShortcutAlert(alert);
+        return NO;
     }
+    return YES;
 }
 - (IBAction)removeConflictingMenuShortcut:(id)sender
 {
@@ -1293,7 +1297,10 @@ static const CGFloat TSMacroRemoveShortcutGap = 8;
     if (!other) return;
     NSString *shown = [TSShortcutStore displayKey:other[@"key"] ?: @"" modifiers:[other[@"modifiers"] unsignedIntegerValue]];
     if ([self confirmRemovingShortcut:shown fromMenuItem:other[@"path"]] != NSAlertSecondButtonReturn) return;
-    [self clearMenuShortcutWithID:other[@"commandID"]];
+    if (![self clearMenuShortcutWithID:other[@"commandID"]]) return;
+    // The menu key is gone. Write the macro, and ask again only if another conflict remains.
+    reviewPending = NO;
+    [self autosaveMacroEdits];
 }
 // END shortcut status
 
@@ -1362,9 +1369,9 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 {
     return TSRunShortcutAlert(TSShortcutConflictsAlert(details));
 }
-- (BOOL)validateMacroShortcutsBeforeSaving
+- (void)collectChangedShortcutConflicts:(NSMutableArray *)changed nodes:(NSMutableArray *)nodes lines:(NSMutableArray *)lines
 {
-    NSMutableArray *nodes = [NSMutableArray array], *candidates = [NSMutableArray array], *changed = [NSMutableArray array], *lines = [NSMutableArray array];
+    NSMutableArray *candidates = [NSMutableArray array];
     NSMutableArray *conflicts = [[self currentShortcutConflictsWithNodes:nodes candidates:candidates] mutableCopy];
     NSMutableIndexSet *inactive = [NSMutableIndexSet indexSet];
     for (NSDictionary *conflict in conflicts) [inactive addIndex:[conflict[@"index"] unsignedIntegerValue]];
@@ -1391,11 +1398,17 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
         NSDictionary *binding = [TSShortcutStore normalizedKey:getKeyEquivalentFromString(node.key) modifiers:getKeyModifierMaskFromString(node.key)];
         if (original && [original isEqual:binding]) continue;
         [changed addObject:conflict];
+        if (!lines) continue;
         NSDictionary *candidate = candidates[index];
         [lines addObject:[NSString stringWithFormat:@"%@ (%@)\n%@", candidate[@"path"],
             [TSShortcutStore displayKey:candidate[@"key"] modifiers:[candidate[@"modifiers"] unsignedIntegerValue]],
             [TSShortcutStore reasonForMacroConflict:conflict]]];
     }
+}
+- (BOOL)validateMacroShortcutsBeforeSaving
+{
+    NSMutableArray *nodes = [NSMutableArray array], *changed = [NSMutableArray array], *lines = [NSMutableArray array];
+    [self collectChangedShortcutConflicts:changed nodes:nodes lines:lines];
     if (!changed.count) return YES;
     NSModalResponse response = [self showShortcutConflicts:[lines componentsJoinedByString:@"\n\n"]];
     if (response == NSAlertThirdButtonReturn) {
@@ -1433,7 +1446,13 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 - (BOOL)autosaveMacroEdits
 {
 	if (!dataTouched || writingMacros) return YES;
-	if (reviewPending) return NO;
+	// Sent back to editing: stay quiet while that conflict remains, and write again once it is gone.
+	if (reviewPending) {
+		NSMutableArray *pending = [NSMutableArray array];
+		[self collectChangedShortcutConflicts:pending nodes:[NSMutableArray array] lines:nil];
+		if (pending.count) return NO;
+		reviewPending = NO;
+	}
 	writingMacros = YES;
 	BOOL saved = NO;
 	@try {
@@ -1457,12 +1476,15 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 			macrosBackedUp = YES;
 		}
 		// end mitsu 1.29
+		coalesceWriteAlerts = YES;
 		if (![self saveNodes: [outlineController rootOfTree] toFile: pathStr]) return NO;
 		[[TSMacroMenuController sharedInstance] reloadMacros: self];
 		[self rememberOriginalShortcutKeys];
 		dataTouched = NO;
 		saved = YES;
+		reportedWriteFailure = NO;
 	} @finally {
+		coalesceWriteAlerts = NO;
 		writingMacros = NO;
 	}
 	return saved;
@@ -1474,6 +1496,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 	if (![window makeFirstResponder:window]) return; // finish editing fields
 	[self reflectChangesInEditor:YES];
 	reviewPending = NO;
+	reportedWriteFailure = NO;
 	[self autosaveMacroEdits]; // stay open
 }
 
@@ -1644,6 +1667,37 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 	//	[outlineView reloadData];// this caused a crash if a node and its child are selected and the disclosure triangle is pressed
 }
 
+// WillTerminate cannot cancel quitting. applicationShouldTerminate: already asked.
+// If that step was skipped, drop the new conflicting keys so the ones already in the file stay.
+- (void)writeMacrosBeforeTermination:(NSNotification *)notification
+{
+    if (window == nil) return;
+    if ([window makeFirstResponder:window] == NO) return;
+    [self reflectChangesInEditor:YES];
+    if (!dataTouched) return;
+    NSMutableArray *nodes = [NSMutableArray array], *changed = [NSMutableArray array];
+    [self collectChangedShortcutConflicts:changed nodes:nodes lines:nil];
+    for (NSDictionary *conflict in changed) {
+        [nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@""];
+    }
+    if (changed.count) [self reflectChangesInEditor:YES];
+    reviewPending = NO;
+    reportedWriteFailure = NO;
+    [self autosaveMacroEdits];
+}
+// Quit asks the way closing does. Return to Editing cancels termination.
+// A typed name is not in the node, and dataTouched stays NO, until the field is committed.
+- (BOOL)prepareMacrosBeforeTermination
+{
+    if (window == nil) return YES;
+    if ([window attachedSheet]) return NO;
+    if (![window makeFirstResponder:window]) return NO;
+    [self reflectChangesInEditor:YES];
+    if (!dataTouched) return YES;
+    reviewPending = NO;
+    reportedWriteFailure = NO;
+    return [self autosaveMacroEdits];
+}
 // delegate method for window
 // Edits are already stored, or stored now. A conflicting shortcut is asked about once more;
 // refusing it leaves the window open. Nothing is discarded.
@@ -1654,6 +1708,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
     if (![window makeFirstResponder:window]) return NO;
     [self reflectChangesInEditor:YES];
     reviewPending = NO;
+    reportedWriteFailure = NO;
     if (![self autosaveMacroEdits]) return NO;
     return YES;
 }
@@ -1774,6 +1829,10 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
         [NSException raise:@"Macro write failed" format:@"%@", pathStr];
 
 	NS_HANDLER
+		// An automatic save says this once. A later success clears that, so the next failure says it again.
+		// Command-S and closing clear it before they save. Saving a selection always says it.
+		if (coalesceWriteAlerts && reportedWriteFailure) return NO;
+		if (coalesceWriteAlerts) reportedWriteFailure = YES;
 		// The path is shown as text, never read as a format.
 		NSRunAlertPanel(@"Error", @"%@", nil, nil, nil, [NSString stringWithFormat:
 			@"failed to save macros to %@\n%@", filePath, error]);

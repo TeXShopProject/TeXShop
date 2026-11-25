@@ -3,20 +3,20 @@
 
 The windows of the compiled TSDocument nibs of every language, which are never
 ordered on screen, get an Expanded toolbar and then the production preparation
-setupToolbar uses. The source window and the combined window use
-TSDocumentWindowPrepare. The Preview window uses TSDocumentWindowPrepareSolidToolbar,
-so its pages stay below the toolbar and the toolbar ends in a line. The test checks:
+setupToolbar uses. Every document window uses that preparation. On macOS 26
+and later the Preview window is full-size too, and none of the windows is given
+a toolbar line. The test checks:
 
-- the source window and the combined window use a full-size content view, and the
-  text starts below the toolbar; the Preview window does not, and its first page
-  starts below the toolbar;
+- the source window, the combined window and the Preview window use a full-size
+  content view on macOS 26 and later, and none is given a toolbar line; the text
+  and the first page start below the toolbar;
 - splitting the source (the production splitWindow:) puts the divider in the
   middle of the area that can be seen, in the source window and in the combined
   window, with and without a full-size content view (the combined window used to
   leave the lower part far smaller);
-- a drawer at the side of the Preview window stays where AppKit put it, below the
-  title bar, because that window's pages do not run under the toolbar; the same drawer
-  beside the combined window, whose content does run under the toolbar, starts where
+- a drawer at the side of the Preview window, whose pages run under the toolbar on
+  macOS 26 and later, starts where the rounding of the window's top corner ends;
+  the same drawer beside the combined window starts where
   the rounding of the window's top corner ends, beside the title bar and the toolbar
   (#67), and not higher than the area below the toolbar where that area starts higher,
   as in full screen, also when it is left open into and out of full screen; on macOS 27
@@ -61,6 +61,18 @@ MUTATIONS = {
         '        for (NSNotificationName name in @[])\n'),
     # The drawer's frame keeps AppKit's light gray bezel.
     'drawer-frame-light': ('TSDocumentWindowGlass.m', '    [frame addSubview:backing positioned:NSWindowBelow relativeTo:nil];\n', ''),
+    # The source window and the combined window are given the Preview window's line.
+    'separator-on-source': ('TSDocumentWindowGlass.m',
+        'void TSDocumentWindowPrepare(NSWindow *window)\n{\n    TSDocumentWindowPrepareChrome(window, TSDocumentWindowsUseFullSizeContent());\n}\n',
+        'void TSDocumentWindowPrepare(NSWindow *window)\n{\n    TSDocumentWindowPrepareChrome(window, TSDocumentWindowsUseFullSizeContent());\n    if (window)\n        window.titlebarSeparatorStyle = NSTitlebarSeparatorStyleLine;\n}\n'),
+    # The Preview window is prepared without a full-size content view.
+    'preview-not-full-size': ('TSDocumentWindowGlass.m',
+        'void TSDocumentWindowPrepareSolidToolbar(NSWindow *window)\n{\n    TSDocumentWindowPrepare(window);\n}\n',
+        'void TSDocumentWindowPrepareSolidToolbar(NSWindow *window)\n{\n    TSDocumentWindowPrepareChrome(window, NO);\n}\n'),
+    # setupToolbar's trio skips the Preview window, so it is never prepared.
+    'preview-not-prepared': ('TSDocumentWindowGlass.m',
+        '        if (window == previewWindow)\n            TSDocumentWindowPrepareSolidToolbar(window);\n        else\n            TSDocumentWindowPrepare(window);\n',
+        '        if (window != previewWindow)\n            TSDocumentWindowPrepare(window);\n'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -199,16 +211,16 @@ static TSDocument *Open(BOOL prepare) {
     }
     [doc->textWindow setFrame:NSMakeRect(40, 40, 600, 640) display:NO];
     [doc.pdfKitWindow setFrame:NSMakeRect(700, 40, 640, 760) display:NO];
-    if (prepare)
-        for (NSWindow *w in @[doc->textWindow, doc.pdfKitWindow, doc->fullSplitWindow]) {
-            NSRect frame = w.frame;
-            if (w == doc.pdfKitWindow)
-                TSDocumentWindowPrepareSolidToolbar(w);
-            else
-                TSDocumentWindowPrepare(w);
-            Check(NSEqualRects(frame, w.frame), [NSString stringWithFormat:@"%@ keeps its frame (%@, %@)", NSStringFromClass(w.class),
-                                                 NSStringFromRect(frame), NSStringFromRect(w.frame)]);
-        }
+    if (prepare) {
+        NSRect textFrame = doc->textWindow.frame;
+        NSRect previewFrame = doc.pdfKitWindow.frame;
+        NSRect combinedFrame = doc->fullSplitWindow.frame;
+        // The same call setupToolbar makes. The Preview window goes through its own entry.
+        TSDocumentWindowPrepareTrio(doc->textWindow, doc.pdfKitWindow, doc->fullSplitWindow);
+        Check(NSEqualRects(textFrame, doc->textWindow.frame) && NSEqualRects(previewFrame, doc.pdfKitWindow.frame)
+              && NSEqualRects(combinedFrame, doc->fullSplitWindow.frame),
+              @"the three document windows keep their frames");
+    }
     for (NSWindow *w in @[doc->textWindow, doc.pdfKitWindow, doc->fullSplitWindow]) Settle(w);
     return doc;
 }
@@ -293,13 +305,10 @@ int main(int argc, char **argv) { @autoreleasepool {
 
         TSDocument *doc = Open(YES);
         Check(doc && doc->textWindow && doc.pdfKitWindow && doc->fullSplitWindow && doc->myDrawer, [@"the nib has the document windows" stringByAppendingString:nibName]);
-        for (NSWindow *w in @[doc->textWindow, doc->fullSplitWindow])
-            Check(((w.styleMask & NSWindowStyleMaskFullSizeContentView) != 0) == glass,
-                  [NSString stringWithFormat:@"%@ uses a full-size content view on macOS 26 and later%@", NSStringFromClass(w.class), nibName]);
-        Check((doc.pdfKitWindow.styleMask & NSWindowStyleMaskFullSizeContentView) == 0
-              && doc.pdfKitWindow.titlebarSeparatorStyle == NSTitlebarSeparatorStyleLine
-              && Band(doc.pdfKitWindow) < 0.5,
-              [@"the Preview window keeps its pages below a toolbar that ends in a line" stringByAppendingString:nibName]);
+        for (NSWindow *w in @[doc->textWindow, doc->fullSplitWindow, doc.pdfKitWindow])
+            Check(((w.styleMask & NSWindowStyleMaskFullSizeContentView) != 0) == glass
+                  && w.titlebarSeparatorStyle != NSTitlebarSeparatorStyleLine,
+                  [NSString stringWithFormat:@"%@ uses a full-size content view on macOS 26 and later and keeps the nib's toolbar separator%@", NSStringFromClass(w.class), nibName]);
         if (!glass) continue;
 
         // The source window: the first line starts below the toolbar.
@@ -310,14 +319,20 @@ int main(int argc, char **argv) { @autoreleasepool {
               [NSString stringWithFormat:@"the source's top inset is the band under the toolbar (%.1f, %.1f)%@", doc->scrollView.contentInsets.top, band, nibName]);
         Check(fabs(NSMaxY(first) - NSMaxY(doc->textWindow.contentLayoutRect)) <= 1.5,
               [NSString stringWithFormat:@"the first line starts below the toolbar (%.1f, %.1f)%@", NSMaxY(first), NSMaxY(doc->textWindow.contentLayoutRect), nibName]);
-        // The Preview window: the first page starts below the toolbar.
+        // The Preview window: the first page rests below the toolbar, and the view runs under it.
         NSWindow *pw = doc.pdfKitWindow; PDFView *pv = doc.myPDFKitView;
         [pv goToFirstPage:nil]; ScrollTop(pv.documentView.enclosingScrollView); Settle(pw);
         PDFPage *page = [pdf pageAtIndex:0];
         NSRect pageRect = [pv convertRect:[pv convertRect:[page boundsForBox:kPDFDisplayBoxCropBox] fromPage:page] toView:nil];
-        Check(fabs(pv.documentView.enclosingScrollView.contentInsets.top - Band(pw)) < 0.5 && NSMaxY(pageRect) <= NSMaxY(pw.contentLayoutRect) + 0.5
+        CGFloat previewBand = Band(pw);
+        NSScrollView *previewScroll = pv.documentView.enclosingScrollView;
+        // PDFView keeps its own margin above the page, about five points on this system.
+        // The page still starts in the band under the toolbar, and the scroll inset is that band.
+        Check(previewBand > 20 && fabs(previewScroll.contentInsets.top - previewBand) < 0.5
+              && NSMaxY(pageRect) <= NSMaxY(pw.contentLayoutRect) + 0.5
               && NSMaxY(pageRect) > NSMaxY(pw.contentLayoutRect) - 20,
-              [NSString stringWithFormat:@"the first page starts just below the toolbar (%.1f, %.1f)%@", NSMaxY(pageRect), NSMaxY(pw.contentLayoutRect), nibName]);
+              [NSString stringWithFormat:@"the first page starts below the toolbar (%.1f, %.1f, band %.1f, inset %.1f)%@",
+               NSMaxY(pageRect), NSMaxY(pw.contentLayoutRect), previewBand, previewScroll.contentInsets.top, nibName]);
         if (pictures) {
             for (NSString *look in @[@"light", @"dark"]) {
                 NSAppearance *a = [NSAppearance appearanceNamed:[look isEqual:@"dark"] ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
@@ -339,18 +354,21 @@ int main(int argc, char **argv) { @autoreleasepool {
         [doc splitWindow:nil]; Settle(doc->textWindow);
         Check(doc->scrollView2.superview == nil, [@"the source window is unsplit again" stringByAppendingString:nibName]);
 
-        // The Preview window's pages stay below the toolbar, so its drawer stays where AppKit put it.
+        // The Preview window's pages run under the toolbar, so its drawer starts where the
+        // rounding of the top corner ends, beside the title bar.
         CGFloat previewBase = doc->myDrawer.leadingOffset;
         NSDrawer *previewDrawer = OpenDrawer(doc);
-        Check(fabs(previewDrawer.leadingOffset - previewBase) < 0.5,
-              [NSString stringWithFormat:@"the Preview window's drawer stays below the title bar (%.1f)%@",
+        Check(fabs(previewDrawer.leadingOffset - (previewBase + 24)) < 0.5,
+              [NSString stringWithFormat:@"the Preview window's drawer starts where the rounding of the corner ends (%.1f)%@",
                previewDrawer.leadingOffset, nibName]);
         // The same drawer beside the combined window, whose content still runs under the toolbar,
         // starts where the rounding of that window's top corner ends (24 points below the top),
         // beside the title bar and the toolbar (#67).
         NSWindow *host = doc->fullSplitWindow;
         [doc->myDrawer setParentWindow:host];
-        CGFloat base = doc->myDrawer.leadingOffset;
+        // The Preview window is full-size too, so opening the drawer there already
+        // added the corner height. Later checks use the offset from before that.
+        CGFloat base = previewBase;
         NSDrawer *drawer = OpenDrawer(doc);
         Check(TitleBar(host) > 24 && TitleBar(host) < Band(host) - 20 &&
               fabs(drawer.leadingOffset - (base + 24)) < 0.5,
