@@ -189,8 +189,8 @@
 "Show in Macro Editor" = "Mostrar en el editor de macros";
 "Assigned" = "Asignado";
 "Cannot Be Changed" = "No modificable";
-"[Change in System Settings…]" = "[Cambiar en Ajustes del Sistema…]";
-"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "Elija «Atajos de apps» en la barra lateral. Si sigue en la página Teclado, abra primero «Atajos de teclado…».";
+"Change in System Settings…" = "Cambiar en Ajustes del Sistema…";
+"To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Para cambiarlo en Ajustes del Sistema, elija «Atajos de apps» en la barra lateral.";
 "Inactive for this key" = "Inactivo para esta tecla";
 "No command uses this key." = "Ningún comando usa esta tecla.";
 "Press a key" = "Pulse una tecla";
