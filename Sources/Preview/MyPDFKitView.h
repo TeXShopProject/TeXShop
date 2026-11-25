@@ -238,6 +238,10 @@
 - (IBAction) doFindOne: sender;
 - (void) doFindOneFullWindow: (id) sender;
 - (void) doFindAgain;
+// Edit › Find while this Preview is the first responder. Find All focuses the drawer's search field.
+- (void)performFindPanelAction:(id)sender;
+// The field editor for one of this document's preview search fields, or nil for any other control.
+- (NSText *)previewFindFieldEditorForWindow:(NSWindow *)window client:(id)client;
 - (double)magnification;
 - (void) setMagnification: (double)magnification;
 - (void) changePageStyle: (id)sender;
