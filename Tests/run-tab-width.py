@@ -39,6 +39,9 @@ MUTATIONS = {
         '        other.defaultParagraphStyle = paragraphStyle;\n', ''),
     'other-half-keeps-typing-style': (TEXT_VIEW,
         '        otherTypingAttributes[NSParagraphStyleAttributeName] = paragraphStyle;\n', ''),
+    # New characters after the tabs are fixed have no foreground, so they draw black.
+    'drop-typing-text-color': (DOCUMENT,
+        '\t\tif (typedColor)\n\t\t\t[typing setObject:typedColor forKey:NSForegroundColorAttributeName];\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -258,6 +261,35 @@ int main(void) { @autoreleasepool {
                                opened->textView1.font.pointSize, (long)spaces];
             Check([opened->textView1.font.fontName isEqual:shown.fontName] && opened->textView1.font.pointSize == shown.pointSize, [@"the source keeps its font: " stringByAppendingString:label]);
             CheckLayout(opened->textView1, spaces, @"opened document with a saved font the source does not take", label);
+        }
+    }
+
+    // Command-N applies the theme color, then fixes the tabs. Text typed after that keeps the color.
+    {
+        NSColor *theme = [NSColor colorWithSRGBRed:0.91 green:0.92 blue:0.93 alpha:1];
+        NSColor *want = [theme colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+        [SUD setBool:YES forKey:SaveDocumentFontKey];
+        [SUD setInteger:4 forKey:tabsKey];
+        NSFont *kept = [NSFont fontWithName:@"Menlo-Regular" size:14] ?: [NSFont userFixedPitchFontOfSize:14];
+        [SUD setObject:[NSArchiver archivedDataWithRootObject:kept] forKey:DocumentFontKey];
+        TSDocument *colored = MakeDocument();
+        colored->textView1.textColor = theme;
+        colored->textView2.textColor = theme;
+        [colored fixUpTabs];
+        for (NSTextView *view in @[colored->textView1, colored->textView2]) {
+            NSColor *typing = [view.typingAttributes[NSForegroundColorAttributeName] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+            Check(typing && fabs(typing.redComponent - want.redComponent) < 0.01 &&
+                  fabs(typing.greenComponent - want.greenComponent) < 0.01 &&
+                  fabs(typing.blueComponent - want.blueComponent) < 0.01,
+                  @"text typed after the tabs are fixed keeps the theme color");
+            NSUInteger at = view.string.length;
+            [view insertText:@"Z" replacementRange:NSMakeRange(at, 0)];
+            NSColor *stored = [[view.textStorage attribute:NSForegroundColorAttributeName atIndex:at effectiveRange:NULL]
+                               colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+            Check(stored && fabs(stored.redComponent - want.redComponent) < 0.01 &&
+                  fabs(stored.greenComponent - want.greenComponent) < 0.01 &&
+                  fabs(stored.blueComponent - want.blueComponent) < 0.01,
+                  @"a character typed after the tabs are fixed keeps the theme color");
         }
     }
 

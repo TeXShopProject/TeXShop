@@ -8923,21 +8923,31 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	if (textStorageLength)
 		[_textStorage addAttribute:NSParagraphStyleAttributeName value:newStyle range:NSMakeRange(0, textStorageLength)];
 		
-	// Warning: the next six lines are needed to insure that new text added at the start of a line
-	// does not revert back to the old tab style
-		
-	NSMutableDictionary *theTypingAttributes = [[NSMutableDictionary alloc] initWithCapacity:1] ;
-	[theTypingAttributes setObject:newStyle forKey:NSParagraphStyleAttributeName];
-	[textView1 setTypingAttributes:theTypingAttributes];
-	
-	NSMutableDictionary *theTypingAttributes2 = [[NSMutableDictionary alloc] initWithCapacity:1];
-	[theTypingAttributes2 setObject:newStyle forKey:NSParagraphStyleAttributeName];
-	[textView2 setTypingAttributes:theTypingAttributes2];
-        
+	// The paragraph style has to stay on the attributes used for typing, or text added at
+	// the start of a line goes back to the old tabs. The font and the theme text color stay
+	// too. A dictionary with only the paragraph style leaves new characters without a
+	// foreground, and they draw black until a later recolor.
 	[textView1 setFontSafely:font];
 	[textView1 setDefaultParagraphStyle: newStyle];
 	[textView2 setFontSafely:font];
 	[textView2 setDefaultParagraphStyle: newStyle];
+
+	// Either view can be nil. An array literal cannot hold nil.
+	NSTextView *typedViews[2] = { textView1, textView2 };
+	for (int typedIndex = 0; typedIndex < 2; typedIndex++) {
+		NSTextView *typedView = typedViews[typedIndex];
+		if (!typedView)
+			continue;
+		NSMutableDictionary *typing = [[NSMutableDictionary alloc] initWithCapacity:3];
+		[typing setObject:newStyle forKey:NSParagraphStyleAttributeName];
+		NSFont *typedFont = [typedView font] ?: font;
+		if (typedFont)
+			[typing setObject:typedFont forKey:NSFontAttributeName];
+		NSColor *typedColor = [typedView textColor];
+		if (typedColor)
+			[typing setObject:typedColor forKey:NSForegroundColorAttributeName];
+		[typedView setTypingAttributes:typing];
+	}
 	[self applyExperimentTextLayout];
 }
 
