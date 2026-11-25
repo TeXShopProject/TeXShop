@@ -18,6 +18,12 @@ MUTATIONS = {
     # bitmap. Measuring the media box instead pulls that ink in. Both box arguments change.
     'crop-includes-outside': ('(CGPDFBox)box', 'kCGPDFMediaBox'),
     'corner-flipped': ('(height - 1 - maxY)', 'minY'),
+    # Invisible (1) is treated as NoView (32). The only such test is the allowlist.
+    'invisible-ignored': ('(flags & 32)', '(flags & 33)'),
+    # /BS replaces /Border instead of taking the wider of the two.
+    'bs-overridden': ('width = saw ? MAX(width, value) : value;', 'width = value;'),
+    # The fast path accepts an encrypted document. The worker check is removed below too.
+    'encrypted-allowed': ('document.isEncrypted || document.isLocked || ', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -114,7 +120,7 @@ static NSData *manyBlankPages(NSUInteger count) {
     return buf.finish;
 }
 
-// Borderless links, then one popup. The walk has to yield in the middle and still see the popup.
+// Borderless links, then one popup. The workers still have to see the popup.
 static NSData *manyLinks(NSUInteger count) {
     PDFBuf *buf = [PDFBuf new];
     [buf add:@"<< /Type /Catalog /Pages 2 0 R >>"];
@@ -328,21 +334,32 @@ int main(int argc, char **argv) {
 
         NSDictionary *annotations = @{
             @"link": @"<< /Type /Annot /Subtype /Link /Rect [1 1 12 12] /Border [0 0 0] >>",
+            @"noview": @"<< /Type /Annot /Subtype /Square /Rect [1 1 20 12] /F 32 >>",
+            @"no-border-key": @"<< /Type /Annot /Subtype /Link /Rect [1 1 12 12] >>",
             @"border": @"<< /Type /Annot /Subtype /Link /Rect [1 1 12 12] /BS << /W 1 >> /Border [0 0 1] >>",
             @"appearance": @"<< /Type /Annot /Subtype /Link /Rect [1 1 12 12] /Border [0 0 0] /AP << /N 6 0 R >> >>",
             @"popup": @"<< /Type /Annot /Subtype /Popup /Rect [1 1 20 20] >>",
             @"highlight": @"<< /Type /Annot /Subtype /Highlight /Rect [1 1 20 12] /QuadPoints [1 12 20 12 1 1 20 1] >>",
             @"ink": @"<< /Type /Annot /Subtype /Ink /Rect [1 1 20 12] /InkList [[1 1 12 8]] >>",
             @"unknown": @"<< /Type /Annot /Subtype /Foo /Rect [1 1 20 12] >>",
+            @"invisible": @"<< /Type /Annot /Subtype /Square /Rect [1 1 20 12] /F 1 >>",
+            @"hidden": @"<< /Type /Annot /Subtype /Square /Rect [1 1 20 12] /F 2 >>",
+            @"noview-popup": @"<< /Type /Annot /Subtype /Popup /Rect [1 1 20 20] /F 32 >>",
+            @"border0-bs1": @"<< /Type /Annot /Subtype /Link /Rect [1 1 12 12] /Border [0 0 0] /BS << /W 1 >> >>",
+            @"bs-no-w": @"<< /Type /Annot /Subtype /Link /Rect [1 1 12 12] /BS << /S /S >> >>",
+            // /Border is wider than /BS. PDFKit follows /BS and draws nothing. Taking only
+            // /BS would accept the page; the allowlist still refuses the wider /Border.
+            @"border2-bs0": @"<< /Type /Annot /Subtype /Link /Rect [1 1 12 12] /Border [0 0 2] /BS << /W 0 >> >>",
         };
-        for (NSString *name in @[@"link", @"border", @"appearance", @"popup", @"highlight", @"ink", @"unknown"]) {
+        NSSet *allowed = [NSSet setWithArray:@[@"link", @"noview", @"no-border-key"]];
+        for (NSString *name in annotations) {
             NSString *extra = [name isEqualToString:@"appearance"] ?
                 @"<< /Type /XObject /Subtype /Form /BBox [0 0 12 12] /Length 19 >>\nstream\n0 g\n0 0 12 12 re f\nendstream" : nil;
             PDFDocument *annotated = cloneAt(root, name, pdfAnnotated(annotations[name], extra), keep);
             ProbeView *annotatedView = [ProbeView new];
             annotatedView.displayBox = kPDFDisplayBoxCropBox;
             annotatedView.document = annotated;
-            BOOL allow = [name isEqualToString:@"link"];
+            BOOL allow = [allowed containsObject:name];
             __block TSContentWidthResult result = (TSContentWidthResult)-1;
             BOOL started = TSContentWidthScheduleFast(annotatedView, ^(TSContentWidthResult next) { result = next; });
             check(started, [NSString stringWithFormat:@"%@ starts a background measurement", name]);
@@ -350,15 +367,57 @@ int main(int argc, char **argv) {
                 [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
             known = NO;
             NSRect ink = TSContentWidthRawInk(annotated, kPDFDisplayBoxCropBox, [annotated pageAtIndex:0], &known);
+            // PDFKit draws an appearance, a highlight, or ink differently from Core Graphics.
+            // The new cases are the ones whose allowlist has to follow what PDFKit draws.
+            NSRect pageInk = NSMakeRect(30, 20, 40, 30);
+            if (allow || [@[@"invisible", @"border0-bs1", @"bs-no-w"] containsObject:name]) {
+                NSRect kitInk = NSZeroRect;
+                TSContentInkStatus kitStatus = TSContentInkMeasure([annotated pageAtIndex:0], kPDFDisplayBoxCropBox, 1.0, &kitInk);
+                BOOL matchesPage = sameRect(kitInk, pageInk);
+                check(kitStatus == TSContentInkFound && matchesPage == allow,
+                      [NSString stringWithFormat:@"%@ PDFKit %@ the page ink %@", name, allow ? @"keeps" : @"extends", rectString(kitInk)]);
+            }
             if (allow) {
                 check(result == TSContentWidthResultReady && known && sameRect(ink, NSMakeRect(30, 20, 40, 30)),
-                      @"a borderless link leaves the ink unchanged");
+                      [NSString stringWithFormat:@"%@ leaves the ink unchanged", name]);
             } else {
                 check(result == TSContentWidthResultPDFKit && !known,
                       [NSString stringWithFormat:@"%@ stays off the stored measurement", name]);
                 check(!TSContentWidthScheduleFast(annotatedView, nil),
                       [NSString stringWithFormat:@"%@ is not measured in the background again", name]);
             }
+        }
+        PDFDocument *dictAnnots = cloneAt(root, @"dict-annots", pdfPages(@[
+            @{@"media": @"[0 0 200 100]", @"rotate": @0, @"stream": @"0 g\n30 20 40 30 re f",
+              @"extra": @"/Annots << /Subtype /Link >>"},
+        ]), keep);
+        ProbeView *dictView = [ProbeView new];
+        dictView.displayBox = kPDFDisplayBoxCropBox;
+        dictView.document = dictAnnots;
+        __block TSContentWidthResult dictResult = (TSContentWidthResult)-1;
+        check(TSContentWidthScheduleFast(dictView, ^(TSContentWidthResult next) { dictResult = next; }),
+              @"a dictionary of annotations can start a background measurement");
+        for (int i = 0; i < 300 && dictResult < 0; i++)
+            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+        known = NO;
+        TSContentWidthRawInk(dictAnnots, kPDFDisplayBoxCropBox, [dictAnnots pageAtIndex:0], &known);
+        check(dictResult == TSContentWidthResultPDFKit && !known, @"annotations that are not an array stay off the stored measurement");
+        check(!TSContentWidthScheduleFast(dictView, nil), @"annotations that are not an array are not measured in the background again");
+        {
+            NSString *directory = [root stringByAppendingPathComponent:@"owner-password"];
+            [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+            NSURL *url = [NSURL fileURLWithPath:[directory stringByAppendingPathComponent:@"snapshot.pdf"]];
+            PDFDocument *plain = [[PDFDocument alloc] initWithData:plainPage];
+            check([plain writeToURL:url withOptions:@{PDFDocumentOwnerPasswordOption: @"ts-owner"}],
+                  @"an owner password can be written");
+            TSExternalPDFDocument *locked = [[TSExternalPDFDocument alloc] initWithURL:url];
+            locked.snapshotDirectory = directory;
+            [keep addObject:locked];
+            ProbeView *lockedView = [ProbeView new];
+            lockedView.displayBox = kPDFDisplayBoxCropBox;
+            lockedView.document = locked;
+            check(locked.isEncrypted && locked.pageCount > 0 && !TSContentWidthScheduleFast(lockedView, nil),
+                  @"an owner password stays off the background measurement");
         }
 
         NSData *mixed = pdfPages(@[
@@ -525,7 +584,7 @@ int main(int argc, char **argv) {
 }
 '''
 
-with tempfile.TemporaryDirectory(dir='/private/tmp') as temp:
+with tempfile.TemporaryDirectory() as temp:
     temp = Path(temp)
     home = temp / 'home'
     work = temp / 'work'
@@ -538,6 +597,10 @@ with tempfile.TemporaryDirectory(dir='/private/tmp') as temp:
         expect = 2 if args.mutation == 'crop-includes-outside' else 1
         assert found == expect, f'{args.mutation}: found {found}, wanted {expect}'
         source = source.replace(old, new)
+        if args.mutation == 'encrypted-allowed':
+            second = 'CGPDFDocumentIsEncrypted(document) || '
+            assert source.count(second) == 1, source.count(second)
+            source = source.replace(second, '')
     (temp / 'TSContentWidth.m').write_text(source)
     (temp / 'test.m').write_text(program)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'PDFKit',

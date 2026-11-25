@@ -44,6 +44,10 @@ MUTATIONS = {
     'measured-pdf-waits': ('view', '        if (preserveZoom && !TSContentWidthIsComplete(document, self.displayBox))', '        if (preserveZoom)'),
     'new-pdf-not-measured': ('view', '        if (preserveZoom && !TSContentWidthIsComplete(document, self.displayBox))\n            [self measureContentLater];',
                              '        if (preserveZoom && !TSContentWidthIsComplete(document, self.displayBox))\n            ;'),
+    # A bordered link comes back as PDFKit. Without this call the view never measures it.
+    'no-pdfkit-fallback': ('view',
+        '        if (result == TSContentWidthResultPDFKit) [view measureContentWithPDFKit];\n        else if (result == TSContentWidthResultRetry) [view measureContentLater];\n',
+        '        if (result == TSContentWidthResultRetry) [view measureContentLater];\n'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -93,6 +97,9 @@ static void settle(NSWindow *w) {
         [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
     }
 }
+@interface TSExternalPDFDocument : PDFDocument
+@property (copy) NSString *snapshotDirectory;
+@end
 @interface TestDocument : NSObject
 @property BOOL previewDisplaysAsBook, previewDisplaysRTL;
 - (void)updatePreviewLayoutControls;
@@ -641,6 +648,46 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSRect area = [view convertRect:TSContentVisibleArea(view) fromView:clipOf(view)];
         check(fabs(view.scaleFactor - fitted) < 1e-4 && fabs(NSMidX(content) - NSMidX(area)) < 2,
               @"the next page keeps that magnification and is centred");
+        [p.window close];
+    }
+
+    // A link with a border is in the file before it is opened. The workers reject it,
+    // and the view measures that page with PDFKit and fits once.
+    context = @"bordered link";
+    {
+        // The link's /Border is in the file before the document opens. The workers
+        // reject that border, and the view then measures the page with PDFKit.
+        NSString *pdf =
+            @"%PDF-1.4\n"
+            "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n"
+            "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n"
+            "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 100] /Contents 4 0 R /Resources << >> /Annots [5 0 R] >>\nendobj\n"
+            "4 0 obj\n<< /Length 21 >>\nstream\n0 g\n30 20 40 30 re f\nendstream\nendobj\n"
+            "5 0 obj\n<< /Type /Annot /Subtype /Link /Rect [1 1 12 12] /Border [0 0 1] >>\nendobj\n"
+            "xref\n0 6\n"
+            "0000000000 65535 f \n"
+            "0000000009 00000 n \n"
+            "0000000058 00000 n \n"
+            "0000000115 00000 n \n"
+            "0000000235 00000 n \n"
+            "0000000305 00000 n \n"
+            "trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n388\n%%EOF\n";
+        NSString *directory = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+        [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+        NSURL *url = [NSURL fileURLWithPath:[directory stringByAppendingPathComponent:@"snapshot.pdf"]];
+        check([[pdf dataUsingEncoding:NSASCIIStringEncoding] writeToURL:url atomically:YES], @"the bordered link is written before it is opened");
+        TSExternalPDFDocument *document = [[TSExternalPDFDocument alloc] initWithURL:url];
+        document.snapshotDirectory = directory;
+        Preview p = makePreview(document, kPDFDisplaySinglePageContinuous);
+        MyPDFKitView *view = p.view;
+        view.autoScales = NO;
+        view.scaleFactor = 1;
+        view.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH;
+        [view measureContentLater];
+        for (int i = 0; i < 500 && !TSContentWidthIsComplete(document, view.displayBox); i++)
+            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+        check(TSContentWidthIsComplete(document, view.displayBox) && view.scaleFactor > 2,
+              [NSString stringWithFormat:@"a bordered link is measured with PDFKit and fitted (%.3f)", view.scaleFactor]);
         [p.window close];
     }
 
