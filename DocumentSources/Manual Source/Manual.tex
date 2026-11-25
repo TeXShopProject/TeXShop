@@ -2291,7 +2291,7 @@ Choose \mnu{Macros}\To\mnu{Open Macro Editor\ldots} (\cref{fig:MacroEditor}). Th
 \label{fig:MacroEditor}
 \end{figure}
 
-Changes made in the Macro Editor take effect when you click \mnu{Save}, which updates the Macros menu and the file of the macros. \mnu{Cancel} closes the Macro Editor without the changes; if you close its window with unsaved changes, TeXShop asks whether to save them. \mnu{Test} runs the selected macro, as it now stands in the editor, in the active document, so that you can try it before saving; double-clicking a macro in the list does the same.
+Changes in the Macro Editor are kept as you make them. The Macros menu and the file of the macros are updated at once, and closing the window does not ask whether to save. There is no \mnu{Save} or \mnu{Cancel} button. \mnu{Test} runs the selected macro, as it now stands in the editor, in the active document; double-clicking a macro in the list does the same.
 
 \begin{description}
 \item[Adding and deleting] Click + below the list to add an item. The menu at the right end of the bar below the list adds a submenu or a separator and duplicates the selected items; $-$ deletes them. A new item or submenu is named at once: type its name and press Return. Submenus can be nested to any level.
@@ -2596,7 +2596,7 @@ Two modes above the list help to find what you want to change:
 
 Menu commands and macros can use the same keys. For the same key and modifiers, a menu command takes precedence over a macro, with its customized shortcut when it has one; a macro can use a key that a menu command no longer has. Among macros, the first one in the Macros menu with the key takes it.
 
-Giving a menu command a shortcut that a macro uses, or restoring such a default, asks for confirmation; the macro stays in the Macros menu, but its shortcut becomes inactive. The Macro Editor marks inactive shortcuts with a warning triangle and shows which command uses the key. When you save macros whose new or changed shortcuts are used by menu commands, the Macro Editor offers \mnu{Return to Editing}, \mnu{Save Anyway (Conflicting Shortcuts Inactive)} and \mnu{Remove Conflicting Shortcuts and Save}.
+Giving a menu command a shortcut that a macro uses, or restoring such a default, asks for confirmation; the macro stays in the Macros menu, but its shortcut becomes inactive. The Macro Editor marks inactive shortcuts with a warning triangle and shows which command uses the key. When a new or changed macro shortcut is used by a menu command, before the macros are written, the Macro Editor offers \mnu{Return to Editing}, \mnu{Save Anyway (Conflicting Shortcuts Inactive)} and \mnu{Remove Conflicting Shortcuts and Save}. Closing the window or pressing \cmdkey-S asks again.
 
 In the Preview window, the shortcuts of \mnu{Edit}\To\mnu{Find}\To\mnu{Find\ldots} and \mnu{Find Next} (\cmdkey-F and \cmdkey-G unless you change them) go to the search field of the toolbar and find the next match in the PDF.
 
@@ -3608,8 +3608,8 @@ and press Return, and the document appears. Everything then works as for other P
 TeXShop does not remember passwords of PDF files. For a file you open often, a macro can type the password for you.
 Choose \mnu{Macros}\To\mnu{Open Macro Editor...}, select the item after which the new macro should appear, click
 \mnu{+} below the list, type a name for the macro and press Return. Then type the following text as the content of
-the macro, with the first line starting at the left margin, replace \texttt{password} by the actual password, and
-click \mnu{Save}:
+the macro, with the first line starting at the left margin, and replace \texttt{password} by the actual password.
+The macro is kept as you type it:
 \begin{verbatim}
 --AppleScript direct
 
