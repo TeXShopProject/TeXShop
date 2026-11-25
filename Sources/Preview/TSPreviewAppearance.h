@@ -283,15 +283,14 @@ static inline void TSWatchPreviewSelection(PDFView *pdfView) {
     [center addObserver:pdfView selector:sel_getUid("tsPreviewSelectionChanged:") name:PDFViewSelectionChangedNotification object:pdfView];
 }
 
-// An overlay knob takes its color from the system. In Dark Mode that knob is light, and on a
-// light page it is white on white. Preview.app draws a gray knob on a light page (macOS 27
-// Dark, the knob about 155,155,155). The knob follows the pages: dark while they are light,
-// light while they are inverted. A legacy scroller is drawn on its own track and keeps the
-// system knob, which is already visible there.
+// A knob takes its color from the system. In Dark Mode that knob is light, and on a light
+// page it is white on white. Preview.app draws a gray knob on a light page (macOS 27 Dark,
+// the knob about 155,155,155). The same light knob on a legacy track is nearly the color of
+// the light gutter beside the page (measured on macOS 26 Dark: knob 244 on track 230). The
+// knob follows the pages, overlay or legacy: dark while they are light, light while they
+// are inverted.
 static inline void TSPreviewMatchScrollerKnob(NSScrollView *scrollView, BOOL invert) {
-    NSScrollerKnobStyle style = NSScrollerKnobStyleDefault;
-    if (scrollView.scrollerStyle == NSScrollerStyleOverlay)
-        style = invert ? NSScrollerKnobStyleLight : NSScrollerKnobStyleDark;
+    NSScrollerKnobStyle style = invert ? NSScrollerKnobStyleLight : NSScrollerKnobStyleDark;
     scrollView.scrollerKnobStyle = style;
     scrollView.verticalScroller.knobStyle = style;
     scrollView.horizontalScroller.knobStyle = style;
@@ -312,6 +311,13 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     NSArray *filters = invert ? TSPreviewInversionFilters() : @[];
     for (NSView *subview in scrollView.subviews) {
+        // The band above the first page paints the window color. Aqua or a filter here
+        // would lighten that band and the toolbar with it.
+        if ([NSStringFromClass(subview.class) containsString:@"TSPreviewToolbarShield"]) {
+            subview.appearance = nil;
+            subview.contentFilters = @[];
+            continue;
+        }
         if (TSPreviewSubviewIsToolbarPocket(subview) ||
             [subview isKindOfClass:[NSScroller class]] ||
             subview == scrollView.contentView) {
