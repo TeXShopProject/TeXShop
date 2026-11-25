@@ -363,6 +363,20 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSUInteger afterHidden=0; for (TSShortcutCommand *command in store.commands) if ([command.commandID isEqual:@"TSShortcut.toggleTabOverview:.0"]) afterHidden++;
     REQUIRE(afterHidden==1);
     [menu removeItem:hidden]; [menu removeItem:again]; [coordinator refreshMenuAndMacros];
+    // A hidden copy that appears first must not take the command, or a saved key would do nothing.
+    NSMenuItem *hiddenFirst=[[NSMenuItem alloc] initWithTitle:@"Show All Tabs" action:NSSelectorFromString(@"toggleTabOverview:") keyEquivalent:@"\\"];
+    hiddenFirst.keyEquivalentModifierMask=cmd|shift; hiddenFirst.hidden=YES; [menu addItem:hiddenFirst];
+    NSMenuItem *visibleAfter=[[NSMenuItem alloc] initWithTitle:@"Show All Tabs" action:NSSelectorFromString(@"toggleTabOverview:") keyEquivalent:@"\\"];
+    visibleAfter.keyEquivalentModifierMask=cmd|shift; [menu addItem:visibleAfter];
+    [coordinator refreshMenuAndMacros];
+    TSShortcutCommand *preferred=nil; NSUInteger preferredCount=0;
+    for (TSShortcutCommand *command in store.commands) if ([command.commandID isEqual:@"TSShortcut.toggleTabOverview:.0"]) { preferredCount++; preferred=command; }
+    REQUIRE(preferredCount==1 && preferred.item==visibleAfter);
+    REQUIRE(![store setKey:@"t" modifiers:cmd forCommand:preferred]);
+    REQUIRE([visibleAfter.keyEquivalent isEqual:@"t"] && visibleAfter.keyEquivalentModifierMask==cmd && hiddenFirst.keyEquivalent.length==0);
+    REQUIRE(![store restoreCommand:preferred]);
+    REQUIRE(visibleAfter.keyEquivalent.length==0 && hiddenFirst.keyEquivalent.length==0);
+    [menu removeItem:hiddenFirst]; [menu removeItem:visibleAfter]; [coordinator refreshMenuAndMacros];
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"one",@"T",cmd),Candidate(@"two",@"t",cmd|shift)]].count==1);
     REQUIRE(![[TSShortcutStore normalizedKey:@"x" modifiers:cmd] isEqual:[TSShortcutStore normalizedKey:@"x" modifiers:cmd|shift]]);
     REQUIRE(![[TSShortcutStore normalizedKey:@"x" modifiers:cmd|shift] isEqual:[TSShortcutStore normalizedKey:@"x" modifiers:cmd]]);

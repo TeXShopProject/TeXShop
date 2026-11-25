@@ -78,6 +78,7 @@ if '--mutations' in sys.argv:
         'monitor never removed': [(k, '@finally { [NSEvent removeMonitor:monitor]; }', '@finally { }')],
         'pending key not restored after preview': [(e, '    [self refreshShortcutConflicts];\n    self.previousItem.key = saved;', '    [self refreshShortcutConflicts];')],
         'accepted macro not recorded as owner (no tooltip for later duplicate)': [(m, '                    self.keyOwners[binding] = @{', '                    if (NO) self.keyOwners[binding] = @{')],
+        'hidden Show All Tabs copy takes the command': [(k, '        if (item.action == NSSelectorFromString(@"toggleTabOverview:") && item.hidden && !item.allowsKeyEquivalentWhenHidden) {\n', '        if (NO) {\n')],
         'close ignores a refused save': [(e, 'if (![self autosaveMacroEdits]) return NO;\n', '[self autosaveMacroEdits];\n')],
         'attachedSheet guard removed in windowShouldClose': [(e, '    if ([window attachedSheet]) return NO;\n', '')],
         'macrosAffectedByRestoringAll empty': [(k, '                [result addObjectsFromArray:[self macrosUsingKey:binding.key modifiers:binding.modifiers]];', '                ;')],
