@@ -590,6 +590,10 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
 - (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates {
     NSMutableDictionary *reserved = [NSMutableDictionary dictionary];
     for (NSDictionary *entry in [TSShortcutStore menuBindings:self.menu]) {
+        // A yielding default is given up when the macro is saved. Warning about it, or
+        // offering to remove it, would store an empty key that does not come back.
+        NSString *commandID = entry[@"commandID"];
+        if (commandID && [TSYieldingDefaultCommands() containsObject:commandID] && !self.overrides[commandID]) continue;
         TSShortcutBinding *binding = TSBinding(entry[@"key"], [entry[@"modifiers"] unsignedIntegerValue]);
         if (!reserved[binding]) reserved[binding] = entry;
     }

@@ -67,6 +67,12 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 	BOOL macrosBackedUp;
 	// autosaveMacroEdits is on the stack (a conflict sheet can commit fields again).
 	BOOL writingMacros;
+	// A failed autosave has already told the user. Command-S and closing ask again.
+	BOOL reportedWriteFailure;
+	// Quit writes the edits the way Save Anyway does, without asking.
+	BOOL acceptShortcutConflicts;
+	// Only an automatic save keeps a later write failure quiet. Saving a selection still asks.
+	BOOL coalesceWriteAlerts;
 }
 
 @property (retain) NSMapTable *originalShortcutKeys;

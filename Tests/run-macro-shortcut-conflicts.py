@@ -17,7 +17,12 @@ def between(text, start, end):
 # Compile the actual methods; unrelated document/AppleScript subsystems are omitted.
 parts = {
     'MacroEditorProduction.inc': between(editor, '- (void)collectShortcutCandidates:', '// action for Cancel button')
-        + between(editor, '- (BOOL)windowShouldClose:', '// delegate method for window\n- (void) windowWillClose:')
+        + between(editor, '- (void)setPendingShortcut:', '// Below the contents, as in the key binding list')
+        + between(editor, '- (IBAction)nameFieldAction:', '// delegate method for contentTextView')
+        + between(editor, '- (IBAction)textDidChange:', "// The nib's key field")
+        + between(editor, '- (void)outlineViewSelectionChanged:', '// a method called on "Items changed"')
+        + between(editor, '- (void)outlineViewItemsChanged:', '// interation bewteen outline')
+        + between(editor, '- (void)writeMacrosBeforeTermination:', '// delegate method for window\n- (void) windowWillClose:')
         + between(editor, '- (BOOL)saveNodes:', '// action for "save selection'),
     'MacroMenuProduction.inc': between(menu, '- (void)setupMainMacroMenu', '// reload') + between(menu, '- (void)addItemsToMenu:', '// build a menu for popup')
         + between(menu, '- (void)listKeyEquivalents:', '\n@end'),
@@ -38,7 +43,7 @@ def run_case(name, changes=()):
                         '-I', td, *include_args(root),
                         str(root / 'Tests/MacroShortcutConflicts.m'),
                         str(root / 'Sources/Macros/TSMacroTreeNode.m'), *companion_sources(root), '-o', str(binary)], check=True)
-        result = subprocess.run([str(binary), td], capture_output=True, text=True, timeout=20)
+        result = subprocess.run([str(binary), td], capture_output=True, text=True, timeout=40)
         if changes:
             assert result.returncode != 0 and 'FAIL ' in result.stderr, (name, result.stdout, result.stderr)
             print('DETECTED:', name, result.stderr.strip().splitlines()[-1])
@@ -104,6 +109,25 @@ if '--mutations' in sys.argv:
         'refused keys explained as a conflict': [(k, '    if ([conflict[@"refused"] boolValue])\n        return', '    if (NO)\n        return')],
         'saving reports refused keys as conflicts': [(e, '        if ([conflict[@"refused"] boolValue]) continue;\n', '')],
         'leave Shift for dead keys': [(k, 'key.length == 1 &&\n        ![key isEqual:unshifted]', 'key.length == 1 && unshifted.length == 1 &&\n        ![key isEqual:unshifted]')],
+        'hidden Show All Tabs copy is not a command': [(k, '    if (![seen containsObject:@"TSShortcut.toggleTabOverview:.0"] && hiddenTabCopies.count)\n        addCommand(hiddenTabCopies[0], hiddenTabPaths[0]);\n', '')],
+        'system commands can be removed': [(k, '            if (!command.managedBySystem) [removable setObject:command.commandID forKey:command.item];', '            if (YES) [removable setObject:command.commandID forKey:command.item];')],
+        'Cancel confirms removing a shortcut': [(e, '    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];\n    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];', '    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];\n    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];')],
+        'clearing a menu shortcut does not refresh': [(e, '    NSString *error = command ? [store setKey:@"" modifiers:0 forCommand:command] : NSLocalizedString(@"This command is no longer available.", @"");\n    [[TSKeyboardShortcuts sharedController] refreshMenuAndMacros];\n', '    NSString *error = command ? [store setKey:@"" modifiers:0 forCommand:command] : NSLocalizedString(@"This command is no longer available.", @"");\n')],
+        'recording still offers Remove': [(e, '    if (self.recordingItem || message.length == 0 || !self.previousItem) return nil;', '    if (message.length == 0 || !self.previousItem) return nil;')],
+        'any status text offers Remove': [(e, '    if (!reason.length || ![message isEqualToString:reason]) return nil;', '    if (!reason.length) return nil;')],
+        'yielding defaults stay reserved': [(k, '        NSString *commandID = entry[@"commandID"];\n        if (commandID && [TSYieldingDefaultCommands() containsObject:commandID] && !self.overrides[commandID]) continue;\n', '')],
+        'removing a menu shortcut leaves the macro unsaved': [(e, '    // The menu key is gone. Write the macro, and ask again only if another conflict remains.\n    reviewPending = NO;\n    [self autosaveMacroEdits];', '    // The menu key is gone. Write the macro, and ask again only if another conflict remains.\n    [self autosaveMacroEdits];')],
+        'a failed automatic save asks again': [(e, '\t\tif (coalesceWriteAlerts && reportedWriteFailure) return NO;\n', '')],
+        'sent back to editing asks on the next automatic save': [(e, '\t\tif (pending.count) return NO;\n', '')],
+        'closing does not ask again': [(e, '    [self reflectChangesInEditor:YES];\n    reviewPending = NO;\n    reportedWriteFailure = NO;\n    if (![self autosaveMacroEdits]) return NO;\n', '    [self reflectChangesInEditor:YES];\n    reportedWriteFailure = NO;\n    if (![self autosaveMacroEdits]) return NO;\n')],
+        'Save Anyway does not remember the key': [(e, '\t\t[self rememberOriginalShortcutKeys];\n', '')],
+        'close never finishes': [(e, '- (BOOL)windowShouldClose:(id)sender\n{\n    if (sender == self) return YES;\n', '- (BOOL)windowShouldClose:(id)sender\n{\n    return NO;\n    if (sender == self) return YES;\n')],
+        'quit asks about a conflict': [(e, '    acceptShortcutConflicts = YES;\n', '')],
+        'pending shortcut is not saved': [(e, '    [self updatePendingShortcutStatus];\n    [self reflectChangesInEditor:YES];\n    [self autosaveMacroEdits];\n', '    [self updatePendingShortcutStatus];\n    [self reflectChangesInEditor:YES];\n')],
+        'name edit is not saved': [(e, '\tnameTouched = YES;\n\t[self reflectChangesInEditor: YES];\n\t[self autosaveMacroEdits];\n', '\tnameTouched = YES;\n\t[self reflectChangesInEditor: YES];\n')],
+        'content edit is not saved': [(e, '\t\tcontentTouched = NO;\n\t}\n\t[self autosaveMacroEdits];\n', '\t\tcontentTouched = NO;\n\t}\n')],
+        'selection change is not saved': [(e, '\t[self endShortcutRecordingUnlessSelected];\n\t[self reflectChangesInEditor: NO];\n\t[self autosaveMacroEdits];\n', '\t[self endShortcutRecordingUnlessSelected];\n\t[self reflectChangesInEditor: NO];\n')],
+        'list change is not saved': [(e, '    [self refreshShortcutConflicts];\n\t[self autosaveMacroEdits];\n', '    [self refreshShortcutConflicts];\n')],
     }
     for name, changes in cases.items():
         if "--shift-only" not in sys.argv or name=="ignore Shift on both comparison sides": run_case(name, changes)
