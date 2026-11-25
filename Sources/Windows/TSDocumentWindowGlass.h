@@ -2,13 +2,12 @@
 /*
  * TSDocumentWindowGlass.h
  *
- * On macOS 26 and later, the source window and the window that shows both let
- * their content run under the title bar and the toolbar. The Preview window
- * keeps its pages below the toolbar on every system, so a page does not show
- * through the glass. On macOS 26 and later that toolbar ends in a hard edge
- * with no line, and stays a solid color when a page scrolls, as Preview.app
- * does. Earlier systems leave the separator the nib built, the line and short
- * shadow Preview.app uses there.
+ * On macOS 26 and later, document windows, including Preview, let their content
+ * run under the title bar and the toolbar. The glass takes on the page color and
+ * ends in a hard edge, with no separator line, as Preview.app does. Earlier
+ * systems leave the content below the toolbar and leave the separator the nib
+ * built, the line and short shadow Preview.app uses there. Clip views clip to
+ * their bounds, so a scrolled page cannot paint into that toolbar.
  */
 
 #import <Cocoa/Cocoa.h>
@@ -25,14 +24,8 @@ BOOL TSDocumentWindowsUseFullSizeContent(void);
 // takes the window's colors.
 void TSDocumentWindowPrepare(NSWindow * _Nullable window);
 
-// The Preview window. Its pages stay below the toolbar on every system. On macOS 26 and
-// later the toolbar ends in a hard edge with no line, and stays a solid color when a
-// page scrolls. Earlier systems leave the nib's separator.
-void TSDocumentWindowPrepareSolidToolbar(NSWindow * _Nullable window);
-
-// The source window, the Preview window and the window that shows both. The Preview
-// window goes through TSDocumentWindowPrepareSolidToolbar. The other two go through
-// TSDocumentWindowPrepare. A missing window is skipped.
+// The source window, the Preview window and the window that shows both. Each goes
+// through TSDocumentWindowPrepare. A missing window is skipped.
 void TSDocumentWindowPrepareTrio(NSWindow * _Nullable textWindow, NSWindow * _Nullable previewWindow, NSWindow * _Nullable combinedWindow);
 
 // Places the open drawers of a document window again after the band under its toolbar

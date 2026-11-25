@@ -1622,13 +1622,15 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 
 
 
-// In a window whose content runs under the title bar and the toolbar, parts side by side
-// start below the toolbar. Running under it, each part brings its own band under the
-// toolbar, AppKit blurs only one of them, and the divider runs up through the toolbar.
-// The Preview window keeps its pages below the toolbar, so this placement is unused there
-// and the content view already starts below the toolbar. A single part, and parts one
-// above the other, fill the content view. The split view follows the band when it changes
-// height, as when the annotation toolbar is shown or in full screen.
+// In a window whose content runs under the title bar and the toolbar (macOS 26 and later),
+// parts side by side start below the toolbar. Running under it, each part brings its own
+// band under the toolbar, AppKit blurs only one of them, and the divider runs up through
+// the toolbar. The Preview window is full-size on macOS 26 and later, so side-by-side parts
+// start below its toolbar too. A single part, and parts one above the other, fill the
+// content view and run under the toolbar. Earlier systems are not full-size, so this
+// placement is unused and the content view already starts below the toolbar. The split
+// view follows the band when it changes height, as when the annotation toolbar is shown
+// or in full screen.
 // The frame the split view gets back when its parts stop being side by side: the content view's
 // bounds with the outsets it had before they went side by side (in the nib, 2 points below the
 // bottom edge).

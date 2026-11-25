@@ -1672,6 +1672,10 @@ if (! skipTextWindow) {
 	NSClipView *pdfClipView = [pdfScrollView contentView];
 	NSRect clipFrame = [pdfClipView frame];
 	pdfClipView = [[FlippedClipView alloc] initWithFrame: clipFrame];	// it returns YES for isFlipped
+	// The replacement is made after the window is prepared, so it has to clip on its own.
+	// A scrolled page otherwise paints into the toolbar and covers its separator.
+	if (@available(macOS 14.0, *))
+		pdfClipView.clipsToBounds = YES;
 	[pdfScrollView setContentView: pdfClipView];
 	[pdfClipView setBackgroundColor: [NSColor windowBackgroundColor]];
 	[pdfClipView setDrawsBackground: YES];

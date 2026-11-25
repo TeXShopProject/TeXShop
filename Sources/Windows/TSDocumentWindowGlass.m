@@ -4,62 +4,28 @@
  */
 
 #import "TSDocumentWindowGlass.h"
-#import <objc/message.h>
 #import <objc/runtime.h>
 
 static const void *TSDrawerBaseOffsetKey = &TSDrawerBaseOffsetKey;
 static const void *TSPreparedWindowKey = &TSPreparedWindowKey;
-static const void *TSSolidToolbarKey = &TSSolidToolbarKey;
-static const void *TSSolidPocketKey = &TSSolidPocketKey;
 
-// On macOS 26 and later the title bar samples a page that has scrolled up to it,
-// so the toolbar takes on the page color. Preview.app keeps that bar a solid
-// color. AppKit stores the choice on a private pocket in the title bar. The
-// selectors are checked at runtime and do nothing if this system does not have them.
-static BOOL TSPocketIsSolid(id pocket)
+// A clip view whose bounds stop at the toolbar still draws a scrolled page into the
+// toolbar when it does not clip. That covers the separator on macOS 14 and 15.
+// Clipping leaves the page that belongs under the glass on macOS 26 and later,
+// because that page is inside the clip view.
+static void TSDocumentWindowClipScrollViews(NSWindow *window)
 {
-    SEL getter = sel_registerName("prefersSolidColorHardPocket");
-    if (![pocket respondsToSelector:getter])
-        return NO;
-    return ((BOOL (*)(id, SEL))objc_msgSend)(pocket, getter);
-}
-
-static NSView *TSTitlebarPocket(NSWindow *window)
-{
-    Class pocketClass = NSClassFromString(@"NSScrollPocket");
-    if (!pocketClass)
-        return nil;
-    NSView *root = window.contentView;
-    while (root.superview)
-        root = root.superview;
-    if (!root)
-        return nil;
-    NSMutableArray<NSView *> *views = [NSMutableArray arrayWithObject:root];
-    for (NSUInteger index = 0; index < views.count; index++) {
-        NSView *view = views[index];
-        for (NSView *subview in view.subviews)
-            [views addObject:subview];
-        if ([view isKindOfClass:pocketClass] && view.frame.size.height >= 10)
-            return view;
-    }
-    return nil;
-}
-
-static void TSDocumentWindowSolidifyTitlebarPocket(NSWindow *window)
-{
-    if (!window || !objc_getAssociatedObject(window, TSSolidToolbarKey))
+    if (!window || !window.contentView)
         return;
-    if (@available(macOS 26.0, *)) {
-        NSView *pocket = objc_getAssociatedObject(window, TSSolidPocketKey);
-        if (pocket.window == window && TSPocketIsSolid(pocket))
-            return;
-        pocket = TSTitlebarPocket(window);
-        if (!pocket)
-            return;
-        SEL setter = sel_registerName("setPrefersSolidColorHardPocket:");
-        if ([pocket respondsToSelector:setter])
-            ((void (*)(id, SEL, BOOL))objc_msgSend)(pocket, setter, YES);
-        objc_setAssociatedObject(window, TSSolidPocketKey, pocket, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (@available(macOS 14.0, *)) {
+        NSMutableArray<NSView *> *views = [NSMutableArray arrayWithObject:window.contentView];
+        for (NSUInteger index = 0; index < views.count; index++) {
+            NSView *view = views[index];
+            for (NSView *subview in view.subviews)
+                [views addObject:subview];
+            if ([view isKindOfClass:NSClipView.class])
+                view.clipsToBounds = YES;
+        }
     }
 }
 
@@ -182,12 +148,6 @@ static void TSDocumentWindowPrepareChrome(NSWindow *window, BOOL underToolbar)
         for (NSNotificationName name in @[NSWindowDidEnterFullScreenNotification, NSWindowDidExitFullScreenNotification])
             [NSNotificationCenter.defaultCenter addObserverForName:name object:nil queue:nil
                                                         usingBlock:^(NSNotification *notification) { TSDocumentWindowPlaceDrawers(notification.object); }];
-        // The title-bar pocket appears when the window is shown, which can be after preparation.
-        [NSNotificationCenter.defaultCenter addObserverForName:NSWindowDidUpdateNotification object:nil queue:nil
-                                                    usingBlock:^(NSNotification *notification) {
-            if ([notification.object isKindOfClass:NSWindow.class])
-                TSDocumentWindowSolidifyTitlebarPocket(notification.object);
-        }];
     });
     BOOL hasFullSize = (window.styleMask & NSWindowStyleMaskFullSizeContentView) != 0;
     if (hasFullSize != underToolbar) {
@@ -201,6 +161,7 @@ static void TSDocumentWindowPrepareChrome(NSWindow *window, BOOL underToolbar)
         }
         [window setFrame:frame display:NO];
     }
+    TSDocumentWindowClipScrollViews(window);
 }
 
 void TSDocumentWindowPrepare(NSWindow *window)
@@ -208,29 +169,12 @@ void TSDocumentWindowPrepare(NSWindow *window)
     TSDocumentWindowPrepareChrome(window, TSDocumentWindowsUseFullSizeContent());
 }
 
-void TSDocumentWindowPrepareSolidToolbar(NSWindow *window)
-{
-    // The page stays below the toolbar, so it does not show through the glass.
-    // On macOS 26 and later Preview.app ends that toolbar with a hard edge and
-    // no line. Earlier systems leave the nib's separator.
-    TSDocumentWindowPrepareChrome(window, NO);
-    if (!window)
-        return;
-    objc_setAssociatedObject(window, TSSolidToolbarKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(macOS 26.0, *))
-        window.titlebarSeparatorStyle = NSTitlebarSeparatorStyleNone;
-    TSDocumentWindowSolidifyTitlebarPocket(window);
-}
-
 void TSDocumentWindowPrepareTrio(NSWindow *textWindow, NSWindow *previewWindow, NSWindow *combinedWindow)
 {
     for (NSWindow *window in @[textWindow ?: (id)NSNull.null, previewWindow ?: (id)NSNull.null, combinedWindow ?: (id)NSNull.null]) {
         if (![window isKindOfClass:[NSWindow class]])
             continue;
-        if (window == previewWindow)
-            TSDocumentWindowPrepareSolidToolbar(window);
-        else
-            TSDocumentWindowPrepare(window);
+        TSDocumentWindowPrepare(window);
     }
 }
 

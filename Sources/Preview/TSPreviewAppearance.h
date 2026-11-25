@@ -283,14 +283,27 @@ static inline void TSWatchPreviewSelection(PDFView *pdfView) {
     [center addObserver:pdfView selector:sel_getUid("tsPreviewSelectionChanged:") name:PDFViewSelectionChangedNotification object:pdfView];
 }
 
+// An overlay knob takes its color from the system. In Dark Mode that knob is light, and on a
+// light page it is white on white. Preview.app draws a gray knob on a light page (macOS 27
+// Dark, the knob about 155,155,155). The knob follows the pages: dark while they are light,
+// light while they are inverted. A legacy scroller is drawn on its own track and keeps the
+// system knob, which is already visible there.
+static inline void TSPreviewMatchScrollerKnob(NSScrollView *scrollView, BOOL invert) {
+    NSScrollerKnobStyle style = NSScrollerKnobStyleDefault;
+    if (scrollView.scrollerStyle == NSScrollerStyleOverlay)
+        style = invert ? NSScrollerKnobStyleLight : NSScrollerKnobStyleDark;
+    scrollView.scrollerKnobStyle = style;
+    scrollView.verticalScroller.knobStyle = style;
+    scrollView.horizontalScroller.knobStyle = style;
+}
+
 // Share the same PDF page treatment between the document and Experiment previews.
-// Scroll bars are part of the window frame. They take no explicit appearance and no
-// filters, so they follow the system whether the preview is light or dark.
-// On macOS 27 an overlay scroller's effective appearance copies the clip view and the
-// document view, so those two take no appearance and no filters. The pages are inverted
-// as they are drawn. The gutter around the pages is drawn light and inverted by the
-// filters on its view, which PDFKit does not magnify. The pocket stays unset so the title
-// bar is not pulled off the system appearance.
+// Scroll bars take no explicit appearance and no filters. Their knob is chosen by
+// TSPreviewMatchScrollerKnob. On macOS 27 an overlay scroller's effective appearance
+// copies the clip view and the document view, so those two take no appearance and no
+// filters. The pages are inverted as they are drawn. The gutter around the pages is
+// drawn light and inverted by the filters on its view, which PDFKit does not magnify.
+// The pocket stays unset so the title bar is not pulled off the system appearance.
 static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert) {
     if (!scrollView) return;
     scrollView.appearance = nil;
@@ -316,6 +329,7 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
     documentView.contentFilters = @[];
     TSInstallPreviewPageHook(documentView);
     TSLightenPreviewPages(documentView, filters);
+    TSPreviewMatchScrollerKnob(scrollView, invert);
     objc_setAssociatedObject(scrollView, TSPreviewInversionStateKey, @(invert),
         OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     // The PDF view the scroll view belongs to draws its pages inverted or not; when that

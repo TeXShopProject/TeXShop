@@ -9796,9 +9796,12 @@ else
 {
     if (_observingPreviewAppearance) return;
     _observingPreviewAppearance = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-        selector:@selector(previewAppearanceDefaultsChanged:)
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    [center addObserver:self selector:@selector(previewAppearanceDefaultsChanged:)
         name:NSUserDefaultsDidChangeNotification object:SUD];
+    // Switching "Show scroll bars" changes an overlay knob for a legacy one, or the reverse.
+    [center addObserver:self selector:@selector(previewAppearanceDefaultsChanged:)
+        name:NSPreferredScrollerStyleDidChangeNotification object:nil];
 }
 
 - (void)previewAppearanceDefaultsChanged:(NSNotification *)notification
