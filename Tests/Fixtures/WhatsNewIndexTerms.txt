@@ -82,6 +82,7 @@
 71
 718
 72
+73
 74
 78
 8
@@ -217,7 +218,6 @@ authors'
 auto
 automatic
 automatically
-automatically''
 autosave
 aux
 auxiliary
@@ -303,7 +303,9 @@ came
 can
 cancel
 cancels
+cannot
 capabilities
+capital
 car
 case
 cases
@@ -312,8 +314,8 @@ cause
 caused
 causes
 cells
+centered
 chain
-chains
 change
 changed
 changes
@@ -474,6 +476,7 @@ david
 day
 days
 deactivate
+dead
 deal
 dealing
 debugging
@@ -543,7 +546,6 @@ don't
 done
 double
 down
-downarrow
 drag
 dragged
 draw
@@ -742,6 +744,7 @@ fullscreen
 fullwidth
 fully
 fun
+function
 further
 future
 g
@@ -760,7 +763,6 @@ gibbons
 gift
 github
 give
-given
 gives
 glance
 glass
@@ -874,7 +876,6 @@ increasing
 independent
 index
 indicate
-indicates
 indicator
 individual
 induces
@@ -1109,6 +1110,7 @@ michael
 middle
 might
 minimal
+minimize
 minor
 miraculously
 misc2
@@ -1278,7 +1280,6 @@ particularly
 partly
 parts
 party
-pass
 passes
 password
 past
@@ -1414,7 +1415,7 @@ range
 rare
 rarely
 rather
-reach
+rc2
 reached
 read
 reading
@@ -1495,7 +1496,6 @@ reshowwithpath
 resize
 resized
 resolutions
-respond
 responder
 rest
 restart
@@ -1524,7 +1524,6 @@ rewritten
 rich
 richard
 right
-rightarrow
 risking
 rivas
 roles
@@ -1644,6 +1643,7 @@ slight
 slightly
 slowly
 small
+smaller
 smith
 smooth
 so
@@ -1886,7 +1886,6 @@ until
 untitled
 unusual
 up
-uparrow
 update
 updated
 updates
@@ -1917,6 +1916,7 @@ uwe
 v
 vague
 valid
+validate
 value
 values
 van

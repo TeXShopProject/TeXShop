@@ -26,6 +26,7 @@
 <h4>Advanced Find panel</h4>
 <ul>
 <li>A new find and replace panel with regular expressions, the Advanced Find panel. Find All lists every match, and Highlight All marks them in the text.</li>
+<li>Highlight All shows each group of a regular expression in its own color, as the Find All list does. A group inside another shows its own color. A pattern without groups, and Multiple Replace, use the highlight color only.</li>
 <li>Multiple Replace applies saved sets of find and replace pairs at once.</li>
 <li>Find and replace in all files with the same root file: a new window, opened from the Find submenu of the Edit menu, lists each match in the root file and in the TeX files that name it as TEX root, shows each replacement before and after, and replaces them all at once, saving a copy of the files first. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/45">#45</a>).</li>
 <li>A cheat sheet shows how to write regular expressions, and Find also works in the console, the log and the Experiment windows.</li>
@@ -92,8 +93,13 @@
 <li><strong>Arrow keys in the preview:</strong> in single-page and two-page layouts, the Up and Down Arrow keys scroll within the page instead of turning it. Suggested by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
 <li><strong>Menu shortcuts set in macOS:</strong> shortcuts for TeXShop made in macOS System Settings may need to be set again in Settings → Keyboard.</li>
 <li><strong>Macro shortcuts:</strong> macro shortcuts are set in the list of the Macro Editor.</li>
+<li><strong>Shortcuts that cannot be changed:</strong> Search by Function has the menu items that macOS adds, in menu order. Minimize All is in that list. The line below the list shows Cannot Be Changed. Search by Key shows Cannot Be Changed for that item. The line shows an arrow and the link Change in System Settings…, which opens Keyboard Shortcuts in System Settings. The next line shows where to choose “App Shortcuts” in the sidebar. TeXShop shows the line with the link and the line below it centered on the window.</li>
+<li><strong>Macro Editor:</strong> the Macro Editor saves when a field, the list or a shortcut changes. TeXShop removes Save and Cancel. The shortcut for Save saves and the window stays open. Return and Escape do not close it. When a shortcut is used by a menu command that Settings can remove, Remove… removes that menu shortcut.</li>
+<li><strong>Globe key:</strong> a shortcut that uses the Globe key is not saved for a TeXShop command or a macro.</li>
+<li><strong>Earlier menu title:</strong> a shortcut TeXShop saved with a menu title from 5.59 or 6.00 RC2 still works after the title changes.</li>
 <li><strong>Marks:</strong> the mark commands are in Edit → Marks.</li>
 <li><strong>Enter Full Screen:</strong> its shortcut is now Globe-F (🌐F). Control-Command-F was used for both it and Next Mark, and is now only Next Mark.</li>
+<li><strong>Font menu:</strong> the Font menu has Show Fonts, Bigger and Smaller.</li>
 <li><strong>Command completion:</strong> the Command Completion submenu of the Source menu is now one item, Add to Command Completion List.</li>
 <li><strong>Open Style File:</strong> it has moved from the Help menu to the File menu.</li>
 <li><strong>Demo movies:</strong> the two movies in the Help menu are removed. Reported by <a href="https://github.com/herbs">Herb Schulz</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/43">#43</a>).</li>
@@ -125,6 +131,11 @@
 <li>A closed Preview window opens again at the same place, with Command-1 or after typesetting, and with its pinned link previews if the PDF has not changed. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/70">#70</a>).</li>
 <li>When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and Preview windows return with their display format, magnification, split, place, turned pages, pinned link previews and the other view of Switch Views. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/71">#71</a>).</li>
 <li>Fit to Content Width now works through all pages of a long document, and the view is fit once. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/62">#62</a>).</li>
+<li>While the Preview is active, Find, Find Next and Find Previous use the search field of its toolbar. Find Previous uses the direction of its menu item, so the shortcut can search the other way. Find All opens the drawer and selects its search field. Find in the source and in the console stays as before.</li>
+<li>On macOS 26 and later, a Preview window has its pages below the toolbar, and the toolbar ends in a line.</li>
+<li>Command-click on the title of a Preview window opens its path menu again (<a href="https://github.com/TeXShopProject/TeXShop/issues/73">#73</a>).</li>
+<li>Holding Command with a dead key no longer makes the Preview crash. Images in the Preview stay as before.</li>
+<li>A file named Only.PDF opens as a PDF when the extension is written in capital letters.</li>
 </ul>
 <h4>Fixes: opening and saving documents</h4>
 <ul>
@@ -145,6 +156,7 @@
 <li>Fix a crash when a setting or file that TeXShop reads is missing or damaged, such as a font that was removed or a damaged macros file, or when you sync from a page without SyncTeX information. The Previous Page and Next Page buttons of an image window turn its pages.</li>
 <li>Fix text that was cut off or drawn over other text, buttons and menus that did not work, texts left in English, and wrong names and words, in some languages.</li>
 <li>Replace All in the Advanced Find panel no longer moves the source. Reported by <a href="https://github.com/ralphrmartin">Ralph Martin</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/72">#72</a>).</li>
+<li>A new source has the text color when TeXShop fixes each tab, so characters typed before TeXShop sets the colors again show that color.</li>
 </ul>
 <h4>Manual, help and bundled tools</h4>
 <ul>
@@ -170,6 +182,8 @@
 <li>Paste Spreadsheet Cells works with any characters in the cells, such as Japanese.</li>
 <li>Set Root File… works with any characters in the path of the root file.</li>
 <li>Run LaTeX, dvips and ps2pdf works with TeX Live and Ghostscript, and shows a message when a step fails.</li>
+<li>Run LaTeX, dvips and ps2pdf ends when LaTeX makes no new DVI, and the earlier DVI stays when LaTeX ends after it makes only part of a new one. A document with a long name works, with a short name on the temporary copy of the PDF.</li>
+<li>PreTeXt-Validate reports an invalid document.</li>
 <li>Extract Pages from PDF… works with TeX Live 2026. The UserUnit of each page stays, and content is placed by the page box when the crop box goes past the media box.</li>
 <li>TeXShop no longer comes with the inactive engines and other files that need programs TeX Live and macOS do not provide, such as jing.jar; files already in <code>~/Library/TeXShop</code> stay.</li>
 <li>Add help for LaTeX-aware spell checking.</li>

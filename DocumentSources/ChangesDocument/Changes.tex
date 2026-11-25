@@ -36,6 +36,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 
 \begin{itemize}
 \item A new find and replace panel with regular expressions, the Advanced Find panel. Find All lists every match, and Highlight All marks them in the text.
+\item Highlight All shows each group of a regular expression in its own color, as the Find All list does. A group inside another shows its own color. A pattern without groups, and Multiple Replace, use the highlight color only.
 \item Multiple Replace applies saved sets of find and replace pairs at once.
 \item Find and replace in all files with the same root file: a new window, opened from the Find submenu of the Edit menu, lists each match in the root file and in the TeX files that name it as TEX root, shows each replacement before and after, and replaces them all at once, saving a copy of the files first. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/45}{\#45}).
 \item A cheat sheet shows how to write regular expressions, and Find also works in the console, the log and the Experiment windows.
@@ -114,8 +115,13 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item \textbf{Arrow keys in the preview:} in single-page and two-page layouts, the Up and Down Arrow keys scroll within the page instead of turning it. Suggested by \href{https://github.com/svb-bit}{svb-bit} (\href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}).
 \item \textbf{Menu shortcuts set in macOS:} shortcuts for TeXShop made in macOS System Settings may need to be set again in Settings \(\rightarrow\) Keyboard.
 \item \textbf{Macro shortcuts:} macro shortcuts are set in the list of the Macro Editor.
+\item \textbf{Shortcuts that cannot be changed:} Search by Function has the menu items that macOS adds, in menu order. Minimize All is in that list. The line below the list shows Cannot Be Changed. Search by Key shows Cannot Be Changed for that item. The line shows an arrow and the link Change in System Settings…, which opens Keyboard Shortcuts in System Settings. The next line shows where to choose “App Shortcuts” in the sidebar. TeXShop shows the line with the link and the line below it centered on the window.
+\item \textbf{Macro Editor:} the Macro Editor saves when a field, the list or a shortcut changes. TeXShop removes Save and Cancel. The shortcut for Save saves and the window stays open. Return and Escape do not close it. When a shortcut is used by a menu command that Settings can remove, Remove… removes that menu shortcut.
+\item \textbf{Globe key:} a shortcut that uses the Globe key is not saved for a TeXShop command or a macro.
+\item \textbf{Earlier menu title:} a shortcut TeXShop saved with a menu title from 5.59 or 6.00 RC2 still works after the title changes.
 \item \textbf{Marks:} the mark commands are in Edit \(\rightarrow\) Marks.
 \item \textbf{Enter Full Screen:} its shortcut is now Globe-F (\faGlobe{}F). Control-Command-F was used for both it and Next Mark, and is now only Next Mark.
+\item \textbf{Font menu:} the Font menu has Show Fonts, Bigger and Smaller.
 \item \textbf{Command completion:} the Command Completion submenu of the Source menu is now one item, Add to Command Completion List.
 \item \textbf{Open Style File:} it has moved from the Help menu to the File menu.
 \item \textbf{Demo movies:} the two movies in the Help menu are removed. Reported by \href{https://github.com/herbs}{Herb Schulz} (\href{https://github.com/TeXShopProject/TeXShop/issues/43}{\#43}).
@@ -151,6 +157,11 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item A closed Preview window opens again at the same place, with Command-1 or after typesetting, and with its pinned link previews if the PDF has not changed. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/70}{\#70}).
 \item When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and Preview windows return with their display format, magnification, split, place, turned pages, pinned link previews and the other view of Switch Views. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/71}{\#71}).
 \item Fit to Content Width now works through all pages of a long document, and the view is fit once. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/62}{\#62}).
+\item While the Preview is active, Find, Find Next and Find Previous use the search field of its toolbar. Find Previous uses the direction of its menu item, so the shortcut can search the other way. Find All opens the drawer and selects its search field. Find in the source and in the console stays as before.
+\item On macOS 26 and later, a Preview window has its pages below the toolbar, and the toolbar ends in a line.
+\item Command-click on the title of a Preview window opens its path menu again (\href{https://github.com/TeXShopProject/TeXShop/issues/73}{\#73}).
+\item Holding Command with a dead key no longer makes the Preview crash. Images in the Preview stay as before.
+\item A file named Only.PDF opens as a PDF when the extension is written in capital letters.
 \end{itemize}
 
 \subsection{Fixes: opening and saving documents}
@@ -175,6 +186,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Fix a crash when a setting or file that TeXShop reads is missing or damaged, such as a font that was removed or a damaged macros file, or when you sync from a page without SyncTeX information. The Previous Page and Next Page buttons of an image window turn its pages.
 \item Fix text that was cut off or drawn over other text, buttons and menus that did not work, texts left in English, and wrong names and words, in some languages.
 \item Replace All in the Advanced Find panel no longer moves the source. Reported by \href{https://github.com/ralphrmartin}{Ralph Martin} (\href{https://github.com/TeXShopProject/TeXShop/issues/72}{\#72}).
+\item A new source has the text color when TeXShop fixes each tab, so characters typed before TeXShop sets the colors again show that color.
 \end{itemize}
 
 \subsection{Manual, help and bundled tools}
@@ -202,6 +214,8 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Paste Spreadsheet Cells works with any characters in the cells, such as Japanese.
 \item Set Root File… works with any characters in the path of the root file.
 \item Run LaTeX, dvips and ps2pdf works with TeX Live and Ghostscript, and shows a message when a step fails.
+\item Run LaTeX, dvips and ps2pdf ends when LaTeX makes no new DVI, and the earlier DVI stays when LaTeX ends after it makes only part of a new one. A document with a long name works, with a short name on the temporary copy of the PDF.
+\item PreTeXt-Validate reports an invalid document.
 \item Extract Pages from PDF… works with TeX Live 2026. The UserUnit of each page stays, and content is placed by the page box when the crop box goes past the media box.
 \item TeXShop no longer comes with the inactive engines and other files that need programs TeX Live and macOS do not provide, such as jing.jar; files already in \texttt{\textasciitilde{}/Library/TeXShop} stay.
 \item Add help for LaTeX-aware spell checking.
