@@ -173,9 +173,14 @@ void TSGiveFullScreenGlobeKey(NSMenu *menu)
         }
     });
     // Preserve PDF search if a custom menu entirely omits the standard Find commands.
-    if (!found && action == @selector(performFindPanelAction:) && (tag == 1 || tag == 2)) {
+    // Find Previous is ⇧⌘G. A key the user assigned is on the menu item and was compared above.
+    if (!found && action == @selector(performFindPanelAction:) && tag >= 1 && tag <= 3) {
+        NSString *character = tag == 1 ? @"f" : @"g";
+        NSEventModifierFlags modifiers = NSEventModifierFlagCommand;
+        if (tag == 3)
+            modifiers |= NSEventModifierFlagShift;
         NSDictionary *key = TSBinding(TSShortcutCharacterForEvent(event), event.modifierFlags);
-        return [key isEqual:TSBinding(tag == 1 ? @"f" : @"g", NSEventModifierFlagCommand)];
+        return [key isEqual:TSBinding(character, modifiers)];
     }
     return matches;
 }

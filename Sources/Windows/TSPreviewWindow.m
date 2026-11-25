@@ -831,7 +831,24 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 
 #endif
 
+	// The Preview window itself, when the PDF view is not the first responder.
+	// The source window does not come through here.
+	if ([anItem action] == @selector(performFindPanelAction:)) {
+		MyPDFKitView *view = (MyPDFKitView *)self.myPDFKitView;
+		if ([view isKindOfClass:[MyPDFKitView class]])
+			return [view validateMenuItem:anItem];
+		return NO;
+	}
+
 	return [super validateMenuItem: anItem];
+}
+
+- (void)performFindPanelAction:(id)sender
+{
+	MyPDFKitView *view = (MyPDFKitView *)self.activeView;
+	if (![view isKindOfClass:[MyPDFKitView class]])
+		view = (MyPDFKitView *)self.myPDFKitView;
+	[view performFindPanelAction:sender];
 }
 
 
