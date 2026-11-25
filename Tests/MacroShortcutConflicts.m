@@ -233,7 +233,9 @@ static void CheckAssignmentOrder(void) {
     REQUIRE([keys isEqualToArray:(@[@"g",@"f"])]); assignments=nil;
     REQUIRE(store.unavailableCommands.count==0);
 }
+#include "QuitGate.inc"
 int main(int argc, char **argv) { @autoreleasepool {
+    CheckQuitGate();
     TSInstallAppKitIsolation(); [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     CheckEscape(); CheckAssignmentOrder();
     NSEvent *punctuation=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand|NSEventModifierFlagShift timestamp:0 windowNumber:0 context:nil characters:@"{" charactersIgnoringModifiers:@"{" isARepeat:NO keyCode:33];

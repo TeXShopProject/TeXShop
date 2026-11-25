@@ -10,6 +10,7 @@ from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 editor = (root / 'Sources/Macros/TSMacroEditor.m').read_text()
 menu = (root / 'Sources/Macros/TSMacroMenuController.m').read_text()
+delegate = (root / 'Sources/App/TSAppDelegate.m').read_text()
 
 def between(text, start, end):
     return text[text.index(start):text.index(end, text.index(start))]
@@ -27,7 +28,19 @@ parts = {
     'MacroMenuProduction.inc': between(menu, '- (void)setupMainMacroMenu', '// reload') + between(menu, '- (void)addItemsToMenu:', '// build a menu for popup')
         + between(menu, '- (void)listKeyEquivalents:', '\n@end'),
     'MacroKeyProduction.inc': menu[menu.index('NSString *getKeyEquivalentFromString('):],
+    'TSAppDelegate.m': delegate,
 }
+def quit_gate_inc(delegate_text):
+    start = delegate_text.index('- (NSApplicationTerminateReply)applicationShouldTerminate:')
+    method = delegate_text[start:delegate_text.index('- (void)applicationWillTerminate:', start)]
+    ask = 'if (![[TSMacroEditor sharedInstance] prepareMacrosBeforeTermination])\n        return NSTerminateCancel;'
+    replace = 'if (![TSTeXRootReplaceGuard isApplying])'
+    # The ask has to win before Replace All decides whether quitting waits.
+    if ask in method and replace in method and method.index(ask) < method.index(replace):
+        return 'static void CheckQuitGate(void) {\n    puts("PASS: quitting asks before the other termination checks");\n}\n'
+    return ('static void CheckQuitGate(void) {\n'
+            '    REQUIRE(0 && "applicationShouldTerminate asks, and cancelling that cancels quitting, before the other checks");\n'
+            '}\n')
 def run_case(name, changes=()):
     sources = dict(parts)
     sources['TSKeyboardShortcuts.m'] = production_source(root)
@@ -37,6 +50,7 @@ def run_case(name, changes=()):
     with tempfile.TemporaryDirectory(prefix='texshop-macro-conflicts-') as td:
         for filename, value in sources.items():
             (Path(td) / filename).write_text(value)
+        (Path(td) / 'QuitGate.inc').write_text(quit_gate_inc(sources['TSAppDelegate.m']))
         binary = Path(td) / 'conflicts'
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-Wno-incomplete-implementation',
                         '-Wno-deprecated-declarations', '-Wno-nullability-completeness', '-framework', 'Cocoa', '-framework', 'Carbon',
@@ -126,6 +140,7 @@ if '--mutations' in sys.argv:
         'closing stays quiet after a write failure': [(e, '    [self reflectChangesInEditor:YES];\n    reviewPending = NO;\n    reportedWriteFailure = NO;\n    if (![self autosaveMacroEdits]) return NO;\n', '    [self reflectChangesInEditor:YES];\n    reviewPending = NO;\n    if (![self autosaveMacroEdits]) return NO;\n')],
         'a successful save leaves the next failure quiet': [(e, '\t\tdataTouched = NO;\n\t\tsaved = YES;\n\t\treportedWriteFailure = NO;\n', '\t\tdataTouched = NO;\n\t\tsaved = YES;\n')],
         'quit notification keeps a displaced key': [(e, '    for (NSDictionary *conflict in changed) {\n        [nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@""];\n    }\n', '')],
+        'applicationShouldTerminate does not ask': [('TSAppDelegate.m', '    if (![[TSMacroEditor sharedInstance] prepareMacrosBeforeTermination])\n        return NSTerminateCancel;\n', '')],
         'pending shortcut is not saved': [(e, '    [self updatePendingShortcutStatus];\n    [self reflectChangesInEditor:YES];\n    [self autosaveMacroEdits];\n', '    [self updatePendingShortcutStatus];\n    [self reflectChangesInEditor:YES];\n')],
         'name edit is not saved': [(e, '\tnameTouched = YES;\n\t[self reflectChangesInEditor: YES];\n\t[self autosaveMacroEdits];\n', '\tnameTouched = YES;\n\t[self reflectChangesInEditor: YES];\n')],
         'content edit is not saved': [(e, '\t\tcontentTouched = NO;\n\t}\n\t[self autosaveMacroEdits];\n', '\t\tcontentTouched = NO;\n\t}\n')],
