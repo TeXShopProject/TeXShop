@@ -775,16 +775,18 @@ static NSUInteger CaretAfterShorterAlphas(NSString *text, NSRange caret)
 }
 
 /// A split source, scrolled, as in a document window. Nothing is ordered on screen. The window is kept for the rest of the test.
-/// `clipping` is the source's no-wrap setting: the text view grows to the longest line and scrolls sideways. `clipX`
-/// is then the horizontal scroll, after the carets have been scrolled into view.
-static BOOL MakeScrolledSource(NSString *text, BOOL clipping, CGFloat clipX, NSTextView *_Nonnull *_Nonnull upperOut, NSTextView *_Nonnull *_Nonnull lowerOut, CGFloat *upperY, CGFloat *lowerY)
+/// `mode` is the source's line break setting. Clipping grows the text view to the longest line and scrolls sideways;
+/// word and character wrapping keep the text view at the window width. `clipX` is the horizontal scroll, after the
+/// carets have been scrolled into view.
+static BOOL MakeScrolledSourceMode(NSString *text, NSLineBreakMode mode, CGFloat clipX, NSTextView *_Nonnull *_Nonnull upperOut, NSTextView *_Nonnull *_Nonnull lowerOut, CGFloat *upperY, CGFloat *lowerY)
 {
+    BOOL clipping = mode == NSLineBreakByClipping;
     static NSMutableArray<NSWindow *> *windows;
     if (!windows)
         windows = [NSMutableArray array];
     NSFont *font = [NSFont userFixedPitchFontOfSize:13] ?: [NSFont systemFontOfSize:13];
     NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
-    style.lineBreakMode = clipping ? NSLineBreakByClipping : NSLineBreakByWordWrapping;
+    style.lineBreakMode = mode;
     NSTextStorage *storage = [[NSTextStorage alloc] initWithString:text attributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: style}];
     NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 420, 200) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     window.releasedWhenClosed = NO;
@@ -844,6 +846,11 @@ static BOOL MakeScrolledSource(NSString *text, BOOL clipping, CGFloat clipX, NST
     return fabs(*upperY - upperTop) > 20 && fabs(*lowerY - lowerTop) > 20;
 }
 
+static BOOL MakeScrolledSource(NSString *text, BOOL clipping, CGFloat clipX, NSTextView *_Nonnull *_Nonnull upperOut, NSTextView *_Nonnull *_Nonnull lowerOut, CGFloat *upperY, CGFloat *lowerY)
+{
+    return MakeScrolledSourceMode(text, clipping ? NSLineBreakByClipping : NSLineBreakByWordWrapping, clipX, upperOut, lowerOut, upperY, lowerY);
+}
+
 /// Refuses every change. A real document's delegate accepts them; this is the refused replacement.
 @interface ReplaceAllVeto : NSObject <NSTextViewDelegate>
 @end
@@ -855,6 +862,7 @@ static BOOL MakeScrolledSource(NSString *text, BOOL clipping, CGFloat clipX, NST
 @end
 
 static void TestWrappedMiddleKeepsPlace(void);
+static void TestHorizontalLock(void);
 static void TestReplaceAllKeepsPlace(void)
 {
     NSUInteger beeps = 0;
@@ -1023,6 +1031,7 @@ static void TestReplaceAllKeepsPlace(void)
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
     Check([vetoUpper.string isEqualToString:text] && vetoUpper.undoManager.canRedo && !vetoUpper.undoManager.canUndo,
           @"a source that became read-only leaves the text and the redo");
+    TestHorizontalLock();
     TestWrappedMiddleKeepsPlace();
 }
 
@@ -1179,6 +1188,329 @@ static void CheckWrappedPlace(NSString *text, BOOL colorAfterScroll)
     Check([redoTop isEqualToData:afterTop] && [redoBottom isEqualToData:afterBottom]
           && [VisibleTopFragment(upper) containsString:@"x35.371"] && [VisibleTopFragment(lower) containsString:@"x25.126"],
           [NSString stringWithFormat:@"redo keeps the wrapped display lines (%@)", order]);
+}
+
+/// The character under the left edge of the viewport, measured the same way Replace All anchors it.
+static NSUInteger LeftEdgeCharacter(NSTextView *view)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0 || layout.numberOfGlyphs == 0)
+        return NSNotFound;
+    NSRect visible = view.visibleRect;
+    NSPoint point = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x, NSMinY(visible) + 1 - view.textContainerOrigin.y);
+    (void)[layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    visible = view.visibleRect;
+    point = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x, NSMinY(visible) + 1 - view.textContainerOrigin.y);
+    NSUInteger glyph = [layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (glyph >= layout.numberOfGlyphs)
+        glyph = layout.numberOfGlyphs - 1;
+    return [layout characterIndexForGlyphAtIndex:glyph];
+}
+
+/// How far `character` sits from the top and the left of the viewport. A negative value starts just outside.
+static void CharacterPins(NSTextView *view, NSUInteger character, CGFloat *pinX, CGFloat *pinY)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    if (!layout || character >= view.string.length) {
+        *pinX = 0;
+        *pinY = 0;
+        return;
+    }
+    [layout ensureLayoutForCharacterRange:NSMakeRange(character, 1)];
+    NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:character];
+    if (glyph >= layout.numberOfGlyphs) {
+        *pinX = 0;
+        *pinY = 0;
+        return;
+    }
+    NSRect fragment = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+    NSPoint location = [layout locationForGlyphAtIndex:glyph];
+    *pinX = view.textContainerOrigin.x + NSMinX(fragment) + location.x - NSMinX(view.visibleRect);
+    *pinY = view.textContainerOrigin.y + NSMinY(fragment) - NSMinY(view.visibleRect);
+}
+
+static CGFloat GlyphPin(NSTextView *view, NSUInteger character)
+{
+    CGFloat pinX = 0, pinY = 0;
+    CharacterPins(view, character, &pinX, &pinY);
+    return pinX;
+}
+
+/// Where a literal Replace All leaves `index`. A character inside a match lands at the end of that replacement.
+static NSUInteger IndexAfterLiteralReplace(NSString *text, NSUInteger index, NSString *find, NSString *replace)
+{
+    NSInteger delta = (NSInteger)replace.length - (NSInteger)find.length;
+    NSInteger shift = 0;
+    NSUInteger cursor = 0;
+    while (cursor < text.length) {
+        NSRange found = [text rangeOfString:find options:0 range:NSMakeRange(cursor, text.length - cursor)];
+        if (found.location == NSNotFound || found.location > index)
+            break;
+        if (found.location == index)
+            return (NSUInteger)((NSInteger)index + shift);
+        if (index < NSMaxRange(found))
+            return (NSUInteger)((NSInteger)NSMaxRange(found) + shift + delta);
+        shift += delta;
+        cursor = NSMaxRange(found);
+    }
+    NSInteger moved = (NSInteger)index + shift;
+    return moved > 0 ? (NSUInteger)moved : 0;
+}
+
+/// Puts `character` one point inside the left edge. The top line may be a different, shorter line, so the character
+/// under the top-left point is not always `character`.
+static BOOL ScrollGlyphToLeftEdge(NSTextView *view, NSUInteger character)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    if (!layout || character >= view.string.length)
+        return NO;
+    NSRange line = [view.string lineRangeForRange:NSMakeRange(character, 0)];
+    [layout ensureLayoutForCharacterRange:line];
+    NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:character];
+    if (glyph >= layout.numberOfGlyphs)
+        return NO;
+    NSRect fragment = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+    NSPoint location = [layout locationForGlyphAtIndex:glyph];
+    CGFloat glyphX = view.textContainerOrigin.x + NSMinX(fragment) + location.x;
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    if (!clip)
+        return NO;
+    NSRect bounds = clip.bounds;
+    bounds.origin.x = glyphX + 1;
+    [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+    [view.enclosingScrollView reflectScrolledClipView:clip];
+    [view.window display];
+    return YES;
+}
+
+/// Puts `character` one point inside the left edge, so the anchor is that character and not the one before it.
+static BOOL ScrollCharacterToLeft(NSTextView *view, NSUInteger character)
+{
+    return ScrollGlyphToLeftEdge(view, character) && LeftEdgeCharacter(view) == character;
+}
+
+static NSRange TopFragmentRange(NSTextView *view)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0 || layout.numberOfGlyphs == 0)
+        return NSMakeRange(NSNotFound, 0);
+    NSRect visible = view.visibleRect;
+    NSPoint inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x, NSMinY(visible) + 1 - view.textContainerOrigin.y);
+    NSUInteger glyph = [layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (glyph >= layout.numberOfGlyphs)
+        glyph = layout.numberOfGlyphs - 1;
+    NSRange glyphs;
+    [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:&glyphs];
+    return [layout characterRangeForGlyphRange:glyphs actualGlyphRange:NULL];
+}
+
+/// `find` sits before KEEP on each line. Without wrapping, KEEP is scrolled to the left edge and must stay there
+/// while the scroll offset follows the new width. With wrapping there is no sideways scroll: the left edge stays
+/// when the edit is past it, and an edit before it must not slide the viewport off the text.
+static void CheckHorizontalLock(NSLineBreakMode mode, NSString *find, NSString *replace, BOOL markerAtLeft)
+{
+    NSString *modeName = mode == NSLineBreakByClipping ? @"no wrap" : mode == NSLineBreakByWordWrapping ? @"word wrap" : @"character wrap";
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSMutableString *text = [NSMutableString string];
+    for (int i = 0; i < 80; i++) {
+        [text appendFormat:@"L%03d ", i];
+        for (int k = 0; k < 40; k++)
+            [text appendString:@"abc "];
+        [text appendString:@"KEEP "];
+        for (int k = 0; k < 20; k++)
+            [text appendString:@"xyz "];
+        if (i >= 60)
+            [text appendString:@"LATE "];
+        [text appendString:@"\n"];
+    }
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat upperY = 0, lowerY = 0;
+    Check(MakeScrolledSourceMode(text, mode, 0, &upper, &lower, &upperY, &lowerY),
+          [NSString stringWithFormat:@"%@: both parts scroll down a long line", modeName]);
+    (void)upperY;
+    (void)lowerY;
+    if (markerAtLeft) {
+        for (NSTextView *view in @[upper, lower]) {
+            NSUInteger edge = LeftEdgeCharacter(view);
+            NSRange line = edge == NSNotFound ? NSMakeRange(0, 0) : [view.string lineRangeForRange:NSMakeRange(edge, 0)];
+            NSRange keep = [view.string rangeOfString:@"KEEP" options:0 range:line];
+            Check(keep.location != NSNotFound && ScrollCharacterToLeft(view, keep.location),
+                  [NSString stringWithFormat:@"%@: KEEP is at the left edge", modeName]);
+        }
+    }
+    NSUInteger upperChar = LeftEdgeCharacter(upper), lowerChar = LeftEdgeCharacter(lower);
+    CGFloat upperPin = 0, upperPinY = 0, lowerPin = 0, lowerPinY = 0;
+    CharacterPins(upper, upperChar, &upperPin, &upperPinY);
+    CharacterPins(lower, lowerChar, &lowerPin, &lowerPinY);
+    CGFloat upperX = ScrollX(upper), lowerX = ScrollX(lower);
+    NSString *upperSnippet = upperChar < text.length ? [text substringWithRange:NSMakeRange(upperChar, MIN(4, text.length - upperChar))] : @"";
+    NSString *lowerSnippet = lowerChar < text.length ? [text substringWithRange:NSMakeRange(lowerChar, MIN(4, text.length - lowerChar))] : @"";
+    controller.settings.findString = find;
+    controller.settings.replaceString = replace;
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper),
+          [NSString stringWithFormat:@"%@: Replace All %@", modeName, find]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    NSUInteger upperMoved = IndexAfterLiteralReplace(text, upperChar, find, replace);
+    NSUInteger lowerMoved = IndexAfterLiteralReplace(text, lowerChar, find, replace);
+    BOOL upperLocked = upperMoved < upper.string.length && fabs(GlyphPin(upper, upperMoved) - upperPin) < 2;
+    BOOL lowerLocked = lowerMoved < lower.string.length && fabs(GlyphPin(lower, lowerMoved) - lowerPin) < 2;
+    if (markerAtLeft) {
+        NSInteger direction = (NSInteger)replace.length - (NSInteger)find.length;
+        Check(upperLocked && lowerLocked
+              && (direction < 0 ? ScrollX(upper) < upperX - 50 && ScrollX(lower) < lowerX - 50
+                                : ScrollX(upper) > upperX + 50 && ScrollX(lower) > lowerX + 50),
+              [NSString stringWithFormat:@"%@: %@ -> %@ keeps the left-edge character (pin %.1f -> %.1f / %.1f -> %.1f, x %.0f -> %.0f / %.0f -> %.0f, %@ / %@)",
+               modeName, find, replace, upperPin, GlyphPin(upper, upperMoved), lowerPin, GlyphPin(lower, lowerMoved),
+               upperX, ScrollX(upper), lowerX, ScrollX(lower), upperSnippet, lowerSnippet]);
+        [upper.undoManager undo];
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+        Check(fabs(GlyphPin(upper, upperChar) - upperPin) < 2 && fabs(GlyphPin(lower, lowerChar) - lowerPin) < 2
+              && fabs(ScrollX(upper) - upperX) < 2 && fabs(ScrollX(lower) - lowerX) < 2,
+              [NSString stringWithFormat:@"%@: undo puts the long line back (pin %.1f / %.1f, x %.0f / %.0f)",
+               modeName, GlyphPin(upper, upperChar), GlyphPin(lower, lowerChar), ScrollX(upper), ScrollX(lower)]);
+        [upper.undoManager redo];
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+        Check(upperMoved < upper.string.length && fabs(GlyphPin(upper, upperMoved) - upperPin) < 2
+              && lowerMoved < lower.string.length && fabs(GlyphPin(lower, lowerMoved) - lowerPin) < 2,
+              [NSString stringWithFormat:@"%@: redo keeps the left-edge character", modeName]);
+    } else if ([find isEqualToString:@"LATE"]) {
+        CGFloat upperAfterY = 0, lowerAfterY = 0, ignored = 0;
+        CharacterPins(upper, upperMoved, &ignored, &upperAfterY);
+        CharacterPins(lower, lowerMoved, &ignored, &lowerAfterY);
+        Check(upperLocked && lowerLocked && ScrollX(upper) < 5 && ScrollX(lower) < 5
+              && fabs(upperAfterY - upperPinY) < 2 && fabs(lowerAfterY - lowerPinY) < 2,
+              [NSString stringWithFormat:@"%@: an edit below the window leaves the text where it was (x pin %.1f -> %.1f / %.1f -> %.1f, y pin %.1f -> %.1f / %.1f -> %.1f, scroll %.0f / %.0f)",
+               modeName, upperPin, GlyphPin(upper, upperMoved), lowerPin, GlyphPin(lower, lowerMoved),
+               upperPinY, upperAfterY, lowerPinY, lowerAfterY, ScrollX(upper), ScrollX(lower)]);
+    } else {
+        NSRange upperTop = TopFragmentRange(upper), lowerTop = TopFragmentRange(lower);
+        Check(ScrollX(upper) < 5 && ScrollX(lower) < 5
+              && upperTop.location != NSNotFound && NSLocationInRange(upperMoved, upperTop)
+              && lowerTop.location != NSNotFound && NSLocationInRange(lowerMoved, lowerTop)
+              && VisibleTopFragment(upper).length > 0 && VisibleTopFragment(lower).length > 0,
+              [NSString stringWithFormat:@"%@: a shorter line stays in view without scrolling sideways (%@ / %@, x %.0f / %.0f)",
+               modeName,
+               [VisibleTopFragment(upper) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
+               [VisibleTopFragment(lower) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet],
+               ScrollX(upper), ScrollX(lower)]);
+    }
+}
+
+/// The top line ends before the left edge. KEEP on the long line under it is at that edge and must stay there.
+static void CheckShortTopLine(NSString *replace)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSMutableString *text = [NSMutableString string];
+    for (int i = 0; i < 80; i++) {
+        if (i % 2 == 0) {
+            [text appendFormat:@"S%03d\n", i];
+            continue;
+        }
+        [text appendFormat:@"L%03d ", i];
+        for (int k = 0; k < 40; k++)
+            [text appendString:@"abc "];
+        [text appendString:@"KEEP "];
+        for (int k = 0; k < 20; k++)
+            [text appendString:@"xyz "];
+        [text appendString:@"\n"];
+    }
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat upperY = 0, lowerY = 0;
+    // The first line is five characters, so this builder's usual stride does not move the viewport. The views are
+    // still the split source. Each part is then placed on its own short line.
+    MakeScrolledSourceMode(text, NSLineBreakByClipping, 0, &upper, &lower, &upperY, &lowerY);
+    (void)upperY;
+    (void)lowerY;
+    Check(upper != nil && lower != nil, @"short top line: both parts exist");
+    NSTextView *views[2] = {upper, lower};
+    NSString *labels[2] = {@"S040\n", @"S020\n"};
+    NSUInteger keeps[2] = {0, 0}, shorts[2] = {0, 0};
+    CGFloat pins[2] = {0, 0}, tops[2] = {0, 0}, xs[2] = {0, 0};
+    for (NSUInteger v = 0; v < 2; v++) {
+        NSTextView *view = views[v];
+        NSRange line = [text rangeOfString:labels[v]];
+        [view scrollRangeToVisible:NSMakeRange(line.location, 0)];
+        CGFloat ignored = 0, pinY = 0;
+        CharacterPins(view, line.location, &ignored, &pinY);
+        NSClipView *clip = view.enclosingScrollView.contentView;
+        NSRect bounds = clip.bounds;
+        bounds.origin.y += pinY;
+        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+        [view.enclosingScrollView reflectScrolledClipView:clip];
+        NSRange below = [view.string lineRangeForRange:NSMakeRange(NSMaxRange(line), 0)];
+        NSRange keep = [view.string rangeOfString:@"KEEP" options:0 range:below];
+        shorts[v] = line.location;
+        keeps[v] = keep.location;
+        Check(keep.location != NSNotFound && ScrollGlyphToLeftEdge(view, keep.location),
+              @"short top line: KEEP scrolls to the left edge");
+        NSUInteger top = LeftEdgeCharacter(view);
+        NSRange topLine = top == NSNotFound ? NSMakeRange(0, 0) : [view.string lineRangeForRange:NSMakeRange(top, 0)];
+        CharacterPins(view, keep.location, &pins[v], &ignored);
+        CharacterPins(view, line.location, &ignored, &tops[v]);
+        xs[v] = ScrollX(view);
+        Check(topLine.length < 10 && fabs(pins[v]) < 3 && fabs(tops[v]) < 2,
+              [NSString stringWithFormat:@"short top line: part %lu shows the short line above KEEP (top %lu chars, KEEP pin %.1f, line pin %.1f)",
+               (unsigned long)v, (unsigned long)topLine.length, pins[v], tops[v]]);
+    }
+    controller.settings.findString = @"abc";
+    controller.settings.replaceString = replace;
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper),
+          [NSString stringWithFormat:@"short top line: Replace All abc -> %@", replace]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    NSInteger direction = (NSInteger)replace.length - (NSInteger)@"abc".length;
+    for (NSUInteger v = 0; v < 2; v++) {
+        NSTextView *view = views[v];
+        NSUInteger moved = IndexAfterLiteralReplace(text, keeps[v], @"abc", replace);
+        NSUInteger movedTop = IndexAfterLiteralReplace(text, shorts[v], @"abc", replace);
+        CGFloat pin = 0, top = 0, ignored = 0;
+        CharacterPins(view, moved, &pin, &ignored);
+        CharacterPins(view, movedTop, &ignored, &top);
+        NSRange fragment = TopFragmentRange(view);
+        BOOL scrolled = direction < 0 ? ScrollX(view) < xs[v] - 50 : ScrollX(view) > xs[v] + 50;
+        Check(fabs(pin - pins[v]) < 2 && fabs(top - tops[v]) < 2 && scrolled
+              && fragment.location != NSNotFound && NSLocationInRange(movedTop, fragment),
+              [NSString stringWithFormat:@"short top line: abc -> %@ keeps KEEP (pin %.1f -> %.1f, line %.1f -> %.1f, x %.0f -> %.0f)",
+               replace, pins[v], pin, tops[v], top, xs[v], ScrollX(view)]);
+    }
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    for (NSUInteger v = 0; v < 2; v++) {
+        CGFloat pin = 0, ignored = 0;
+        CharacterPins(views[v], keeps[v], &pin, &ignored);
+        Check(fabs(pin - pins[v]) < 2 && fabs(ScrollX(views[v]) - xs[v]) < 2,
+              [NSString stringWithFormat:@"short top line: undo puts KEEP back (pin %.1f, x %.0f)", pin, ScrollX(views[v])]);
+    }
+    [upper.undoManager redo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    for (NSUInteger v = 0; v < 2; v++) {
+        NSUInteger moved = IndexAfterLiteralReplace(text, keeps[v], @"abc", replace);
+        CGFloat pin = 0, ignored = 0;
+        CharacterPins(views[v], moved, &pin, &ignored);
+        Check(fabs(pin - pins[v]) < 2,
+              [NSString stringWithFormat:@"short top line: redo keeps KEEP (pin %.1f)", pin]);
+    }
+}
+
+/// Issue #72, the follow-up: long lines moved sideways. The source window wraps or it does not.
+static void TestHorizontalLock(void)
+{
+    CheckShortTopLine(@"Z");
+    CheckShortTopLine(@"abcd");
+    CheckHorizontalLock(NSLineBreakByClipping, @"abc", @"Z", YES);
+    CheckHorizontalLock(NSLineBreakByClipping, @"abc", @"abcd", YES);
+    NSLineBreakMode wrapped[] = {NSLineBreakByWordWrapping, NSLineBreakByCharWrapping};
+    for (NSUInteger i = 0; i < sizeof wrapped / sizeof wrapped[0]; i++) {
+        CheckHorizontalLock(wrapped[i], @"LATE", @"LATER", NO);
+        CheckHorizontalLock(wrapped[i], @"abc", @"Z", NO);
+    }
 }
 
 /// A long logical line, wrapped, scrolled to a word in the middle of that line. Same-length Replace All must leave
