@@ -5,20 +5,24 @@
 
 #define TSLocalized TSAdvancedFindLocalized
 
-/// The character at the left of the top line, and where it sits in the viewport. A split source has two. The clip
-/// origin is not enough: the replacement changes the text view's height, and on a long line it changes how wide the
-/// text before that character is, so the same origin shows other text (#72). `clipX` is only the fallback when the
-/// character cannot be placed.
+/// Where to put the view back. `character` is the left of the top line, and `pin` is how far that line sits below the
+/// top of the viewport. That line may end before the left edge: a short line scrolled sideways has no character
+/// there, and the long line under it is what the reader is looking at. `characterX` is the character under the left
+/// edge on the first line that reaches it, and `pinX` is how far that glyph sits from the left edge. `clipX` is only
+/// the fallback when that character cannot be placed (#72).
 typedef struct {
     NSUInteger character;
     CGFloat pin;
     CGFloat pinX;
     CGFloat clipX;
+    NSUInteger characterX;
 } TSScrollAnchor;
+
+static void TSReadHorizontalAnchor(NSTextView *view, TSScrollAnchor *anchor);
 
 static TSScrollAnchor TSAnchorForView(NSTextView *view)
 {
-    TSScrollAnchor anchor = {NSNotFound, 0, 0, 0};
+    TSScrollAnchor anchor = {NSNotFound, 0, 0, 0, NSNotFound};
     NSClipView *clip = view.enclosingScrollView.contentView;
     if (clip)
         anchor.clipX = clip.bounds.origin.x;
@@ -43,12 +47,57 @@ static TSScrollAnchor TSAnchorForView(NSTextView *view)
         glyph = layout.numberOfGlyphs - 1;
     [layout ensureLayoutForGlyphRange:NSMakeRange(glyph, 1)];
     NSRect fragment = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
-    NSPoint location = [layout locationForGlyphAtIndex:glyph];
-    CGFloat glyphX = view.textContainerOrigin.x + NSMinX(fragment) + location.x;
     anchor.character = [layout characterIndexForGlyphAtIndex:glyph];
     anchor.pin = NSMinY(fragment) + view.textContainerOrigin.y - NSMinY(visible);
-    anchor.pinX = glyphX - NSMinX(visible);
+    TSReadHorizontalAnchor(view, &anchor);
     return anchor;
+}
+
+/// The character under the left edge. The top line is not that character when the line ends further left: the point
+/// then hits the end of the short line, and restoring it leaves the long line below free to slide (#72).
+static void TSReadHorizontalAnchor(NSTextView *view, TSScrollAnchor *anchor)
+{
+    anchor->characterX = NSNotFound;
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || layout.numberOfGlyphs == 0)
+        return;
+    NSRect visible = view.visibleRect;
+    CGFloat originX = view.textContainerOrigin.x;
+    NSRect box = NSOffsetRect(visible, -originX, -view.textContainerOrigin.y);
+    [layout ensureLayoutForBoundingRect:box inTextContainer:container];
+    if (layout.numberOfGlyphs == 0)
+        return;
+    NSRange glyphRange = [layout glyphRangeForBoundingRect:box inTextContainer:container];
+    if (glyphRange.length == 0 || glyphRange.location >= layout.numberOfGlyphs)
+        return;
+    __block NSUInteger found = NSNotFound;
+    __block CGFloat foundX = 0;
+    [layout enumerateLineFragmentsForGlyphRange:glyphRange usingBlock:^(NSRect fragment, NSRect used, NSTextContainer *textContainer, NSRange glyphs, BOOL *stop) {
+        (void)textContainer;
+        CGFloat usedLeft = originX + NSMinX(used);
+        CGFloat usedRight = originX + NSMaxX(used);
+        // A line that ends before the left edge, or starts to the right of it, has nothing to pin there.
+        if (usedRight <= NSMinX(visible) + 0.5 || usedLeft > NSMinX(visible) + 1 || glyphs.length == 0)
+            return;
+        NSPoint point = NSMakePoint(NSMinX(visible) - originX, NSMinY(fragment) + 1);
+        (void)[layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+        NSUInteger glyph = [layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+        if (glyph >= layout.numberOfGlyphs)
+            glyph = layout.numberOfGlyphs - 1;
+        if (!NSLocationInRange(glyph, glyphs))
+            return;
+        [layout ensureLayoutForGlyphRange:NSMakeRange(glyph, 1)];
+        NSRect hit = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+        NSPoint location = [layout locationForGlyphAtIndex:glyph];
+        foundX = originX + NSMinX(hit) + location.x;
+        found = [layout characterIndexForGlyphAtIndex:glyph];
+        *stop = YES;
+    }];
+    if (found == NSNotFound)
+        return;
+    anchor->characterX = found;
+    anchor->pinX = foundX - NSMinX(view.visibleRect);
 }
 
 static NSValue *TSAnchorValue(TSScrollAnchor anchor)
@@ -58,7 +107,7 @@ static NSValue *TSAnchorValue(TSScrollAnchor anchor)
 
 static TSScrollAnchor TSAnchorFromValue(NSValue *value)
 {
-    TSScrollAnchor anchor = {NSNotFound, 0, 0, 0};
+    TSScrollAnchor anchor = {NSNotFound, 0, 0, 0, NSNotFound};
     if (value)
         [value getValue:&anchor size:sizeof anchor];
     return anchor;
@@ -85,6 +134,8 @@ static NSMapTable<NSTextView *, NSValue *> *TSAnchorsFollowingEdits(NSMapTable<N
         TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
         if (anchor.character != NSNotFound)
             anchor.character = [result locationByFollowingEdits:anchor.character];
+        if (anchor.characterX != NSNotFound)
+            anchor.characterX = [result locationByFollowingEdits:anchor.characterX];
         [mapped setObject:TSAnchorValue(anchor) forKey:view];
     }
     return mapped;
@@ -162,6 +213,7 @@ static BOOL TSPlaceOfCharacter(NSTextView *view, NSUInteger character, CGFloat *
         if (glyph >= layout.numberOfGlyphs)
             glyph = layout.numberOfGlyphs - 1;
         NSRect next = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+        // Width too: a wrap's glyph x can still move after the fragment's y and height have settled.
         if (pass > 0 && fabs(next.origin.y - fragment.origin.y) < 0.5 && fabs(next.size.height - fragment.size.height) < 0.5
             && fabs(next.size.width - fragment.size.width) < 0.5) {
             fragment = next;
@@ -208,15 +260,15 @@ static BOOL TSTopLine(NSTextView *view, NSRange *characterRange, CGFloat *lineTo
     return YES;
 }
 
-/// The clip origin that puts the anchor character back where it was drawn. The saved origin is not that place once
-/// the text before the character has changed width (#72). When the character cannot be placed, the saved origin remains.
+/// The clip origin that puts `characterX` back where it was drawn. The saved origin is not that place once the text
+/// before that character has changed width (#72). When it cannot be placed, the saved origin remains.
 static CGFloat TSPinnedClipX(NSTextView *view, TSScrollAnchor anchor)
 {
     NSClipView *clip = view.enclosingScrollView.contentView;
-    if (!clip)
+    if (!clip || anchor.characterX == NSNotFound)
         return anchor.clipX;
     CGFloat glyphX = 0, lineTop = 0, lineRight = 0;
-    if (!TSPlaceOfCharacter(view, anchor.character, &glyphX, &lineTop, &lineRight))
+    if (!TSPlaceOfCharacter(view, anchor.characterX, &glyphX, &lineTop, &lineRight))
         return anchor.clipX;
     // The edit can leave the frame at the window width until the long line is measured. Grow to this line first, or
     // the scroll clamps to the left and the text stays there after the frame catches up.
@@ -279,15 +331,11 @@ static void TSApplyAnchors(NSMapTable<NSTextView *, NSValue *> *anchors)
         if (!clip)
             continue;
         TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
+        CGFloat x = TSPinnedClipX(view, anchor);
         CGFloat y = NSMinY(view.frame);
         CGFloat glyphX = 0, lineTop = 0, lineRight = 0;
-        CGFloat x = anchor.clipX;
-        if (TSPlaceOfCharacter(view, anchor.character, &glyphX, &lineTop, &lineRight)) {
-            if (view.horizontallyResizable && lineRight > NSWidth(view.frame) && lineRight < 1000000)
-                [view setFrameSize:NSMakeSize(lineRight, NSHeight(view.frame))];
-            x = NSMinX(clip.bounds) + (glyphX - anchor.pinX - NSMinX(view.visibleRect));
+        if (TSPlaceOfCharacter(view, anchor.character, &glyphX, &lineTop, &lineRight))
             y = NSMinY(clip.bounds) + (lineTop - anchor.pin - NSMinY(view.visibleRect));
-        }
         TSScroll(view, x, y);
         TSRefineAnchor(view, anchor);
     }
@@ -421,8 +469,9 @@ static void TSRegisterPlaceUndo(NSUndoManager *undo, NSTextView *view,
             return;
         }
         // Rewriting a scope makes NSLayoutManager resize the text view and scroll a stale range into view, so the
-        // text jumps (#72). Remember the character at the left of the top line, and the carets: the replacement
-        // contains them, and the text view would otherwise leave them at the end of the new text.
+        // text jumps (#72). Remember the top line, the character under the left edge (a lower line, when the top line
+        // ends sooner), and the carets. The replacement contains the carets, and the text view would otherwise leave
+        // them at the end of the new text.
         NSTextStorage *storage = textView.textStorage;
         NSMapTable *previousAnchors = storage ? TSAnchors(storage) : [NSMapTable weakToStrongObjectsMapTable];
         NSMapTable *keptAnchors = TSAnchorsFollowingEdits(previousAnchors, result);
