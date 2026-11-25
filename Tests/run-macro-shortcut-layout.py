@@ -81,16 +81,20 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'the first row is higher than the sets\'': ('    list.contentInsets = NSEdgeInsetsMake(5, 0, 0, 0);\n', ''),
             'the fields keep the nib\'s margin from the list': ('    CGFloat shift = NSMinX([nameField frame]) - TSDialogMargin;', '    CGFloat shift = NSMinX([nameField frame]) - 2 * TSDialogMargin;'),
             'the buttons do not hold the narrowest window': ('                            TSDialogButtonsWidth(@[saveButton, cancelButton], @[testButton]));', '                            0);'),
+            'Test stays at the leading edge': ('TSLayoutDialogButtons(self.editorView ?: [window contentView], @[testButton], @[]);', 'TSLayoutDialogButtons(self.editorView ?: [window contentView], @[], @[testButton]);'),
+            'Save and Cancel stay': ('for (NSButton *button in @[saveButton, cancelButton]) {\n        button.keyEquivalent = @"";\n        [button removeFromSuperview];\n    }\n', ''),
+            'Return is still the default button': ('    [window setDefaultButtonCell:nil];\n', '    [window setDefaultButtonCell:saveButton.cell];\n'),
             'a reopened window keeps the closed one\'s sidebar': ('    self.sidebar = nil; self.listBar = nil; self.editorView = nil;\n', ''),
+            # The contents consume Return. Letting it continue is what used to press Save.
             'Return in the contents saves': ('    [editor sendEvent:event];\n    return nil;\n', '    return event;\n'),
-            'Escape does not cancel': ('    cancelButton.keyEquivalent = @"\\033";\n', ''),
-            'Save is not the default button': ('    saveButton.keyEquivalent = @"\\r";\n', ''),
+
             'zh_CN.lproj: a font the nib names stays': ('        if (font == nil || [font.fontName hasPrefix:@"."]) continue;', '        continue;'),
             'the buttons keep the nib\'s height': ('        frame.size.height = button.fittingSize.height;\n', ''),
             'the window loses its minimum height': ('    editor.minSize = NSMakeSize(TSListSidebarMinimumWidth + split.splitView.dividerThickness + narrowest, minimumHeight);', '    editor.minSize = NSMakeSize(TSListSidebarMinimumWidth + split.splitView.dividerThickness + narrowest, 0);'),
             'typing keys become shortcuts': ('    if (binding.key.length != 1 || ![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) {', '    if (binding.key.length != 1) {'),
             'Return in the list does not rename': ('        if (![self beginRenamingSelectedItem]) NSBeep();\n        return nil;\n', '        return event;\n'),
             'Escape while renaming closes the window': ('        if (escape) [outlineView abortEditing];\n', '        if (escape) return event;\n'),
+            # Escape in the list is consumed. Letting it continue is what used to press Cancel.
             'Escape in the list cancels': ('        if (escape) return nil;\n', '        if (escape) return event;\n'),
             'a separator is renamed': ('![item isKindOfClass:TSMacroTreeNode.class] || item.isSeparator) return NO;', '![item isKindOfClass:TSMacroTreeNode.class]) return NO;'),
             'the contents keep a margin from the sidebar': ('        contents.frame = NSMakeRect(0, NSMaxY(line), width, NSHeight(main.bounds) - NSMaxY(line));', '        contents.frame = NSMakeRect(TSDialogMargin, NSMaxY(line), width - TSDialogMargin, NSHeight(main.bounds) - NSMaxY(line));'),

@@ -399,38 +399,39 @@ int main(int argc, char **argv) { @autoreleasepool {
     editor.pendingShortcutKey=@"F+ControlKey+NoCommandKey";[editor updatePendingShortcutStatus];REQUIRE(editor.shortcutStatus.stringValue.length==0 && [a.key isEqual:@"Y"]);
     editor.previousItem=nil;
     NSString *file=[MacrosPath stringByAppendingPathComponent:@"Macros_Latex.plist"];
-    [editor savePressed:nil];REQUIRE(editor.prompts==0 && editor.testWindow.closes==1 && reloads==1);
-    a.key=@"F";editor.answer=NSAlertFirstButtonReturn;[editor savePressed:nil];
-    REQUIRE(editor.prompts==1 && editor.testWindow.closes==1 && reloads==1 && [a.key isEqual:@"F"]);
+    [@"SENTINEL" writeToFile:file atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    NSString *backup=[[file stringByDeletingPathExtension] stringByAppendingString:@"~.plist"];
+    [editor savePressed:nil];REQUIRE(editor.prompts==0 && editor.testWindow.closes==0 && reloads==1);
+    REQUIRE([@"SENTINEL" isEqual:[NSString stringWithContentsOfFile:backup encoding:NSUTF8StringEncoding error:NULL]]);
+    a.key=@"F";[editor setValue:@YES forKey:@"dataTouched"];editor.answer=NSAlertFirstButtonReturn;[editor savePressed:nil];
+    REQUIRE(editor.prompts==1 && editor.testWindow.closes==0 && reloads==1 && [a.key isEqual:@"F"]);
     REQUIRE(editor.testOutline.selection.firstObject==a && editor.recordingRequests==1 && editor.recordingRequest==a && ![editor.details containsString:@"Old collision"]);
     REQUIRE([editor.details componentsSeparatedByString:@"Find"].count==2); // one opponent, with its key
     editor.testWindow.rejectCommit=YES;[editor savePressed:nil];REQUIRE(editor.prompts==1);editor.testWindow.rejectCommit=NO;
     editor.answer=NSAlertSecondButtonReturn;[editor savePressed:nil];
-    REQUIRE(editor.prompts==2 && editor.testWindow.closes==2 && reloads==2 && [a.key isEqual:@"F"]);
+    REQUIRE(editor.prompts==2 && editor.testWindow.closes==0 && reloads==2 && [a.key isEqual:@"F"]);
     NSDictionary *saved=[NSDictionary dictionaryWithContentsOfFile:file];REQUIRE([saved[@"submenu"][0][@"submenu"][1][@"key"] isEqual:@"F"]);
-    editor.answer=NSAlertThirdButtonReturn;[editor savePressed:nil];
-    REQUIRE(editor.prompts==3 && editor.testWindow.closes==3 && reloads==3 && [a.key isEqual:@""] && [old.key isEqual:@"F"]);
+    REQUIRE([@"SENTINEL" isEqual:[NSString stringWithContentsOfFile:backup encoding:NSUTF8StringEncoding error:NULL]]);
+    // That save accepted F, so a later save of the same key does not ask again. Z is a new conflict.
+    a.key=@"Z";[editor setValue:@YES forKey:@"dataTouched"];editor.answer=NSAlertThirdButtonReturn;[editor savePressed:nil];
+    REQUIRE(editor.prompts==3 && editor.testWindow.closes==0 && reloads==3 && [a.key isEqual:@""] && [old.key isEqual:@"F"]);
     REQUIRE([a.content isEqual:@"KEEP NEW"] && [b.key isEqual:@"Z"]);
     TSMacroTreeNode *imported=[TSMacroTreeNode nodeWithName:@"Imported" content:@"KEEP IMPORT" key:@"Z"];[group addChild:imported];
-    editor.answer=NSAlertFirstButtonReturn;[editor savePressed:nil];REQUIRE(editor.prompts==4 && [editor.details containsString:@"Imported"] && [editor.details containsString:@"Free"]);
-    imported.key=@""; editor.failWrite=YES;[editor savePressed:nil];REQUIRE(writeAlerts==1 && reloads==3 && editor.testWindow.closes==3);
+    [editor setValue:@YES forKey:@"dataTouched"];editor.answer=NSAlertFirstButtonReturn;[editor savePressed:nil];REQUIRE(editor.prompts==4 && [editor.details containsString:@"Imported"] && [editor.details containsString:@"Free"]);
+    imported.key=@""; editor.failWrite=YES;[editor savePressed:nil];REQUIRE(writeAlerts==1 && reloads==3 && editor.testWindow.closes==0);
     editor.failWrite=NO; a.key=@"F"; editor.answer=NSAlertFirstButtonReturn;
     int prompts=editor.prompts;
     int oldStarts=sheetStarts; editor.testWindow.attachedSheet=[InvisibleSheetWindow new];
-    REQUIRE(![editor windowShouldClose:editor.testWindow] && sheetStarts==oldStarts);
+    REQUIRE(![editor windowShouldClose:editor.testWindow] && sheetStarts==oldStarts && editor.prompts==prompts);
     editor.testWindow.attachedSheet=nil;
-    REQUIRE(![editor windowShouldClose:editor.testWindow] && sheetCompletion && sheetStarts==oldStarts+1);
-    sheetCompletion(NSAlertFirstButtonReturn); REQUIRE(editor.prompts==prompts && sheetDismissals==1);
-    NSDate *deadline=[NSDate dateWithTimeIntervalSinceNow:1];
-    while(editor.prompts==prompts && [deadline timeIntervalSinceNow]>0)
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
-    REQUIRE(editor.prompts==prompts+1 && editor.testWindow.closes==3 && reloads==3);
-    puts("PASS: close-sheet save defers conflict review until after sheet dismissal");
+    REQUIRE(![editor windowShouldClose:editor.testWindow] && sheetStarts==oldStarts);
+    REQUIRE(editor.prompts==prompts+1 && editor.testWindow.closes==0 && reloads==3);
+    puts("PASS: closing asks about a conflicting shortcut and stays open when editing continues");
     TSMacroTreeNode *first=[TSMacroTreeNode nodeWithName:@"Changed first" content:@"KEEP" key:@"X"], *later=[TSMacroTreeNode nodeWithName:@"Existing later" content:@"KEEP" key:@"Z"];
     TSMacroTreeNode *secondRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"];[secondRoot addChildren:@[first,later]];
     TestEditor *second=[TestEditor new];second.testOutline.rootOfTree=secondRoot;[second rememberOriginalShortcutKeys];first.key=@"Z";
     second.answer=NSAlertFirstButtonReturn;[second savePressed:nil];REQUIRE(second.prompts==1 && second.testWindow.closes==0 && [second.details containsString:@"Existing later"] && [second.details containsString:@"appears later"]);
-    second.answer=NSAlertThirdButtonReturn;[second savePressed:nil];REQUIRE(!first.key.length && [later.key isEqual:@"Z"] && second.testWindow.closes==1);
+    second.answer=NSAlertThirdButtonReturn;[second savePressed:nil];REQUIRE(!first.key.length && [later.key isEqual:@"Z"] && second.testWindow.closes==0);
     puts("PASS: changing an earlier macro warns before making a later macro inactive");
     // A key that cannot be a shortcut (here Control-Escape, from a macro file) overlaps nothing: saving does not
     // call it a conflict, alone or next to a real one, and the key is kept as written.
@@ -438,14 +439,14 @@ int main(int argc, char **argv) { @autoreleasepool {
     TSMacroTreeNode *refusedOnly=[TSMacroTreeNode nodeWithName:@"Refused alone" content:@"KEEP" key:@""];
     TSMacroTreeNode *thirdRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"];[thirdRoot addChild:refusedOnly];
     TestEditor *third=[TestEditor new];third.testOutline.rootOfTree=thirdRoot;[third rememberOriginalShortcutKeys];refusedOnly.key=controlEscape;
-    third.answer=NSAlertFirstButtonReturn;[third savePressed:nil];REQUIRE(third.prompts==0 && third.testWindow.closes==1 && [refusedOnly.key isEqual:controlEscape]);
+    third.answer=NSAlertFirstButtonReturn;[third savePressed:nil];REQUIRE(third.prompts==0 && third.testWindow.closes==0 && [refusedOnly.key isEqual:controlEscape]);
     TSMacroTreeNode *mixedFirst=[TSMacroTreeNode nodeWithName:@"Mixed first" content:@"KEEP" key:@"X"], *mixedLater=[TSMacroTreeNode nodeWithName:@"Mixed later" content:@"KEEP" key:@"Z"];
     TSMacroTreeNode *mixedRefused=[TSMacroTreeNode nodeWithName:@"Refused mixed" content:@"KEEP" key:@""];
     TSMacroTreeNode *fourthRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"];[fourthRoot addChildren:@[mixedFirst,mixedRefused,mixedLater]];
     TestEditor *fourth=[TestEditor new];fourth.testOutline.rootOfTree=fourthRoot;[fourth rememberOriginalShortcutKeys];mixedFirst.key=@"Z";mixedRefused.key=controlEscape;
     fourth.answer=NSAlertThirdButtonReturn;[fourth savePressed:nil];
     REQUIRE(fourth.prompts==1 && [fourth.details containsString:@"Mixed later"] && ![fourth.details containsString:@"Refused mixed"] && ![fourth.details containsString:@"cannot be used"]);
-    REQUIRE(!mixedFirst.key.length && [mixedLater.key isEqual:@"Z"] && [mixedRefused.key isEqual:controlEscape] && fourth.testWindow.closes==1);
+    REQUIRE(!mixedFirst.key.length && [mixedLater.key isEqual:@"Z"] && [mixedRefused.key isEqual:controlEscape] && fourth.testWindow.closes==0);
     puts("PASS: saving does not report a key that cannot be a shortcut as a conflict, alone or with a real one; the key is kept");
     puts("PASS: existing conflicts save without prompting; new/imported keys have three choices; cancellation and write errors preserve content");
     // A macro warning can remove a menu shortcut Settings can clear. Cancel leaves it.
