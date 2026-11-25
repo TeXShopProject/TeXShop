@@ -337,7 +337,7 @@ int main(int argc,char **argv){@autoreleasepool{
   REQUIRE(pane.searchingByKey && pane.searchMode.selectedSegment==1 && !pane.search.editable && !pane.keySearchView.hidden);
   REQUIRE(pane.searchEvent==nil && pane.searchMatches.count==0 && pane.search.stringValue.length==0);
   REQUIRE([pane.searchMessage isEqual:NSLocalizedString(@"Press a key",@"")] && [pane.hint.stringValue isEqual:pane.searchMessage] && [pane.keySearchView.accessibilityValue isEqual:pane.searchMessage]);
-  REQUIRE(pane.table.numberOfRows==(NSInteger)pane.visibleCommands.count && pane.table.selectedRow==-1 && !pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
+  REQUIRE(pane.table.numberOfRows==(NSInteger)pane.functionRows.count && pane.table.selectedRow==-1 && !pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
   REQUIRE(shell.window.firstResponder==pane.keySearchView);
   // With no key recorded the field shows no cancel button, and the same spot does nothing.
   REQUIRE(![pane.keySearchView isAccessibilitySelectorAllowed:@selector(accessibilityPerformCancel)] && ![pane.keySearchView accessibilityPerformCancel]);
@@ -524,7 +524,7 @@ int main(int argc,char **argv){@autoreleasepool{
   REQUIRE([[pane.table viewAtColumn:shortcutColumn row:duplicateRow makeIfNecessary:YES] isKindOfClass:TSShortcutKeyLabel.class]);
   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)saveAsRow] byExtendingSelection:NO];
   for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
-  REQUIRE([pane.statusText.stringValue containsString:saveAsShown]);
+  REQUIRE([pane.statusText.stringValue isEqual:NSLocalizedString(@"Cannot Be Changed",@"")]);
   [pane beginRecordingAtRow:saveAsRow];REQUIRE(pane.editingCommand==nil);
   [pane removeShortcut:nil];[pane restoreShortcut:nil];REQUIRE([saveAsItem.keyEquivalent isEqual:@"S"] && saveAsItem.keyEquivalentModifierMask==(C|O));
   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)duplicateRow] byExtendingSelection:NO];
@@ -550,7 +550,7 @@ int main(int argc,char **argv){@autoreleasepool{
   }
   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)fullScreenRow] byExtendingSelection:NO];
   for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
-  REQUIRE([pane.statusText.stringValue containsString:globeF]);
+  REQUIRE([pane.statusText.stringValue isEqual:NSLocalizedString(@"Cannot Be Changed",@"")]);
   [pane beginRecordingAtRow:fullScreenRow];REQUIRE(pane.editingCommand==nil);
   [pane removeShortcut:nil];[pane restoreShortcut:nil];
   REQUIRE([store setKey:@"j" modifiers:C|FSControl forCommand:fullScreenCommand]!=nil);
@@ -591,6 +591,29 @@ int main(int argc,char **argv){@autoreleasepool{
     NSMenuItem *minimizeAll=[[NSMenuItem alloc] initWithTitle:@"Minimize All" action:@selector(miniaturizeAll:) keyEquivalent:@"m"];
     minimizeAll.keyEquivalentModifierMask=C|O;
     [first.menu addItem:minimizeAll];[coordinator refreshMenuAndMacros];
+    // Function search lists the same item in gray. The line under the list says it cannot be changed.
+    {
+     BOOL wasKey=pane.searchingByKey;
+     if(wasKey)[pane stopKeySearch];
+     pane.search.stringValue=@"Minimize All";[pane reloadCommands];
+     REQUIRE(pane.visibleCommands.count==0 && pane.functionRows.count==1 && pane.functionRows[0].command==nil && pane.functionRows[0].item==minimizeAll && pane.table.numberOfRows==1);
+     NSString *miniKey=[TSShortcutStore displayKey:@"m" modifiers:C|O];
+     for(NSInteger column=0;column<2;column++){
+      NSTextField *cell=(NSTextField *)[pane.table viewAtColumn:column row:0 makeIfNecessary:YES];
+      REQUIRE([cell isKindOfClass:NSTextField.class] && ![cell isKindOfClass:TSShortcutKeyLabel.class] && [cell.textColor isEqual:NSColor.disabledControlTextColor]);
+      REQUIRE([cell.stringValue isEqual:column==0?@"Actions › Minimize All":miniKey]);
+     }
+     [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+     REQUIRE([pane.statusText.stringValue isEqual:NSLocalizedString(@"Cannot Be Changed",@"")] && pane.status.arrangedSubviews[0].hidden);
+     for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
+     [pane beginRecordingAtRow:0];REQUIRE(pane.editingCommand==nil);
+     minimizeAll.hidden=YES;[pane reloadCommands];REQUIRE(pane.functionRows.count==0 && pane.table.numberOfRows==0);
+     minimizeAll.allowsKeyEquivalentWhenHidden=YES;[pane reloadCommands];REQUIRE(pane.functionRows.count==1 && pane.functionRows[0].item==minimizeAll);
+     minimizeAll.allowsKeyEquivalentWhenHidden=NO;minimizeAll.hidden=NO;
+     pane.search.stringValue=@"";[pane reloadCommands];
+     if(wasKey){pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];}
+    }
+    REQUIRE(pane.searchingByKey);
     REQUIRE([pane handleKeySearchEvent:Event(@"m",C|O,46)]);
     NSInteger miniRow=-1;
     for(NSInteger row=0;row<(NSInteger)pane.table.numberOfRows;row++){
@@ -738,7 +761,7 @@ int main(int argc,char **argv){@autoreleasepool{
   translated.search.stringValue=@"missing command fixture";[translated reloadCommands];
   REQUIRE(translated.table.numberOfRows==0);
   translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];
-  REQUIRE(translated.searchEvent==nil && translated.table.numberOfRows==(NSInteger)translated.store.settingsSearchCommandNames.count);
+  REQUIRE(translated.searchEvent==nil && translated.table.numberOfRows==(NSInteger)translated.functionRows.count);
   NSUInteger beforeFlags=translated.table.numberOfRows;NSEvent *flagsEvent=[NSEvent keyEventWithType:NSEventTypeFlagsChanged location:NSZeroPoint modifierFlags:S timestamp:0 windowNumber:0 context:nil characters:@"" charactersIgnoringModifiers:@"" isARepeat:NO keyCode:56];
   @try { REQUIRE([translated handleKeySearchEvent:flagsEvent] && translated.searchEvent==nil && translated.table.numberOfRows==beforeFlags); } @catch(NSException *exception) { Check(NO,@"Modifier-only events must not reach character translation"); }
   for(id trigger in @[@"TAB",@"ESCAPE",NSNull.null,@"unexpected",@"ESC",@"TAB"]){
