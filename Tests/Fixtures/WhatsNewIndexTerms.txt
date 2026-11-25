@@ -73,16 +73,13 @@
 6
 60
 61
-62
 66
 68
 69
 7
-70
 71
 718
 72
-73
 74
 78
 8
@@ -242,6 +239,7 @@ because
 become
 becomes
 before
+began
 begin
 beginning
 beginnings
@@ -303,7 +301,6 @@ can
 cancel
 cancels
 capabilities
-capital
 car
 case
 cases
@@ -480,6 +477,7 @@ decides
 decline
 decomposed
 decrypted
+decrypting
 default
 defaults
 defective
@@ -528,6 +526,7 @@ display
 displayed
 displaying
 displays
+distributed
 divider
 divides
 do
@@ -591,6 +590,7 @@ embarrassing
 emilio
 emphasize
 empire
+empty
 enable
 encoding
 encodings
@@ -785,6 +785,7 @@ group
 groups
 grows
 guard
+guide
 habits
 half
 halves
@@ -888,7 +889,6 @@ initialized
 initializes
 initially
 initiated
-input
 insert
 inserts
 inside
@@ -1413,7 +1413,6 @@ range
 rare
 rarely
 rather
-rc2
 reach
 reached
 read
@@ -1729,6 +1728,7 @@ surprises
 survey
 svb
 swap
+swift
 switch
 switched
 switches
