@@ -452,15 +452,16 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
         NSEventModifierFlags flags = binding.modifiers;
         NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
         self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
-        // The shortcut column of the command this key runs. Comparison keeps the
-        // shifted punctuation (| for JIS Shift+¥); the field shows the menu's
-        // own spelling (⇧⌘¥). With no match, the recorded spelling stays. Globe
-        // stays on the key, as the list shows Enter Full Screen's 🌐︎F.
+        // The shortcut column of the row the list selects. A winner is the item
+        // the key runs. With matches but no winner, the field follows the first
+        // row. With no match, the recorded spelling stays (| for JIS Shift+¥).
+        // Globe stays on the key, as the list shows Enter Full Screen's 🌐︎F.
         TSShortcutMatch *winner = nil;
         for (TSShortcutMatch *match in self.searchMatches) {
             if (match.winner) { winner = match; break; }
         }
-        TSShortcutBinding *shown = winner != nil ? [self shownBindingForMatch:winner] : binding;
+        TSShortcutMatch *shownMatch = winner != nil ? winner : self.searchMatches.firstObject;
+        TSShortcutBinding *shown = shownMatch != nil ? [self shownBindingForMatch:shownMatch] : binding;
         self.search.stringValue = [TSShortcutStore displayKey:shown.key modifiers:shown.modifiers | TSEventGlobeModifier(event)];
         // The trigger key with Shift (the previous candidate), Option or Control (the next or
         // previous mark) belongs to command completion too; plain Escape ends the search.
