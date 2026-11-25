@@ -121,6 +121,9 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property BOOL confirmingRecording;
 @property NSStackView *status;
 @property NSTextField *statusText;
+// Shown with "Cannot Be Changed": a link into Keyboard Shortcuts, and where to go next.
+@property NSTextField *systemSettingsLink;
+@property NSTextField *systemSettingsGuide;
 @property (nullable) NSString *capturedKey;
 @property (copy) NSArray<TSShortcutBinding *> *capturedBindings;
 @property NSEventModifierFlags capturedModifiers;
@@ -221,7 +224,15 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     self.statusText = (NSTextField *)self.status.arrangedSubviews[1];
     self.statusText.identifier = @"shortcut.status-text"; self.statusText.alignment = NSTextAlignmentCenter;
     self.status.arrangedSubviews[0].hidden = YES;
-    for (NSView *view in @[self.searchMode,self.search,hint,scroll,self.status,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
+    self.systemSettingsLink = [self systemSettingsLinkField];
+    self.systemSettingsGuide = [self systemSettingsGuideField];
+    // Hidden rows leave this column the height of the status line alone.
+    NSStackView *statusColumn = [NSStackView stackViewWithViews:@[self.status, self.systemSettingsLink, self.systemSettingsGuide]];
+    statusColumn.orientation = NSUserInterfaceLayoutOrientationVertical;
+    statusColumn.alignment = NSLayoutAttributeCenterX;
+    statusColumn.spacing = 2;
+    statusColumn.identifier = @"shortcut.status-column";
+    for (NSView *view in @[self.searchMode,self.search,hint,scroll,statusColumn,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
     content.identifier = @"shortcut.commands"; self.commandsView = content;
     hint.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     [NSLayoutConstraint activateConstraints:@[
@@ -239,11 +250,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         [hint.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor], [hint.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-12],
         [scroll.topAnchor constraintEqualToAnchor:hint.bottomAnchor constant:4],
         [scroll.leadingAnchor constraintEqualToAnchor:content.leadingAnchor constant:4], [scroll.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-4],
-        [self.status.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:4],
-        [self.status.centerXAnchor constraintEqualToAnchor:content.centerXAnchor],
-        [self.status.leadingAnchor constraintGreaterThanOrEqualToAnchor:content.leadingAnchor constant:12],
-        [self.status.trailingAnchor constraintLessThanOrEqualToAnchor:content.trailingAnchor constant:-12],
-        [buttons.topAnchor constraintEqualToAnchor:self.status.bottomAnchor constant:6],
+        [statusColumn.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:4],
+        [statusColumn.centerXAnchor constraintEqualToAnchor:content.centerXAnchor],
+        [statusColumn.leadingAnchor constraintGreaterThanOrEqualToAnchor:content.leadingAnchor constant:12],
+        [statusColumn.trailingAnchor constraintLessThanOrEqualToAnchor:content.trailingAnchor constant:-12],
+        [buttons.topAnchor constraintEqualToAnchor:statusColumn.bottomAnchor constant:6],
         [buttons.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor],
         [buttons.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-12],
         [buttons.bottomAnchor constraintEqualToAnchor:content.bottomAnchor constant:-10]
@@ -853,6 +864,53 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     self.recorder.removeButton.hidden = command.item.keyEquivalent.length == 0;
     self.recordingWarning.hidden = self.recordingError == nil;
 }
+// Keyboard Shortcuts opens from this anchor. App Shortcuts is a section inside that window and has no anchor:
+// x-apple.systempreferences:...?applications stays on the Keyboard page. An unknown anchor does the same,
+// so the guide names the sidebar item and the Keyboard Shortcuts button.
+- (NSURL *)systemShortcutSettingsURL {
+    return [NSURL URLWithString:@"x-apple.systempreferences:com.apple.Keyboard-Settings.extension?Shortcuts"];
+}
+- (NSTextField *)systemSettingsLinkField {
+    NSFont *font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    NSString *title = NSLocalizedString(@"[Change in System Settings…]", @"");
+    NSTextField *link = [NSTextField labelWithString:title];
+    link.identifier = @"shortcut.system-settings";
+    link.font = font;
+    link.alignment = NSTextAlignmentCenter;
+    link.selectable = YES;
+    link.editable = NO;
+    link.allowsEditingTextAttributes = YES;
+    link.drawsBackground = NO;
+    link.bordered = NO;
+    link.hidden = YES;
+    NSMutableAttributedString *styled = [link.attributedStringValue mutableCopy];
+    NSRange whole = NSMakeRange(0, styled.length);
+    [styled addAttribute:NSFontAttributeName value:font range:whole];
+    // A foreground color would replace the link color. NSWorkspace opens this URL with no permission prompt.
+    [styled removeAttribute:NSForegroundColorAttributeName range:whole];
+    [styled addAttribute:NSLinkAttributeName value:[self systemShortcutSettingsURL] range:whole];
+    [styled addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:whole];
+    link.attributedStringValue = styled;
+    return link;
+}
+- (NSTextField *)systemSettingsGuideField {
+    NSTextField *guide = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first.", @"")];
+    guide.identifier = @"shortcut.system-settings-guide";
+    guide.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    guide.textColor = NSColor.secondaryLabelColor;
+    guide.alignment = NSTextAlignmentCenter;
+    guide.preferredMaxLayoutWidth = 640;
+    guide.hidden = YES;
+    [guide setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
+    return guide;
+}
+- (void)viewDidLayout {
+    [super viewDidLayout];
+    if (self.systemSettingsGuide == nil || self.commandsView == nil) { return; }
+    CGFloat width = NSWidth(self.commandsView.bounds) - 24;
+    if (width > 80 && fabs(self.systemSettingsGuide.preferredMaxLayoutWidth - width) > 0.5)
+        self.systemSettingsGuide.preferredMaxLayoutWidth = width;
+}
 // The line under the list: why a recorded key was refused, that a gray row of the function list cannot
 // be changed, or otherwise the selected command's default.
 - (void)updateStatus {
@@ -870,6 +928,9 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     // A blank line keeps the list and the buttons where they are.
     self.statusText.stringValue = text.length ? text : @" ";
     self.status.arrangedSubviews[0].hidden = error == nil;
+    BOOL showSystemSettings = self.systemSettingsLink != nil && error == nil && self.editingCommand == nil && [self selectedFunctionRowCannotChange];
+    self.systemSettingsLink.hidden = !showSystemSettings;
+    self.systemSettingsGuide.hidden = !showSystemSettings;
 }
 - (void)showRecordingError:(NSString *)error {
     self.recordingError = error;

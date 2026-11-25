@@ -189,6 +189,8 @@
 "Show in Macro Editor" = "Mostrar no editor de macros";
 "Assigned" = "Atribuído";
 "Cannot Be Changed" = "Não alterável";
+"[Change in System Settings…]" = "[Alterar nos Ajustes do Sistema…]";
+"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "Escolha “Atalhos de Apps” na barra lateral. Se a página Teclado ainda estiver aberta, abra primeiro “Atalhos de Teclado…”.";
 "Inactive for this key" = "Inativo para esta tecla";
 "No command uses this key." = "Nenhum comando usa esta tecla.";
 "Press a key" = "Pressione uma tecla";
