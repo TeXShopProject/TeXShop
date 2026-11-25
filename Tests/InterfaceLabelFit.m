@@ -41,6 +41,7 @@
 // What the recording of a shortcut asks of the rest of the editor, which these checks leave out.
 - (void)updatePendingShortcutStatus {}
 - (void)reflectChangesInEditor:(BOOL)force {}
+- (BOOL)autosaveMacroEdits { return YES; }
 - (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node { return nil; }
 @end
 @implementation TSMacroOutlineController

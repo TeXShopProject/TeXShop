@@ -46,6 +46,7 @@ static NSMapTable *Conflicts;
     [self updateShortcutStatus];
 }
 - (void)outlineViewItemsChanged:(NSNotification *)note { [self setValue:@YES forKey:@"dataTouched"]; [self endShortcutRecording]; }
+- (BOOL)autosaveMacroEdits { return YES; }
 - (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node { return node ? [Conflicts objectForKey:node] : nil; }
 - (IBAction)doMacroTest:(id)sender { tests++; }
 @end
@@ -213,7 +214,7 @@ static void CheckSidebar(TSMacroEditor *owner, NSScrollView *list) {
     NSSplitViewItem *side=split.splitViewItems[0],*rest=split.splitViewItems[1];
     REQUIRE(side.viewController.view==sidebar && !side.canCollapse && side.minimumThickness==160 && side.maximumThickness==320 && side.titlebarSeparatorStyle==NSTitlebarSeparatorStyleNone);
     REQUIRE(side.behavior==NSSplitViewItemBehaviorDefault && side.holdingPriority>rest.holdingPriority && rest.titlebarSeparatorStyle==NSTitlebarSeparatorStyleNone);
-    REQUIRE(main.superview==rest.viewController.view && rest.minimumThickness>=TSDialogButtonsWidth(@[[owner valueForKey:@"saveButton"],[owner valueForKey:@"cancelButton"]],@[[owner valueForKey:@"testButton"]]));
+    REQUIRE(main.superview==rest.viewController.view && rest.minimumThickness>=TSDialogButtonsWidth(@[[owner valueForKey:@"testButton"]],@[]));
     REQUIRE([sidebar isKindOfClass:NSVisualEffectView.class] && sidebar.material==NSVisualEffectMaterialSidebar && sidebar.blendingMode==NSVisualEffectBlendingModeBehindWindow);
     // From the top edge to the bottom edge at the leading edge: no margin above, below or beside it.
     NSRect side_=[sidebar convertRect:sidebar.bounds toView:content];
@@ -487,8 +488,10 @@ static void CheckRecording(TSMacroEditor *owner) {
     REQUIRE([recorder.removeButton.toolTip isEqual:NSLocalizedString(@"Remove Shortcut",@"")] && recorder.removeButton.refusesFirstResponder);
     // Escape ends it and keeps the shortcut; the list is focused again, the window stays open.
     SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended(); REQUIRE([macro.key isEqual:@"M+ShiftKey"] && [Shown(rows,row) isEqual:@"⇧⌘M"]);
-    // Escape in the list, not recording, does nothing.
-    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended();
+    // Escape in the list, not recording, is consumed: it does not cancel or close.
+    NSEvent *idleEsc=KeyIn(window,@"\x1b",53,0), *idlePassed=[owner keyForContents:idleEsc];
+    if(idlePassed && ![window performKeyEquivalent:idlePassed]) [window sendEvent:idlePassed];
+    ended(); REQUIRE(idlePassed==nil && rows.window==window);
     // Return and Enter end it as Escape does; neither saves. Return in the list then renames, it does not record.
     for(NSString *c in @[@"\r",@"\x03"]) { Click(owner,row,@"Key",NO); REQUIRE(recording(macro)); SendKey(owner,window,KeyIn(window,c,[c isEqual:@"\r"]?36:76,0)); ended(); REQUIRE([macro.key isEqual:@"M+ShiftKey"]); }
     // Enter with fn (fn-Return on a laptop) ends it too: Enter is not a character key, so it is not refused for fn.
@@ -767,22 +770,23 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
       REQUIRE(label.superview==host && mark.superview==host && [label.textColor isEqual:NSColor.labelColor] && label.font.pointSize==NSFont.smallSystemFontSize);
       if(fabs(NSMinX(m)-start)>=.5 || fabs(NSMinX(t)-NSMaxX(m)-4)>=.5 || fabs(NSMaxX(t)-end)>=.5) fprintf(stderr,"MESSAGE mark %s text %s in %.1f\n",NSStringFromRect(m).UTF8String,NSStringFromRect(t).UTF8String,NSWidth(host.bounds));
       REQUIRE(fabs(NSMinX(m)-start)<.5 && fabs(NSMinX(t)-NSMaxX(m)-4)<.5 && fabs(NSMaxX(t)-end)<.5); }
-    REQUIRE(fabs(NSMaxX(save.frame)-(NSWidth(host.bounds)-20))<.5 && fabs(NSMinX(save.frame)-12-NSMaxX(cancel.frame))<.5 && NSWidth(save.frame)==NSWidth(cancel.frame));
-    REQUIRE(fabs(NSMinX(test.frame)-20)<.5 && NSMaxX(test.frame)+12<=NSMinX(cancel.frame));
-    for(NSButton *b in @[save,cancel,test]) REQUIRE(b.superview==host && b.fittingSize.width<=NSWidth(b.frame)+.5);
+    REQUIRE(save.superview==nil && cancel.superview==nil && save.keyEquivalent.length==0 && cancel.keyEquivalent.length==0);
+    REQUIRE(fabs(NSMaxX(test.frame)-(NSWidth(host.bounds)-20))<.5 && test.superview==host && test.fittingSize.width<=NSWidth(test.frame)+.5);
     // As the Multiple Replace window's buttons: AppKit's own style and height, 20 points above the bottom edge.
-    for(NSButton *b in @[save,cancel,test]) REQUIRE(b.bezelStyle==NSBezelStyleAutomatic && fabs(NSHeight(b.frame)-b.fittingSize.height)<.5 && fabs(NSMinY(b.frame)-20)<.5);
-    // Save is the default button, blue as Replace All of the Multiple Replace window.
-    REQUIRE([save.keyEquivalent isEqual:@"\r"] && [cancel.keyEquivalent isEqual:@"\033"] && test.keyEquivalent.length==0 && window.defaultButtonCell==save.cell && owner.contentsKeyMonitor);
+    REQUIRE(test.bezelStyle==NSBezelStyleAutomatic && fabs(NSHeight(test.frame)-test.fittingSize.height)<.5 && fabs(NSMinY(test.frame)-20)<.5);
+    // Nothing takes Return or Escape. Test does not close the window.
+    REQUIRE(test.keyEquivalent.length==0 && window.defaultButtonCell==nil && owner.contentsKeyMonitor);
     // Interface text in the system font (the Chinese nibs name STHeiti), the hidden controls too.
     NSMutableArray<NSView *> *all=[NSMutableArray arrayWithObject:window.contentView];
     while(all.count){ NSView *v=all.lastObject; [all removeLastObject]; [all addObjectsFromArray:v.subviews];
         if([v isKindOfClass:NSControl.class] && ((NSControl *)v).font) { if(![((NSControl *)v).font.fontName hasPrefix:@"."]) fprintf(stderr,"FONT %s %s\n",NSStringFromClass(v.class).UTF8String,((NSControl *)v).font.fontName.UTF8String); REQUIRE([((NSControl *)v).font.fontName hasPrefix:@"."]); } }
-    NSRect s=Drawn(host,save),c=Drawn(host,cancel); REQUIRE(NSMinX(s)-NSMaxX(c)>=11);
+    NSRect drawn=Drawn(host,test);
+    if(NSWidth(drawn)<10 || NSMaxX(drawn)>NSWidth(host.bounds)+1 || NSMinX(drawn)<NSMinX(test.frame)-12) fprintf(stderr,"TEST drawn %s frame %s\n",NSStringFromRect(drawn).UTF8String,NSStringFromRect(test.frame).UTF8String);
+    REQUIRE(NSWidth(drawn)>=10 && NSMaxX(drawn)<=NSWidth(host.bounds)+1 && NSMinX(drawn)>=NSMinX(test.frame)-12);
     CheckPlaceholderRow(owner);
     // What this layout adds or moves must not overlap anything; older labels in the
     // nibs may run into their fields by a few points.
-    NSArray *placed=@[scroll,owner.insertPlaceholderButton,owner.placeholdersButton,save,cancel,test];
+    NSArray *placed=@[scroll,owner.insertPlaceholderButton,owner.placeholdersButton,test];
     for(NSView *a in placed) {
         REQUIRE(NSContainsRect(NSInsetRect(host.bounds,-.5,-.5),a.frame));
         for(NSView *b in host.subviews) if(a!=b && !b.hidden && b!=ContentsLine(owner)) {
@@ -811,7 +815,7 @@ static TSMacroTreeNode *MakeSampleRoot(TSMacroTreeNode **selected, TSMacroTreeNo
 // - an item renamed: Return and Enter keep the new name (an empty one keeps the old), Escape the old one, a focus
 //   change the new one; none closes the window;
 // - the contents: Return and Enter start a new line, Escape does not cancel;
-// - elsewhere (nothing focused, Insert, the buttons): Return saves, Escape cancels.
+// - elsewhere (nothing focused, Insert, Test): Return and Escape do not close the window.
 // A double click never edits a name; the field of the name is as wide as the name and grows with it.
 static void CheckKeys(TSMacroEditor *owner) {
     NSWindow *window=[owner valueForKey:@"window"]; NSOutlineView *rows=[owner valueForKey:@"outlineView"];
@@ -865,21 +869,31 @@ static void CheckKeys(TSMacroEditor *owner) {
     // Several items: no renaming.
     [rows selectRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1,2)] byExtendingSelection:NO];
     SendKey(owner,window,KeyIn(window,@"\r",36,0)); REQUIRE(!Renaming(window,rows) && recorder.log.count==0);
-    // Escape in the list does nothing.
-    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); REQUIRE(recorder.log.count==0 && window.firstResponder==rows && !Renaming(window,rows));
-    // The contents keep Return, Enter and Escape.
+    // Escape in the list is consumed: it does not cancel or close.
+    REQUIRE([window makeFirstResponder:rows]);
+    NSEvent *listEsc=KeyIn(window,@"\x1b",53,0), *listPassed=[owner keyForContents:listEsc];
+    if(listPassed && ![window performKeyEquivalent:listPassed]) [window sendEvent:listPassed];
+    REQUIRE(listPassed==nil && recorder.log.count==0 && window.firstResponder==rows && !Renaming(window,rows) && rows.window==window);
+    // The contents keep Return, Enter and Escape. The monitor gives each one to the text and
+    // consumes it: a newline is inserted, Escape changes nothing, and the key cannot save or close.
     BOOL editable=contents.editable; contents.editable=YES;
     for(NSString *c in @[@"\r",@"\x03"]) {
         contents.string=@"ab"; contents.selectedRange=NSMakeRange(1,0);
-        REQUIRE([window makeFirstResponder:contents]); SendKey(owner,window,KeyIn(window,c,[c isEqual:@"\r"]?36:76,0));
-        if(![contents.string isEqual:@"a\nb"] || recorder.log.count) fprintf(stderr,"RETURN contents %s buttons %s\n",contents.string.UTF8String,recorder.log.description.UTF8String);
-        REQUIRE([contents.string isEqual:@"a\nb"] && recorder.log.count==0);
+        REQUIRE([window makeFirstResponder:contents]);
+        NSEvent *ev=KeyIn(window,c,[c isEqual:@"\r"]?36:76,0), *passed=[owner keyForContents:ev];
+        if(passed && ![window performKeyEquivalent:passed]) [window sendEvent:passed];
+        if(![contents.string isEqual:@"a\nb"] || passed || recorder.log.count || rows.window!=window)
+            fprintf(stderr,"RETURN contents %s consumed %d buttons %s\n",contents.string.UTF8String,passed==nil,recorder.log.description.UTF8String);
+        REQUIRE([contents.string isEqual:@"a\nb"] && passed==nil && recorder.log.count==0 && rows.window==window);
     }
-    contents.string=@"ab"; SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); REQUIRE(recorder.log.count==0 && [contents.string hasPrefix:@"ab"]);
-    // Elsewhere: Return saves, Escape cancels.
+    contents.string=@"ab"; REQUIRE([window makeFirstResponder:contents]);
+    NSEvent *esc=KeyIn(window,@"\x1b",53,0), *escPassed=[owner keyForContents:esc];
+    if(escPassed && ![window performKeyEquivalent:escPassed]) [window sendEvent:escPassed];
+    REQUIRE(escPassed==nil && recorder.log.count==0 && [contents.string hasPrefix:@"ab"] && rows.window==window);
+    // Elsewhere: Return and Escape do not save or close.
     REQUIRE([window makeFirstResponder:window]);
     SendKey(owner,window,KeyIn(window,@"\r",36,0)); SendKey(owner,window,KeyIn(window,@"\x1b",53,0));
-    REQUIRE([recorder.log isEqual:(@[save.title,cancel.title])]);
+    REQUIRE(recorder.log.count==0 && rows.window==window);
     // Other keys, and Command-Return, are not the monitor's.
     REQUIRE([window makeFirstResponder:contents]);
     NSEvent *letter=KeyIn(window,@"x",7,0); REQUIRE([owner keyForContents:letter]==letter);
@@ -1091,8 +1105,8 @@ static void RenderOnly(const char *path, NSString *only) {
     REQUIRE(owner.previousItem==shown);
     [[owner valueForKey:@"nameField"] setStringValue:shown.name];
     NSTextView *contents=contentsOf(owner); contents.editable=YES; contents.string=shown.content; [owner syncPlaceholderControls];
-    // As after the first key the window has had: the default button drawn as such.
-    { NSButton *save=[owner valueForKey:@"saveButton"]; [save highlight:YES]; [save highlight:NO]; }
+    // Test is not a default button: drawing it once still leaves it in its ordinary state.
+    { NSButton *test=[owner valueForKey:@"testButton"]; [test highlight:YES]; [test highlight:NO]; }
     NSRect frame=window.frame;
     if([state isEqual:@"resized"]) { frame.size.width+=260; frame.size.height+=160; frame.origin.y-=160; }
     if([state isEqual:@"smallest"]) frame.size=window.minSize;

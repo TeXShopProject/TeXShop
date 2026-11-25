@@ -60,6 +60,13 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 	BOOL nameTouched;
 	BOOL contentTouched;
 	BOOL keyTouched;
+	// A conflicting shortcut was sent back to editing. Later edits do not ask again;
+	// closing the window, Command-S, or a new shortcut does.
+	BOOL reviewPending;
+	// The backup beside the macro file is taken once each time the editor opens.
+	BOOL macrosBackedUp;
+	// autosaveMacroEdits is on the stack (a conflict sheet can commit fields again).
+	BOOL writingMacros;
 }
 
 @property (retain) NSMapTable *originalShortcutKeys;
@@ -101,6 +108,8 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 - (void)cancelPendingListRename;
 - (IBAction)renameSelectedMacro:(id)sender;
 - (IBAction)saveDocument:(id)sender;
+// Writes macros that have changed. Does not close the window.
+- (BOOL)autosaveMacroEdits;
 - (void)stopKeyMonitor;
 - (void)releaseWindowControls;
 - (void)useSystemFont;
