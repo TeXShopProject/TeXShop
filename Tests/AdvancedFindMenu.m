@@ -305,6 +305,121 @@ static void TestBehavior(void)
     TSAdvancedFindController.testTargetTextView = nil;
 }
 
+/// A Find submenu AppKit would own, with the Advanced Find commands added.
+static NSMenu *MenuWithAdvancedFind(void)
+{
+    NSMenu *main = [[NSMenu alloc] initWithTitle:@"Main"];
+    NSMenuItem *editItem = [main addItemWithTitle:@"Edit" action:NULL keyEquivalent:@""];
+    NSMenu *edit = [[NSMenu alloc] initWithTitle:@"Edit"];
+    editItem.submenu = edit;
+    NSMenuItem *findItem = [edit addItemWithTitle:@"Find" action:NULL keyEquivalent:@""];
+    NSMenu *find = [[NSMenu alloc] initWithTitle:@"Find"];
+    findItem.submenu = find;
+    NSMenuItem *show = [[NSMenuItem alloc] initWithTitle:@"Find…" action:@selector(performFindPanelAction:) keyEquivalent:@"f"];
+    show.tag = NSFindPanelActionShowFindPanel;
+    show.identifier = ID(1);
+    show.keyEquivalentModifierMask = NSEventModifierFlagCommand;
+    [find addItem:show];
+    [TSAdvancedFindMenu updateMainMenu:main findMethod:3];
+    return main;
+}
+
+static TSShortcutMacro *NamedMacro(NSString *key, NSEventModifierFlags flags)
+{
+    return [[TSShortcutMacro alloc] initWithName:@"M" path:@"Macros › M" indexPath:[NSIndexPath indexPathWithIndex:0]
+                                   serializedKey:key key:key modifiers:flags];
+}
+
+static NSArray *MacroConflict(TSShortcutStore *store, NSString *key, NSEventModifierFlags flags)
+{
+    return [store conflictsForMacroShortcuts:@[@{@"path": @"Macros › M", @"key": key, @"modifiers": @(flags)}]];
+}
+
+/// The five Advanced Find shortcuts yield like F5. A macro file that names the key keeps it;
+/// a key saved in Settings wins, including across leaving and returning to the panel.
+static void TestYieldingFindKeys(void)
+{
+    struct { NSInteger tag; NSString *key; NSEventModifierFlags flags; } commands[] = {
+        {106, @"F", NSEventModifierFlagCommand | NSEventModifierFlagShift},
+        {101, @"E", NSEventModifierFlagCommand | NSEventModifierFlagShift},
+        {6, @"g", NSEventModifierFlagCommand | NSEventModifierFlagOption},
+        {102, @"H", NSEventModifierFlagCommand | NSEventModifierFlagShift},
+        {103, @"H", NSEventModifierFlagCommand | NSEventModifierFlagShift | NSEventModifierFlagControl},
+    };
+    for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++) {
+        NSInteger tag = commands[i].tag;
+        NSString *key = commands[i].key;
+        NSEventModifierFlags flags = commands[i].flags;
+        NSString *name = ID(tag);
+        NSMenu *main = MenuWithAdvancedFind();
+        TSShortcutStore *store = [[TSShortcutStore alloc] initWithMenu:main defaults:(id)[MenuMemoryDefaults new]];
+        NSMenuItem *item = ItemWithIdentifier(main, name);
+        TSShortcutCommand *command = Command(store, name);
+        Check(command != nil && [command.defaultKey isEqualToString:key] && [item.keyEquivalent isEqualToString:key]
+              && item.keyEquivalentModifierMask == flags,
+              [NSString stringWithFormat:@"%@ keeps its default when no macro has it", name]);
+
+        TSShortcutMacro *macro = NamedMacro(key, flags);
+        store.macroProvider = ^{ return @[macro]; };
+        [store refreshMenu];
+        Check(item.keyEquivalent.length == 0 && item.keyEquivalentModifierMask == 0 && store.unavailableCommands.count == 0
+              && MacroConflict(store, key, flags).count == 0,
+              [NSString stringWithFormat:@"%@ yields its default to a macro", name]);
+        NSMenuItem *live = [[NSMenuItem alloc] initWithTitle:@"M" action:TSMacroAction() keyEquivalent:key];
+        live.keyEquivalentModifierMask = flags;
+        [main addItem:live];
+        Check([store macrosAffectedByRestoringAll].count == 0,
+              [NSString stringWithFormat:@"restoring all does not take %@ from the macro", name]);
+        [main removeItem:live];
+        NSString *refused = [store setKey:key modifiers:flags forCommand:command];
+        Check(refused.length > 0 && item.keyEquivalent.length == 0 && MacroConflict(store, key, flags).count == 0,
+              [NSString stringWithFormat:@"recording %@ while a macro has it is refused", name]);
+        store.macroProvider = nil;
+        [store refreshMenu];
+        Check([item.keyEquivalent isEqualToString:key] && item.keyEquivalentModifierMask == flags,
+              [NSString stringWithFormat:@"%@ takes its default back once the macro is gone", name]);
+
+        store.macroProvider = ^{ return @[macro]; };
+        [store refreshMenu];
+        [TSAdvancedFindMenu updateMainMenu:main findMethod:1];
+        [store refreshMenu];
+        Check(Command(store, name) == nil && MacroConflict(store, key, flags).count == 0,
+              [NSString stringWithFormat:@"while %@ is absent the macro keeps the default", name]);
+        [TSAdvancedFindMenu updateMainMenu:main findMethod:3];
+        [store refreshMenu];
+        NSMenuItem *returned = ItemWithIdentifier(main, name);
+        Check(returned.keyEquivalent.length == 0 && [Command(store, name).defaultKey isEqualToString:key]
+              && MacroConflict(store, key, flags).count == 0,
+              [NSString stringWithFormat:@"%@ comes back without taking the default from the macro", name]);
+
+        NSMenu *savedMenu = MenuWithAdvancedFind();
+        TSShortcutStore *savedStore = [[TSShortcutStore alloc] initWithMenu:savedMenu defaults:(id)[MenuMemoryDefaults new]];
+        const NSEventModifierFlags other = NSEventModifierFlagCommand | NSEventModifierFlagControl | NSEventModifierFlagOption;
+        TSShortcutCommand *savedCommand = Command(savedStore, name);
+        Check([savedStore setKey:@"k" modifiers:other forCommand:savedCommand] == nil,
+              [NSString stringWithFormat:@"%@ accepts a saved key", name]);
+        TSShortcutMacro *savedMacro = NamedMacro(@"k", other);
+        savedStore.macroProvider = ^{ return @[savedMacro]; };
+        [TSAdvancedFindMenu updateMainMenu:savedMenu findMethod:1];
+        [savedStore refreshMenu];
+        Check(Command(savedStore, name) == nil && MacroConflict(savedStore, @"k", other).count == 0,
+              [NSString stringWithFormat:@"while %@ is absent the macro may hold the saved key", name]);
+        [TSAdvancedFindMenu updateMainMenu:savedMenu findMethod:3];
+        [savedStore refreshMenu];
+        NSMenuItem *restored = ItemWithIdentifier(savedMenu, name);
+        Check([restored.keyEquivalent isEqualToString:@"k"] && restored.keyEquivalentModifierMask == other,
+              [NSString stringWithFormat:@"%@ returns with its saved key", name]);
+        // The conflict names the command only while this store is the one the menu is read through.
+        TSKeyboardShortcuts *coordinator = [TSKeyboardShortcuts sharedController];
+        TSShortcutStore *previousStore = coordinator.store;
+        coordinator.store = savedStore;
+        NSArray *conflicts = MacroConflict(savedStore, @"k", other);
+        coordinator.store = previousStore;
+        Check(conflicts.count == 1 && [conflicts[0][@"other"][@"commandID"] isEqual:name],
+              [NSString stringWithFormat:@"%@ returns and the macro conflicts with that command", name]);
+    }
+}
+
 int main(int argc, const char *argv[])
 {
     @autoreleasepool {
@@ -329,6 +444,7 @@ int main(int argc, const char *argv[])
         } else if ([mode isEqualToString:@"behavior"]) {
             TestOgreKitMenu();
             TestBehavior();
+            TestYieldingFindKeys();
         } else {
             Check(NO, @"usage: probe nib <nib> <macros> <titles json> | behavior");
         }

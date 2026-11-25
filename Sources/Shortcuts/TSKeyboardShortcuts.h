@@ -66,7 +66,8 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
 @property (nonatomic, readonly, copy) NSArray<NSString *> *unavailableCommands;
 - (void)refreshMenu;
 // The macros as their files name their keys. A command that yields its default key
-// (Edit › Complete Label or Citation Key) leaves that key to a macro that names it.
+// (Edit › Complete Label or Citation Key, and the Advanced Find shortcuts) leaves
+// that key to a macro that names it.
 @property (copy, nullable) NSArray<TSShortcutMacro *> * (^macroProvider)(void);
 - (NSArray<NSString *> *)settingsSearchCommandNames;
 

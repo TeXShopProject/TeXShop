@@ -323,15 +323,52 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"z",@"z",cmd)]].count==0);
     NSMenuItem *dynamic=[[NSMenuItem alloc] initWithTitle:@"Show All Tabs" action:NSSelectorFromString(@"toggleTabOverview:") keyEquivalent:@"\\"];
     dynamic.keyEquivalentModifierMask=cmd|shift;[menu addItem:dynamic];[coordinator refreshMenuAndMacros];
-    REQUIRE(![dynamic.identifier hasPrefix:@"TSShortcut."] && [store conflictsForMacroShortcuts:@[Candidate(@"abs",@"\\",cmd|shift)]].count==1);
-    [menu removeItem:dynamic];[coordinator refreshMenuAndMacros];
+    TSShortcutCommand *tabs=nil;
+    for (TSShortcutCommand *command in store.commands) if ([command.commandID isEqual:@"TSShortcut.toggleTabOverview:.0"]) tabs=command;
+    REQUIRE([dynamic.identifier isEqual:@"TSShortcut.toggleTabOverview:.0"]);
+    REQUIRE(dynamic.keyEquivalent.length==0 && dynamic.keyEquivalentModifierMask==0);
+    REQUIRE(tabs && !tabs.managedBySystem && tabs.defaultKey.length==0 && tabs.defaultModifiers==0);
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"abs",@"\\",cmd|shift)]].count==0);
+    TSShortcutCommand *sameTabs=tabs;
+    dynamic.keyEquivalent=@"\\"; dynamic.keyEquivalentModifierMask=cmd|shift; [coordinator refreshMenuAndMacros];
+    REQUIRE(dynamic.keyEquivalent.length==0 && dynamic.keyEquivalentModifierMask==0 && tabs==sameTabs && tabs.defaultKey.length==0);
+    REQUIRE(![store setKey:@"\\" modifiers:cmd|shift forCommand:tabs]); [coordinator refreshMenuAndMacros];
+    REQUIRE([dynamic.keyEquivalent isEqual:@"\\"] && dynamic.keyEquivalentModifierMask==(cmd|shift));
+    NSArray *taken=[store conflictsForMacroShortcuts:@[Candidate(@"abs",@"\\",cmd|shift)]];
+    REQUIRE(taken.count==1 && [taken[0][@"other"][@"commandID"] isEqual:@"TSShortcut.toggleTabOverview:.0"]);
+    REQUIRE(![store restoreCommand:tabs]); [coordinator refreshMenuAndMacros];
+    REQUIRE(dynamic.keyEquivalent.length==0 && [store conflictsForMacroShortcuts:@[Candidate(@"abs",@"\\",cmd|shift)]].count==0);
+    REQUIRE(![store setKey:@"\\" modifiers:cmd|shift forCommand:tabs]);
+    [menu removeItem:dynamic];
+    NSMenuItem *replaced=[[NSMenuItem alloc] initWithTitle:@"Show All Tabs" action:NSSelectorFromString(@"toggleTabOverview:") keyEquivalent:@"\\"];
+    replaced.keyEquivalentModifierMask=cmd|shift; [menu addItem:replaced]; [coordinator refreshMenuAndMacros];
+    NSUInteger tabCommands=0; TSShortcutCommand *fresh=nil;
+    for (TSShortcutCommand *command in store.commands) if ([command.commandID isEqual:@"TSShortcut.toggleTabOverview:.0"]) { tabCommands++; fresh=command; }
+    REQUIRE(tabCommands==1 && fresh.item==replaced && fresh.defaultKey.length==0);
+    REQUIRE([replaced.keyEquivalent isEqual:@"\\"] && replaced.keyEquivalentModifierMask==(cmd|shift) && dynamic.menu==nil);
+    REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"abs",@"\\",cmd|shift)]].count==1);
+    REQUIRE(![store restoreCommand:fresh]); [menu removeItem:replaced]; [coordinator refreshMenuAndMacros];
+    REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"abs",@"\\",cmd|shift)]].count==0);
+    NSMenuItem *again=[[NSMenuItem alloc] initWithTitle:@"Show All Tabs" action:NSSelectorFromString(@"toggleTabOverview:") keyEquivalent:@"\\"];
+    again.keyEquivalentModifierMask=cmd|shift; [menu addItem:again]; [coordinator refreshMenuAndMacros];
+    TSShortcutCommand *stable=nil;
+    for (TSShortcutCommand *command in store.commands) if ([command.commandID isEqual:@"TSShortcut.toggleTabOverview:.0"]) stable=command;
+    for (int i=0;i<3;i++) [coordinator refreshMenuAndMacros];
+    TSShortcutCommand *still=nil;
+    for (TSShortcutCommand *command in store.commands) if ([command.commandID isEqual:@"TSShortcut.toggleTabOverview:.0"]) still=command;
+    REQUIRE(still==stable && still.defaultKey.length==0 && again.keyEquivalent.length==0 && again.keyEquivalentModifierMask==0);
+    NSMenuItem *hidden=[[NSMenuItem alloc] initWithTitle:@"Show All Tabs" action:NSSelectorFromString(@"toggleTabOverview:") keyEquivalent:@"\\"];
+    hidden.keyEquivalentModifierMask=cmd|shift; hidden.hidden=YES; [menu addItem:hidden]; [coordinator refreshMenuAndMacros];
+    REQUIRE(hidden.keyEquivalent.length==0 && hidden.keyEquivalentModifierMask==0 && again.keyEquivalent.length==0);
+    NSUInteger afterHidden=0; for (TSShortcutCommand *command in store.commands) if ([command.commandID isEqual:@"TSShortcut.toggleTabOverview:.0"]) afterHidden++;
+    REQUIRE(afterHidden==1);
+    [menu removeItem:hidden]; [menu removeItem:again]; [coordinator refreshMenuAndMacros];
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"one",@"T",cmd),Candidate(@"two",@"t",cmd|shift)]].count==1);
     REQUIRE(![[TSShortcutStore normalizedKey:@"x" modifiers:cmd] isEqual:[TSShortcutStore normalizedKey:@"x" modifiers:cmd|shift]]);
     REQUIRE(![[TSShortcutStore normalizedKey:@"x" modifiers:cmd|shift] isEqual:[TSShortcutStore normalizedKey:@"x" modifiers:cmd]]);
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"plain",@"x",cmd),Candidate(@"shifted",@"x",cmd|shift)]].count==0);
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"shifted",@"x",cmd|shift),Candidate(@"plain",@"x",cmd)]].count==0);
-    puts("PASS: services excluded; dynamically present menu keys counted without making them editable; ASCII Shift comparison");
+    puts("PASS: services excluded; Show All Tabs is a command with an empty default; ASCII Shift comparison");
 
     // Observe real AppKit notifications; visual validation changes must not rebuild.
     __block int rebuilds=0;
@@ -377,6 +414,22 @@ int main(int argc, char **argv) { @autoreleasepool {
     for(int i=0;i<5;i++) { [menu addItem:recent]; [menu removeItem:recent]; }
     [menu addItem:recent]; Drain(); REQUIRE(rebuilds==before+1);
     [menu removeItem:recent]; Drain(); REQUIRE(rebuilds==before+2);
+    // Replacing Show All Tabs coalesces into one refresh. With no saved key the item ends empty;
+    // with a saved key the assignment survives the replacement.
+    before=rebuilds;
+    NSMenuItem *tabsBurst=[[NSMenuItem alloc] initWithTitle:@"Show All Tabs" action:NSSelectorFromString(@"toggleTabOverview:") keyEquivalent:@"\\"];
+    tabsBurst.keyEquivalentModifierMask=cmd|shift; [menu addItem:tabsBurst];
+    for (int i=0;i<4;i++) { [menu removeItem:tabsBurst]; tabsBurst.keyEquivalent=@"\\"; tabsBurst.keyEquivalentModifierMask=cmd|shift; [menu addItem:tabsBurst]; }
+    Drain(); REQUIRE(rebuilds==before+1 && tabsBurst.keyEquivalent.length==0 && tabsBurst.keyEquivalentModifierMask==0);
+    TSShortcutCommand *burstCommand=nil;
+    for (TSShortcutCommand *command in store.commands) if ([command.commandID isEqual:@"TSShortcut.toggleTabOverview:.0"]) burstCommand=command;
+    REQUIRE(burstCommand && burstCommand.defaultKey.length==0);
+    REQUIRE(![store setKey:@"\\" modifiers:cmd|shift forCommand:burstCommand]);
+    before=rebuilds;
+    for (int i=0;i<4;i++) { [menu removeItem:tabsBurst]; tabsBurst.keyEquivalent=@"\\"; tabsBurst.keyEquivalentModifierMask=cmd|shift; [menu addItem:tabsBurst]; }
+    Drain();
+    REQUIRE(rebuilds==before+1 && [tabsBurst.keyEquivalent isEqual:@"\\"] && tabsBurst.keyEquivalentModifierMask==(cmd|shift));
+    REQUIRE(![store restoreCommand:burstCommand]); [menu removeItem:tabsBurst]; Drain();
     [[NSNotificationCenter defaultCenter] removeObserver:counter];
     [[NSNotificationCenter defaultCenter] removeObserver:coordinator name:NSMenuDidAddItemNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:coordinator name:NSMenuDidRemoveItemNotification object:nil];
