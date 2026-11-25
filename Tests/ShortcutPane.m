@@ -128,6 +128,21 @@ static void CaptureSheet(id self,SEL cmd,NSWindow *parent,void (^reply)(NSModalR
 @implementation ProbePane
 - (void)showError:(NSString *)error {self.lastError=error;}
 @end
+// The arrow sits between the status words and the link, and that group shares the guide's center.
+static void RequireSystemSettingsLine(TSShortcutPaneController *pane) {
+  REQUIRE(!pane.systemSettingsArrow.hidden && !pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
+  REQUIRE([pane.systemSettingsArrow.stringValue isEqual:@"→"]);
+  [pane.view layoutSubtreeIfNeeded];
+  NSRect statusWords=[pane.statusText convertRect:pane.statusText.bounds toView:pane.view];
+  NSRect arrowWords=[pane.systemSettingsArrow convertRect:pane.systemSettingsArrow.bounds toView:pane.view];
+  NSRect linkWords=[pane.systemSettingsLink convertRect:pane.systemSettingsLink.bounds toView:pane.view];
+  NSRect guideWords=[pane.systemSettingsGuide convertRect:pane.systemSettingsGuide.bounds toView:pane.view];
+  REQUIRE(NSMinX(arrowWords)+.5>=NSMaxX(statusWords) && NSMinX(linkWords)+.5>=NSMaxX(arrowWords));
+  REQUIRE(NSMaxY(arrowWords)>NSMidY(statusWords) && NSMinY(arrowWords)<NSMidY(statusWords));
+  REQUIRE(NSMaxY(linkWords)>NSMidY(statusWords) && NSMinY(linkWords)<NSMidY(statusWords));
+  NSRect group=NSUnionRect(NSUnionRect(statusWords,arrowWords),linkWords);
+  REQUIRE(fabs(NSMidX(group)-NSMidX(guideWords))<=2);
+}
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();[NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
  nibPath=@(argv[1]);
@@ -529,7 +544,7 @@ int main(int argc,char **argv){@autoreleasepool{
   [pane beginRecordingAtRow:saveAsRow];REQUIRE(pane.editingCommand==nil);
   [pane removeShortcut:nil];[pane restoreShortcut:nil];REQUIRE([saveAsItem.keyEquivalent isEqual:@"S"] && saveAsItem.keyEquivalentModifierMask==(C|O));
   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)duplicateRow] byExtendingSelection:NO];
-  REQUIRE(pane.selectionButtons[0].enabled && pane.systemSettingsLink.hidden && pane.systemSettingsGuide.hidden);
+  REQUIRE(pane.selectionButtons[0].enabled && pane.systemSettingsArrow.hidden && pane.systemSettingsLink.hidden && pane.systemSettingsGuide.hidden);
   [first.menu removeItem:saveAsItem];[first.menu removeItem:duplicateItem];[coordinator refreshMenuAndMacros];[pane reloadCommands];
   // Enter Full Screen has Globe-F, which macOS gives only its own items: shown as AppKit 27 shows it (🌐︎F), dimmed,
   // not recorded, no buttons, found by its name; Control-Command-F is Next Mark's, and a key saved for it before is left out.
@@ -614,10 +629,7 @@ int main(int argc,char **argv){@autoreleasepool{
      id underline=[pane.systemSettingsLink.attributedStringValue attribute:NSUnderlineStyleAttributeName atIndex:0 effectiveRange:NULL];
      REQUIRE([systemURL isKindOfClass:NSURL.class] && [[(NSURL *)systemURL absoluteString] isEqual:pane.systemShortcutSettingsURL.absoluteString] && [pane.systemShortcutSettingsURL.absoluteString isEqual:@"x-apple.systempreferences:com.apple.Keyboard-Settings.extension?Shortcuts"]);
      REQUIRE(underline==nil || [underline integerValue]==NSUnderlineStyleNone);
-     [pane.view layoutSubtreeIfNeeded];
-     NSRect statusWords=[pane.statusText convertRect:pane.statusText.bounds toView:pane.view];
-     NSRect linkWords=[pane.systemSettingsLink convertRect:pane.systemSettingsLink.bounds toView:pane.view];
-     REQUIRE(NSMinX(linkWords)+.5>=NSMaxX(statusWords) && NSMaxY(linkWords)>NSMidY(statusWords) && NSMinY(linkWords)<NSMidY(statusWords));
+     RequireSystemSettingsLine(pane);
      for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
      [pane beginRecordingAtRow:0];REQUIRE(pane.editingCommand==nil);
      minimizeAll.hidden=YES;[pane reloadCommands];REQUIRE(pane.functionRows.count==0 && pane.table.numberOfRows==0);
@@ -646,7 +658,7 @@ int main(int argc,char **argv){@autoreleasepool{
    REQUIRE(controlCommandFFindsNextMark && [pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"f" modifiers:C|FSControl]]);
    NSInteger nextMarkRow=-1;for(NSInteger row=0;row<(NSInteger)pane.table.numberOfRows;row++)if([pane matchAtRow:row].menuItem==nextMark)nextMarkRow=row;
    REQUIRE(nextMarkRow>=0);[pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)nextMarkRow] byExtendingSelection:NO];
-   REQUIRE(pane.systemSettingsLink.hidden && pane.systemSettingsGuide.hidden);
+   REQUIRE(pane.systemSettingsArrow.hidden && pane.systemSettingsLink.hidden && pane.systemSettingsGuide.hidden);
    NSArray<TSShortcutMatch *> *bareF=[TSShortcutSearch matchesKey:@"f" modifiers:0 store:store macros:@[]];
    NSArray<TSShortcutMatch *> *globeFHits=[TSShortcutSearch matchesKey:@"f" modifiers:FSFunction store:store macros:@[]];
    REQUIRE(bareF.count==0 && globeFHits.count==1 && globeFHits[0].menuItem==fullScreen);
@@ -851,13 +863,12 @@ int main(int argc,char **argv){@autoreleasepool{
     REQUIRE(!NSIntersectsRect(line,buttons) && !NSIntersectsRect(line,[translated.table.enclosingScrollView convertRect:translated.table.enclosingScrollView.bounds toView:translated.view]));
    }
    [translated updateStatus];
-   translated.systemSettingsLink.hidden=NO;translated.systemSettingsGuide.hidden=NO;[translated viewDidLayout];[translated.view layoutSubtreeIfNeeded];
+   translated.systemSettingsArrow.hidden=NO;translated.systemSettingsLink.hidden=NO;translated.systemSettingsGuide.hidden=NO;[translated viewDidLayout];[translated.view layoutSubtreeIfNeeded];
    NSRect linkLine=[translated.systemSettingsLink convertRect:translated.systemSettingsLink.bounds toView:translated.view];
    NSRect guideLine=[translated.systemSettingsGuide convertRect:translated.systemSettingsGuide.bounds toView:translated.view];
-   NSRect statusWords=[translated.statusText convertRect:translated.statusText.bounds toView:translated.view];
    NSRect buttonLine=[translated.selectionButtons[0] convertRect:translated.selectionButtons[0].bounds toView:translated.view];
    REQUIRE(NSContainsRect(NSInsetRect(translated.view.bounds,-.5,-.5),linkLine) && NSContainsRect(NSInsetRect(translated.view.bounds,-.5,-.5),guideLine));
-   REQUIRE(NSMinX(linkLine)+.5>=NSMaxX(statusWords) && NSMaxY(linkLine)>NSMidY(statusWords) && NSMinY(linkLine)<NSMidY(statusWords));
+   RequireSystemSettingsLine(translated);
    REQUIRE(!NSIntersectsRect(linkLine,buttonLine) && !NSIntersectsRect(guideLine,buttonLine));
    REQUIRE(NSHeight(guideLine)+.5>=translated.systemSettingsGuide.intrinsicContentSize.height);
    [translated updateStatus];
