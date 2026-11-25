@@ -154,7 +154,6 @@ already
 alternate
 although
 altogether
-altpdflatexc
 always
 am
 an
@@ -218,6 +217,7 @@ authors'
 auto
 automatic
 automatically
+automatically''
 autosave
 aux
 auxiliary
@@ -231,6 +231,7 @@ backslash
 backward
 bad
 band
+bands
 bar
 bars
 based
@@ -259,8 +260,6 @@ bibdesk
 bibliography
 bibstuff
 bibtex
-bibtexc
-bibtexcpl
 big
 bigger
 bin
@@ -303,7 +302,6 @@ came
 can
 cancel
 cancels
-cannot
 capabilities
 capital
 car
@@ -314,8 +312,8 @@ cause
 caused
 causes
 cells
-centered
 chain
+chains
 change
 changed
 changes
@@ -340,7 +338,6 @@ citations
 citecolor
 citing
 claims
-classic
 click
 clicked
 clicking
@@ -361,7 +358,6 @@ coloring
 colorlinks
 colors
 colors''
-columns
 combination
 combined
 combining
@@ -372,6 +368,7 @@ commands
 commas
 comment
 comments
+commercial
 common
 compare
 compilation
@@ -419,7 +416,6 @@ control
 convenient
 convergence
 conversion
-convert
 converted
 coordinates
 copied
@@ -483,6 +479,7 @@ debugging
 decides
 decline
 decomposed
+decrypted
 default
 defaults
 defective
@@ -546,10 +543,12 @@ don't
 done
 double
 down
+downarrow
 drag
 dragged
 draw
 drawer
+drawer's
 drawn
 dread
 drive
@@ -595,6 +594,7 @@ empire
 enable
 encoding
 encodings
+encrypted
 end
 endings
 ends
@@ -680,7 +680,6 @@ fetishist
 few
 fewer
 field
-figure
 file
 file's
 filename
@@ -693,7 +692,6 @@ filter
 final
 finally
 find
-finder
 finder's
 finds
 fine
@@ -735,6 +733,7 @@ four
 fourier
 fraction
 fractional
+free
 french
 friend
 from
@@ -744,7 +743,6 @@ fullscreen
 fullwidth
 fully
 fun
-function
 further
 future
 g
@@ -757,28 +755,31 @@ generally
 george
 gestures
 get
-getfontset
 ghostscript
 gibbons
 gift
 github
 give
+given
 gives
 glance
 glass
 globe
+glory
 go
 goes
 golden
 gone
 good
 google
+got
 goto
 gracefully
 gradually
 graphs
 grateful
 gratzer
+gray
 green
 group
 groups
@@ -792,6 +793,7 @@ handling
 handover
 hangs
 hans
+happen
 happened
 happens
 has
@@ -829,8 +831,6 @@ hovering
 hovers
 how
 however
-htlatexc
-htlatexr
 html
 huh
 hyperfigures
@@ -876,6 +876,7 @@ increasing
 independent
 index
 indicate
+indicates
 indicator
 individual
 induces
@@ -987,6 +988,7 @@ learns
 leave
 lectures
 left
+leftarrow
 legacy
 lemmas
 length
@@ -994,6 +996,7 @@ lesson
 let
 letters
 level
+levels
 lf
 library
 light
@@ -1004,6 +1007,7 @@ lines
 link
 linkcolor
 linked
+linking
 linkpopups
 links
 link’s
@@ -1060,11 +1064,11 @@ maintainer
 maintains
 major
 make
-makeindex
 makes
 making
 malformed
 malumbres
+managed
 management
 manipulated
 manner
@@ -1110,7 +1114,6 @@ michael
 middle
 might
 minimal
-minimize
 minor
 miraculously
 misc2
@@ -1148,9 +1151,6 @@ moved
 moves
 movies
 moving
-mpost
-mpostc
-mpostcpl
 mr
 multipage
 multiple
@@ -1232,7 +1232,6 @@ opacity
 open
 opened
 opening
-openpdf
 opens
 operation
 option
@@ -1280,6 +1279,7 @@ particularly
 partly
 parts
 party
+pass
 passes
 password
 past
@@ -1292,9 +1292,7 @@ pay
 pdf
 pdfkit
 pdflatex
-pdflatexc
 pdfpath
-pdfselectc
 pdfstartview
 pearce
 people
@@ -1306,7 +1304,6 @@ periods
 perl
 permanent
 permission
-personal
 peter
 phase
 pi
@@ -1388,6 +1385,7 @@ propagating
 proposal
 propositions
 prose
+protected
 prove
 proved
 proves
@@ -1416,6 +1414,7 @@ rare
 rarely
 rather
 rc2
+reach
 reached
 read
 reading
@@ -1435,6 +1434,7 @@ recent
 recently
 recognize
 recommended
+recompiled
 recreate
 rect
 rectangle
@@ -1462,7 +1462,6 @@ reluctant
 remain
 remained
 remains
-remaking
 remember
 remembered
 remembers
@@ -1496,6 +1495,7 @@ reshowwithpath
 resize
 resized
 resolutions
+respond
 responder
 rest
 restart
@@ -1524,6 +1524,7 @@ rewritten
 rich
 richard
 right
+rightarrow
 risking
 rivas
 roles
@@ -1545,7 +1546,6 @@ same
 sample
 save
 saved
-savefontset
 saves
 saving
 saw
@@ -1584,6 +1584,7 @@ selection
 selects
 send
 sense
+sent
 separate
 separating
 sequence
@@ -1632,7 +1633,6 @@ single
 site
 situation
 size
-sizes
 sizing
 sketch
 skim
@@ -1658,7 +1658,6 @@ sophisticated
 sort
 source
 space
-spaces
 spanish
 sparkle
 special
@@ -1700,6 +1699,7 @@ struggle
 students
 stupid
 style
+sub
 subfolder
 subfolders
 submenu
@@ -1711,6 +1711,7 @@ substitute
 subtab
 subtle
 succeeds
+such
 suddenly
 suggested
 suggestions
@@ -1745,8 +1746,6 @@ t
 tab
 tabbed
 table
-tabularize
-tag
 tags
 tahoe
 take
@@ -1768,8 +1767,6 @@ temporary
 ten
 terada
 terminal
-test
-testfontset
 tex
 tex4ht
 texbin
@@ -1871,6 +1868,7 @@ under
 underfull
 underline
 underlying
+understand
 undesirable
 undo
 unexpected
@@ -1886,6 +1884,7 @@ until
 untitled
 unusual
 up
+uparrow
 update
 updated
 updates
@@ -1935,6 +1934,7 @@ very
 vi
 videos
 view
+viewers
 views
 visible
 voisin
