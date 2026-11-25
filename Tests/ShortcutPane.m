@@ -348,7 +348,8 @@ static void CheckKeySearchDisplayMatchesMenu(void) {
 // The arrow sits between the status words and the link, and that group shares the guide's center.
 static void RequireSystemSettingsLine(TSShortcutPaneController *pane) {
   REQUIRE(!pane.systemSettingsArrow.hidden && !pane.systemSettingsLink.hidden && !pane.systemSettingsGuide.hidden);
-  REQUIRE(!pane.systemSettingsArrow.accessibilityElement);
+  REQUIRE(![NSAccessibilityUnignoredChildren(pane.systemSettingsArrow.superview.accessibilityChildren) containsObject:pane.systemSettingsArrow.cell]);
+  REQUIRE(!pane.systemSettingsArrow.cell.accessibilityElement);
   REQUIRE([pane.systemSettingsArrow.stringValue isEqual:@"→"]);
   [pane.view layoutSubtreeIfNeeded];
   NSRect statusWords=[pane.statusText convertRect:pane.statusText.bounds toView:pane.view];
