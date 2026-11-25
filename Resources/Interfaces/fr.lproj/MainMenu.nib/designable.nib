@@ -1310,6 +1310,12 @@
                             <menuItem isSeparatorItem="YES" id="I0b-U0-6zZ">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="Démarrage rapide de la complétion des commandes (en anglais)" id="CcQ-St-Itm" identifier="TSShortcut.displayCommandCompletionQuickStart:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayCommandCompletionQuickStart:" target="675" id="CcQ-St-Act"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Commentaires spéciaux et réglages cachés (en anglais)" id="xP0-7K-Pgd" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

@@ -144,6 +144,14 @@
     [self displayFile: fileName];
 }
 
+- (IBAction)displayCommandCompletionQuickStart:sender
+{
+    NSString				*fileName;
+    
+    fileName = [[NSBundle mainBundle] pathForResource:@"Command Completion Quick Start" ofType:@"pdf"];
+    [self displayFile: fileName];
+}
+
 - (IBAction)displayTipsandTricks:sender
 {
 	NSString				*fileName;

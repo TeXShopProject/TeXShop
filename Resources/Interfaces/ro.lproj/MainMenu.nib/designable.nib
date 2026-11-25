@@ -1309,6 +1309,12 @@
                             <menuItem isSeparatorItem="YES" id="ERI-3k-CFx">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="Ghid rapid pentru completarea comenzilor (în engleză)" id="CcQ-St-Itm" identifier="TSShortcut.displayCommandCompletionQuickStart:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayCommandCompletionQuickStart:" target="690" id="CcQ-St-Act"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Linii de comentarii și configurări ascunse (în engleză)" id="Ojz-or-SBx" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

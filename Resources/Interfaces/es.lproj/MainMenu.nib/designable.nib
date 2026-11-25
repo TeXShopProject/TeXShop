@@ -1311,6 +1311,12 @@
                             <menuItem isSeparatorItem="YES" id="KFe-m9-BbD">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="Guía rápida de autocompletado de comandos (en inglés)" id="CcQ-St-Itm" identifier="TSShortcut.displayCommandCompletionQuickStart:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayCommandCompletionQuickStart:" target="675" id="CcQ-St-Act"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Comentarios mágicos y ajustes ocultos (en inglés)" id="4ow-mg-Xv9" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
