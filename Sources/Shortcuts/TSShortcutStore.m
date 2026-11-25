@@ -34,9 +34,33 @@ static NSString * const TSFullScreenCommandID = @"TSShortcut.toggleFullScreen:.0
 @end
 // Commands whose default key is only a proposal: they take it only when no other menu
 // command (with its key as resolved) and no macro (as its file names it) has it, and
-// they never make another command's key unavailable.
+// they never make another command's key unavailable. F5 is Complete Label or Citation
+// Key. The other five are the Advanced Find shortcuts added in 6.00.
 static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
-    return [NSSet setWithObject:@"TSShortcut.completeLabelOrCitationKey:.0"];
+    return [NSSet setWithObjects:
+        @"TSShortcut.completeLabelOrCitationKey:.0",
+        @"TSShortcut.performFindPanelAction:.106",
+        @"TSShortcut.performFindPanelAction:.101",
+        @"TSShortcut.performFindPanelAction:.6",
+        @"TSShortcut.performFindPanelAction:.102",
+        @"TSShortcut.performFindPanelAction:.103",
+        nil];
+}
+// Every Show All Tabs item, including a hidden copy, is this one command. AppKit's ⇧⌘\
+// is cleared before the command is created: initWithItem: keeps the first key it sees
+// as defaultKey and never updates it. An empty item is left untouched, because writing
+// the key again is not what schedules the next refresh (only item insertion and removal
+// are observed). A key saved in Settings is applied afterwards. That assignment does not
+// make the command run while AppKit leaves the item disabled; the key is consumed and
+// the window beeps.
+static void TSClearAppKitTabOverviewKey(NSMenu *menu) {
+    TSVisitMenu(menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (item.action != NSSelectorFromString(@"toggleTabOverview:")) return;
+        (void)path;
+        if (item.keyEquivalent.length == 0 && item.keyEquivalentModifierMask == 0) return;
+        item.keyEquivalent = @"";
+        item.keyEquivalentModifierMask = 0;
+    });
 }
 @implementation TSShortcutStore
 - (NSArray<NSString *> *)settingsSearchCommandNames
@@ -67,6 +91,7 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     return self;
 }
 - (void)refreshMenu {
+    TSClearAppKitTabOverviewKey(self.menu);
     TSPrepareMenuIdentifiers(self.menu);
     NSMapTable *previous = [NSMapTable strongToStrongObjectsMapTable];
     for (TSShortcutCommand *command in self.commands) [previous setObject:command forKey:command.item];

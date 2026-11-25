@@ -179,8 +179,11 @@ NSString *TSFindCommandID(NSMenuItem *item) {
     if (tag) return [NSString stringWithFormat:@"TSShortcut.performFindPanelAction:.%@", tag];
     // AppKit adds Duplicate to the File menu when documents autosave (and moves Save As… to
     // ⌥⇧⌘S), and Close All as the Option alternate of Close. Their actions do not change, so
-    // they are listed and customized like the menu's own commands.
-    if (action == @selector(duplicateDocument:) || action == NSSelectorFromString(@"closeAll:"))
+    // they are listed and customized like the menu's own commands. Show All Tabs is named
+    // for the same reason; refreshMenu clears the key AppKit gives it before the command
+    // remembers a default.
+    if (action == @selector(duplicateDocument:) || action == NSSelectorFromString(@"closeAll:")
+        || action == NSSelectorFromString(@"toggleTabOverview:"))
         return [NSString stringWithFormat:@"TSShortcut.%@.0", NSStringFromSelector(action)];
     return nil;
 }
