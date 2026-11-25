@@ -113,11 +113,15 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
 
 @end
 
+@class TSPreviewDrawerFieldEditorSource;
+
 @interface MyPDFKitView ()
 - (BOOL)performPreviewFindKeyEquivalent:(NSEvent *)theEvent;
 - (NSText *)previewFindFieldEditorForWindow:(NSWindow *)window;
 - (void)doFindAgainBackwards;
 - (void)previewDrawerDidOpen:(NSNotification *)notification;
+// Strong: the drawer window's delegate is weak. Only this object is that delegate.
+@property (strong) TSPreviewDrawerFieldEditorSource *drawerFieldEditorSource;
 @end
 
 // Field editor of the Preview search fields. The ordinary editor would run Edit › Find
@@ -147,6 +151,20 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     return [super performKeyEquivalent:theEvent];
 }
 
+@end
+
+// The drawer window's delegate is in the action responder chain when it is a view.
+// This object only supplies the field editor, so zoom, copy and print still reach the
+// active preview, or the source, while the outline or the drawer search is key.
+@interface TSPreviewDrawerFieldEditorSource : NSObject <NSWindowDelegate>
+@property (weak) MyPDFKitView *owner;
+@end
+
+@implementation TSPreviewDrawerFieldEditorSource
+- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client
+{
+    return [self.owner windowWillReturnFieldEditor:sender toObject:client];
+}
 @end
 
 @implementation MyPDFKitView : PDFView
@@ -213,8 +231,9 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
 {
     // Breaks retain cycles to prevent memory leaks.
     [self cleanupMarquee: YES];
-    if (_drawer.contentView.window.delegate == self)
+    if (_drawer.contentView.window.delegate == self.drawerFieldEditorSource)
         _drawer.contentView.window.delegate = nil;
+    self.drawerFieldEditorSource = nil;
     [self.myPDFWindow setDelegate:nil];
     [[self document] setDelegate:nil];
     [self setDocument:nil];
@@ -3824,8 +3843,13 @@ TeXShop supports search through the drawer in the Preview Window using sample co
     NSWindow *drawerWindow = _drawer.contentView.window;
     if (!drawerWindow || !_searchField)
         return;
-    if (drawerWindow.delegate != self)
-        drawerWindow.delegate = self;
+    if (!self.drawerFieldEditorSource) {
+        TSPreviewDrawerFieldEditorSource *source = [TSPreviewDrawerFieldEditorSource new];
+        source.owner = self;
+        self.drawerFieldEditorSource = source;
+    }
+    if (drawerWindow.delegate != self.drawerFieldEditorSource)
+        drawerWindow.delegate = self.drawerFieldEditorSource;
 }
 
 - (void)observePreviewDrawerFind
