@@ -213,6 +213,8 @@
 "Show in Macro Editor" = "マクロエディタで表示";
 "Assigned" = "割り当て有効";
 "Cannot Be Changed" = "変更不可";
+"[Change in System Settings…]" = "[システム設定で変更…]";
+"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "サイドバーで「アプリのショートカット」を選んでください。キーボードの画面のままなら、先に「キーボードショートカット…」を開いてください。";
 "Inactive for this key" = "このキーでは無効";
 "No command uses this key." = "このキーを使うコマンドはありません。";
 "Press a key" = "キーを押してください";

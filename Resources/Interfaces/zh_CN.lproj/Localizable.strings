@@ -187,6 +187,8 @@
 "Show in Macro Editor" = "在宏编辑器中显示";
 "Assigned" = "已分配";
 "Cannot Be Changed" = "不可更改";
+"[Change in System Settings…]" = "[在系统设置中更改…]";
+"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "请在侧边栏中选择“App快捷键”。如果仍停留在“键盘”页面，请先打开“键盘快捷键…”。";
 "Inactive for this key" = "此按键无效";
 "No command uses this key." = "没有命令使用此按键。";
 "Press a key" = "请按键";

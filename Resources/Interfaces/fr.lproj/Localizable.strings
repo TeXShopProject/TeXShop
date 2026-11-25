@@ -190,6 +190,8 @@
 "Show in Macro Editor" = "Afficher dans l’éditeur de macros";
 "Assigned" = "Attribué";
 "Cannot Be Changed" = "Non modifiable";
+"[Change in System Settings…]" = "[Modifier dans Réglages Système…]";
+"Choose “App Shortcuts” in the sidebar. If you are still on the Keyboard page, open “Keyboard Shortcuts…” first." = "Choisissez « Raccourcis de l’application » dans la barre latérale. Si la page Clavier est encore affichée, ouvrez d’abord « Raccourcis clavier… ».";
 "Inactive for this key" = "Inactif pour cette touche";
 "No command uses this key." = "Aucune commande n’utilise cette touche.";
 "Press a key" = "Appuyez sur une touche";
