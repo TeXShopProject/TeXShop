@@ -2,10 +2,12 @@
 /*
  * TSDocumentWindowGlass.h
  *
- * On macOS 26 and later, the source window, the Preview window and the window
- * that shows both let their content run under the title bar and the toolbar.
- * The toolbar's glass then shows the text or the pages scrolling beneath it.
- * Earlier systems keep the windows as they were.
+ * On macOS 26 and later, the source window and the window that shows both let
+ * their content run under the title bar and the toolbar. The toolbar's glass
+ * then shows the text scrolling beneath it. The Preview window keeps its pages
+ * below the toolbar, and the toolbar ends in a line, so a page does not show
+ * through the bottom of the toolbar. Earlier systems keep every window's
+ * content below the toolbar.
  */
 
 #import <Cocoa/Cocoa.h>
@@ -21,6 +23,11 @@ BOOL TSDocumentWindowsUseFullSizeContent(void);
 // systems the drawer starts right below the title bar. On every system the drawer's frame
 // takes the window's colors.
 void TSDocumentWindowPrepare(NSWindow * _Nullable window);
+
+// The Preview window. Its pages stay below the toolbar on every system, and the toolbar
+// ends in a line, so the page does not show through the bottom of the toolbar. A drawer
+// at its side starts right below the title bar.
+void TSDocumentWindowPrepareSolidToolbar(NSWindow * _Nullable window);
 
 // Places the open drawers of a document window again after the band under its toolbar
 // changed height, as when the annotation toolbar is shown or hidden; the window does this
