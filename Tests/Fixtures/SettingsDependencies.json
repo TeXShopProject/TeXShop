@@ -1,5 +1,5 @@
 {
-  "provenance": "Approved catalog buttonEnabledWhen / parent choices; existing tag 0 means fixed position. User decision 2026-11-09 removes per-document BlockCursor/SourceAndPreview dependencies. User decision 2026-11-16 adds the Advanced Find panel switch, enabled only with the Advanced Find panel as the find interface.",
+  "provenance": "Approved catalog buttonEnabledWhen / parent choices; existing tag 0 means fixed position. User decision 2026-11-09 removes per-document BlockCursor/SourceAndPreview dependencies. User decision 2026-11-16 adds the Advanced Find panel switch, enabled only with the Advanced Find panel as the find interface. User decision 2026-11-27 (#75) adds None to the completion trigger; the Option and Control mark switch is enabled only with Escape or Tab as the trigger.",
   "rules": [
     {
       "category": "general",
@@ -316,6 +316,26 @@
         "row.catalog.spelling.1.5"
       ],
       "value_kind": "boolean"
+    },
+    {
+      "category": "keyboard",
+      "key": "CommandCompletionChar",
+      "values": [
+        "ESCAPE",
+        "TAB",
+        "NONE"
+      ],
+      "enabled_values": [
+        "ESCAPE",
+        "TAB"
+      ],
+      "outlets": [
+        "completionMarkKeysButton"
+      ],
+      "label_row": "row.catalog.keyboard.1.3",
+      "key_symbol": "CommandCompletionCharKey",
+      "whole_row": true,
+      "value_kind": "completion_trigger"
     }
   ]
 }

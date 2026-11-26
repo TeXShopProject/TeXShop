@@ -1329,10 +1329,11 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 - (IBAction)commandCompletionChanged:sender
 {
 	
-	if ([[sender selectedCell] tag] == 0)
-		[SUD setObject:@"ESCAPE" forKey:CommandCompletionCharKey];
-	else
-		[SUD setObject:@"TAB" forKey:CommandCompletionCharKey];
+	NSInteger tag = [[sender selectedCell] tag];
+	TSCommandCompletionTrigger trigger = tag == TSCommandCompletionTriggerEscape ? TSCommandCompletionTriggerEscape
+		: tag == TSCommandCompletionTriggerNone ? TSCommandCompletionTriggerNone : TSCommandCompletionTriggerTab;
+	[SUD setObject:TSCommandCompletionValueForTrigger(trigger) forKey:CommandCompletionCharKey];
+	[self updateSettingsDependenciesForCategory:TSSettingsCategoryKeyboard defaults:SUD];
 	TSPostPreferenceNotifications([NSSet setWithArray:@[CommandCompletionCharKey]], self);
 	
 }
@@ -2464,7 +2465,7 @@ person script. See also: DefaultTypesetMode.
 // only the accessory depends on it. Per-document defaults have no parent rule.
 - (void)updateSettingsDependenciesForCategory:(TSSettingsCategoryID)category defaults:(NSUserDefaults *)defaults
 {
-    typedef NS_ENUM(NSUInteger, TSDependencyKind) { TSDependencyBoolean, TSDependencyInteger };
+    typedef NS_ENUM(NSUInteger, TSDependencyKind) { TSDependencyBoolean, TSDependencyInteger, TSDependencyCompletionTrigger };
     typedef struct {
         __unsafe_unretained TSSettingsCategoryID category;
         __unsafe_unretained TSPreferenceKey key;
@@ -2490,7 +2491,9 @@ person script. See also: DefaultTypesetMode.
     for (NSUInteger i = 0; i < sizeof(rules)/sizeof(rules[0]); i++) {
         Rule rule = rules[i];
         if (category && ![category isEqual:rule.category]) continue;
-        NSInteger value = rule.kind == TSDependencyBoolean ? [defaults boolForKey:rule.key] : [defaults integerForKey:rule.key];
+        NSInteger value = rule.kind == TSDependencyBoolean ? [defaults boolForKey:rule.key]
+            : rule.kind == TSDependencyCompletionTrigger ? (TSCommandCompletionTriggerFromDefaults(defaults) != TSCommandCompletionTriggerNone)
+            : [defaults integerForKey:rule.key];
         BOOL enabled = value == rule.enabledValue;
 #ifdef USESPARKLE
         if ([rule.key isEqual:SparkleAutomaticUpdateKey] && defaults == SUD && [TSSparkleController sharedUpdater])

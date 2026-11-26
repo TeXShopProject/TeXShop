@@ -2343,7 +2343,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
         }
     }
     
-	if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
+	if (TSIsCompletionTrigger(theEvent, g_commandCompletionChar) &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSEventModifierFlagOption) != 0))
 			{
@@ -2351,7 +2351,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 				return;
 			}
 		
-	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
+	else if (TSIsCompletionTrigger(theEvent, g_commandCompletionChar) &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSEventModifierFlagControl) != 0))
 			{
@@ -2359,7 +2359,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 				return;
 			}
 
-	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
+	else if (TSIsCompletionTrigger(theEvent, g_commandCompletionChar) &&
 		(([theEvent modifierFlags] & NSEventModifierFlagOption) == 0) &&
 		![self hasMarkedText] && g_commandCompletionList)
 

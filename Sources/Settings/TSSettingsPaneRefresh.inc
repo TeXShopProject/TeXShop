@@ -289,10 +289,7 @@
     [_autoCompleteButton setState:[defaults boolForKey:AutoCompleteEnabledKey]];
     [_bibDeskCompleteButton setState:[defaults boolForKey:BibDeskCompletionKey]];
     self.completionMarkKeysButton.state = [defaults boolForKey:CommandCompletionAlternateMarkShortcutKey] ? NSControlStateValueOn : NSControlStateValueOff;
-    if ([[defaults stringForKey:CommandCompletionCharKey] isEqualToString:@"ESCAPE"])
-        [_commandCompletionMatrix selectCellWithTag:0];
-    else
-        [_commandCompletionMatrix selectCellWithTag:1];
+    [_commandCompletionMatrix selectCellWithTag:TSCommandCompletionTriggerFromDefaults(defaults)];
 }
 
 - (void)refreshUpdatesSettingsFromDefaults:(NSUserDefaults *)defaults

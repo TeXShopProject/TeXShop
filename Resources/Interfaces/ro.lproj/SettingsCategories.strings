@@ -315,6 +315,7 @@
 "group.completion.title" = "Completarea comenzilor";
 "catalog.keyboard.1.0.title" = "Tastă de activare";
 "catalog.keyboard.1.0.note" = "Completează comanda pe care o tastați; apăsați din nou tasta pentru următoarea variantă. Ținând apăsat Shift, obțineți varianta anterioară.";
+"catalog.keyboard.1.0.keywords" = "Dezactivare Dezactivat Oprit";
 "catalog.keyboard.1.3.title" = "Accesați marcajul următor sau anterior cu Opțiune sau Control și tasta de activare";
 "catalog.keyboard.1.2.title" = "Editați completarea comenzilor…";
 "group.labelcompletion.title" = "Completarea referințelor și a cheilor de citare";

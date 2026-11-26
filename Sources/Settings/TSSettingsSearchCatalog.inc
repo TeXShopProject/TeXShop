@@ -290,6 +290,8 @@ add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"SettingsCategorie
 add(TSSettingsCategoryKeyboard, @"heading.group.completion", @"SettingsCategories", @"group.completion.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.note", TSSettingsSearchWeightDescription);
+// Words for turning command completion off (the None choice) also find the trigger row.
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.keywords", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.3", @"SettingsCategories", @"catalog.keyboard.1.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.2", @"SettingsCategories", @"catalog.keyboard.1.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"heading.group.labelcompletion", @"SettingsCategories", @"group.labelcompletion.title", TSSettingsSearchWeightHeading);
@@ -342,6 +344,7 @@ add(TSSettingsCategoryGeneral, @"row.catalog.general.1.2", @"SettingsSource", @"
 add(TSSettingsCategoryGeneral, @"row.catalog.general.1.2", @"SettingsSource", @"ypQ-Gc-HUa.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsSource", @"927.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsSource", @"928.title", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsSource", @"931.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Input Character", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Output String", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Paste", TSSettingsSearchWeightChoice);

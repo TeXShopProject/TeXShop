@@ -315,6 +315,7 @@
 "group.completion.title" = "コマンド補完";
 "catalog.keyboard.1.0.title" = "呼び出すキー";
 "catalog.keyboard.1.0.note" = "入力途中のコマンドを、呼び出すキーを押して補完します。続けて押すと次の候補、Shiftを押しながらだと前の候補になります。";
+"catalog.keyboard.1.0.keywords" = "無効 オフ 切る";
 "catalog.keyboard.1.3.title" = "Option・Controlと呼び出すキーで、次・前のマークへ移動";
 "catalog.keyboard.1.2.title" = "コマンド補完ファイルを編集…";
 "group.labelcompletion.title" = "ラベルと引用キーの補完";
