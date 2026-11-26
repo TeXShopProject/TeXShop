@@ -290,6 +290,8 @@ add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"SettingsCategorie
 add(TSSettingsCategoryKeyboard, @"heading.group.completion", @"SettingsCategories", @"group.completion.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.note", TSSettingsSearchWeightDescription);
+// Words for turning command completion off (the None choice) also find the trigger row.
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.keywords", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.3", @"SettingsCategories", @"catalog.keyboard.1.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.2", @"SettingsCategories", @"catalog.keyboard.1.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"heading.group.labelcompletion", @"SettingsCategories", @"group.labelcompletion.title", TSSettingsSearchWeightHeading);

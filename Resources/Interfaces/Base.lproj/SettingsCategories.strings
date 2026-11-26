@@ -315,6 +315,7 @@
 "group.completion.title" = "Command Completion";
 "catalog.keyboard.1.0.title" = "Completion trigger";
 "catalog.keyboard.1.0.note" = "Completes the command you are typing; press the key again for the next candidate. Hold Shift for the previous candidate.";
+"catalog.keyboard.1.0.keywords" = "Off Disable Disabled Turn off";
 "catalog.keyboard.1.3.title" = "Move to the next or previous mark with Option or Control and the trigger key";
 "catalog.keyboard.1.2.title" = "Edit Command Completion…";
 "group.labelcompletion.title" = "Label and Citation Key Completion";

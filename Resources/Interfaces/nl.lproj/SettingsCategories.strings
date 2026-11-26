@@ -315,6 +315,7 @@
 "group.completion.title" = "Commandoaanvulling";
 "catalog.keyboard.1.0.title" = "Activeringstoets";
 "catalog.keyboard.1.0.note" = "Vult het commando aan dat u typt; druk nogmaals op de toets voor de volgende suggestie. Houd Shift ingedrukt voor de vorige suggestie.";
+"catalog.keyboard.1.0.keywords" = "Uit Uitschakelen Uitgeschakeld";
 "catalog.keyboard.1.3.title" = "Naar het volgende of vorige markeerpunt met Option of Control en de activeringstoets";
 "catalog.keyboard.1.2.title" = "Commandoaanvulling bewerken…";
 "group.labelcompletion.title" = "Aanvullen van labels en citatiesleutels";
