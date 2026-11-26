@@ -2542,7 +2542,7 @@ failed. If you change the code below, be sure to test carefully!
 			case NSLeftMouseDragged:
 			{
 				NSPoint	newLocation;
-				NSRect	newVisibleRect;
+				NSRect	newVisibleRect = visibleRect;
 				CGFloat	xDelta, yDelta;
 
 				newLocation = [theEvent locationInWindow];
