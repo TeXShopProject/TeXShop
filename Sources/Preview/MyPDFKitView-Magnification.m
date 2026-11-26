@@ -86,11 +86,11 @@
     
     do {
         
-        if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
+        if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
             
             // set up the size and magScale
             if ([theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
-                currentLevel = originalLevel+(([theEvent modifierFlags] & NSAlternateKeyMask)?1:0);
+                currentLevel = originalLevel+(([theEvent modifierFlags] & NSEventModifierFlagOption)?1:0);
                 if (currentLevel <= 1) {
                     magWidth = 150; magHeight = 100;
                     magOffsetX = magWidth/2; magOffsetY = magHeight/2;
@@ -142,11 +142,11 @@
                 }
             }
             
-        } else if ([theEvent type] == NSLeftMouseUp) {
+        } else if ([theEvent type] == NSEventTypeLeftMouseUp) {
             break;
         }
-        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseDownMask | NSLeftMouseUpMask |
-                    NSLeftMouseDraggedMask | NSFlagsChangedMask];
+        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseDownMask | NSEventMaskLeftMouseUp |
+                    NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged];
     } while (YES);
     
     if (theOverView) {
@@ -201,11 +201,11 @@
     
     do {
         
-        if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
+        if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
             
             // set up the size, in points on screen, and the magnification of the screen
             if ([theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
-                currentLevel = originalLevel; // +(([theEvent modifierFlags] & NSAlternateKeyMask)?1:0);
+                currentLevel = originalLevel; // +(([theEvent modifierFlags] & NSEventModifierFlagOption)?1:0);
                 NSSize lensSize = TSMagnifyingGlassSize(currentLevel);
                 magWidth = lensSize.width; magHeight = lensSize.height;
             }
@@ -256,11 +256,11 @@
                 }
             }
             
-        } else if ([theEvent type] == NSLeftMouseUp) {
+        } else if ([theEvent type] == NSEventTypeLeftMouseUp) {
             break;
         }
-        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask |
-                    NSLeftMouseDraggedMask | NSFlagsChangedMask];
+        theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp |
+                    NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged];
     } while (YES);
     
     if (theOverView) {
@@ -304,13 +304,13 @@
     
     do {
         
-        if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
+        if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
             
             // [[self window] disableFlushWindow];
             
             // set up the size and magScale
             if ([theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
-                currentLevel = originalLevel+(([theEvent modifierFlags] & NSAlternateKeyMask)?1:0);
+                currentLevel = originalLevel+(([theEvent modifierFlags] & NSEventModifierFlagOption)?1:0);
                 if (currentLevel <= 1) {
                     magWidth = 150; magHeight = 100;
                     magOffsetX = magWidth/2; magOffsetY = magHeight/2;
@@ -322,17 +322,17 @@
                     // [[self window] cacheImageInRect:[self convertRect:[self visibleRect] toView: nil]];
                     rect = [self visibleRect];
                 }
-                if (!([theEvent modifierFlags] & NSShiftKeyMask)) {
-                    if ([theEvent modifierFlags] & NSCommandKeyMask)
+                if (!([theEvent modifierFlags] & NSEventModifierFlagShift)) {
+                    if ([theEvent modifierFlags] & NSEventModifierFlagCommand)
                         magScale = 0.25; 	// x4
-                    else if ([theEvent modifierFlags] & NSControlKeyMask)
+                    else if ([theEvent modifierFlags] & NSEventModifierFlagControl)
                         magScale = 0.66666; // x1.5
                     else
                         magScale = 0.4; 	// x2.5
                 } else { // shrink the image with shift key -- can be very slow
-                    if ([theEvent modifierFlags] & NSCommandKeyMask)
+                    if ([theEvent modifierFlags] & NSEventModifierFlagCommand)
                         magScale = 4.0; 	// /4
-                    else if ([theEvent modifierFlags] & NSControlKeyMask)
+                    else if ([theEvent modifierFlags] & NSEventModifierFlagControl)
                         magScale = 1.5; 	// /1.5
                     else
                         magScale = 2.5; 	// /2.5
@@ -406,11 +406,11 @@
             [[self window] flushWindow];
             [[self window] disableFlushWindow];
             
-        } else if ([theEvent type] == NSLeftMouseUp) {
+        } else if ([theEvent type] == NSEventTypeLeftMouseUp) {
             break;
         }
-        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask |
-                    NSLeftMouseDraggedMask | NSFlagsChangedMask];
+        theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp |
+                    NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged];
     } while (YES);
     
     [[self window] enableFlushWindow];

@@ -104,7 +104,7 @@
             TSMagnifyingGlassDrawPage(self.magnifiedPage, self.magnifiedBox, magnifiedRect, theSelectionRect);
         else {
 // changed by Terada (from this line)
-        [self.magnifiedImage drawInRect: theSelectionRect fromRect: magnifiedRect operation: NSCompositeSourceOver fraction: 1.0 respectFlipped: YES hints: nil ]; //NSCompositeCopy NSCompositeSourceOver
+        [self.magnifiedImage drawInRect: theSelectionRect fromRect: magnifiedRect operation: NSCompositingOperationSourceOver fraction: 1.0 respectFlipped: YES hints: nil ]; //NSCompositeCopy NSCompositingOperationSourceOver
 // changed by Terada (until this line)
         }
         [[NSColor blackColor] set];

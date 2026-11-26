@@ -532,7 +532,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 {
   //  [[NSColorPanel sharedColorPanel] close];
     
-	if ([theEvent modifierFlags] & NSAlternateKeyMask)
+	if ([theEvent modifierFlags] & NSEventModifierFlagOption)
 		_alternateDown = YES;
 	else
 		_alternateDown = NO;
@@ -541,7 +541,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 	// koch; Dec 13, 2003
 	
 	// Trigger PDF sync when a click occurs while cmd is pressed (and alt is not pressed).
-	if (!([theEvent modifierFlags] & NSAlternateKeyMask) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+	if (!([theEvent modifierFlags] & NSEventModifierFlagOption) && ([theEvent modifierFlags] & NSEventModifierFlagCommand)) {
 		[self doSync: theEvent];
 		return;
 	}
@@ -571,9 +571,9 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 {
 	NSPasteboard *pb = [sender draggingPasteboard];
 	NSString *type = [pb availableTypeFromArray:
-		[NSArray arrayWithObjects: NSStringPboardType, NSFilenamesPboardType, nil] ];
+		[NSArray arrayWithObjects: NSPasteboardTypeString, NSFilenamesPboardType, nil] ];
 	if( type && [self.document fileIsTex] ) {
-		if( [type isEqualToString:NSStringPboardType] ||
+		if( [type isEqualToString:NSPasteboardTypeString] ||
 			[type isEqualToString:NSFilenamesPboardType] ){
 			NSPoint location = [self convertPoint:[sender draggingLocation] fromView:nil];
 			NSLayoutManager *layoutManager = [self layoutManager];
@@ -623,7 +623,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
     [[self window] makeFirstResponder:self]; // added by Terada (required in the case of split window)
 	NSPasteboard *pb = [ sender draggingPasteboard ];
 	NSString *type = [ pb availableTypeFromArray:
-		[NSArray arrayWithObjects: NSStringPboardType, NSFilenamesPboardType, nil]];
+		[NSArray arrayWithObjects: NSPasteboardTypeString, NSFilenamesPboardType, nil]];
 
 	if ([type isEqualToString:NSFilenamesPboardType]) {
 		NSArray *ar = [pb propertyListForType:NSFilenamesPboardType];
@@ -816,13 +816,13 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-	if (!([theEvent modifierFlags] & NSAlternateKeyMask))
+	if (!([theEvent modifierFlags] & NSEventModifierFlagOption))
 		[super flagsChanged:theEvent];
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
-	if (!([theEvent modifierFlags] & NSAlternateKeyMask))
+	if (!([theEvent modifierFlags] & NSEventModifierFlagOption))
 		[super mouseMoved:theEvent];
 }
 
@@ -1595,7 +1595,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 - (void)setUpCompletionAndDragging
 {
 	[ self registerForDraggedTypes:
-			[NSArray arrayWithObjects: NSStringPboardType, NSFilenamesPboardType, nil] ];
+			[NSArray arrayWithObjects: NSPasteboardTypeString, NSFilenamesPboardType, nil] ];
 	self.document = nil;
     wasCompleted = NO; // was completed on last keyDown
 	latexSpecial = NO; // was last time LaTeX Special?  \begin{...}
@@ -2347,7 +2347,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     
 	if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
-		(([theEvent modifierFlags] & NSAlternateKeyMask) != 0))
+		(([theEvent modifierFlags] & NSEventModifierFlagOption) != 0))
 			{
  				[self.document doNextBullet:self];
 				return;
@@ -2355,14 +2355,14 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 		
 	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
-		(([theEvent modifierFlags] & NSControlKeyMask) != 0))
+		(([theEvent modifierFlags] & NSEventModifierFlagControl) != 0))
 			{
  				[self.document doPreviousBullet:self];
 				return;
 			}
 
 	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
-		(([theEvent modifierFlags] & NSAlternateKeyMask) == 0) &&
+		(([theEvent modifierFlags] & NSEventModifierFlagOption) == 0) &&
 		![self hasMarkedText] && g_commandCompletionList)
 
 	  //  if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] && (![self hasMarkedText]) && g_commandCompletionList)
@@ -2487,7 +2487,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 			while (YES) { // look for a candidate which is not equal to originalString
 // (HS) modification to reverse search 2014/05/11
 /* original code
-                if (([theEvent modifierFlags] & NSShiftKeyMask) && wasCompleted) {
+                if (([theEvent modifierFlags] & NSEventModifierFlagShift) && wasCompleted) {
 					// backward
 					searchRange.location = 0;
 					searchRange.length = completionListLocation-1;
@@ -2499,10 +2499,10 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 				// search the string in the completion list
 				foundRange = [g_commandCompletionList rangeOfString:
 						[@"\n" stringByAppendingString: self.originalString]
-						options: (([theEvent modifierFlags] & NSShiftKeyMask)?NSBackwardsSearch:0)
+						options: (([theEvent modifierFlags] & NSEventModifierFlagShift)?NSBackwardsSearch:0)
 						range: searchRange];
 */
-                if (!([theEvent modifierFlags] & NSShiftKeyMask) && wasCompleted) {
+                if (!([theEvent modifierFlags] & NSEventModifierFlagShift) && wasCompleted) {
 					// backward
 					searchRange.location = 0;
 					searchRange.length = completionListLocation-1;
@@ -2514,7 +2514,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 				// search the string in the completion list
 				foundRange = [g_commandCompletionList rangeOfString:
                         [@"\n" stringByAppendingString: self.originalString]
-                        options: (!(([theEvent modifierFlags] & NSShiftKeyMask))?NSBackwardsSearch:0)
+                        options: (!(([theEvent modifierFlags] & NSEventModifierFlagShift))?NSBackwardsSearch:0)
                         range: searchRange];
 // End of modification to reverse search
 				if (foundRange.location == NSNotFound) { // a completion candidate was not found
@@ -2687,7 +2687,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	unichar c;
 	
 	if ([[theEvent characters] isEqualToString: g_commandCompletionChar] &&
-		(([theEvent modifierFlags] & NSAlternateKeyMask) == 0) &&
+		(([theEvent modifierFlags] & NSEventModifierFlagOption) == 0) &&
 		![self hasMarkedText] && g_commandCompletionList)
 		
 		//  if ([[theEvent characters] isEqualToString: g_commandCompletionChar] && (![self hasMarkedText]) && g_commandCompletionList)
@@ -3211,14 +3211,14 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 // otherwise YES, with what readSelectionFromPasteboard:type: answers in answer.
 - (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings answer:(BOOL *)answer
 {
-	if (! [type isEqualToString: NSStringPboardType])
+	if (! [type isEqualToString: NSPasteboardTypeString])
 		return NO;
 	BOOL convertLF = [SUD boolForKey:ConvertLFKey];
 	TSFilterMode filter = japaneseFilter ? g_shouldFilter : kNoFilterMode;
 	NSDictionary<NSString *, NSString *> *bindings = keyBindings ? [[GlobalData sharedGlobalData] pasteKeyBindings] : nil;
 	if (! filter && ! convertLF && bindings.count == 0)
 		return NO;
-	NSString *pasted = [pboard stringForType: NSStringPboardType];
+	NSString *pasted = [pboard stringForType: NSPasteboardTypeString];
 	// Empty text is pasted by AppKit, which changes nothing.
 	if (pasted.length == 0)
 		return NO;

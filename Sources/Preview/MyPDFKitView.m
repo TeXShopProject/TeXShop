@@ -263,7 +263,7 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     if (!mouseMode) mouseMode = MOUSE_MODE_MAG_GLASS;
     currentMouseMode = mouseMode;
     [mouseModeMatrix selectCellWithTag: mouseMode];
-    [[mouseModeMenu itemWithTag: mouseMode] setState: NSOnState];
+    [[mouseModeMenu itemWithTag: mouseMode] setState: NSControlStateValueOn];
     // Only the first view is connected to the page number field of the single window
     // toolbar; the second view shows its page there too (#14).
     MyPDFKitView *first = self.myDocument.myPDFKitView;
@@ -1002,7 +1002,7 @@ static PDFPage *TSPreviewDecodePopupHome(NSCoder *coder, NSString *prefix, PDFDo
 	// mouseMode = [SUD integerForKey: PdfKitMouseModeKey];
 	// [[myDocument mousemodeMatrix] selectCellWithTag: mouseMode];
 	
-	[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSOnState];
+	[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSControlStateValueOn];
 	currentMouseMode = mouseMode;
 	self.selRectTimer = nil;
 	
@@ -2896,13 +2896,13 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 						NSLocalizedString(@"Preview", @"Preview")] submenu];
 	NSMenu *menu = [[previewMenu itemWithTitle:
 				NSLocalizedString(@"Magnification", @"Magnification")] submenu];
-	[[menu itemWithTag: resizeOption] setState: NSOffState];
+	[[menu itemWithTag: resizeOption] setState: NSControlStateValueOff];
 	if (magSize == 1.0)
 		resizeOption = NEW_PDF_ACTUAL_SIZE;
 	else
 		resizeOption = NEW_PDF_FIT_TO_NONE;
 	// uncheck menu item Preview=>Magnification
-	[[menu itemWithTag: resizeOption] setState: NSOnState];
+	[[menu itemWithTag: resizeOption] setState: NSControlStateValueOn];
 	// end mitsu 1.29
 */
 }
@@ -3338,7 +3338,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 		NSMenu *menu = [[previewMenu itemWithTitle:
 				NSLocalizedString(@"Display Format", @"Display Format")] submenu];
 		id item = [menu itemWithTag: pageStyle];
-		[item setState: NSOffState];
+		[item setState: NSControlStateValueOff];
 		// end mitsu 1.29b
 
 		// change page style
@@ -3347,7 +3347,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 		// mitsu 1.29b check menu item Preview=>Display Format
 		item = [menu itemWithTag: pageStyle];
-		[item setState: NSOnState];
+		[item setState: NSControlStateValueOn];
 		// end mitsu 1.29b
 
 
@@ -3380,10 +3380,10 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
                          NSLocalizedString(@"Magnification", @"Magnification")] submenu];
         number = [menu numberOfItems];
         for (i = 0; i < number; i++)
-            [[menu itemAtIndex:i] setState: NSOffState];
+            [[menu itemAtIndex:i] setState: NSControlStateValueOff];
 
         // id  item = [menu itemWithTag: resizeOption];
-        // [item setState: NSOffState];
+        // [item setState: NSControlStateValueOff];
         
         resizeOption = newResizeOption;
         [self setupMagnificationStyle];
@@ -3410,7 +3410,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         
         // mitsu: check menu item Preview=>Magnification
         item = [menu itemWithTag: resizeOption];
-        [item setState: NSOnState];
+        [item setState: NSControlStateValueOn];
         // end mitsu
 
     
@@ -3434,7 +3434,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	NSMenu *menu = [[previewMenu itemWithTitle:
 				NSLocalizedString(@"Magnification", @"Magnification")] submenu];
 	id  item = [menu itemWithTag: resizeOption];
-	[item setState: NSOffState];
+	[item setState: NSControlStateValueOff];
 
 	resizeOption = [sender tag];
 	[self setupMagnificationStyle];
@@ -3461,7 +3461,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 	// mitsu: check menu item Preview=>Magnification
 	item = [menu itemWithTag: resizeOption];
-	[item setState: NSOnState];
+	[item setState: NSControlStateValueOn];
 	// end mitsu
 }
 
@@ -3661,7 +3661,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
    
     NSUInteger flags = [[NSApp currentEvent] modifierFlags];
  
-    if (flags & NSShiftKeyMask)
+    if (flags & NSEventModifierFlagShift)
     
         searchSelection = [[self document] findString: [sender stringValue]
                                         fromSelection:searchSelection withOptions:(NSCaseInsensitiveSearch | NSBackwardsSearch)];
@@ -3713,7 +3713,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
    
     NSUInteger flags = [[NSApp currentEvent] modifierFlags];
                            
-    if (flags & NSShiftKeyMask)
+    if (flags & NSEventModifierFlagShift)
                            
         searchSelection = [[self document] findString: [sender stringValue]
                 fromSelection:searchSelection withOptions:(NSCaseInsensitiveSearch | NSBackwardsSearch)];
@@ -4248,24 +4248,24 @@ TeXShop supports search through the drawer in the Preview Window using sample co
     
     if ([sender isKindOfClass: [NSSegmentedControl class]])
     {
-        [[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSOffState];
+        [[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSControlStateValueOff];
         mouseMode = currentMouseMode = [sender tagForSegment:[sender selectedSegment]];
         //[[self.myDocument mousemodeMatrix] selectCellWithTag: mouseMode];
-        [[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSOnState];
+        [[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSControlStateValueOn];
     }
 	else if ([sender isKindOfClass: [NSButton class]] || [sender isKindOfClass: [NSMenuItem class]])
 	{
-		[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSOffState];
+		[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSControlStateValueOff];
 		mouseMode = currentMouseMode = [sender tag];
 		[[self.myDocument mousemodeMatrix] selectCellWithTag: mouseMode];
-		[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSOnState];
+		[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSControlStateValueOn];
 	}
 	else if ([sender isKindOfClass: [NSMatrix class]])
 	{
-		[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSOffState];
+		[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSControlStateValueOff];
 		mouseMode = currentMouseMode = [[sender selectedCell] tag];
 		[[self.myDocument mousemodeMatrix] selectCellWithTag: mouseMode];
-		[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSOnState];
+		[[[self.myDocument mousemodeMenu] itemWithTag: mouseMode] setState: NSControlStateValueOn];
 	}
 
 	if ((oldMouseMode == NEW_MOUSE_MODE_SELECT_PDF) && (mouseMode != NEW_MOUSE_MODE_SELECT_PDF) &&
@@ -4298,10 +4298,10 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 
 	while (keepGoing)
 	{
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
 		switch ([theEvent type])
 		{
-			case NSLeftMouseDragged:
+			case NSEventTypeLeftMouseDragged:
 			{
 				NSPoint	newLocation;
 				NSRect	newVisibleRect;
@@ -4323,7 +4323,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 			}
 			break;
 
-			case NSLeftMouseUp:
+			case NSEventTypeLeftMouseUp:
 				keepGoing = NO;
 				break;
 
@@ -5010,13 +5010,13 @@ if (self.myDocument.useConTeXtSyncParser)
 	// to the preview. Then the select tool is not active. The reason is that
 	// pushing the command key calls "flags changed" but releasing it doesn't call
 	// "flags changed" because now another window is active. Koch Jan 11, 2006
-	if (!([theEvent modifierFlags] & NSAlternateKeyMask) &&
-		!([theEvent modifierFlags] & NSCommandKeyMask) &&
-		!([theEvent modifierFlags] & NSControlKeyMask))
+	if (!([theEvent modifierFlags] & NSEventModifierFlagOption) &&
+		!([theEvent modifierFlags] & NSEventModifierFlagCommand) &&
+		!([theEvent modifierFlags] & NSEventModifierFlagControl))
 		currentMouseMode = mouseMode;
     
 	
-	if (!([theEvent modifierFlags] & NSAlternateKeyMask) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+	if (!([theEvent modifierFlags] & NSEventModifierFlagOption) && ([theEvent modifierFlags] & NSEventModifierFlagCommand)) {
 		currentMouseMode = mouseMode;
 		[[self window] invalidateCursorRectsForView: self];
 		NSPoint thePoint = [theEvent locationInWindow];
@@ -5087,7 +5087,7 @@ if (self.myDocument.useConTeXtSyncParser)
 				
 					// mitsu 1.29 drag & drop
 					// Koch: I commented out the moveSelection choice since it seems to be broken due to sync
-					// if (([theEvent modifierFlags] & NSCommandKeyMask) &&
+					// if (([theEvent modifierFlags] & NSEventModifierFlagCommand) &&
 					//					(mouseMode == NEW_MOUSE_MODE_SELECT_PDF))
 					//	[self moveSelection: theEvent];
 					// else
@@ -5401,11 +5401,11 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
             linkedPoint = [theDestination point];
             // NSLog(@"The value is %f", linkedPoint.x);
             
-            if ([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask)
+            if ([[NSApp currentEvent] modifierFlags] & NSEventModifierFlagCommand)
                 largerSize = YES;
-            if ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask)
+            if ([[NSApp currentEvent] modifierFlags] & NSEventModifierFlagShift)
                 pushUp = YES;
-            if ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)
+            if ([[NSApp currentEvent] modifierFlags] & NSEventModifierFlagOption)
                 self.globalLongTerm = YES;
             
             // aRect = where text comes from
@@ -5581,9 +5581,9 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
             }
             linkedPoint = TSLinkPreviewDestinationPoint([theDestination point], imageSize, pageTransform);
 
-            if (modifiers & NSCommandKeyMask)
+            if (modifiers & NSEventModifierFlagCommand)
                 largerSize = YES;
-            if (modifiers & NSShiftKeyMask)
+            if (modifiers & NSEventModifierFlagShift)
                 pushUp = YES;
 
             
@@ -6227,7 +6227,7 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
  rect = NSMakeRect(0, 0, 1, 1);
  
  do {
- if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged)
+ if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged)
  {
  
  
@@ -6247,7 +6247,7 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
  selectedRect.size.width = abs(currentPoint.x-startPoint.x);
  selectedRect.size.height = abs(currentPoint.y-startPoint.y);
  
- if ([theEvent modifierFlags] & NSShiftKeyMask)
+ if ([theEvent modifierFlags] & NSEventModifierFlagShift)
  {
  if (selectedRect.size.width > selectedRect.size.height)
  selectedRect.size.height = selectedRect.size.width;
@@ -6277,12 +6277,12 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
  //[[self window] flushWindow];
  
  }
- else if ([theEvent type]==NSLeftMouseUp)
+ else if ([theEvent type]==NSEventTypeLeftMouseUp)
  {
  break;
  }
- theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask |
- NSLeftMouseDraggedMask | NSFlagsChangedMask ];
+ theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp |
+ NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged ];
  } while (YES);
  
  [self flagsChanged: theEvent]; // update cursor
@@ -6318,7 +6318,7 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
     rect = NSMakeRect(0, 0, 1, 1);
     
     do {
-        if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged)
+        if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged)
         {
             
             
@@ -6335,7 +6335,7 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
             selectedRect.size.width = fabs(currentPoint.x-startPoint.x);
             selectedRect.size.height = fabs(currentPoint.y-startPoint.y);
             
-            if ([theEvent modifierFlags] & NSShiftKeyMask)
+            if ([theEvent modifierFlags] & NSEventModifierFlagShift)
             {
                 if (selectedRect.size.width > selectedRect.size.height)
                     selectedRect.size.height = selectedRect.size.width;
@@ -6364,12 +6364,12 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
             [[self overView] setNeedsDisplayInRect:[[self documentView] visibleRect]];
             
         }
-        else if ([theEvent type]==NSLeftMouseUp)
+        else if ([theEvent type]==NSEventTypeLeftMouseUp)
         {
             break;
         }
-        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask |
-                    NSLeftMouseDraggedMask | NSFlagsChangedMask ];
+        theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp |
+                    NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged ];
     } while (YES);
     
     [self flagsChanged: theEvent]; // update cursor
@@ -6531,7 +6531,7 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
 	aRect.origin.y += SIZE_WINDOW_V_OFFSET;
 	aRect.size = NSMakeSize(SIZE_WINDOW_WIDTH, SIZE_WINDOW_HEIGHT);
 	NSPanel *sizeWindow = [[NSPanel alloc] initWithContentRect: aRect
-			styleMask: NSBorderlessWindowMask | NSUtilityWindowMask
+			styleMask: NSWindowStyleMaskBorderless | NSWindowStyleMaskUtilityWindow
 			backing: NSBackingStoreBuffered //NSBackingStoreRetained
 			defer: NO];
 	[sizeWindow setOpaque: NO];
@@ -6541,8 +6541,8 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
 #endif
 
 	do {
-		if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown ||
-			[theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSPeriodic)
+		if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown ||
+			[theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSEventTypePeriodic)
 		{
 			// restore the cached image in order to clear the rect
             
@@ -6553,7 +6553,7 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
  			 [[self window] flushWindow];
             
 			// get Mouse location and check if it is with the view's rect
-			if (!([theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSPeriodic))
+			if (!([theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSEventTypePeriodic))
 			{
 				mouseLocWindow = [theEvent locationInWindow];
 				// scroll if the mouse is out of visibleRect
@@ -6563,7 +6563,7 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
 			currentPoint = [[self documentView] convertPoint: mouseLocWindow fromView:nil];
             selectedRect.size.width =  fabs(currentPoint.x-startPoint.x);
 			selectedRect.size.height = fabs(currentPoint.y-startPoint.y);
-			if ([theEvent modifierFlags] & NSShiftKeyMask)
+			if ([theEvent modifierFlags] & NSEventModifierFlagShift)
 			{
 				if (selectedRect.size.width > selectedRect.size.height)
 					selectedRect.size.height = selectedRect.size.width;
@@ -6664,12 +6664,12 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
 
 #endif
 		}
-		else if ([theEvent type]==NSLeftMouseUp)
+		else if ([theEvent type]==NSEventTypeLeftMouseUp)
 		{
 			break;
 		}
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask |
-				NSLeftMouseDraggedMask | NSFlagsChangedMask | NSPeriodicMask];
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp |
+				NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged | NSEventMaskPeriodic];
 	} while (YES);
 
 	[NSEvent stopPeriodicEvents];
@@ -7000,55 +7000,55 @@ else
 		if (bitmap && type != IMAGE_TYPE_PICT) {
 			switch (type) {
 				case IMAGE_TYPE_TIFF_NC:
-					fileType = NSTIFFFileType;
+					fileType = NSBitmapImageFileTypeTIFF;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithInteger:NSTIFFCompressionNone],
 							NSImageCompressionMethod, nil];
 					break;
 				case IMAGE_TYPE_TIFF_LZW:
-					fileType = NSTIFFFileType;
+					fileType = NSBitmapImageFileTypeTIFF;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithInteger:NSTIFFCompressionLZW],
 							NSImageCompressionMethod, nil];
 					break;
 				case IMAGE_TYPE_TIFF_PB:
-					fileType = NSTIFFFileType;
+					fileType = NSBitmapImageFileTypeTIFF;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithInteger:NSTIFFCompressionPackBits],
 							NSImageCompressionMethod, nil];
 					break;
 				case IMAGE_TYPE_JPEG_HIGH:
-					fileType = NSJPEGFileType;
+					fileType = NSBitmapImageFileTypeJPEG;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithDouble:JPEG_COMPRESSION_HIGH],
 							NSImageCompressionFactor, nil];
 					break;
 				case IMAGE_TYPE_JPEG_MEDIUM:
-					fileType = NSJPEGFileType;
+					fileType = NSBitmapImageFileTypeJPEG;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithDouble:JPEG_COMPRESSION_MEDIUM],
 							NSImageCompressionFactor, nil];
 					break;
 				case IMAGE_TYPE_JPEG_LOW:
-					fileType = NSJPEGFileType;
+					fileType = NSBitmapImageFileTypeJPEG;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithDouble:JPEG_COMPRESSION_LOW],
 							NSImageCompressionFactor, nil];
 					break;
 				case IMAGE_TYPE_PNG:
-					fileType = NSPNGFileType;
+					fileType = NSBitmapImageFileTypePNG;
 					dict = [NSDictionary  dictionary];
 					break;
 				case IMAGE_TYPE_GIF: // GIF is not right format for our purpose
-					fileType = NSGIFFileType;
+					fileType = NSBitmapImageFileTypeGIF;
 					dict = [NSDictionary  dictionary];
 					break;
 				case IMAGE_TYPE_BMP: // does not work?
-					fileType = NSBMPFileType;
+					fileType = NSBitmapImageFileTypeBMP;
 					dict = [NSDictionary  dictionary];
 					break;
 				default: //default IMAGE_TYPE_JPEG_MEDIUM?
-					fileType = NSJPEGFileType;
+					fileType = NSBitmapImageFileTypeJPEG;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithDouble:JPEG_COMPRESSION_MEDIUM],
 							NSImageCompressionFactor, nil];
@@ -7216,7 +7216,7 @@ else
     
     [savePanel beginSheetModalForWindow: [self window]
             completionHandler:^(NSInteger result) {
-                if (NSFileHandlingPanelOKButton) {
+                if (NSModalResponseOK) {
                     NSData *data = nil;
                      data = [self imageDataFromSelectionType: [SUD integerForKey: PdfExportTypeKey]];
                     
@@ -7242,7 +7242,7 @@ else
 /*
 - (void)saveSelectionPanelDidEnd:(NSSavePanel *)sheet returnCode:(NSInteger)returnCode contextInfo:(void  *)contextInfo
 {
-	if (returnCode == NSFileHandlingPanelOKButton && [sheet filename]) {
+	if (returnCode == NSModalResponseOK && [sheet filename]) {
 		NSData *data = nil;
 		//NSNumber *aNumber;
 
@@ -7307,7 +7307,7 @@ else
     mySelectedRect = [self convertRect: selectedRect fromView: [self documentView]];
 
     
-    pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+    pboard = [NSPasteboard pasteboardWithName:NSPasteboardNameDrag];
     imageCopyType = [SUD integerForKey:PdfCopyTypeKey];
     if (rotation != 0)
         dataType = NSPDFPboardType;
@@ -9035,13 +9035,13 @@ else
 // change mouse mode when a modifier key is pressed
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-	if (([theEvent modifierFlags] & NSCommandKeyMask) && (!([theEvent modifierFlags] & NSAlternateKeyMask)))
+	if (([theEvent modifierFlags] & NSEventModifierFlagCommand) && (!([theEvent modifierFlags] & NSEventModifierFlagOption)))
 		currentMouseMode = NEW_MOUSE_MODE_SELECT_TEXT;
-	else if ([theEvent modifierFlags] & NSControlKeyMask)
+	else if ([theEvent modifierFlags] & NSEventModifierFlagControl)
 		currentMouseMode = NEW_MOUSE_MODE_SCROLL;
-	else if ([theEvent modifierFlags] & NSCommandKeyMask)
+	else if ([theEvent modifierFlags] & NSEventModifierFlagCommand)
 		currentMouseMode = NEW_MOUSE_MODE_SELECT_PDF;
-	else if ([theEvent modifierFlags] & NSAlternateKeyMask)
+	else if ([theEvent modifierFlags] & NSEventModifierFlagOption)
 		currentMouseMode = MOUSE_MODE_MAG_GLASS;
 	else
 		currentMouseMode = mouseMode;
@@ -9116,9 +9116,9 @@ else
 	else
 		key = 0;
 	
-	if ((key == NSLeftArrowFunctionKey) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+	if ((key == NSLeftArrowFunctionKey) && ([theEvent modifierFlags] & NSEventModifierFlagCommand)) {
 		[self previousPage:self];
-	} else if ((key == NSRightArrowFunctionKey) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+	} else if ((key == NSRightArrowFunctionKey) && ([theEvent modifierFlags] & NSEventModifierFlagCommand)) {
 		[self nextPage:self];
 	} else if (((key == NSLeftArrowFunctionKey) || (key == NSRightArrowFunctionKey)) &&
 				([SUD boolForKey: LeftRightArrowsAlwaysPageKey] ||
@@ -9295,9 +9295,9 @@ else
     
     if ((key == NSLeftArrowFunctionKey) || (key == NSRightArrowFunctionKey))
     {
-        if ((key == NSLeftArrowFunctionKey) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+        if ((key == NSLeftArrowFunctionKey) && ([theEvent modifierFlags] & NSEventModifierFlagCommand)) {
             [self previousPage:self];
-        } else if ((key == NSRightArrowFunctionKey) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+        } else if ((key == NSRightArrowFunctionKey) && ([theEvent modifierFlags] & NSEventModifierFlagCommand)) {
             [self nextPage:self];
         } else if (((key == NSLeftArrowFunctionKey) || (key == NSRightArrowFunctionKey)) &&
                    ([SUD boolForKey: LeftRightArrowsAlwaysPageKey] ||
@@ -9428,9 +9428,9 @@ else
 	menuArray = [menu itemArray];
 	enumerator = [menuArray objectEnumerator];
 	while ((anObject = [enumerator nextObject]))
-		[anObject setState: NSOffState];
+		[anObject setState: NSControlStateValueOff];
 	item = [menu itemWithTag: pageStyle];
-	[item setState: NSOnState];
+	[item setState: NSControlStateValueOn];
 		
 	//-------Magnification Menu------------------
 	menu = [[previewMenu itemWithTitle:
@@ -9439,9 +9439,9 @@ else
 	menuArray = [menu itemArray];
 	enumerator = [menuArray objectEnumerator];
 	while ((anObject = [enumerator nextObject]))
-		[anObject setState: NSOffState];
+		[anObject setState: NSControlStateValueOff];
 	item = [menu itemWithTag: resizeOption];
-	[item setState: NSOnState];
+	[item setState: NSControlStateValueOn];
 	
 	//-------Magnification Controls----------
 	[self fixMagnificationControls]; //needed when magnify in split mode
