@@ -1255,8 +1255,6 @@ static NSString *TSTextForSaving(NSString *text, NSStringEncoding encoding)
 
 - (BOOL)ptexUtfOutputCheck: (NSString *)dataString withEncoding: (NSStringEncoding)enc
 {
-	NSString *currentEncoding;
-	currentEncoding = [self keyForStringEncoding:enc];
 
 	if( ![dataString canBeConvertedToEncoding:
 			CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISO_2022_JP)] ) {

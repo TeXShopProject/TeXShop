@@ -113,8 +113,6 @@ static BOOL TSContextSyncPlace(NSString *output, NSString **fileName, NSInteger 
 - (BOOL)doSyncTeXForPageConTeXt: (NSInteger)pageNumber x: (CGFloat)xPosition y: (CGFloat)yPosition yOriginal: (CGFloat)yOriginalPosition
 {
     NSString        *myFileName;
-    NSString        *foundFileName;
-    NSInteger       line;
     NSNumber        *myNumber;
     NSDate          *myDate;
     NSMutableArray  *args;
@@ -123,8 +121,6 @@ static BOOL TSContextSyncPlace(NSString *output, NSString **fileName, NSInteger 
     NSString        *rootFile, *mySyncTeXFileName;
     
      
-    line = 0;
-    foundFileName = NULL;
     
     myFileName = [[self fileURL] path];
     if (! myFileName)
@@ -507,7 +503,7 @@ static BOOL TSContextSyncPlace(NSString *output, NSString **fileName, NSInteger 
     
     // The equations below define a rectangle, with origin (hNumber, vNumber) and size (WNumber, HNumber)
     
-    pageNumber[0] = aPage;
+    pageNumber[0] = (int)aPage;
     thePage = [[self.myPDFKitView document] pageAtIndex: (pageNumber[0] - 1)];
     pageSize = [thePage boundsForBox: kPDFDisplayBoxMediaBox];
    
@@ -515,7 +511,7 @@ static BOOL TSContextSyncPlace(NSString *output, NSString **fileName, NSInteger 
     vNumber[0] = pageSize.size.height - lly - 5.0;   //pageSize.size.height - v - height; // v;
     WNumber[0] = urx - llx;
     HNumber[0] = ury - lly;
-    pageNumber[0] = aPage;
+    pageNumber[0] = (int)aPage;
     firstPage[0] = YES;
 
     [(MyPDFKitView *)self.pdfKitWindow.activeView setNumberSyncRect:0];

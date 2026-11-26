@@ -377,16 +377,9 @@
 
 - (id)handleSyncToPreviewCommand:(NSScriptCommand*)command
 {
-    NSString    *filePath;
-    NSInteger   line;
-    NSUInteger  characterIndex;
     
     // NSLog(@"got here");
     
-    NSDictionary* args = [command evaluatedArguments];
-    filePath = [args objectForKey:@"SourceName"];
-    line = [[args objectForKey:@"SourceLine"] integerValue];
-    characterIndex = [[args objectForKey:@"SourceCharIndex"] integerValue];
     // NSLog(@"The line is $d", line);
     // NSLog(@"The index is $d", characterIndex);
     // NSLog(filePath);

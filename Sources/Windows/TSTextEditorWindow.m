@@ -214,10 +214,10 @@
 - (void)sendEvent:(NSEvent *)theEvent
 {
 	
-//	if (([theEvent type] == NSEventTypeFlagsChanged) && ([theEvent modifierFlags] & NSCommandKeyMask))
+//	if (([theEvent type] == NSEventTypeFlagsChanged) && ([theEvent modifierFlags] & NSEventModifierFlagCommand))
 //		NSLog(@"yes");
 	
-	if (([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+	if (([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSEventModifierFlagCommand)) {
 		
 		if  ([[theEvent characters] characterAtIndex:0] == '[') {
 			[self.myDocument doCommentOrIndentForTag:Munindent];

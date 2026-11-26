@@ -113,7 +113,7 @@ NSData *draggedData;
 	NSRange         pageRangeEnd, smallerRange;
 	NSRange         remainingRange, searchResultRange;
 	NSRange         newRange;
-	NSInteger             syncNumber, x, y;
+	NSInteger             x, y;
 	NSUInteger        theStart, theEnd;
 	double          newx, newy;
 	NSRect          smallRect;
@@ -244,7 +244,6 @@ NSData *draggedData;
 			NS_HANDLER
 			return;
 			NS_ENDHANDLER
-			syncNumber = [keyLine integerValue]; // number of entry
 
 			searchResultRange = [keyLine rangeOfString: @" "];
 			if (searchResultRange.location == NSNotFound)
@@ -1296,12 +1295,11 @@ failed. If you change the code below, be sure to test carefully!
 
 - (void) down: sender
 {
-	NSRect	myBounds, myVisible, newVisible;
+	NSRect	myVisible, newVisible;
 	// mitsu 1.29 (O)  commented out--this should work with TIFF etc.
 	//if ((documentType == isTIFF) || (documentType == isJPG) || (documentType == isEPS)) return;
 	if (!self.myRep) return;
 
-	myBounds = [self bounds];
 	myVisible = [self visibleRect];
 	newVisible = myVisible;
 	// newVisible.origin.y = myVisible.origin.y - myVisible.size.height;
@@ -1313,12 +1311,11 @@ failed. If you change the code below, be sure to test carefully!
 
 - (void) bottom: sender
 {
-	NSRect	myBounds, myVisible, newVisible;
+	NSRect	myVisible, newVisible;
 	// mitsu 1.29 (O)  commented out--this should work with TIFF etc.
 	//if ((documentType == isTIFF) || (documentType == isJPG) || (documentType == isEPS)) return;
 	if (!self.myRep) return;
 
-	myBounds = [self bounds];
 	myVisible = [self visibleRect];
 	newVisible = myVisible;
 	newVisible.origin.y = 0;
@@ -1550,7 +1547,7 @@ failed. If you change the code below, be sure to test carefully!
 		NSScroller *scroller = [[self enclosingScrollView] verticalScroller];
 		NSRect aRect = [scroller rectForPart: NSScrollerKnob];
 		aRect = [scroller convertRect: aRect toView: nil];
-		NSPoint aPoint = [[self window] convertBaseToScreen: aRect.origin];
+		NSPoint aPoint = [[self window] convertRectToScreen: NSMakeRect(aRect.origin.x, aRect.origin.y, 0, 0)].origin;
 		aPoint.x -= PAGE_WINDOW_H_OFFSET;
 		aPoint.y += aRect.size.height/2 + PAGE_WINDOW_V_OFFSET;
 		[pageNumberWindow setFrameOrigin: aPoint];
@@ -1607,11 +1604,8 @@ failed. If you change the code below, be sure to test carefully!
 {
 	NSPoint	theCenter, theOrigin;
 	NSRect	myBounds, visRect;
-	double	width, height;
 
 	myBounds = [self bounds];
-	width = myBounds.size.width;
-	height = myBounds.size.height;
 	visRect = [self visibleRect];
 	theCenter.x = visRect.origin.x + visRect.size.width/2;
 	theCenter.y = visRect.origin.y + visRect.size.height/2;
@@ -1680,7 +1674,7 @@ failed. If you change the code below, be sure to test carefully!
 	NSRange         thisRange, newRange, foundRange;
 	NSNumber        *anotherNumber;
 	NSInteger             aNumber;
-	NSInteger             syncNumber, oldSyncNumber, x, oldx, y, oldy;
+	NSInteger             syncNumber, oldSyncNumber, y;
 	BOOL            found, done;
 	NSUInteger        theStart, theEnd, theContentsEnd;
 	NSString        *newFileName, *theExtension;
@@ -1853,12 +1847,11 @@ failed. If you change the code below, be sure to test carefully!
 
 	found = YES;
 	syncNumber = -1;
-	x = 0; y = 0;
+	y = 0;
 	remainingRange.location = 0;
 	remainingRange.length = [syncInfo length];
 	do {
 		oldSyncNumber = syncNumber;
-		oldx = x; oldy = y;
 	//	if (remainingRange.length < 0)
 	//		{found = NO; break;}
 		searchResultRange = [syncInfo rangeOfString: @"p " options: NSLiteralSearch range: remainingRange];
@@ -1911,7 +1904,6 @@ failed. If you change the code below, be sure to test carefully!
 			NS_HANDLER
 			return;
 			NS_ENDHANDLER
-			x = [keyLine integerValue];
 
 			searchResultRange = [keyLine rangeOfString: @" "];
 			if (searchResultRange.location == NSNotFound)
@@ -2655,7 +2647,7 @@ failed. If you change the code below, be sure to test carefully!
 #ifndef DO_NOT_SHOW_SELECTION_SIZE
 	// create a small window displaying the size of selection
 	NSRect aRect;
-	aRect.origin = [[self window] convertBaseToScreen: mouseLocWindow];
+	aRect.origin = [[self window] convertRectToScreen: NSMakeRect(mouseLocWindow.x, mouseLocWindow.y, 0, 0)].origin;
 	aRect.origin.x -= SIZE_WINDOW_H_OFFSET;
 	aRect.origin.y += SIZE_WINDOW_V_OFFSET;
 	aRect.size = NSMakeSize(SIZE_WINDOW_WIDTH, SIZE_WINDOW_HEIGHT);
@@ -2764,7 +2756,7 @@ failed. If you change the code below, be sure to test carefully!
 			ymax = fmin(selRectWindow.origin.y+selRectWindow.size.height,
 						contentRect.origin.y+contentRect.size.height);
 			NSPoint aPoint = NSMakePoint(xmin, (ymin+ymax)/2);
-			aPoint = [[self window] convertBaseToScreen: aPoint];
+			aPoint = [[self window] convertRectToScreen: NSMakeRect(aPoint.x, aPoint.y, 0, 0)].origin;
 			aPoint.x -= SIZE_WINDOW_H_OFFSET;
 			aPoint.y += SIZE_WINDOW_V_OFFSET;
 			[sizeWindow setFrameOrigin: aPoint]; // set the position
@@ -3037,7 +3029,7 @@ failed. If you change the code below, be sure to test carefully!
 
 	[NSEvent stopPeriodicEvents];
 	// if the mouse in is menu bar, cancel the move
-	mouseLocScreen = [[self window] convertBaseToScreen: [theEvent locationInWindow]];
+	mouseLocScreen = [[self window] convertRectToScreen: NSMakeRect([theEvent locationInWindow].x, [theEvent locationInWindow].y, 0, 0)].origin;
 	screenFrame = [[NSScreen mainScreen] frame];
 	if (([[NSScreen screens] count] == 1 || NSPointInRect(mouseLocScreen, screenFrame)) &&
 			mouseLocScreen.y >= screenFrame.origin.y + screenFrame.size.height - 22)
@@ -3442,7 +3434,7 @@ failed. If you change the code below, be sure to test carefully!
 }
 
 // NSDraggingSource required method
-- (NSUInteger)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal
 {
 	return (isLocal)?NSDragOperationNone:NSDragOperationCopy;
 }

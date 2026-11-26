@@ -1854,14 +1854,14 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 	//			didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:) contextInfo:nil];
     [aPanel beginSheetModalForWindow:window
         completionHandler: ^ (NSInteger result ) {
-        if (result == NSFileHandlingPanelOKButton) {
+        if (result == NSModalResponseOK) {
             NS_DURING
             // NSString *fileName = [sheet fileName];
             NSURL *fileURL = [aPanel URL];
             NSString *fileName = [fileURL path];
             if (fileName) {
                 NSArray *selectionArray = [TSMacroTreeNode minimumNodeCoverFromNodesInArray:
-                                           [outlineView allSelectedItems]];
+                                           [self->outlineView allSelectedItems]];
                 [self saveNodes: selectionArray toFile: fileName];
             }
             NS_HANDLER
@@ -1909,7 +1909,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
     
     [aPanel beginSheetModalForWindow:window
                    completionHandler: ^ (NSInteger result ) {
-                       if (result == NSFileHandlingPanelOKButton) {
+                       if (result == NSModalResponseOK) {
                            NSDictionary *newDict = nil;
                            NSURL *myURL = [aPanel URL];
                            NSString *fileName = [myURL path];
@@ -1921,7 +1921,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
                                    newDict = (NSDictionary *)[aString propertyList];
                            if (newDict) {
                                    NSArray *newNodeArray = [TSMacroTreeNode nodeArrayFromPropertyList: newDict];
-                                   [outlineController addNewDataArrayToSelection: newNodeArray];
+                                   [self->outlineController addNewDataArrayToSelection: newNodeArray];
                                }
                            NS_HANDLER
                            newDict = nil;

@@ -103,7 +103,7 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 	TSMacroUseShortcutCell(outlineView);
 
 	// Register to get only our custom type.
-	[outlineView registerForDraggedTypes:[NSArray arrayWithObjects: DragDropSimplePboardType, NSStringPboardType, nil]];
+	[outlineView registerForDraggedTypes:[NSArray arrayWithObjects: DragDropSimplePboardType, NSPasteboardTypeString, nil]];
 }
 
 
@@ -384,7 +384,7 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 	self.draggedNodes = items; // Don't retain since this is just holding temporaral drag information, and it is only used during a drag!  We could put this in the pboard actually.
 
 	// Provide data for our custom type, and simple NSStrings.
-	[pboard declareTypes:[NSArray arrayWithObjects: DragDropSimplePboardType, NSStringPboardType, nil] owner:self];
+	[pboard declareTypes:[NSArray arrayWithObjects: DragDropSimplePboardType, NSPasteboardTypeString, nil] owner:self];
 
 	// the actual data doesn't matter since DragDropSimplePboardType drags aren't recognized by anyone but us!.
 	[pboard setData:[NSData data] forType:DragDropSimplePboardType];
@@ -396,7 +396,7 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 	// As the macro is shown: with yen signs in the Mac Japanese mode, as stored otherwise.
 	if (g_shouldFilter == kMacJapaneseFilterMode)
 		draggedString = filterBackslashToYen(draggedString);
-	[pboard setString: draggedString forType: NSStringPboardType];
+	[pboard setString: draggedString forType: NSPasteboardTypeString];
 
 	return YES;
 }
@@ -446,7 +446,7 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 	NSPasteboard * pboard = [info draggingPasteboard];
 	NSMutableArray * itemsToSelect = nil;
 	
-	// Do the appropriate thing depending on whether the data is DragDropSimplePboardType or NSStringPboardType.
+	// Do the appropriate thing depending on whether the data is DragDropSimplePboardType or NSPasteboardTypeString.
 	if ([pboard availableTypeFromArray:[NSArray arrayWithObjects:DragDropSimplePboardType, nil]] != nil) {
 		TSMacroOutlineController *dragDataSource = [[info draggingSource] dataSource];
 		NSArray *myDraggedNodes = [TSMacroTreeNode minimumNodeCoverFromNodesInArray: [dragDataSource draggedNodes]];
@@ -462,8 +462,8 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 			[aDraggedNodeParent removeChild: aDraggedNode];
 		}
 		[parentNode insertChildren: myDraggedNodes atIndex: childIndex];
-	} else if ([pboard availableTypeFromArray:[NSArray arrayWithObject: NSStringPboardType]]) {
-		NSString *string = [pboard stringForType: NSStringPboardType];
+	} else if ([pboard availableTypeFromArray:[NSArray arrayWithObject: NSPasteboardTypeString]]) {
+		NSString *string = [pboard stringForType: NSPasteboardTypeString];
 		// The type can be there while its data cannot be read (another app's provider failed).
 		if (string == nil)
 			return;
@@ -796,7 +796,7 @@ static CGFloat TSNameEditingWidth(NSString *string, NSFont *font)
 		imageSrcRect.size = imageSize;
 		imageSrcRect.origin = NSMakePoint(0,0);
 		[self.image1 drawInRect: imageFrame fromRect: imageSrcRect
-						operation: NSCompositeSourceOver fraction: 1.0];
+						operation: NSCompositingOperationSourceOver fraction: 1.0];
 // original was:
 		//imageFrame.size = imageSize;
 
@@ -805,7 +805,7 @@ static CGFloat TSNameEditingWidth(NSString *string, NSFont *font)
 		//else
 		//    imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
 
-		//[image compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver];
+		//[image compositeToPoint:imageFrame.origin operation:NSCompositingOperationSourceOver];
 // change end
 	}
 	[super drawWithFrame:cellFrame inView:controlView];

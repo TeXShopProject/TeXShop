@@ -21,6 +21,7 @@
 
 #import <AppKit/AppKit.h>
 #import "TSHTMLWindow.h"
+#import "TSAppDelegate.h"
 #import "TSDocument.h"
 #import "globals.h"
 

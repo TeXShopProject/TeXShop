@@ -54,7 +54,6 @@
     NSString *filePath;
     
     NSData          *thePDFData;
-    NSPDFImageRep   *thePDFImageRep;
     NSImage         *theImage;
     NSRect          theOriginalRect;
     
@@ -65,7 +64,6 @@
     filePath = [[DraggedImagePath stringByStandardizingPath]
             stringByAppendingPathExtension: @"pdf"];
     [mydata writeToFile:filePath atomically:NO];
-    thePDFImageRep = [NSPDFImageRep imageRepWithData: thePDFData];
     theImage = [[NSImage alloc] initWithData: thePDFData];
     // NSLog(@"got here");
     

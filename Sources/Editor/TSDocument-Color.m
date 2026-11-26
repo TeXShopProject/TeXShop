@@ -64,8 +64,6 @@
     NSColor *myBackgroundColor;
     NSColor *myTextColor;
     NSColor *myColor;
-    NSArray *myArray;
-    NSNumber *myNumber;
     BOOL    withDarkColors;
     
 #ifdef MOJAVEORHIGHER

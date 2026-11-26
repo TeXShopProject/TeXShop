@@ -35,7 +35,7 @@
 
 - (void)StopSyncScannerOld
 {
-  old_synctex_scanner_free(scanner);
+  old_synctex_scanner_free((synctex_scanner_t)scanner);
 }
 
 
@@ -86,11 +86,11 @@
     }
     
     if (scanner != NULL)
-        old_synctex_scanner_free(scanner);
+        old_synctex_scanner_free((synctex_scanner_t)scanner);
     scanner = NULL;
     
     fileString = [myFileName cStringUsingEncoding:NSUTF8StringEncoding];
-    scanner = old_synctex_scanner_new_with_output_file(fileString, NULL, 1);
+    scanner = (struct synctex_scanner_t *)old_synctex_scanner_new_with_output_file(fileString, NULL, 1);
 }
 
 
@@ -107,7 +107,7 @@
     NSString         *newFile;
     NSError            *myError;
     
-    NSInteger        length, theIndex;
+    NSInteger        theIndex;
     NSPoint            viewPosition;
     NSRange            correctedFoundRange;
     NSString        *sourceLineString;
@@ -147,11 +147,11 @@
         //    NSLog(syncTeXName);
         
         gotSomething = NO;
-        if (old_synctex_edit_query(scanner, pageNumber, xPosition, yPosition) > 0) {
+        if (old_synctex_edit_query((synctex_scanner_t)scanner, (int)pageNumber, xPosition, yPosition) > 0) {
             gotSomething = YES;
             synctex_node_t node;
-            while ((node = old_synctex_next_result(scanner)) != NULL) {
-                theFoundFileName = old_synctex_scanner_get_name(scanner, old_synctex_node_tag(node));
+            while ((node = old_synctex_next_result((synctex_scanner_t)scanner)) != NULL) {
+                theFoundFileName = old_synctex_scanner_get_name((synctex_scanner_t)scanner, old_synctex_node_tag(node));
                 
                 // This line is a patch by Klaus Tichmann
                 if (theFoundFileName == NULL)
@@ -239,7 +239,6 @@
         PDFDocument *pdfDocument = [[self pdfKitView] document];
         PDFPage *thePage = [pdfDocument pageAtIndex: (pageNumber - 1)];
         NSString *fullText = [thePage string];
-        length = [fullText length];
         theIndex = [thePage characterIndexAtPoint:viewPosition];
         
         myLineRange = [newDocument lineRange: line];
@@ -426,7 +425,7 @@
     NSString        *theFullName; //, *aName;
     // NSString        *pathString;
     NSString        *rootFile, *rootPath, *theFile;
-    float            x, y, h, v, width, height;
+    float            h, v, width, height;
     
     // THIS IS ACTIVE
     
@@ -454,10 +453,10 @@
     if (scanner == NULL)
         return NO;
     
-    synctex_node_t node = old_synctex_scanner_input(scanner);
+    synctex_node_t node = old_synctex_scanner_input((synctex_scanner_t)scanner);
     BOOL found = NO;
     while (node != NULL) {
-        name = old_synctex_scanner_get_name(scanner, old_synctex_node_tag(node));
+        name = old_synctex_scanner_get_name((synctex_scanner_t)scanner, old_synctex_node_tag(node));
         // An unknown tag has no name, and a name that is not UTF-8 cannot be compared.
         theName = name != NULL ? [NSString stringWithCString:name encoding: NSUTF8StringEncoding] : nil;
         if (theName == nil) {
@@ -486,12 +485,11 @@
     
     boxNumber = 0;
     
-    if (old_synctex_display_query(scanner, name, line, 0) > 0) {
+    if (old_synctex_display_query((synctex_scanner_t)scanner, name, (int)line, 0) > 0) {
         int page = -1;
-        BOOL gotSomething = NO;
         
         
-        while (((node = old_synctex_next_result(scanner)) != NULL) && (boxNumber < 200)) {
+        while (((node = old_synctex_next_result((synctex_scanner_t)scanner)) != NULL) && (boxNumber < 200)) {
             if (page == -1) {
                 page = old_synctex_node_page(node);
                 thePage = [[self.myPDFKitView document] pageAtIndex: (page - 1)];
@@ -499,10 +497,8 @@
             }
             if (old_synctex_node_page(node) != page)
                 continue;
-            gotSomething = YES;
             // x = synctex_node_box_visible_x(node);
             // y = synctex_node_box_visible_y(node);
-            x = 0; y = 0;
             h = old_synctex_node_box_visible_h(node);
             v = old_synctex_node_box_visible_v(node) - old_synctex_node_box_visible_height(node);
             width = old_synctex_node_box_visible_width(node);
