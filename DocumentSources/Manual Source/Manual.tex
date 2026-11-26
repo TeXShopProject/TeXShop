@@ -779,7 +779,7 @@ The Keyboard category sets what keys do in the source window and the shortcuts o
 
 \begin{description}
 \item[Key Bindings] \mnu{Use key bindings (default for new documents)} replaces a typed character by a text, such as \verb|{| by \verb|{}|; \mnu{Source}\To\mnu{Key Bindings} turns them on or off for the active document. The \mnu{Key Binding List} below the switch shows the replacements, where they can be added, changed and removed; check \mnu{Paste} for a replacement that should also apply to pasted text.
-\item[Command Completion] \mnu{Completion trigger} chooses the key that completes the command you are typing; press it again for the next candidate, and with Shift for the previous one. \mnu{Move to the next or previous mark with Option or Control and the trigger key} adds mark navigation to that key, and \mnu{Edit Command Completion\ldots} opens the list of completions.
+\item[Command Completion] \mnu{Completion trigger} chooses the key that completes the command you are typing, or \mnu{None} to turn command completion off; press it again for the next candidate, and with Shift for the previous one. \mnu{Move to the next or previous mark with Option or Control and the trigger key} adds mark navigation to that key, and \mnu{Edit Command Completion\ldots} opens the list of completions.
 \item[Label and Citation Key Completion] \mnu{Edit}\To\mnu{Complete Label or Citation Key} offers the labels of the file after \verb|\ref{| and similar commands. With \mnu{Also offer BibDesk citation keys} on, it also offers BibDesk citation keys after \verb|\cite{| and similar commands.
 \item[Menu Shortcuts] The list of all menu commands with their shortcuts, where any shortcut can be changed or removed. \mnu{Search by Function} finds a command by name, and \mnu{Search by Key} finds what a keystroke does. \mnu{Restore Default} and \mnu{Restore All\ldots} return to the default shortcuts.
 \end{description}
@@ -1740,7 +1740,7 @@ The list is kept in the folder \path{~/Library/TeXShop/Keyboard}, in \texttt{aut
 
 \section{Command Completion}\label{CommandCompletionSection}
 
-Command completion enters commands and environments from their first letters or from a short abbreviation. It is always available, and is triggered by a key that is rarely typed otherwise: Escape, or Tab if you choose it under \mnu{Completion trigger} in the \mnu{Keyboard} category of TeXShop Settings. In this section the trigger key is written \esckey. The source panel of \mnu{Edit}\To\mnu{Experiment\ldots} uses the same key.
+Command completion enters commands and environments from their first letters or from a short abbreviation. It is triggered by a key that is rarely typed otherwise: Escape, or Tab if you choose it under \mnu{Completion trigger} in the \mnu{Keyboard} category of TeXShop Settings. Choose \mnu{None} there to turn command completion off. In this section the trigger key is written \esckey. The source panel of \mnu{Edit}\To\mnu{Experiment\ldots} uses the same key.
 
 \subsection{Completing a Command}
 
@@ -1748,7 +1748,7 @@ Type the first letters of a command and press \esckey: TeXShop completes it from
 \begin{verbatim}
      \begin{th
 \end{verbatim}
-\esckey\ offers \verb|\begin{thebibliography}|, \verb|\begin{theindex}| and \verb|\begin{theorem}|. When the list has nothing for the text, the key does what it does elsewhere: Escape shows the word completions of macOS, and Tab types a tab.
+\esckey\ offers \verb|\begin{thebibliography}|, \verb|\begin{theindex}| and \verb|\begin{theorem}|. When the list has nothing for the text, Escape leaves the text as it is, and Tab types a tab.
 
 A completion can do more than finish the word. The completion of \verb|\begin{theorem}| also writes the \verb|\end{theorem}| line, and puts marks (•) where you will type. The first mark is selected, shown here as \selmark, so what you type replaces it:
 \begin{quote}\ttfamily
