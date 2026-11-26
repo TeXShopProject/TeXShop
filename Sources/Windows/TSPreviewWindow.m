@@ -1900,9 +1900,6 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
         if (!window) return;
         [window layoutIfNeeded];
         MyPDFKitView *one = (MyPDFKitView *)window.myPDFKitView, *two = (MyPDFKitView *)window.myPDFKitView2;
-        // The outline of the drawer is shared by the parts; each keeps its own record of the open entries.
-        [two.outlineExpansion restoreState:drawerState];
-        [one.outlineExpansion restoreState:drawerState];
         [one finishRestoringPreview];
         if (window.windowIsSplit) {
             if (secondRestoring)
@@ -1911,6 +1908,10 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
             [window showActivePart];
         }
         [window.myDocument updatePreviewLayoutControls];
+        // Last: going to the page and making a part the one in use scroll the outline to the entry of
+        // the page, which would move the scroll position that was kept. The outline of the drawer is
+        // shared by the parts, and only the first part has the record of its open entries.
+        [one.outlineExpansion restoreState:drawerState];
     });
     return YES;
 }

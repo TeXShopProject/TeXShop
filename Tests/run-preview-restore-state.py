@@ -39,6 +39,10 @@ MUTATIONS = {
     # #71 follow-up: what the drawer shows of the outline after the next launch.
     'drawer-layout-not-kept': ('window', '    if (drawerState.count)\n', '    if (NO)\n'),
     'drawer-layout-not-restored': ('window', '        [one.outlineExpansion restoreState:drawerState];\n', ''),
+    # The audit: restored before the page and the part in use scrolled the outline, the position was lost.
+    'drawer-layout-restored-first': ('window',
+        ['        [one finishRestoringPreview];\n        if (window.windowIsSplit) {', '        [one.outlineExpansion restoreState:drawerState];\n    });'],
+        ['        [one.outlineExpansion restoreState:drawerState];\n        [one finishRestoringPreview];\n        if (window.windowIsSplit) {', '    });']),
     'frame-not-restored': ('window', '    if (frame.length)\n', '    if (NO)\n'),
     'old-state-taken': ('window', " || ![coder containsValueForKey:@\"TSPreviewFirstPageStyle\"]) return NO;", ') return NO;'),
     # The first audit: the pages came back unturned.
@@ -115,8 +119,9 @@ if args.mutation:
         assert popup_source.count(old) == 1, args.mutation
         popup_source = popup_source.replace(old, new)
     elif which == 'window':
-        assert window_text.count(old) == 1, args.mutation
-        window_text = window_text.replace(old, new)
+        for o, n in (zip(old, new) if isinstance(old, list) else [(old, new)]):
+            assert window_text.count(o) == 1, args.mutation
+            window_text = window_text.replace(o, n)
     else:
         assert view_text.count(old) == 1, args.mutation
         view_text = view_text.replace(old, new)
@@ -167,6 +172,7 @@ program = r'''
 @property (weak) TestDocument *myDocument;
 @property BOOL oldUsed;
 @property (strong) TSOutlineExpansion *outlineExpansion;
+@property (strong) NSOutlineView *outlineToScroll;
 @property NSInteger handlingLink, arrangements, contentWidthFits, activations, otherViewObserved;
 - (void)applyPreviewArrangement;
 - (void)becomeActiveView;
@@ -236,7 +242,11 @@ void TSContentWidthNoteDrawingDiverged(PDFDocument *document) {}
 - (void)killTransientLinkPreview {}
 - (void)observeLinkPreviewEvents {}
 - (void)fitContentWidth { self.contentWidthFits++; }
-- (void)becomeActiveView { ((TestWindow *)self.window).activeView = self; self.activations++; }
+- (void)becomeActiveView {
+    ((TestWindow *)self.window).activeView = self; self.activations++;
+    // As showPageInOutline: does for the part in use: the outline is scrolled to the entry of the page.
+    [self.outlineToScroll scrollRowToVisible:0];
+}
 - (void)applyPreviewArrangement { self.arrangements++; }
 - (void)otherViewDocumentChanged:(NSNotification *)notification { self.otherViewObserved++; }
 - (BOOL)hasPinnedLinkPreview { return pinnedLinkPreview.superview != nil; }
@@ -604,15 +614,24 @@ int main(void) { @autoreleasepool {
         [outlineA expandItem:[outlineA child:2 ofItem:nil]];
         NSSplitView *splitA = (NSSplitView *)scrollA.superview.superview;
         [splitA setPosition:280 ofDividerAtIndex:0];
+        // Scrolled down; a split window makes a part the one in use when it comes back, which scrolls the
+        // outline to the entry of its page (the audit's finding).
+        NSClipView *clipA = scrollA.contentView;
+        [clipA scrollToPoint:NSMakePoint(0, 300)]; [scrollA reflectScrolledClipView:clipA];
+        [before mainSplitPdfKitWindow];
         NSData *state = archive(^(NSKeyedArchiver *a) { [before encodePreviewStateWithCoder:a]; });
         TestWindow *after = preview(pdf);
         MyPDFKitView *a1 = (MyPDFKitView *)after.myPDFKitView;
         a1.outlineExpansion = [[TSOutlineExpansion alloc] initWithOutlineView:outlineB];
+        a1.outlineToScroll = outlineB;
         [a1.outlineExpansion reloadOutline];
         check(outlineB.numberOfRows == 30, @"fixture: the outline is closed");
         [after restorePreviewStateWithCoder:unarchiver(state)]; pump();
         check([outlineB isItemExpanded:[outlineB child:7 ofItem:nil]] && [outlineB isItemExpanded:[outlineB child:2 ofItem:nil]] && ![outlineB isItemExpanded:[outlineB child:3 ofItem:nil]],
               @"the open sections of the drawer's outline come back");
+        check(clipA.bounds.origin.y > 200 && fabs(scrollB.contentView.bounds.origin.y - clipA.bounds.origin.y) < 0.5,
+              [NSString stringWithFormat:@"the scroll position of the outline comes back, also after the part in use scrolled it (%.1f, was %.1f)",
+               scrollB.contentView.bounds.origin.y, clipA.bounds.origin.y]);
         NSSplitView *splitB = (NSSplitView *)scrollB.superview.superview;
         check(fabs(NSHeight(splitB.subviews[0].frame) - NSHeight(splitA.subviews[0].frame)) < 1.5 && NSHeight(splitA.subviews[0].frame) > 250,
               [NSString stringWithFormat:@"the divider of the drawer comes back (%.1f, was %.1f)", NSHeight(splitB.subviews[0].frame), NSHeight(splitA.subviews[0].frame)]);
