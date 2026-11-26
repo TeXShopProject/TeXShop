@@ -29,7 +29,13 @@ static NSRect TSPreviewConstrainBounds(NSClipView *self, SEL _cmd, NSRect propos
     NSRect rect = original ? ((NSRect (*)(id, SEL, NSRect))original)(self, _cmd, proposed) : proposed;
     if (!objc_getAssociatedObject(self, &TSPreviewClipConstrainKey))
         return rect;
-    CGFloat inset = self.enclosingScrollView.contentInsets.top;
+    NSScrollView *scroll = self.enclosingScrollView;
+    CGFloat magnification = scroll.magnification;
+    // Below unit scale the inset is in screen points and AppKit's stop is the one
+    // Fit to Window uses. Extending it leaves the first page short of the toolbar.
+    if (!isfinite(magnification) || magnification <= 1)
+        return rect;
+    CGFloat inset = scroll.contentInsets.top;
     if (inset <= 0.5)
         return rect;
     if (self.isFlipped) {
@@ -104,9 +110,10 @@ static BOOL TSHasInsets(NSScrollView *scroll)
     return insets.top != 0 || insets.bottom != 0;
 }
 
-// PDFKit stores a magnified scroll view's content insets in the clip view's bounds,
-// then magnifies them. A top inset of the toolbar band is band / magnification on
-// screen; the property itself is that many bounds points.
+// Above unit scale, PDFKit stores the top inset in the clip view's bounds and then
+// magnifies it, so the property is the toolbar band divided by the magnification.
+// At unit scale and below, the property is that band in screen points. Dividing
+// there subtracts the band twice.
 static CGFloat TSMag(NSScrollView *scroll)
 {
     CGFloat magnification = scroll.magnification;
@@ -115,7 +122,9 @@ static CGFloat TSMag(NSScrollView *scroll)
 
 static CGFloat TSTopInsetScreen(NSScrollView *scroll)
 {
-    return scroll.contentInsets.top * TSMag(scroll);
+    CGFloat magnification = TSMag(scroll);
+    CGFloat top = scroll.contentInsets.top;
+    return magnification > 1 ? top * magnification : top;
 }
 
 // The height of the area where the text can be seen, in points.
@@ -430,6 +439,8 @@ static void *TSPreviewToolbarShieldKey = &TSPreviewToolbarShieldKey;
     CGFloat magnification = TSMag(scroll);
     CGFloat band = underToolbar ? [self bandOverScroll:scroll] : 0;
     CGFloat wanted = band / magnification;
+    if (magnification <= 1)
+        wanted = band;
     if (underToolbar && scroll.automaticallyAdjustsContentInsets)
         scroll.automaticallyAdjustsContentInsets = NO;
     NSEdgeInsets insets = scroll.contentInsets;
@@ -437,11 +448,18 @@ static void *TSPreviewToolbarShieldKey = &TSPreviewToolbarShieldKey;
         CGFloat shift = insets.top - wanted;
         insets.top = wanted;
         scroll.contentInsets = insets;
-        // The document point at the bottom of the band stays where it is.
-        NSPoint origin = clip.bounds.origin;
-        origin.y += clip.isFlipped ? shift : -shift;
-        [clip scrollToPoint:origin];
-        [scroll reflectScrolledClipView:clip];
+        if (magnification > 1) {
+            // The document point at the bottom of the band stays where it is.
+            // Below unit scale the inset is in screen points, and this shift is not.
+            NSPoint origin = clip.bounds.origin;
+            origin.y += clip.isFlipped ? shift : -shift;
+            [clip scrollToPoint:origin];
+            [scroll reflectScrolledClipView:clip];
+        } else if (view.autoScales) {
+            // Fit to Window measured the old inset. Measure the band again.
+            view.autoScales = NO;
+            view.autoScales = YES;
+        }
     }
     TSPreviewToolbarShield *shield = objc_getAssociatedObject(scroll, TSPreviewToolbarShieldKey);
     if (!underToolbar || band < 1) {

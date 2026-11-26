@@ -84,6 +84,10 @@ MUTATIONS = {
     'toolbar-inset-unscaled': ('TSPreviewScrollerKeeper.m',
         '    CGFloat wanted = band / magnification;\n',
         '    CGFloat wanted = band;\n'),
+    # Below unit scale the band is divided again, so Fit to Window leaves a gap.
+    'toolbar-inset-divided-when-small': ('TSPreviewScrollerKeeper.m',
+        '    if (magnification <= 1)\n        wanted = band;\n',
+        ''),
     # Nothing paints the window color over the light gutter in the toolbar band.
     'toolbar-shield-missing': ('TSPreviewScrollerKeeper.m',
         '    if (shield.superview != scroll)\n        [scroll addSubview:shield positioned:NSWindowAbove relativeTo:clip];\n',
@@ -415,6 +419,33 @@ int main(int argc, char **argv) { @autoreleasepool {
         Check(bandColor && bandColor.redComponent < 0.3 && bandColor.greenComponent < 0.3 && bandColor.blueComponent < 0.3,
               [NSString stringWithFormat:@"in Dark Mode the band behind the toolbar is the window color (%.2f, %.2f, %.2f)%@",
                bandColor.redComponent, bandColor.greenComponent, bandColor.blueComponent, nibName]);
+        [pv setScaleFactor:1];
+        TSPreviewViewDidLayout(pv);
+
+        // Fit to Window in a short window is below unit scale. The top inset stays
+        // the band in screen points, and the page stays up against the toolbar.
+        NSRect fittedFrame = pw.frame;
+        PDFDisplayMode fittedMode = pv.displayMode;
+        [pw setFrame:NSMakeRect(NSMinX(fittedFrame), NSMinY(fittedFrame), 800, 520) display:NO];
+        pv.displayMode = kPDFDisplaySinglePage;
+        pv.autoScales = YES;
+        Settle(pw);
+        TSPreviewViewDidLayout(pv);
+        previewScroll = pv.documentView.enclosingScrollView;
+        magnification = previewScroll.magnification;
+        previewBand = Band(pw);
+        pageRect = [pv convertRect:[pv convertRect:[page boundsForBox:kPDFDisplayBoxCropBox] fromPage:page] toView:nil];
+        gap = NSMaxY(pw.contentLayoutRect) - NSMaxY(pageRect);
+        Check(magnification > 0.2 && magnification < 0.98,
+              [NSString stringWithFormat:@"fit to window in a short window is below unit scale (%.2f)%@", magnification, nibName]);
+        Check(fabs(previewScroll.contentInsets.top - previewBand) < 1.5,
+              [NSString stringWithFormat:@"below unit scale the top inset is the band (%.1f, %.1f)%@",
+               previewScroll.contentInsets.top, previewBand, nibName]);
+        Check(gap > -1 && gap < 16,
+              [NSString stringWithFormat:@"fit to window keeps the page within one margin of the toolbar (%.1f)%@", gap, nibName]);
+        pv.autoScales = NO;
+        pv.displayMode = fittedMode;
+        [pw setFrame:fittedFrame display:NO];
         [pv setScaleFactor:1];
         TSPreviewViewDidLayout(pv);
 
