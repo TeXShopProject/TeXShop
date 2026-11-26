@@ -34,6 +34,11 @@ MUTATIONS = {
         '        subview.appearance = light;\n'
         '        subview.contentFilters = filters;\n',
     ),
+    'fullscreen-fail-stays-dark': (
+        'MyPDFKitView.m',
+        '    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO);\n}\n\n\n- (NSDrawer *)drawer',
+        '}\n\n\n- (NSDrawer *)drawer',
+    ),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -42,10 +47,36 @@ root = Path(__file__).resolve().parents[1]
 header = (root/'Sources/Preview/TSPreviewAppearance.h').read_text(encoding='utf-8')
 document = (root/'Sources/Preview/MyPDFKitView.m').read_text(encoding='utf-8')
 experiment = (root/'Sources/Preview/ScrapPDFKitView.m').read_text(encoding='utf-8')
+def method_body(source, marker):
+    if source.count(marker) != 1:
+        return ''
+    return source.split(marker, 1)[1].split('\n}\n', 1)[0]
+
+def fullscreen_product_calls(source):
+    fail = method_body(source, '- (void)windowDidFailToEnterFullScreen:(NSNotification *)notification')
+    enter = method_body(source, '- (void)windowWillEnterFullScreen:(NSNotification *)notification')
+    leave = method_body(source, '- (void)windowWillExitFullScreen:(NSNotification *)notification')
+    paper = method_body(source, '- (void)updatePreviewPaperColor')
+    dark = 'TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, YES)'
+    clear = 'TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO)'
+    if clear not in fail or enter.count(dark) != 2 or leave.count(clear) != 2:
+        return False
+    if enter.find(dark) > enter.find('enterFullScreen:') or enter.rfind(dark) < enter.find('enterFullScreen:'):
+        return False
+    if leave.find(clear) > leave.find('exitFullScreen:') or leave.rfind(clear) < leave.find('exitFullScreen:'):
+        return False
+    return 'TSPreviewFullScreenDarkKey' in paper and 'NSApp.effectiveAppearance' in paper
+
 if args.mutation:
     name, old, new = MUTATIONS[args.mutation]
-    assert header.count(old) == 1, args.mutation
-    header = header.replace(old, new)
+    if name == 'TSPreviewAppearance.h':
+        assert header.count(old) == 1, args.mutation
+        header = header.replace(old, new)
+    elif name == 'MyPDFKitView.m':
+        assert document.count(old) == 1, args.mutation
+        document = document.replace(old, new)
+    else:
+        raise SystemExit(args.mutation)
 assert 'name:NSPreferredScrollerStyleDidChangeNotification object:nil];' in document, 'document preview watches the scroller style'
 assert 'name:NSPreferredScrollerStyleDidChangeNotification object:nil];' in experiment, 'experiment preview watches the scroller style'
 
@@ -119,10 +150,17 @@ with tempfile.TemporaryDirectory(prefix='texshop-scroller-knob-') as temp:
                     str(temp/'test.m'), '-o', str(temp/'test')], check=True)
     result = subprocess.run([str(temp/'test')], capture_output=True, text=True, timeout=60,
                             env=dict(os.environ, HOME=str(temp)))
+    source_ok = fullscreen_product_calls(document)
     if args.mutation:
-        assert result.returncode == 1 and 'FAIL:' in result.stderr, result.stdout + result.stderr
+        if MUTATIONS[args.mutation][0] == 'MyPDFKitView.m':
+            assert result.returncode == 0, result.stdout + result.stderr
+            assert not source_ok, 'mutation was not detected'
+        else:
+            assert result.returncode == 1 and 'FAIL:' in result.stderr, result.stdout + result.stderr
         print('PASS: detected', args.mutation)
     else:
         if result.returncode:
             raise SystemExit(result.stdout + result.stderr)
+        if not source_ok:
+            raise SystemExit('FAIL: a failed full screen leaves the dark appearance')
         print(result.stdout.strip())
