@@ -2,7 +2,6 @@
 // applies to each window after loading its nib. Shared by the checks that
 // load every localized nib.
 #import "TSDialogButtonLayout.h"
-#import "TSConsoleButtonRow.h"
 #import "TSMarkMenu.h"
 #import "TSOlderPanelLayout.h"
 // The Matrix and LaTeX panels are loaded by their own controllers, which lay them out after loading. A check
@@ -49,9 +48,6 @@ static void ApplyProductionLayout(NSString *name, id owner, NSArray *objects) {
         SpacingOwner *document = owner;
         if (!document->linePanel || !document->projectPanel || !document->extensionPanel) { printf("ERROR TSDocument.nib panels are not connected\n"); exit(2); }
         for (NSWindow *panel in @[document->linePanel, document->projectPanel, document->extensionPanel]) TSLayoutDialogButtonRow(panel);
-        // TSDocument -setupConsole: push buttons along the top of the console.
-        if (![document->outputWindow isKindOfClass:NSWindow.class]) { printf("ERROR TSDocument.nib console is not connected\n"); exit(2); }
-        TSLayoutConsoleButtonRow(document->outputWindow);
         // TSToolbarController: the Tags and Labels pull-downs, titled as the document titles them.
         if (!document->tags || !document->stags || !document->labels || !document->slabels) { printf("ERROR TSDocument.nib toolbar pull-downs are not connected\n"); exit(2); }
         for (NSPopUpButton *tag in @[document->tags, document->stags]) TSFitToolbarPullDown(tag, NSLocalizedString(@"Tags", @"Tags"));

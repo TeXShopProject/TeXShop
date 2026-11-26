@@ -1,20 +1,16 @@
 #!/usr/bin/env python3
 """The console's buttons and the Magnification labels
 of every localized TSDocument.nib (which no longer holds the former Statistics panel), laid out as the
-application lays them out (see ConsoleAndSmallPanels.m). Also checks that the
-application lays out the document's console and the Experiment console with
-the shared row (TSConsoleButtonRow.h). No window is shown; AppKit defaults stay
+application lays them out (see ConsoleAndSmallPanels.m): the console keeps the
+square bars of the nib along its top edge. No window is shown; AppKit defaults stay
 in memory."""
 from pathlib import Path
 import subprocess, sys, tempfile
 from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 document = (root / 'Sources/Document/TSDocument.m').read_text(encoding='latin-1')
-setup = document[document.index('- (void)setupConsole;'):document.index('- (void)setupLogWindow')]
-assert setup.index('TSLayoutConsoleButtonRow(outputWindow);') > setup.index('[outputWindow setFrameAutosaveName:ConsoleWindowNameKey];'), \
-    'The application lays out the console after its saved frame, as the check does'
-assert 'TSLayoutConsoleButtons(content, @[], @[stop], scroll);' in (root / 'Sources/Typesetting/TSExperimentConsoleController.m').read_text(), \
-    'The Experiment console shares the row of the document console'
+assert 'TSLayoutConsole' not in document and not (root / 'Sources/Windows/TSConsoleButtonRow.h').exists(), \
+    'The console keeps the square bars of the nib'
 nibs = sorted((root / 'Resources/Interfaces').glob('*.lproj/TSDocument.nib/keyedobjects.nib'))
 assert len(nibs) == 12, nibs
 with tempfile.TemporaryDirectory(prefix='texshop-console-small-panels-') as tmp:
