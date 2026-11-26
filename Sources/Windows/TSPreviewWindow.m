@@ -1810,6 +1810,7 @@ NSUserInterfaceItemIdentifier const TSPreviewWindowRestorationIdentifier = @"TSP
 static NSString *const TSPreviewRestorationBookmarkKey = @"TSPreviewDocumentBookmark";
 static NSString *const TSPreviewRestorationURLKey = @"TSPreviewDocumentURL";
 static NSString *const TSPreviewRestorationFrameKey = @"TSPreviewWindowFrame";
+static NSString *const TSPreviewRestorationDrawerKey = @"TSPreviewDrawerOpen";
 
 // A choice of the Two-Page Arrangement menu: -1 when the document's own is used.
 static NSInteger TSPreviewOverrideCode(NSNumber *value)
@@ -1927,6 +1928,10 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
         [coder encodeObject:bookmark forKey:TSPreviewRestorationBookmarkKey];
     [coder encodeObject:url forKey:TSPreviewRestorationURLKey];
     [coder encodeObject:[self stringWithSavedFrame] forKey:TSPreviewRestorationFrameKey];
+    // Whether the outline drawer was out (a source keeps this in its own state).
+    NSInteger drawerState = [[(MyPDFKitView *)self.myPDFKitView drawer] state];
+    [coder encodeBool:(drawerState == NSDrawerOpenState || drawerState == NSDrawerOpeningState)
+               forKey:TSPreviewRestorationDrawerKey];
     [self encodePreviewStateWithCoder:coder];
 }
 
@@ -1939,6 +1944,13 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
     NSString *frame = [coder decodeObjectOfClass:[NSString class] forKey:TSPreviewRestorationFrameKey];
     if (frame.length)
         [self setFrameFromString:frame];
+    if ([coder containsValueForKey:TSPreviewRestorationDrawerKey]) {
+        NSDrawer *drawer = [(MyPDFKitView *)self.myPDFKitView drawer];
+        if ([coder decodeBoolForKey:TSPreviewRestorationDrawerKey])
+            [drawer open];
+        else
+            [drawer close];
+    }
     [self restorePreviewStateWithCoder:coder];
 }
 
