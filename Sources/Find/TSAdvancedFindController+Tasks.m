@@ -570,6 +570,28 @@ static void TSFinishPlace(NSMapTable<NSTextView *, NSValue *> *anchors)
     TSApplyAnchors(anchors);
 }
 
+/// The origin from before the edit, without laying the document out. The resize tried to show the left edge. The hold
+/// swallows that scroll, and this puts the origin back when the frame can still reach it. A target the frame cannot
+/// reach is left where it is: scrolling there would clamp to the corner. The next turn lays the text out once and
+/// places the anchor (#72).
+static void TSRestoreClipOrigin(NSMapTable<NSTextView *, NSValue *> *anchors)
+{
+    for (NSTextView *view in anchors) {
+        NSClipView *clip = view.enclosingScrollView.contentView;
+        if (!clip)
+            continue;
+        TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
+        NSRect proposed = clip.bounds;
+        proposed.origin = NSMakePoint(anchor.clipX, anchor.clipY);
+        NSPoint reachable = [clip constrainBoundsRect:proposed].origin;
+        // The edit can leave the frame at the window width. Scrolling now would clamp to the corner and draw it.
+        // The next turn grows the frame, then scrolls (#72).
+        if (fabs(reachable.x - anchor.clipX) > 1 || fabs(reachable.y - anchor.clipY) > 1)
+            continue;
+        TSScroll(view, anchor.clipX, anchor.clipY);
+    }
+}
+
 static NSMapTable<NSTextView *, NSArray<NSValue *> *> *TSSelections(NSTextStorage *storage)
 {
     NSMapTable *selections = [NSMapTable weakToStrongObjectsMapTable];
@@ -781,12 +803,12 @@ static void TSRegisterPlaceUndo(NSUndoManager *undo, NSTextView *view,
         }
         [undo disableUndoRegistration];
         TSApplySelections(kept);
-        // The frame resize already tried to put the clip at the left edge. Put the anchor back before this turn
-        // draws. The pass below repeats it after the height estimate is corrected (#72).
-        TSFinishPlace(keptAnchors);
+        // The frame resize already tried to put the clip at the left edge. Put that origin back before this turn
+        // draws. Laying the whole document out here as well as on the next turn is what stalls a long file (#72).
+        TSRestoreClipOrigin(keptAnchors);
         [undo enableUndoRegistration];
         // Measuring the text after this returns corrects the height estimate and scrolls the caret into view. Lay it
-        // out first, while the hold still swallows that scroll, then put the place back (#72).
+        // out once, while the hold still swallows that scroll, then put the place back (#72).
         dispatch_async(dispatch_get_main_queue(), ^{
             [undo disableUndoRegistration];
             TSFinishPlace(keptAnchors);

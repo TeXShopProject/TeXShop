@@ -2269,6 +2269,58 @@ static void TestNoWrapDoesNotFlashLeftEdge(void)
     Check(lowest > 200, [NSString stringWithFormat:@"redo does not draw the left edge (lowest x %.1f)", lowest]);
 }
 
+/// Counts `ensureLayoutForTextContainer:` on these two panes. That call is the whole-document layout (#72).
+static IMP TSOriginalEnsureContainerLayout;
+static NSHashTable<NSTextContainer *> *TSCountedContainers;
+static NSUInteger TSContainerLayoutCount;
+
+static void TSCountedEnsureContainerLayout(NSLayoutManager *layout, SEL _cmd, NSTextContainer *container)
+{
+    if (container && [TSCountedContainers containsObject:container])
+        TSContainerLayoutCount++;
+    ((void (*)(id, SEL, NSTextContainer *))TSOriginalEnsureContainerLayout)(layout, @selector(ensureLayoutForTextContainer:), container);
+}
+
+static NSUInteger ContainerLayoutsDuring(NSTextView *upper, NSTextView *lower, dispatch_block_t block)
+{
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        Method method = class_getInstanceMethod(NSLayoutManager.class, @selector(ensureLayoutForTextContainer:));
+        TSOriginalEnsureContainerLayout = method_setImplementation(method, (IMP)TSCountedEnsureContainerLayout);
+        TSCountedContainers = [NSHashTable weakObjectsHashTable];
+    });
+    [TSCountedContainers removeAllObjects];
+    [TSCountedContainers addObject:upper.textContainer];
+    [TSCountedContainers addObject:lower.textContainer];
+    TSContainerLayoutCount = 0;
+    block();
+    NSUInteger count = TSContainerLayoutCount;
+    [TSCountedContainers removeAllObjects];
+    return count;
+}
+
+/// Replace All lays each pane out once, on the turn after the edit. Doing it again before returning is the stall on
+/// a long file. Two panes, so the count is 2 (#72).
+static void TestReplaceAllLaysOutOnce(void)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSString *text = WideLines(48, 40);
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat ignored = 0;
+    Check(MakeScrolledSourceMode(text, NSLineBreakByClipping, 0, &upper, &lower, &ignored, &ignored),
+          @"layout-count source scrolls");
+    controller.settings.findString = @"aaa";
+    controller.settings.replaceString = @"ddd";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    NSUInteger layouts = ContainerLayoutsDuring(upper, lower, ^{
+        Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper), @"Replace All for the layout count");
+    });
+    Check(layouts == 2,
+          [NSString stringWithFormat:@"Replace All lays the document out once (laid out %lu times)", (unsigned long)layouts]);
+}
+
 /// Same-length Replace All must not move either axis. A shorter or longer replacement keeps the character that was
 /// under the left edge. The caret starts four lines below the top, which is where the view was jumping.
 static void TestSameLengthKeepsScreen(void)
@@ -2323,6 +2375,7 @@ static void TestSameLengthKeepsScreen(void)
     TestWrappedEndBelowToolbar(NSLineBreakByWordWrapping, @"aaaa");
     TestWrappedEndBelowToolbar(NSLineBreakByCharWrapping, @"aaaa");
     TestNoWrapDoesNotFlashLeftEdge();
+    TestReplaceAllLaysOutOnce();
 }
 
 #pragma mark Main

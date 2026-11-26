@@ -67,6 +67,9 @@ MUTATIONS = {
     'a width change draws the left edge': ('TSAdvancedFindController+Tasks.m',
         '    if (TSClipHoldCount > 0 && !TSAllowClipScroll && [view isKindOfClass:NSClipView.class])\n        return;\n',
         '    if (TSClipHoldCount > 0 && !TSAllowClipScroll && [view isKindOfClass:NSClipView.class])\n        ;\n'),
+    'Replace All lays the document out twice': ('TSAdvancedFindController+Tasks.m',
+        '        TSRestoreClipOrigin(keptAnchors);\n',
+        '        TSFinishPlace(keptAnchors);\n'),
 }
 
 
