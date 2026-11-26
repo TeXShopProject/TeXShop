@@ -68,9 +68,9 @@ static id sharedFindObject = nil;
 }
 
 - (void)loadFindStringFromPasteboard {
-	NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSFindPboard];
-	if ([[pasteboard types] containsObject:NSStringPboardType]) {
-		NSString *string = [pasteboard stringForType:NSStringPboardType];
+	NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSPasteboardNameFind];
+	if ([[pasteboard types] containsObject:NSPasteboardTypeString]) {
+		NSString *string = [pasteboard stringForType:NSPasteboardTypeString];
 		if (string && [string length]) {
 			[self setFindString:string];
 			findStringChangedSinceLastPasteboardUpdate = NO;
@@ -79,10 +79,10 @@ static id sharedFindObject = nil;
 }
 
 - (void)loadFindStringToPasteboard {
-	NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSFindPboard];
+	NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSPasteboardNameFind];
 	if (findStringChangedSinceLastPasteboardUpdate) {
-		[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
-		[pasteboard setString:[self findString] forType:NSStringPboardType];
+		[pasteboard declareTypes:[NSArray arrayWithObject:NSPasteboardTypeString] owner:nil];
+		[pasteboard setString:[self findString] forType:NSPasteboardTypeString];
 	findStringChangedSinceLastPasteboardUpdate = NO;
 	}
 }

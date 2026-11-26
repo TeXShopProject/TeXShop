@@ -1309,7 +1309,7 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     
     // Walk array of annotations.
    // for (i = 0; i < annotCount; i++)
-   //     NSFrameRectWithWidthUsingOperation([[annotations objectAtIndex: i] bounds], 1.0, NSCompositeSourceOver);
+   //     NSFrameRectWithWidthUsingOperation([[annotations objectAtIndex: i] bounds], 1.0, NSCompositingOperationSourceOver);
     
     // Handle the selected annotation.
     if ((_activeAnnotation) && ([_activeAnnotation page] == page))
@@ -1495,8 +1495,8 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
    // _rejectDrag = NO;
    // NSLog(@"mouse Down");
     
-    modifiers = ([NSEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask);
-    optionPressed = (modifiers == NSAlternateKeyMask);
+    modifiers = ([NSEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask);
+    optionPressed = (modifiers == NSEventModifierFlagOption);
     
     if (optionPressed)
         return NO;
@@ -1632,8 +1632,8 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
         */
             
             
-        modifiers = ([NSEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask);
-        optionPressed = (modifiers == NSAlternateKeyMask);
+        modifiers = ([NSEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask);
+        optionPressed = (modifiers == NSEventModifierFlagOption);
                 
         // Where is annotation now?
         currentBounds = [_activeAnnotation bounds];
@@ -2068,8 +2068,8 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     if (_activeAnnotation == NULL)
         return;
     
-    modifiers = ([NSEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask);
-    optionPressed = (modifiers == NSAlternateKeyMask);
+    modifiers = ([NSEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask);
+    optionPressed = (modifiers == NSEventModifierFlagOption);
     
     theColor = [(NSColorPanel *)sender color];
     

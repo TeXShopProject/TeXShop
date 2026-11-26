@@ -182,7 +182,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
             direction = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
         if (direction != NSWritingDirectionLeftToRight)
             return NO;
-        current = NSLeftTextAlignment;
+        current = NSTextAlignmentLeft;
     }
     return current == alignment;
 }
@@ -332,7 +332,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
             }
             theLine = [textString substringWithRange:selectedLineRange];
             testRange = [theLine rangeOfCharacterFromSet: middleEastSet];
-            NSTextAlignment wanted = (testRange.location == NSNotFound) ? NSLeftTextAlignment : NSRightTextAlignment;
+            NSTextAlignment wanted = (testRange.location == NSNotFound) ? NSTextAlignmentLeft : NSRightTextAlignment;
             // Setting the alignment edits the text storage, which relays out the
             // paragraph, resizes the view and colors the visible area again. Only
             // change it when it differs, so that coloring does not feed itself.

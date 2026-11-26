@@ -253,7 +253,7 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	if ([theEvent modifierFlags] & NSAlternateKeyMask)
+	if ([theEvent modifierFlags] & NSEventModifierFlagOption)
 		_alternateDown = YES;
 	else
 		_alternateDown = NO;
@@ -625,7 +625,7 @@
 	
 	if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
-		(([theEvent modifierFlags] & NSAlternateKeyMask) != 0))
+		(([theEvent modifierFlags] & NSEventModifierFlagOption) != 0))
         
     {
         [self doNextBullet:self];
@@ -634,14 +634,14 @@
     
 	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
              [SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
-             (([theEvent modifierFlags] & NSControlKeyMask) != 0))
+             (([theEvent modifierFlags] & NSEventModifierFlagControl) != 0))
     {
         [self doPreviousBullet:self];
         return;
     }
     
 	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
-             (([theEvent modifierFlags] & NSAlternateKeyMask) == 0) &&
+             (([theEvent modifierFlags] & NSEventModifierFlagOption) == 0) &&
              ![self hasMarkedText] && g_commandCompletionList)
         
         //  if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] && (![self hasMarkedText]) && g_commandCompletionList)
@@ -763,7 +763,7 @@
 			while (YES) { // look for a candidate which is not equal to originalString
                 // (HS) modification to reverse search 2014/05/11
                 /* original code
-                 if (([theEvent modifierFlags] & NSShiftKeyMask) && wasCompleted) {
+                 if (([theEvent modifierFlags] & NSEventModifierFlagShift) && wasCompleted) {
                  // backward
                  searchRange.location = 0;
                  searchRange.length = completionListLocation-1;
@@ -775,10 +775,10 @@
                  // search the string in the completion list
                  foundRange = [g_commandCompletionList rangeOfString:
                  [@"\n" stringByAppendingString: self.originalString]
-                 options: (([theEvent modifierFlags] & NSShiftKeyMask)?NSBackwardsSearch:0)
+                 options: (([theEvent modifierFlags] & NSEventModifierFlagShift)?NSBackwardsSearch:0)
                  range: searchRange];
                  */
-                if (!([theEvent modifierFlags] & NSShiftKeyMask) && wasCompleted) {
+                if (!([theEvent modifierFlags] & NSEventModifierFlagShift) && wasCompleted) {
 					// backward
 					searchRange.location = 0;
 					searchRange.length = completionListLocation-1;
@@ -790,7 +790,7 @@
 				// search the string in the completion list
 				foundRange = [g_commandCompletionList rangeOfString:
                               [@"\n" stringByAppendingString: self.originalString]
-                                                            options: (!(([theEvent modifierFlags] & NSShiftKeyMask))?NSBackwardsSearch:0)
+                                                            options: (!(([theEvent modifierFlags] & NSEventModifierFlagShift))?NSBackwardsSearch:0)
                                                               range: searchRange];
                 // End of modification to reverse search
 				if (foundRange.location == NSNotFound) { // a completion candidate was not found

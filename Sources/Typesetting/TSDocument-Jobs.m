@@ -2177,7 +2177,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     
     if (
         (([sender respondsToSelector: @selector(tag)]) && ([sender tag] == -2)) ||
-        (modifiers == NSAlternateKeyMask)
+        (modifiers == NSEventModifierFlagOption)
         )
    {
         [self trashAUXFilesAggressively:NO];

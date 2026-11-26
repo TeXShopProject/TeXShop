@@ -255,14 +255,12 @@
 - (void)doExternalSyncTeXForPageConTeXt: (NSInteger)pageNumber x: (CGFloat)xPosition y: (CGFloat)yPosition yOriginal: (CGFloat)yOriginalPosition
 {
     NSString        *myFileName, *mySyncTeXFileName;
-    NSString        *foundFileName;
     NSString        *enginePath, *tetexBinPath, *alternateBinPath;
     NSDate          *myDate;
     NSMutableArray  *args;
     NSInteger       tolerance;
     NSNumber        *myNumber;
     
-    foundFileName = NULL;
     
  
     myFileName = [[self.myDocument fileURL] path];
