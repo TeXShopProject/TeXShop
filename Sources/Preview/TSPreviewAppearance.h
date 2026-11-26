@@ -132,6 +132,9 @@ static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
 // The choice made for a scroll view. Selectors are the same in every file that includes
 // this header, so the hook below finds the state another file stored.
 #define TSPreviewInversionStateKey @selector(tsPreviewInversionState)
+// Set on the preview window while it is in full screen. The window's own appearance
+// is dark then, like Preview.app, even when the system is light.
+#define TSPreviewFullScreenDarkKey @selector(tsPreviewFullScreenDark)
 
 // Whether the pages of a PDF view are drawn inverted. PDFKit draws pages on its own
 // threads, so the choice is kept on the PDF view itself, where those threads read it.
@@ -283,14 +286,30 @@ static inline void TSWatchPreviewSelection(PDFView *pdfView) {
     [center addObserver:pdfView selector:sel_getUid("tsPreviewSelectionChanged:") name:PDFViewSelectionChangedNotification object:pdfView];
 }
 
+// A knob takes its color from the system. In Dark Mode that knob is light, and on a light
+// page it is white on white. Preview.app draws a gray knob on a light page (macOS 27 Dark,
+// the knob about 155,155,155). The same light knob on a legacy track is nearly the color of
+// the light gutter beside the page (measured on macOS 26 Dark: knob 244 on track 230). The
+// knob follows the pages, overlay or legacy: dark while they are light, light while they
+// are inverted.
+static inline BOOL TSPreviewFullScreenChromeIsDark(NSView *view) {
+    return view.window != nil && objc_getAssociatedObject(view.window, TSPreviewFullScreenDarkKey) != nil;
+}
+
+static inline void TSPreviewMatchScrollerKnob(NSScrollView *scrollView, BOOL invert) {
+    NSScrollerKnobStyle style = invert ? NSScrollerKnobStyleLight : NSScrollerKnobStyleDark;
+    scrollView.scrollerKnobStyle = style;
+    scrollView.verticalScroller.knobStyle = style;
+    scrollView.horizontalScroller.knobStyle = style;
+}
+
 // Share the same PDF page treatment between the document and Experiment previews.
-// Scroll bars are part of the window frame. They take no explicit appearance and no
-// filters, so they follow the system whether the preview is light or dark.
-// On macOS 27 an overlay scroller's effective appearance copies the clip view and the
-// document view, so those two take no appearance and no filters. The pages are inverted
-// as they are drawn. The gutter around the pages is drawn light and inverted by the
-// filters on its view, which PDFKit does not magnify. The pocket stays unset so the title
-// bar is not pulled off the system appearance.
+// Scroll bars take no explicit appearance and no filters. Their knob is chosen by
+// TSPreviewMatchScrollerKnob. On macOS 27 an overlay scroller's effective appearance
+// copies the clip view and the document view, so those two take no appearance and no
+// filters. The pages are inverted as they are drawn. The gutter around the pages is
+// drawn light and inverted by the filters on its view, which PDFKit does not magnify.
+// The pocket stays unset so the title bar is not pulled off the system appearance.
 static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert) {
     if (!scrollView) return;
     scrollView.appearance = nil;
@@ -299,6 +318,13 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     NSArray *filters = invert ? TSPreviewInversionFilters() : @[];
     for (NSView *subview in scrollView.subviews) {
+        // The band above the first page paints the window color. Aqua or a filter here
+        // would lighten that band and the toolbar with it.
+        if ([NSStringFromClass(subview.class) containsString:@"TSPreviewToolbarShield"]) {
+            subview.appearance = nil;
+            subview.contentFilters = @[];
+            continue;
+        }
         if (TSPreviewSubviewIsToolbarPocket(subview) ||
             [subview isKindOfClass:[NSScroller class]] ||
             subview == scrollView.contentView) {
@@ -308,14 +334,23 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
             subview.contentFilters = @[];
             continue;
         }
-        subview.appearance = light;
-        subview.contentFilters = filters;
+        // Full screen keeps this view on the dark window. The pages stay as they were.
+        // An inverted preview still draws the view light and inverts it: clearing the
+        // appearance as well would invert the dark view back toward light.
+        if (TSPreviewFullScreenChromeIsDark(scrollView) && !invert) {
+            subview.appearance = nil;
+            subview.contentFilters = @[];
+        } else {
+            subview.appearance = light;
+            subview.contentFilters = filters;
+        }
     }
     NSView *documentView = scrollView.documentView;
     documentView.appearance = nil;
     documentView.contentFilters = @[];
     TSInstallPreviewPageHook(documentView);
     TSLightenPreviewPages(documentView, filters);
+    TSPreviewMatchScrollerKnob(scrollView, invert);
     objc_setAssociatedObject(scrollView, TSPreviewInversionStateKey, @(invert),
         OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     // The PDF view the scroll view belongs to draws its pages inverted or not; when that
@@ -335,6 +370,30 @@ static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
     NSNumber *invert = objc_getAssociatedObject(scrollView, TSPreviewInversionStateKey);
     if (!invert) return;
     TSApplyPreviewInversion(scrollView, invert.boolValue);
+}
+
+// While a preview window is in full screen its appearance is dark, including when the
+// system is light. Scroll views that already follow the preview choice are told again,
+// so the area around a light page follows that dark window. Pages are not inverted by
+// this. Leaving full screen clears the appearance and tells those scroll views again.
+static void TSPreviewReapplyFullScreenInView(NSView *view) {
+    if ([view isKindOfClass:NSScrollView.class]) {
+        NSNumber *invert = objc_getAssociatedObject(view, TSPreviewInversionStateKey);
+        if (invert)
+            TSApplyPreviewInversion((NSScrollView *)view, invert.boolValue);
+    }
+    NSArray<NSView *> *subviews = [view.subviews copy];
+    for (NSView *subview in subviews)
+        TSPreviewReapplyFullScreenInView(subview);
+}
+
+static inline void TSPreviewUseDarkFullScreenChrome(NSWindow *window, BOOL dark) {
+    if (!window) return;
+    objc_setAssociatedObject(window, TSPreviewFullScreenDarkKey, dark ? @YES : nil,
+        OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    window.appearance = dark ? [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua] : nil;
+    if (window.contentView)
+        TSPreviewReapplyFullScreenInView(window.contentView);
 }
 
 // A page view PDFKit adds while scrolling, or after a new document or display format, is

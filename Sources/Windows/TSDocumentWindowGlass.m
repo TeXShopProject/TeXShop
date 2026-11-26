@@ -9,6 +9,26 @@
 static const void *TSDrawerBaseOffsetKey = &TSDrawerBaseOffsetKey;
 static const void *TSPreparedWindowKey = &TSPreparedWindowKey;
 
+// A clip view whose bounds stop at the toolbar still draws a scrolled page into the
+// toolbar when it does not clip. That covers the separator on macOS 14 and 15.
+// Clipping leaves the page that belongs under the glass on macOS 26 and later,
+// because that page is inside the clip view.
+static void TSDocumentWindowClipScrollViews(NSWindow *window)
+{
+    if (!window || !window.contentView)
+        return;
+    if (@available(macOS 14.0, *)) {
+        NSMutableArray<NSView *> *views = [NSMutableArray arrayWithObject:window.contentView];
+        for (NSUInteger index = 0; index < views.count; index++) {
+            NSView *view = views[index];
+            for (NSView *subview in view.subviews)
+                [views addObject:subview];
+            if ([view isKindOfClass:NSClipView.class])
+                view.clipsToBounds = YES;
+        }
+    }
+}
+
 // The height of the band of the content view that lies under the title bar and the toolbar.
 static CGFloat TSHiddenTopBand(NSWindow *window)
 {
@@ -141,6 +161,7 @@ static void TSDocumentWindowPrepareChrome(NSWindow *window, BOOL underToolbar)
         }
         [window setFrame:frame display:NO];
     }
+    TSDocumentWindowClipScrollViews(window);
 }
 
 void TSDocumentWindowPrepare(NSWindow *window)
@@ -148,20 +169,12 @@ void TSDocumentWindowPrepare(NSWindow *window)
     TSDocumentWindowPrepareChrome(window, TSDocumentWindowsUseFullSizeContent());
 }
 
-void TSDocumentWindowPrepareSolidToolbar(NSWindow *window)
-{
-    TSDocumentWindowPrepare(window);
-}
-
 void TSDocumentWindowPrepareTrio(NSWindow *textWindow, NSWindow *previewWindow, NSWindow *combinedWindow)
 {
     for (NSWindow *window in @[textWindow ?: (id)NSNull.null, previewWindow ?: (id)NSNull.null, combinedWindow ?: (id)NSNull.null]) {
         if (![window isKindOfClass:[NSWindow class]])
             continue;
-        if (window == previewWindow)
-            TSDocumentWindowPrepareSolidToolbar(window);
-        else
-            TSDocumentWindowPrepare(window);
+        TSDocumentWindowPrepare(window);
     }
 }
 

@@ -5,6 +5,67 @@
 static void *TSPreviewScrollerKeeperKey = &TSPreviewScrollerKeeperKey;
 static void *TSPreviewScrollerContext = &TSPreviewScrollerContext;
 static void *TSPreviewInsetsContext = &TSPreviewInsetsContext;
+static void *TSPreviewClipConstrainKey = &TSPreviewClipConstrainKey;
+
+// NSClipView copies the scroll view's top inset and divides it by the magnification,
+// then stops a scroll there. PDFKit applies that same top inset in the clip's bounds,
+// so at a magnification other than 1 the top of the document is short of the stop by
+// the rest of the inset. The scroll is allowed to reach it. Other clip views are left
+// as they are.
+static Class TSConstrainClasses[8];
+static IMP TSConstrainIMPs[8];
+static int TSConstrainCount;
+
+static IMP TSConstrainOriginal(id view) {
+    for (Class cls = object_getClass(view); cls; cls = class_getSuperclass(cls))
+        for (int i = 0; i < TSConstrainCount; i++)
+            if (TSConstrainClasses[i] == cls)
+                return TSConstrainIMPs[i];
+    return NULL;
+}
+
+static NSRect TSPreviewConstrainBounds(NSClipView *self, SEL _cmd, NSRect proposed) {
+    IMP original = TSConstrainOriginal(self);
+    NSRect rect = original ? ((NSRect (*)(id, SEL, NSRect))original)(self, _cmd, proposed) : proposed;
+    if (!objc_getAssociatedObject(self, &TSPreviewClipConstrainKey))
+        return rect;
+    NSScrollView *scroll = self.enclosingScrollView;
+    CGFloat magnification = scroll.magnification;
+    // Below unit scale the inset is in screen points and AppKit's stop is the one
+    // Fit to Window uses. Extending it leaves the first page short of the toolbar.
+    if (!isfinite(magnification) || magnification <= 1)
+        return rect;
+    CGFloat inset = scroll.contentInsets.top;
+    if (inset <= 0.5)
+        return rect;
+    if (self.isFlipped) {
+        CGFloat limit = NSMinY(self.documentRect) - inset;
+        if (proposed.origin.y < rect.origin.y)
+            rect.origin.y = fmax(proposed.origin.y, limit);
+    } else {
+        CGFloat limit = NSMaxY(self.documentRect) - NSHeight(proposed) + inset;
+        if (proposed.origin.y > rect.origin.y)
+            rect.origin.y = fmin(proposed.origin.y, limit);
+    }
+    return rect;
+}
+
+static void TSInstallPreviewClipConstrain(NSClipView *clip) {
+    if (!clip)
+        return;
+    objc_setAssociatedObject(clip, &TSPreviewClipConstrainKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    Class cls = object_getClass(clip);
+    SEL sel = @selector(constrainBoundsRect:);
+    Method method = class_getInstanceMethod(cls, sel);
+    if (!method || method_getImplementation(method) == (IMP)TSPreviewConstrainBounds)
+        return;
+    if (TSConstrainCount == sizeof TSConstrainClasses / sizeof TSConstrainClasses[0])
+        return;
+    TSConstrainClasses[TSConstrainCount] = cls;
+    TSConstrainIMPs[TSConstrainCount] = method_getImplementation(method);
+    TSConstrainCount++;
+    class_replaceMethod(cls, sel, (IMP)TSPreviewConstrainBounds, method_getTypeEncoding(method));
+}
 
 // The text shown at a place in the visible area, as a point on a page.
 typedef struct {
@@ -49,10 +110,27 @@ static BOOL TSHasInsets(NSScrollView *scroll)
     return insets.top != 0 || insets.bottom != 0;
 }
 
+// Above unit scale, PDFKit stores the top inset in the clip view's bounds and then
+// magnifies it, so the property is the toolbar band divided by the magnification.
+// At unit scale and below, the property is that band in screen points. Dividing
+// there subtracts the band twice.
+static CGFloat TSMag(NSScrollView *scroll)
+{
+    CGFloat magnification = scroll.magnification;
+    return (isfinite(magnification) && magnification > 0.01) ? magnification : 1;
+}
+
+static CGFloat TSTopInsetScreen(NSScrollView *scroll)
+{
+    CGFloat magnification = TSMag(scroll);
+    CGFloat top = scroll.contentInsets.top;
+    return magnification > 1 ? top * magnification : top;
+}
+
 // The height of the area where the text can be seen, in points.
 static CGFloat TSVisibleHeight(NSScrollView *scroll)
 {
-    return NSHeight(scroll.contentView.frame) - scroll.contentInsets.top - scroll.contentInsets.bottom;
+    return NSHeight(scroll.contentView.frame) - TSTopInsetScreen(scroll) - scroll.contentInsets.bottom;
 }
 
 // The text shown a distance below the top edge of the clip view, in the middle of its width.
@@ -122,6 +200,31 @@ static CGFloat TSReadableBelow(NSScrollView *scroll, CGFloat band)
     return fmin(fmax(0, band - distance), NSHeight(clip.frame));
 }
 
+// Draws the window color from the top of a magnified PDF scroll view down to the first
+// page. At the top of a light page the glass would otherwise sample the light gutter and
+// the toolbar would turn light. A scrolled page moves above this view, so the glass takes
+// the page color. The view clips: on macOS 14 and later a view draws outside its bounds
+// unless it clips, and that would cover the page. Clicks pass through.
+@interface TSPreviewToolbarShield : NSView
+@end
+
+@implementation TSPreviewToolbarShield
+- (BOOL)isOpaque { return NO; }
+- (NSView *)hitTest:(NSPoint)point { (void)point; return nil; }
+- (void)drawRect:(NSRect)dirtyRect
+{
+    (void)dirtyRect;
+    NSAppearance *appearance = self.window.effectiveAppearance;
+    if (!appearance) appearance = NSApp.effectiveAppearance;
+    [appearance performAsCurrentDrawingAppearance:^{
+        [[NSColor.windowBackgroundColor colorUsingColorSpace:NSColorSpace.sRGBColorSpace] setFill];
+        NSRectFill(self.bounds);
+    }];
+}
+@end
+
+static void *TSPreviewToolbarShieldKey = &TSPreviewToolbarShieldKey;
+
 @interface TSPreviewScrollerKeeper ()
 @property (weak) PDFView *view;
 // Held so that the observation can always be removed.
@@ -147,6 +250,12 @@ static CGFloat TSReadableBelow(NSScrollView *scroll, CGFloat band)
 @property BOOL checkPending;
 @property NSPoint keptOrigin;
 @property CGFloat keptScale;
+// The clip whose bounds are watched so the band over the toolbar can follow scrolling.
+@property (strong, nullable) NSClipView *observedClip;
+// While the top inset and the band are being put in place, a bounds change from that
+// scroll does not start the work again.
+@property BOOL placingGround;
+- (void)placeToolbarGround;
 @end
 
 @implementation TSPreviewScrollerKeeper
@@ -179,17 +288,35 @@ static CGFloat TSReadableBelow(NSScrollView *scroll, CGFloat band)
     [self observeScrollView:nil];
 }
 
+- (void)observeClip:(nullable NSClipView *)clip
+{
+    if (clip == self.observedClip)
+        return;
+    if (self.observedClip)
+        [NSNotificationCenter.defaultCenter removeObserver:self name:NSViewBoundsDidChangeNotification object:self.observedClip];
+    self.observedClip = clip;
+    if (!clip)
+        return;
+    clip.postsBoundsChangedNotifications = YES;
+    TSInstallPreviewClipConstrain(clip);
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(clipBoundsChanged:)
+                                               name:NSViewBoundsDidChangeNotification object:clip];
+}
+
 - (void)observeScrollView:(nullable NSScrollView *)scrollView
 {
     if (scrollView == self.scrollView)
         return;
     [self.scrollView removeObserver:self forKeyPath:@"hasHorizontalScroller" context:TSPreviewScrollerContext];
     [self.scrollView removeObserver:self forKeyPath:@"contentInsets" context:TSPreviewInsetsContext];
+    [self observeClip:nil];
     self.scrollView = scrollView;
     self.pending = NO;
     [scrollView addObserver:self forKeyPath:@"hasHorizontalScroller" options:NSKeyValueObservingOptionPrior
                     context:TSPreviewScrollerContext];
     [scrollView addObserver:self forKeyPath:@"contentInsets" options:0 context:TSPreviewInsetsContext];
+    [self observeClip:scrollView.contentView];
+    [self placeToolbarGround];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -288,6 +415,98 @@ static CGFloat TSReadableBelow(NSScrollView *scroll, CGFloat band)
         CFRelease(observer);
     });
 }
+
+// The part of the toolbar band that lies over this scroll view, in screen points.
+- (CGFloat)bandOverScroll:(NSScrollView *)scroll
+{
+    return TSReadableBelow(scroll, TSToolbarBand(self.view));
+}
+
+// Keeps the magnified top inset equal to the toolbar band on screen, and paints the
+// window color above the first page so a light gutter cannot light the glass.
+- (void)placeToolbarGround
+{
+    if (self.placingGround)
+        return;
+    PDFView *view = self.view;
+    NSScrollView *scroll = view ? TSScroll(view) : nil;
+    NSClipView *clip = scroll.contentView;
+    if (!scroll || !clip)
+        return;
+    self.placingGround = YES;
+    NSWindow *window = view.window;
+    BOOL underToolbar = window && (window.styleMask & NSWindowStyleMaskFullSizeContentView);
+    CGFloat magnification = TSMag(scroll);
+    CGFloat band = underToolbar ? [self bandOverScroll:scroll] : 0;
+    CGFloat wanted = band / magnification;
+    if (magnification <= 1)
+        wanted = band;
+    if (underToolbar && scroll.automaticallyAdjustsContentInsets)
+        scroll.automaticallyAdjustsContentInsets = NO;
+    NSEdgeInsets insets = scroll.contentInsets;
+    if (underToolbar && fabs(insets.top - wanted) >= 0.25) {
+        CGFloat shift = insets.top - wanted;
+        insets.top = wanted;
+        scroll.contentInsets = insets;
+        if (magnification > 1) {
+            // The document point at the bottom of the band stays where it is.
+            // Below unit scale the inset is in screen points, and this shift is not.
+            NSPoint origin = clip.bounds.origin;
+            origin.y += clip.isFlipped ? shift : -shift;
+            [clip scrollToPoint:origin];
+            [scroll reflectScrolledClipView:clip];
+        } else if (view.autoScales) {
+            // Fit to Window measured the old inset. Measure the band again.
+            view.autoScales = NO;
+            view.autoScales = YES;
+        }
+    }
+    TSPreviewToolbarShield *shield = objc_getAssociatedObject(scroll, TSPreviewToolbarShieldKey);
+    if (!underToolbar || band < 1) {
+        shield.hidden = YES;
+        self.placingGround = NO;
+        return;
+    }
+    if (!shield) {
+        shield = [[TSPreviewToolbarShield alloc] initWithFrame:NSZeroRect];
+        shield.autoresizingMask = NSViewNotSizable;
+        shield.clipsToBounds = YES;
+        objc_setAssociatedObject(scroll, TSPreviewToolbarShieldKey, shield, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    if (shield.superview != scroll)
+        [scroll addSubview:shield positioned:NSWindowAbove relativeTo:clip];
+    PDFPage *page = view.document.pageCount ? [view.document pageAtIndex:0] : nil;
+    if (!page) {
+        shield.hidden = YES;
+        self.placingGround = NO;
+        return;
+    }
+    NSRect pageRect = [view convertRect:[view convertRect:[page boundsForBox:view.displayBox] fromPage:page] toView:nil];
+    NSRect inScroll = [scroll convertRect:pageRect fromView:nil];
+    BOOL flipped = scroll.isFlipped;
+    CGFloat pageEdge = flipped ? NSMinY(inScroll) : NSMaxY(inScroll);
+    CGFloat viewEdge = flipped ? NSMinY(scroll.bounds) : NSMaxY(scroll.bounds);
+    CGFloat height = flipped ? pageEdge - viewEdge : viewEdge - pageEdge;
+    // The natural margin under the band is a few points. A larger value is a page that
+    // has not reached the band; only the band, plus that margin, is painted.
+    CGFloat limit = band + 24;
+    if (height > limit)
+        height = limit;
+    if (height < 0.5) {
+        shield.hidden = YES;
+    } else {
+        shield.hidden = NO;
+        shield.frame = flipped ? NSMakeRect(NSMinX(scroll.bounds), viewEdge, NSWidth(scroll.bounds), height)
+                                : NSMakeRect(NSMinX(scroll.bounds), pageEdge, NSWidth(scroll.bounds), height);
+    }
+    self.placingGround = NO;
+}
+
+- (void)clipBoundsChanged:(NSNotification *)notification
+{
+    (void)notification;
+    [self placeToolbarGround];
+}
 @end
 
 void TSPreviewChangeScale(PDFView *view, void (NS_NOESCAPE ^change)(void))
@@ -296,12 +515,14 @@ void TSPreviewChangeScale(PDFView *view, void (NS_NOESCAPE ^change)(void))
     NSScrollView *scroll = TSScroll(view);
     CGFloat height = scroll ? TSVisibleHeight(scroll) : 0;
     // The centre of the area where the text can be seen.
-    CGFloat below = scroll ? scroll.contentInsets.top + height / 2 : 0;
+    CGFloat below = scroll ? TSTopInsetScreen(scroll) + height / 2 : 0;
     TSPreviewText text = scroll ? TSTextAt(view, scroll, below) : (TSPreviewText){0};
     PDFPage *page = text.page;
     keeper.suspended++;
     change();
     keeper.suspended--;
+    // The magnified inset follows the new scale before the text is put back.
+    [keeper placeToolbarGround];
     // Without a change of the visible height, PDFKit's own place is kept.
     if (!text.valid || TSScroll(view) != scroll || page.document != view.document ||
         fabs(TSVisibleHeight(scroll) - height) < 0.5)
@@ -411,6 +632,7 @@ void TSPreviewPlaceSetByProgram(PDFView *view)
 void TSPreviewViewDidLayout(PDFView *view)
 {
     TSPreviewScrollerKeeper *keeper = [TSPreviewScrollerKeeper keeperForView:view];
+    [keeper placeToolbarGround];
     if (keeper && !keeper.checkPending) {
         // Auto Layout can move the view after its last change of size: the part of the band
         // over it is noted again for the next change.

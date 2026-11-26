@@ -156,8 +156,14 @@ static inline NSRect TSContentVisibleArea(PDFView *view)
     NSEdgeInsets insets = scroll.contentInsets;
     area.origin.x += insets.left * unit;
     area.size.width -= (insets.left + insets.right) * unit;
-    area.origin.y += (clip.isFlipped ? insets.top : insets.bottom) * unit;
-    area.size.height -= (insets.top + insets.bottom) * unit;
+    // Above unit scale the top inset is already in clip bounds. At unit scale and
+    // below it is in screen points, like the bottom inset.
+    CGFloat magnification = scroll.magnification;
+    if (!isfinite(magnification) || magnification <= 0) magnification = 1;
+    CGFloat top = magnification > 1 ? insets.top : insets.top * unit;
+    CGFloat bottom = insets.bottom * unit;
+    area.origin.y += clip.isFlipped ? top : bottom;
+    area.size.height -= top + bottom;
     return area;
 }
 
@@ -168,7 +174,12 @@ static inline NSSize TSContentVisibleSize(PDFView *view)
     NSClipView *clip = scroll.contentView;
     if (!clip) return NSZeroSize;
     NSEdgeInsets insets = scroll.contentInsets;
-    return NSMakeSize(NSWidth(clip.frame) - insets.left - insets.right, NSHeight(clip.frame) - insets.top - insets.bottom);
+    CGFloat magnification = scroll.magnification;
+    if (!isfinite(magnification) || magnification <= 0)
+        magnification = NSHeight(clip.bounds) > 0 ? NSHeight(clip.frame) / NSHeight(clip.bounds) : 1;
+    CGFloat top = magnification > 1 ? insets.top * magnification : insets.top;
+    return NSMakeSize(NSWidth(clip.frame) - insets.left - insets.right,
+                       NSHeight(clip.frame) - top - insets.bottom);
 }
 
 static inline BOOL TSContentTwoUp(PDFView *view)

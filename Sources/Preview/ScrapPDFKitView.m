@@ -156,6 +156,7 @@ static const NSInteger TSExperimentToolCount = 4;
     [center removeObserver:self name:SourceColorChangedNotification object:nil];
     [center removeObserver:self name:NSUserDefaultsDidChangeNotification object:SUD];
     [center removeObserver:self name:PDFViewScaleChangedNotification object:self];
+    [center removeObserver:self name:NSPreferredScrollerStyleDidChangeNotification object:nil];
     if (!self.window) return;
     [center addObserver:self selector:@selector(updateExperimentColors:)
         name:SourceColorChangedNotification object:nil];
@@ -163,6 +164,8 @@ static const NSInteger TSExperimentToolCount = 4;
         name:NSUserDefaultsDidChangeNotification object:SUD];
     [center addObserver:self selector:@selector(experimentScaleChanged:)
         name:PDFViewScaleChangedNotification object:self];
+    [center addObserver:self selector:@selector(updateExperimentAppearance:)
+        name:NSPreferredScrollerStyleDidChangeNotification object:nil];
     if (!self.window.toolbar) {
         NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"TSExperimentPreviewToolbar"];
         toolbar.delegate = self;

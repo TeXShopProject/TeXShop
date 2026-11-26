@@ -9258,7 +9258,8 @@ else
         if (fabs(end - origin.y) * magnification > 0.5) {
             // A screen, less the part that stays in view, as AppKit pages a scroll view.
             NSEdgeInsets insets = scroll.contentInsets;
-            CGFloat visible = NSHeight(clip.bounds) - (fabs(insets.top) + fabs(insets.bottom)) / magnification;
+            // The top inset is in clip bounds. The bottom inset stays in screen points.
+            CGFloat visible = NSHeight(clip.bounds) - fabs(insets.top) - fabs(insets.bottom) / magnification;
             CGFloat overlap = scroll.verticalPageScroll / magnification;
             CGFloat step = visible - overlap > 0 ? visible - overlap : visible;
             origin.y = fmin(fmax(origin.y + (towardMaximum ? step : -step), minimum), maximum);
@@ -9660,8 +9661,11 @@ else
     [[self.myDocument myPdfKitView2] changePDFViewSizeTo:fullscreenResizeOption];
     [[self.myDocument myPdfKitView2] changePageStyleTo: fullscreenPageStyle];
 */
+    // Preview.app draws full screen dark even when the system is light. Set that
+    // before the layout change, and again after it, so a new scroll view follows.
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, YES);
     [self.myDocument enterFullScreen: notification];
-
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, YES);
 }
 
 
@@ -9676,7 +9680,17 @@ else
     [[self.myDocument myPdfKitView2] changePDFViewSizeTo: oldResizeOption];
     [[self.myDocument myPdfKitView2] changePageStyleTo:oldPageStyle];
 */
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO);
     [self.myDocument exitFullScreen: notification];
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO);
+}
+
+// The dark appearance is set before the transition. If the transition does not
+// finish, leaving full screen is not called, so clear it here.
+- (void)windowDidFailToEnterFullScreen:(NSNotification *)notification
+{
+    (void)notification;
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO);
 }
 
 
@@ -9781,7 +9795,12 @@ else
 - (void)updatePreviewPaperColor
 {
     if (!_pdfViewReady) return;
-    BOOL dark = [[self.effectiveAppearance bestMatchFromAppearancesWithNames:
+    // Full screen forces a dark window. The paper still follows the system and the
+    // Appearance menu, so a light page is not recoloured by that window.
+    NSAppearance *choosing = self.effectiveAppearance;
+    if (objc_getAssociatedObject(self.window, TSPreviewFullScreenDarkKey) != nil)
+        choosing = NSApp.effectiveAppearance;
+    BOOL dark = [[choosing bestMatchFromAppearancesWithNames:
         @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     NSColor *themeColor = [[TSColorSupport sharedInstance] opaqueColorForKey:@"PreviewBackground"
         fromDictionary:(dark ? darkColors : liteColors) isWindowDark:dark];
@@ -9796,9 +9815,12 @@ else
 {
     if (_observingPreviewAppearance) return;
     _observingPreviewAppearance = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-        selector:@selector(previewAppearanceDefaultsChanged:)
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    [center addObserver:self selector:@selector(previewAppearanceDefaultsChanged:)
         name:NSUserDefaultsDidChangeNotification object:SUD];
+    // Switching "Show scroll bars" changes an overlay knob for a legacy one, or the reverse.
+    [center addObserver:self selector:@selector(previewAppearanceDefaultsChanged:)
+        name:NSPreferredScrollerStyleDidChangeNotification object:nil];
 }
 
 - (void)previewAppearanceDefaultsChanged:(NSNotification *)notification

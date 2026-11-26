@@ -29,6 +29,14 @@ MUTATIONS = {
     'partner-by-height': ('zoom', '        NSInteger other = index < first ? -1 : ((index - first) % 2 == 0 ? index + 1 : index - 1);',
                           '        NSInteger other = index - 1;'),
     'one-pass': ('zoom', '    for (int pass = 0; pass < 4; pass++) {', '    for (int pass = 0; pass < 1; pass++) {'),
+    # Below unit scale the top inset is in screen points. Using it as clip bounds
+    # pulls Fit to Content Width down from under the toolbar.
+    'visible-area-uses-clip-inset': ('zoom',
+        '    CGFloat top = magnification > 1 ? insets.top : insets.top * unit;\n',
+        '    CGFloat top = insets.top;\n'),
+    'visible-size-scales-inset': ('zoom',
+        '    CGFloat top = magnification > 1 ? insets.top * magnification : insets.top;\n',
+        '    CGFloat top = insets.top * magnification;\n'),
     # MyPDFKitView.m
     'rounded-up': ('view', 'MIN((NSInteger)floor(scale * 100.0 + 1e-6), PDF_MAX_SCALE)', 'MIN((NSInteger)ceil(scale * 100.0), PDF_MAX_SCALE)'),
     'zoom-keeps-fit': ('view', '\t// A fixed magnification, as Zoom In sets, also when it did not change.\n\tresizeOption = NEW_PDF_FIT_TO_NONE;\n', ''),
@@ -311,6 +319,41 @@ static CGFloat across(NSPoint point, NSInteger rotation) { return rotation % 180
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
+    // Below unit scale the top inset is in screen points. The visible area and the
+    // visible size both have to use it that way; a magnified inset is in clip bounds.
+    {
+        context = @"below unit scale";
+        PDFDocument *document = makeDocument(0, NSZeroRect);
+        NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 700, 600)
+            styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+        window.releasedWhenClosed = NO;
+        PDFView *plain = [[PDFView alloc] initWithFrame:window.contentView.bounds];
+        plain.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        [window.contentView addSubview:plain];
+        plain.document = document;
+        plain.displayMode = kPDFDisplaySinglePageContinuous;
+        plain.autoScales = NO;
+        plain.scaleFactor = 0.5;
+        [window layoutIfNeeded];
+        NSScrollView *scroll = plain.documentView.enclosingScrollView;
+        NSClipView *clip = scroll.contentView;
+        scroll.automaticallyAdjustsContentInsets = NO;
+        scroll.contentInsets = NSEdgeInsetsMake(80, 0, 0, 0);
+        [plain layoutDocumentView];
+        CGFloat magnification = scroll.magnification;
+        CGFloat inset = scroll.contentInsets.top;
+        CGFloat unit = NSHeight(clip.bounds) / NSHeight(clip.frame);
+        NSRect area = TSContentVisibleArea(plain);
+        CGFloat lost = NSHeight(clip.bounds) - NSHeight(area);
+        NSSize visible = TSContentVisibleSize(plain);
+        check(magnification > 0.2 && magnification <= 1 && unit > 1.4 && inset > 40,
+              [NSString stringWithFormat:@"half scale keeps a screen inset (%.2f, unit %.2f, inset %.1f)", magnification, unit, inset]);
+        check(fabs(lost - inset * unit) < 1.5,
+              [NSString stringWithFormat:@"the visible area loses the band in document points (%.1f, expected %.1f)", lost, inset * unit]);
+        check(fabs(visible.height - (NSHeight(clip.frame) - inset)) < 1.5,
+              [NSString stringWithFormat:@"the visible size loses the band in screen points (%.1f, expected %.1f)", visible.height, NSHeight(clip.frame) - inset]);
+        [window close];
+    }
     // Content of the pages with the body: Body and Number, with the 8pt margin.
     NSRect ink = NSInsetRect(NSUnionRect(Body, Number), -8, -8);
     for (NSInteger rotation = 0; rotation < 360; rotation += 90) for (int cropped = 0; cropped < 2; cropped++) {
