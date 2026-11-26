@@ -185,11 +185,13 @@ static NSMapTable<NSTextView *, NSValue *> *TSAnchorsFollowingEdits(NSMapTable<N
 /// Laying out a replacement resizes the text view. `_resizeTextViewForTextContainer:` then scrolls, and so does
 /// `_scrollRangeToVisible:forceCenter:` for the caret. Both go through `scrollClipView:toPoint:`, which calls
 /// `scrollToPoint:` and `translateOriginToPoint:`. A direct `setBoundsOrigin:` is the other way the frame change
-/// moves the clip. Either one lands on the caret's line, including when the height estimate is corrected the next
-/// time the text is measured (#72). While a hold is in force both do nothing. The anchor restore is the scroll that
-/// should happen.
+/// moves the clip. The resize also goes through `_reflectDocumentViewFrameChange` → `_scrollTo:` → `tile` →
+/// `translateOriginToPoint:`, which calls neither of those. With wrapping off, that draws the left edge for one
+/// frame before the anchor is put back, even when the replacement keeps the advance (#72). While a hold is in
+/// force all three do nothing. The anchor restore is the scroll that should happen.
 static IMP TSOriginalScrollClipView;
 static IMP TSOriginalSetBoundsOrigin;
+static IMP TSOriginalTranslateOrigin;
 static int TSClipHoldCount;
 static BOOL TSAllowClipScroll;
 /// Undo managers that still owe a hold to a Replace All redo. The number is how many later undos have stacked
@@ -239,6 +241,13 @@ static void TSHeldSetBoundsOrigin(NSClipView *clip, SEL _cmd, NSPoint origin)
     ((void (*)(id, SEL, NSPoint))TSOriginalSetBoundsOrigin)(clip, @selector(setBoundsOrigin:), origin);
 }
 
+static void TSHeldTranslateOrigin(NSView *view, SEL _cmd, NSPoint point)
+{
+    if (TSClipHoldCount > 0 && !TSAllowClipScroll && [view isKindOfClass:NSClipView.class])
+        return;
+    ((void (*)(id, SEL, NSPoint))TSOriginalTranslateOrigin)(view, @selector(translateOriginToPoint:), point);
+}
+
 static void TSInstallClipHold(void)
 {
     static dispatch_once_t once;
@@ -247,6 +256,8 @@ static void TSInstallClipHold(void)
         TSOriginalScrollClipView = method_setImplementation(scroll, (IMP)TSHeldScrollClipView);
         Method origin = class_getInstanceMethod(NSClipView.class, @selector(setBoundsOrigin:));
         TSOriginalSetBoundsOrigin = method_setImplementation(origin, (IMP)TSHeldSetBoundsOrigin);
+        Method translate = class_getInstanceMethod(NSView.class, @selector(translateOriginToPoint:));
+        TSOriginalTranslateOrigin = method_setImplementation(translate, (IMP)TSHeldTranslateOrigin);
         NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
         [center addObserverForName:NSUndoManagerWillUndoChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
             // Posted before the undo handlers. A later undo (typing, after Replace All was undone) stacks its redo
@@ -770,6 +781,9 @@ static void TSRegisterPlaceUndo(NSUndoManager *undo, NSTextView *view,
         }
         [undo disableUndoRegistration];
         TSApplySelections(kept);
+        // The frame resize already tried to put the clip at the left edge. Put the anchor back before this turn
+        // draws. The pass below repeats it after the height estimate is corrected (#72).
+        TSFinishPlace(keptAnchors);
         [undo enableUndoRegistration];
         // Measuring the text after this returns corrects the height estimate and scrolls the caret into view. Lay it
         // out first, while the hold still swallows that scroll, then put the place back (#72).

@@ -64,6 +64,9 @@ MUTATIONS = {
     'a later undo steals the Replace All scroll hold': ('TSAdvancedFindController+Tasks.m',
         '            if (undo.isUndoing && skip)\n                [TSRedoHolds setObject:@(skip.integerValue + 1) forKey:undo];\n',
         '            if (undo.isUndoing && skip)\n                ;\n'),
+    'a width change draws the left edge': ('TSAdvancedFindController+Tasks.m',
+        '    if (TSClipHoldCount > 0 && !TSAllowClipScroll && [view isKindOfClass:NSClipView.class])\n        return;\n',
+        '    if (TSClipHoldCount > 0 && !TSAllowClipScroll && [view isKindOfClass:NSClipView.class])\n        ;\n'),
 }
 
 

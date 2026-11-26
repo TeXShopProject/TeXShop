@@ -3,6 +3,7 @@
 // menu, the highlights drawn by the real TSLayoutManager (checked in pixels), and the panel's layout and images.
 // Built by Tests/run-advanced-find-panel.py; no window is ever shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
+#import <objc/message.h>
 #import <objc/runtime.h>
 #import <string.h>
 #import "TestAppKitIsolation.h"
@@ -2153,6 +2154,121 @@ static void TestWrappedEndBelowToolbar(NSLineBreakMode mode, NSString *replace)
     }
 }
 
+/// The lowest clip x reached while `block` runs. The clip must be posting bounds notifications.
+static CGFloat LowestClipXDuring(NSTextView *upper, NSTextView *lower, dispatch_block_t block)
+{
+    NSClipView *upperClip = upper.enclosingScrollView.contentView;
+    NSClipView *lowerClip = lower.enclosingScrollView.contentView;
+    __block CGFloat lowest = MIN(NSMinX(upperClip.bounds), NSMinX(lowerClip.bounds));
+    upperClip.postsBoundsChangedNotifications = YES;
+    lowerClip.postsBoundsChangedNotifications = YES;
+    id token = [NSNotificationCenter.defaultCenter addObserverForName:NSViewBoundsDidChangeNotification object:nil
+                                                                queue:nil usingBlock:^(NSNotification *note) {
+        if (note.object != upperClip && note.object != lowerClip)
+            return;
+        lowest = MIN(lowest, NSMinX(((NSView *)note.object).bounds));
+    }];
+    block();
+    [NSNotificationCenter.defaultCenter removeObserver:token];
+    return lowest;
+}
+
+/// The audit's left-edge jump is `-[NSClipView _selfBoundsChanged]` calling `translateOriginToPoint:`. A plain
+/// text view's `setFrameSize:` does not reach that while `scrollClipView:toPoint:` is held. The document window's
+/// tile does. Call it once the frame is narrower than the scroll position (#72).
+static void PullClipToTheLeftEdge(NSTextView *view)
+{
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    SEL sel = NSSelectorFromString(@"_selfBoundsChanged");
+    if (!clip || ![clip respondsToSelector:sel])
+        return;
+    void (*call)(id, SEL) = (void (*)(id, SEL))objc_msgSend;
+    call(clip, sel);
+}
+
+/// After the edit's `endEditing` returns, and before Replace All pops the hold, narrow both text views and run the
+/// clip's own bounds adjustment. That adjustment pulls a too-narrow frame to the left edge through
+/// `translateOriginToPoint:`, which `scrollClipView:toPoint:` does not. Inside `endEditing` the adjustment is
+/// skipped, so this waits until that returns. The pop is queued after this (#72).
+static void AfterEditingNarrowTheFrame(NSTextView *upper, NSTextView *lower, dispatch_block_t block)
+{
+    __block BOOL queued = NO;
+    id token = [NSNotificationCenter.defaultCenter addObserverForName:NSTextStorageDidProcessEditingNotification
+                                                                object:upper.textStorage queue:nil
+                                                            usingBlock:^(NSNotification *note) {
+        if (queued)
+            return;
+        queued = YES;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            upper.horizontallyResizable = NO;
+            lower.horizontallyResizable = NO;
+            [upper setFrameSize:NSMakeSize(200, NSHeight(upper.frame))];
+            [lower setFrameSize:NSMakeSize(200, NSHeight(lower.frame))];
+            PullClipToTheLeftEdge(upper);
+            PullClipToTheLeftEdge(lower);
+            upper.horizontallyResizable = YES;
+            lower.horizontallyResizable = YES;
+            [upper sizeToFit];
+            [lower sizeToFit];
+        });
+    }];
+    block();
+    [NSNotificationCenter.defaultCenter removeObserver:token];
+}
+
+/// Helvetica 12, no wrap, both panes scrolled sideways on a long line. The two panes do not share a layout
+/// manager, so each one has to be laid out before it can scroll (#72).
+static void TestNoWrapDoesNotFlashLeftEdge(void)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    // 24 lines is enough to scroll vertically. 800 copies of "aaa " is about the width of the document that
+    // drew the left edge (frame about 15000pt, clip x about 1000).
+    NSString *text = WideLines(24, 800);
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat ignored = 0;
+    Check(MakeScrolledSourceMode(text, NSLineBreakByClipping, 0, &upper, &lower, &ignored, &ignored),
+          @"no-wrap source scrolls");
+    NSFont *font = [NSFont fontWithName:@"Helvetica" size:12];
+    Check(font != nil, @"Helvetica 12 is available");
+    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+    style.lineBreakMode = NSLineBreakByClipping;
+    [upper.textStorage setAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: style}
+                                range:NSMakeRange(0, upper.string.length)];
+    [upper.layoutManager ensureLayoutForTextContainer:upper.textContainer];
+    [lower.layoutManager ensureLayoutForTextContainer:lower.textContainer];
+    [upper sizeToFit];
+    [lower sizeToFit];
+    ScrollToProposed(upper, 1000, ScrollY(upper));
+    ScrollToProposed(lower, 1000, ScrollY(lower));
+    CGFloat upperX = ScrollX(upper);
+    CGFloat lowerX = ScrollX(lower);
+    Check(upperX > 400 && lowerX > 400, @"the source is scrolled sideways");
+    controller.settings.findString = @"aaa";
+    controller.settings.replaceString = @"ddd";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    CGFloat lowest = LowestClipXDuring(upper, lower, ^{
+        AfterEditingNarrowTheFrame(upper, lower, ^{
+            Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper), @"sideways Replace All");
+        });
+    });
+    Check(lowest > 200,
+          [NSString stringWithFormat:@"Replace All does not draw the left edge (lowest x %.1f, was %.1f and %.1f)",
+           lowest, upperX, lowerX]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    Check(ScrollX(upper) > 200 && ScrollX(lower) > 200, @"the sideways place is still there after the run loop");
+    lowest = LowestClipXDuring(upper, lower, ^{
+        [upper.undoManager undo];
+    });
+    Check(lowest > 200, [NSString stringWithFormat:@"undo does not draw the left edge (lowest x %.1f)", lowest]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    lowest = LowestClipXDuring(upper, lower, ^{
+        [upper.undoManager redo];
+    });
+    Check(lowest > 200, [NSString stringWithFormat:@"redo does not draw the left edge (lowest x %.1f)", lowest]);
+}
+
 /// Same-length Replace All must not move either axis. A shorter or longer replacement keeps the character that was
 /// under the left edge. The caret starts four lines below the top, which is where the view was jumping.
 static void TestSameLengthKeepsScreen(void)
@@ -2206,6 +2322,7 @@ static void TestSameLengthKeepsScreen(void)
     TestWrappedEndBelowToolbar(NSLineBreakByCharWrapping, @"aa");
     TestWrappedEndBelowToolbar(NSLineBreakByWordWrapping, @"aaaa");
     TestWrappedEndBelowToolbar(NSLineBreakByCharWrapping, @"aaaa");
+    TestNoWrapDoesNotFlashLeftEdge();
 }
 
 #pragma mark Main
