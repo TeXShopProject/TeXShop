@@ -576,7 +576,7 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 
 
 	// A dead key, such as ^ on a French keyboard, gives no characters.
-	if ([self.myDocument fromKit] && ([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSCommandKeyMask) && [[theEvent characters] length] > 0) {
+	if ([self.myDocument fromKit] && ([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSEventModifierFlagCommand) && [[theEvent characters] length] > 0) {
 		if ([[theEvent characters] characterAtIndex:0] == '[') {
 			// [[self.myDocument pdfKitView] goBack: self];
 			[self.activeView zoomOut:nil];
@@ -630,7 +630,7 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 		if ([theEvent type] == NSEventTypeKeyDown && [[theEvent characters] length] > 0) {
 
 			/*
-			if (([theEvent modifierFlags] & NSControlKeyMask) &&
+			if (([theEvent modifierFlags] & NSEventModifierFlagControl) &&
 				([myDocument documentType] == isTeX) &&
 				([[theEvent charactersIgnoringModifiers] isEqualToString:@"1"])) {
 
@@ -670,7 +670,7 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 				case NSEndFunctionKey: [self lastPage: self]; return;
 
 				case ' ':
-					if (([theEvent modifierFlags] & NSShiftKeyMask) == 0)
+					if (([theEvent modifierFlags] & NSEventModifierFlagShift) == 0)
 						[self nextPage: self];
 					else
 						[self previousPage: self];
@@ -706,7 +706,7 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 				aRect.size.width = PAGE_WINDOW_WIDTH;
 				aRect.size.height = PAGE_WINDOW_HEIGHT;
 				pageNumberWindow = [[NSPanel alloc] initWithContentRect: aRect
-															  styleMask: NSBorderlessWindowMask | NSUtilityWindowMask
+															  styleMask: NSWindowStyleMaskBorderless | NSWindowStyleMaskUtilityWindow
 																backing: NSBackingStoreBuffered //NSBackingStoreRetained
 																  defer: NO];
 				[pageNumberWindow setHasShadow: PAGE_WINDOW_HAS_SHADOW];
@@ -740,9 +740,9 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     
 	if ([anItem action] == @selector(splitWindow:)) {
 		if (self.windowIsSplit)
-			[anItem setState:NSOnState];
+			[anItem setState:NSControlStateValueOn];
 		else
-			[anItem setState:NSOffState];
+			[anItem setState:NSControlStateValueOff];
 		return YES;
 	}
     
@@ -753,9 +753,9 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         aView = (MyPDFKitView *)self.myPDFKitView;
         
         if (aView.skipLinks)
-            [anItem setState:NSOffState];
+            [anItem setState:NSControlStateValueOff];
         else
-            [anItem setState:NSOnState];
+            [anItem setState:NSControlStateValueOn];
         return YES;
     }
     
@@ -765,9 +765,9 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         aView = (MyPDFKitView *)self.myPDFKitView;
         
         if (aView.useAnnotationMenu)
-            [anItem setState:NSOnState];
+            [anItem setState:NSControlStateValueOn];
         else
-            [anItem setState:NSOffState];
+            [anItem setState:NSControlStateValueOff];
         
         return YES;
     }

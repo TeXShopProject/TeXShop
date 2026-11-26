@@ -99,7 +99,7 @@ NSData *draggedData;
     currentMouseMode = mouseMode;
 	[self setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
 	[mouseModeMatrix selectCellWithTag: mouseMode];
-	[[mouseModeMenu itemWithTag: mouseMode] setState: NSOnState];
+	[[mouseModeMenu itemWithTag: mouseMode] setState: NSControlStateValueOn];
 }
 // end mitsu 1.29
 
@@ -753,7 +753,7 @@ failed. If you change the code below, be sure to test carefully!
 						NSLocalizedString(@"Preview", @"Preview")] submenu];
 	NSMenu *menu = [[previewMenu itemWithTitle:
 				NSLocalizedString(@"Magnification", @"Magnification")] submenu];
-    [[menu itemWithTag: resizeOption] setState: NSOffState];
+    [[menu itemWithTag: resizeOption] setState: NSControlStateValueOff];
    
 	if (magSize == 1.0)
 		resizeOption = PDF_ACTUAL_SIZE;
@@ -761,7 +761,7 @@ failed. If you change the code below, be sure to test carefully!
 		resizeOption = PDF_FIT_TO_NONE;
      
 	// uncheck menu item Preview=>Magnification
-	[[menu itemWithTag: resizeOption] setState: NSOnState];
+	[[menu itemWithTag: resizeOption] setState: NSControlStateValueOn];
     
 	// end mitsu 1.29
 }
@@ -2085,7 +2085,7 @@ failed. If you change the code below, be sure to test carefully!
 - (void)mouseDown:(NSEvent *)theEvent
 {
 		// koch; Dec 5, 2003
-		if (!([theEvent modifierFlags] & NSAlternateKeyMask) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+		if (!([theEvent modifierFlags] & NSEventModifierFlagOption) && ([theEvent modifierFlags] & NSEventModifierFlagCommand)) {
 				currentMouseMode = mouseMode;
 				[[self window] invalidateCursorRectsForView: self];
 				[self doSync: theEvent];
@@ -2133,7 +2133,7 @@ failed. If you change the code below, be sure to test carefully!
 					[theEvent locationInWindow] fromView: nil] inRect: selectedRect])
 				{
 					// mitsu 1.29 drag & drop
-					if (([theEvent modifierFlags] & NSCommandKeyMask) &&
+					if (([theEvent modifierFlags] & NSEventModifierFlagCommand) &&
 										(mouseMode == MOUSE_MODE_SELECT))
 						[self moveSelection: theEvent];
 					else
@@ -2152,17 +2152,17 @@ failed. If you change the code below, be sure to test carefully!
 {
 	if ([sender isKindOfClass: [NSButton class]] || [sender isKindOfClass: [NSMenuItem class]])
 	{
-		[[mouseModeMenu itemWithTag: mouseMode] setState: NSOffState];
+		[[mouseModeMenu itemWithTag: mouseMode] setState: NSControlStateValueOff];
 		mouseMode = currentMouseMode = [sender tag];
 		[mouseModeMatrix selectCellWithTag: mouseMode];
-		[[mouseModeMenu itemWithTag: mouseMode] setState: NSOnState];
+		[[mouseModeMenu itemWithTag: mouseMode] setState: NSControlStateValueOn];
 	}
 	else if ([sender isKindOfClass: [NSMatrix class]])
 	{
-		[[mouseModeMenu itemWithTag: mouseMode] setState: NSOffState];
+		[[mouseModeMenu itemWithTag: mouseMode] setState: NSControlStateValueOff];
 		mouseMode = currentMouseMode = [[sender selectedCell] tag];
 		[mouseModeMatrix selectCellWithTag: mouseMode];
-		[[mouseModeMenu itemWithTag: mouseMode] setState: NSOnState];
+		[[mouseModeMenu itemWithTag: mouseMode] setState: NSControlStateValueOn];
 	}
 	[[self window] invalidateCursorRectsForView: self]; // this updates the cursor rects
 		[self cleanupMarquee: YES]; // added by koch to erase marquee
@@ -2172,13 +2172,13 @@ failed. If you change the code below, be sure to test carefully!
 // change mouse mode when a modifier key is pressed
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-		if (([theEvent modifierFlags] & NSCommandKeyMask) && (!([theEvent modifierFlags] & NSAlternateKeyMask)))
+		if (([theEvent modifierFlags] & NSEventModifierFlagCommand) && (!([theEvent modifierFlags] & NSEventModifierFlagOption)))
 				currentMouseMode = MOUSE_MODE_NULL;
-	else if ([theEvent modifierFlags] & NSControlKeyMask)
+	else if ([theEvent modifierFlags] & NSEventModifierFlagControl)
 		currentMouseMode = MOUSE_MODE_SCROLL;
-	else if ([theEvent modifierFlags] & NSCommandKeyMask)
+	else if ([theEvent modifierFlags] & NSEventModifierFlagCommand)
 		currentMouseMode = MOUSE_MODE_SELECT;
-	else if ([theEvent modifierFlags] & NSAlternateKeyMask)
+	else if ([theEvent modifierFlags] & NSEventModifierFlagOption)
 		currentMouseMode = MOUSE_MODE_MAG_GLASS;
 	else
 		currentMouseMode = mouseMode;
@@ -2252,12 +2252,12 @@ failed. If you change the code below, be sure to test carefully!
 	[[self window] discardCachedImage]; // make sure not use the cached image
 
 	do {
-		if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged)
+		if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged)
 		{
 			// set up the size and magScale
 			if ([theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged)
 			{
-				currentLevel = originalLevel+(([theEvent modifierFlags] & NSAlternateKeyMask)?1:0);
+				currentLevel = originalLevel+(([theEvent modifierFlags] & NSEventModifierFlagOption)?1:0);
 				if (currentLevel <= 1)
 				{
 					magWidth = 150; magHeight = 100;
@@ -2273,20 +2273,20 @@ failed. If you change the code below, be sure to test carefully!
 					[[self window] restoreCachedImage];
 					[[self window] cacheImageInRect:[self convertRect:[self visibleRect] toView: nil]];
 				}
-				if (!([theEvent modifierFlags] & NSShiftKeyMask))
+				if (!([theEvent modifierFlags] & NSEventModifierFlagShift))
 				{
-					if ([theEvent modifierFlags] & NSCommandKeyMask)
+					if ([theEvent modifierFlags] & NSEventModifierFlagCommand)
 						magScale = 0.25; 	// x4
-					else if ([theEvent modifierFlags] & NSControlKeyMask)
+					else if ([theEvent modifierFlags] & NSEventModifierFlagControl)
 						magScale = 0.66666; // x1.5
 					else
 						magScale = 0.4; 	// x2.5
 				}
 				else // shrink the image with shift key -- can be very slow
 				{
-					if ([theEvent modifierFlags] & NSCommandKeyMask)
+					if ([theEvent modifierFlags] & NSEventModifierFlagCommand)
 						magScale = 4.0; 	// /4
-					else if ([theEvent modifierFlags] & NSControlKeyMask)
+					else if ([theEvent modifierFlags] & NSEventModifierFlagControl)
 						magScale = 1.5; 	// /1.5
 					else
 						magScale = 2.5; 	// /2.5
@@ -2383,12 +2383,12 @@ failed. If you change the code below, be sure to test carefully!
 					[[self window] discardCachedImage];
 			}
 		}
-		else if ([theEvent type]==NSLeftMouseUp)
+		else if ([theEvent type]==NSEventTypeLeftMouseUp)
 		{
 			break;
 		}
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask |
-				NSLeftMouseDraggedMask | NSFlagsChangedMask];
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp |
+				NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged];
 	} while (YES);
 
 	[[self window] restoreCachedImage];
@@ -2442,11 +2442,11 @@ failed. If you change the code below, be sure to test carefully!
     
 	do {
         
-		if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
+		if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
             
 			// set up the size and magScale
 			if ([theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
-				currentLevel = originalLevel+(([theEvent modifierFlags] & NSAlternateKeyMask)?1:0);
+				currentLevel = originalLevel+(([theEvent modifierFlags] & NSEventModifierFlagOption)?1:0);
 				if (currentLevel <= 1) {
 					magWidth = 150; magHeight = 100;
 					magOffsetX = magWidth/2; magOffsetY = magHeight/2;
@@ -2499,11 +2499,11 @@ failed. If you change the code below, be sure to test carefully!
 				}
 			}
 			
- 		} else if ([theEvent type] == NSLeftMouseUp) {
+ 		} else if ([theEvent type] == NSEventTypeLeftMouseUp) {
 			break;
 		}
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask |
-                    NSLeftMouseDraggedMask | NSFlagsChangedMask];
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp |
+                    NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged];
 	} while (YES);
     
     if (theOverView) {
@@ -2536,10 +2536,10 @@ failed. If you change the code below, be sure to test carefully!
 
 	while (keepGoing)
 	{
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
 		switch ([theEvent type])
 		{
-			case NSLeftMouseDragged:
+			case NSEventTypeLeftMouseDragged:
 			{
 				NSPoint	newLocation;
 				NSRect	newVisibleRect = visibleRect;
@@ -2566,7 +2566,7 @@ failed. If you change the code below, be sure to test carefully!
 			}
 			break;
 
-			case NSLeftMouseUp:
+			case NSEventTypeLeftMouseUp:
 				keepGoing = NO;
 				break;
 
@@ -2652,7 +2652,7 @@ failed. If you change the code below, be sure to test carefully!
 	aRect.origin.y += SIZE_WINDOW_V_OFFSET;
 	aRect.size = NSMakeSize(SIZE_WINDOW_WIDTH, SIZE_WINDOW_HEIGHT);
 	NSPanel *sizeWindow = [[NSPanel alloc] initWithContentRect: aRect
-			styleMask: NSBorderlessWindowMask | NSUtilityWindowMask
+			styleMask: NSWindowStyleMaskBorderless | NSWindowStyleMaskUtilityWindow
 			backing: NSBackingStoreBuffered //NSBackingStoreRetained
 			defer: NO];
 	[sizeWindow setOpaque: NO];
@@ -2662,13 +2662,13 @@ failed. If you change the code below, be sure to test carefully!
 #endif
 
 	do {
-		if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown ||
-			[theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSPeriodic)
+		if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown ||
+			[theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSEventTypePeriodic)
 		{
 			// restore the cached image in order to clear the rect
 			[[self window] restoreCachedImage];
 			// get Mouse location and check if it is with the view's rect
-			if (!([theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSPeriodic))
+			if (!([theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSEventTypePeriodic))
 			{
 				mouseLocWindow = [theEvent locationInWindow];
 				// scroll if the mouse is out of visibleRect
@@ -2678,7 +2678,7 @@ failed. If you change the code below, be sure to test carefully!
 			currentPoint = [self convertPoint: mouseLocWindow fromView:nil];
             selectedRect.size.width = fabs(currentPoint.x-startPoint.x);
 			selectedRect.size.height = fabs(currentPoint.y-startPoint.y);
-			if ([theEvent modifierFlags] & NSShiftKeyMask)
+			if ([theEvent modifierFlags] & NSEventModifierFlagShift)
 			{
 				if (selectedRect.size.width > selectedRect.size.height)
 					selectedRect.size.height = selectedRect.size.width;
@@ -2774,12 +2774,12 @@ failed. If you change the code below, be sure to test carefully!
 
 #endif
 		}
-		else if ([theEvent type]==NSLeftMouseUp)
+		else if ([theEvent type]==NSEventTypeLeftMouseUp)
 		{
 			break;
 		}
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask |
-				NSLeftMouseDraggedMask | NSFlagsChangedMask | NSPeriodicMask];
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp |
+				NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged | NSEventMaskPeriodic];
 	} while (YES);
 
 	[NSEvent stopPeriodicEvents];
@@ -2969,13 +2969,13 @@ failed. If you change the code below, be sure to test carefully!
 	[path setLineWidth: 0.01];
 
 	do {
-		if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown ||
-			[theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSPeriodic)
+		if ([theEvent type]==NSEventTypeLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown ||
+			[theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSEventTypePeriodic)
 		{
 			// restore the cached image in order to clear the rect
 			[[self window] restoreCachedImage];
 			// get Mouse location and check if it is with the view's rect
-			if (!([theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSPeriodic))
+			if (!([theEvent type]==NSEventTypeFlagsChanged || [theEvent type]==NSEventTypePeriodic))
 			{
 				mouseLocWindow = [theEvent locationInWindow];
 				// scroll if the mouse is out of visibleRect
@@ -2985,7 +2985,7 @@ failed. If you change the code below, be sure to test carefully!
 			mouseLocView = [self convertPoint: mouseLocWindow fromView:nil];
 			deltaX = mouseLocView.x-startPointView.x;
 			deltaY = mouseLocView.y-startPointView.y;
-			if ([theEvent modifierFlags] & NSShiftKeyMask)
+			if ([theEvent modifierFlags] & NSEventModifierFlagShift)
 			{
 				if (fabs(deltaX) >= fabs(deltaY))
 					deltaY = 0;
@@ -3019,12 +3019,12 @@ failed. If you change the code below, be sure to test carefully!
 			// display the image drawn in the buffer
 			[[self window] flushWindow];
 		}
-		else if ([theEvent type]==NSLeftMouseUp)
+		else if ([theEvent type]==NSEventTypeLeftMouseUp)
 		{
 			break;
 		}
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask |
-				NSLeftMouseDraggedMask | NSFlagsChangedMask | NSPeriodicMask];
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp |
+				NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged | NSEventMaskPeriodic];
 	} while (YES);
 
 	[NSEvent stopPeriodicEvents];
@@ -3164,55 +3164,55 @@ failed. If you change the code below, be sure to test carefully!
 			switch (type)
 			{
 				case IMAGE_TYPE_TIFF_NC:
-					fileType = NSTIFFFileType;
+					fileType = NSBitmapImageFileTypeTIFF;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithInteger:NSTIFFCompressionNone],
 							NSImageCompressionMethod, nil];
 					break;
 				case IMAGE_TYPE_TIFF_LZW:
-					fileType = NSTIFFFileType;
+					fileType = NSBitmapImageFileTypeTIFF;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithInteger:NSTIFFCompressionLZW],
 							NSImageCompressionMethod, nil];
 					break;
 				case IMAGE_TYPE_TIFF_PB:
-					fileType = NSTIFFFileType;
+					fileType = NSBitmapImageFileTypeTIFF;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithInteger:NSTIFFCompressionPackBits],
 							NSImageCompressionMethod, nil];
 					break;
 				case IMAGE_TYPE_JPEG_HIGH:
-					fileType = NSJPEGFileType;
+					fileType = NSBitmapImageFileTypeJPEG;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithDouble:JPEG_COMPRESSION_HIGH],
 							NSImageCompressionFactor, nil];
 					break;
 				case IMAGE_TYPE_JPEG_MEDIUM:
-					fileType = NSJPEGFileType;
+					fileType = NSBitmapImageFileTypeJPEG;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithDouble:JPEG_COMPRESSION_MEDIUM],
 							NSImageCompressionFactor, nil];
 					break;
 				case IMAGE_TYPE_JPEG_LOW:
-					fileType = NSJPEGFileType;
+					fileType = NSBitmapImageFileTypeJPEG;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithDouble:JPEG_COMPRESSION_LOW],
 							NSImageCompressionFactor, nil];
 					break;
 				case IMAGE_TYPE_PNG:
-					fileType = NSPNGFileType;
+					fileType = NSBitmapImageFileTypePNG;
 					dict = [NSDictionary  dictionary];
 					break;
 				case IMAGE_TYPE_GIF: // GIF is not right format for our purpose
-					fileType = NSGIFFileType;
+					fileType = NSBitmapImageFileTypeGIF;
 					dict = [NSDictionary  dictionary];
 					break;
 				case IMAGE_TYPE_BMP: // does not work?
-					fileType = NSBMPFileType;
+					fileType = NSBitmapImageFileTypeBMP;
 					dict = [NSDictionary  dictionary];
 					break;
 				default: //default IMAGE_TYPE_JPEG_MEDIUM?
-					fileType = NSJPEGFileType;
+					fileType = NSBitmapImageFileTypeJPEG;
 					dict = [NSDictionary  dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithDouble:JPEG_COMPRESSION_MEDIUM],
 							NSImageCompressionFactor, nil];
@@ -3312,7 +3312,7 @@ failed. If you change the code below, be sure to test carefully!
     
     [savePanel beginSheetModalForWindow: [self window]
                       completionHandler:^(NSInteger result) {
-                          if (NSFileHandlingPanelOKButton) {
+                          if (NSModalResponseOK) {
                               NSData *data = nil;
                               data = [self imageDataFromSelectionType: [SUD integerForKey: PdfExportTypeKey]];
                               
@@ -3335,7 +3335,7 @@ failed. If you change the code below, be sure to test carefully!
 /*
  - (void)saveSelectionPanelDidEnd:(NSSavePanel *)sheet returnCode:(NSInteger)returnCode contextInfo:(void  *)contextInfo
  {
- if (returnCode == NSFileHandlingPanelOKButton && [sheet filename]) {
+ if (returnCode == NSModalResponseOK && [sheet filename]) {
  NSData *data = nil;
  //NSNumber *aNumber;
  
@@ -3388,7 +3388,7 @@ failed. If you change the code below, be sure to test carefully!
 	NSImage *image;
 	NSSize dragOffset = NSMakeSize(0, 0);
 
-	pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+	pboard = [NSPasteboard pasteboardWithName:NSPasteboardNameDrag];
 	imageCopyType = [SUD integerForKey:PdfCopyTypeKey];
 	if (imageCopyType != IMAGE_TYPE_PDF && imageCopyType != IMAGE_TYPE_EPS)
 		dataType = NSTIFFPboardType;
@@ -3512,7 +3512,7 @@ failed. If you change the code below, be sure to test carefully!
 		NSMenu *menu = [[previewMenu itemWithTitle:
 				NSLocalizedString(@"Display Format", @"Display Format")] submenu];
 		id item = [menu itemWithTag: pageStyle];
-		[item setState: NSOffState];
+		[item setState: NSControlStateValueOff];
 		// end mitsu 1.29b
 
 		// change page style
@@ -3522,7 +3522,7 @@ failed. If you change the code below, be sure to test carefully!
 
 		// mitsu 1.29b check menu item Preview=>Display Format
 		item = [menu itemWithTag: pageStyle];
-		[item setState: NSOnState];
+		[item setState: NSControlStateValueOn];
 		// end mitsu 1.29b
 
 		// clean up the timer for selected rectangle
@@ -3554,7 +3554,7 @@ failed. If you change the code below, be sure to test carefully!
 	NSMenu *menu = [[previewMenu itemWithTitle:
 				NSLocalizedString(@"Magnification", @"Magnification")] submenu];
 	id item = [menu itemWithTag: resizeOption];
-	if (item) [item setState: NSOffState];
+	if (item) [item setState: NSControlStateValueOff];
 	// end mitsu 1.29b
 
 	resizeOption = [sender tag];
@@ -3578,7 +3578,7 @@ failed. If you change the code below, be sure to test carefully!
 
 	// mitsu 1.29b check menu item Preview=>Magnification
 	item =[menu itemWithTag: resizeOption];
-	if (item) [item setState: NSOnState];
+	if (item) [item setState: NSControlStateValueOn];
 	// end mitsu 1.29b
 }
 

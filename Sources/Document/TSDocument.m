@@ -293,8 +293,6 @@ withDarkColors = NO;
 
 - (id)init
 {
-    NSColor *myColor1, *myColor2, *myColor3, *myColor4, *myColor5, *myColor6, *myColor7;
-    
 	//id result = [super init];
     id result = [super init];
     self = result;
@@ -924,7 +922,7 @@ withDarkColors = NO;
     [openPanel beginSheetModalForWindow:theWindow completionHandler:^(NSInteger result1)
      {
     
-    if (result1 == NSFileHandlingPanelOKButton) {
+    if (result1 == NSModalResponseOK) {
         NSArray *urls = [openPanel URLs];
         NSFileManager *fileManager = [NSFileManager defaultManager];
         
@@ -4753,10 +4751,10 @@ if ( ! skipTextWindow) {
 	
 	 menu = [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Typeset", @"Typeset")] submenu];
 	
-	[[menu itemWithTag:kTypesetViaPDFTeX] setState:NSOffState];
-	[[menu itemWithTag:kTypesetViaGhostScript] setState:NSOffState];
-	[[menu itemWithTag:kTypesetViaPersonalScript] setState:NSOffState];
-	[sender setState:NSOnState];
+	[[menu itemWithTag:kTypesetViaPDFTeX] setState:NSControlStateValueOff];
+	[[menu itemWithTag:kTypesetViaGhostScript] setState:NSControlStateValueOff];
+	[[menu itemWithTag:kTypesetViaPersonalScript] setState:NSControlStateValueOff];
+	[sender setState:NSControlStateValueOn];
 	whichScript = (DefaultTypesetMode)[sender tag];
 }
 
@@ -4766,11 +4764,11 @@ if ( ! skipTextWindow) {
     
     menu = [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Typeset", @"Typeset")] submenu];
     
-    [[menu itemWithTag:kTypesetViaPDFTeX] setState:NSOffState];
-    [[menu itemWithTag:kTypesetViaGhostScript] setState:NSOffState];
-    [[menu itemWithTag:kTypesetViaPersonalScript] setState:NSOffState];
+    [[menu itemWithTag:kTypesetViaPDFTeX] setState:NSControlStateValueOff];
+    [[menu itemWithTag:kTypesetViaGhostScript] setState:NSControlStateValueOff];
+    [[menu itemWithTag:kTypesetViaPersonalScript] setState:NSControlStateValueOff];
     
-    [[menu itemWithTag:whichScript] setState:NSOnState];
+    [[menu itemWithTag:whichScript] setState:NSControlStateValueOn];
 
   }
 
@@ -7022,25 +7020,25 @@ if (! useFullSplitWindow) {
     if ([anItem action] == @selector(toggleSyntaxColor:))
     {
         if (self.syntaxColor)
-            [anItem setState:NSOnState];
+            [anItem setState:NSControlStateValueOn];
         else
-            [anItem setState:NSOffState];
+            [anItem setState:NSControlStateValueOff];
     }
     
     if ([anItem action] == @selector(toggleSyntaxColorEntry:))
     {
         if (self.syntaxcolorEntry)
-            [anItem setState:NSOnState];
+            [anItem setState:NSControlStateValueOn];
         else
-            [anItem setState:NSOffState];
+            [anItem setState:NSControlStateValueOff];
     }
     
     if ([anItem action] == @selector(toggleExplColor:))
     {
         if (self.useExplColor)
-            [anItem setState:NSOnState];
+            [anItem setState:NSControlStateValueOn];
         else
-            [anItem setState:NSOffState];
+            [anItem setState:NSControlStateValueOff];
     }
 
     if ([anItem action] == @selector(toggleIndexColor:))
@@ -7049,9 +7047,9 @@ if (! useFullSplitWindow) {
     if ([anItem action] == @selector(toggleBlockCursor:))
     {
         if (self.blockCursor)
-            [anItem setState:NSOnState];
+            [anItem setState:NSControlStateValueOn];
         else
-            [anItem setState:NSOffState];
+            [anItem setState:NSControlStateValueOff];
     }
     
 	if (!fileIsTex) {
@@ -7077,44 +7075,44 @@ if (! useFullSplitWindow) {
 	// forsplit
 	if ([anItem action] == @selector(splitWindow:)) {
 		if (windowIsSplit)
-			[anItem setState:NSOnState];
+			[anItem setState:NSControlStateValueOn];
 		else
-			[anItem setState:NSOffState];
+			[anItem setState:NSControlStateValueOff];
 		return YES;
 	}
 	// end forsplit
 	
 	if ([anItem action] == @selector(showHideLineNumbers:)) {
 		if (lineNumbersShowing)
-			[anItem setState:NSOnState];
+			[anItem setState:NSControlStateValueOn];
 		else
-			[anItem setState:NSOffState];
+			[anItem setState:NSControlStateValueOff];
 		return YES;
 	}
 
 	// added by Terada
 	if ([anItem action] == @selector(showHideInvisibleCharacters:)) {
 		if (invisibleCharactersShowing)
-			[anItem setState:NSOnState];
+			[anItem setState:NSControlStateValueOn];
 		else
-			[anItem setState:NSOffState];
+			[anItem setState:NSControlStateValueOff];
 		return YES;
 	}
 	
 	// added by Koch
 	if ([anItem action] == @selector(changeAutoComplete:)) {
 		if (doAutoComplete)
-			[anItem setState:NSOnState];
+			[anItem setState:NSControlStateValueOn];
 		else 
-			[anItem setState:NSOffState];
+			[anItem setState:NSControlStateValueOff];
 		return YES;
 	}
     
     if ([anItem action] == @selector(toggleXML:)) {
         if (self.fileIsXML)
-            [anItem setState:NSOnState];
+            [anItem setState:NSControlStateValueOn];
         else
-            [anItem setState:NSOffState];
+            [anItem setState:NSControlStateValueOff];
         return YES;
     }
 
@@ -7123,9 +7121,9 @@ if (! useFullSplitWindow) {
 	//Michael Witten: mfwitten@mit.edu
 	if ([anItem action] == @selector(setLineBreakMode:)) {
 		switch ([anItem tag]) {
-			case 0: [anItem setState: (lineBreakMode == NSLineBreakByClipping)	   ? NSOnState : NSOffState]; break;
-			case 1: [anItem setState: (lineBreakMode == NSLineBreakByWordWrapping) ? NSOnState : NSOffState]; break;
-			case 2: [anItem setState: (lineBreakMode == NSLineBreakByCharWrapping) ? NSOnState : NSOffState]; break;
+			case 0: [anItem setState: (lineBreakMode == NSLineBreakByClipping)	   ? NSControlStateValueOn : NSControlStateValueOff]; break;
+			case 1: [anItem setState: (lineBreakMode == NSLineBreakByWordWrapping) ? NSControlStateValueOn : NSControlStateValueOff]; break;
+			case 2: [anItem setState: (lineBreakMode == NSLineBreakByCharWrapping) ? NSControlStateValueOn : NSControlStateValueOff]; break;
 		}
 	}
     
@@ -8730,10 +8728,10 @@ if (! useFullSplitWindow) {
 		if ([[anObject itemIdentifier] isEqual: @"AutoComplete"]) {
 			if (doAutoComplete)
 //                [[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setTitle: NSLocalizedString(@"Turn off", @"Turn off")];
-				  [[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSOnState];
+				  [[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSControlStateValueOn];
 			else
 //                [[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setTitle: NSLocalizedString(@"Turn on", @"Turn on")];
-				  [[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSOffState];
+				  [[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSControlStateValueOff];
 			}
 		}
 }
@@ -8760,9 +8758,9 @@ if (! useFullSplitWindow) {
 	while ((anObject = [enumerator nextObject])) {
 		if ([[anObject itemIdentifier] isEqual: @"ShowFullPath"]) {
 			if (showFullPath)
-				[[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSOnState];
+				[[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSControlStateValueOn];
 			else
-				[[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSOffState];
+				[[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSControlStateValueOff];
 		}
 	}
 }
