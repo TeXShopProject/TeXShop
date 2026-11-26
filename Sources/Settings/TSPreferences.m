@@ -742,6 +742,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 //==============================================================================
 
 // The engine files that a document's toolbar lists, by name and in the same order.
+NSArray<NSString *> *TSEngineFileNames(NSString *folder);
 NSArray<NSString *> *TSEngineFileNames(NSString *folder)
 {
     NSFileManager *fileManager = NSFileManager.defaultManager;
@@ -801,6 +802,7 @@ static void TSFillEngineMenu(NSPopUpButton *popup, NSArray<NSArray<NSString *> *
 
 // The programs that the Alternate Engine can name besides the engine files, with the names
 // that the typesetting understands (TSDocument-Jobs.m), plain TeX before LaTeX.
+NSArray<NSArray<NSString *> *> *TSAlternateEnginePrograms(void);
 NSArray<NSArray<NSString *> *> *TSAlternateEnginePrograms(void)
 {
     NSBundle *bundle = NSBundle.mainBundle;
@@ -856,6 +858,7 @@ static NSString *TSAlternateEngineInfoSentences(NSArray<NSString *> *sentences)
 
 // What the info button of the Alternate Engine says, as a heading and paragraphs: what the engine is for and what the
 // command does; where the command is and its key as the menu has it now; what takes precedence.
+NSArray<NSString *> *TSAlternateEngineInfoLines(NSMenu *mainMenu);
 NSArray<NSString *> *TSAlternateEngineInfoLines(NSMenu *mainMenu)
 {
     NSMenuItem *item = TSAlternateTypesetItem(mainMenu);
@@ -1983,7 +1986,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 - (IBAction)colorMapChanged:sender
 {
 
-	[SUD setBool:([(NSCell *)sender state]==NSOnState) forKey:PdfColorMapKey];
+	[SUD setBool:([(NSCell *)sender state]==NSControlStateValueOn) forKey:PdfColorMapKey];
     [self updateSettingsDependenciesFromDefaults:SUD];
 }
 

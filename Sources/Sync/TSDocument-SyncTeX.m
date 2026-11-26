@@ -154,7 +154,7 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
 	NSString 		*newFile;
 	NSError			*myError;
 	
-	NSInteger		length, theIndex;
+	NSInteger		theIndex;
 	NSPoint			viewPosition;
 	NSRange			correctedFoundRange;
 	NSString		*sourceLineString;
@@ -201,7 +201,7 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
 		//	NSLog(syncTeXName);
 		
 		gotSomething = NO;
-		if (synctex_edit_query(scanner, pageNumber, xPosition, yPosition) > 0) {
+		if (synctex_edit_query(scanner, (int)pageNumber, xPosition, yPosition) > 0) {
 			gotSomething = YES;
 			synctex_node_p node;
 			while ((node = synctex_scanner_next_result(scanner)) != NULL) {
@@ -311,7 +311,6 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
 		PDFDocument *pdfDocument = [[self pdfKitView] document];
 		PDFPage *thePage = [pdfDocument pageAtIndex: (pageNumber - 1)]; 
 		NSString *fullText = [thePage string];
-		length = [fullText length];
 		theIndex = [thePage characterIndexAtPoint:viewPosition];
 		
 		myLineRange = [newDocument lineRange: line];
@@ -1240,13 +1239,10 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
 	const char		*name;
 	// NSString		*pathString;
 	NSString		*rootFile, *rootPath, *theFile;
-	float			x, y, h, v, width, height;
+	float			h, v, width, height;
     PDFPage         *aPage;
     NSInteger       theindex;
     NSRect          tempSyncRect;
-    NSRect          visRect;
-    NSString        *theString;
-    BOOL            doScroll;
     
     
     if (self.useConTeXtSyncParser)
@@ -1297,9 +1293,8 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
     
     
 	
-	if (synctex_display_query(scanner, name, line, 0, theindex) > 0) {  //last argument = page_hint
+	if (synctex_display_query(scanner, name, (int)line, 0, (int)theindex) > 0) {  //last argument = page_hint
 		int page = -1;
-		BOOL gotSomething = NO;
 		
 		
 		while (((node = synctex_scanner_next_result(scanner)) != NULL) && (boxNumber < 200)) {
@@ -1310,10 +1305,8 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
             }
 			if (synctex_node_page(node) != page)
 				continue;
-			gotSomething = YES;
 			// x = synctex_node_box_visible_x(node);
 			// y = synctex_node_box_visible_y(node);
-			x = 0; y = 0;
 			h = synctex_node_box_visible_h(node);
 			v = synctex_node_box_visible_v(node) - synctex_node_box_visible_height(node);
 			width = synctex_node_box_visible_width(node);
@@ -1815,7 +1808,7 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
     NSString        *mySyncTeXFileName; //, *mySyncTeX;
     const char        *name;
     NSString        *rootFile, *rootPath, *theFile;
-    float            x, y, h, v, width, height;
+    float            h, v, width, height;
     PDFPage         *aPage;
     NSInteger       theindex;
     
@@ -1861,9 +1854,8 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
     
     
     
-    if (synctex_display_query(scanner, name, line, 0, theindex) > 0) {  //last argument = page_hint
+    if (synctex_display_query(scanner, name, (int)line, 0, (int)theindex) > 0) {  //last argument = page_hint
         int page = -1;
-        BOOL gotSomething = NO;
         
         
         while (((node = synctex_scanner_next_result(scanner)) != NULL) && (boxNumber < 200)) {
@@ -1874,10 +1866,8 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
             }
             if (synctex_node_page(node) != page)
                 continue;
-            gotSomething = YES;
             // x = synctex_node_box_visible_x(node);
             // y = synctex_node_box_visible_y(node);
-            x = 0; y = 0;
             h = synctex_node_box_visible_h(node);
             v = synctex_node_box_visible_v(node) - synctex_node_box_visible_height(node);
             width = synctex_node_box_visible_width(node);

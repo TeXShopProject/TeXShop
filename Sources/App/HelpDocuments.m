@@ -205,7 +205,6 @@
     TSDocumentController    *myController;
     NSURL                    *myURL;
     NSError                   *outError;
-    TSDocument               *myDocument;
     
     tempPath = @"~/Library/TeXShop/HTML/Help.html";
     fileName = [tempPath stringByExpandingTildeInPath];

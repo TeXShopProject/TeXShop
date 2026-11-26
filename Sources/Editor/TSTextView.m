@@ -2643,7 +2643,6 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 		}
 		else // candidate was not found
 		{
-			self.originalString;
 			self.originalString = self.currentString = nil;
 			if (! wasCompleted)
 				[super keyDown: theEvent];
@@ -3390,7 +3389,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     
     NSUInteger textlocation, cursorlocation, textlength;
     NSRange cursorRange, selectedRange, searchRange, selectedCommentEndRange, selectedCommentStartRange;
-    BOOL  done, stillletter;
+    BOOL  stillletter;
     BOOL tagOpens;
     NSUInteger state, newstate;
     NSString *text;
@@ -3415,7 +3414,6 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     textlocation = cursorlocation - 1;
     
     // we will only search source before cursor location
-    done = FALSE;
     searchRange.location = 0;
     searchRange.length = textlocation;
     

@@ -171,19 +171,19 @@ static id _sharedInstance = nil;
 				NSLocalizedString(@"Display Format", @"Display Format")] submenu];
         number = [menu numberOfItems];
         for (i = 0; i < number; i++)
-            [[menu itemAtIndex:i] setState: NSOffState];
+            [[menu itemAtIndex:i] setState: NSControlStateValueOff];
         if ([doc pdfKitView] != nil) {
             item = [menu itemWithTag:[[doc pdfKitView] pageStyle]];
-            [item setState: flag ? NSOnState : NSOffState];
+            [item setState: flag ? NSControlStateValueOn : NSControlStateValueOff];
             }
 		menu = [[previewMenu itemWithTitle:
 				NSLocalizedString(@"Magnification", @"Magnification")] submenu];
         number = [menu numberOfItems];
         for (i = 0; i < number; i++)
-            [[menu itemAtIndex:i] setState: NSOffState];
+            [[menu itemAtIndex:i] setState: NSControlStateValueOff];
         if ([doc pdfKitView] != nil) {
             item = [menu itemWithTag:[[doc pdfKitView] resizeOption]];
-            [item setState: flag ? NSOnState : NSOffState];
+            [item setState: flag ? NSControlStateValueOn : NSControlStateValueOff];
             }
 	}
 }
@@ -228,7 +228,7 @@ static id _sharedInstance = nil;
 - (void)checkProgramMenuItem: (NSInteger)programID checked: (BOOL)flag
 {
 	[[[[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Typeset", @"Typeset")] submenu]
-		itemWithTag:programID] setState: (flag)?NSOnState:NSOffState];
+		itemWithTag:programID] setState: (flag)?NSControlStateValueOn:NSControlStateValueOff];
 }
 
 - (void)HtmlWindowDidBecomeKey:(NSNotification *)note

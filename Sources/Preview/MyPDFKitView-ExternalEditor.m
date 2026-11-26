@@ -39,12 +39,10 @@
     NSTask                  *task;
     NSURL                   *myFileURL;
     NSURL                   *myCurrentDirectoryURL;
-    BOOL                    result;
     NSError                 *error;
     NSString                *filename, *sourcePath, *pdfPath;
     NSMutableDictionary     *environmentForTask;
     NSArray                 *args;
-    NSString                *editorString;
     
 // The synctex routine in TeXLive seems to be broken. Hence we call lower level code to parse the .sync file.
 // Remove the next two lines if synctex is fixed.
@@ -55,7 +53,6 @@
     if (! [SUD boolForKey: TextMateSyncKey])
         return;
     
-    editorString = @"'mate --line %{line} %{input}'";
     
     
     NSPoint windowPosition = thePoint;
@@ -121,7 +118,7 @@
         task.executableURL = myFileURL;
         myCurrentDirectoryURL = [NSURL fileURLWithPath:sourcePath isDirectory:YES];
         task.currentDirectoryURL = myCurrentDirectoryURL;
-        result = [task launchAndReturnError:&error];
+        [task launchAndReturnError:&error];
     }
     else
 #endif
@@ -219,7 +216,7 @@
         return;
     else {
         gotSomething = NO;
-        if (synctex_edit_query(external_scanner, pageNumber, xPosition, yPosition) > 0) {
+        if (synctex_edit_query(external_scanner, (int)pageNumber, xPosition, yPosition) > 0) {
             gotSomething = YES;
             synctex_node_p node;
             while ((node = synctex_scanner_next_result(external_scanner)) != NULL) {
@@ -259,15 +256,12 @@
 {
     NSString        *myFileName, *mySyncTeXFileName;
     NSString        *foundFileName;
-    NSInteger       line;
-    NSString        *newFile;
     NSString        *enginePath, *tetexBinPath, *alternateBinPath;
     NSDate          *myDate;
     NSMutableArray  *args;
     NSInteger       tolerance;
     NSNumber        *myNumber;
     
-    line = 0;
     foundFileName = NULL;
     
  
@@ -281,12 +275,6 @@
         if (! [[NSFileManager defaultManager] fileExistsAtPath: mySyncTeXFileName])
             return;
     }
-    
- 
-    if ([foundFileName isAbsolutePath])
-        newFile = [foundFileName stringByStandardizingPath];
-    else
-        newFile = [[[[[self.myDocument fileURL] path] stringByDeletingLastPathComponent] stringByAppendingPathComponent: foundFileName] stringByStandardizingPath];
     
      if (self.myDocument.backwardSyncTaskExternal != nil) {
         if ([self.myDocument.backwardSyncTaskExternal isRunning])

@@ -9,7 +9,7 @@
 #import "TSApplication.h"
 #import "TSDocumentController.h"
 #import "TSDocument.h"
-#import "Globals.h"
+#import "globals.h"
 #import "TSAboutCredits.h"
 
 @implementation TSApplication

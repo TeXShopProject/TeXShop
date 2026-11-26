@@ -19,8 +19,6 @@
 
 
 - (IBAction)didTapCancelButton:(id)sender {
-    NSStringEncoding theCode;
-    
     [myDocument initializeTempEncoding];
  //   theCode = [myDocument temporaryEncoding];
  //    NSLog(@"The current temporary encoding is %ld", theCode);
@@ -43,9 +41,6 @@
 // Create the contents of the encoding menu on the fly & select the active encoding
 - (void)initializeEncodingMatrix: (TSDocument *)theDocument;
 {
-    TSTextEditorWindow *myWindow;
-    TSDocument      *myDocumentA;
-    
     NSStringEncoding currentEncoding;
 
     myDocument = theDocument;
@@ -53,8 +48,6 @@
     
 //    NSLog(@"Initializing");
     
-    myWindow = (TSTextEditorWindow *)self.window.sheetParent;
-    myDocumentA = [myWindow document];
     
     
     currentEncoding = [myDocument currentDocumentEncoding];

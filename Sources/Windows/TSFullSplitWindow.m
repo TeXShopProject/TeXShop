@@ -443,7 +443,7 @@
 }
 
 
-- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)styleMask backing:(NSBackingStoreType)backingType defer:(BOOL)flag
+- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSWindowStyleMask)styleMask backing:(NSBackingStoreType)backingType defer:(BOOL)flag
 {
 	id  result;
 	result = [super initWithContentRect:contentRect styleMask:styleMask backing:backingType defer:flag];
@@ -656,10 +656,10 @@
     
     
     
-    //    if (([theEvent type] == NSEventTypeFlagsChanged) && ([theEvent modifierFlags] & NSCommandKeyMask))
+    //    if (([theEvent type] == NSEventTypeFlagsChanged) && ([theEvent modifierFlags] & NSEventModifierFlagCommand))
     //        NSLog(@"yes");
     
-    if (([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+    if (([theEvent type] == NSEventTypeKeyDown) && ([theEvent modifierFlags] & NSEventModifierFlagCommand)) {
         
         if  ([[theEvent characters] characterAtIndex:0] == '[') {
             [self.myDocument doCommentOrIndentForTag:Munindent];

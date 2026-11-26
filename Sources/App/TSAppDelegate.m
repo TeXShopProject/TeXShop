@@ -892,7 +892,7 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	if (item) {
 		NSMenu *formatMenu = [item submenu];
 		item = [formatMenu itemWithTag: imageCopyType];
-		[item setState: NSOnState];
+		[item setState: NSControlStateValueOn];
 	}
 
 	[NSColor setIgnoresAlpha:NO]; // it seesm necessary to call this to activate alpha
@@ -1342,11 +1342,11 @@ static void TSInstallAdvancedFindFieldStyle(void)
 
 		imageCopyType = [SUD integerForKey:PdfCopyTypeKey]; // mitsu 1.29b
 		item = [[sender menu] itemWithTag: imageCopyType];
-		[item setState: NSOffState];
+		[item setState: NSControlStateValueOff];
 
 		imageCopyType = [sender tag];
 		item = [[sender menu] itemWithTag: imageCopyType];
-		[item setState: NSOnState];
+		[item setState: NSControlStateValueOn];
 
 		// mitsu 1.29b
 		NSPopUpButton *popup = [[TSPreferences sharedInstance] imageCopyTypePopup];

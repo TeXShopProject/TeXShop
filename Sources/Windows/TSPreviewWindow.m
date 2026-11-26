@@ -779,9 +779,9 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 	if ([anItem action] == @selector(zoomToContent:) || [anItem action] == @selector(zoomToContentWidth:))
 		return [self.myDocument fromKit] && [[[self.myDocument pdfKitView] document] pageCount] > 0;
 
-	if ([anItem action] == @selector(displayLatexPanel:))
+	if ([anItem action] == sel_getUid("displayLatexPanel:"))
 		return NO;
-	if ([anItem action] == @selector(displayMatrixPanel:))
+	if ([anItem action] == sel_getUid("displayMatrixPanel:"))
 		return NO;
 
 #ifdef MITSU_PDF
@@ -806,7 +806,7 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 			[anItem action] == @selector(doBibtex:) ||
 			[anItem action] == @selector(doIndex:) ||
 			[anItem action] == @selector(doMetapost:) ||
-			[anItem action] == @selector(doContext:) ||
+			[anItem action] == sel_getUid("doContext:") ||
 			[anItem action] == @selector(doMetaFont:) ||
 			[anItem action] == @selector(doTypeset:))
 			return NO;
@@ -1196,7 +1196,7 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     if (self.windowIsSplit) {
         self.windowIsSplit = NO;
         self.activeView = self.myPDFKitView;
-        result = [self.activeView becomeFirstResponder];
+        [self.activeView becomeFirstResponder];
         [(MyPDFKitView *)self.activeView resetSearchDelegate];
     }
     else {
@@ -1370,7 +1370,6 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 {
     NSSize        theSize, newSize1, newSize2;
     NSRect        theFrame, theFrame1, theFrame2;
-    BOOL        result;
     double      temp1, temp2;
     BOOL        splitInMiddle;
     BOOL        topToBottom;
@@ -1474,7 +1473,7 @@ static void TSPreviewPlacePartByFrame(NSView *part)
         [self.myDocument annotationPartWillCollapse: self.myPDFKitView2];
         self.windowIsSplit = NO;
         self.activeView = self.myPDFKitView;
-        result = [self.activeView becomeFirstResponder];
+        [self.activeView becomeFirstResponder];
         [(MyPDFKitView *)self.activeView resetSearchDelegate];
     }
     else {

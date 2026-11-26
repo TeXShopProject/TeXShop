@@ -222,7 +222,6 @@
 {
 	NSRange		undoRange;
 	NSString	*oldString, *newString, *undoKey;
-	NSUInteger	from, to;
     
 	// Retrieve undo info
 	undoRange.location = [[theDictionary objectForKey: @"oldLocation"] unsignedIntegerValue];
@@ -240,8 +239,6 @@
 	[self registerUndoWithString:oldString location:undoRange.location
                           length:[newString length] key:undoKey];
     
-	from = undoRange.location;
-	to = from + [newString length];
 //	[self fixColor:from :to];
 //	[self setupTags];
 }
@@ -298,7 +295,6 @@
 	NSRange		oldRange, searchRange;
 	NSMutableString	*stringBuf;
 	NSString *oldString, *newString;
-	NSUInteger from, to;
     
 	// mutably copy the replacement text
 	stringBuf = [NSMutableString stringWithString: theString];
@@ -332,8 +328,6 @@
 	//[textView registerUndoWithString:oldString location:oldRange.location
 	//					length:[newString length] key:key];
     
-	from = oldRange.location;
-	to = from + [newString length];
     
 	// Place insertion mark
 	if (searchRange.location != NSNotFound) {
@@ -615,7 +609,7 @@
 	NSString *textString, *foundString, *latexString = 0;
 	NSMutableString *indentString = [NSMutableString stringWithString:@""]; // Alvise Trevisan; preserve tabs code
 	NSMutableString *newString;
-	NSUInteger selectedLocation, currentLength, from, to;
+	NSUInteger selectedLocation, currentLength;
 	NSRange foundRange, searchRange, spaceRange, insRange, replaceRange;
 	// Start Changed by (HS) - define ins2Range, selectlength
 	NSRange ins2Range;
@@ -899,8 +893,6 @@
 			// clean up
 		//	if (self.document)
                 {
-				from = replaceLocation;
-				to = from + [newString length];
 				// [self.document fixColor:from :to];
 				// [self.document setupTags];
 			}
@@ -927,7 +919,6 @@
 		}
 		else // candidate was not found
 		{
-			self.originalString;
 			self.originalString = self.currentString = nil;
 			if (! wasCompleted)
 				[self passKeyDown: theEvent];
