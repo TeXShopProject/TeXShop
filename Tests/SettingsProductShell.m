@@ -310,12 +310,12 @@ int main(int argc,char **argv){@autoreleasepool{
  [TSIsolatedAppKitDefaults setObject:factory[SwitchSidesKey] ?: @NO forKey:SwitchSidesKey];
  [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
  NSData *dependencyData=[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsDependencies" withExtension:@"json"]];
- NSDictionary *dependencyLedger=[NSJSONSerialization JSONObjectWithData:dependencyData options:0 error:NULL];Check([dependencyLedger[@"rules"]count]==15,@"Independent dependency ledger loads");
+ NSDictionary *dependencyLedger=[NSJSONSerialization JSONObjectWithData:dependencyData options:0 error:NULL];Check([dependencyLedger[@"rules"]count]==16,@"Independent dependency ledger loads");
  for(NSDictionary *rule in dependencyLedger[@"rules"]){
   NSString *key=rule[@"key"],*category=rule[@"category"];id original=[TSIsolatedAppKitDefaults objectForKey:key];
   for(NSNumber *value in rule[@"values"]){
    [TSIsolatedAppKitDefaults setObject:value forKey:key];[owner updateSettingsCategory:category fromDefaults:TSIsolatedAppKitDefaults];
-   id normalized=[rule[@"value_kind"]isEqual:@"boolean"]?@([value boolValue]):@([value integerValue]);
+   id normalized=[rule[@"value_kind"]isEqual:@"boolean"]?@([value boolValue]):[rule[@"value_kind"]isEqual:@"completion_trigger"]?value:@([value integerValue]);
    BOOL enabled=[rule[@"enabled_values"]containsObject:normalized];
    for(NSString *outlet in rule[@"outlets"]){NSControl *control=[owner valueForKey:outlet];Check(control!=nil && control.enabled==enabled,[NSString stringWithFormat:@"Ledger dependency %@=%@ -> %@",key,value,outlet]);}
    NSArray *labelRows=rule[@"label_rows"] ?: ([rule[@"label_row"]isKindOfClass:NSString.class]?@[rule[@"label_row"]]:@[]);

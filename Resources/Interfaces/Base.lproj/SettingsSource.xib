@@ -46,7 +46,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
             <subviews>
               <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="926" identifier="settings.926">
-                <rect key="frame" x="26" y="9" width="107" height="38" />
+                <rect key="frame" x="26" y="-11" width="107" height="58" />
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
                 <size key="cellSize" width="107" height="18" />
@@ -62,6 +62,10 @@
                       <font key="font" metaFont="system" />
                     </buttonCell>
                     <buttonCell type="radio" title="Tab" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="928">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="None" imagePosition="left" alignment="left" tag="2" inset="2" id="931">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>

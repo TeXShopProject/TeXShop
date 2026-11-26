@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Completion and mark keys (TeXShop-audit spec, 2026-11-19): the yielding F5 of
 // Edit › Complete Label or Citation Key, the menu item and its target, Escape and Tab
-// during composition, and Escape in the Experiment panel. Windows are never shown.
+// during composition, Escape in the Experiment panel, and command completion turned
+// off (#75). Windows are never shown.
 #import "TSKeyboardShortcuts.m"
 #import "TestAppKitIsolation.h"
 #import "TSMarkMenu.h"
@@ -266,6 +267,70 @@ static void CheckComposition(void) {
     g_commandCompletionChar = [NSString stringWithCharacters:&tab length:1];
     [scrap keyDown:Key(panel, 53, @"\033", @"\033", 0)];
     check(panel.cancels == 1, @"Tab trigger: Escape closes the Experiment panel as before");
+    // With command completion off (#75), Escape closes the Experiment panel as with Tab.
+    g_commandCompletionChar = TSCommandCompletionCharacterForTrigger(TSCommandCompletionTriggerNone);
+    panel.cancels = 0;
+    [scrap keyDown:Key(panel, 53, @"\033", @"\033", 0)];
+    [scrap keyDown:Key(panel, 53, @"\033", @"\033", NSEventModifierFlagShift)];
+    check(panel.cancels == 2, @"no trigger: Escape and Shift-Escape close the Experiment panel");
+}
+
+// ---- Command completion off (#75) ----
+// The saved value and the trigger: ESCAPE, TAB and NONE; anything else is Tab, as before.
+static void CheckTriggerValues(void) {
+    struct { id saved; TSCommandCompletionTrigger trigger; NSString *character; } cases[] = {
+        {@"ESCAPE", TSCommandCompletionTriggerEscape, @"\033"},
+        {@"TAB", TSCommandCompletionTriggerTab, @"\t"},
+        {@"NONE", TSCommandCompletionTriggerNone, nil},
+        {nil, TSCommandCompletionTriggerTab, @"\t"},
+        {@"none", TSCommandCompletionTriggerTab, @"\t"},
+        {@"ESC", TSCommandCompletionTriggerTab, @"\t"},
+        {@"", TSCommandCompletionTriggerTab, @"\t"},
+    };
+    for (size_t i = 0; i < sizeof(cases) / sizeof(cases[0]); i++) {
+        TSMemoryDefaults *defaults = [TSMemoryDefaults new];
+        if (cases[i].saved) [defaults setObject:cases[i].saved forKey:TSCommandCompletionCharacterKey];
+        TSCommandCompletionTrigger trigger = TSCommandCompletionTriggerFromDefaults((NSUserDefaults *)defaults);
+        NSString *character = TSCommandCompletionCharacterForTrigger(trigger);
+        NSString *name = [NSString stringWithFormat:@"saved %@", cases[i].saved ?: @"(none)"];
+        check(trigger == cases[i].trigger, [name stringByAppendingString:@" gives its trigger"]);
+        check(cases[i].character ? [character isEqual:cases[i].character] : character == nil, [name stringByAppendingString:@" gives its trigger character"]);
+    }
+    check([TSCommandCompletionValueForTrigger(TSCommandCompletionTriggerEscape) isEqual:@"ESCAPE"] &&
+          [TSCommandCompletionValueForTrigger(TSCommandCompletionTriggerTab) isEqual:@"TAB"] &&
+          [TSCommandCompletionValueForTrigger(TSCommandCompletionTriggerNone) isEqual:@"NONE"], @"each trigger is saved as ESCAPE, TAB or NONE");
+    for (TSCommandCompletionTrigger t = TSCommandCompletionTriggerEscape; t <= TSCommandCompletionTriggerNone; t++) {
+        TSMemoryDefaults *defaults = [TSMemoryDefaults new];
+        [defaults setObject:TSCommandCompletionValueForTrigger(t) forKey:TSCommandCompletionCharacterKey];
+        check(TSCommandCompletionTriggerFromDefaults((NSUserDefaults *)defaults) == t, @"a saved trigger reads back as itself");
+    }
+}
+
+// No key is the trigger when command completion is off: Escape, Tab and Shift-Tab alone
+// or with Shift, Option or Control, nor Control-[, Control-I and Control-Y. The source
+// window and the Experiment test every completion and mark branch with this function.
+static void CheckNoTrigger(void) {
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(-8000, -8000, 100, 100) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+    struct { unsigned short code; NSString *chars, *ignoring; } keys[] = {
+        {53, @"\033", @"\033"}, {48, @"\t", @"\t"}, {48, @"\031", @"\031"},
+        {33, @"\033", @"["}, {34, @"\t", @"i"}, {16, @"\031", @"y"},
+    };
+    NSEventModifierFlags flags[] = {0, NSEventModifierFlagShift, NSEventModifierFlagOption, NSEventModifierFlagControl};
+    NSString *triggers[] = {@"\033", @"\t"};
+    for (size_t k = 0; k < sizeof(keys) / sizeof(keys[0]); k++) for (size_t f = 0; f < 4; f++) {
+        NSEvent *event = Key(window, keys[k].code, keys[k].chars, keys[k].ignoring, flags[f]);
+        NSString *name = [NSString stringWithFormat:@"key %u (%lx)", keys[k].code, (unsigned long)flags[f]];
+        check(!TSIsCompletionTrigger(event, nil), [name stringByAppendingString:@" is not the trigger with completion off"]);
+        check(!TSIsCompletionTrigger(event, @""), [name stringByAppendingString:@" is not the trigger for an empty trigger"]);
+        // With a trigger, the physical key decides, as before.
+        for (size_t t = 0; t < 2; t++) {
+            BOOL physical = (keys[k].code == 53 && t == 0) || (keys[k].code == 48 && t == 1);
+            check(TSIsCompletionTrigger(event, triggers[t]) == physical, [name stringByAppendingString:@" follows the physical trigger key"]);
+        }
+    }
+    // The three branches of both views (marks with Option, marks with Control, completion)
+    // ask this function; run-completion-mark-keys.py checks that in the sources.
+    check(TSCommandCompletionCharacterForTrigger(TSCommandCompletionTriggerNone) == nil, @"completion off has no trigger character");
 }
 
 int main(void) { @autoreleasepool {
@@ -274,6 +339,8 @@ int main(void) { @autoreleasepool {
     CheckYielding();
     CheckMenuItem();
     CheckComposition();
+    CheckTriggerValues();
+    CheckNoTrigger();
     if (failures) { fprintf(stderr, "FAIL: %d of %d completion and mark key checks\n", failures, checks); return 1; }
     printf("PASS: %d completion and mark key checks\n", checks);
 } return 0; }

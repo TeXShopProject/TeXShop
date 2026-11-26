@@ -4615,16 +4615,7 @@ if ( ! skipTextWindow) {
 - (void)setCommandCompletionChar: (NSNotification *)notification
 /*" Called when preferences changes the Command Completion Character "*/
 	{
-		unichar esc = 0x001B; // configure the key in Preferences?
-		unichar tab = 0x0009; // ditto
-	//	if (g_commandCompletionChar)
-	//		[g_commandCompletionChar release];
-		
-		if ([[SUD stringForKey: CommandCompletionCharKey] isEqualToString:@"ESCAPE"]) 
-			g_commandCompletionChar = [NSString stringWithCharacters: &esc length: 1] ;
-		else
-			g_commandCompletionChar = [NSString stringWithCharacters: &tab length: 1];
-		
+		g_commandCompletionChar = TSCommandCompletionCharacterForTrigger(TSCommandCompletionTriggerFromDefaults(SUD));
 	}
 
 

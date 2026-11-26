@@ -16,3 +16,4 @@
         {TSSettingsCategorySpelling, TSTeXAwareSpellCheckingKey, 0, TSDependencyBoolean, _spellCheckCommands, YES},
         {TSSettingsCategorySpelling, TSTeXAwareSpellCheckingKey, 0, TSDependencyBoolean, _spellCheckParameters, YES},
         {TSSettingsCategorySpelling, TSTeXAwareSpellCheckingKey, 0, TSDependencyBoolean, _spellCheckComments, YES},
+        {TSSettingsCategoryKeyboard, CommandCompletionCharKey, 1, TSDependencyCompletionTrigger, _completionMarkKeysButton, YES},

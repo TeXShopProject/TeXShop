@@ -315,6 +315,7 @@
 "group.completion.title" = "Conclusão de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de ativação";
 "catalog.keyboard.1.0.note" = "Completa o comando que você está digitando; pressione a tecla de novo para a próxima sugestão. Com Shift pressionado, volta à sugestão anterior.";
+"catalog.keyboard.1.0.keywords" = "Desativar Desativado Desligado";
 "catalog.keyboard.1.3.title" = "Ir para a marca seguinte ou anterior com Option ou Control e a tecla de ativação";
 "catalog.keyboard.1.2.title" = "Editar conclusão de comandos…";
 "group.labelcompletion.title" = "Conclusão de rótulos e chaves de citação";

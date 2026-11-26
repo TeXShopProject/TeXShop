@@ -61,6 +61,20 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
   Check(moved && !old,@"BibDesk finds the switch in Label and Citation Key Completion");
   Check(marks,@"The mark switch is found by its name");
  }
+ // Turning command completion off (#75): the None choice and the words for off find the trigger row,
+ // alone and together with a word of the row name.
+ {
+  NSString *none=[resources localizedStringForKey:@"931.title" value:nil table:@"SettingsSource"];
+  NSString *keywords=[resources localizedStringForKey:@"catalog.keyboard.1.0.keywords" value:nil table:@"SettingsCategories"];
+  Check(none.length && ![none isEqual:@"931.title"] && keywords.length && ![keywords isEqual:@"catalog.keyboard.1.0.keywords"],@"The None choice and the off words are translated");
+  NSString *titleWord=[[resources localizedStringForKey:@"catalog.keyboard.1.0.title" value:nil table:@"SettingsCategories"] componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceCharacterSet].firstObject;
+  NSMutableArray *queries=[NSMutableArray arrayWithObject:none];
+  for(NSString *word in [keywords componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceCharacterSet])if(word.length){[queries addObject:word];[queries addObject:[NSString stringWithFormat:@"%@ %@",titleWord,word]];}
+  for(NSString *query in queries){
+   BOOL reached=NO;for(TSSettingsSearchResult *hit in [index resultsForQuery:query])if([hit.targetIdentifier isEqual:@"row.catalog.keyboard.1.0"])reached=YES;
+   Check(reached,[NSString stringWithFormat:@"Searching %@ finds the completion trigger",query]);
+  }
+ }
  // The Paste column of key bindings and the note under the list lead to the key binding list
  // itself: the column name as a choice, the note as a description.
  {

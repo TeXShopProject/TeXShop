@@ -315,6 +315,7 @@
 "group.completion.title" = "Autocompletado de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de activación";
 "catalog.keyboard.1.0.note" = "Completa el comando que se está escribiendo; pulse de nuevo la tecla para ver la siguiente opción. Con Mayúsculas pulsada, se muestra la opción anterior.";
+"catalog.keyboard.1.0.keywords" = "Desactivar Desactivado";
 "catalog.keyboard.1.3.title" = "Ir a la señal siguiente o anterior con Opción o Control y la tecla de activación";
 "catalog.keyboard.1.2.title" = "Editar autocompletado de comandos…";
 "group.labelcompletion.title" = "Autocompletado de etiquetas y claves de cita";

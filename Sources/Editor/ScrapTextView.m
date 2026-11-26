@@ -623,7 +623,7 @@
     NSString *g_commandCompletionCharTab = g_commandCompletionChar;
 
 	
-	if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
+	if (TSIsCompletionTrigger(theEvent, g_commandCompletionCharTab) &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSEventModifierFlagOption) != 0))
         
@@ -632,7 +632,7 @@
         return;
     }
     
-	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
+	else if (TSIsCompletionTrigger(theEvent, g_commandCompletionCharTab) &&
              [SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
              (([theEvent modifierFlags] & NSEventModifierFlagControl) != 0))
     {
@@ -640,7 +640,7 @@
         return;
     }
     
-	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
+	else if (TSIsCompletionTrigger(theEvent, g_commandCompletionCharTab) &&
              (([theEvent modifierFlags] & NSEventModifierFlagOption) == 0) &&
              ![self hasMarkedText] && g_commandCompletionList)
         

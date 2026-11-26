@@ -315,6 +315,7 @@
 "group.completion.title" = "Complétion des commandes";
 "catalog.keyboard.1.0.title" = "Touche de déclenchement";
 "catalog.keyboard.1.0.note" = "Complète la commande en cours de saisie ; appuyez de nouveau sur la touche pour la proposition suivante. Maintenez Maj enfoncée pour la proposition précédente.";
+"catalog.keyboard.1.0.keywords" = "Désactiver Désactivé";
 "catalog.keyboard.1.3.title" = "Aller au repère suivant ou précédent avec Option ou Contrôle et la touche de déclenchement";
 "catalog.keyboard.1.2.title" = "Modifier la complétion des commandes…";
 "group.labelcompletion.title" = "Complétion des labels et des clés de citation";

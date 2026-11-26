@@ -81,6 +81,7 @@
 718
 72
 74
+75
 78
 8
 82
@@ -732,7 +733,6 @@ four
 fourier
 fraction
 fractional
-free
 freezes
 french
 friend
@@ -765,7 +765,6 @@ gives
 glance
 glass
 globe
-glory
 go
 goes
 golden
@@ -1084,6 +1083,7 @@ marker
 marker''
 markers
 marks
+marquinho78
 martignoni
 martin
 match

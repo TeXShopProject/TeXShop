@@ -514,8 +514,10 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
         self.search.stringValue = [TSShortcutStore displayKey:shown.key modifiers:shown.modifiers | TSEventGlobeModifier(event)];
         // The trigger key with Shift (the previous candidate), Option or Control (the next or
         // previous mark) belongs to command completion too; plain Escape ends the search.
-        BOOL escapeTrigger = [[store.defaults stringForKey:TSCommandCompletionCharacterKey] isEqualToString:@"ESCAPE"];
-        BOOL triggerKey = escapeTrigger ? [key isEqualToString:@"\033"] : ([key isEqualToString:@"\t"] || [key isEqualToString:@"\031"]);
+        // With command completion off, no key is reserved for it.
+        TSCommandCompletionTrigger trigger = TSCommandCompletionTriggerFromDefaults(store.defaults);
+        BOOL triggerKey = trigger == TSCommandCompletionTriggerEscape ? [key isEqualToString:@"\033"]
+            : trigger == TSCommandCompletionTriggerTab ? ([key isEqualToString:@"\t"] || [key isEqualToString:@"\031"]) : NO;
         NSEventModifierFlags completionFlags = flags & (NSEventModifierFlagShift | NSEventModifierFlagOption | NSEventModifierFlagControl | NSEventModifierFlagCommand);
         reservedCompletion = triggerKey && (completionFlags == 0 || completionFlags == NSEventModifierFlagShift ||
                                             completionFlags == NSEventModifierFlagOption || completionFlags == NSEventModifierFlagControl);

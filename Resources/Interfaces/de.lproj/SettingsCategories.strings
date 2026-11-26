@@ -315,6 +315,7 @@
 "group.completion.title" = "Befehlsvervollständigung";
 "catalog.keyboard.1.0.title" = "Auslösetaste";
 "catalog.keyboard.1.0.note" = "Vervollständigt den gerade eingegebenen Befehl; erneutes Drücken der Taste zeigt den nächsten Vorschlag. Mit gedrückter Umschalttaste erscheint der vorherige Vorschlag.";
+"catalog.keyboard.1.0.keywords" = "Aus Deaktivieren Deaktiviert";
 "catalog.keyboard.1.3.title" = "Mit Wahl- oder Control-Taste und der Auslösetaste zur nächsten oder vorherigen Marke springen";
 "catalog.keyboard.1.2.title" = "Befehlsvervollständigung bearbeiten …";
 "group.labelcompletion.title" = "Vervollständigung von Labels und Zitierschlüsseln";
