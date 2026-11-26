@@ -64,11 +64,10 @@ BOOL    annotationsFound;
     {
         PDFSelection        *theSelection, *aSelection;
         PDFAnnotation       *theAnnotation;
-        NSArray             *initialPages, *thePages;
+        NSArray             *thePages;
         NSArray             *theSelections;
         NSInteger           theCount, i;
         PDFPage             *initialPage, *thePage;
-        NSRect              theBounds;
         
         if (_editMode == NO)
             return;
@@ -88,7 +87,6 @@ BOOL    annotationsFound;
                              initialPage = thePage;
                          if (initialPage == thePage)
                          {
-                             theBounds = [aSelection boundsForPage: thePage];
                              theAnnotation = [[PDFAnnotation alloc] initWithBounds: [aSelection boundsForPage: thePage] forType: PDFAnnotationSubtypeStrikeOut withProperties: nil];
                              [theAnnotation setColor: [NSColor redColor]];
                              [self deSelectAll];
@@ -113,11 +111,10 @@ BOOL    annotationsFound;
 {
     PDFSelection        *theSelection, *aSelection;
     PDFAnnotation       *theAnnotation;
-    NSArray             *initialPages, *thePages;
+    NSArray             *thePages;
     NSArray             *theSelections;
     NSInteger           theCount, i;
     PDFPage             *initialPage, *thePage;
-    NSRect              theBounds;
     
     if (_editMode == NO)
         return;
@@ -137,7 +134,6 @@ BOOL    annotationsFound;
                          initialPage = thePage;
                      if (initialPage == thePage)
                      {
-                         theBounds = [aSelection boundsForPage: thePage];
                          theAnnotation = [[PDFAnnotation alloc] initWithBounds: [aSelection boundsForPage: thePage] forType: PDFAnnotationSubtypeHighlight withProperties: nil];
                          [self deSelectAll];
                         [thePage addAnnotation: theAnnotation];
@@ -155,11 +151,10 @@ BOOL    annotationsFound;
 {
     PDFSelection        *theSelection, *aSelection;
     PDFAnnotation       *theAnnotation;
-    NSArray             *initialPages, *thePages;
+    NSArray             *thePages;
     NSArray             *theSelections;
     NSInteger           theCount, i;
     PDFPage             *initialPage, *thePage;
-    NSRect              theBounds;
     
     if (_editMode == NO)
         return;
@@ -180,7 +175,6 @@ BOOL    annotationsFound;
                          initialPage = thePage;
                      if (initialPage == thePage)
                      {
-                         theBounds = [aSelection boundsForPage: thePage];
                          theAnnotation = [[PDFAnnotation alloc] initWithBounds: [aSelection boundsForPage: thePage] forType: PDFAnnotationSubtypeUnderline withProperties: nil];
                          [theAnnotation setColor: [NSColor redColor]];
                          [self deSelectAll];
@@ -746,7 +740,7 @@ BOOL    annotationsFound;
 
 - (NSRect) lineEndRect: (PDFAnnotation *)theAnnotation
 {
-    NSPoint     startPoint, endPoint, originPoint;
+    NSPoint     endPoint, originPoint;
     
     endPoint = theAnnotation.endPoint;
     originPoint = [theAnnotation bounds].origin;
@@ -815,7 +809,7 @@ BOOL    annotationsFound;
 - (BOOL) specialPointInRect: (NSPoint)point : (NSRect)bounds
 {
     BOOL xOK, yOK;
-    float a, b, c, d, x, y;
+    float a, b, x, y;
     
     xOK = NO; yOK = NO;
     x = point.x - bounds.origin.x;
@@ -968,7 +962,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     NSString    *writePath, *writeDirectory, *writeName;
     PDFDocument *theDocument;
     BOOL    doFullSave;
-    NSString *theExtension;
     NSURL   *myURL;
     BOOL    mustSaveAnnotations;
     BOOL    mustDoFullSave;
@@ -1000,7 +993,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     [self deSelectAll];
     
     filePath = [[self.myDocument fileURL] path];
-    theExtension = [filePath pathExtension];
     
     // now we bring up the panel
     
@@ -1087,7 +1079,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     BOOL pagesExist, desiredType;
     NSString    *theType;
     pagesExist = NO;
-    NSString    *theLabel;
     
     PDFDocument *originalDocument = self.document;
     PDFDocument *modifiedDocument = [[PDFDocument alloc] init];
@@ -1299,9 +1290,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
 
 - (BOOL) annotationDrawPage: (PDFPage *)page
 {
-    NSArray            *annotations;
-    NSUInteger        annotCount;
-    NSUInteger        i;
     
     // Let PDFView do most of the hard work.
    //  [super drawPage: pdfPage];
@@ -1320,8 +1308,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     [[NSColor colorWithDeviceRed: 0.0 green: 0.0 blue: 0.0 alpha: 0.3] set];
     
     // Walk array of annotations.
-    annotations = [page annotations];
-    annotCount = [annotations count];
    // for (i = 0; i < annotCount; i++)
    //     NSFrameRectWithWidthUsingOperation([[annotations objectAtIndex: i] bounds], 1.0, NSCompositeSourceOver);
     
@@ -1330,10 +1316,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     {
         NSRect            bounds;
         NSBezierPath    *path;
-        NSString        *theType;
-        BOOL            isLine, isPopup;
-        NSPoint         originPoint, thePoint;
-        NSPoint         startPoint, endPoint;
         
       
         bounds = [_activeAnnotation bounds];
@@ -1478,7 +1460,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     if ([self isArrow: _activeAnnotation])
     {
         //PDFBorder    *border = [_activeAnnotation border];
-        float        inset = 0.0;
         
      }
 
@@ -1508,8 +1489,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     NSArray            *annotations;
     NSInteger       numAnnotations, i;
     NSPoint            pagePoint;
-    NSString        *theType;
-    BOOL            isLine;
     BOOL            optionPressed;
     NSUInteger     modifiers;
     
@@ -1594,13 +1573,8 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
         
         else if ([self isArrow: _activeAnnotation])
             {
-                NSPoint     endPoint;
-                NSRect      lineBounds;
-                NSRect      theEndRect;
                 
                 
-                lineBounds = _wasBounds;
-                theEndRect = [self lineEndRect: _activeAnnotation];
                 
                 _resizing = NSPointInRect(pagePoint, [self lineEndRectFromBounds: _wasBounds]);
                
@@ -1644,10 +1618,9 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
         NSRect        dirtyRect;
         NSPoint        mouseLoc;
         NSPoint        endPt;
-        NSPoint        newPt, oldStart, newStart, oldEnd, newEnd, theEndPoint;
+        NSPoint        newEnd, theEndPoint;
         BOOL           optionPressed;
         NSUInteger     modifiers;
-        NSColor        *theColor, *aColor;
         
         /*
         if //((NSColorPanel.sharedColorPanelExists) &&
@@ -1885,8 +1858,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
 - (BOOL)annotationKeyDown: (NSEvent *)theEvent // return YES if the event was handled and nothing more need be done
 {
     unichar            oneChar;
-    unsigned int    theModifiers;
-    BOOL            noModifier;
     
     // Skip out if not in 'edit mode'.
     if (_editMode == NO)
@@ -1896,8 +1867,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     if ([[theEvent charactersIgnoringModifiers] length] == 0)
         return NO;
     oneChar = [[theEvent charactersIgnoringModifiers] characterAtIndex: 0];
-    theModifiers = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
-    noModifier = ((theModifiers & (NSEventModifierFlagShift | NSEventModifierFlagControl | NSEventModifierFlagOption)) == 0);
     
     // Delete?
     if ((oneChar == NSDeleteCharacter) || (oneChar == NSDeleteFunctionKey))
@@ -1929,7 +1898,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
 // Tab key was hit; move focus to the next widget.
 - (void) advanceFocus
 {
-    NSString    *theType;
     
     if (_activeAnnotation != NULL)
     {
@@ -1946,8 +1914,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
         PDFAnnotation * newActiveAnnotation = [annotations objectAtIndex: newActiveIndex];
         if (newActiveAnnotation != NULL)
         {
-            theType = newActiveAnnotation.type;
-            //NSLog(theType);
         }
         [self selectAnnotation: newActiveAnnotation];
        
@@ -2129,7 +2095,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
 
 - (void) changeString: (id) sender
 {
-    NSString*   theString;
     
     if (_activeAnnotation == NULL)
         return;
@@ -2153,27 +2118,27 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
 
 // --------------------------------------------------------------------------------------------------- resizeThumbForRect
 
-- (NSRect) resizeThumbForRect: (NSRect) rect rotation: (NSInteger) rotation
+- (NSRect) resizeThumbForRect: (NSRect) inRect rotation: (NSInteger) rotation
 {
     NSRect        thumb;
     
-    // Start with rect.
-    thumb = rect;
+    // Start with inRect.
+    thumb = inRect;
     
     // Use rotation to determine thumb origin.
     switch (rotation)
     {
         case 0:
-        thumb.origin.x += rect.size.width - 8.0;
+        thumb.origin.x += inRect.size.width - 8.0;
         break;
         
         case 90:
-        thumb.origin.x += rect.size.width - 8.0;
-        thumb.origin.y += rect.size.height - 8.0;
+        thumb.origin.x += inRect.size.width - 8.0;
+        thumb.origin.y += inRect.size.height - 8.0;
         break;
         
         case 180:
-        thumb.origin.y += rect.size.height - 8.0;
+        thumb.origin.y += inRect.size.height - 8.0;
         break;
     }
     
@@ -2183,27 +2148,27 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     return thumb;
 }
 
-- (NSRect) resizeThumbForRectSmall: (NSRect) rect rotation: (NSInteger) rotation
+- (NSRect) resizeThumbForRectSmall: (NSRect) inRect rotation: (NSInteger) rotation
 {
     NSRect        thumb;
     
-    // Start with rect.
-    thumb = rect;
+    // Start with inRect.
+    thumb = inRect;
     
     // Use rotation to determine thumb origin.
     switch (rotation)
     {
         case 0:
-        thumb.origin.x += rect.size.width - 8.0;
+        thumb.origin.x += inRect.size.width - 8.0;
         break;
         
         case 90:
-        thumb.origin.x += rect.size.width - 8.0;
-        thumb.origin.y += rect.size.height - 8.0;
+        thumb.origin.x += inRect.size.width - 8.0;
+        thumb.origin.y += inRect.size.height - 8.0;
         break;
         
         case 180:
-        thumb.origin.y += rect.size.height - 8.0;
+        thumb.origin.y += inRect.size.height - 8.0;
         break;
     }
     

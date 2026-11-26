@@ -1085,7 +1085,7 @@ static PDFPage *TSPreviewDecodePopupHome(NSCoder *coder, NSString *prefix, PDFDo
      [scurrentPage display];
      [currentPage1 display];
     
-	[[self document] setDelegate: self];
+	[[self document] setDelegate: (id<PDFDocumentDelegate>)self];
     
     // either set page 
     
@@ -1791,18 +1791,15 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
 - (void)reShowWithDocument:(PDFDocument *)pdfDoc
 {
     
-    PDFDocument            *oldDoc, *aDoc;
-    PDFPage                *aPage, *fixingPage;
-    NSInteger            theindex, fixingindex;
+    PDFDocument            *oldDoc;
+    PDFPage                *aPage;
+    NSInteger            theindex;
     NSInteger           theindexold, totalpagesold;
     BOOL                needsInitialization;
     NSInteger            i, amount, newAmount;
     PDFPage                *myPage;
-    NSData                *theData;
     NSRect              sizeRect;
     BOOL                visibleRectExists;
-    CGFloat             theScale;
-    NSInteger           theMode;
     
     // self.PDFFlashFix = NO;
     
@@ -1875,8 +1872,6 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
 
 
     
-    theScale = [self scaleFactor];
-    theMode = [self displayMode];
     
     if ((floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_10_Max) || (! [self.myDocument externalEditor]))
         NSDisableScreenUpdates();
@@ -1957,7 +1952,7 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
     
   
 
-    [[self document] setDelegate: self];
+    [[self document] setDelegate: (id<PDFDocumentDelegate>)self];
     totalPages = [[self document] pageCount];
     [totalPage setIntegerValue:totalPages];
     [stotalPage setIntegerValue:totalPages];
@@ -2120,7 +2115,6 @@ if ((atLeastHighSierra) && (self.PDFFlashFix))
 
 - (void)prepareSecond
 {	PDFPage		*aPage;
-	NSInteger			oldindex;
 	
 	[self cleanupMarquee: YES];
 	
@@ -2138,7 +2132,6 @@ if ((atLeastHighSierra) && (self.PDFFlashFix))
 	drawMark = NO;
 	aPage = [self currentPage];
 	secondTheIndex = [[self document] indexForPage: aPage];
-	oldindex = secondTheIndex;
 	secondTheIndex++;
 	
 	/*
@@ -2517,7 +2510,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     NSInteger decimals[13] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
     //   NSString  *numerals[13] = @[@"m", @"cm", @"d", @"cd", @"c", @"xc", @"l", @"xl", @"x",  @"ix", @"v", @"iv", @"i"];
     NSString *numerals[13] = {@"M", @"CM", @"D", @"CD", @"C", @"XC", @"L", @"XL", @"X", @"IX", @"V", @"IV", @"I"};
-    NSInteger numberOfItems = 13;
     
     
     
@@ -2828,9 +2820,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	TSContentZoom(self, widthOnly, ^CGFloat(CGFloat scale) {
 		// Rounded down, so that the content stays within the view.
 		NSInteger percent = MAX(20, MIN((NSInteger)floor(scale * 100.0 + 1e-6), PDF_MAX_SCALE));
-		scaleMag = percent;
-		[myScale setIntegerValue:percent];
-		[smyScale setIntegerValue:percent];
+		self->scaleMag = percent;
+		[self->myScale setIntegerValue:percent];
+		[self->smyScale setIntegerValue:percent];
 		[self changeScale: self];
 		return self.scaleFactor;
 	});
@@ -4584,7 +4576,6 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 	NSAffineTransform   *transform;
     BOOL				redOvals;
 	NSColor				*myColor;
-    BOOL                result;
    
 
     /*
@@ -4603,7 +4594,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
     
 	// boxRect = [page boundsForBox: [self displayBox]];
 	boxRect = [page boundsForBox: kPDFDisplayBoxMediaBox];
-	rotation = [page rotation];
+	rotation = (int)[page rotation];
     
 	// [super drawPage: page];
     
@@ -4709,10 +4700,10 @@ if ( ! self.myDocument.useConTeXtSyncParser)
 	}
 	
 	p.x = 0; p.y = 0;
-	pagenumber = [[self document] indexForPage:page];
+	pagenumber = (int)[[self document] indexForPage:page];
 	[self drawDotsForPage:pagenumber atPoint: p];
 	
-    int theIndex = [[self document] indexForPage: page];
+    int theIndex = (int)[[self document] indexForPage: page];
 //	redOvals = [SUD boolForKey: syncWithRedOvalsKey];
     if (self.myDocument.syncWithOvals == 1)
         redOvals = YES;
@@ -4825,10 +4816,10 @@ if (self.myDocument.useConTeXtSyncParser)
     }
     
     p.x = 0; p.y = 0;
-    pagenumber = [[self document] indexForPage:page];
+    pagenumber = (int)[[self document] indexForPage:page];
     [self drawDotsForPage:pagenumber atPoint: p];
     
-    int theIndex1 = [[self document] indexForPage: page];
+    int theIndex1 = (int)[[self document] indexForPage: page];
 //    redOvals = [SUD boolForKey: syncWithRedOvalsKey];
     if (self.myDocument.syncWithOvals == 1)
         redOvals = YES;
@@ -4935,7 +4926,7 @@ if (self.myDocument.useConTeXtSyncParser)
      }
      */
     
-    result = [self annotationDrawPage: page];
+    [self annotationDrawPage: page];
        
 }
 
@@ -5534,7 +5525,6 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
     PDFPage         *activePage;
     NSPoint         pagePoint;
     PDFAnnotation   *theAnnotation;
-    NSURL           *theURL;
     PDFDestination  *theDestination;
     PDFPage         *linkedPage;
     NSPoint         linkedPoint;
@@ -5580,7 +5570,6 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
     theAnnotation = [activePage annotationAtPoint: pagePoint];
     NSString *theType = [theAnnotation type];
     if ([theType isEqualToString: @"Link"]) {
-        theURL = [(PDFAnnotationLink *)theAnnotation URL]; // we will do nothing if it is a link to an external page
         theDestination = [(PDFAnnotationLink *)theAnnotation destination];
         if (theDestination) {
             linkedPage = [theDestination page];
@@ -6537,7 +6526,7 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
 #ifndef DO_NOT_SHOW_SELECTION_SIZE
 	// create a small window displaying the size of selection
 	NSRect aRect;
-	aRect.origin = [[self window] convertBaseToScreen: mouseLocWindow];
+	aRect.origin = [[self window] convertRectToScreen: NSMakeRect(mouseLocWindow.x, mouseLocWindow.y, 0, 0)].origin;
 	aRect.origin.x -= SIZE_WINDOW_H_OFFSET;
 	aRect.origin.y += SIZE_WINDOW_V_OFFSET;
 	aRect.size = NSMakeSize(SIZE_WINDOW_WIDTH, SIZE_WINDOW_HEIGHT);
@@ -6657,7 +6646,7 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
 			ymax = fmin(selRectWindow.origin.y+selRectWindow.size.height,
 						contentRect.origin.y+contentRect.size.height);
 			NSPoint aPoint = NSMakePoint(xmin, (ymin+ymax)/2);
-			aPoint = [[self window] convertBaseToScreen: aPoint];
+			aPoint = [[self window] convertRectToScreen: NSMakeRect(aPoint.x, aPoint.y, 0, 0)].origin;
 			aPoint.x -= SIZE_WINDOW_H_OFFSET;
 			aPoint.y += SIZE_WINDOW_V_OFFSET;
 			[sizeWindow setFrameOrigin: aPoint]; // set the position
@@ -7407,7 +7396,7 @@ else
 
 
 // NSDraggingSource required method
-- (NSUInteger)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal
 {
 	return (isLocal)?NSDragOperationNone:NSDragOperationCopy;
 }
@@ -7709,7 +7698,7 @@ else
  {
  NSInteger						theIndex;
  NSInteger						testIndex;
- NSInteger						pageNumber, numberOfTests;
+ NSInteger						numberOfTests;
  NSInteger						searchWindow;
  NSUInteger			sourcelength[NUMBER_OF_SOURCE_FILES + 1];
  NSInteger						startIndex, endIndex;
@@ -7747,7 +7736,6 @@ else
  if (thePage == NULL)
  return NO;
  NSPoint viewPosition = [self convertPoint: kitPosition toPage: thePage];
- pageNumber = [[self document] indexForPage: thePage];
  NSString *fullText = [thePage string];
  length = [fullText length];
  theIndex = [thePage characterIndexAtPoint:viewPosition];
@@ -8403,7 +8391,7 @@ else
 	NSRange         thisRange, newRange, foundRange;
 	NSNumber        *anotherNumber;
 	NSInteger             aNumber;
-	NSInteger             syncNumber, oldSyncNumber, x, oldx, y, oldy;
+	NSInteger             syncNumber, oldSyncNumber, y;
 	BOOL            found;
 	NSUInteger        theStart, theEnd, theContentsEnd;
 	NSString        *newFileName, *theExtension;
@@ -8608,12 +8596,11 @@ else
 	
 	found = YES;
 	syncNumber = -1;
-	x = 0; y = 0;
+	y = 0;
 	remainingRange.location = 0;
 	remainingRange.length = [syncInfo length];
 	do {
 		oldSyncNumber = syncNumber;
-		oldx = x; oldy = y;
 		searchResultRange = [syncInfo rangeOfString: @"p " options: NSLiteralSearch range: remainingRange];
 		if (searchResultRange.location == NSNotFound)
 		{found = NO; break;}
@@ -8664,7 +8651,6 @@ else
 			NS_HANDLER
 				return;
 			NS_ENDHANDLER
-			x = [keyLine integerValue];
 			
 			searchResultRange = [keyLine rangeOfString: @" "];
 			if (searchResultRange.location == NSNotFound)
@@ -8841,7 +8827,7 @@ else
 		NSRange         pageRangeEnd, smallerRange;
 		NSRange         remainingRange, searchResultRange;
 		NSRange         newRange;
-		NSInteger             syncNumber, x, y;
+		NSInteger             x, y;
 		NSUInteger        theStart, theEnd;
 		double          newx, newy;
 		NSRect          smallRect;
@@ -8973,7 +8959,6 @@ else
 			NS_HANDLER
 			return;
 			NS_ENDHANDLER
-			syncNumber = [keyLine integerValue]; // number of entry
 
 			searchResultRange = [keyLine rangeOfString: @" "];
 			if (searchResultRange.location == NSNotFound)

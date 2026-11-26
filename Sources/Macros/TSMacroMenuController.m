@@ -23,6 +23,7 @@
  */
 
 #import "TSMacroMenuController.h"
+#import "TSMacroEditor.h"
 #import "TSLibraryRepair.h"
 #import "TSMacroContentKind.h"
 #import "TSKeyboardShortcuts.h"
@@ -120,7 +121,7 @@ static id sharedMacroMenuController = nil;
 {
 	NSString *pathStr, *defaultPathStr;
 	NSData *myData;
-	NSString *error = nil; // mitsu 1.29 (U) added
+	NSError *error = nil;
 						   //    NSString *aString; // mitsu 1.29 (U) removed
 	
 	defaultPathStr = [MacrosPath stringByStandardizingPath];
@@ -159,10 +160,10 @@ static id sharedMacroMenuController = nil;
 		}
 
 		NSPropertyListFormat format;
-		self.macroDict = myData ? [NSPropertyListSerialization propertyListFromData:myData
-													 mutabilityOption:NSPropertyListImmutable
+		self.macroDict = myData ? [NSPropertyListSerialization propertyListWithData:myData
+													 options:NSPropertyListImmutable
 															   format:&format
-													 errorDescription:&error] : nil;
+													 error:&error] : nil;
 	NS_HANDLER
 		self.macroDict = nil;
 	NS_ENDHANDLER
@@ -331,7 +332,7 @@ static id sharedMacroMenuController = nil;
 		} else if ([nameStr isEqualToString: SEPARATOR]) {	// separator item
 			[popupButton addItemWithTitle: @""];
 			newItem = [popupButton lastItem];
-			[newItem setState: NSOffState];
+			[newItem setState: NSControlStateValueOff];
 		} else {	// standard item
 			[popupButton addItemWithTitle: nameStr]; // this method does not return the item
 			newItem = [popupButton lastItem];
@@ -345,8 +346,6 @@ static id sharedMacroMenuController = nil;
 // now simply call doCompletion routine via notification center
 - (void)doMacro: (id)sender
 {
-	BOOL            result;
-	NSString        *reason = 0;
 	NSMutableArray  *args;
 	NSString        *macroString;
     NSString        *filePath, *folderPath, *displayName;
@@ -470,7 +469,6 @@ static id sharedMacroMenuController = nil;
 		} else {
 			
 			// save newScript in file named scriptFileName in directory scriptFilePath
-			NSFileManager *fileManager = [NSFileManager defaultManager];
             NSString *tmpScriptPath = [GlobalData sharedGlobalData].tempAppleScriptPath;
             if (tmpScriptPath == nil)
                 {

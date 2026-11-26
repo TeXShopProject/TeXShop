@@ -45,7 +45,7 @@
 }
 */
 
-NSInteger stringSortPref(id s1, id s2, void *context)
+static NSInteger stringSortPref(id s1, id s2, void *context)
 {
     NSComparisonResult result;
     result =  [(NSString *)s1 localizedCaseInsensitiveCompare: (NSString *)s2];
@@ -130,14 +130,12 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 	NSDocumentController	*myController;
 	NSURL					*myURL;
 	NSInteger						index1;
-    NSString                *extension;
- 	
+	
 	index1 = [tableView selectedRow];
 	[stationeryWindow close];
 	if (index1 >= 0) {
 		NSString *basePath = [ StationeryPath stringByStandardizingPath ];
 		NSString *fullPath = [basePath stringByAppendingPathComponent: [self.fullSourceData objectAtIndex: index1]];
-        extension = [fullPath pathExtension];
 		// NSLog([sourceData objectAtIndex:index]);
 		// NSLog(fullPath);
 		myURL = [NSURL fileURLWithPath: fullPath];

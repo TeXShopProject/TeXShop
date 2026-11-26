@@ -33,13 +33,6 @@
 
 @implementation TSPreferences (Color)
 
-NSInteger stringSort(id s1, id s2, void *context)
-{
-    NSComparisonResult result;
-    result =  [(NSString *)s1 localizedCaseInsensitiveCompare: (NSString *)s2];
-    return result;
-}
-
 
 // A theme's name as the list has it: composed, whatever form an earlier version stored it in (TSThemeFileStore titles).
 static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringWithCanonicalMapping; }

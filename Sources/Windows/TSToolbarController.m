@@ -933,9 +933,9 @@ static NSString *TSPreviewPageItemKey(NSString *itemIdent)
         return TSPreviewAppearanceItem(self);
 // added by Terada (until this line)
     if ([itemIdent isEqual: kSharingTID]) {
-        [[shareButton cell] setImageScaling: NSImageAlignCenter];
+        [[shareButton cell] setImageScaling: NSImageScaleProportionallyDown];
         [shareButton setImage: [NSImage imageNamed: @"NSShareTemplate"]];
-        [shareButton sendActionOn: NSLeftMouseDownMask];
+        [shareButton sendActionOn: NSEventMaskLeftMouseDown];
         [shareButton setTarget: self];
         [shareButton setAction:@selector(doShareSource:)];
         toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView: shareButton];
@@ -949,9 +949,9 @@ static NSString *TSPreviewPageItemKey(NSString *itemIdent)
 
     
     if ([itemIdent isEqual: skSharingTID]) {
-        [[shareButtonFull cell] setImageScaling: NSImageAlignCenter];
+        [[shareButtonFull cell] setImageScaling: NSImageScaleProportionallyDown];
         [shareButtonFull setImage: [NSImage imageNamed: @"NSShareTemplate"]];
-        [shareButtonFull sendActionOn: NSLeftMouseDownMask];
+        [shareButtonFull sendActionOn: NSEventMaskLeftMouseDown];
         [shareButtonFull setTarget: self];
         [shareButtonFull setAction:@selector(doShareSource:)];
         toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView: shareButtonFull];
@@ -965,9 +965,9 @@ static NSString *TSPreviewPageItemKey(NSString *itemIdent)
      
     
     if ([itemIdent isEqual: kSharingKKTID]) {
-        [[shareButtonEE cell] setImageScaling: NSImageAlignCenter];
+        [[shareButtonEE cell] setImageScaling: NSImageScaleProportionallyDown];
         [shareButtonEE setImage: [NSImage imageNamed: @"NSShareTemplate"]];
-        [shareButtonEE sendActionOn:NSLeftMouseDownMask];
+        [shareButtonEE sendActionOn:NSEventMaskLeftMouseDown];
         [shareButtonEE setTarget: self];
         [shareButtonEE setAction:@selector(doSharePreview:)];
         toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:shareButtonEE];
@@ -1268,19 +1268,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 		[menuFormRep setTitle: [toolbarItem label]];
 
 		submenu = [[NSMenu alloc] init];
-		id tempsubmenuItem;
-		NSString *tempString;
-		id tempTarget;
-		SEL tempAction;
-		NSInteger i;
-		NSInteger j = [[programButtonEE menu] numberOfItems];
-		for (i = 0; i < j; i++) {
-			tempsubmenuItem = [[programButtonEE menu] itemAtIndex: i];
-			tempString = [tempsubmenuItem title];
-			tempTarget = [tempsubmenuItem target];
-			tempAction = [tempsubmenuItem action];
-  
-        }
 
 
 		[menuFormRep setSubmenu: submenu];

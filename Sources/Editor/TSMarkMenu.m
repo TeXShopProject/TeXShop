@@ -31,10 +31,10 @@ static NSMenuItem *TSItemWithAction(NSMenu *menu, SEL action)
 
 + (void)installInMenu:(NSMenu *)mainMenu
 {
-    NSMenuItem *markItem = TSItemWithSubmenuAction(mainMenu, @selector(doNextBullet:));
+    NSMenuItem *markItem = TSItemWithSubmenuAction(mainMenu, NSSelectorFromString(@"doNextBullet:"));
     NSMenuItem *editItem = nil;
     for (NSMenuItem *item in mainMenu.itemArray)
-        if (item.submenu && TSItemWithAction(item.submenu, @selector(undo:))) { editItem = item; break; }
+        if (item.submenu && TSItemWithAction(item.submenu, NSSelectorFromString(@"undo:"))) { editItem = item; break; }
     if (markItem == nil || editItem == nil) return;
     NSMenu *edit = editItem.submenu, *marks = markItem.submenu;
     // The nibs place Mark in Edit, after Find. Moving it at run time would cost
@@ -47,7 +47,7 @@ static NSMenuItem *TSItemWithAction(NSMenu *menu, SEL action)
             if (TSItemWithAction([edit itemAtIndex:i].submenu, @selector(performFindPanelAction:))) { index = i + 1; break; }
         [edit insertItem:markItem atIndex:index];
     }
-    NSMenuItem *note = TSItemWithAction(marks, @selector(placeComment:));
+    NSMenuItem *note = TSItemWithAction(marks, NSSelectorFromString(@"placeComment:"));
     if (note) { note.alternate = NO; note.title = NSLocalizedString(@"Insert Mark with Note", @"Edit › Mark"); }
     NSDictionary<NSString *, NSString *> *tips = @{
         @"placeBullet:": NSLocalizedString(@"Inserts a mark (•) to come back to later.", @"Edit › Mark tooltip"),
@@ -87,7 +87,7 @@ static NSMenuItem *TSItemWithAction(NSMenu *menu, SEL action)
 {
     NSString *editTitle = NSLocalizedString(@"Edit", @"Edit menu"), *markTitle = NSLocalizedString(@"Marks", @"Edit › Mark");
     NSMenu *main = NSApp.mainMenu;
-    NSMenuItem *markItem = main ? TSItemWithSubmenuAction(main, @selector(doNextBullet:)) : nil;
+    NSMenuItem *markItem = main ? TSItemWithSubmenuAction(main, NSSelectorFromString(@"doNextBullet:")) : nil;
     if (markItem) {
         markTitle = markItem.title;
         NSMenu *parent = markItem.menu.supermenu;

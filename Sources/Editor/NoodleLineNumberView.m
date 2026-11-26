@@ -315,7 +315,7 @@
     
     if ([view isKindOfClass:[NSTextView class]])
     {
-        NSUInteger      index, numberOfLines, stringLength, lineEnd, contentEnd;
+        NSUInteger      index, stringLength, lineEnd, contentEnd;
         NSString        *text;
         CGFloat         oldThickness, newThickness;
         
@@ -325,14 +325,12 @@
         _lineIndices = [[NSMutableArray alloc] init];
         
         index = 0;
-        numberOfLines = 0;
         
         do
         {
             [_lineIndices addObject:[NSNumber numberWithUnsignedInteger:index]];
             
             index = NSMaxRange([text lineRangeForRange:NSMakeRange(index, 0)]);
-            numberOfLines++;
         }
         while (index < stringLength);
 

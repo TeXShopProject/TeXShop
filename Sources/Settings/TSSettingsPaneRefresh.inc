@@ -212,7 +212,7 @@
     if (itemIndex == -1)
         itemIndex = 1;
     [_mouseModePopup selectItemAtIndex:itemIndex];
-    [_colorMapButton setState:[defaults boolForKey:PdfColorMapKey] ? NSOnState : NSOffState];
+    [_colorMapButton setState:[defaults boolForKey:PdfColorMapKey] ? NSControlStateValueOn : NSControlStateValueOff];
     myTag = [defaults integerForKey:PdfColorParam1Key];
     itemIndex = [_colorParam1Popup indexOfItemWithTag:myTag];
     if (itemIndex == -1)

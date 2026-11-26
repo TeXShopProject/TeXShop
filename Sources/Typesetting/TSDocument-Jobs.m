@@ -709,7 +709,7 @@ static NSString *const TSDvipsConversionScript =
 				reason = [localException reason];
 			NS_ENDHANDLER
 			if (!result) {
-				NSRunAlertPanel(@"Error", reason, @"Couldn't Create Temp Folder", nil, nil);
+				NSRunAlertPanel(@"Error", @"%@", @"Couldn't Create Temp Folder", nil, nil, reason);
 				return;
 			}
 		}
@@ -810,7 +810,7 @@ static NSString *const TSDvipsConversionScript =
 {
 	NSArray			*myList;
 	NSString		*theSource, *theKey, *myEngine, *testString, *programString;
-	NSRange			aRange, myRange, theRange, programRange, newProgramRange;
+	NSRange			myRange, theRange, programRange, newProgramRange;
 	NSUInteger      mystart, myend;
 	NSUInteger      start, end, irrelevant;
 	NSInteger             whichEngineLocal;
@@ -1383,11 +1383,11 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     @finally {
             ;
         }
-        int theReason = myTask.terminationReason;
+        int theReason = (int)myTask.terminationReason;
         int theStatus = [myTask terminationStatus];
         if (DisplayLogs)
             NSLog(@"The status is %d:", theStatus);
-        doAbort = NO;
+        self->doAbort = NO;
         
         
         if (myTask.terminationReason == NSTaskTerminationReasonExit && myTask.terminationStatus == 0)
@@ -1399,26 +1399,26 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
             cmd = [cmd componentsJoinedByString:@" "];
             NSString *mainString = [NSString stringWithFormat:@"Failed executing: %@.", cmd];
             if (DisplayLogs)
-                NSLog(mainString);
+                NSLog(@"%@", mainString);
               if (DisplayLogs)
                 NSLog(@"The status is %d.", [myTask terminationStatus]);
                 
             if (! (stdoutString == nil)) {
                 NSString *aString = [NSString stringWithFormat: @"Standard output: %@.", stdoutString];
                 if (DisplayLogs)
-                   NSLog(aString);
+                   NSLog(@"%@", aString);
                 }
             
             if (! (stderrString == nil)) {
                 NSString *bString = [NSString stringWithFormat: @"Standard error: %@.", stderrString];
                 if (DisplayLogs)
-                    NSLog(bString);
+                    NSLog(@"%@", bString);
                 }
             
                 
             NSString *cString = [NSString stringWithFormat: @"Termination Reason: %d.", theReason];
             if (DisplayLogs)
-                NSLog(cString);
+                NSLog(@"%@", cString);
             
             }
          
@@ -1485,10 +1485,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 	NSString		*imagePath;
 	NSString		*sourcePath;
 	NSString            *gsPath;
-	NSRange		aRange;
-	NSUInteger		here;
 	BOOL                continuous;
-	BOOL                fixPath;
 	NSInteger                 whichEngineLocal;
     BOOL        MainLogs;
     BOOL        KeepConsoleClosed;
@@ -1520,7 +1517,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     if (MainLogs)
         NSLog(@"completeSaveFinished");
     
-	fixPath = YES;
 	continuous = typesetContinuously;
 	typesetContinuously = NO;
 
@@ -1844,9 +1840,9 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                      NSString *message = NSLocalizedString(@"The program ", @"The program ");
                      message = [[message stringByAppendingString: bibtexEngineString] stringByAppendingString: NSLocalizedString(@" does not exist.", @" does not exist.")];
                      
-                     NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"), message, 
+                     NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"), @"%@", 
                                   nil,
-                                     nil, nil);
+                                     nil, nil, message);
                  }
                  else {
                      
@@ -2350,9 +2346,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     NSInteger                status;
     BOOL            alreadyFound;
     BOOL            front;
-    BOOL            DisplayLogs, MainLogs;
+    BOOL            MainLogs;
     BOOL            doPDF, doHTML;
-    NSString        *newURL, *theRevisedURL;
     NSURL           *theURL;
     NSURLRequest    *theRequest;
     NSURL           *existingURL;
@@ -2372,7 +2367,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     [self forgetProcessGroupOfTask: theTask];
     if (theTask != nil){
         if (MainLogs)
-            NSLog(theTask.launchPath);
+            NSLog(@"%@", theTask.launchPath);
         if (MainLogs)
             NSLog(@"The status is %d:", [theTask terminationStatus]);
  //       if ([theTask terminationStatus] == 13)
@@ -2380,7 +2375,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     }
     
     // Not needed since "sudden halt" bug is fixed
-    DisplayLogs = NO;
 
 //    if (DisplayLogs)
 //    {
@@ -2553,7 +2547,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
             if (! alreadyFound)  { // see if there is a temporary file
                 alternatePath = [[TempOutputKey stringByAppendingString:@"/"] stringByAppendingString:[imagePath lastPathComponent]];
                 if ([[NSFileManager defaultManager] fileExistsAtPath: alternatePath]) {
-                    self.texRep = [NSPDFImageRep imageRepWithContentsOfFile: alternatePath] ;
+                    self.texRep = (NSPDFImageRep *)[NSPDFImageRep imageRepWithContentsOfFile: alternatePath] ;
                     [[NSFileManager defaultManager] removeItemAtPath: alternatePath error:NULL];
                     if (self.texRep) {
                         [self showImageTitleForPath: imagePath];
@@ -2569,8 +2563,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
             if (doHTML)
             {
                 alreadyFound = NO;
-                NSString *htmlImagePath1 = [htmlImagePath stringByAppendingString:@"'"];
-                newURL = [@"file://'" stringByAppendingString: htmlImagePath1];
                  
                //  NSLog(htmlImagePath);
                //  NSLog(newURL);

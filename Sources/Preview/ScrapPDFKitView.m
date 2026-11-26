@@ -358,7 +358,7 @@ static const NSInteger TSExperimentToolCount = 4;
     }
     
     
-	[[self document] setDelegate: self];
+	[[self document] setDelegate: (id<PDFDocumentDelegate>)self];
      NSEnableScreenUpdates();
 	[self display]; //this is needed outside disableFlushWindow when the user does not bring the window forward
     

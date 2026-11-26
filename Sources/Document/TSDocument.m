@@ -196,7 +196,7 @@ static TSOwnTextFileKind TSOwnTextFileForURL(NSURL *url)
 
 @implementation TSDocument
 
-NSInteger strSort(id s1, id s2, void *context)
+static NSInteger strSort(id s1, id s2, void *context)
 {
     NSComparisonResult result;
         
@@ -723,9 +723,9 @@ withDarkColors = NO;
 - (void)restoreStateWithCoder:(NSCoder *)coder
 {
     NSString        *windowState, *rangeString;
-    NSPoint         thePoint, splitPoint;
+    
     BOOL            fromFullSplitWindow;
-    NSRect          theVisibleRect;
+    
     NSRange         theRange;
     NSInteger       drawerState, tabPreference;
     
@@ -932,13 +932,13 @@ withDarkColors = NO;
         {
             [urls enumerateObjectsUsingBlock:^(NSURL *obj, NSUInteger idx, BOOL *stop) {
                 // NSLog([obj path]);
-                NSTask   *convertTask;
+                
                 NSArray  *arguments;
                 NSString *firstArgument, *secondArgument;
                 firstArgument = [NSString stringWithString:[obj path]];
                 secondArgument = [[firstArgument stringByDeletingPathExtension] stringByAppendingPathExtension:@"png"];
                 arguments = [NSArray arrayWithObjects: firstArgument, secondArgument, nil];
-                convertTask = [NSTask launchedTaskWithLaunchPath:@"/usr/local/bin/convert" arguments: arguments];
+                [NSTask launchedTaskWithLaunchPath:@"/usr/local/bin/convert" arguments: arguments];
             }];
         }
         else if ([fileManager fileExistsAtPath:@"/usr/bin/sips"])
@@ -946,13 +946,13 @@ withDarkColors = NO;
             NSString *sipsPath = [[NSBundle mainBundle] pathForResource:@"sipswrap" ofType:nil inDirectory:@"Shellscripts"];
             [urls enumerateObjectsUsingBlock:^(NSURL *obj, NSUInteger idx, BOOL *stop) {
                 // NSLog([obj path]);
-                NSTask   *convertTask;
+                
                 NSArray  *arguments;
                 NSString *firstArgument, *secondArgument;
                 firstArgument = [NSString stringWithString:[obj path]];
                 secondArgument = [[firstArgument stringByDeletingPathExtension] stringByAppendingPathExtension:@"png"];
                 arguments = [NSArray arrayWithObjects: firstArgument, secondArgument, nil];
-                convertTask = [NSTask launchedTaskWithLaunchPath:sipsPath arguments: arguments];
+                [NSTask launchedTaskWithLaunchPath:sipsPath arguments: arguments];
             }];
         }
     }
@@ -1654,7 +1654,7 @@ if (! skipTextWindow) {
 	//   [pdfView resetMagnification];
 
 
-	whichScript = [SUD integerForKey:DefaultScriptKey];
+	whichScript = (DefaultTypesetMode)[SUD integerForKey:DefaultScriptKey];
 	// This line fixes an obscure error
 	if ((whichScript < 100) || (whichScript > 102))
 		whichScript = 100;
@@ -1713,7 +1713,7 @@ if (! skipTextWindow) {
 				 ([fileExtension isEqualToString: @"jpeg"]) ||
 				 ([fileExtension isEqualToString: @"JPG"])) {
 			imageFound = YES;
-			self.texRep = [NSBitmapImageRep imageRepWithContentsOfFile: imagePath];
+			self.texRep = (NSPDFImageRep *)[NSBitmapImageRep imageRepWithContentsOfFile: imagePath];
 			[pdfWindow setTitle: [[[self fileURL] path] lastPathComponent]];
 			// [pdfWindow setRepresentedFilename: [self fileName]]; //mitsu July4
 			self.documentType = isJPG;
@@ -1723,7 +1723,7 @@ if (! skipTextWindow) {
 				 ([fileExtension isEqualToString: @"png"]) ||
 				 ([fileExtension isEqualToString: @"tif"])) {
 			imageFound = YES;
-			self.texRep = [NSBitmapImageRep imageRepWithContentsOfFile: imagePath];
+			self.texRep = (NSPDFImageRep *)[NSBitmapImageRep imageRepWithContentsOfFile: imagePath];
 			[pdfWindow setTitle: [[[self fileURL] path] lastPathComponent]];
 			// [pdfWindow setRepresentedFilename: [self fileName]]; //mitsu July4
 			self.documentType = isTIFF;
@@ -2105,7 +2105,7 @@ if (! skipTextWindow) {
     oldAccessoryView = [savePanel accessoryView];
     NSArray *theViews = [oldAccessoryView subviews];
     NSArray *moreViews = [theViews[0] subviews];
-    NSTextField *theLabel = moreViews[0];
+    
     NSPopUpButton *theButton = moreViews[1];
     NSArray *theItems = [theButton itemArray];
     NSArray *theItemTitles = [theButton itemTitles];
@@ -2442,7 +2442,7 @@ in other code when an external editor is being used. */
 
 - (NSStringEncoding)dataEncoding:(NSData *)theData {
 	NSString            *firstBytes, *encodingString, *testString, *spellcheckString, *numberingString;
-	NSRange             encodingRange, newEncodingRange, myRange, theRange, spellcheckRange, tabRange, pdfRange, parserRange, numberingRange;
+	NSRange             myRange, theRange, spellcheckRange, tabRange, pdfRange, parserRange, numberingRange;
 	NSUInteger          length, start, end;
 	BOOL                done;
 	NSInteger           linesTested, offset;
@@ -3298,7 +3298,6 @@ else {
 	NSString		*imagePath;
 	NSString		*theSource;
 	id				aRep;
-	NSInteger				result;
     NSString        *fileName;
     NSPrintPanel    *printPanel;
 	
@@ -3409,7 +3408,7 @@ else {
 //		[printView release];
 	} else if (self.documentType == isTeX)
 		{
-		result = [TSAlertForNoticePanel(printRequestPanel) runModal];
+		[TSAlertForNoticePanel(printRequestPanel) runModal];
 		}
 }
 
@@ -4088,7 +4087,6 @@ if ( ! skipTextWindow) {
 {
     NSScreen *mainScreen;
     NSRect   mainRect;
-    BOOL     result;
     float    floatValue, x, y, temp, LargeArea, LargePDFArea, SmallArea, SmallPDFArea, MainDisplayArea;
     NSString *docWindowString, *pdfWindowString, *portableDocWindowString, *portablePDFWindowString, *htmlWindowString;
     
@@ -4096,15 +4094,15 @@ if ( ! skipTextWindow) {
         htmlWindowString = [SUD stringForKey:HtmlWindowFixedPosKey];
         if (htmlWindowString) {
             NSScanner *htmlWindow = [NSScanner scannerWithString: htmlWindowString];
-            result = [htmlWindow scanFloat: &floatValue];
-            result = [htmlWindow scanFloat: &floatValue];
-            result = [htmlWindow scanFloat: &floatValue];
-            result = [htmlWindow scanFloat: &floatValue];
-            result = [htmlWindow scanFloat: &floatValue];
-            result = [htmlWindow scanFloat: &floatValue];
-            result = [htmlWindow scanFloat: &floatValue];
-            result = [htmlWindow scanFloat: &floatValue];
-            result = [htmlWindow scanFloat: &floatValue];
+            [htmlWindow scanFloat: &floatValue];
+            [htmlWindow scanFloat: &floatValue];
+            [htmlWindow scanFloat: &floatValue];
+            [htmlWindow scanFloat: &floatValue];
+            [htmlWindow scanFloat: &floatValue];
+            [htmlWindow scanFloat: &floatValue];
+            [htmlWindow scanFloat: &floatValue];
+            [htmlWindow scanFloat: &floatValue];
+            [htmlWindow scanFloat: &floatValue];
             }
       }
 
@@ -4114,16 +4112,16 @@ if ( ! skipTextWindow) {
         docWindowString = [SUD stringForKey:DocumentWindowFixedPosKey];
         if (docWindowString) {
             NSScanner *docWindow = [NSScanner scannerWithString: docWindowString];
-            result = [docWindow scanFloat: &floatValue];
-            result = [docWindow scanFloat: &floatValue];
-            result = [docWindow scanFloat: &floatValue];
-            result = [docWindow scanFloat: &floatValue];
-            result = [docWindow scanFloat: &floatValue];
-            result = [docWindow scanFloat: &floatValue];
-            result = [docWindow scanFloat: &floatValue];
-            result = [docWindow scanFloat: &floatValue];
+            [docWindow scanFloat: &floatValue];
+            [docWindow scanFloat: &floatValue];
+            [docWindow scanFloat: &floatValue];
+            [docWindow scanFloat: &floatValue];
+            [docWindow scanFloat: &floatValue];
+            [docWindow scanFloat: &floatValue];
+            [docWindow scanFloat: &floatValue];
+            [docWindow scanFloat: &floatValue];
             x = floatValue;
-            result = [docWindow scanFloat: &floatValue];
+            [docWindow scanFloat: &floatValue];
             y = floatValue;
             LargeArea = x * y;
             }
@@ -4133,15 +4131,15 @@ if ( ! skipTextWindow) {
         portableDocWindowString = [SUD stringForKey:PortableDocumentWindowFixedPosKey];
         if (portableDocWindowString) {
             NSScanner *portableDocWindow = [NSScanner scannerWithString: portableDocWindowString];
-            result = [portableDocWindow scanFloat: &floatValue]; // origin.x for source
-            result = [portableDocWindow scanFloat: &floatValue]; // origin.y for source
-            result = [portableDocWindow scanFloat: &floatValue]; // size.width for source
-            result = [portableDocWindow scanFloat: &floatValue]; // size.height for source
-            result = [portableDocWindow scanFloat: &floatValue]; // origin.x for window where data defined
-            result = [portableDocWindow scanFloat: &floatValue]; // origin.y for window where data defined
-            result = [portableDocWindow scanFloat: &floatValue]; // size.width for window where data defined
+            [portableDocWindow scanFloat: &floatValue]; // origin.x for source
+            [portableDocWindow scanFloat: &floatValue]; // origin.y for source
+            [portableDocWindow scanFloat: &floatValue]; // size.width for source
+            [portableDocWindow scanFloat: &floatValue]; // size.height for source
+            [portableDocWindow scanFloat: &floatValue]; // origin.x for window where data defined
+            [portableDocWindow scanFloat: &floatValue]; // origin.y for window where data defined
+            [portableDocWindow scanFloat: &floatValue]; // size.width for window where data defined
             x = floatValue;
-            result = [portableDocWindow scanFloat: &floatValue]; // size.height for window where data defined
+            [portableDocWindow scanFloat: &floatValue]; // size.height for window where data defined
             y = floatValue;
             SmallArea = x * y;
             if ((x < 800) || (y < 600))
@@ -4154,15 +4152,15 @@ if ( ! skipTextWindow) {
         pdfWindowString = [SUD stringForKey:PdfWindowFixedPosKey];
         if (pdfWindowString) {
             NSScanner *PDFWindow = [NSScanner scannerWithString: pdfWindowString];
-            result = [PDFWindow scanFloat: &floatValue]; // origin.x for pdf
-            result = [PDFWindow scanFloat: &floatValue]; // origin.y for pdf
-            result = [PDFWindow scanFloat: &floatValue]; // size.width for pdf
-            result = [PDFWindow scanFloat: &floatValue]; // size.height for pdf
-            result = [PDFWindow scanFloat: &floatValue]; // origin.x for window where pdf defined
-            result = [PDFWindow scanFloat: &floatValue]; // origin.y for window where pdf defined
-            result = [PDFWindow scanFloat: &floatValue]; // size.width for window where pdf defined
+            [PDFWindow scanFloat: &floatValue]; // origin.x for pdf
+            [PDFWindow scanFloat: &floatValue]; // origin.y for pdf
+            [PDFWindow scanFloat: &floatValue]; // size.width for pdf
+            [PDFWindow scanFloat: &floatValue]; // size.height for pdf
+            [PDFWindow scanFloat: &floatValue]; // origin.x for window where pdf defined
+            [PDFWindow scanFloat: &floatValue]; // origin.y for window where pdf defined
+            [PDFWindow scanFloat: &floatValue]; // size.width for window where pdf defined
                 x = floatValue;
-            result = [PDFWindow scanFloat: &floatValue]; // size.height for window where pdf defined
+            [PDFWindow scanFloat: &floatValue]; // size.height for window where pdf defined
                 y = floatValue;
             LargePDFArea = x * y;
             }
@@ -4172,15 +4170,15 @@ if ( ! skipTextWindow) {
         portablePDFWindowString = [SUD stringForKey:PortablePdfWindowFixedPosKey];
         if (portablePDFWindowString) {
             NSScanner *portablePDFWindow = [NSScanner scannerWithString: portablePDFWindowString];
-            result = [portablePDFWindow scanFloat: &floatValue]; // origin.x for pdf
-            result = [portablePDFWindow scanFloat: &floatValue]; // origin.y for pdf
-            result = [portablePDFWindow scanFloat: &floatValue]; // size.width for pdf
-            result = [portablePDFWindow scanFloat: &floatValue]; // size.height for pdf
-            result = [portablePDFWindow scanFloat: &floatValue]; // origin.x for window where pdf defined
-            result = [portablePDFWindow scanFloat: &floatValue]; // origin.y for window where pdf defined
-            result = [portablePDFWindow scanFloat: &floatValue]; // size.width for window where pdf defined
+            [portablePDFWindow scanFloat: &floatValue]; // origin.x for pdf
+            [portablePDFWindow scanFloat: &floatValue]; // origin.y for pdf
+            [portablePDFWindow scanFloat: &floatValue]; // size.width for pdf
+            [portablePDFWindow scanFloat: &floatValue]; // size.height for pdf
+            [portablePDFWindow scanFloat: &floatValue]; // origin.x for window where pdf defined
+            [portablePDFWindow scanFloat: &floatValue]; // origin.y for window where pdf defined
+            [portablePDFWindow scanFloat: &floatValue]; // size.width for window where pdf defined
                 x = floatValue;
-            result = [portablePDFWindow scanFloat: &floatValue]; // size.height for window where pdf defined
+            [portablePDFWindow scanFloat: &floatValue]; // size.height for window where pdf defined
                 y = floatValue;
             SmallPDFArea = x * y;
             if ((x < 800) || (y < 600))
@@ -4731,7 +4729,7 @@ if ( ! skipTextWindow) {
 
 	[myPrintInfo setHorizontalPagination: NSFitPagination];
 	[myPrintInfo setVerticallyCentered:NO];
-    [myPrintInfo setOrientation: NSPortraitOrientation];
+    [myPrintInfo setOrientation: (NSPaperOrientation)NSPortraitOrientation];
 	
     oldTextColor = textView.textColor;
     oldBackgroundColor = textView.backgroundColor;
@@ -4763,7 +4761,7 @@ if ( ! skipTextWindow) {
 	[[menu itemWithTag:kTypesetViaGhostScript] setState:NSOffState];
 	[[menu itemWithTag:kTypesetViaPersonalScript] setState:NSOffState];
 	[sender setState:NSOnState];
-	whichScript = [sender tag];
+	whichScript = (DefaultTypesetMode)[sender tag];
 }
 
 - (void) fixTypesetMenu
@@ -4783,9 +4781,7 @@ if ( ! skipTextWindow) {
 - (void) fixSyntaxColorMenu
 {
     NSMenu				*menu;
-    BOOL                value;
     
-    value = self.syntaxColor;
     
     menu = [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Source", @"Source")] submenu];
     [[menu itemWithTag:14] setState:self.syntaxColor];
@@ -4986,7 +4982,7 @@ if ( ! skipTextWindow) {
 
 	myManager = [textView undoManager];
 	myDictionary = [NSMutableDictionary dictionaryWithCapacity: 3];
-	theLocation = [NSNumber numberWithInt: oldRange.location];
+	theLocation = [NSNumber numberWithInt: (int)oldRange.location];
 	theLength = [NSNumber numberWithInteger:[newString length]];
 	[myDictionary setObject: oldString forKey: @"oldString"];
 	[myDictionary setObject: theLocation forKey: @"oldLocation"];
@@ -5082,7 +5078,7 @@ if ( ! skipTextWindow) {
 
 			myManager = [textView undoManager];
 			myDictionary = [NSMutableDictionary dictionaryWithCapacity: 3];
-			theLocation = [NSNumber numberWithUnsignedInt: myRange.location];
+			theLocation = [NSNumber numberWithUnsignedInt: (unsigned int)myRange.location];
 			theLength = [NSNumber numberWithUnsignedInteger:[templateString length]];
 			[myDictionary setObject: oldString forKey: @"oldString"];
 			[myDictionary setObject: theLocation forKey: @"oldLocation"];
@@ -5271,7 +5267,6 @@ if ( ! skipTextWindow) {
     if (!fileIsTex) return;     //only for TeX docs
     NSString *text;             //the whole doc
     id newItem;                 //new popup entries
-    NSUInteger    length;
     
     text = [textView string];
     NSScanner *labelScanner = [[NSScanner alloc] initWithString:text];
@@ -5279,7 +5274,6 @@ if ( ! skipTextWindow) {
     NSString *scanFormat;
     
     [labelScanner setCharactersToBeSkipped:nil];
-    length = [text length];
     scanFormat = @"\\label{";
     
     [labels removeAllItems];
@@ -5359,7 +5353,7 @@ if ( ! skipTextWindow) {
 
 - (void) doTag: (id)sender
 {
-    NSString    *text, *titleString, *matchString;
+    NSString    *text, *matchString;
     NSUInteger    start, end;
     NSRange    myRange, nameRange, gotoRange;
     NSUInteger    length;
@@ -5368,7 +5362,6 @@ if ( ! skipTextWindow) {
     
 
     
-    titleString = [sender title];
     matchString = [sender representedObject];
     destLineNumber = [sender tag];
     
@@ -5438,7 +5431,7 @@ if ( ! skipTextWindow) {
     NSString    *text;
     NSUInteger    start, end;
     NSRange    myRange, nameRange, cutRange, startRange, endRange, tempRange;
-    NSUInteger    length, idx;
+    NSUInteger    length;
     NSUInteger    lineNumber;
     NSUInteger    tempLocation;  // this will be the start of the next line, but if we get that line, it will start the next line after that
     NSMenuItem  *anItem;
@@ -5467,7 +5460,6 @@ if ( ! skipTextWindow) {
     
     text = [textView string];
     length = [text length];
-    idx = tagLocation + 10000;
     lineNumber = tagLocationLine; // added
     myRange.location = tagLocation;
     myRange.length = 1;
@@ -6435,7 +6427,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 				else if (! [aTextView hasMarkedText]) {
 					// koch: here 'affinity' and 'stillSelecting' are necessary, else the wrong range is selected.
 					[aTextView setSelectedRange: matchRange
-									  affinity: NSSelectByCharacter stillSelecting: YES];
+									  affinity: (NSSelectionAffinity)NSSelectByCharacter stillSelecting: YES];
 					
 					// TODO / FIXME: Replace the brace highlighting below with something better. See Smultron:
 					//   [layoutManager addTemporaryAttributes:[self highlightColour] forCharacterRange:NSMakeRange(cursorLocation, 1)];
@@ -8034,7 +8026,7 @@ if (! useFullSplitWindow) {
 	NSString		*pdfPath = [self previewPDFPath];
 
 	if ([[NSFileManager defaultManager] fileExistsAtPath: pdfPath]) {
-		tempRep = [NSPDFImageRep imageRepWithContentsOfFile: pdfPath];
+		tempRep = (NSPDFImageRep *)[NSPDFImageRep imageRepWithContentsOfFile: pdfPath];
 		if ((tempRep == nil) || ([tempRep pageCount] == 0)) {
 			// Loading the PDF failed for some reason (e.g. maybe it is still being written),
 			// so we should retry loading it a in a bit.
@@ -8120,7 +8112,6 @@ if (! useFullSplitWindow) {
 - (void)checkLogFile
 {
     NSStringEncoding    theEncoding = _encoding;
-    NSError             *error;
     NSRange             mainRange;
     NSString            *lineNumberString, *loopString;
     NSInteger           mainOffset;
@@ -8183,7 +8174,7 @@ if (! useFullSplitWindow) {
                 
 
                 // theEncoding = [[TSEncodingSupport sharedInstance] defaultEncoding];
-            theEncoding = _encoding;
+            theEncoding = self->_encoding;
             // 1.35 (F) fix --- suggested by Kino-san: output that is not in the document's encoding
             newOutput = [TSEncodingSupport displayStringForData: myData encoding: theEncoding];
             
@@ -8212,7 +8203,7 @@ if (! useFullSplitWindow) {
             myLength = [newOutput length];
             testRange.location = [newOutput length] - 2;
             testRange.length = 1;
-            if ((makeError) && (myLength > 2) && (errorNumber < NUMBEROFERRORS)  &&
+            if ((self->makeError) && (myLength > 2) && (self->errorNumber < NUMBEROFERRORS)  &&
                     ([[newOutput substringWithRange: testRange] isEqualToString: @"?"])) {
                 searchString = @"l.";
                 lineRange.location = 0;
@@ -9027,7 +9018,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 		fileInfo = [NSString stringWithFormat:
 					NSLocalizedString(@"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@", @"File Info"),
 		filePath,
-		fsize?[fsize integerValue]:0,
+		fsize?(int)[fsize integerValue]:0,
 		creationDate?[creationDate description]:@"",
 		modificationDate?[modificationDate description]:@""];
 	} else
@@ -9039,8 +9030,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	infoText = [NSString stringWithFormat:
 					NSLocalizedString(@"%@\n\nCharacters: %d", @"InfoText"),
 					fileInfo,
-					[[textView string] length]];
-	NSRunAlertPanel(infoTitle, infoText, nil, nil, nil);
+					(int)[[textView string] length]];
+	NSRunAlertPanel(infoTitle, @"%@", nil, nil, nil, infoText);
 }
 
 - (BOOL)isDoAutoCompleteEnabled
@@ -9907,7 +9898,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
 - (void)trashAUX
 {
-	NSString                *path, *path2;
+	NSString                *path;
 	NSString                *extension;
 	NSString                *fileName, *objectFileName, *objectName;
 	NSMutableArray          *pathsToBeMoved, *fileToBeMoved = 0;
@@ -10049,7 +10040,6 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
     enumerator = [pathsToBeMoved objectEnumerator];
     while (anObject = [enumerator nextObject]) {
-        path2 = [anObject stringByDeletingLastPathComponent];
         [fileToBeMoved replaceObjectAtIndex:0 withObject: [anObject lastPathComponent]];
    //     NSLog(path2);
    //     NSLog([anObject lastPathComponent]);
@@ -11139,7 +11129,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             if ([wLog intValue] != 0)
                 flags = [flags stringByAppendingString: @"w"];
             
-            if (([flags length] == 1) && (!errorFlag) || (! [self.logExtension isEqualToString:@"log"]))
+            if ((([flags length] == 1) && (!errorFlag)) || (! [self.logExtension isEqualToString:@"log"]))
                 [self.logTextView setString: content];
             else {
                 if (!errorFlag)
@@ -11695,9 +11685,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
         if (count) {
             count_value = [count intValue];
             if(increment == 1){
-                [environmentStack setObject:[NSNumber numberWithInt:count_value+1] forKey:stackKey];
+                [environmentStack setObject:[NSNumber numberWithInteger:count_value+1] forKey:stackKey];
             }else if(count_value > 0){
-                [environmentStack setObject:[NSNumber numberWithInt:count_value-1] forKey:stackKey];
+                [environmentStack setObject:[NSNumber numberWithInteger:count_value-1] forKey:stackKey];
             }else {
                 newString = environment;
                 break;

@@ -131,10 +131,10 @@ static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
 
 // The choice made for a scroll view. Selectors are the same in every file that includes
 // this header, so the hook below finds the state another file stored.
-#define TSPreviewInversionStateKey @selector(tsPreviewInversionState)
+#define TSPreviewInversionStateKey sel_getUid("tsPreviewInversionState")
 // Set on the preview window while it is in full screen. The window's own appearance
 // is dark then, like Preview.app, even when the system is light.
-#define TSPreviewFullScreenDarkKey @selector(tsPreviewFullScreenDark)
+#define TSPreviewFullScreenDarkKey sel_getUid("tsPreviewFullScreenDark")
 
 // Whether the pages of a PDF view are drawn inverted. PDFKit draws pages on its own
 // threads, so the choice is kept on the PDF view itself, where those threads read it.
@@ -412,16 +412,16 @@ static void TSInstallPreviewPageHook(NSView *documentView) {
     if (!cls || cls == NSView.class) return;
     SEL sel = @selector(didAddSubview:);
     @synchronized (NSView.class) {
-        if (objc_getAssociatedObject(cls, @selector(tsPreviewPageHook))) return;
+        if (objc_getAssociatedObject(cls, sel_getUid("tsPreviewPageHook"))) return;
         Method own = NULL;
         unsigned count = 0;
         Method *methods = class_copyMethodList(cls, &count);
         for (unsigned i = 0; i < count; i++) if (method_getName(methods[i]) == sel) own = methods[i];
         free(methods);
-        NSMutableSet<NSValue *> *hooks = objc_getAssociatedObject(NSView.class, @selector(tsPreviewPageHooks));
+        NSMutableSet<NSValue *> *hooks = objc_getAssociatedObject(NSView.class, sel_getUid("tsPreviewPageHooks"));
         if (!hooks) {
             hooks = [NSMutableSet set];
-            objc_setAssociatedObject(NSView.class, @selector(tsPreviewPageHooks), hooks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            objc_setAssociatedObject(NSView.class, sel_getUid("tsPreviewPageHooks"), hooks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         }
         IMP original = own ? method_getImplementation(own)
                            : class_getMethodImplementation(class_getSuperclass(cls), sel);
@@ -435,7 +435,7 @@ static void TSInstallPreviewPageHook(NSView *documentView) {
         [hooks addObject:[NSValue valueWithPointer:(const void *)hook]];
         if (own) method_setImplementation(own, hook);
         else class_addMethod(cls, sel, hook, "v@:@");
-        objc_setAssociatedObject(cls, @selector(tsPreviewPageHook), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(cls, sel_getUid("tsPreviewPageHook"), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
 
