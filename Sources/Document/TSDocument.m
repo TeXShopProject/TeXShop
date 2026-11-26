@@ -8397,9 +8397,9 @@ if (! useFullSplitWindow) {
 		[aTextView insertNewline: self];
 
 		for (n = 0; n < indentTab; ++ n)
-			[aTextView insertText: @"\t"];
+			[aTextView insertText: @"\t" replacementRange: NSMakeRange(NSNotFound, 0)];
 		for (n = 0; n < indentSpace; ++ n)
-			[aTextView insertText: @" "];
+			[aTextView insertText: @" " replacementRange: NSMakeRange(NSNotFound, 0)];
 
 		return YES;
 	}

@@ -383,8 +383,8 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     
     // Now the tokens of the lines get their colors.
     TSMutableSyntaxTeXOptions *options = [self sourceScannerOptionsWithScheme:self.syntaxColorScheme];
-    TSSyntaxTeXScanner *scanner = [[TSSyntaxTeXScanner alloc] initWithOptions:options];
-    TSSyntaxHighlighter *highlighter = [[TSSyntaxHighlighter alloc] initWithTextView:aTextView scanner:scanner scheme:self.syntaxColorScheme];
+    TSSyntaxTeXScanner *teXScanner = [[TSSyntaxTeXScanner alloc] initWithOptions:options];
+    TSSyntaxHighlighter *highlighter = [[TSSyntaxHighlighter alloc] initWithTextView:aTextView scanner:teXScanner scheme:self.syntaxColorScheme];
     [highlighter applyTokensInRange:colorRange];
     TSMarkFullwidthBackground(layoutManager, colorRange, [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol][NSBackgroundColorAttributeName]);
     [self restoreBraceHighlightsIn:aTextView range:colorRange];
