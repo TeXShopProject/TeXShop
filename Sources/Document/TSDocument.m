@@ -42,7 +42,6 @@
 #import "TSSourceMagicComments.h"
 #import "TSDialogButtonLayout.h"
 #import "TSOlderPanelLayout.h"
-#import "TSConsoleButtonRow.h"
 #import "TSExperimentConsoleController.h"
 #include <sys/xattr.h>
 #import <OgreKit/OgreKit.h> // zenitani 1.35 (A)
@@ -1118,8 +1117,6 @@ withDarkColors = NO;
     {
         [outputWindow setFrameAutosaveName:ConsoleWindowNameKey];
     }
-    // Push buttons along the top, after the saved frame, which may be narrower than the buttons need.
-    TSLayoutConsoleButtonRow(outputWindow);
     
     [self setTabBehavior: outputWindow];
 	
