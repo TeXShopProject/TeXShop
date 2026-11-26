@@ -14,3 +14,6 @@ TeXShop-private-keys/
 /website/archive/downloads/*.partial
 __pycache__/
 *.pyc
+
+# Personal signing overrides.
+Config/Local.xcconfig

@@ -366,7 +366,7 @@
 /* Begin PBXBuildRule section */
 		40E08A5707B741D50025F50B /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.gcc.4_2;
+			compilerSpec = com.apple.compilers.llvm.clang.1_0;
 			fileType = sourcecode.c;
 			inputFiles = (
 			);
@@ -435,6 +435,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AE9900010000000000000001 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Signing.xcconfig; sourceTree = "<group>"; };
 		5FFE9532AD27014213EA0D40 /* TSMacroContentTokens.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroContentTokens.h; sourceTree = "<group>"; };
 		A416D39112908450597128E6 /* TSMacroContentTokens.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMacroContentTokens.m; sourceTree = "<group>"; };
 		5FF4987736A8FFE348FDE345 /* TSPlaceholderToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPlaceholderToken.h; sourceTree = "<group>"; };
@@ -1773,6 +1774,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* CocoaDocApp */ = {
 			isa = PBXGroup;
 			children = (
+				AE9900010000000000000001 /* Signing.xcconfig */,
 				BEE2C92FF50430D4B3A23A8C,
 				40E81A6729A0788D0014D82A /* Manual.pdf */,
 				4020276425D06FD70039F253 /* TeX.mdimporter */,
@@ -2090,7 +2092,6 @@
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
 					407880610519249A006979EA = {
-						DevelopmentTeam = RBGCY5RJWM;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.HardenedRuntime = {
@@ -3019,12 +3020,9 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = TeXShop;
 				CODE_SIGN_ENTITLEMENTS = TeXShop.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 6.00rc3;
-				DEVELOPMENT_TEAM = RBGCY5RJWM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3069,12 +3067,9 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = TeXShop;
 				CODE_SIGN_ENTITLEMENTS = TeXShop.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 6.00rc3;
-				DEVELOPMENT_TEAM = RBGCY5RJWM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3113,6 +3108,7 @@
 		};
 		5288880F089D023A0095E82D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AE9900010000000000000001;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -3134,7 +3130,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				DEVELOPMENT_TEAM = RBGCY5RJWM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3164,6 +3159,7 @@
 		};
 		52888810089D023A0095E82D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AE9900010000000000000001;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -3185,7 +3181,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				DEVELOPMENT_TEAM = RBGCY5RJWM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;

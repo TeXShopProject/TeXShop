@@ -17,7 +17,7 @@ The universal application requires macOS 14.6 or later and runs on Apple Silicon
 
 ## Building
 
-Open `TeXShop.xcodeproj` in Xcode and select the `TeXShop` scheme. Choose your own signing configuration when building a distributable application. For an unsigned developer build:
+Open `TeXShop.xcodeproj` in Xcode and select the `TeXShop` scheme. The project signs with "Sign to Run Locally" by default, so no Apple account is needed. To sign with your own team, put `DEVELOPMENT_TEAM = XXXXXXXXXX` and `CODE_SIGN_IDENTITY = Apple Development` in `Config/Local.xcconfig` (not tracked by Git). Choose your own signing configuration when building a distributable application. For an unsigned developer build:
 
 ```sh
 xcodebuild -project TeXShop.xcodeproj -scheme TeXShop \

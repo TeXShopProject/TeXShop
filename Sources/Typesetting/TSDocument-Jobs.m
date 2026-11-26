@@ -29,6 +29,7 @@
 
 #import "TSDocument.h"
 #import "TSTeXOptions.h"
+#import "TSPreferenceProfile.h"
 #import "TSExperimentConsoleController.h"
 
 #import "MyPDFView.h"
@@ -536,6 +537,141 @@ for(NSString *key in enu)
     
 }
 
+// A conversion of a .dvi, .ps or .eps file that does not end within this time is stopped.
+static const NSTimeInterval TSConversionTimeout = 120.0;
+
+// The conversion of a .dvi by dvips and Ghostscript. Arguments: $1 name without extension, $2 the .dvi, $3 the wrapper
+// of ps2pdf, $4 the Ghostscript folder, $5 dvips. The PostScript is made in a folder of its own that is removed in the
+// end, so that a .ps of the user with the same name is never written or removed. Ghostscript writes <name>.pdf in the
+// working directory, which is the folder of the PDF.
+static NSString *const TSDvipsConversionScript =
+    @"t=$(mktemp -d \"${TMPDIR:-/tmp}/TeXShop-convert.XXXXXX\") || exit 1; "
+    @"trap 'rm -rf \"$t\"' EXIT; trap 'exit 143' TERM INT; "
+    @"\"$5\" -q -o \"$t/$1.ps\" \"$2\" && \"$3\" Ghostscript \"$4\" \"$t/$1.ps\"";
+
+// Tell the user that a conversion failed, with the end of what the tool printed.
+- (void)showConversionFailure:(NSString *)reason output:(NSString *)output
+{
+    NSString *title = NSLocalizedString(@"The conversion to PDF failed.", @"");
+    NSString *tail = @"";
+    if (output.length > 0) {
+        NSArray *lines = [output componentsSeparatedByString:@"\n"];
+        NSUInteger from = lines.count > 12 ? lines.count - 12 : 0;
+        tail = [[lines subarrayWithRange:NSMakeRange(from, lines.count - from)] componentsJoinedByString:@"\n"];
+    }
+    NSString *message = tail.length > 0 ? [NSString stringWithFormat:@"%@\n\n%@", reason, tail] : reason;
+    NSWindow *window = [[textView window] isVisible] ? [textView window] : ([self.pdfKitWindow isVisible] ? self.pdfKitWindow : nil);
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = title;
+    alert.informativeText = message;
+    if (window != nil)
+        [alert beginSheetModalForWindow:window completionHandler:nil];
+    else
+        [alert runModal];
+}
+
+// Run the tool that converts the file to PDF without waiting for it on the main thread.
+// The tool cannot ask anything: its standard input is closed at once, so that a prompt
+// of TeX or Ghostscript meets the end of the input. What it prints goes to a file, shown
+// when it fails. A tool that is still running after TSConversionTimeout is stopped.
+// The result is shown by checkATaskStatusFromTerminationRoutine, as for typesetting.
+- (void)launchConversionTask:(NSTask *)task program:(NSString *)program arguments:(NSArray *)args
+{
+    NSString *logPath = [NSTemporaryDirectory() stringByAppendingPathComponent:
+                         [NSString stringWithFormat:@"TeXShop-convert-%@.log", [[NSUUID UUID] UUIDString]]];
+    NSFileHandle *logHandle = nil;
+    if ([[NSFileManager defaultManager] createFileAtPath:logPath contents:nil attributes:nil])
+        logHandle = [NSFileHandle fileHandleForWritingAtPath:logPath];
+
+    self.inputPipe = [NSPipe pipe];
+    [task setStandardInput:self.inputPipe];
+    [[self.inputPipe fileHandleForWriting] closeFile];
+    NSFileHandle *sink = logHandle ?: [NSFileHandle fileHandleWithNullDevice];
+    [task setStandardOutput:sink];
+    [task setStandardError:sink];
+    [task setLaunchPath:program];
+    [task setArguments:args];
+
+    __block BOOL timedOut = NO;
+    __weak TSDocument *weakSelf = self;
+    task.terminationHandler = ^(NSTask *finished) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            TSDocument *strongSelf = weakSelf;
+            NSString *output = [NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL];
+            [logHandle closeFile];
+            [[NSFileManager defaultManager] removeItemAtPath:logPath error:NULL];
+            if (strongSelf == nil)
+                return;
+            // A task that was stopped by the user or replaced by a newer one is not reported.
+            BOOL current = (finished == strongSelf.texTask);
+            BOOL failed = (finished.terminationReason != NSTaskTerminationReasonExit) || (finished.terminationStatus != 0);
+            [strongSelf checkATaskStatusFromTerminationRoutine:finished];
+            if (current && (timedOut || failed)) {
+                NSString *reason = timedOut
+                    ? [NSString stringWithFormat:NSLocalizedString(@"%@ did not finish in %d seconds and was stopped.", @""),
+                       [program lastPathComponent], (int)TSConversionTimeout]
+                    : [NSString stringWithFormat:NSLocalizedString(@"%@ ended with an error.", @""), [program lastPathComponent]];
+                [strongSelf showConversionFailure:reason output:output];
+            }
+        });
+    };
+
+    NSError *error = nil;
+    BOOL launched = NO;
+    @try {
+        launched = [task launchAndReturnError:&error];
+    } @catch (NSException *exception) {
+        launched = NO;
+    }
+    if (!launched) {
+        [logHandle closeFile];
+        [[NSFileManager defaultManager] removeItemAtPath:logPath error:NULL];
+        task.terminationHandler = nil;
+        self.texTask = nil;
+        [self showConversionFailure:[NSString stringWithFormat:NSLocalizedString(@"%@ could not be started.", @""),
+                                     [program lastPathComponent]] output:error.localizedDescription];
+        return;
+    }
+    [self recordProcessGroupOfTask:task];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(TSConversionTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        TSDocument *strongSelf = weakSelf;
+        if ((strongSelf == nil) || (task != strongSelf.texTask) || ![task isRunning])
+            return;
+        timedOut = YES;
+        // Stop it without waiting on the main thread: TERM now, KILL half a second later if it is still there.
+        pid_t pid = [task processIdentifier];
+        pid_t group = (pid > 1) ? getpgid(pid) : 0;
+        BOOL ownGroup = (group == pid) && (group != getpgrp());
+        if (ownGroup)
+            kill(-group, SIGTERM);
+        else
+            [task terminate];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (ownGroup && (kill(-group, 0) == 0))
+                kill(-group, SIGKILL);
+            if ([task isRunning] && (pid > 1))
+                kill(pid, SIGKILL);
+        });
+    });
+}
+
+// The place of a program of the TeX distribution: the folder in Settings, else the PATH given to tasks.
+- (NSString *)conversionProgramNamed:(NSString *)name
+{
+    NSString *bin = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
+    NSMutableArray *folders = [NSMutableArray array];
+    if (bin.length > 0)
+        [folders addObject:bin];
+    [folders addObjectsFromArray:[[[self environmentForSubTask] objectForKey:@"PATH"] componentsSeparatedByString:@":"]];
+    for (NSString *folder in folders) {
+        NSString *candidate = [folder stringByAppendingPathComponent:name];
+        if ([folder length] > 0 && [[NSFileManager defaultManager] isExecutableFileAtPath:candidate])
+            return candidate;
+    }
+    return nil;
+}
+
 - (void) convertDocument
 {
 	NSFileManager	*fileManager;
@@ -545,148 +681,124 @@ for(NSString *key in enu)
 	NSString		*imagePath;
 	NSString		*sourcePath;
 	NSString		*directoryPath;
-	NSString		*enginePath = 0;
+	NSString		*enginePath = nil;
 	NSString		*gsPath;
 	NSString		*tetexBinPath;
 	NSString		*epstopdfPath;
 	BOOL			writeable, result;
-	NSString		*argumentString;
 	NSString           *tempDestinationString;
-    
-   // NSLog(@"convertDocument");
+
 	myFileName = [[self fileURL] path];
-	if ([myFileName length] > 0) {
+	if ([myFileName length] == 0)
+		return;
 
-		fileManager = [NSFileManager defaultManager];
-		directoryPath = [myFileName stringByDeletingLastPathComponent];
-		writeable = [fileManager isWritableFileAtPath: directoryPath];
-		if (! writeable) {
-			// put converted file in folder named TempOutputKey; create that folder now
-			if (!([fileManager fileExistsAtPath: TempOutputKey]))
-			{
-				NSString		*reason = 0;
+	fileManager = [NSFileManager defaultManager];
+	directoryPath = [myFileName stringByDeletingLastPathComponent];
+	writeable = [fileManager isWritableFileAtPath: directoryPath];
+	if (! writeable) {
+		// put converted file in folder named TempOutputKey; create that folder now
+		if (!([fileManager fileExistsAtPath: TempOutputKey]))
+		{
+			NSString		*reason = 0;
 
-				// create the necessary directories
-				NS_DURING
-                result = [fileManager createDirectoryAtPath:TempOutputKey withIntermediateDirectories:NO attributes:nil error:NULL];
-				NS_HANDLER
-					result = NO;
-					reason = [localException reason];
-				NS_ENDHANDLER
-				if (!result) {
-					NSRunAlertPanel(@"Error", reason, @"Couldn't Create Temp Folder", nil, nil);
-					return;
-				}
-			}
-			if (! [[myFileName pathExtension] isEqualToString:@"dvi"]) {
-				tempDestinationString = [[TempOutputKey stringByAppendingString:@"/"]
-								stringByAppendingString: [myFileName lastPathComponent]];
-				if ([fileManager fileExistsAtPath: tempDestinationString])
-					[fileManager removeItemAtPath:tempDestinationString error:NULL];
-				[fileManager copyItemAtPath:myFileName toPath:tempDestinationString error:NULL];
-			}
-		}
-
-		imagePath = [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
-
-		if ([[NSFileManager defaultManager] fileExistsAtPath: imagePath]) {
-			myAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath: imagePath error:NULL];
-			self.startDate = [myAttributes objectForKey:NSFileModificationDate];
-		}
-		else
-			self.startDate = nil;
-
-		args = [NSMutableArray array];
-		sourcePath = myFileName;
-
-		self.texTask = [[NSTask alloc] init];
-		if ((! writeable) && (! [[myFileName pathExtension] isEqualToString:@"dvi"]))
-			[self.texTask setCurrentDirectoryPath: TempOutputKey];
-		else
-			[self.texTask setCurrentDirectoryPath: [sourcePath stringByDeletingLastPathComponent]];
-		[self.texTask setEnvironment: [self environmentForSubTask]];
-
-		if ([[myFileName pathExtension] isEqualToString:@"dvi"]) {
-			[self testGSCommandKey];
-			enginePath = [[SUD stringForKey:LatexGSCommandKey] stringByExpandingTildeInPath];
-
-			if (! writeable) {
-				argumentString = [@" --outdir " stringByAppendingString: TempOutputKey];
-				enginePath = [enginePath stringByAppendingString: argumentString];
-			}
-			enginePath = [self separate:enginePath into: args];
-			NSArray *ghostscriptFolders = TSGhostscriptFoldersForCommand(enginePath, args);
-			if ((ghostscriptFolders != nil) && ! [self ghostscriptIsAvailableAlsoIn: ghostscriptFolders]) {
-				self.texTask = nil;
+			// create the necessary directories
+			NS_DURING
+			result = [fileManager createDirectoryAtPath:TempOutputKey withIntermediateDirectories:NO attributes:nil error:NULL];
+			NS_HANDLER
+				result = NO;
+				reason = [localException reason];
+			NS_ENDHANDLER
+			if (!result) {
+				NSRunAlertPanel(@"Error", reason, @"Couldn't Create Temp Folder", nil, nil);
 				return;
 			}
-		} else if ([[myFileName pathExtension] isEqualToString:@"ps"]) {
-			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
-				self.texTask = nil;
-				return;
-			}
-			// The wrapper adds -dALLOWPSTRANSPARENCY when Ghostscript is 9.51 or later.
-			enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
-			[args addObject: @"Ghostscript"];
-			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
-			[args addObject: gsPath ?: @""];
-		} else if  ([[myFileName pathExtension] isEqualToString:@"eps"]) {
-			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
-				self.texTask = nil;
-				return;
-			}
-			enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap" ofType:nil inDirectory:@"Shellscripts"];
-			[args addObject: @"Ghostscript"];
-			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
-			[args addObject: gsPath ?: @""];
-			tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
-			epstopdfPath = [tetexBinPath stringByAppendingString:@"epstopdf"];
-			[args addObject: epstopdfPath];
-			// [args addObject: [[NSBundle mainBundle] pathForResource:@"epstopdf" ofType:nil]];
 		}
-
-		if ((! writeable) && ([[myFileName pathExtension] isEqualToString:@"dvi"])) {
-			/*
-			 NSString *fixedPathString = [NSString stringWithString:@""];
-			 NSArray *myArray = [[myFileName stringByStandardizingPath] componentsSeparatedByString:@"/"];
-			 NSEnumerator *myEnumerator = [myArray objectEnumerator];
-			 id anObject;
-			 int i = 0;
-			 int j = [myArray count];
-
-			 while (anObject = [myEnumerator nextObject]) {
-				 i++;
-				 if ((i > 1) && (i < j))
-					 fixedPathString =[[[fixedPathString stringByAppendingString: @"/'"] stringByAppendingString:anObject]
-										stringByAppendingString:@"'"];
-				 if (i == j)
-					 fixedPathString = [[fixedPathString stringByAppendingString: @"/"] stringByAppendingString:anObject];
-			 }
-			 [args addObject: fixedPathString];
-			 */
-			[args addObject: [myFileName  stringByStandardizingPath]]; // this seems to be required when the directory isn't writable
-		} else
-			[args addObject: [sourcePath lastPathComponent]]; //this allows spaces in folder names
-
-		if (enginePath != nil) {
-			if ([enginePath characterAtIndex:0] != '/') {
-				tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
-				enginePath = [tetexBinPath stringByAppendingString:enginePath];
-			}
-		}
-		self.inputPipe = [NSPipe pipe];
-		[self.texTask setStandardInput: self.inputPipe];
-		if ((enginePath != nil) && ([[NSFileManager defaultManager] fileExistsAtPath: enginePath])) {
-			[self.texTask setLaunchPath:enginePath];
-			[self.texTask setArguments:args];
-			[self.texTask launch];
-            [self.texTask waitUntilExit];
-		} else {
-	//		[self.inputPipe release];
-	//		[self.texTask release];
-			self.texTask = nil;
+		if (! [[myFileName pathExtension] isEqualToString:@"dvi"]) {
+			tempDestinationString = [[TempOutputKey stringByAppendingString:@"/"]
+							stringByAppendingString: [myFileName lastPathComponent]];
+			if ([fileManager fileExistsAtPath: tempDestinationString])
+				[fileManager removeItemAtPath:tempDestinationString error:NULL];
+			[fileManager copyItemAtPath:myFileName toPath:tempDestinationString error:NULL];
 		}
 	}
+
+	imagePath = [[[[self fileURL] path] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
+
+	if ([[NSFileManager defaultManager] fileExistsAtPath: imagePath]) {
+		myAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath: imagePath error:NULL];
+		self.startDate = [myAttributes objectForKey:NSFileModificationDate];
+	}
+	else
+		self.startDate = nil;
+
+	args = [NSMutableArray array];
+	sourcePath = myFileName;
+	NSString *workDirectory = ((! writeable) && (! [[myFileName pathExtension] isEqualToString:@"dvi"]))
+		? TempOutputKey : [sourcePath stringByDeletingLastPathComponent];
+
+	if ([[myFileName pathExtension] isEqualToString:@"dvi"]) {
+		// The command of Settings is a command for .tex files (pdflatex, uplatex2pdf, simpdftex...), which would
+		// read the .dvi as TeX input. A .dvi is converted by dvipdfmx, or by dvips and Ghostscript when the
+		// Settings are those of the LaTeX - Dvips - Ghostscript profile.
+		NSString *outputFolder = writeable ? directoryPath : TempOutputKey;
+		workDirectory = outputFolder;
+		NSString *base = [[myFileName lastPathComponent] stringByDeletingPathExtension];
+		NSString *absoluteDvi = [myFileName stringByStandardizingPath];
+		BOOL latexmk = NO;
+		if (TSEngineProfileMatchingSettings(SUD, &latexmk) == TSEngineProfileLaTeXDvipsGhostscript) {
+			NSString *dvips = [self conversionProgramNamed:@"dvips"];
+			NSString *wrapper = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
+			if (dvips == nil) {
+				[self showConversionFailure:NSLocalizedString(@"dvips was not found. Choose Detect Paths in Settings > Typesetting.", @"") output:nil];
+				return;
+			}
+			if (wrapper == nil) {
+				[self showConversionFailure:NSLocalizedString(@"The tool that converts PostScript to PDF is missing from the application.", @"") output:nil];
+				return;
+			}
+			if (! [self ghostscriptIsAvailableAlsoIn: nil])
+				return;
+			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
+			enginePath = @"/bin/sh";
+			[args addObjectsFromArray:@[@"-c", TSDvipsConversionScript, @"sh", base, absoluteDvi, wrapper, gsPath ?: @"", dvips]];
+		} else {
+			NSString *dvipdfmx = [self conversionProgramNamed:@"dvipdfmx"];
+			if (dvipdfmx == nil) {
+				[self showConversionFailure:NSLocalizedString(@"dvipdfmx was not found. Choose Detect Paths in Settings > Typesetting.", @"") output:nil];
+				return;
+			}
+			enginePath = dvipdfmx;
+			[args addObjectsFromArray:@[@"-o", [[outputFolder stringByAppendingPathComponent:base] stringByAppendingPathExtension:@"pdf"], absoluteDvi]];
+		}
+	} else if ([[myFileName pathExtension] isEqualToString:@"ps"]) {
+		if (! [self ghostscriptIsAvailableAlsoIn: nil])
+			return;
+		// The wrapper adds -dALLOWPSTRANSPARENCY when Ghostscript is 9.51 or later.
+		enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
+		[args addObject: @"Ghostscript"];
+		gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
+		[args addObject: gsPath ?: @""];
+		[args addObject: [sourcePath lastPathComponent]]; //this allows spaces in folder names
+	} else if  ([[myFileName pathExtension] isEqualToString:@"eps"]) {
+		if (! [self ghostscriptIsAvailableAlsoIn: nil])
+			return;
+		enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap" ofType:nil inDirectory:@"Shellscripts"];
+		[args addObject: @"Ghostscript"];
+		gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
+		[args addObject: gsPath ?: @""];
+		tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
+		epstopdfPath = [tetexBinPath stringByAppendingString:@"epstopdf"];
+		[args addObject: epstopdfPath];
+		[args addObject: [sourcePath lastPathComponent]];
+	}
+
+	if ((enginePath == nil) || (! [[NSFileManager defaultManager] fileExistsAtPath: enginePath]))
+		return;
+
+	self.texTask = [[NSTask alloc] init];
+	[self.texTask setCurrentDirectoryPath: workDirectory];
+	[self.texTask setEnvironment: [self environmentForSubTask]];
+	[self launchConversionTask:self.texTask program:enginePath arguments:args];
 }
 
 // TODO/FIXME: The following method is badly named. What it really does: perform (La)TeX
