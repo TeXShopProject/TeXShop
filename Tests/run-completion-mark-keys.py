@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Completion and mark keys: the yielding F5 of Edit › Complete Label or Citation Key,
 the menu item and its target, Escape and Tab during composition in the source and the
-Experiment, and Escape in the Experiment panel. The production shortcut units and
+Experiment, Escape in the Experiment panel, and command completion turned off (#75). The production shortcut units and
 TSMarkMenu.m are compiled as they are; the text view parts are the production
 fragments of TSTextView.m and ScrapTextView.m, verified byte for byte. No window is shown.
 """
@@ -12,7 +12,7 @@ from shortcut_sources import production_source, companion_sources
 from source_tree import include_args, source_file
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['yield-off', 'hold-back', 'swallow-off', 'composition-off', 'escape-pass', 'menu-field-editor', 'record-macro', 'restore-conflict', 'backtab', 'shared-flag', 'control-y', 'nested-drop', 'control-bracket'])
+parser.add_argument('--mutation', choices=['yield-off', 'hold-back', 'swallow-off', 'composition-off', 'escape-pass', 'menu-field-editor', 'record-macro', 'restore-conflict', 'backtab', 'shared-flag', 'control-y', 'nested-drop', 'control-bracket', 'none-as-tab', 'empty-trigger', 'none-character'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 production = production_source(root)
@@ -21,6 +21,7 @@ scrap_view = source_file(root, 'ScrapTextView.m').read_text(encoding='latin-1')
 mark_menu = source_file(root, 'TSMarkMenu.m').read_text(encoding='utf-8')
 completion_keys = source_file(root, 'TSCompletionKeys.h').read_text(encoding='utf-8')
 completion_keys_text = completion_keys
+preference_key = source_file(root, 'TSPreferenceKey.h').read_text(encoding='utf-8')
 
 docommand = method(text_view, '- (void)doCommandBySelector:(SEL)selector')
 composition = method(text_view, '- (void)keyDown:(NSEvent *)theEvent\n{\n    // During composition')
@@ -38,9 +39,11 @@ assert 'NSString *g_commandCompletionCharTab = g_commandCompletionChar;' in scra
 live_text = text_view[:text_view.index('/* NEW VERSION')]
 def code_lines(text, needle):
     return sum(1 for line in text.splitlines() if needle in line and not line.strip().startswith('//'))
-assert code_lines(live_text, '[TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&') == 3
-assert code_lines(live_text, '[[theEvent characters] isEqualToString: g_commandCompletionChar]') == 0
-assert code_lines(scrap_view, '[TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&') == 3
+# With command completion off the trigger is nil, and every branch asks TSIsCompletionTrigger.
+assert code_lines(live_text, 'if (TSIsCompletionTrigger(theEvent, g_commandCompletionChar) &&') == 3
+assert code_lines(live_text, 'isEqualToString: g_commandCompletionChar]') == 0
+assert code_lines(scrap_view, 'if (TSIsCompletionTrigger(theEvent, g_commandCompletionCharTab) &&') == 3
+assert code_lines(scrap_view, 'isEqualToString: g_commandCompletionCharTab]') == 0
 assert '(self.selectedRange.length > 2) && editorCanAddBrackets && ![self hasMarkedText]' in text_view, 'no enclosing during composition'
 
 harness = (root / 'Tests/CompletionMarkKeys.m').read_text(encoding='utf-8').replace('#import "TSCompletionKeys.h"', completion_keys)
@@ -81,12 +84,19 @@ elif args.mutation == 'control-bracket':
     harness = mutate(harness, 'if (c == 0x1b) return event.keyCode == kVK_Escape ? characters : @"";', 'if (c == 0x1b) return characters;')
 elif args.mutation == 'nested-drop':
     harness = mutate(harness, '    if (was == view) TSCompletionKeyComposingView = nil;\n', '')
+elif args.mutation == 'none-as-tab':
+    preference_key = mutate(preference_key, 'if ([value isEqualToString:TSCommandCompletionNoneValue]) return TSCommandCompletionTriggerNone;\n', '')
+elif args.mutation == 'empty-trigger':
+    harness = mutate(harness, '    if (trigger.length == 0) return NO;\n', '')
+elif args.mutation == 'none-character':
+    preference_key = mutate(preference_key, 'case TSCommandCompletionTriggerNone: return nil;', 'case TSCommandCompletionTriggerNone: return @"";')
 elif args.mutation == 'menu-field-editor':
     mark_menu = mutate(mark_menu, 'return view.isEditable && !view.isFieldEditor ? view : nil;', 'return view.isEditable ? view : nil;')
 with tempfile.TemporaryDirectory(prefix='texshop-completion-keys-') as folder:
     temp = Path(folder)
     (temp / 'TSKeyboardShortcuts.m').write_text(production)
     (temp / 'TSMarkMenu.m').write_text(mark_menu)
+    (temp / 'TSPreferenceKey.h').write_text(preference_key)
     (temp / 'test.m').write_text(harness)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-I', folder, *include_args(root), '-I', str(root / 'Tests'),
                     '-framework', 'Cocoa', '-framework', 'Carbon', str(temp / 'test.m'), str(temp / 'TSMarkMenu.m'),

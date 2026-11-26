@@ -626,7 +626,7 @@ extern BOOL             atLeastSequoia;
 extern BOOL             editorCanAddBrackets;
 
 // Command completion
-extern NSString *g_commandCompletionChar;	/*" The key triggering completion. Always set to ESC in finishCommandCompletionConfigure "*/
+extern NSString *g_commandCompletionChar;	/*" The key triggering completion (Escape or Tab), or nil when command completion is off "*/
 extern NSMutableString *g_commandCompletionList;/*" The list of completions, read from CommandCompletion.txt "*/
 extern BOOL g_canRegisterCommandCompletion;	/*" This is set to NO while e.g. CommandCompletion.txt is open "*/
 

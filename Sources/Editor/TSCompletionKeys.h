@@ -67,6 +67,15 @@ static inline NSString *TSCompletionTypedKey(NSEvent *event)
     return characters;
 }
 
+// Whether the event is the trigger key (alone or with modifiers). The trigger is nil
+// when command completion is off, and then no key is the trigger. An empty string is
+// never a trigger: TSCompletionTypedKey gives it for Control-[ and the like.
+static inline BOOL TSIsCompletionTrigger(NSEvent *event, NSString *trigger)
+{
+    if (trigger.length == 0) return NO;
+    return [TSCompletionTypedKey(event) isEqualToString:trigger];
+}
+
 // The Escape key alone or with Shift (the trigger and the reverse candidate), as
 // opposed to Option or Control with it.
 static inline BOOL TSIsPlainOrShiftedEscape(NSEvent *event)

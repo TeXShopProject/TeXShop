@@ -2408,6 +2408,15 @@
         "column": 0
       },
       {
+        "key": "931.tag",
+        "view": "settings.926",
+        "kind": "matrix",
+        "property": "tag",
+        "value": 2,
+        "row": 2,
+        "column": 0
+      },
+      {
         "key": "32.tag",
         "view": "settings.30",
         "kind": "matrix",
@@ -3073,6 +3082,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Use exclusion rules for LaTeX documents.",
           "928.title": "Tab",
+          "931.title": "None",
           "583.title": "Apple Find Bar",
           "ts-edit-spelling.ibShadowedToolTip": "Edit the exclusion rules used by LaTeX-aware spell checking.",
           "Xrb-Fe-9cg.title": "Small",
@@ -4809,6 +4819,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "None",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -5843,6 +5862,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Ausschlussregeln für LaTeX-Dokumente verwenden.",
           "928.title": "Tabulator",
+          "931.title": "Ohne",
           "583.title": "Apple-Suchleiste",
           "ts-edit-spelling.ibShadowedToolTip": "Die Ausschlussregeln für die LaTeX-bewusste Rechtschreibprüfung bearbeiten.",
           "Xrb-Fe-9cg.title": "Klein",
@@ -7579,6 +7599,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Ohne",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -8613,6 +8642,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Usar reglas de exclusión para documentos LaTeX.",
           "928.title": "Tabulador",
+          "931.title": "Ninguna",
           "583.title": "Barra de búsquedas de Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Editar las reglas de exclusión de la revisión ortográfica adaptada a LaTeX.",
           "Xrb-Fe-9cg.title": "Pequeño",
@@ -10349,6 +10379,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Ninguna",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -11383,6 +11422,7 @@
           "927.title": "Échap",
           "ts-aware-spelling.ibShadowedToolTip": "Utiliser les règles d’exclusion pour les documents LaTeX.",
           "928.title": "Tab",
+          "931.title": "Aucune",
           "583.title": "Bannière de recherche Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Modifier les règles d’exclusion de la vérification orthographique adaptée à LaTeX.",
           "Xrb-Fe-9cg.title": "Petit",
@@ -13119,6 +13159,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Aucune",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -14153,6 +14202,7 @@
           "927.title": "Esc",
           "ts-aware-spelling.ibShadowedToolTip": "Usa le regole di esclusione per i documenti LaTeX.",
           "928.title": "Tabulazione",
+          "931.title": "Nessuno",
           "583.title": "Barra di ricerca Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Modifica le regole di esclusione del controllo ortografico per LaTeX.",
           "Xrb-Fe-9cg.title": "Piccola",
@@ -15889,6 +15939,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Nessuno",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -16923,6 +16982,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "LaTeX文書では除外規則を使います。",
           "928.title": "Tab",
+          "931.title": "なし",
           "583.title": "Apple標準検索バー",
           "ts-edit-spelling.ibShadowedToolTip": "LaTeX対応のスペルチェックで使用する除外規則を編集します。",
           "Xrb-Fe-9cg.title": "小",
@@ -18659,6 +18719,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "なし",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -19693,6 +19762,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "LaTeX 문서에 제외 규칙을 사용합니다.",
           "928.title": "Tab",
+          "931.title": "없음",
           "583.title": "Apple 찾기 바",
           "ts-edit-spelling.ibShadowedToolTip": "LaTeX 맞춤법 검사에 사용하는 제외 규칙을 편집합니다.",
           "Xrb-Fe-9cg.title": "작게",
@@ -21429,6 +21499,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "없음",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -22463,6 +22542,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Uitsluitingsregels voor LaTeX-documenten gebruiken.",
           "928.title": "Tab",
+          "931.title": "Geen",
           "583.title": "Apple-zoekbalk",
           "ts-edit-spelling.ibShadowedToolTip": "Bewerk de uitsluitingsregels voor LaTeX-bewuste spellingcontrole.",
           "Xrb-Fe-9cg.title": "Klein",
@@ -24199,6 +24279,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Geen",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -25233,6 +25322,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Usar regras de exclusão para documentos LaTeX.",
           "928.title": "Tab",
+          "931.title": "Nenhuma",
           "583.title": "Barra de pesquisa Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Editar as regras de exclusão da verificação ortográfica adaptada ao LaTeX.",
           "Xrb-Fe-9cg.title": "Pequeno",
@@ -26969,6 +27059,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Nenhuma",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -28003,6 +28102,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Usar regras de exclusão para documentos LaTeX.",
           "928.title": "Tab",
+          "931.title": "Nenhuma",
           "583.title": "Barra de busca da Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Editar as regras de exclusão da verificação ortográfica adaptada ao LaTeX.",
           "Xrb-Fe-9cg.title": "Pequeno",
@@ -29739,6 +29839,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Nenhuma",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -30773,6 +30882,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "Folosiți reguli de excludere pentru documentele LaTeX.",
           "928.title": "Tab",
+          "931.title": "Fără",
           "583.title": "Bara de căutare Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Editați regulile de excludere ale verificării adaptate la LaTeX.",
           "Xrb-Fe-9cg.title": "Mic",
@@ -32509,6 +32619,15 @@
           "column": 0
         },
         {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Fără",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "583.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -33543,6 +33662,7 @@
           "927.title": "Escape",
           "ts-aware-spelling.ibShadowedToolTip": "对LaTeX文稿使用排除规则。",
           "928.title": "Tab",
+          "931.title": "无",
           "583.title": "Apple查找栏",
           "ts-edit-spelling.ibShadowedToolTip": "编辑LaTeX拼写检查使用的排除规则。",
           "Xrb-Fe-9cg.title": "小",
@@ -35276,6 +35396,15 @@
           "property": "title",
           "value": "Tab",
           "row": 1,
+          "column": 0
+        },
+        {
+          "key": "931.title",
+          "view": "settings.926",
+          "kind": "matrix",
+          "property": "title",
+          "value": "无",
+          "row": 2,
           "column": 0
         },
         {

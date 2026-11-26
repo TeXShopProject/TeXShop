@@ -149,8 +149,9 @@ static NSString *ShortcutColumnText(TSShortcutPaneController *pane, BOOL (^selec
 // Tab, Escape and the mark key clear the result list when only Shift, Option or Control is held.
 // The field is filled before that clear, from the menu item the key would have run.
 static BOOL ReservedCompletionKey(NSUserDefaults *defaults, NSString *key, NSEventModifierFlags flags) {
- BOOL escapeTrigger=[[defaults stringForKey:TSCommandCompletionCharacterKey] isEqualToString:@"ESCAPE"];
- BOOL trigger=escapeTrigger ? [key isEqualToString:@"\033"] : ([key isEqualToString:@"\t"] || [key isEqualToString:@"\031"]);
+ NSString *saved=[defaults stringForKey:TSCommandCompletionCharacterKey];
+ BOOL escapeTrigger=[saved isEqualToString:@"ESCAPE"], noTrigger=[saved isEqualToString:@"NONE"];
+ BOOL trigger=noTrigger ? NO : escapeTrigger ? [key isEqualToString:@"\033"] : ([key isEqualToString:@"\t"] || [key isEqualToString:@"\031"]);
  NSEventModifierFlags completion=flags & (NSEventModifierFlagShift|NSEventModifierFlagOption|NSEventModifierFlagControl|NSEventModifierFlagCommand);
  return trigger && (completion==0 || completion==NSEventModifierFlagShift || completion==NSEventModifierFlagOption || completion==NSEventModifierFlagControl);
 }
@@ -1069,11 +1070,11 @@ int main(int argc,char **argv){@autoreleasepool{
   REQUIRE(translated.searchEvent==nil && translated.table.numberOfRows==(NSInteger)translated.functionRows.count);
   NSUInteger beforeFlags=translated.table.numberOfRows;NSEvent *flagsEvent=[NSEvent keyEventWithType:NSEventTypeFlagsChanged location:NSZeroPoint modifierFlags:S timestamp:0 windowNumber:0 context:nil characters:@"" charactersIgnoringModifiers:@"" isARepeat:NO keyCode:56];
   @try { REQUIRE([translated handleKeySearchEvent:flagsEvent] && translated.searchEvent==nil && translated.table.numberOfRows==beforeFlags); } @catch(NSException *exception) { Check(NO,@"Modifier-only events must not reach character translation"); }
-  for(id trigger in @[@"TAB",@"ESCAPE",NSNull.null,@"unexpected",@"ESC",@"TAB"]){
+  for(id trigger in @[@"TAB",@"ESCAPE",NSNull.null,@"unexpected",@"ESC",@"NONE",@"none",@"TAB"]){
    [TSIsolatedAppKitDefaults setObject:trigger==NSNull.null?nil:trigger forKey:@"CommandCompletionChar"];
    NSDictionary *unchanged=[TSIsolatedAppKitDefaults.values copy];fixtureCharacters=@"\t";
    REQUIRE([translated handleKeySearchEvent:Event(@"\t",0,48)]);
-   BOOL reserved=![trigger isEqual:@"ESCAPE"];
+   BOOL reserved=![trigger isEqual:@"ESCAPE"] && ![trigger isEqual:@"NONE"];
    REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]==reserved);
    REQUIRE((translated.highlightedCompletionRow!=nil)==reserved);
    if(!reserved)REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")]);
@@ -1090,6 +1091,21 @@ int main(int argc,char **argv){@autoreleasepool{
   [TSIsolatedAppKitDefaults setObject:@"ESCAPE" forKey:@"CommandCompletionChar"];
   [NSNotificationCenter.defaultCenter postNotificationName:@"CommandCompletionCharNotification" object:nil];
   REQUIRE(translated.highlightedCompletionRow==nil && ![translated.searchMessage containsString:@"reserved"]);
+  // With command completion off (#75), no Escape or Tab key is reserved for it and no
+  // row of command completion is shown; plain Escape still ends the search.
+  [TSIsolatedAppKitDefaults setObject:@"NONE" forKey:@"CommandCompletionChar"];
+  [NSNotificationCenter.defaultCenter postNotificationName:@"CommandCompletionCharNotification" object:nil];
+  for(NSNumber *flags in @[@0,@(NSEventModifierFlagShift),@(NSEventModifierFlagOption),@(NSEventModifierFlagControl)]){
+   for(NSArray *key in @[@[@"\t",@48],@[@"\033",@53]]){
+    if([key[0] isEqual:@"\033"] && flags.integerValue==0) continue;
+    NSString *typed=[key[0] isEqual:@"\t"] && flags.integerValue==NSEventModifierFlagShift ? @"\031" : key[0];
+    fixtureCharacters=typed;REQUIRE([translated handleKeySearchEvent:Event(typed,flags.unsignedIntegerValue,[key[1] unsignedShortValue])]);
+    REQUIRE(translated.highlightedCompletionRow==nil && ![translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]);
+   }
+  }
+  REQUIRE(translated.searchingByKey);
+  fixtureCharacters=@"\033";REQUIRE([translated handleKeySearchEvent:Event(@"\033",0,53)] && !translated.searchingByKey);
+  translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];
   [TSIsolatedAppKitDefaults setObject:@"TAB" forKey:@"CommandCompletionChar"];
   // Shift with the trigger key is the previous candidate: the trigger row is shown too.
   fixtureCharacters=@"\t";[translated handleKeySearchEvent:Event(@"\t",NSEventModifierFlagShift,48)];

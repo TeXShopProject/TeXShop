@@ -342,6 +342,7 @@ add(TSSettingsCategoryGeneral, @"row.catalog.general.1.2", @"SettingsSource", @"
 add(TSSettingsCategoryGeneral, @"row.catalog.general.1.2", @"SettingsSource", @"ypQ-Gc-HUa.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsSource", @"927.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsSource", @"928.title", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsSource", @"931.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Input Character", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Output String", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Paste", TSSettingsSearchWeightChoice);

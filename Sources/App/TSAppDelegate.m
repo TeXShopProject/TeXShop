@@ -1016,16 +1016,9 @@ static void TSInstallAdvancedFindFieldStyle(void)
     endcommentString = [NSString stringWithCharacters: &smallgreater length: 1];
 
     
-	unichar esc = 0x001B; // configure the key in Preferences?
-	unichar tab = 0x0009; // ditto
-	if (!g_commandCompletionChar) {
-		if ([[SUD stringForKey: CommandCompletionCharKey] isEqualToString:@"ESCAPE"]) 
-			g_commandCompletionChar = [NSString stringWithCharacters: &esc length: 1];
-		else
-			g_commandCompletionChar = [NSString stringWithCharacters: &tab length: 1];
-		
-	}
-		
+	// The trigger key chosen in Settings, or nil when command completion is off.
+	g_commandCompletionChar = TSCommandCompletionCharacterForTrigger(TSCommandCompletionTriggerFromDefaults(SUD));
+
   [GlobalData sharedGlobalData].CommandCompletionPath = CommandCompletionPathRegular;
   [self reReadCommandCompletionData];
     
