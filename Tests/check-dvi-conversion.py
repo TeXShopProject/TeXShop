@@ -70,6 +70,9 @@ with tempfile.TemporaryDirectory() as d:
     tools = subprocess.run(['which', 'dvips', 'gs'], env=env, capture_output=True, text=True).stdout.split()
     if len(tools) == 2 and wrapper.exists():
         gsdir = str(Path(tools[1]).parent)
+        private_tmp = d / 'tmp'
+        private_tmp.mkdir()
+        env['TMPDIR'] = str(private_tmp)
         r = run(['/bin/sh', '-c', script, 'sh', 'a', str(work / 'a.dvi'), str(wrapper), gsdir, tools[0]], work)
         check(r.returncode == 0 and (work / 'a.pdf').exists(), 'dvips and Ghostscript make the PDF')
         check((work / 'a.ps').exists() and (work / 'a.ps').read_text() == '%%USER-ORIGINAL\n', 'a .ps of the user with the same name stays after a success')
@@ -77,7 +80,7 @@ with tempfile.TemporaryDirectory() as d:
         r = run(['/bin/sh', '-c', script, 'sh', 'a', str(work / 'missing.dvi'), str(wrapper), gsdir, tools[0]], work)
         check(r.returncode != 0, 'a failed dvips ends with an error')
         check((work / 'a.ps').exists() and (work / 'a.ps').read_text() == '%%USER-ORIGINAL\n', 'a .ps of the user with the same name stays after a failure')
-        left = [p for p in Path(tempfile.gettempdir()).glob('TeXShop-convert.*')]
+        left = list(private_tmp.glob('TeXShop-convert.*'))
         check(not left, 'the folder of the intermediate PostScript is removed')
     else:
         print('SKIP: dvips or Ghostscript is not installed')
