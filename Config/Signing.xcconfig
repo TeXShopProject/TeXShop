@@ -1,0 +1,9 @@
+// 署名設定。既定は「ローカル実行用に署名」(ad hoc) で，Apple アカウントなしでビルドできる。
+// 自分のチームで署名したい場合は，Git 管理外の Config/Local.xcconfig に次のように書く。
+//   DEVELOPMENT_TEAM = XXXXXXXXXX
+//   CODE_SIGN_IDENTITY = Apple Development
+CODE_SIGN_STYLE = Automatic
+CODE_SIGN_IDENTITY = -
+DEVELOPMENT_TEAM =
+
+#include? "Local.xcconfig"
