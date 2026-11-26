@@ -7444,7 +7444,7 @@ else
 
 	manager = [NSFileManager defaultManager];
 
-	rootPath = [[self.myDocument fileName] stringByDeletingLastPathComponent];
+	rootPath = [[[self.myDocument fileURL] path] stringByDeletingLastPathComponent];
 	self.sourceFiles = [NSMutableArray arrayWithCapacity: NUMBER_OF_SOURCE_FILES] ;
 	currentIndex = 0;
 	sourceText = [[self.myDocument textView] string];
@@ -7647,7 +7647,7 @@ else
     
 /* // this section moved to TSDocument-SyncTeX
 
-	myFileName = [self.myDocument fileName];
+	myFileName = [[self.myDocument fileURL] path];
 	if (! myFileName)
 		return NO;
 	mySyncTeXFileName = [[myFileName stringByDeletingPathExtension] stringByAppendingPathExtension: @"synctex"];
@@ -8466,7 +8466,7 @@ else
 	
 	// now see if the sync file exists
 	fileManager = [NSFileManager defaultManager];
-	NSString *fileName = [self.myDocument fileName];
+	NSString *fileName = [[self.myDocument fileURL] path];
 	NSString *infoFile = [[fileName stringByDeletingPathExtension] stringByAppendingPathExtension: @"pdfsync"];
 	if (![fileManager fileExistsAtPath: infoFile])
 		return;
@@ -8779,7 +8779,7 @@ else
 		[self.myDocument toLine:aNumber];
 		[[self.myDocument  textWindow] makeKeyAndOrderFront:self];
 	} else {
-		newFileName = [[[self.myDocument fileName] stringByDeletingLastPathComponent] stringByAppendingString:@"/"];
+		newFileName = [[[[self.myDocument fileURL] path] stringByDeletingLastPathComponent] stringByAppendingString:@"/"];
 		newFileName = [newFileName stringByAppendingString: includeFileName];
 		theExtension = [newFileName pathExtension];
 		if ([theExtension length] == 0)
@@ -8849,7 +8849,7 @@ else
 
 	// now see if the sync file exists
 	fileManager = [NSFileManager defaultManager];
-	NSString *fileName = [self.myDocument fileName];
+	NSString *fileName = [[self.myDocument fileURL] path];
 	NSString *infoFile = [[fileName stringByDeletingPathExtension] stringByAppendingPathExtension: @"pdfsync"];
 	if (![fileManager fileExistsAtPath: infoFile])
 		return;
