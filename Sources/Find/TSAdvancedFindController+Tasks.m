@@ -30,6 +30,21 @@ typedef struct {
 
 static void TSReadHorizontalAnchor(NSTextView *view, TSScrollAnchor *anchor);
 
+/// The top of the text the reader sees. Under a toolbar the clip origin sits `contentInsets.top` above that line.
+/// At the top of the file the clip is already above the text, and `visibleRect` starts on the text. Further down,
+/// `visibleRect` includes the band the toolbar covers, so the first visible line is one inset below its top (#72).
+static CGFloat TSContentTop(NSTextView *view)
+{
+    NSRect visible = view.visibleRect;
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    if (!clip)
+        return NSMinY(visible);
+    CGFloat belowBar = NSMinY(clip.bounds) + view.enclosingScrollView.contentInsets.top;
+    if (belowBar <= NSMinY(visible) + 0.5)
+        return NSMinY(visible);
+    return belowBar;
+}
+
 static TSScrollAnchor TSAnchorForView(NSTextView *view)
 {
     TSScrollAnchor anchor = {NSNotFound, 0, 0, 0, NSNotFound};
@@ -53,15 +68,17 @@ static TSScrollAnchor TSAnchorForView(NSTextView *view)
     // setTextColor: leaves the first glyphIndexForPoint on another wrap of the line than the one on screen. A theme
     // does that for each part of a split source. The next question returns the wrap that is painted (#72).
     NSRect visible = view.visibleRect;
+    // The line under the toolbar, not the one the bar covers. Pinning the covered line leaves the visible line free
+    // to slip by a wrap when the text above it changes height (#72).
     NSPoint inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x,
-                                      NSMinY(visible) + 1 - view.textContainerOrigin.y);
+                                      TSContentTop(view) + 1 - view.textContainerOrigin.y);
     if (layout.numberOfGlyphs > 0)
         (void)[layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
     if (layout.numberOfGlyphs == 0)
         return anchor;
     visible = view.visibleRect;
     inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x,
-                              NSMinY(visible) + 1 - view.textContainerOrigin.y);
+                              TSContentTop(view) + 1 - view.textContainerOrigin.y);
     NSUInteger glyph = [layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
     if (glyph >= layout.numberOfGlyphs)
         glyph = layout.numberOfGlyphs - 1;
@@ -83,6 +100,7 @@ static void TSReadHorizontalAnchor(NSTextView *view, TSScrollAnchor *anchor)
     if (!layout || !container || layout.numberOfGlyphs == 0)
         return;
     NSRect visible = view.visibleRect;
+    CGFloat contentTop = TSContentTop(view);
     CGFloat originX = view.textContainerOrigin.x;
     NSRect box = NSOffsetRect(visible, -originX, -view.textContainerOrigin.y);
     [layout ensureLayoutForBoundingRect:box inTextContainer:container];
@@ -97,7 +115,10 @@ static void TSReadHorizontalAnchor(NSTextView *view, TSScrollAnchor *anchor)
         (void)textContainer;
         CGFloat usedLeft = originX + NSMinX(used);
         CGFloat usedRight = originX + NSMaxX(used);
-        // A line that ends before the left edge, or starts to the right of it, has nothing to pin there.
+        // A line hidden under the toolbar, or one that ends before the left edge, or one that starts to the right
+        // of it, has nothing to pin on the visible edge.
+        if (view.textContainerOrigin.y + NSMaxY(fragment) <= contentTop + 0.5)
+            return;
         if (usedRight <= NSMinX(visible) + 0.5 || usedLeft > NSMinX(visible) + 1 || glyphs.length == 0)
             return;
         NSPoint point = NSMakePoint(NSMinX(visible) - originX, NSMinY(fragment) + 1);
@@ -171,7 +192,8 @@ static IMP TSOriginalScrollClipView;
 static IMP TSOriginalSetBoundsOrigin;
 static int TSClipHoldCount;
 static BOOL TSAllowClipScroll;
-/// Undo managers whose next redo must hold the clip before the text redo scrolls (#72).
+/// Undo managers that still owe a hold to a Replace All redo. The number is how many later undos have stacked
+/// their own redo above that one. Zero means the next redo is the Replace All redo (#72).
 static NSMapTable<NSUndoManager *, NSNumber *> *TSRedoHolds;
 
 static void TSExpectRedoHold(NSUndoManager *undo)
@@ -180,19 +202,28 @@ static void TSExpectRedoHold(NSUndoManager *undo)
         return;
     if (!TSRedoHolds)
         TSRedoHolds = [NSMapTable weakToStrongObjectsMapTable];
-    [TSRedoHolds setObject:@YES forKey:undo];
+    // WillUndo for this undo already ran, before the mark existed, so it did not count itself.
+    [TSRedoHolds setObject:@0 forKey:undo];
 }
 
-/// YES when this redo was asked to hold. The caller pushes; the redo handler pops.
+/// YES when this redo is the Replace All redo and must hold. The caller pushes; the redo handler pops.
+/// A redo stacked above that one returns NO and leaves the mark for the Replace All redo underneath.
 static BOOL TSConsumeRedoHold(NSUndoManager *undo)
 {
-    if (![[TSRedoHolds objectForKey:undo] boolValue])
+    NSNumber *skip = [TSRedoHolds objectForKey:undo];
+    if (!skip)
         return NO;
+    NSInteger left = skip.integerValue;
+    if (left > 0) {
+        [TSRedoHolds setObject:@(left - 1) forKey:undo];
+        return NO;
+    }
     [TSRedoHolds removeObjectForKey:undo];
     return YES;
 }
 
 static void TSPushClipHold(void);
+static void TSPopClipHold(void);
 
 static void TSHeldScrollClipView(NSScrollView *scroll, SEL _cmd, NSClipView *clip, NSPoint point)
 {
@@ -217,11 +248,26 @@ static void TSInstallClipHold(void)
         Method origin = class_getInstanceMethod(NSClipView.class, @selector(setBoundsOrigin:));
         TSOriginalSetBoundsOrigin = method_setImplementation(origin, (IMP)TSHeldSetBoundsOrigin);
         NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+        [center addObserverForName:NSUndoManagerWillUndoChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            // Posted before the undo handlers. A later undo (typing, after Replace All was undone) stacks its redo
+            // on top of the Replace All redo. Counting it here keeps the hold for that redo, instead of spending it
+            // on a redo that has no place handler and never pops (#72).
+            NSUndoManager *undo = note.object;
+            NSNumber *skip = [TSRedoHolds objectForKey:undo];
+            if (undo.isUndoing && skip)
+                [TSRedoHolds setObject:@(skip.integerValue + 1) forKey:undo];
+        }];
         [center addObserverForName:NSUndoManagerWillRedoChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
             // Posted before the text redo. The place handler runs after that text change, which is too late to stop
             // its scroll (#72).
-            if (TSConsumeRedoHold(note.object))
-                TSPushClipHold();
+            if (!TSConsumeRedoHold(note.object))
+                return;
+            TSPushClipHold();
+            // The place handler pops before the run loop continues. A redo that has no place handler must not leave
+            // the process-wide hold in place.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                TSPopClipHold();
+            });
         }];
         [center addObserverForName:NSUndoManagerDidCloseUndoGroupNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
             NSUndoManager *undo = note.object;
@@ -354,7 +400,7 @@ static BOOL TSTopLine(NSTextView *view, NSRange *characterRange, CGFloat *lineTo
     [layout ensureLayoutForBoundingRect:NSOffsetRect(visible, -view.textContainerOrigin.x, -view.textContainerOrigin.y) inTextContainer:container];
     if (layout.numberOfGlyphs == 0)
         return NO;
-    NSPoint point = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x + 1, NSMinY(visible) - view.textContainerOrigin.y + 1);
+    NSPoint point = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x + 1, TSContentTop(view) + 1 - view.textContainerOrigin.y);
     NSUInteger glyph = [layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
     if (glyph >= layout.numberOfGlyphs)
         glyph = layout.numberOfGlyphs - 1;

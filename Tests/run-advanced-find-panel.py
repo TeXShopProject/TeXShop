@@ -61,6 +61,9 @@ MUTATIONS = {
         'NSString *findString = self.settings.findString;'),
     'Replace All leaves the text where it jumped': ('TSAdvancedFindController+Tasks.m',
         '    [clip scrollToPoint:NSMakePoint(x, y)];\n', ''),
+    'a later undo steals the Replace All scroll hold': ('TSAdvancedFindController+Tasks.m',
+        '            if (undo.isUndoing && skip)\n                [TSRedoHolds setObject:@(skip.integerValue + 1) forKey:undo];\n',
+        '            if (undo.isUndoing && skip)\n                ;\n'),
 }
 
 
