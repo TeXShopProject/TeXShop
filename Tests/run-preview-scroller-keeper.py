@@ -42,6 +42,11 @@ MUTATIONS = {
         '        fabs(TSVisibleHeight(scroll) - height) < 0.5)', '        NO)'),
     # Views with content insets are kept too.
     'insets-kept': ('TSPreviewScrollerKeeper.m', '    return insets.top != 0 || insets.bottom != 0;\n', '    return NO;\n'),
+    # Below unit scale the top inset is already in screen points. Multiplying again
+    # moves the text when the magnification changes.
+    'top-inset-always-scaled': ('TSPreviewScrollerKeeper.m',
+        '    return magnification > 1 ? top * magnification : top;\n',
+        '    return top * magnification;\n'),
     # The Preview views do not use the keeper.
     'not-installed': ('MyPDFKitView.m', '    [super setDocument:document];\n    [TSPreviewScrollerKeeper installInView:self];\n',
         '    [super setDocument:document];\n'),
@@ -357,6 +362,30 @@ int main(int argc, char **argv) { @autoreleasepool {
         } else
             Check(fabs(moved[1] - moved[0]) <= 0.5, [NSString stringWithFormat:
                   @"full-size window: the keeper leaves the view to PDFKit (%.2f and %.2fpt)", moved[1], moved[0]]);
+        // Below unit scale the band is already in screen points, so the visible height
+        // does not change and the keeper leaves PDFKit's place. Multiplying the band
+        // again makes the keeper move the text.
+        if (!strcmp(model, "system")) {
+            CGFloat places[2] = {0, 0}; BOOL crossed = YES;
+            for (int restore = 0; restore < 2; restore++) {
+                NSWindow *low = MakeGlassWindow(900, 700);
+                PDFView *zoomed = MakeView(low.contentView.bounds, document, NO, YES);
+                [low.contentView addSubview:zoomed]; [low layoutIfNeeded]; RunLoop();
+                TSPreviewChangeScale(zoomed, ^{ zoomed.scaleFactor = 1.2; }); RunLoop();
+                ScrollIntoPage(zoomed, 2, 200);
+                Mark marked = MarkAt(zoomed, 200);
+                if (restore) TSPreviewChangeScale(zoomed, ^{ zoomed.scaleFactor = 0.9; });
+                else zoomed.scaleFactor = 0.9;
+                RunLoop();
+                CGFloat mag = Scroll(zoomed).magnification;
+                CGFloat shown = mag > 1 ? Scroll(zoomed).contentInsets.top * mag : Scroll(zoomed).contentInsets.top;
+                crossed = crossed && mag < 1 && shown > 20;
+                places[restore] = Below(zoomed, marked);
+            }
+            Check(crossed && fabs(places[1] - places[0]) <= 2,
+                  [NSString stringWithFormat:@"below unit scale the keeper leaves PDFKit's place (%.2f and %.2f)",
+                   places[1], places[0]]);
+        }
     }
 
     // A view with content insets is left to PDFKit: the text noted while the scroller comes or
