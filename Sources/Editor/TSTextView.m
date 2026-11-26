@@ -2129,8 +2129,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	// clean up
 	NSInteger from, to;
 	NSRange insRange;
-	bool wasCompleted;
-	static NSUInteger textLocation = NSNotFound; // location of insertion point
+	static NSUInteger completionTextLocation = NSNotFound; // location of insertion point
 	if (self.document) {
 		from =replaceLocationLocal;
 		to = from + [newString length];
@@ -2139,7 +2138,6 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
      
 	}
 	// currentStringNew = [newString retain];
-	wasCompleted = YES;
 	// flash the new string
 	[self setSelectedRange: NSMakeRange(replaceLocationLocal, [newString length])];
 	[self display];
@@ -2148,10 +2146,10 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	insRange = [newString rangeOfString:@"#INS#" options:0];
 	// set the insertion point
 	if (insRange.location != NSNotFound) // position of #INS#
-		textLocation = replaceLocationLocal+insRange.location;
+		completionTextLocation = replaceLocationLocal+insRange.location;
 	else{
-		textLocation = replaceLocationLocal+[newString length];
-		[self setSelectedRange: NSMakeRange(textLocation,5)];
+		completionTextLocation = replaceLocationLocal+[newString length];
+		[self setSelectedRange: NSMakeRange(completionTextLocation,5)];
 	}
 }
 // End of the code added by Soheil Hassas Yeganeh

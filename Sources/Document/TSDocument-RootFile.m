@@ -54,8 +54,8 @@
 		// TODO: Consider using [obj isMemberOfClass:[TSDocument class]] here
 		if ([[obj windowNibName] isEqualToString:@"TSDocument"]) {
             BOOL isRootFileWindow = [SUD boolForKey:AutomaticUTF8MACtoUTF8ConversionKey] ?
-                                        [[[obj fileName] normalizedStringWithModifiedNFC] isEqualToString:[nameString normalizedStringWithModifiedNFC]] :
-                                        [[obj fileName] isEqualToString:nameString];
+                                        [[[[obj fileURL] path] normalizedStringWithModifiedNFC] isEqualToString:[nameString normalizedStringWithModifiedNFC]] :
+                                        [[[obj fileURL] path] isEqualToString:nameString];
 
             BOOL usingFullSplitWindow = NO;
             if (isRootFileWindow){
