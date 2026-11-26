@@ -750,6 +750,28 @@ int main(int argc,char **argv){@autoreleasepool{
   // Restore All empties the filtered list.
   sheetReply=nil;[pane restoreAll:nil];REQUIRE(sheetReply!=nil);sheetReply(NSAlertFirstButtonReturn);
   REQUIRE(pane.table.numberOfRows==0 && [pane.hint.stringValue isEqual:NSLocalizedString(@"No custom shortcuts.",@"")]);
+  // A saved key that another menu item takes leaves the default shown: not bold, not listed.
+  pane.customFilter.state=NSControlStateValueOff;[pane changeCustomFilter:pane.customFilter];
+  REQUIRE([store setKey:@"j" modifiers:C forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
+  REQUIRE([store commandIsCustomized:firstCommand] && isBold(shortcutCell([pane rowForCommand:firstCommand])));
+  dynamic.keyEquivalent=@"j";[coordinator refreshMenuAndMacros];
+  REQUIRE([store.unavailableCommands containsObject:firstCommand.path] && [TSShownBinding(first) isEqual:TSBinding(firstCommand.defaultKey,firstCommand.defaultModifiers)]);
+  REQUIRE(![store commandIsCustomized:firstCommand] && !isBold(shortcutCell([pane rowForCommand:firstCommand])));
+  pane.customFilter.state=NSControlStateValueOn;[pane changeCustomFilter:pane.customFilter];REQUIRE([pane rowForCommand:firstCommand]<0);
+  pane.customFilter.state=NSControlStateValueOff;[pane changeCustomFilter:pane.customFilter];
+  dynamic.keyEquivalent=@"d";[coordinator refreshMenuAndMacros];
+  REQUIRE([store commandIsCustomized:firstCommand] && isBold(shortcutCell([pane rowForCommand:firstCommand])));
+  // A command with no default whose key was set and removed again shows no key, as its default: not bold, not listed.
+  NSMenuItem *blank=Item(@"Blank",@"",0);[menu addItem:blank];[coordinator refreshMenuAndMacros];
+  TSShortcutCommand *blankCommand=nil;for(TSShortcutCommand *command in store.commands)if(command.item==blank)blankCommand=command;
+  REQUIRE(blankCommand!=nil && blankCommand.defaultKey.length==0);
+  REQUIRE([store setKey:@"b" modifiers:C|O forCommand:blankCommand]==nil);[coordinator refreshMenuAndMacros];
+  REQUIRE([store commandIsCustomized:blankCommand] && isBold(shortcutCell([pane rowForCommand:blankCommand])));
+  REQUIRE([store setKey:@"" modifiers:0 forCommand:blankCommand]==nil);[coordinator refreshMenuAndMacros];
+  REQUIRE(![store commandIsCustomized:blankCommand] && !isBold(shortcutCell([pane rowForCommand:blankCommand])));
+  pane.customFilter.state=NSControlStateValueOn;[pane changeCustomFilter:pane.customFilter];REQUIRE([pane rowForCommand:blankCommand]<0 && [pane rowForCommand:firstCommand]>=0);
+  pane.customFilter.state=NSControlStateValueOff;[pane changeCustomFilter:pane.customFilter];
+  [menu removeItem:blank];[coordinator refreshMenuAndMacros];
   // Search Settings shows the command it found, custom or not.
   REQUIRE([store setKey:@"k" modifiers:C forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
   pane.customFilter.state=NSControlStateValueOn;[pane changeCustomFilter:pane.customFilter];REQUIRE(pane.table.numberOfRows==1);

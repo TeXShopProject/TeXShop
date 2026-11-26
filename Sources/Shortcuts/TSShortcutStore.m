@@ -751,9 +751,12 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
 - (BOOL)commandYieldsDefault:(TSShortcutCommand *)command {
     return [TSYieldingDefaultCommands() containsObject:command.commandID];
 }
-// A command macOS keeps shows its own key, whatever was saved for it.
+// A command macOS keeps shows its own key, whatever was saved for it. A saved key that another
+// item or a macro has, and an empty key for a command with no default, leave the default shown.
 - (BOOL)commandIsCustomized:(TSShortcutCommand *)command {
-    return !command.managedBySystem && self.overrides[command.commandID] != nil;
+    if (command.managedBySystem || self.overrides[command.commandID] == nil) return NO;
+    TSShortcutBinding *shown = [self shownBindingForCommand:command];
+    return ![shown isEqual:[self shownDefaultForCommand:command]] && ![[self defaultBindingsForCommand:command] containsObject:shown];
 }
 - (nullable NSString *)macroNamingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
     TSShortcutBinding *wanted = TSBinding(key, flags);
