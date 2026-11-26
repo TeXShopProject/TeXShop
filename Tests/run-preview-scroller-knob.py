@@ -22,6 +22,18 @@ MUTATIONS = {
         '    NSScrollerKnobStyle style = invert ? NSScrollerKnobStyleLight : NSScrollerKnobStyleDark;\n',
         '    NSScrollerKnobStyle style = invert ? NSScrollerKnobStyleDark : NSScrollerKnobStyleLight;\n',
     ),
+    'fullscreen-gutter-stays-light': (
+        'TSPreviewAppearance.h',
+        '        if (TSPreviewFullScreenChromeIsDark(scrollView) && !invert) {\n'
+        '            subview.appearance = nil;\n'
+        '            subview.contentFilters = @[];\n'
+        '        } else {\n'
+        '            subview.appearance = light;\n'
+        '            subview.contentFilters = filters;\n'
+        '        }\n',
+        '        subview.appearance = light;\n'
+        '        subview.contentFilters = filters;\n',
+    ),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -72,6 +84,27 @@ int main(void) {
         TSApplyPreviewInversion(legacy, YES);
         check(legacy.scrollerKnobStyle == NSScrollerKnobStyleLight, "an inverted page has a light legacy knob");
         check(legacy.verticalScroller.knobStyle == NSScrollerKnobStyleLight && legacy.horizontalScroller.knobStyle == NSScrollerKnobStyleLight, "both inverted legacy knobs are light");
+        NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 420, 320)
+            styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+        NSScrollView *full = Scroll(NSScrollerStyleLegacy);
+        NSView *gutter = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 20, 200)];
+        [full addSubview:gutter];
+        [window.contentView addSubview:full];
+        TSApplyPreviewInversion(full, NO);
+        check([gutter.appearance.name isEqualToString:NSAppearanceNameAqua], "outside full screen the gutter is light");
+        TSPreviewUseDarkFullScreenChrome(window, YES);
+        check([window.appearance.name isEqualToString:NSAppearanceNameDarkAqua], "full screen uses the dark appearance");
+        check(gutter.appearance == nil, "full screen leaves the gutter on the dark window");
+        check(full.scrollerKnobStyle == NSScrollerKnobStyleDark, "a light page keeps a dark knob in full screen");
+        check(full.verticalScroller.appearance == nil && full.contentView.appearance == nil, "the scroller and the clip stay unset in full screen");
+        TSApplyPreviewInversion(full, YES);
+        check([gutter.appearance.name isEqualToString:NSAppearanceNameAqua], "an inverted page still draws the gutter light");
+        check(full.scrollerKnobStyle == NSScrollerKnobStyleLight, "an inverted page keeps a light knob in full screen");
+        TSApplyPreviewInversion(full, NO);
+        check(gutter.appearance == nil, "a light page in full screen keeps the gutter on the dark window");
+        TSPreviewUseDarkFullScreenChrome(window, NO);
+        check(window.appearance == nil, "leaving full screen follows the system");
+        check([gutter.appearance.name isEqualToString:NSAppearanceNameAqua], "leaving full screen draws the gutter light");
         printf("PASS: %d scroller knob checks\n", checks);
     }
     return 0;
