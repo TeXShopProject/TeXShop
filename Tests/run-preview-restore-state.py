@@ -36,6 +36,9 @@ MUTATIONS = {
     # #71 follow-up: a PDF opened by itself did not remember whether the drawer was out.
     'drawer-not-kept': ('window', '    NSInteger drawerState = [[(MyPDFKitView *)self.myPDFKitView drawer] state];', '    NSInteger drawerState = NSDrawerClosedState;'),
     'drawer-not-restored': ('window', '    if ([coder containsValueForKey:TSPreviewRestorationDrawerKey]) {', '    if (NO) {'),
+    # #71 follow-up: what the drawer shows of the outline after the next launch.
+    'drawer-layout-not-kept': ('window', '    if (drawerState.count)\n', '    if (NO)\n'),
+    'drawer-layout-not-restored': ('window', '        [one.outlineExpansion restoreState:drawerState];\n', ''),
     'frame-not-restored': ('window', '    if (frame.length)\n', '    if (NO)\n'),
     'old-state-taken': ('window', " || ![coder containsValueForKey:@\"TSPreviewFirstPageStyle\"]) return NO;", ') return NO;'),
     # The first audit: the pages came back unturned.
@@ -126,6 +129,7 @@ program = r'''
 #import "TSPreviewPanePlace.h"
 #import "TSPreviewScrollerKeeper.h"
 #import "TSLinkPreviewView.h"
+#import "TSOutlineExpansion.h"
 #import "TSLinkPreviewGeometry.h"
 #import "globals.h"
 
@@ -162,6 +166,7 @@ program = r'''
 }
 @property (weak) TestDocument *myDocument;
 @property BOOL oldUsed;
+@property (strong) TSOutlineExpansion *outlineExpansion;
 @property NSInteger handlingLink, arrangements, contentWidthFits, activations, otherViewObserved;
 - (void)applyPreviewArrangement;
 - (void)becomeActiveView;
@@ -294,6 +299,54 @@ static PDFDocument *book(NSInteger pages) {
 }
 
 // A Preview window as TeXShop opens it: not split, MultiPage, Fit to Window.
+
+// The drawer's outline in a split view above the search results, with an outline of 30 entries
+// that have a child each when open; never shown.
+@interface TestOutlineSource : NSObject <NSOutlineViewDataSource>
+@property (strong) PDFOutline *root;
+@end
+@implementation TestOutlineSource
+- (instancetype)init {
+    self = [super init];
+    self.root = [[PDFOutline alloc] init];
+    for (int i = 0; i < 30; i++) {
+        PDFOutline *chapter = [[PDFOutline alloc] init];
+        chapter.label = [NSString stringWithFormat:@"Chapter %d", i];
+        PDFOutline *section = [[PDFOutline alloc] init];
+        section.label = [NSString stringWithFormat:@"Section %d", i];
+        [chapter insertChild:section atIndex:0];
+        [self.root insertChild:chapter atIndex:(NSUInteger)i];
+    }
+    return self;
+}
+- (NSInteger)outlineView:(NSOutlineView *)v numberOfChildrenOfItem:(id)item { return item ? [(PDFOutline *)item numberOfChildren] : [self.root numberOfChildren]; }
+- (id)outlineView:(NSOutlineView *)v child:(NSInteger)i ofItem:(id)item { return item ? [(PDFOutline *)item childAtIndex:i] : [self.root childAtIndex:i]; }
+- (BOOL)outlineView:(NSOutlineView *)v isItemExpandable:(id)item { return [(PDFOutline *)item numberOfChildren] > 0; }
+- (id)outlineView:(NSOutlineView *)v objectValueForTableColumn:(NSTableColumn *)c byItem:(id)item { return [(PDFOutline *)item label]; }
+@end
+static NSOutlineView *drawerOutline(TestOutlineSource *source, NSScrollView **scrollOut) {
+    NSSplitView *split = [[NSSplitView alloc] initWithFrame:NSMakeRect(0, 0, 240, 400)];
+    split.vertical = NO; split.dividerStyle = NSSplitViewDividerStyleThin;
+    NSView *top = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 240, 200)];
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:top.bounds];
+    scroll.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    NSOutlineView *outline = [[NSOutlineView alloc] initWithFrame:scroll.bounds];
+    NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"label"];
+    [outline addTableColumn:column]; outline.outlineTableColumn = column; outline.headerView = nil;
+    outline.dataSource = source;
+    scroll.documentView = outline;
+    [top addSubview:scroll];
+    [split addSubview:top];
+    [split addSubview:[[NSView alloc] initWithFrame:NSMakeRect(0, 0, 240, 200)]];
+    // A window that is never ordered front.
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:split.frame styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
+    window.releasedWhenClosed = NO;
+    window.contentView = split;
+    objc_setAssociatedObject(split, "keep", window, OBJC_ASSOCIATION_RETAIN);
+    *scrollOut = scroll;
+    return outline;
+}
+
 static TestWindow *preview(PDFDocument *document) {
     TestWindow *w = [[TestWindow alloc] initWithContentRect:NSMakeRect(100, 100, 700, 760)
         styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
@@ -537,6 +590,32 @@ int main(void) { @autoreleasepool {
         check([a1 previewRotation] == 90 && [again pageAtIndex:0].rotation == 90 && [again pageAtIndex:6].rotation == 90,
               @"the pages come back turned, once");
         samePlace(one, a1, @"turned pages");
+    }
+
+    {   // The drawer's outline: open sections, scroll position and the divider come back with the Preview (#71).
+        TestWindow *before = preview(pdf);
+        TestOutlineSource *sourceA = [TestOutlineSource new], *sourceB = [TestOutlineSource new];
+        NSScrollView *scrollA = nil, *scrollB = nil;
+        NSOutlineView *outlineA = drawerOutline(sourceA, &scrollA), *outlineB = drawerOutline(sourceB, &scrollB);
+        MyPDFKitView *p1 = (MyPDFKitView *)before.myPDFKitView;
+        p1.outlineExpansion = [[TSOutlineExpansion alloc] initWithOutlineView:outlineA];
+        [p1.outlineExpansion reloadOutline];
+        [outlineA expandItem:[outlineA child:7 ofItem:nil]];
+        [outlineA expandItem:[outlineA child:2 ofItem:nil]];
+        NSSplitView *splitA = (NSSplitView *)scrollA.superview.superview;
+        [splitA setPosition:280 ofDividerAtIndex:0];
+        NSData *state = archive(^(NSKeyedArchiver *a) { [before encodePreviewStateWithCoder:a]; });
+        TestWindow *after = preview(pdf);
+        MyPDFKitView *a1 = (MyPDFKitView *)after.myPDFKitView;
+        a1.outlineExpansion = [[TSOutlineExpansion alloc] initWithOutlineView:outlineB];
+        [a1.outlineExpansion reloadOutline];
+        check(outlineB.numberOfRows == 30, @"fixture: the outline is closed");
+        [after restorePreviewStateWithCoder:unarchiver(state)]; pump();
+        check([outlineB isItemExpanded:[outlineB child:7 ofItem:nil]] && [outlineB isItemExpanded:[outlineB child:2 ofItem:nil]] && ![outlineB isItemExpanded:[outlineB child:3 ofItem:nil]],
+              @"the open sections of the drawer's outline come back");
+        NSSplitView *splitB = (NSSplitView *)scrollB.superview.superview;
+        check(fabs(NSHeight(splitB.subviews[0].frame) - NSHeight(splitA.subviews[0].frame)) < 1.5 && NSHeight(splitA.subviews[0].frame) > 250,
+              [NSString stringWithFormat:@"the divider of the drawer comes back (%.1f, was %.1f)", NSHeight(splitB.subviews[0].frame), NSHeight(splitA.subviews[0].frame)]);
     }
 
     {   // The Preview window of a PDF opened by itself keeps its file and frame; a source's does not.
@@ -836,7 +915,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-restore-state-') as directory:
     (temp / 'TSLinkPreviewView.m').write_text(popup_source, encoding='latin1')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     '-I', str(root / 'Tests'), *include_args(root), str(temp / 'test.m'),
-                    str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m'), str(temp / 'TSLinkPreviewView.m'),
+                    str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m'), str(root / 'Sources/Preview/TSOutlineExpansion.m'), str(temp / 'TSLinkPreviewView.m'),
                     str(root / 'Sources/Windows/TSDocumentWindowGlass.m'), '-o', str(temp / 'test')], check=True)
     home = temp / 'home'
     (home / 'Library' / 'Preferences').mkdir(parents=True)

@@ -41,6 +41,7 @@
 #import "TSDocument.h"
 #import "MyPDFView.h"
 #import "MyPDFKitView.h"
+#import "TSOutlineExpansion.h"
 #import "globals.h"
 #import "TSPreviewSplitDivider.h"
 #import "TSToolbarController.h"
@@ -1828,6 +1829,10 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
     MyPDFKitView *first = (MyPDFKitView *)self.myPDFKitView, *second = (MyPDFKitView *)self.myPDFKitView2;
     if (![[first document] pageCount]) return;
     [first encodePreviewStateWithCoder:coder prefix:@"TSPreviewFirst"];
+    // What the drawer shows of the outline: open entries, scroll position, divider above the search results.
+    NSDictionary *drawerState = [first.outlineExpansion restorableState];
+    if (drawerState.count)
+        [coder encodeObject:drawerState forKey:@"TSPreviewDrawerLayout"];
     [coder encodeInteger:[first previewRotation] forKey:@"TSPreviewRotation"];
     [coder encodeInteger:TSPreviewOverrideCode(self.myDocument.previewDirectionOverride) forKey:@"TSPreviewDirection"];
     [coder encodeInteger:TSPreviewOverrideCode(self.myDocument.previewBookOverride) forKey:@"TSPreviewBook"];
@@ -1885,6 +1890,9 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
             secondInUse = [coder decodeBoolForKey:@"TSPreviewSecondInUse"];
         }
     }
+    NSDictionary *drawerState = [coder decodeObjectOfClasses:[NSSet setWithObjects:[NSDictionary class], [NSArray class],
+                                                               [NSString class], [NSNumber class], nil]
+                                                      forKey:@"TSPreviewDrawerLayout"];
     // The places and pinned popups are put back once the window and its parts are laid out.
     __weak TSPreviewWindow *weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1892,6 +1900,9 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
         if (!window) return;
         [window layoutIfNeeded];
         MyPDFKitView *one = (MyPDFKitView *)window.myPDFKitView, *two = (MyPDFKitView *)window.myPDFKitView2;
+        // The outline of the drawer is shared by the parts; each keeps its own record of the open entries.
+        [two.outlineExpansion restoreState:drawerState];
+        [one.outlineExpansion restoreState:drawerState];
         [one finishRestoringPreview];
         if (window.windowIsSplit) {
             if (secondRestoring)

@@ -110,11 +110,16 @@ static NSString *const TSOutlineKeySeparator = @"\x1E";
 
 - (void)reloadOutline
 {
+    NSClipView *clipView = _outlineView.enclosingScrollView.contentView;
+    [self reloadOutlineScrollingTo:clipView.bounds.origin];
+}
+
+- (void)reloadOutlineScrollingTo:(NSPoint)origin
+{
     NSOutlineView *outlineView = _outlineView;
     if (outlineView == nil)
         return;
     NSClipView *clipView = outlineView.enclosingScrollView.contentView;
-    NSPoint origin = clipView.bounds.origin;
 
     _reloading = YES;
     [outlineView reloadData];
@@ -135,6 +140,69 @@ static NSString *const TSOutlineKeySeparator = @"\x1E";
         [clipView scrollToPoint:bounds.origin];
         [outlineView.enclosingScrollView reflectScrolledClipView:clipView];
     }
+}
+
+// The pane of the drawer's split view that holds the outline, and that split view.
+- (NSSplitView *)splitViewAroundOutline:(NSView **)pane
+{
+    for (NSView *view = _outlineView; view.superview != nil; view = view.superview) {
+        if ([view.superview isKindOfClass:[NSSplitView class]]) {
+            if (pane) *pane = view;
+            return (NSSplitView *)view.superview;
+        }
+    }
+    return nil;
+}
+
+- (NSDictionary *)restorableState
+{
+    NSOutlineView *outlineView = _outlineView;
+    if (outlineView == nil)
+        return @{};
+    NSMutableDictionary *state = [NSMutableDictionary dictionary];
+    state[@"expanded"] = [[_expandedKeys allObjects] sortedArrayUsingSelector:@selector(compare:)];
+    NSClipView *clipView = outlineView.enclosingScrollView.contentView;
+    if (clipView != nil)
+        state[@"scrollY"] = @(clipView.bounds.origin.y);
+    NSView *pane = nil;
+    NSSplitView *split = [self splitViewAroundOutline:&pane];
+    if (split != nil && split.subviews.count >= 2) {
+        NSRect first = split.subviews[0].frame, second = split.subviews[1].frame;
+        CGFloat one = split.isVertical ? NSWidth(first) : NSHeight(first);
+        CGFloat two = split.isVertical ? NSWidth(second) : NSHeight(second);
+        if (one + two > 0 && split.subviews[0] == pane)
+            state[@"share"] = @(one / (one + two));
+    }
+    return state;
+}
+
+- (void)restoreState:(NSDictionary *)state
+{
+    if (![state isKindOfClass:[NSDictionary class]] || state.count == 0 || _outlineView == nil)
+        return;
+    NSArray *expanded = state[@"expanded"];
+    if ([expanded isKindOfClass:[NSArray class]]) {
+        [_expandedKeys removeAllObjects];
+        for (id key in expanded)
+            if ([key isKindOfClass:[NSString class]])
+                [_expandedKeys addObject:key];
+    }
+    // The divider first, as the position that can be scrolled to depends on the room of the outline.
+    NSNumber *share = state[@"share"];
+    NSView *pane = nil;
+    NSSplitView *split = [self splitViewAroundOutline:&pane];
+    if ([share isKindOfClass:[NSNumber class]] && split != nil && split.subviews.count >= 2
+        && split.subviews[0] == pane && share.doubleValue >= 0 && share.doubleValue <= 1) {
+        CGFloat whole = (split.isVertical ? NSWidth(split.bounds) : NSHeight(split.bounds)) - split.dividerThickness;
+        [split setPosition:round(whole * share.doubleValue) ofDividerAtIndex:0];
+        [split adjustSubviews];
+    }
+    NSClipView *clipView = _outlineView.enclosingScrollView.contentView;
+    NSPoint origin = clipView.bounds.origin;
+    NSNumber *scrollY = state[@"scrollY"];
+    if ([scrollY isKindOfClass:[NSNumber class]])
+        origin.y = scrollY.doubleValue;
+    [self reloadOutlineScrollingTo:origin];
 }
 
 @end

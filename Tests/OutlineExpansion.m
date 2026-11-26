@@ -87,6 +87,38 @@ static void Toggle(NSOutlineView *v, NSString *label, NSInteger nth, BOOL open)
     if (open) [v expandItem:item]; else [v collapseItem:item];
 }
 
+
+// The drawer: the outline above, the search results below, in a split view (#71).
+typedef struct { __unsafe_unretained NSSplitView *split; __unsafe_unretained NSScrollView *scroll; __unsafe_unretained NSOutlineView *outline; } DrawerParts;
+static NSSplitView *MakeDrawer(OutlineSource *source, NSOutlineView **outlineOut, NSScrollView **scrollOut)
+{
+    NSSplitView *split = [[NSSplitView alloc] initWithFrame:NSMakeRect(0, 0, 240, 400)];
+    split.vertical = NO;
+    split.dividerStyle = NSSplitViewDividerStyleThin;
+    NSView *top = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 240, 200)];
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:top.bounds];
+    scroll.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    NSOutlineView *outline = [[NSOutlineView alloc] initWithFrame:scroll.bounds];
+    NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"label"];
+    column.width = 220;
+    [outline addTableColumn:column];
+    outline.outlineTableColumn = column;
+    outline.headerView = nil;
+    outline.dataSource = source;
+    scroll.documentView = outline;
+    [top addSubview:scroll];
+    NSView *bottom = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 240, 200)];
+    [split addSubview:top];
+    [split addSubview:bottom];
+    // A window that is never ordered front.
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:split.frame styleMask:NSWindowStyleMaskBorderless
+                                                     backing:NSBackingStoreBuffered defer:NO];
+    window.releasedWhenClosed = NO;
+    window.contentView = split;
+    *outlineOut = outline; *scrollOut = scroll;
+    return split;
+}
+
 int main(int argc, char **argv)
 {
     @autoreleasepool {
@@ -221,6 +253,60 @@ int main(int argc, char **argv)
             CHECK(before.count > top && [Rows(view) isEqual:before],
                   "%s: %ld rows with an open chapter and section, the same after reading the PDF again",
                   url.lastPathComponent.UTF8String, (long)before.count);
+        }
+
+        // 10. The drawer's state comes back after the next launch: open entries, scroll position and the
+        // divider between the outline and the search results (#71).
+        {
+            NSMutableArray *many = [NSMutableArray array];
+            for (int i = 1; i <= 40; i++)
+                [many addObject:@[[NSString stringWithFormat:@"Chapter %d", i], @[@[[NSString stringWithFormat:@"Section %d.1", i], @[@"Detail"]], @"Last"]]];
+            OutlineSource *one = [OutlineSource new], *two = [OutlineSource new];
+            NSOutlineView *outlineA, *outlineB; NSScrollView *scrollA, *scrollB;
+            NSSplitView *splitA = MakeDrawer(one, &outlineA, &scrollA), *splitB = MakeDrawer(two, &outlineB, &scrollB);
+            TSOutlineExpansion *a = [[TSOutlineExpansion alloc] initWithOutlineView:outlineA];
+            TSOutlineExpansion *b = [[TSOutlineExpansion alloc] initWithOutlineView:outlineB];
+            one.root = Tree(many); [a reloadOutline];
+            [splitA setPosition:300 ofDividerAtIndex:0]; [splitA adjustSubviews];
+            Toggle(outlineA, @"Chapter 30", 0, YES);
+            Toggle(outlineA, @"Section 30.1", 0, YES);
+            Toggle(outlineA, @"Chapter 12", 0, YES);
+            NSClipView *clipA = scrollA.contentView;
+            [clipA scrollToPoint:NSMakePoint(0, 400)]; [scrollA reflectScrolledClipView:clipA];
+            NSDictionary *state = [a restorableState];
+            // Through a keyed archive that requires secure coding, as the window's restorable state does.
+            NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initRequiringSecureCoding:YES];
+            [archiver encodeObject:state forKey:@"state"];
+            [archiver finishEncoding];
+            NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:archiver.encodedData error:NULL];
+            unarchiver.requiresSecureCoding = YES;
+            NSDictionary *again = [unarchiver decodeObjectOfClasses:[NSSet setWithObjects:[NSDictionary class], [NSArray class],
+                                       [NSString class], [NSNumber class], nil] forKey:@"state"];
+            CHECK(again.count == 3, "the drawer's state has the open entries, the scroll position and the divider");
+            // A new window: the outline is built again, all closed, the divider in the middle.
+            two.root = Tree(many); [b reloadOutline];
+            CHECK([Rows(outlineB) count] == 40, "fixture: the new outline is closed");
+            [b restoreState:again];
+            CHECK([outlineB isItemExpanded:Find(outlineB, @"Chapter 30", 0)] && [outlineB isItemExpanded:Find(outlineB, @"Section 30.1", 0)]
+                  && [outlineB isItemExpanded:Find(outlineB, @"Chapter 12", 0)] && ![outlineB isItemExpanded:Find(outlineB, @"Chapter 1", 0)],
+                  "the open sections and subsections come back open");
+            CHECK(fabs(scrollB.contentView.bounds.origin.y - clipA.bounds.origin.y) < 0.5 && clipA.bounds.origin.y > 0,
+                  "the scroll position of the outline comes back (%.1f, was %.1f)", scrollB.contentView.bounds.origin.y, clipA.bounds.origin.y);
+            CHECK(fabs(NSHeight(splitB.subviews[0].frame) - NSHeight(splitA.subviews[0].frame)) < 1.5 && NSHeight(splitA.subviews[0].frame) > 250,
+                  "the divider between the outline and the search results comes back (%.1f, was %.1f)",
+                  NSHeight(splitB.subviews[0].frame), NSHeight(splitA.subviews[0].frame));
+            // The PDF changed meanwhile: what is gone stays closed, and nothing breaks without a state.
+            OutlineSource *three = [OutlineSource new];
+            NSOutlineView *outlineC; NSScrollView *scrollC;
+            NSSplitView *splitC = MakeDrawer(three, &outlineC, &scrollC);
+            TSOutlineExpansion *c = [[TSOutlineExpansion alloc] initWithOutlineView:outlineC];
+            three.root = Tree([many subarrayWithRange:NSMakeRange(0, 20)]); [c reloadOutline];
+            [c restoreState:again];
+            CHECK([Rows(outlineC) count] == 20 + 2 && [outlineC isItemExpanded:Find(outlineC, @"Chapter 12", 0)],
+                  "entries of the old PDF that are gone stay closed");
+            [c restoreState:@{}]; [c restoreState:nil];
+            CHECK([Rows(outlineC) count] == 20 + 2, "an empty state changes nothing");
+            (void)splitC;
         }
     }
     printf(failures ? "%d failed\n" : "all passed\n", failures);

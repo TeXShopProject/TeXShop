@@ -30,6 +30,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSSet<NSString *> *expandedKeys;
 
+/// What the drawer shows of the outline, as a property list: the open entries, the scroll
+/// position and the share of the drawer that the outline takes above the search results.
+/// It is kept with a window's restorable state (#71).
+- (NSDictionary *)restorableState;
+
+/// Shows the outline as described by a state made by -restorableState, also for a PDF that is
+/// not the one it was made from: entries that are no longer there stay closed.
+- (void)restoreState:(nullable NSDictionary *)state;
+
 @end
 
 NS_ASSUME_NONNULL_END

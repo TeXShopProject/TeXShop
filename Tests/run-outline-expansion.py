@@ -17,6 +17,12 @@ MUTATIONS = {
                      '    // as NSOutlineView does for items it already knows.\n'),
     'keep-closed': ('    [_expandedKeys removeObject:', '    [_expandedKeys member:'),
     'forget-on-parent-close': ('    if (parent != nil && ![_outlineView isItemExpanded:parent] && !closingAll)\n        return;\n', ''),
+    # #71: the drawer's state after the next launch.
+    'state-keys-lost': ('        [_expandedKeys removeAllObjects];\n', '        return;\n'),
+    'state-scroll-lost': ('        origin.y = scrollY.doubleValue;\n', '        ;\n'),
+    'state-divider-lost': ('        [split setPosition:round(whole * share.doubleValue) ofDividerAtIndex:0];\n', ''),
+    'state-divider-not-kept': ('            state[@"share"] = @(one / (one + two));\n', '            ;\n'),
+    'state-keys-not-kept': ('    state[@"expanded"] = [[_expandedKeys allObjects] sortedArrayUsingSelector:@selector(compare:)];\n', ''),
     'option-ignored': ('&& !closingAll)', ')'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
