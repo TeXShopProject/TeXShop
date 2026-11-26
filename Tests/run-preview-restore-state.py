@@ -33,6 +33,9 @@ MUTATIONS = {
     'ends-ignored': ('window', '            if ([coder containsValueForKey:@"TSPreviewSplitShare"] && share >= 0 && share <= 1) {', '            if (share > 0 && share < 1) {'),
     'places-not-restored': ('window', '        [one finishRestoringPreview];\n', ''),
     'arrangement-lost': ('window', '    if ([coder containsValueForKey:@"TSPreviewDirection"]) {', '    if (NO) {'),
+    # #71 follow-up: a PDF opened by itself did not remember whether the drawer was out.
+    'drawer-not-kept': ('window', '    NSInteger drawerState = [[(MyPDFKitView *)self.myPDFKitView drawer] state];', '    NSInteger drawerState = NSDrawerClosedState;'),
+    'drawer-not-restored': ('window', '    if ([coder containsValueForKey:TSPreviewRestorationDrawerKey]) {', '    if (NO) {'),
     'frame-not-restored': ('window', '    if (frame.length)\n', '    if (NO)\n'),
     'old-state-taken': ('window', " || ![coder containsValueForKey:@\"TSPreviewFirstPageStyle\"]) return NO;", ') return NO;'),
     # The first audit: the pages came back unturned.
@@ -118,6 +121,7 @@ if args.mutation:
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
+#import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
 #import "TSPreviewPanePlace.h"
 #import "TSPreviewScrollerKeeper.h"
@@ -191,7 +195,29 @@ program = r'''
 #define TSPreviewWindow TestWindow
 static void TSSplitToggleItemsFollowSplit(void) {}
 
+// The outline drawer: only whether it is out matters here.
+@interface TestDrawer : NSObject
+@property NSInteger state;
+- (void)open;
+- (void)close;
+@end
+@implementation TestDrawer
+- (void)open { self.state = NSDrawerOpenState; }
+- (void)close { self.state = NSDrawerClosedState; }
+@end
+static TestDrawer *drawerOf(MyPDFKitView *v) {
+    static const void *key = &key;
+    TestDrawer *d = objc_getAssociatedObject(v, key);
+    if (!d) { d = [TestDrawer new]; objc_setAssociatedObject(v, key, d, OBJC_ASSOCIATION_RETAIN); }
+    return d;
+}
+
+// Fit to Content Width's measuring (#62) is not under test here.
+void TSContentWidthNoteDrawingDiverged(PDFDocument *document) {}
+
 @implementation MyPDFKitView
+- (void)measureContentLater {}
+- (NSDrawer *)drawer { return (NSDrawer *)drawerOf(self); }
 - (void)setupPageStyle {
     switch (pageStyle) {
         case PDF_SINGLE_PAGE_STYLE: self.displayMode = kPDFDisplaySinglePage; break;
@@ -531,6 +557,20 @@ int main(void) { @autoreleasepool {
         check(NSEqualRects(after.frame, before.frame), [NSString stringWithFormat:@"the window comes back at its frame (%@, not %@)",
                                                         NSStringFromRect(before.frame), NSStringFromRect(after.frame)]);
         check([unarchiver(own) containsValueForKey:@"TSPreviewFirstPageStyle"], @"a PDF opened by itself keeps the state of its Preview");
+        // Whether the outline drawer was out comes back too, in both directions.
+        for (NSNumber *out in @[@YES, @NO]) {
+            TestWindow *source = preview(pdf);
+            source.restorationClass = [TestWindow class];
+            if (out.boolValue) [drawerOf((MyPDFKitView *)source.myPDFKitView) open]; else [drawerOf((MyPDFKitView *)source.myPDFKitView) close];
+            NSData *kept = archive(^(NSKeyedArchiver *a) { [source encodeRestorableStateWithCoder:a]; });
+            TestWindow *target = preview(pdf);
+            target.restorationClass = [TestWindow class];
+            // The state it starts in, which the settings may have chosen, is the opposite one.
+            if (out.boolValue) [drawerOf((MyPDFKitView *)target.myPDFKitView) close]; else [drawerOf((MyPDFKitView *)target.myPDFKitView) open];
+            [target restoreStateWithCoder:unarchiver(kept)]; pump();
+            check((drawerOf((MyPDFKitView *)target.myPDFKitView).state == NSDrawerOpenState) == out.boolValue,
+                  [NSString stringWithFormat:@"the drawer comes back %@", out.boolValue ? @"out" : @"in"]);
+        }
     }
     {   // A popup away from its place, because its page is not shown in Single Page display, goes back to
         // its place on its page after the next launch too (#35).
