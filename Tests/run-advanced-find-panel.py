@@ -34,7 +34,7 @@ MUTATIONS = {
         '\t[super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];\n\t[TSAdvancedFindHighlights drawInLayoutManager:self forGlyphRange:glyphsToShow atPoint:origin];',
         '\t[TSAdvancedFindHighlights drawInLayoutManager:self forGlyphRange:glyphsToShow atPoint:origin];\n\t[super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];'),
     'highlights do not follow edits': ('TSAdvancedFindHighlights.m',
-        '    if (!(storage.editedMask & NSTextStorageEditedCharacters) || self.ranges.count == 0)', '    if (YES)'),
+        '    if (!(storage.editedMask & NSTextStorageEditedCharacters))\n        return;\n', '    if (YES)\n        return;\n'),
     'TSLayoutManager draws no highlights': ('TSLayoutManager.m',
         '\t[TSAdvancedFindHighlights drawInLayoutManager:self forGlyphRange:glyphsToShow atPoint:origin];\n', ''),
     'replacements are not registered for undo': ('TSAdvancedFindController.m',
