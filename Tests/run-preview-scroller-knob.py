@@ -39,6 +39,11 @@ MUTATIONS = {
         '    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO);\n}\n\n\n- (NSDrawer *)drawer',
         '}\n\n\n- (NSDrawer *)drawer',
     ),
+    'fullscreen-paper-follows-window': (
+        'MyPDFKitView.m',
+        '        choosing = NSApp.effectiveAppearance;\n',
+        '        choosing = self.effectiveAppearance;\n',
+    ),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -65,7 +70,13 @@ def fullscreen_product_calls(source):
         return False
     if leave.find(clear) > leave.find('exitFullScreen:') or leave.rfind(clear) < leave.find('exitFullScreen:'):
         return False
-    return 'TSPreviewFullScreenDarkKey' in paper and 'NSApp.effectiveAppearance' in paper
+    # The paper call also names NSApp.effectiveAppearance. Require the assignment
+    # that runs only while the full-screen flag is set.
+    paper_guard = (
+        'if (objc_getAssociatedObject(self.window, TSPreviewFullScreenDarkKey) != nil)\n'
+        '        choosing = NSApp.effectiveAppearance;'
+    )
+    return paper_guard in paper
 
 if args.mutation:
     name, old, new = MUTATIONS[args.mutation]
