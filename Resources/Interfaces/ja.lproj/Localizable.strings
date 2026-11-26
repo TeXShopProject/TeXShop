@@ -239,6 +239,13 @@
 
 "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "TeX LiveかMacTeXをインストールしてから、設定の「タイプセット」で「パスの自動検出」を選んでください。";
 "Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscriptが見つかりませんでした。Ghostscriptをインストールしてから、設定の「タイプセット」で「パスの自動検出」を選んでください。";
+"The conversion to PDF failed." = "PDFへの変換に失敗しました。";
+"%@ did not finish in %d seconds and was stopped." = "%1$@ が%2$d秒以内に終わらなかったため、停止しました。";
+"%@ ended with an error." = "%@ がエラーで終了しました。";
+"%@ could not be started." = "%@ を起動できませんでした。";
+"dvips was not found. Choose Detect Paths in Settings > Typesetting." = "dvipsが見つかりませんでした。設定の「タイプセット」で「パスの自動検出」を選んでください。";
+"dvipdfmx was not found. Choose Detect Paths in Settings > Typesetting." = "dvipdfmxが見つかりませんでした。設定の「タイプセット」で「パスの自動検出」を選んでください。";
+"The tool that converts PostScript to PDF is missing from the application." = "PostScriptをPDFに変換するアプリ内のツールが見つかりません。";
 
 
 "This key is reserved for command completion." = "予約済みのキーです（コマンド補完の呼び出し）。";

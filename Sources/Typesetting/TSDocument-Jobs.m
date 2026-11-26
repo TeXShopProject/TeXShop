@@ -540,6 +540,15 @@ for(NSString *key in enu)
 // A conversion of a .dvi, .ps or .eps file that does not end within this time is stopped.
 static const NSTimeInterval TSConversionTimeout = 120.0;
 
+// The conversion of a .dvi by dvips and Ghostscript. Arguments: $1 name without extension, $2 the .dvi, $3 the wrapper
+// of ps2pdf, $4 the Ghostscript folder, $5 dvips. The PostScript is made in a folder of its own that is removed in the
+// end, so that a .ps of the user with the same name is never written or removed. Ghostscript writes <name>.pdf in the
+// working directory, which is the folder of the PDF.
+static NSString *const TSDvipsConversionScript =
+    @"t=$(mktemp -d \"${TMPDIR:-/tmp}/TeXShop-convert.XXXXXX\") || exit 1; "
+    @"trap 'rm -rf \"$t\"' EXIT; trap 'exit 143' TERM INT; "
+    @"\"$5\" -q -o \"$t/$1.ps\" \"$2\" && \"$3\" Ghostscript \"$4\" \"$t/$1.ps\"";
+
 // Tell the user that a conversion failed, with the end of what the tool printed.
 - (void)showConversionFailure:(NSString *)reason output:(NSString *)output
 {
@@ -627,10 +636,23 @@ static const NSTimeInterval TSConversionTimeout = 120.0;
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(TSConversionTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         TSDocument *strongSelf = weakSelf;
-        if ((strongSelf != nil) && (task == strongSelf.texTask) && [task isRunning]) {
-            timedOut = YES;
-            [strongSelf stopJobTask:task];
-        }
+        if ((strongSelf == nil) || (task != strongSelf.texTask) || ![task isRunning])
+            return;
+        timedOut = YES;
+        // Stop it without waiting on the main thread: TERM now, KILL half a second later if it is still there.
+        pid_t pid = [task processIdentifier];
+        pid_t group = (pid > 1) ? getpgid(pid) : 0;
+        BOOL ownGroup = (group == pid) && (group != getpgrp());
+        if (ownGroup)
+            kill(-group, SIGTERM);
+        else
+            [task terminate];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (ownGroup && (kill(-group, 0) == 0))
+                kill(-group, SIGKILL);
+            if ([task isRunning] && (pid > 1))
+                kill(pid, SIGKILL);
+        });
     });
 }
 
@@ -726,19 +748,19 @@ static const NSTimeInterval TSConversionTimeout = 120.0;
 		if (TSEngineProfileMatchingSettings(SUD, &latexmk) == TSEngineProfileLaTeXDvipsGhostscript) {
 			NSString *dvips = [self conversionProgramNamed:@"dvips"];
 			NSString *wrapper = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
-			if ((dvips == nil) || (wrapper == nil)) {
+			if (dvips == nil) {
 				[self showConversionFailure:NSLocalizedString(@"dvips was not found. Choose Detect Paths in Settings > Typesetting.", @"") output:nil];
+				return;
+			}
+			if (wrapper == nil) {
+				[self showConversionFailure:NSLocalizedString(@"The tool that converts PostScript to PDF is missing from the application.", @"") output:nil];
 				return;
 			}
 			if (! [self ghostscriptIsAvailableAlsoIn: nil])
 				return;
 			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
-			// dvips writes <name>.ps next to the PDF; Ghostscript turns it into <name>.pdf; the .ps is removed in the end.
 			enginePath = @"/bin/sh";
-			[args addObjectsFromArray:@[@"-c",
-				@"trap 'rm -f \"$1.ps\"' EXIT; trap 'exit 143' TERM INT; "
-				@"\"$5\" -q -o \"$1.ps\" \"$2\" && \"$3\" Ghostscript \"$4\" \"$1.ps\"",
-				@"sh", [outputFolder stringByAppendingPathComponent:base], absoluteDvi, wrapper, gsPath ?: @"", dvips]];
+			[args addObjectsFromArray:@[@"-c", TSDvipsConversionScript, @"sh", base, absoluteDvi, wrapper, gsPath ?: @"", dvips]];
 		} else {
 			NSString *dvipdfmx = [self conversionProgramNamed:@"dvipdfmx"];
 			if (dvipdfmx == nil) {
