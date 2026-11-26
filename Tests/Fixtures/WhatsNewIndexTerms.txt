@@ -239,7 +239,6 @@ because
 become
 becomes
 before
-began
 begin
 beginning
 beginnings
@@ -263,6 +262,7 @@ bigger
 bin
 bindings
 bit
+blocking
 blue
 bookmarksnumbered
 books
@@ -477,7 +477,6 @@ decides
 decline
 decomposed
 decrypted
-decrypting
 default
 defaults
 defective
@@ -526,7 +525,6 @@ display
 displayed
 displaying
 displays
-distributed
 divider
 divides
 do
@@ -590,7 +588,6 @@ embarrassing
 emilio
 emphasize
 empire
-empty
 enable
 encoding
 encodings
@@ -610,6 +607,7 @@ entirely
 entries
 entry
 environment
+eps
 equations
 erases
 error
@@ -695,6 +693,7 @@ find
 finder's
 finds
 fine
+finish
 finster
 first
 fit
@@ -734,6 +733,7 @@ fourier
 fraction
 fractional
 free
+freezes
 french
 friend
 from
@@ -1392,6 +1392,7 @@ proves
 provide
 provided
 provides
+ps
 ps2pdf
 pspath
 purpose
@@ -1728,7 +1729,6 @@ surprises
 survey
 svb
 swap
-swift
 switch
 switched
 switches
