@@ -9661,8 +9661,11 @@ else
     [[self.myDocument myPdfKitView2] changePDFViewSizeTo:fullscreenResizeOption];
     [[self.myDocument myPdfKitView2] changePageStyleTo: fullscreenPageStyle];
 */
+    // Preview.app draws full screen dark even when the system is light. Set that
+    // before the layout change, and again after it, so a new scroll view follows.
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, YES);
     [self.myDocument enterFullScreen: notification];
-
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, YES);
 }
 
 
@@ -9677,7 +9680,9 @@ else
     [[self.myDocument myPdfKitView2] changePDFViewSizeTo: oldResizeOption];
     [[self.myDocument myPdfKitView2] changePageStyleTo:oldPageStyle];
 */
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO);
     [self.myDocument exitFullScreen: notification];
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO);
 }
 
 
@@ -9782,7 +9787,12 @@ else
 - (void)updatePreviewPaperColor
 {
     if (!_pdfViewReady) return;
-    BOOL dark = [[self.effectiveAppearance bestMatchFromAppearancesWithNames:
+    // Full screen forces a dark window. The paper still follows the system and the
+    // Appearance menu, so a light page is not recoloured by that window.
+    NSAppearance *choosing = self.effectiveAppearance;
+    if (objc_getAssociatedObject(self.window, TSPreviewFullScreenDarkKey) != nil)
+        choosing = NSApp.effectiveAppearance;
+    BOOL dark = [[choosing bestMatchFromAppearancesWithNames:
         @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     NSColor *themeColor = [[TSColorSupport sharedInstance] opaqueColorForKey:@"PreviewBackground"
         fromDictionary:(dark ? darkColors : liteColors) isWindowDark:dark];
