@@ -9685,6 +9685,14 @@ else
     TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO);
 }
 
+// The dark appearance is set before the transition. If the transition does not
+// finish, leaving full screen is not called, so clear it here.
+- (void)windowDidFailToEnterFullScreen:(NSNotification *)notification
+{
+    (void)notification;
+    TSPreviewUseDarkFullScreenChrome(self.myPDFWindow, NO);
+}
+
 
 - (NSDrawer *)drawer
 {
