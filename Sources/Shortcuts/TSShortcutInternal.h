@@ -66,6 +66,8 @@ FOUNDATION_EXPORT NSString * const TSShortcutLearningIdentifier;
 - (NSArray<TSShortcutBinding *> *)bindingsForMacroKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 // Edit › Complete Label or Citation Key: its default key gives way to a menu command or a macro.
 - (BOOL)commandYieldsDefault:(TSShortcutCommand *)command;
+// Whether a key was saved for the command, an empty one included: Restore Default and Restore All forget it.
+- (BOOL)commandIsCustomized:(TSShortcutCommand *)command;
 // The macro, as its file names its key, that has the key; nil when none.
 - (nullable NSString *)macroNamingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 @end

@@ -691,6 +691,74 @@ int main(int argc,char **argv){@autoreleasepool{
  sheetReply=nil;[pane applyCapturedShortcut:nil];REQUIRE(sheetReply!=nil);sheetReply(NSAlertSecondButtonReturn);
  REQUIRE([first.keyEquivalent isEqual:@"z"] && pane.editingCommand==nil);
  puts("PASS: confirmations are asynchronous sheets attached to Settings");
+ // Custom shortcuts (#76): bold in every list; the filter lists them, keeps one restored to its default
+ // until the filter or the search changes, and does not apply in key search.
+ {
+  [shell selectCategoryIdentifier:TSSettingsCategoryKeyboard];
+  if(pane.searchingByKey)[pane stopKeySearch];
+  pane.search.stringValue=@"";[pane controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:pane.search]];
+  TSShortcutStore *store=coordinator.store;
+  [store restoreAll];[coordinator refreshMenuAndMacros];
+  TSShortcutCommand *secondCommand=nil,*equalsCommand=nil;
+  for(TSShortcutCommand *command in store.commands){if(command.item==second)secondCommand=command;if(command.item==equals)equalsCommand=command;}
+  REQUIRE(secondCommand!=nil && equalsCommand!=nil);
+  NSInteger shortcutColumn=[pane.table columnWithIdentifier:@"shortcut"],all=pane.table.numberOfRows;
+  NSTextField *(^shortcutCell)(NSInteger)=^NSTextField *(NSInteger row){return (NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[(NSUInteger)shortcutColumn] row:row];};
+  BOOL (^isBold)(NSTextField *)=^BOOL(NSTextField *field){return [field isKindOfClass:NSTextField.class] && ([NSFontManager.sharedFontManager traitsOfFont:field.font]&NSBoldFontMask)!=0;};
+  REQUIRE(pane.customFilter.enabled && pane.customFilter.state==NSControlStateValueOff && [pane.customFilter.toolTip isEqual:NSLocalizedString(@"Show Only Custom Shortcuts",@"")]);
+  // With no custom shortcut, the filtered list is empty and says so.
+  pane.customFilter.state=NSControlStateValueOn;[pane changeCustomFilter:pane.customFilter];
+  REQUIRE(pane.table.numberOfRows==0 && [pane.hint.stringValue isEqual:NSLocalizedString(@"No custom shortcuts.",@"")]);
+  pane.customFilter.state=NSControlStateValueOff;[pane changeCustomFilter:pane.customFilter];
+  REQUIRE(pane.table.numberOfRows==all && ![pane.hint.stringValue isEqual:NSLocalizedString(@"No custom shortcuts.",@"")]);
+  // A changed key and a removed key are custom; both are bold, a default is not.
+  REQUIRE([store setKey:@"k" modifiers:C forCommand:firstCommand]==nil && [store setKey:@"" modifiers:0 forCommand:secondCommand]==nil);
+  [coordinator refreshMenuAndMacros];
+  REQUIRE([store commandIsCustomized:firstCommand] && [store commandIsCustomized:secondCommand] && ![store commandIsCustomized:equalsCommand]);
+  REQUIRE(isBold(shortcutCell([pane rowForCommand:firstCommand])) && isBold(shortcutCell([pane rowForCommand:secondCommand])) && !isBold(shortcutCell([pane rowForCommand:equalsCommand])));
+  REQUIRE(!isBold((NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:[pane rowForCommand:firstCommand]]));
+  pane.customFilter.state=NSControlStateValueOn;[pane changeCustomFilter:pane.customFilter];
+  REQUIRE(pane.table.numberOfRows==2 && [pane rowForCommand:firstCommand]>=0 && [pane rowForCommand:secondCommand]>=0 && [pane rowForCommand:equalsCommand]<0);
+  REQUIRE(![pane.hint.stringValue isEqual:NSLocalizedString(@"No custom shortcuts.",@"")]);
+  // A command restored to its default stays, no longer bold, until the search changes.
+  REQUIRE([store restoreCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
+  REQUIRE(pane.table.numberOfRows==2 && [pane rowForCommand:firstCommand]>=0 && !isBold(shortcutCell([pane rowForCommand:firstCommand])));
+  pane.search.stringValue=@"Second";[pane controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:pane.search]];
+  REQUIRE(pane.table.numberOfRows==1 && [pane rowForCommand:secondCommand]==0);
+  pane.search.stringValue=@"";[pane controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:pane.search]];
+  REQUIRE(pane.table.numberOfRows==1 && [pane rowForCommand:firstCommand]<0);
+  // A search that matches no custom shortcut leaves the list empty without the message.
+  pane.search.stringValue=@"Equals";[pane controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:pane.search]];
+  REQUIRE(pane.table.numberOfRows==0 && ![pane.hint.stringValue isEqual:NSLocalizedString(@"No custom shortcuts.",@"")]);
+  pane.search.stringValue=@"";[pane controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:pane.search]];
+  // ... or until the filter is turned off and on.
+  REQUIRE([store setKey:@"k" modifiers:C forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
+  REQUIRE(pane.table.numberOfRows==2);
+  REQUIRE([store restoreCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
+  REQUIRE(pane.table.numberOfRows==2);
+  pane.customFilter.state=NSControlStateValueOff;[pane changeCustomFilter:pane.customFilter];REQUIRE(pane.table.numberOfRows==all);
+  pane.customFilter.state=NSControlStateValueOn;[pane changeCustomFilter:pane.customFilter];REQUIRE(pane.table.numberOfRows==1);
+  // Key search lists every match, with custom keys bold; the filter is off there and comes back after it.
+  REQUIRE([store setKey:@"k" modifiers:C forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
+  pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];
+  REQUIRE(pane.searchingByKey && !pane.customFilter.enabled && pane.customFilter.state==NSControlStateValueOn && pane.table.numberOfRows>2 && [pane rowForCommand:equalsCommand]>=0);
+  fixtureCharacters=@"k";[shell.window performKeyEquivalent:Event(@"k",C,40)];
+  NSInteger matchRow=-1;for(NSInteger row=0;row<pane.table.numberOfRows;row++)if([pane matchAtRow:row].command==firstCommand)matchRow=row;
+  REQUIRE(matchRow>=0 && isBold(shortcutCell(matchRow)));
+  [pane stopKeySearch];
+  REQUIRE(pane.customFilter.enabled && pane.customFilter.state==NSControlStateValueOn && pane.table.numberOfRows==2);
+  // Restore All empties the filtered list.
+  sheetReply=nil;[pane restoreAll:nil];REQUIRE(sheetReply!=nil);sheetReply(NSAlertFirstButtonReturn);
+  REQUIRE(pane.table.numberOfRows==0 && [pane.hint.stringValue isEqual:NSLocalizedString(@"No custom shortcuts.",@"")]);
+  // Search Settings shows the command it found, custom or not.
+  REQUIRE([store setKey:@"k" modifiers:C forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
+  pane.customFilter.state=NSControlStateValueOn;[pane changeCustomFilter:pane.customFilter];REQUIRE(pane.table.numberOfRows==1);
+  [pane applySettingsQuery:@"Equals" targets:@[] filterCommands:YES];
+  REQUIRE(pane.customFilter.state==NSControlStateValueOff && pane.table.numberOfRows==1 && [pane rowForCommand:equalsCommand]==0);
+  [pane applySettingsQuery:@"" targets:@[] filterCommands:NO];REQUIRE(pane.table.numberOfRows==all);
+  REQUIRE([store setKey:@"z" modifiers:C forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
+  puts("PASS: custom shortcuts are bold, filtered, kept after a restore until the search or filter changes, and unfiltered in key search");
+ }
  // In-cell recording, as in Xcode's key bindings.
  {
   [shell selectCategoryIdentifier:TSSettingsCategoryKeyboard];
@@ -1122,6 +1190,8 @@ int main(int argc,char **argv){@autoreleasepool{
   CheckButtons(translated.view,translated.view);
   REQUIRE(NSContainsRect(translated.view.bounds,translated.table.enclosingScrollView.frame));
   REQUIRE(NSWidth(translated.searchMode.frame)+1>=translated.searchMode.intrinsicContentSize.width);
+  // The custom-shortcut filter sits whole between the search field and the search modes.
+  REQUIRE(NSWidth(translated.customFilter.frame)+.5>=translated.customFilter.intrinsicContentSize.width && NSMaxX(translated.search.frame)<=NSMinX(translated.customFilter.frame) && NSMaxX(translated.customFilter.frame)<=NSMinX(translated.searchMode.frame));
   // The line under the list shows the longest default and refusal texts whole, and the recording field shows the longest key.
   {
    [translated stopKeySearch];translated.search.stringValue=@"";[translated reloadCommands];

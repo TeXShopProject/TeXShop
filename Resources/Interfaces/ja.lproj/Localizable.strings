@@ -217,6 +217,8 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "システム設定で変えるときは、サイドバーで「アプリのショートカット」を選びます。";
 "Inactive for this key" = "このキーでは無効";
 "No command uses this key." = "このキーを使うコマンドはありません。";
+"Show Only Custom Shortcuts" = "カスタムショートカットのみを表示";
+"No custom shortcuts." = "カスタムショートカットはありません。";
 "Press a key" = "キーを押してください";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "ショートカットに使えないキーです。⌘か⌃と組み合わせるか、F1〜F20を使ってください。";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "地球儀（fn）キーを使うショートカットは、TeXShopのコマンドには割り当てられません。";
