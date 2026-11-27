@@ -82,6 +82,7 @@
 72
 74
 75
+76
 78
 8
 82
@@ -265,6 +266,7 @@ bindings
 bit
 blocking
 blue
+bold
 bookmarksnumbered
 books
 both
@@ -477,7 +479,6 @@ debugging
 decides
 decline
 decomposed
-decrypted
 default
 defaults
 defective
@@ -771,7 +772,6 @@ golden
 gone
 good
 google
-got
 goto
 gracefully
 gradually
@@ -1162,6 +1162,7 @@ name
 named
 names
 narrower
+narrows
 native
 natural
 near
@@ -1434,7 +1435,6 @@ recent
 recently
 recognize
 recommended
-recompiled
 recreate
 rect
 rectangle
