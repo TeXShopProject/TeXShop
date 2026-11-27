@@ -534,23 +534,8 @@
 /* File > New from Stationery: opens the Stationery folder in the Finder */
 "Show in Finder" = "在访达中显示";
 
-/* File > New from Stationery: the + button */
-"Add the Front Document as Stationery" = "将最前面的文稿添加为样板";
-
 /* File > New from Stationery: the - button */
 "Move the Stationery to the Trash" = "将样板移到废纸篓";
-
-/* File > New from Stationery: title of the sheet that adds the front document */
-"Add as Stationery" = "添加为样板";
-
-/* File > New from Stationery: label of the name of new stationery */
-"Name:" = "名称：";
-
-/* File > New from Stationery: label of the description of new stationery */
-"Description:" = "描述：";
-
-/* File > New from Stationery: adding a stationery with the name of another */
-"A stationery named “%@” already exists. Replace it?" = "名为“%@”的样板已存在。要替换它吗？";
 
 /* File > New from Stationery: asked before the - button removes a stationery */
 "Move “%@” to the Trash?" = "要将“%@”移到废纸篓吗？";
@@ -569,3 +554,24 @@
 
 /* File > New from Stationery: the name of a duplicated stationery */
 "%@ copy" = "%@ 副本";
+
+/* File > New from Stationery: the + button */
+"New Stationery" = "新建样板";
+
+/* File > New from Stationery: the name of a new, empty stationery */
+"Untitled Stationery" = "未命名";
+
+/* File > New from Stationery: contextual menu item that opens the stationery file */
+"Edit Stationery" = "编辑";
+
+/* File > New from Stationery: actions menu item that opens the stationery file */
+"Edit “%@”" = "编辑“%@”";
+
+/* File > New from Stationery: contextual menu item */
+"Rename Stationery" = "重新命名";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Rename “%@”" = "重新命名“%@”";
+
+/* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
+"Show “%@” in Finder" = "在访达中显示“%@”";

@@ -537,23 +537,8 @@
 /* File > New from Stationery: opens the Stationery folder in the Finder */
 "Show in Finder" = "Finder에서 보기";
 
-/* File > New from Stationery: the + button */
-"Add the Front Document as Stationery" = "맨 앞의 문서를 스테이셔너리로 추가";
-
 /* File > New from Stationery: the - button */
 "Move the Stationery to the Trash" = "스테이셔너리를 휴지통으로 이동";
-
-/* File > New from Stationery: title of the sheet that adds the front document */
-"Add as Stationery" = "스테이셔너리로 추가";
-
-/* File > New from Stationery: label of the name of new stationery */
-"Name:" = "이름:";
-
-/* File > New from Stationery: label of the description of new stationery */
-"Description:" = "설명:";
-
-/* File > New from Stationery: adding a stationery with the name of another */
-"A stationery named “%@” already exists. Replace it?" = "‘%@’ 이름의 스테이셔너리가 이미 있습니다. 대치하겠습니까?";
 
 /* File > New from Stationery: asked before the - button removes a stationery */
 "Move “%@” to the Trash?" = "‘%@’을(를) 휴지통으로 이동하겠습니까?";
@@ -572,3 +557,24 @@
 
 /* File > New from Stationery: the name of a duplicated stationery */
 "%@ copy" = "%@ 복사본";
+
+/* File > New from Stationery: the + button */
+"New Stationery" = "새로운 스테이셔너리";
+
+/* File > New from Stationery: the name of a new, empty stationery */
+"Untitled Stationery" = "무제";
+
+/* File > New from Stationery: contextual menu item that opens the stationery file */
+"Edit Stationery" = "편집";
+
+/* File > New from Stationery: actions menu item that opens the stationery file */
+"Edit “%@”" = "‘%@’ 편집";
+
+/* File > New from Stationery: contextual menu item */
+"Rename Stationery" = "이름 변경";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Rename “%@”" = "‘%@’ 이름 변경";
+
+/* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
+"Show “%@” in Finder" = "Finder에서 ‘%@’ 보기";

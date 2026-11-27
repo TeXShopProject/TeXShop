@@ -17,14 +17,9 @@
 @property (readonly, nonatomic) NSTableView *tableView;
 @property (readonly, nonatomic) NSButton *createButton;
 @property (readonly, nonatomic) NSButton *showInFinderButton;
-// + adds the front document as stationery; - moves the selected one to the Trash.
+// + adds an empty stationery and edits its name; - moves the selected one to the Trash.
 @property (readonly, nonatomic) NSButton *plusButton;
 @property (readonly, nonatomic) NSButton *minusButton;
-// The sheet of +, with the name and the description of the new stationery.
-@property (readonly, nonatomic) NSWindow *addSheet;
-@property (readonly, nonatomic) NSTextField *addNameField;
-@property (readonly, nonatomic) NSTextField *addDescriptionField;
-@property (readonly, nonatomic) NSButton *addButton;
 // File names, with their extension, and the description of each.
 @property (readonly, nonatomic) NSArray<NSString *> *fullSourceData;
 @property (readonly, nonatomic) NSArray<NSString *> *commentData;
@@ -35,8 +30,13 @@
 - (IBAction)okForStationeryPanel:(id)sender;
 - (IBAction)cancelForStationeryPanel:(id)sender;
 - (IBAction)showStationeryInFinder:(id)sender;
-- (IBAction)addFrontDocument:(id)sender;
+- (IBAction)addStationery:(id)sender;
 - (IBAction)removeSelectedStationery:(id)sender;
+// The actions menu at the bottom of the list, and the contextual menu of a row.
+- (IBAction)editStationery:(id)sender;
+- (IBAction)renameStationery:(id)sender;
+- (IBAction)duplicateStationery:(id)sender;
+- (IBAction)revealStationeryInFinder:(id)sender;
 // Reads the folder again, keeping the selected file selected when it is still there.
 - (void)reloadStationery;
 

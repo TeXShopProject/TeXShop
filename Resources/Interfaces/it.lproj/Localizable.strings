@@ -537,23 +537,8 @@
 /* File > New from Stationery: opens the Stationery folder in the Finder */
 "Show in Finder" = "Mostra nel Finder";
 
-/* File > New from Stationery: the + button */
-"Add the Front Document as Stationery" = "Aggiungi il documento in primo piano come modulo";
-
 /* File > New from Stationery: the - button */
 "Move the Stationery to the Trash" = "Sposta il modulo nel Cestino";
-
-/* File > New from Stationery: title of the sheet that adds the front document */
-"Add as Stationery" = "Aggiungi come modulo";
-
-/* File > New from Stationery: label of the name of new stationery */
-"Name:" = "Nome:";
-
-/* File > New from Stationery: label of the description of new stationery */
-"Description:" = "Descrizione:";
-
-/* File > New from Stationery: adding a stationery with the name of another */
-"A stationery named “%@” already exists. Replace it?" = "Esiste già un modulo chiamato “%@”. Vuoi sostituirlo?";
 
 /* File > New from Stationery: asked before the - button removes a stationery */
 "Move “%@” to the Trash?" = "Spostare “%@” nel Cestino?";
@@ -572,3 +557,24 @@
 
 /* File > New from Stationery: the name of a duplicated stationery */
 "%@ copy" = "%@ copia";
+
+/* File > New from Stationery: the + button */
+"New Stationery" = "Nuovo modulo";
+
+/* File > New from Stationery: the name of a new, empty stationery */
+"Untitled Stationery" = "Senza nome";
+
+/* File > New from Stationery: contextual menu item that opens the stationery file */
+"Edit Stationery" = "Modifica";
+
+/* File > New from Stationery: actions menu item that opens the stationery file */
+"Edit “%@”" = "Modifica “%@”";
+
+/* File > New from Stationery: contextual menu item */
+"Rename Stationery" = "Rinomina";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Rename “%@”" = "Rinomina “%@”";
+
+/* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
+"Show “%@” in Finder" = "Mostra “%@” nel Finder";

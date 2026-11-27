@@ -85,20 +85,10 @@ static id TestOpenDocument(id self, SEL _cmd, NSURL *url, BOOL display, NSError 
 }
 static void TestNoKeyAndFront(id self, SEL _cmd, id sender) {}
 
-// The front source document, behind a document that is not a source document.
-@interface FakeSource : NSObject
-@property NSURL *fileURL;
-@property NSString *displayName;
-@property NSTextView *textView;
-@end
-@implementation FakeSource @end
-static id FrontDocument;
-static NSArray *TestOrderedDocuments(id self, SEL _cmd) { return FrontDocument ? @[[NSObject new], FrontDocument] : @[]; }
-
-// Sheets and alerts are recorded with their completion handler, not shown.
-static NSWindow *LastSheet;
-static void (^SheetHandler)(NSModalResponse);
-static void TestBeginSheet(id self, SEL _cmd, NSWindow *sheet, void (^handler)(NSModalResponse)) { LastSheet = sheet; SheetHandler = handler; }
+// Files shown in the Finder and stationery opened for editing are recorded.
+static NSMutableArray<NSURL *> *Revealed, *Edited;
+static void TestReveal(id self, SEL _cmd, NSArray<NSURL *> *urls) { [Revealed addObjectsFromArray:urls]; }
+static void TestOpenForEditing(id self, SEL _cmd, NSURL *url, BOOL display, void (^handler)(NSDocument *, BOOL, NSError *)) { [Edited addObject:url]; }
 static NSAlert *LastAlert;
 static void (^AlertHandler)(NSModalResponse);
 static void TestAlertSheet(id self, SEL _cmd, NSWindow *window, void (^handler)(NSModalResponse)) { LastAlert = self; AlertHandler = handler; }
@@ -235,58 +225,67 @@ static void Behavior(NSString *work) {
     [empty windowDidBecomeKey:[NSNotification notificationWithName:NSWindowDidBecomeKeyNotification object:empty.stationeryWindow]];
     Check([empty.fullSourceData isEqualToArray:@[@"New.tex"]], @"a stationery added to the new folder shows when the panel comes back");
 
-    // + : the front document.
-    FrontDocument = nil;
-    [s newFromStationery:nil];
-    Check(!s.plusButton.enabled, @"+ is disabled with no source document in front");
-    FakeSource *source = [FakeSource new];
-    source.fileURL = [NSURL fileURLWithPath:@"/Somewhere/Paper.ltx"];
-    source.displayName = @"Paper.ltx";
-    source.textView = [NSTextView new];
-    source.textView.string = @"\\documentclass{article}\n% 日本語\n";
-    FrontDocument = source;
-    [s windowDidBecomeKey:[NSNotification notificationWithName:NSWindowDidBecomeKeyNotification object:panel]];
-    Check(s.plusButton.enabled, @"+ is enabled with a source document in front");
-    Check(s.plusButton.target == s && s.plusButton.action == @selector(addFrontDocument:) && s.minusButton.target == s && s.minusButton.action == @selector(removeSelectedStationery:), @"+ and - send their actions to the panel");
-    [s addFrontDocument:nil];
-    Check(LastSheet == s.addSheet && SheetHandler, @"+ shows the sheet on the panel");
-    Check([s.addNameField.stringValue isEqualToString:@"Paper"] && s.addDescriptionField.stringValue.length == 0, @"the sheet proposes the name of the document");
-    Check(s.addButton.enabled && [s.addButton.keyEquivalent isEqualToString:@"\r"], @"Add is enabled and is Return");
-    for (NSString *bad in @[@"", @"  ", @"a/b", @"a:b", @".hidden"]) {
-        s.addNameField.stringValue = bad;
-        [s controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:s.addNameField]];
-        Check(!s.addButton.enabled, [NSString stringWithFormat:@"Add is disabled for the name '%@'", bad]);
+    // + : an empty stationery named Untitled, its name being edited.
+    Check(s.plusButton.enabled, @"+ is always enabled");
+    Check(s.plusButton.target == s && s.plusButton.action == @selector(addStationery:) && s.minusButton.target == s && s.minusButton.action == @selector(removeSelectedStationery:), @"+ and - send their actions to the panel");
+    [s addStationery:nil];
+    Check([Read([folder stringByAppendingPathComponent:@"Untitled.tex"]) isEqualToString:@""] && [Selected(s) isEqualToString:@"Untitled.tex"], @"+ adds an empty Untitled.tex and selects it");
+    NSInteger untitledRow = s.tableView.selectedRow;
+    NSTableCellView *nameCell = [s.tableView viewAtColumn:0 row:untitledRow makeIfNecessary:YES];
+    // A view-based table reports no edited row: the name's field has the field editor.
+    Check(nameCell.textField.currentEditor != nil && panel.firstResponder == nameCell.textField.currentEditor, @"and its name is being edited");
+    Check(s.createButton.keyEquivalent.length == 0, @"while the name is edited, Return does not press Create");
+    nameCell.textField.stringValue = @"  Untitled Note ";
+    [panel makeFirstResponder:s.tableView];
+    Check([fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"Untitled Note.tex"]] && ![fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"Untitled.tex"]], @"the name typed renames the file");
+    Check([Selected(s) isEqualToString:@"Untitled Note.tex"] && [s.createButton.keyEquivalent isEqualToString:@"\r"], @"the renamed stationery stays selected and Return is Create again");
+    [s addStationery:nil];
+    [panel makeFirstResponder:s.tableView];
+    [s addStationery:nil];
+    [panel makeFirstResponder:s.tableView];
+    Check([Names(s) containsObject:@"Untitled.tex"] && [Names(s) containsObject:@"Untitled 2.tex"], @"the next empty stationery takes the next free name");
+    // Renaming: names refused, a name in use, the description following, a change of case.
+    Select(s, @"Untitled 2.tex");
+    Write([folder stringByAppendingPathComponent:@"Untitled 2.comment"], @"Second");
+    [s reloadStationery];
+    for (NSString *bad in @[@"", @"a/b", @"a:b", @".hidden"]) {
+        [s renameStationery:nil];
+        NSTableCellView *renamed = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+        renamed.textField.stringValue = bad;
+        [panel makeFirstResponder:s.tableView];
+        Check([Names(s) containsObject:@"Untitled 2.tex"] && [renamed.textField.stringValue isEqualToString:@"Untitled 2"], [NSString stringWithFormat:@"the name '%@' is refused and the old one comes back", bad]);
     }
-    s.addNameField.stringValue = @"My Paper";
-    s.addDescriptionField.stringValue = @"A paper\nwith notes";
-    [s controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:s.addNameField]];
-    Check(s.addButton.enabled, @"Add is enabled for a good name");
-    SheetHandler(NSModalResponseCancel);
-    Check(![fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"My Paper.ltx"]], @"Cancel adds nothing");
-    SheetHandler(NSModalResponseOK);
-    Check([Read([folder stringByAppendingPathComponent:@"My Paper.ltx"]) isEqualToString:source.textView.string], @"Add writes the document's text with its extension");
-    Check([Read([folder stringByAppendingPathComponent:@"My Paper.comment"]) isEqualToString:@"A paper with notes"], @"and the description, on one line, as name.comment");
-    Check([Selected(s) isEqualToString:@"My Paper.ltx"], @"the new stationery is selected");
-    // The same name again.
     LastAlert = nil;
-    source.textView.string = @"second";
-    [s addFrontDocument:nil];
-    s.addNameField.stringValue = @"my paper";
-    s.addDescriptionField.stringValue = @"";
-    SheetHandler(NSModalResponseOK);
-    Check(LastAlert && [LastAlert.messageText containsString:@"my paper"] && LastAlert.buttons.count == 2 && LastAlert.buttons[0].hasDestructiveAction, @"a name in use asks before replacing");
-    AlertHandler(NSAlertSecondButtonReturn);
-    Check([Read([folder stringByAppendingPathComponent:@"My Paper.ltx"]) hasPrefix:@"\\documentclass"], @"Cancel keeps the stationery in use");
-    AlertHandler(NSAlertFirstButtonReturn);
-    Check(![fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"My Paper.ltx"]] || [[fm contentsOfDirectoryAtPath:folder error:nil] containsObject:@"my paper.ltx"], @"Replace moves the old stationery to the Trash");
-    Check([Read([folder stringByAppendingPathComponent:@"my paper.ltx"]) isEqualToString:@"second"], @"and writes the new one");
-    Check(![fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"my paper.comment"]], @"an empty description leaves no .comment file");
-    source.fileURL = nil; source.displayName = @"Untitled 2";
-    [s addFrontDocument:nil];
-    Check([s.addNameField.stringValue isEqualToString:@"Untitled 2"], @"an untitled document proposes its window name");
-    s.addNameField.stringValue = @"Untitled Note";
-    SheetHandler(NSModalResponseOK);
-    Check([fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"Untitled Note.tex"]], @"an untitled document is added as .tex");
+    [s renameStationery:nil];
+    NSTableCellView *renamed = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+    renamed.textField.stringValue = @"untitled note";
+    [panel makeFirstResponder:s.tableView];
+    Check(LastAlert != nil && [Names(s) containsObject:@"Untitled 2.tex"] && [Read([folder stringByAppendingPathComponent:@"Untitled Note.tex"]) isEqualToString:@""], @"a name in use is refused with an error, and nothing moves");
+    LastAlert = nil;
+    [s renameStationery:nil];
+    renamed = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+    renamed.textField.stringValue = @"c";
+    [panel makeFirstResponder:s.tableView];
+    Check(LastAlert != nil && [Names(s) containsObject:@"Untitled 2.tex"] && ![fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"c.tex"]], @"the name of a stationery with another extension (c.md) is refused too: they would share c.comment");
+    [s renameStationery:nil];
+    renamed = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+    renamed.textField.stringValue = @"Second One";
+    [panel makeFirstResponder:s.tableView];
+    Check([Names(s) containsObject:@"Second One.tex"] && [Read([folder stringByAppendingPathComponent:@"Second One.comment"]) isEqualToString:@"Second"] && ![fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"Untitled 2.comment"]],
+          @"renaming takes the description along");
+    [s renameStationery:nil];
+    renamed = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+    renamed.textField.stringValue = @"second one";
+    [panel makeFirstResponder:s.tableView];
+    Check([[fm contentsOfDirectoryAtPath:folder error:nil] containsObject:@"second one.tex"] && [Selected(s) isEqualToString:@"second one.tex"], @"a change of case alone renames");
+    [s renameStationery:nil];
+    renamed = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+    renamed.textField.stringValue = @"Not kept";
+    NSTextView *nameEditor = (NSTextView *)[panel fieldEditor:YES forObject:renamed.textField];
+    Check([renamed.textField.delegate control:renamed.textField textView:nameEditor doCommandBySelector:@selector(cancelOperation:)] && [renamed.textField.stringValue isEqualToString:@"second one"] && [Names(s) containsObject:@"second one.tex"],
+          @"Escape keeps the name");
+    for (NSString *file in @[@"Untitled.tex", @"second one.tex", @"second one.comment"]) [fm removeItemAtPath:[folder stringByAppendingPathComponent:file] error:nil];
+    [s reloadStationery];
 
     // - : asks, then moves the stationery and its description to the Trash.
     Select(s, @"A.tex");
@@ -311,14 +310,27 @@ static void Behavior(NSString *work) {
     NSMenu *actions = bar.actionsButton.menu;
     Check(bar && !bar.actionsButton.hidden && actions.delegate == (id)s, @"the bar has the actions menu");
     [actions.delegate menuNeedsUpdate:actions];
-    NSMenuItem *duplicate = actions.itemArray.lastObject;
-    Check(actions.numberOfItems == 2 && [duplicate.title containsString:@"0"] && [(id)s validateMenuItem:duplicate], @"the actions menu duplicates the selected stationery by name");
+    NSMenuItem *(^ItemFor)(NSMenu *, SEL) = ^NSMenuItem *(NSMenu *menu, SEL action) { for (NSMenuItem *item in menu.itemArray) if (item.action == action) return item; return nil; };
+    NSMenuItem *duplicate = ItemFor(actions, @selector(duplicateStationery:));
+    NSMutableArray *order = [NSMutableArray array];
+    for (NSMenuItem *item in [actions.itemArray subarrayWithRange:NSMakeRange(1, actions.numberOfItems - 1)]) [order addObject:NSStringFromSelector(item.action)];
+    Check([order isEqual:(@[@"editStationery:", @"renameStationery:", @"duplicateStationery:", @"revealStationeryInFinder:"])], [NSString stringWithFormat:@"the actions menu is Edit, Rename, Duplicate, Show in Finder: %@", order]);
+    Check(actions.numberOfItems == 5 && ItemFor(actions, @selector(editStationery:)) && ItemFor(actions, @selector(renameStationery:)) && ItemFor(actions, @selector(revealStationeryInFinder:)),
+          @"the actions menu has Edit, Rename, Duplicate and Show in Finder");
+    for (NSMenuItem *item in [actions.itemArray subarrayWithRange:NSMakeRange(1, actions.numberOfItems - 1)])
+        Check([item.title containsString:@"0"] && [(id)s validateMenuItem:item], [NSString stringWithFormat:@"%@ names the selected stationery", item.title]);
+    NSMenuItem *edit = ItemFor(actions, @selector(editStationery:));
+    [NSApp sendAction:edit.action to:edit.target from:edit];
+    Check(Edited.count == 1 && [Edited.firstObject.path isEqualToString:[folder stringByAppendingPathComponent:@"0.tex"]] && OpenedDocuments.count == 1, @"Edit opens the stationery file itself");
+    NSMenuItem *reveal = ItemFor(actions, @selector(revealStationeryInFinder:));
+    [NSApp sendAction:reveal.action to:reveal.target from:reveal];
+    Check(Revealed.count == 1 && [Revealed.firstObject.path isEqualToString:[folder stringByAppendingPathComponent:@"0.tex"]], @"Show in Finder of the menu shows the stationery file in the Finder");
     [NSApp sendAction:duplicate.action to:duplicate.target from:duplicate];
     Check([Read([folder stringByAppendingPathComponent:@"0 copy.tex"]) isEqualToString:@"0"] && [Read([folder stringByAppendingPathComponent:@"0 copy.comment"]) isEqualToString:@"Zero"], @"Duplicate copies the stationery and its description");
     Check([Selected(s) isEqualToString:@"0 copy.tex"], @"the copy is selected");
     Select(s, @"0.tex");
     [actions.delegate menuNeedsUpdate:actions];
-    duplicate = actions.itemArray.lastObject;
+    duplicate = ItemFor(actions, @selector(duplicateStationery:));
     [NSApp sendAction:duplicate.action to:duplicate.target from:duplicate];
     Check([Selected(s) isEqualToString:@"0 copy 2.tex"] && [fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"0 copy 2.comment"]], @"a second copy takes the next free name");
     Check([Read([folder stringByAppendingPathComponent:@"0 copy.tex"]) isEqualToString:@"0"], @"and leaves the first copy alone");
@@ -434,41 +446,16 @@ static void Layout(NSString *language, NSString *folder, NSString *pngs) {
     NSMutableArray *views = [NSMutableArray array]; All(panel.contentView, views);
     NSButton *cancel = nil;
     for (NSView *v in views) if ([v.identifier isEqual:@"stationery.cancel"]) cancel = (NSButton *)v;
-    for (NSString *key in @[@"Add the Front Document as Stationery", @"Move the Stationery to the Trash", @"Add as Stationery", @"Name:", @"Description:",
-                            @"A stationery named “%@” already exists. Replace it?", @"Move “%@” to the Trash?", @"Move to Trash", @"Add", @"Replace"])
+    for (NSString *key in @[@"New Stationery", @"Untitled Stationery", @"Move the Stationery to the Trash", @"Move “%@” to the Trash?", @"Move to Trash",
+                            @"Edit Stationery", @"Edit “%@”", @"Rename Stationery", @"Rename “%@”", @"Show “%@” in Finder"])
         Check(Table[key] != nil, [NSString stringWithFormat:@"%@: %@ is translated", language, key]);
     for (NSString *key in @[@"Stationery Actions", @"Duplicate", @"Duplicate “%@”", @"%@ copy"])
         Check(Table[key] != nil, [NSString stringWithFormat:@"%@: %@ is translated", language, key]);
     NSButton *actionsButton = nil;
     for (NSView *v in views) if ([v.identifier isEqual:@"stationery.actions"]) actionsButton = (NSButton *)v;
     Check([actionsButton.toolTip isEqualToString:L(@"Stationery Actions")], [NSString stringWithFormat:@"%@: the actions menu has a translated tooltip", language]);
-    Check([s.plusButton.toolTip isEqualToString:L(@"Add the Front Document as Stationery")] && [s.minusButton.toolTip isEqualToString:L(@"Move the Stationery to the Trash")],
+    Check([s.plusButton.toolTip isEqualToString:L(@"New Stationery")] && [s.minusButton.toolTip isEqualToString:L(@"Move the Stationery to the Trash")],
           [NSString stringWithFormat:@"%@: + and - have translated tooltips", language]);
-    // The sheet of +: labels and buttons whole, the fields after the longer label.
-    FakeSource *front = [FakeSource new];
-    front.displayName = @"Untitled"; front.textView = [NSTextView new];
-    FrontDocument = front;
-    [s addFrontDocument:nil];
-    NSWindow *sheet = s.addSheet;
-    [sheet.contentView layoutSubtreeIfNeeded];
-    NSMutableArray *sheetViews = [NSMutableArray array]; All(sheet.contentView, sheetViews);
-    NSRect sheetBounds = sheet.contentView.bounds;
-    for (NSView *v in sheetViews) {
-        if (v == sheet.contentView) continue;
-        Check(NSContainsRect(sheetBounds, InContent(v)), [NSString stringWithFormat:@"%@: the sheet shows %@ whole", language, v.className]);
-        if ([v isKindOfClass:NSTextField.class] && !((NSTextField *)v).editable)
-            Check(NSWidth(v.frame) + 0.5 >= v.intrinsicContentSize.width, [NSString stringWithFormat:@"%@: the sheet label %@ fits", language, ((NSTextField *)v).stringValue]);
-        if ([v isKindOfClass:NSButton.class])
-            Check(NSWidth(v.frame) + 0.5 >= v.intrinsicContentSize.width, [NSString stringWithFormat:@"%@: the sheet button %@ fits", language, ((NSButton *)v).title]);
-    }
-    Check(fabs(NSMinX(InContent(s.addNameField)) - NSMinX(InContent(s.addDescriptionField))) < 0.5 && NSWidth(s.addNameField.frame) >= 279.5,
-          [NSString stringWithFormat:@"%@: the name and description fields line up", language]);
-    if (![pngs isEqualToString:@"-"]) {
-        sheet.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-        Render((NSPanel *)sheet, [pngs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-sheet.png", language]]);
-    }
-    FrontDocument = nil;
-    [s windowDidBecomeKey:[NSNotification notificationWithName:NSWindowDidBecomeKeyNotification object:panel]];
     for (NSValue *size in @[[NSValue valueWithSize:NSMakeSize(600, 400)], [NSValue valueWithSize:panel.contentMinSize]]) {
         [panel setContentSize:size.sizeValue];
         [panel.contentView layoutSubtreeIfNeeded];
@@ -526,8 +513,10 @@ int main(int argc, char **argv) { @autoreleasepool {
     method_setImplementation(class_getInstanceMethod(NSWorkspace.class, @selector(openURL:)), (IMP)TestOpenURL);
     method_setImplementation(class_getInstanceMethod(NSDocumentController.class, @selector(openDocumentWithContentsOfURL:display:error:)), (IMP)TestOpenDocument);
     method_setImplementation(class_getInstanceMethod(NSWindow.class, @selector(makeKeyAndOrderFront:)), (IMP)TestNoKeyAndFront);
-    method_setImplementation(class_getInstanceMethod(NSApplication.class, @selector(orderedDocuments)), (IMP)TestOrderedDocuments);
-    method_setImplementation(class_getInstanceMethod(NSWindow.class, @selector(beginSheet:completionHandler:)), (IMP)TestBeginSheet);
+    Revealed = [NSMutableArray array];
+    Edited = [NSMutableArray array];
+    method_setImplementation(class_getInstanceMethod(NSWorkspace.class, @selector(activateFileViewerSelectingURLs:)), (IMP)TestReveal);
+    method_setImplementation(class_getInstanceMethod(NSDocumentController.class, @selector(openDocumentWithContentsOfURL:display:completionHandler:)), (IMP)TestOpenForEditing);
     method_setImplementation(class_getInstanceMethod(NSAlert.class, @selector(beginSheetModalForWindow:completionHandler:)), (IMP)TestAlertSheet);
     method_setImplementation(class_getInstanceMethod(NSFileManager.class, @selector(trashItemAtURL:resultingItemURL:error:)), (IMP)TestTrash);
     Trashed = [NSMutableArray array];

@@ -56,21 +56,15 @@ static NSUserInterfaceItemIdentifier const TSStationeryDescriptionColumn = @"Des
 @property (readwrite, nonatomic) NSArray<NSString *> *fullSourceData;
 @property (readwrite, nonatomic) NSArray<NSString *> *commentData;
 @property (readwrite, nonatomic) TSListBottomBar *listBar;
-@property (readwrite, nonatomic) NSWindow *addSheet;
-@property (readwrite, nonatomic) NSTextField *addNameField;
-@property (readwrite, nonatomic) NSTextField *addDescriptionField;
-@property (readwrite, nonatomic) NSButton *addButton;
-// The text and extension of the document the sheet adds.
-@property (nonatomic) NSString *addText;
-@property (nonatomic) NSString *addExtension;
-@property (nonatomic) NSString *descriptionBeforeEditing;
+// The text of the name or description being edited, put back by Escape.
+@property (nonatomic) NSString *textBeforeEditing;
 @end
 
-// The description cell; it tells the panel when its editing starts, before any key.
-@interface TSStationeryDescriptionField : NSTextField
+// A name or description cell; it tells the panel when its editing starts, before any key.
+@interface TSStationeryEditableField : NSTextField
 @property (copy) void (^willEdit)(NSTextField *field);
 @end
-@implementation TSStationeryDescriptionField
+@implementation TSStationeryEditableField
 - (BOOL)becomeFirstResponder
 {
 	BOOL became = [super becomeFirstResponder];
@@ -169,7 +163,7 @@ static NSString *TSStationeryOneLine(NSString *text)
 	// The list from the title bar to the window's sides, with + and - in the bar at its bottom
 	// and a line under it, as the list of the macro editor.
 	TSListBottomBar *bar = [[TSListBottomBar alloc] initWithTarget:self
-	    addAction:@selector(addFrontDocument:) addToolTip:NSLocalizedString(@"Add the Front Document as Stationery", @"File > New from Stationery: the + button")
+	    addAction:@selector(addStationery:) addToolTip:NSLocalizedString(@"New Stationery", @"File > New from Stationery: the + button")
 	    removeAction:@selector(removeSelectedStationery:) removeToolTip:NSLocalizedString(@"Move the Stationery to the Trash", @"File > New from Stationery: the - button")
 	    actionsToolTip:NSLocalizedString(@"Stationery Actions", @"File > New from Stationery: the actions menu at the bottom of the list")];
 	bar.actionsButton.menu.delegate = self;
@@ -320,7 +314,6 @@ static NSString *TSStationeryOneLine(NSString *text)
 {
 	BOOL selected = self.tableView.selectedRow >= 0;
 	self.createButton.enabled = selected;
-	self.listBar.addButton.enabled = [self frontDocument] != nil;
 	self.listBar.removeButton.enabled = selected;
 }
 
@@ -337,16 +330,14 @@ static NSString *TSStationeryOneLine(NSString *text)
 	if (!cell) {
 		cell = [NSTableCellView new];
 		cell.identifier = tableColumn.identifier;
-		BOOL description = [tableColumn.identifier isEqualToString:TSStationeryDescriptionColumn];
-		NSTextField *field = description ? [TSStationeryDescriptionField labelWithString:@""] : [NSTextField labelWithString:@""];
+		TSStationeryEditableField *field = [TSStationeryEditableField labelWithString:@""];
 		field.lineBreakMode = NSLineBreakByTruncatingTail;
-		// The description is edited in place and kept in the .comment file.
-		if (description) {
-			field.editable = YES;
-			field.delegate = self;
-			__weak TSStationery *weakSelf = self;
-			((TSStationeryDescriptionField *)field).willEdit = ^(NSTextField *edited) { [weakSelf beginEditingDescription:edited]; };
-		}
+		// The name and the description are edited in place, as the names of the theme list: the
+		// name renames the file, the description is kept in the .comment file.
+		field.editable = YES;
+		field.delegate = self;
+		__weak TSStationery *weakSelf = self;
+		field.willEdit = ^(NSTextField *edited) { [weakSelf beginEditingField:edited]; };
 		field.translatesAutoresizingMaskIntoConstraints = NO;
 		[field setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
 		[cell addSubview:field];
@@ -508,110 +499,10 @@ static NSString *TSStationeryOneLine(NSString *text)
 - (NSButton *)plusButton { return self.listBar.addButton; }
 - (NSButton *)minusButton { return self.listBar.removeButton; }
 
-// The source document whose window is in front of the other documents' windows.
-- (NSDocument *)frontDocument
-{
-	for (NSDocument *document in NSApp.orderedDocuments)
-		if ([document respondsToSelector:@selector(textView)]) return document;
-	return nil;
-}
-
 - (BOOL)isValidStationeryName:(NSString *)name
 {
 	name = [name stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
 	return name.length > 0 && ![name hasPrefix:@"."] && [name rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"/:"]].location == NSNotFound;
-}
-
-- (void)buildAddSheet
-{
-	NSWindow *sheet = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 420, 150) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
-	sheet.identifier = @"stationery.add-sheet";
-	NSView *content = sheet.contentView;
-	NSTextField *message = [NSTextField labelWithString:NSLocalizedString(@"Add as Stationery", @"File > New from Stationery: title of the sheet that adds the front document")];
-	message.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
-	NSTextField *nameLabel = [NSTextField labelWithString:NSLocalizedString(@"Name:", @"File > New from Stationery: label of the name of new stationery")];
-	NSTextField *descriptionLabel = [NSTextField labelWithString:NSLocalizedString(@"Description:", @"File > New from Stationery: label of the description of new stationery")];
-	NSTextField *name = [NSTextField textFieldWithString:@""];
-	name.identifier = @"stationery.add-name";
-	name.delegate = self;
-	NSTextField *description = [NSTextField textFieldWithString:@""];
-	description.identifier = @"stationery.add-description";
-	NSButton *cancel = [NSButton buttonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") target:self action:@selector(endAddSheet:)];
-	cancel.keyEquivalent = @"\033";
-	cancel.tag = NSModalResponseCancel;
-	NSButton *add = [NSButton buttonWithTitle:NSLocalizedString(@"Add", @"Add") target:self action:@selector(endAddSheet:)];
-	add.keyEquivalent = @"\r";
-	add.tag = NSModalResponseOK;
-	add.identifier = @"stationery.add-confirm";
-	for (NSView *v in @[message, nameLabel, descriptionLabel, name, description, cancel, add]) {
-		v.translatesAutoresizingMaskIntoConstraints = NO;
-		[content addSubview:v];
-	}
-	for (NSTextField *label in @[nameLabel, descriptionLabel]) {
-		label.alignment = NSTextAlignmentRight;
-		[label setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
-		[label setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
-	}
-	[NSLayoutConstraint activateConstraints:@[
-		[message.topAnchor constraintEqualToAnchor:content.topAnchor constant:20],
-		[message.leadingAnchor constraintEqualToAnchor:content.leadingAnchor constant:20],
-		[message.trailingAnchor constraintLessThanOrEqualToAnchor:content.trailingAnchor constant:-20],
-		[name.topAnchor constraintEqualToAnchor:message.bottomAnchor constant:16],
-		[description.topAnchor constraintEqualToAnchor:name.bottomAnchor constant:10],
-		[nameLabel.firstBaselineAnchor constraintEqualToAnchor:name.firstBaselineAnchor],
-		[descriptionLabel.firstBaselineAnchor constraintEqualToAnchor:description.firstBaselineAnchor],
-		[nameLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:content.leadingAnchor constant:20],
-		[descriptionLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:content.leadingAnchor constant:20],
-		[nameLabel.trailingAnchor constraintEqualToAnchor:descriptionLabel.trailingAnchor],
-		[name.leadingAnchor constraintEqualToAnchor:nameLabel.trailingAnchor constant:8],
-		[description.leadingAnchor constraintEqualToAnchor:name.leadingAnchor],
-		[name.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
-		[description.trailingAnchor constraintEqualToAnchor:name.trailingAnchor],
-		[name.widthAnchor constraintGreaterThanOrEqualToConstant:280],
-		[add.topAnchor constraintEqualToAnchor:description.bottomAnchor constant:20],
-		[add.bottomAnchor constraintEqualToAnchor:content.bottomAnchor constant:-16],
-		[add.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
-		[add.widthAnchor constraintGreaterThanOrEqualToConstant:88],
-		[cancel.widthAnchor constraintEqualToAnchor:add.widthAnchor],
-		[cancel.trailingAnchor constraintEqualToAnchor:add.leadingAnchor constant:-12],
-		[cancel.centerYAnchor constraintEqualToAnchor:add.centerYAnchor],
-		[cancel.leadingAnchor constraintGreaterThanOrEqualToAnchor:content.leadingAnchor constant:20]]];
-	// The label column is as wide as the longer label.
-	NSLayoutConstraint *left = [nameLabel.leadingAnchor constraintEqualToAnchor:content.leadingAnchor constant:20];
-	left.priority = NSLayoutPriorityDefaultLow;
-	NSLayoutConstraint *left2 = [descriptionLabel.leadingAnchor constraintEqualToAnchor:content.leadingAnchor constant:20];
-	left2.priority = NSLayoutPriorityDefaultLow;
-	[NSLayoutConstraint activateConstraints:@[left, left2]];
-	sheet.initialFirstResponder = name;
-	[content layoutSubtreeIfNeeded];
-	[sheet setContentSize:content.fittingSize];
-	self.addSheet = sheet;
-	self.addNameField = name;
-	self.addDescriptionField = description;
-	self.addButton = add;
-}
-
-- (IBAction)addFrontDocument:(id)sender
-{
-	NSDocument *document = [self frontDocument];
-	if (document == nil) return;
-	if (!self.addSheet) [self buildAddSheet];
-	self.addText = [[(id)document textView] string] ?: @"";
-	NSString *extension = document.fileURL.pathExtension;
-	self.addExtension = extension.length ? extension : @"tex";
-	self.addNameField.stringValue = document.fileURL ? document.fileURL.lastPathComponent.stringByDeletingPathExtension : document.displayName.stringByDeletingPathExtension;
-	self.addDescriptionField.stringValue = @"";
-	[self controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:self.addNameField]];
-	[self.addSheet makeFirstResponder:self.addNameField];
-	[self.stationeryWindow beginSheet:self.addSheet completionHandler:^(NSModalResponse response) {
-		if (response == NSModalResponseOK)
-			[self addStationeryNamed:self.addNameField.stringValue description:self.addDescriptionField.stringValue replacing:NO];
-	}];
-}
-
-- (IBAction)endAddSheet:(NSButton *)sender
-{
-	[self.stationeryWindow endSheet:self.addSheet returnCode:sender.tag];
 }
 
 // Files of the folder whose name without extension is name, the .comment file aside.
@@ -624,45 +515,77 @@ static NSString *TSStationeryOneLine(NSString *text)
 	return found;
 }
 
-- (void)addStationeryNamed:(NSString *)name description:(NSString *)description replacing:(BOOL)replacing
+// proposed, or proposed 2, 3 ... : a name that no stationery and no .comment file has.
+- (NSString *)availableNameFor:(NSString *)proposed
 {
-	name = [name stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-	if (![self isValidStationeryName:name]) return;
-	NSArray *existing = [self stationeryFilesNamed:name];
-	if (existing.count && !replacing) {
-		NSAlert *alert = [NSAlert new];
-		alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"A stationery named “%@” already exists. Replace it?", @"File > New from Stationery: adding a stationery with the name of another"), name];
-		[alert addButtonWithTitle:NSLocalizedString(@"Replace", @"Replace")].hasDestructiveAction = YES;
-		[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel")];
-		[alert beginSheetModalForWindow:self.stationeryWindow completionHandler:^(NSModalResponse response) {
-			if (response == NSAlertFirstButtonReturn) [self addStationeryNamed:name description:description replacing:YES];
-		}];
-		return;
-	}
+	NSString *name = proposed;
+	for (NSUInteger number = 2; [self stationeryFilesNamed:name].count || [[NSFileManager defaultManager] fileExistsAtPath:[[self.folderPath stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"comment"]]; number++)
+		name = [NSString stringWithFormat:@"%@ %lu", proposed, (unsigned long)number];
+	return name;
+}
+
+- (void)selectFile:(NSString *)file
+{
+	NSUInteger row = [self.fullSourceData indexOfObject:file];
+	if (row == NSNotFound) return;
+	[self.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+	[self.tableView scrollRowToVisible:row];
+}
+
+// + adds an empty stationery named Untitled, and its name is edited at once, as a new theme's.
+- (IBAction)addStationery:(id)sender
+{
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSError *error = nil;
 	if (![fileManager createDirectoryAtPath:self.folderPath withIntermediateDirectories:YES attributes:nil error:&error]) {
 		[self showError:error];
 		return;
 	}
-	for (NSString *file in existing)
-		if (![fileManager trashItemAtURL:[NSURL fileURLWithPath:[self.folderPath stringByAppendingPathComponent:file]] resultingItemURL:nil error:&error]) {
-			[self showError:error];
-			return;
-		}
-	NSString *file = [name stringByAppendingPathExtension:self.addExtension ?: @"tex"];
-	if (![self.addText ?: @"" writeToFile:[self.folderPath stringByAppendingPathComponent:file] atomically:YES encoding:NSUTF8StringEncoding error:&error]
-	    || ![self writeDescription:description forName:name error:&error]) {
+	NSString *name = [self availableNameFor:NSLocalizedString(@"Untitled Stationery", @"File > New from Stationery: the name of a new, empty stationery")];
+	NSString *file = [name stringByAppendingPathExtension:@"tex"];
+	if (![@"" writeToFile:[self.folderPath stringByAppendingPathComponent:file] atomically:YES encoding:NSUTF8StringEncoding error:&error]) {
 		[self showError:error];
-		[self reloadStationery];
 		return;
 	}
 	[self reloadStationery];
+	[self selectFile:file];
+	[self beginRenamingFile:file];
+}
+
+- (void)beginRenamingFile:(NSString *)file
+{
 	NSUInteger row = [self.fullSourceData indexOfObject:file];
-	if (row != NSNotFound) {
-		[self.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-		[self.tableView scrollRowToVisible:row];
+	if (row == NSNotFound || self.stationeryWindow == nil) return;
+	[self.tableView editColumn:[self.tableView columnWithIdentifier:TSStationeryNameColumn] row:(NSInteger)row withEvent:nil select:YES];
+}
+
+// Renames the file and its .comment file; a name in use is refused, as in the Finder.
+- (BOOL)renameFile:(NSString *)file to:(NSString *)name
+{
+	NSString *old = file.stringByDeletingPathExtension;
+	if ([name isEqualToString:old] || ![self isValidStationeryName:name]) return NO;
+	NSString *renamed = file.pathExtension.length ? [name stringByAppendingPathExtension:file.pathExtension] : name;
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *oldComment = [[self.folderPath stringByAppendingPathComponent:old] stringByAppendingPathExtension:@"comment"];
+	NSString *newComment = [[self.folderPath stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"comment"];
+	BOOL caseOnly = [name caseInsensitiveCompare:old] == NSOrderedSame;
+	NSMutableArray *others = [[self stationeryFilesNamed:name] mutableCopy];
+	[others removeObject:file];
+	if (others.count || (!caseOnly && [fileManager fileExistsAtPath:newComment])) {
+		[self showError:[NSError errorWithDomain:NSCocoaErrorDomain code:NSFileWriteFileExistsError userInfo:@{NSFilePathErrorKey: [self.folderPath stringByAppendingPathComponent:renamed]}]];
+		return NO;
 	}
+	NSError *error = nil;
+	if (![fileManager moveItemAtPath:[self.folderPath stringByAppendingPathComponent:file] toPath:[self.folderPath stringByAppendingPathComponent:renamed] error:&error]) {
+		[self showError:error];
+		return NO;
+	}
+	// The description goes with it, unless another stationery of the old name keeps it.
+	if ([fileManager fileExistsAtPath:oldComment] && [self stationeryFilesNamed:old].count == 0)
+		[fileManager moveItemAtPath:oldComment toPath:newComment error:nil];
+	[self reloadStationery];
+	[self selectFile:renamed];
+	return YES;
 }
 
 // name.comment holds the description on one line; an empty description removes it.
@@ -722,7 +645,8 @@ static NSString *TSStationeryOneLine(NSString *text)
 
 #pragma mark Duplicating
 
-// The actions menu names the selected stationery; the contextual menu acts on the row clicked.
+// The actions menu names the selected stationery; the contextual menu acts on the row clicked,
+// without its name, as the theme list's.
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
 	BOOL context = menu == self.tableView.menu;
@@ -731,32 +655,73 @@ static NSString *TSStationeryOneLine(NSString *text)
 	if (icon) [menu addItem:icon];
 	NSInteger row = context ? self.tableView.clickedRow : self.tableView.selectedRow;
 	if (row < 0 || row >= (NSInteger)self.fullSourceData.count) return;
-	NSString *title = context ? NSLocalizedString(@"Duplicate", @"File > New from Stationery: contextual menu item")
-	                          : [NSString stringWithFormat:NSLocalizedString(@"Duplicate “%@”", @"File > New from Stationery: actions menu item, with the name of the selected stationery"), [self titleAtRow:row]];
-	NSMenuItem *item = [menu addItemWithTitle:title action:@selector(duplicateStationery:) keyEquivalent:@""];
-	item.target = self;
-	item.representedObject = self.fullSourceData[row];
+	NSString *name = [self titleAtRow:row];
+	NSArray *items = @[
+		@[NSLocalizedString(@"Edit Stationery", @"File > New from Stationery: contextual menu item that opens the stationery file"),
+		  NSLocalizedString(@"Edit “%@”", @"File > New from Stationery: actions menu item that opens the stationery file"), NSStringFromSelector(@selector(editStationery:))],
+		@[NSLocalizedString(@"Rename Stationery", @"File > New from Stationery: contextual menu item"),
+		  NSLocalizedString(@"Rename “%@”", @"File > New from Stationery: actions menu item, with the name of the selected stationery"), NSStringFromSelector(@selector(renameStationery:))],
+		@[NSLocalizedString(@"Duplicate", @"File > New from Stationery: contextual menu item"),
+		  NSLocalizedString(@"Duplicate “%@”", @"File > New from Stationery: actions menu item, with the name of the selected stationery"), NSStringFromSelector(@selector(duplicateStationery:))],
+		@[NSLocalizedString(@"Show in Finder", @"File > New from Stationery: opens the Stationery folder in the Finder"),
+		  NSLocalizedString(@"Show “%@” in Finder", @"File > New from Stationery: actions menu item that shows the stationery file in the Finder"), NSStringFromSelector(@selector(revealStationeryInFinder:))]];
+	for (NSArray *entry in items) {
+		NSString *title = context ? entry[0] : [NSString stringWithFormat:entry[1], name];
+		NSMenuItem *item = [menu addItemWithTitle:title action:NSSelectorFromString(entry[2]) keyEquivalent:@""];
+		item.target = self;
+		item.representedObject = self.fullSourceData[row];
+	}
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)item
 {
-	if (item.action == @selector(duplicateStationery:)) return [self.fullSourceData containsObject:item.representedObject];
+	if (item.action == @selector(duplicateStationery:) || item.action == @selector(editStationery:) || item.action == @selector(renameStationery:) || item.action == @selector(revealStationeryInFinder:))
+		return [self.fullSourceData containsObject:item.representedObject];
 	return YES;
+}
+
+// The file of the menu item, or the selected one.
+- (NSString *)fileOfSender:(id)sender
+{
+	NSString *file = [sender respondsToSelector:@selector(representedObject)] ? [sender representedObject] : nil;
+	if ([file isKindOfClass:NSString.class] && [self.fullSourceData containsObject:file]) return file;
+	NSInteger row = self.tableView.selectedRow;
+	return row >= 0 && row < (NSInteger)self.fullSourceData.count ? self.fullSourceData[row] : nil;
+}
+
+// The stationery file itself is opened for editing; the panel stays.
+- (IBAction)editStationery:(id)sender
+{
+	NSString *file = [self fileOfSender:sender];
+	if (file == nil) return;
+	NSURL *url = [NSURL fileURLWithPath:[self.folderPath stringByAppendingPathComponent:file]];
+	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:^(NSDocument *document, BOOL wasOpen, NSError *error) {
+		if (document == nil && error) [NSApp presentError:error];
+	}];
+}
+
+// The file selected in a Finder window of the Stationery folder.
+- (IBAction)revealStationeryInFinder:(id)sender
+{
+	NSString *file = [self fileOfSender:sender];
+	if (file == nil) return;
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:[self.folderPath stringByAppendingPathComponent:file]]]];
+}
+
+- (IBAction)renameStationery:(id)sender
+{
+	NSString *file = [self fileOfSender:sender];
+	if (file == nil) return;
+	[self selectFile:file];
+	[self beginRenamingFile:file];
 }
 
 // A copy of the stationery and its description, named as the theme list names a copy, and selected.
 - (IBAction)duplicateStationery:(id)sender
 {
-	NSString *file = [sender respondsToSelector:@selector(representedObject)] ? [sender representedObject] : nil;
-	if (![file isKindOfClass:NSString.class]) {
-		NSInteger row = self.tableView.selectedRow;
-		file = row >= 0 && row < (NSInteger)self.fullSourceData.count ? self.fullSourceData[row] : nil;
-	}
+	NSString *file = [self fileOfSender:sender];
 	if (file == nil) return;
-	NSString *proposed = [NSString stringWithFormat:NSLocalizedString(@"%@ copy", @"File > New from Stationery: the name of a duplicated stationery"), file.stringByDeletingPathExtension];
-	NSString *name = proposed;
-	for (NSUInteger number = 2; [self stationeryFilesNamed:name].count || [[NSFileManager defaultManager] fileExistsAtPath:[[self.folderPath stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"comment"]]; number++)
-		name = [NSString stringWithFormat:@"%@ %lu", proposed, (unsigned long)number];
+	NSString *name = [self availableNameFor:[NSString stringWithFormat:NSLocalizedString(@"%@ copy", @"File > New from Stationery: the name of a duplicated stationery"), file.stringByDeletingPathExtension]];
 	NSString *copy = file.pathExtension.length ? [name stringByAppendingPathExtension:file.pathExtension] : name;
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSError *error = nil;
@@ -768,25 +733,15 @@ static NSString *TSStationeryOneLine(NSString *text)
 	if ([fileManager fileExistsAtPath:comment])
 		[fileManager copyItemAtPath:comment toPath:[[self.folderPath stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"comment"] error:nil];
 	[self reloadStationery];
-	NSUInteger row = [self.fullSourceData indexOfObject:copy];
-	if (row != NSNotFound) {
-		[self.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-		[self.tableView scrollRowToVisible:row];
-	}
+	[self selectFile:copy];
 }
 
-#pragma mark Editing descriptions
+#pragma mark Editing names and descriptions
 
-- (void)controlTextDidChange:(NSNotification *)notification
+// While a name or description is edited, Return and Escape end the editing, not the panel.
+- (void)beginEditingField:(NSTextField *)field
 {
-	if (notification.object == self.addNameField)
-		self.addButton.enabled = [self isValidStationeryName:self.addNameField.stringValue];
-}
-
-// While a description is edited, Return and Escape end the editing, not the panel.
-- (void)beginEditingDescription:(NSTextField *)field
-{
-	self.descriptionBeforeEditing = field.stringValue;
+	self.textBeforeEditing = field.stringValue;
 	self.createButton.keyEquivalent = @"";
 	[self cancelButton].keyEquivalent = @"";
 }
@@ -800,9 +755,8 @@ static NSString *TSStationeryOneLine(NSString *text)
 
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)command
 {
-	if (control == self.addNameField || control == self.addDescriptionField) return NO;
 	if (command == @selector(cancelOperation:)) {
-		control.stringValue = self.descriptionBeforeEditing ?: control.stringValue;
+		control.stringValue = self.textBeforeEditing ?: control.stringValue;
 		[self.stationeryWindow makeFirstResponder:self.tableView];
 		return YES;
 	}
@@ -816,11 +770,15 @@ static NSString *TSStationeryOneLine(NSString *text)
 - (void)controlTextDidEndEditing:(NSNotification *)notification
 {
 	NSTextField *field = notification.object;
-	if (field == self.addNameField || field == self.addDescriptionField) return;
 	self.createButton.keyEquivalent = @"\r";
 	[self cancelButton].keyEquivalent = @"\033";
 	NSInteger row = [self.tableView rowForView:field];
 	if (row < 0 || row >= (NSInteger)self.fullSourceData.count) return;
+	if ([self.tableView columnForView:field] == [self.tableView columnWithIdentifier:TSStationeryNameColumn]) {
+		NSString *name = [field.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+		if (![self renameFile:self.fullSourceData[row] to:name]) field.stringValue = [self titleAtRow:row];
+		return;
+	}
 	NSString *description = TSStationeryOneLine(field.stringValue);
 	field.stringValue = description;
 	field.toolTip = description.length ? description : nil;

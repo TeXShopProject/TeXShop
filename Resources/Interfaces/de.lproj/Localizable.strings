@@ -537,23 +537,8 @@
 /* File > New from Stationery: opens the Stationery folder in the Finder */
 "Show in Finder" = "Im Finder anzeigen";
 
-/* File > New from Stationery: the + button */
-"Add the Front Document as Stationery" = "Vorderstes Dokument als Formularblock hinzufügen";
-
 /* File > New from Stationery: the - button */
 "Move the Stationery to the Trash" = "Formularblock in den Papierkorb legen";
-
-/* File > New from Stationery: title of the sheet that adds the front document */
-"Add as Stationery" = "Als Formularblock hinzufügen";
-
-/* File > New from Stationery: label of the name of new stationery */
-"Name:" = "Name:";
-
-/* File > New from Stationery: label of the description of new stationery */
-"Description:" = "Beschreibung:";
-
-/* File > New from Stationery: adding a stationery with the name of another */
-"A stationery named “%@” already exists. Replace it?" = "Ein Formularblock mit dem Namen „%@“ ist bereits vorhanden. Möchten Sie ihn ersetzen?";
 
 /* File > New from Stationery: asked before the - button removes a stationery */
 "Move “%@” to the Trash?" = "„%@“ in den Papierkorb legen?";
@@ -572,3 +557,24 @@
 
 /* File > New from Stationery: the name of a duplicated stationery */
 "%@ copy" = "%@ Kopie";
+
+/* File > New from Stationery: the + button */
+"New Stationery" = "Neuer Formularblock";
+
+/* File > New from Stationery: the name of a new, empty stationery */
+"Untitled Stationery" = "Ohne Titel";
+
+/* File > New from Stationery: contextual menu item that opens the stationery file */
+"Edit Stationery" = "Bearbeiten";
+
+/* File > New from Stationery: actions menu item that opens the stationery file */
+"Edit “%@”" = "„%@“ bearbeiten";
+
+/* File > New from Stationery: contextual menu item */
+"Rename Stationery" = "Umbenennen";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Rename “%@”" = "„%@“ umbenennen";
+
+/* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
+"Show “%@” in Finder" = "„%@“ im Finder anzeigen";

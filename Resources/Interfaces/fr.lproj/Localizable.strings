@@ -537,23 +537,8 @@
 /* File > New from Stationery: opens the Stationery folder in the Finder */
 "Show in Finder" = "Afficher dans le Finder";
 
-/* File > New from Stationery: the + button */
-"Add the Front Document as Stationery" = "Ajouter le document au premier plan comme modèle";
-
 /* File > New from Stationery: the - button */
 "Move the Stationery to the Trash" = "Placer le modèle dans la corbeille";
-
-/* File > New from Stationery: title of the sheet that adds the front document */
-"Add as Stationery" = "Ajouter comme modèle";
-
-/* File > New from Stationery: label of the name of new stationery */
-"Name:" = "Nom :";
-
-/* File > New from Stationery: label of the description of new stationery */
-"Description:" = "Description :";
-
-/* File > New from Stationery: adding a stationery with the name of another */
-"A stationery named “%@” already exists. Replace it?" = "Un modèle nommé « %@ » existe déjà. Voulez-vous le remplacer ?";
 
 /* File > New from Stationery: asked before the - button removes a stationery */
 "Move “%@” to the Trash?" = "Placer « %@ » dans la corbeille ?";
@@ -572,3 +557,24 @@
 
 /* File > New from Stationery: the name of a duplicated stationery */
 "%@ copy" = "%@ copie";
+
+/* File > New from Stationery: the + button */
+"New Stationery" = "Nouveau modèle";
+
+/* File > New from Stationery: the name of a new, empty stationery */
+"Untitled Stationery" = "Sans titre";
+
+/* File > New from Stationery: contextual menu item that opens the stationery file */
+"Edit Stationery" = "Modifier";
+
+/* File > New from Stationery: actions menu item that opens the stationery file */
+"Edit “%@”" = "Modifier « %@ »";
+
+/* File > New from Stationery: contextual menu item */
+"Rename Stationery" = "Renommer";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Rename “%@”" = "Renommer « %@ »";
+
+/* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
+"Show “%@” in Finder" = "Afficher « %@ » dans le Finder";
