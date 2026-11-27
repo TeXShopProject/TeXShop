@@ -560,3 +560,15 @@
 
 /* File > New from Stationery: removes the stationery */
 "Move to Trash" = "Placer dans la corbeille";
+
+/* File > New from Stationery: the actions menu at the bottom of the list */
+"Stationery Actions" = "Actions sur les modèles";
+
+/* File > New from Stationery: contextual menu item */
+"Duplicate" = "Dupliquer";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Duplicate “%@”" = "Dupliquer « %@ »";
+
+/* File > New from Stationery: the name of a duplicated stationery */
+"%@ copy" = "%@ copie";

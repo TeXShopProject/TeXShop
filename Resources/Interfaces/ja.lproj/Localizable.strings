@@ -575,3 +575,15 @@
 
 /* File > New from Stationery: removes the stationery */
 "Move to Trash" = "ゴミ箱に入れる";
+
+/* File > New from Stationery: the actions menu at the bottom of the list */
+"Stationery Actions" = "ひな形の操作";
+
+/* File > New from Stationery: contextual menu item */
+"Duplicate" = "複製";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Duplicate “%@”" = "“%@”を複製";
+
+/* File > New from Stationery: the name of a duplicated stationery */
+"%@ copy" = "%@ のコピー";

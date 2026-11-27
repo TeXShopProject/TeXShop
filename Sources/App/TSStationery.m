@@ -20,7 +20,7 @@ static NSUserInterfaceItemIdentifier const TSStationeryDescriptionColumn = @"Des
 @property (weak) TSStationery *stationery;
 @end
 
-@interface TSStationery () <QLPreviewPanelDataSource, QLPreviewPanelDelegate>
+@interface TSStationery () <QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuDelegate>
 - (NSURL *)selectedStationeryURL;
 - (void)toggleQuickLook;
 @end
@@ -154,6 +154,9 @@ static NSString *TSStationeryOneLine(NSString *text)
 	table.delegate = self;
 	table.target = self;
 	table.doubleAction = @selector(openClickedRow:);
+	// The contextual menu names no stationery, as in the Finder and the theme list.
+	table.menu = [[NSMenu alloc] initWithTitle:@""];
+	table.menu.delegate = self;
 
 	NSScrollView *scroll = [NSScrollView new];
 	scroll.borderType = NSNoBorder;
@@ -168,8 +171,9 @@ static NSString *TSStationeryOneLine(NSString *text)
 	TSListBottomBar *bar = [[TSListBottomBar alloc] initWithTarget:self
 	    addAction:@selector(addFrontDocument:) addToolTip:NSLocalizedString(@"Add the Front Document as Stationery", @"File > New from Stationery: the + button")
 	    removeAction:@selector(removeSelectedStationery:) removeToolTip:NSLocalizedString(@"Move the Stationery to the Trash", @"File > New from Stationery: the - button")
-	    actionsToolTip:@""];
-	bar.actionsButton.hidden = YES;
+	    actionsToolTip:NSLocalizedString(@"Stationery Actions", @"File > New from Stationery: the actions menu at the bottom of the list")];
+	bar.actionsButton.menu.delegate = self;
+	bar.actionsButton.identifier = @"stationery.actions";
 	bar.addButton.identifier = @"stationery.add";
 	bar.removeButton.identifier = @"stationery.remove";
 	NSView *frame = [NSView new];
@@ -433,13 +437,35 @@ static NSString *TSStationeryOneLine(NSString *text)
 	NSURL *url = [NSURL fileURLWithPath:[self.folderPath stringByAppendingPathComponent:self.fullSourceData[row]]];
 	[self.stationeryWindow close];
 	NSError *error = nil;
-	TSDocument *document = [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error];
+	NSDocumentController *controller = [NSDocumentController sharedDocumentController];
+	TSDocument *document = nil;
+	if ([self documentIsOpenForURL:url]) {
+		// The stationery is open for editing (Show in Finder, +): a second document is made from
+		// the file, so that the one being edited keeps its file.
+		NSString *type = [controller typeForContentsOfURL:url error:&error];
+		document = type ? [controller makeDocumentWithContentsOfURL:url ofType:type error:&error] : nil;
+		if (document) {
+			[controller addDocument:document];
+			[document makeWindowControllers];
+			[document showWindows];
+		}
+	} else
+		document = [controller openDocumentWithContentsOfURL:url display:YES error:&error];
 	if (!document) {
 		if (error) [NSApp presentError:error];
 		return;
 	}
 	[document setFileURL:nil];
 	[document updateChangeCount:NSChangeDone];
+}
+
+- (BOOL)documentIsOpenForURL:(NSURL *)url
+{
+	NSDocumentController *controller = [NSDocumentController sharedDocumentController];
+	if ([controller documentForURL:url]) return YES;
+	for (NSDocument *document in controller.documents)
+		if ([document respondsToSelector:@selector(isSameFileAs:)] && [(TSDocument *)document isSameFileAs:url]) return YES;
+	return NO;
 }
 
 - (IBAction)cancelForStationeryPanel:(id)sender
@@ -692,6 +718,61 @@ static NSString *TSStationeryOneLine(NSString *text)
 {
 	if (error == nil) return;
 	[[NSAlert alertWithError:error] beginSheetModalForWindow:self.stationeryWindow completionHandler:nil];
+}
+
+#pragma mark Duplicating
+
+// The actions menu names the selected stationery; the contextual menu acts on the row clicked.
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+	BOOL context = menu == self.tableView.menu;
+	NSMenuItem *icon = context ? nil : menu.itemArray.firstObject;
+	[menu removeAllItems];
+	if (icon) [menu addItem:icon];
+	NSInteger row = context ? self.tableView.clickedRow : self.tableView.selectedRow;
+	if (row < 0 || row >= (NSInteger)self.fullSourceData.count) return;
+	NSString *title = context ? NSLocalizedString(@"Duplicate", @"File > New from Stationery: contextual menu item")
+	                          : [NSString stringWithFormat:NSLocalizedString(@"Duplicate “%@”", @"File > New from Stationery: actions menu item, with the name of the selected stationery"), [self titleAtRow:row]];
+	NSMenuItem *item = [menu addItemWithTitle:title action:@selector(duplicateStationery:) keyEquivalent:@""];
+	item.target = self;
+	item.representedObject = self.fullSourceData[row];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+	if (item.action == @selector(duplicateStationery:)) return [self.fullSourceData containsObject:item.representedObject];
+	return YES;
+}
+
+// A copy of the stationery and its description, named as the theme list names a copy, and selected.
+- (IBAction)duplicateStationery:(id)sender
+{
+	NSString *file = [sender respondsToSelector:@selector(representedObject)] ? [sender representedObject] : nil;
+	if (![file isKindOfClass:NSString.class]) {
+		NSInteger row = self.tableView.selectedRow;
+		file = row >= 0 && row < (NSInteger)self.fullSourceData.count ? self.fullSourceData[row] : nil;
+	}
+	if (file == nil) return;
+	NSString *proposed = [NSString stringWithFormat:NSLocalizedString(@"%@ copy", @"File > New from Stationery: the name of a duplicated stationery"), file.stringByDeletingPathExtension];
+	NSString *name = proposed;
+	for (NSUInteger number = 2; [self stationeryFilesNamed:name].count || [[NSFileManager defaultManager] fileExistsAtPath:[[self.folderPath stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"comment"]]; number++)
+		name = [NSString stringWithFormat:@"%@ %lu", proposed, (unsigned long)number];
+	NSString *copy = file.pathExtension.length ? [name stringByAppendingPathExtension:file.pathExtension] : name;
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSError *error = nil;
+	if (![fileManager copyItemAtPath:[self.folderPath stringByAppendingPathComponent:file] toPath:[self.folderPath stringByAppendingPathComponent:copy] error:&error]) {
+		[self showError:error];
+		return;
+	}
+	NSString *comment = [[self.folderPath stringByAppendingPathComponent:file.stringByDeletingPathExtension] stringByAppendingPathExtension:@"comment"];
+	if ([fileManager fileExistsAtPath:comment])
+		[fileManager copyItemAtPath:comment toPath:[[self.folderPath stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"comment"] error:nil];
+	[self reloadStationery];
+	NSUInteger row = [self.fullSourceData indexOfObject:copy];
+	if (row != NSNotFound) {
+		[self.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+		[self.tableView scrollRowToVisible:row];
+	}
 }
 
 #pragma mark Editing descriptions

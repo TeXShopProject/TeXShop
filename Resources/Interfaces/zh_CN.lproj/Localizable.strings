@@ -557,3 +557,15 @@
 
 /* File > New from Stationery: removes the stationery */
 "Move to Trash" = "移到废纸篓";
+
+/* File > New from Stationery: the actions menu at the bottom of the list */
+"Stationery Actions" = "样板操作";
+
+/* File > New from Stationery: contextual menu item */
+"Duplicate" = "复制";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Duplicate “%@”" = "复制“%@”";
+
+/* File > New from Stationery: the name of a duplicated stationery */
+"%@ copy" = "%@ 副本";

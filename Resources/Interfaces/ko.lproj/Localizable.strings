@@ -560,3 +560,15 @@
 
 /* File > New from Stationery: removes the stationery */
 "Move to Trash" = "휴지통으로 이동";
+
+/* File > New from Stationery: the actions menu at the bottom of the list */
+"Stationery Actions" = "스테이셔너리 동작";
+
+/* File > New from Stationery: contextual menu item */
+"Duplicate" = "복제";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Duplicate “%@”" = "‘%@’ 복제";
+
+/* File > New from Stationery: the name of a duplicated stationery */
+"%@ copy" = "%@ 복사본";

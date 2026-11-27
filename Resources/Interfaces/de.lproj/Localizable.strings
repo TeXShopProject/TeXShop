@@ -560,3 +560,15 @@
 
 /* File > New from Stationery: removes the stationery */
 "Move to Trash" = "In den Papierkorb legen";
+
+/* File > New from Stationery: the actions menu at the bottom of the list */
+"Stationery Actions" = "Aktionen für Formularblöcke";
+
+/* File > New from Stationery: contextual menu item */
+"Duplicate" = "Duplizieren";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Duplicate “%@”" = "„%@“ duplizieren";
+
+/* File > New from Stationery: the name of a duplicated stationery */
+"%@ copy" = "%@ Kopie";

@@ -6,7 +6,9 @@
 //     Create and Cancel; a double click on a row opens it;
 //   * the list is read again when the panel opens and when it becomes key, and the
 //     selected file stays selected while it is there;
-//   * Create opens the selected file as an untitled, edited document;
+//   * Create opens the selected file as an untitled, edited document; when the file is
+//     already open for editing, a second document is made from it and the open one keeps
+//     its file;
 //   * Show in Finder creates the folder if it is missing and opens it;
 //   * + is enabled while a source document is in front; its sheet proposes the
 //     document's name, refuses empty names and names with / or :, and adds the
@@ -14,6 +16,9 @@
 //     in use asks before replacing;
 //   * - is enabled with a stationery selected, asks before moving it and its
 //     .comment file to the Trash, and selects the next one;
+//   * the actions menu at the bottom of the list duplicates the selected stationery and its
+//     description as "name copy", "name copy 2" ..., and selects the copy; the contextual
+//     menu does it for the row clicked;
 //   * Space shows the selected stationery in Quick Look and hides it again; the preview
 //     follows the selection and grows from the selected row;
 //   * a description edited in the list is written to the .comment file (an empty one
@@ -27,6 +32,7 @@
 // Usage: StationeryPanel <work folder> <png folder or -> <language>=<Localizable.strings> ...
 #import "TestAppKitIsolation.h"
 #import "TSStationery.h"
+#import "TSListBottomBar.h"
 #import <Quartz/Quartz.h>
 
 NSString *StationeryPath = @"~/Library/TeXShop/Stationery";
@@ -48,11 +54,28 @@ static BOOL TestOpenURL(id self, SEL _cmd, NSURL *url) { [OpenedInWorkspace addO
 @property (nonatomic) NSURL *fileURL;
 @property BOOL fileURLWasSet;
 @property NSInteger changes;
+@property BOOL shown;
 @end
 @implementation FakeDocument
 - (void)setFileURL:(NSURL *)url { _fileURL = url; self.fileURLWasSet = YES; }
 - (void)updateChangeCount:(NSDocumentChangeType)change { if (change == NSChangeDone) self.changes++; }
+- (BOOL)isSameFileAs:(NSURL *)url { return [self.fileURL.path isEqualToString:url.path]; }
+- (void)makeWindowControllers {}
+- (void)showWindows { self.shown = YES; }
 @end
+// Documents open in the application, and documents made from a file beside them.
+static NSArray *OpenDocuments;
+static NSMutableArray *MadeDocuments, *AddedDocuments;
+static NSArray *TestDocuments(id self, SEL _cmd) { return OpenDocuments ?: @[]; }
+static id TestDocumentForURL(id self, SEL _cmd, NSURL *url) { return nil; }
+static NSString *TestTypeForURL(id self, SEL _cmd, NSURL *url, NSError **error) { return @"edu.uo.texshop.tex"; }
+static id TestMakeDocument(id self, SEL _cmd, NSURL *url, NSString *type, NSError **error) {
+    FakeDocument *made = [FakeDocument new];
+    made.fileURL = url;
+    [MadeDocuments addObject:made];
+    return made;
+}
+static void TestAddDocument(id self, SEL _cmd, id document) { [AddedDocuments addObject:document]; }
 static FakeDocument *LastDocument;
 static id TestOpenDocument(id self, SEL _cmd, NSURL *url, BOOL display, NSError **error) {
     [OpenedDocuments addObject:url];
@@ -181,6 +204,17 @@ static void Behavior(NSString *work) {
     [s okForStationeryPanel:nil];
     Check(OpenedDocuments.count == 1 && [OpenedDocuments.firstObject.path isEqualToString:[folder stringByAppendingPathComponent:@"A.tex"]], @"Create opens the selected file");
     Check(LastDocument.fileURLWasSet && LastDocument.fileURL == nil && LastDocument.changes == 1, @"the new document is untitled and edited");
+    // The same stationery open for editing.
+    FakeDocument *editing = [FakeDocument new];
+    editing.fileURL = [NSURL fileURLWithPath:[folder stringByAppendingPathComponent:@"A.tex"]];
+    editing.fileURLWasSet = NO;
+    OpenDocuments = @[editing];
+    Select(s, @"A.tex");
+    [s okForStationeryPanel:nil];
+    FakeDocument *made = MadeDocuments.lastObject;
+    Check(OpenedDocuments.count == 1 && MadeDocuments.count == 1 && [AddedDocuments isEqualToArray:@[made]] && made.shown, @"Create on a stationery open for editing makes a second document from the file");
+    Check(made.fileURL == nil && made.changes == 1 && !editing.fileURLWasSet && editing.changes == 0, @"the second document is untitled and edited; the open one keeps its file");
+    OpenDocuments = nil;
     [s.tableView deselectAll:nil];
     [s okForStationeryPanel:nil];
     Check(OpenedDocuments.count == 1, @"Create with nothing selected opens nothing");
@@ -269,6 +303,33 @@ static void Behavior(NSString *work) {
     Check(s.tableView.selectedRow == (NSInteger)before, @"the next stationery is selected");
     [s.tableView deselectAll:nil];
     Check(!s.minusButton.enabled, @"- is disabled with nothing selected");
+
+    // Duplicate.
+    Select(s, @"0.tex");
+    TSListBottomBar *bar = nil;
+    for (NSView *v = s.plusButton; v; v = v.superview) if ([v isKindOfClass:TSListBottomBar.class]) bar = (TSListBottomBar *)v;
+    NSMenu *actions = bar.actionsButton.menu;
+    Check(bar && !bar.actionsButton.hidden && actions.delegate == (id)s, @"the bar has the actions menu");
+    [actions.delegate menuNeedsUpdate:actions];
+    NSMenuItem *duplicate = actions.itemArray.lastObject;
+    Check(actions.numberOfItems == 2 && [duplicate.title containsString:@"0"] && [(id)s validateMenuItem:duplicate], @"the actions menu duplicates the selected stationery by name");
+    [NSApp sendAction:duplicate.action to:duplicate.target from:duplicate];
+    Check([Read([folder stringByAppendingPathComponent:@"0 copy.tex"]) isEqualToString:@"0"] && [Read([folder stringByAppendingPathComponent:@"0 copy.comment"]) isEqualToString:@"Zero"], @"Duplicate copies the stationery and its description");
+    Check([Selected(s) isEqualToString:@"0 copy.tex"], @"the copy is selected");
+    Select(s, @"0.tex");
+    [actions.delegate menuNeedsUpdate:actions];
+    duplicate = actions.itemArray.lastObject;
+    [NSApp sendAction:duplicate.action to:duplicate.target from:duplicate];
+    Check([Selected(s) isEqualToString:@"0 copy 2.tex"] && [fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"0 copy 2.comment"]], @"a second copy takes the next free name");
+    Check([Read([folder stringByAppendingPathComponent:@"0 copy.tex"]) isEqualToString:@"0"], @"and leaves the first copy alone");
+    [s.tableView deselectAll:nil];
+    [actions.delegate menuNeedsUpdate:actions];
+    Check(actions.numberOfItems == 1, @"with nothing selected the actions menu has no command");
+    NSMenu *context = s.tableView.menu;
+    [context.delegate menuNeedsUpdate:context];
+    Check(context.numberOfItems == 0, @"the contextual menu of no row is empty");
+    for (NSString *copy in @[@"0 copy.tex", @"0 copy.comment", @"0 copy 2.tex", @"0 copy 2.comment"]) [fm removeItemAtPath:[folder stringByAppendingPathComponent:copy] error:nil];
+    [s reloadStationery];
 
     // Quick Look, recorded only here: text views also ask the shared panel.
     IMP sharedPanel = method_setImplementation(class_getClassMethod(QLPreviewPanel.class, @selector(sharedPreviewPanel)), (IMP)TestSharedPreview);
@@ -376,6 +437,11 @@ static void Layout(NSString *language, NSString *folder, NSString *pngs) {
     for (NSString *key in @[@"Add the Front Document as Stationery", @"Move the Stationery to the Trash", @"Add as Stationery", @"Name:", @"Description:",
                             @"A stationery named “%@” already exists. Replace it?", @"Move “%@” to the Trash?", @"Move to Trash", @"Add", @"Replace"])
         Check(Table[key] != nil, [NSString stringWithFormat:@"%@: %@ is translated", language, key]);
+    for (NSString *key in @[@"Stationery Actions", @"Duplicate", @"Duplicate “%@”", @"%@ copy"])
+        Check(Table[key] != nil, [NSString stringWithFormat:@"%@: %@ is translated", language, key]);
+    NSButton *actionsButton = nil;
+    for (NSView *v in views) if ([v.identifier isEqual:@"stationery.actions"]) actionsButton = (NSButton *)v;
+    Check([actionsButton.toolTip isEqualToString:L(@"Stationery Actions")], [NSString stringWithFormat:@"%@: the actions menu has a translated tooltip", language]);
     Check([s.plusButton.toolTip isEqualToString:L(@"Add the Front Document as Stationery")] && [s.minusButton.toolTip isEqualToString:L(@"Move the Stationery to the Trash")],
           [NSString stringWithFormat:@"%@: + and - have translated tooltips", language]);
     // The sheet of +: labels and buttons whole, the fields after the longer label.
@@ -466,6 +532,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     method_setImplementation(class_getInstanceMethod(NSFileManager.class, @selector(trashItemAtURL:resultingItemURL:error:)), (IMP)TestTrash);
     Trashed = [NSMutableArray array];
     QuickLook = [FakeQuickLook new];
+    MadeDocuments = [NSMutableArray array];
+    AddedDocuments = [NSMutableArray array];
+    method_setImplementation(class_getInstanceMethod(NSDocumentController.class, @selector(documents)), (IMP)TestDocuments);
+    method_setImplementation(class_getInstanceMethod(NSDocumentController.class, @selector(documentForURL:)), (IMP)TestDocumentForURL);
+    method_setImplementation(class_getInstanceMethod(NSDocumentController.class, @selector(typeForContentsOfURL:error:)), (IMP)TestTypeForURL);
+    method_setImplementation(class_getInstanceMethod(NSDocumentController.class, @selector(makeDocumentWithContentsOfURL:ofType:error:)), (IMP)TestMakeDocument);
+    method_setImplementation(class_getInstanceMethod(NSDocumentController.class, @selector(addDocument:)), (IMP)TestAddDocument);
     OpenedInWorkspace = [NSMutableArray array];
     OpenedDocuments = [NSMutableArray array];
     NSString *work = @(argv[1]), *pngs = @(argv[2]);
