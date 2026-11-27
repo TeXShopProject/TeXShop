@@ -97,6 +97,22 @@ MUTATIONS = {
     'toolbar-top-clamped': ('TSPreviewScrollerKeeper.m',
         '        if (proposed.origin.y < rect.origin.y)\n            rect.origin.y = fmax(proposed.origin.y, limit);\n',
         ''),
+    # A link target or an outline entry stays where PDFKit puts it, under the toolbar (#78).
+    'destination-under-toolbar': ('TSPreviewScrollerKeeper.m',
+        '    if (!isfinite(distance) || distance >= below - 0.5)\n',
+        '    if (YES)\n'),
+    # Back comes back lower by the top inset (#78).
+    'history-place-lower': ('TSPreviewScrollerKeeper.m',
+        '    TSMoveTextUp(scroll, inset);\n}',
+        '}'),
+    # Back to the top of the document hides the top of the first page under the band (#78).
+    'history-top-of-document': ('TSPreviewScrollerKeeper.m',
+        '        if (noted.point.y >= pageTop - 1) {\n',
+        '        if (NO) {\n'),
+    # A change of the layout puts the place it kept below the band, lower by the band (#78).
+    'layout-place-lower': ('TSPreviewScrollerKeeper.m',
+        '    if (isfinite(distance))\n        TSMoveTextUp(scroll, distance);\n',
+        ''),
     # setupToolbar's trio skips the Preview window, so it is never prepared.
     'preview-not-prepared': ('TSDocumentWindowGlass.m',
         '        TSDocumentWindowPrepare(window);\n',
@@ -111,6 +127,21 @@ names = ('TSDocumentWindowGlass.m', 'TSDocument.m', 'TSPreviewScrollerKeeper.m')
 text = {name: source_file(root, name).read_text(encoding='latin1') for name in names}
 preview = source_file(root, 'MyPDFKitView.m').read_text(encoding='latin1')
 assert preview.count('[TSPreviewScrollerKeeper installInView:self];') >= 2, 'the preview installs the scroller keeper'
+# Links, outline entries, page jumps and SyncTeX or search results show below the toolbar (#78).
+for signature, call in (('- (void) goBack:sender', 'TSPreviewHistoryPlaceToTop(self);'),
+                        ('- (void) goForward: sender', 'TSPreviewHistoryPlaceToTop(self);'),
+                        ('- (void)goToNextPage:(id)sender', '[self revealCurrentPageBelowToolbar];'),
+                        ('- (void)goToPreviousPage:(id)sender', '[self revealCurrentPageBelowToolbar];'),
+                        ('- (void)goToFirstPage:(id)sender', '[self revealCurrentPageBelowToolbar];'),
+                        ('- (void)goToLastPage:(id)sender', '[self revealCurrentPageBelowToolbar];'),
+                        ('- (void)revealCurrentPageBelowToolbar', 'TSPreviewRevealBelowToolbar(self, page, '),
+                        ('- (void)performPreviewLayoutChange:(void (^)(void))change', 'TSPreviewPutAtTop(self, destination.page, destination.point);'),
+                        ('- (void)goToDestination:(PDFDestination *)destination', 'TSPreviewRevealBelowToolbar(self, page, point);'),
+                        ('- (void)goToPage:(PDFPage *)page', 'TSPreviewRevealBelowToolbar(self, page, '),
+                        ('- (void)revealSelectionBelowToolbar', 'TSPreviewRevealBelowToolbar(self, page, '),
+                        ('- (void)scrollSelectionToVisible:(id)sender', '[self revealSelectionBelowToolbar];')):
+    assert call in method(preview, signature), signature
+assert method(preview, '- (void)scrollSelectionToVisible:(id)sender').count('[self revealSelectionBelowToolbar];') == 2, 'both ways of showing a result'
 split_method = method(text['TSDocument.m'], '- (void) splitWindow: sender')
 fragments = [('complete method: splitWindow:', text['TSDocument.m'], split_method)]
 if args.mutation:
@@ -402,6 +433,82 @@ int main(int argc, char **argv) { @autoreleasepool {
         Check(fabs(previewScroll.contentInsets.top * magnification - previewBand) < 1.5,
               [NSString stringWithFormat:@"the top inset times the magnification is the toolbar band (%.1f, %.1f)%@",
                previewScroll.contentInsets.top * magnification, previewBand, nibName]);
+        // #78: above unit scale PDFKit puts a link target at the top inset taken as screen
+        // points, which is the band divided by the magnification: under the toolbar. The
+        // target goes right below the band.
+        {
+            PDFPage *target = [pdf pageAtIndex:pdf.pageCount > 1 ? 1 : 0];
+            NSPoint point = NSMakePoint(100, NSMidY([target boundsForBox:kPDFDisplayBoxCropBox]));
+            CGFloat (^UnderBar)(void) = ^CGFloat{
+                NSPoint w = [pv convertPoint:[pv convertPoint:point fromPage:target] toView:nil];
+                return w.y - NSMaxY(pw.contentLayoutRect);
+            };
+            [pv goToDestination:[[PDFDestination alloc] initWithPage:target atPoint:point]];
+            Settle(pw);
+            CGFloat byPDFKit = UnderBar();
+            TSPreviewRevealBelowToolbar(pv, target, point);
+            Settle(pw);
+            CGFloat shown = UnderBar();
+            printf("  link target above the bottom of the toolbar: %.1f by PDFKit, %.1f shown\n", byPDFKit, shown);
+            Check(shown <= 0.6 && shown > -2,
+                  [NSString stringWithFormat:@"at twice the scale a link target shows right below the toolbar (%.1f)%@", shown, nibName]);
+            TSPreviewRevealBelowToolbar(pv, target, point);
+            Check(fabs(UnderBar() - shown) < 0.1,
+                  [NSString stringWithFormat:@"a target already below the toolbar stays where it is%@", nibName]);
+            // Back: PDFKit puts the place noted before the move, the point at the top edge of the
+            // clip view, at its top inset; it goes back to the top edge.
+            {
+                PDFPage *first = [pdf pageAtIndex:0];
+                [pv goToPage:first];
+                ScrollTop(previewScroll); Settle(pw);
+                NSClipView *clip = previewScroll.contentView;
+                NSPoint o = clip.bounds.origin; o.y += (clip.isFlipped ? 1 : -1) * 150; [clip scrollToPoint:o]; [previewScroll reflectScrolledClipView:clip]; Settle(pw);
+                NSPoint probe = [pv convertPoint:NSMakePoint(NSMidX(clip.bounds), NSMidY(clip.bounds)) fromView:clip];
+                PDFPage *probePage = [pv pageForPoint:probe nearest:YES];
+                NSPoint probePoint = [pv convertPoint:probe toPage:probePage];
+                CGFloat (^Probe)(void) = ^CGFloat{ return [pv convertPoint:[pv convertPoint:probePoint fromPage:probePage] toView:nil].y; };
+                CGFloat seen = Probe();
+                PDFDestination *noted = pv.currentDestination;
+                [pv goToDestination:[[PDFDestination alloc] initWithPage:target atPoint:point]];
+                Settle(pw);
+                [pv goBack:nil];
+                Settle(pw);
+                CGFloat byPDFKit = Probe() - seen;
+                TSPreviewHistoryPlaceToTop(pv);
+                Settle(pw);
+                printf("  Back moved the view by %.1f with PDFKit alone, %.1f after\n", byPDFKit, Probe() - seen);
+                Check(fabs(Probe() - seen) < 1,
+                      [NSString stringWithFormat:@"Back at twice the scale shows the place where it was (%.1f)%@", Probe() - seen, nibName]);
+                // Back to the top of the document: the noted point is the top of the first page.
+                {
+                    ScrollTop(previewScroll); Settle(pw);
+                    NSPoint top = NSMakePoint(0, NSMaxY([first boundsForBox:kPDFDisplayBoxCropBox]));
+                    CGFloat (^Top)(void) = ^CGFloat{ return [pv convertPoint:[pv convertPoint:top fromPage:first] toView:nil].y; };
+                    CGFloat atTop = Top();
+                    [pv goToDestination:[[PDFDestination alloc] initWithPage:target atPoint:point]];
+                    Settle(pw);
+                    [pv goBack:nil];
+                    Settle(pw);
+                    TSPreviewHistoryPlaceToTop(pv);
+                    Settle(pw);
+                    Check(fabs(Top() - atTop) < 1,
+                          [NSString stringWithFormat:@"Back to the top of the document shows the first page where it was (%.1f)%@", Top() - atTop, nibName]);
+                    [pv goToDestination:noted];
+                    Settle(pw);
+                }
+                // A change of the layout goes to the current destination noted before it.
+                [pv goToDestination:noted];
+                Settle(pw);
+                TSPreviewPutAtTop(pv, noted.page, noted.point);
+                Settle(pw);
+                Check(fabs(Probe() - seen) < 1,
+                      [NSString stringWithFormat:@"the current destination goes back to the top edge, where it was (%.1f)%@", Probe() - seen, nibName]);
+            }
+            [pv setScaleFactor:2];
+            ScrollTop(previewScroll);
+            Settle(pw);
+        }
+
         NSView *shield = ToolbarShield(previewScroll);
         BOOL shieldOK = shield && !shield.hidden && shield.clipsToBounds
             && NSHeight(shield.bounds) >= previewBand && NSHeight(shield.bounds) <= previewBand + 30;

@@ -2296,20 +2296,28 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 // Back and Forward go to another place: the pinned popup of this part stays on its page (#35).
 - (void) goBack:sender
 {
-	if ([self canGoBack])
+	BOOL moves = [self canGoBack];
+	if (moves)
 		[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goBack:sender];
+	// The place noted before the move comes back where it was, not lower by the band (#78).
+	if (moves)
+		TSPreviewHistoryPlaceToTop(self);
 }
 
 - (void) goForward: sender
 {
-	if ([self canGoForward])
+	BOOL moves = [self canGoForward];
+	if (moves)
 		[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goForward:sender];
+	// The place noted before the move comes back where it was, not lower by the band (#78).
+	if (moves)
+		TSPreviewHistoryPlaceToTop(self);
 }
 
 // added by Terada (from this line)
@@ -2950,9 +2958,20 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     TSPreviewPlaceChosenByProgram(self);
 }
 
+// The top of the page that a page turn went to shows below the toolbar (#78).
+- (void)revealCurrentPageBelowToolbar
+{
+    PDFPage *page = self.currentPage;
+    if (page)
+        TSPreviewRevealBelowToolbar(self, page, NSMakePoint(0, NSMaxY([page boundsForBox:self.displayBox])));
+}
+
 - (void)goToPage:(PDFPage *)page
 {
     [self keepHorizontalPositionDuring:^{ [super goToPage:page]; }];
+    // The top of the page shows below the toolbar (#78).
+    if (page)
+        TSPreviewRevealBelowToolbar(self, page, NSMakePoint(0, NSMaxY([page boundsForBox:self.displayBox])));
 }
 
 // Fit to Content Width: going to a place, as the drawer and links do, PDFKit also scrolls
@@ -2971,6 +2990,15 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (void)goToDestination:(PDFDestination *)destination
 {
     [self keepContentWidthPlaceDuring:^{ [super goToDestination:destination]; }];
+    // The target of a link or an outline entry shows below the toolbar (#78). A destination
+    // without a height goes to the top of its page.
+    PDFPage *page = destination.page;
+    if (page) {
+        NSPoint point = destination.point;
+        if (!isfinite(point.y) || point.y >= kPDFDestinationUnspecifiedValue)
+            point.y = NSMaxY([page boundsForBox:self.displayBox]);
+        TSPreviewRevealBelowToolbar(self, page, point);
+    }
 }
 
 // "Do not turn pages by scrolling" (NoScrollPageTurnKey): in single and double page
@@ -3012,6 +3040,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     if ([self isPageTurnFromScrolling:_cmd])
         return;
     [self keepHorizontalPositionDuring:^{ [super goToNextPage:sender]; }];
+    [self revealCurrentPageBelowToolbar];
 }
 
 - (void)goToPreviousPage:(id)sender
@@ -3019,28 +3048,43 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     if ([self isPageTurnFromScrolling:_cmd])
         return;
     [self keepHorizontalPositionDuring:^{ [super goToPreviousPage:sender]; }];
+    [self revealCurrentPageBelowToolbar];
 }
 
 - (void)goToFirstPage:(id)sender
 {
     [self keepHorizontalPositionDuring:^{ [super goToFirstPage:sender]; }];
+    [self revealCurrentPageBelowToolbar];
 }
 
 - (void)goToLastPage:(id)sender
 {
     [self keepHorizontalPositionDuring:^{ [super goToLastPage:sender]; }];
+    [self revealCurrentPageBelowToolbar];
 }
 
 // SyncTeX and Find show their result with scrollSelectionToVisible:. On macOS 27
 // PDFKit then also scrolls sideways, to a place that depends on where the line
 // is on the page, so the margins moved from one page to the next. Scroll sideways
 // only as far as needed to bring the result into view (TSPreviewHorizontalPosition.h).
+// A SyncTeX or search result that PDFKit scrolled into view shows below the toolbar (#78).
+- (void)revealSelectionBelowToolbar
+{
+    PDFSelection *selection = self.currentSelection;
+    PDFPage *page = selection.pages.firstObject;
+    if (!page) return;
+    NSRect bounds = [selection boundsForPage:page];
+    if (NSIsEmptyRect(bounds)) return;
+    TSPreviewRevealBelowToolbar(self, page, NSMakePoint(NSMinX(bounds), NSMaxY(bounds)));
+}
+
 - (void)scrollSelectionToVisible:(id)sender
 {
     // Fit to Content Width: the result is part of the content, which is in view sideways at
     // its place (#62).
     if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH) {
         [self keepContentWidthPlaceDuring:^{ [super scrollSelectionToVisible:sender]; }];
+        [self revealSelectionBelowToolbar];
         return;
     }
     NSScrollView *scroll = self.documentView.enclosingScrollView;
@@ -3051,6 +3095,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         keep = selection && clip && !NSIsEmptyRect(clip.bounds) && NSWidth(clip.frame) > 0;
     CGFloat x = NSMinX(clip.bounds), width = NSWidth(clip.bounds);
     [super scrollSelectionToVisible:sender];
+    [self revealSelectionBelowToolbar];
     if (!keep) return;
     clip = self.documentView.enclosingScrollView.contentView;
     // The result line by line: a result that runs on to another page or column
@@ -3273,9 +3318,12 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     if (page && [self.document indexForPage:page] != NSNotFound) {
         // currentDestination can belong to the previous page at the bottom of
         // a continuous view or to the left page of a spread.
-        if (destination.page == page)
-            [self goToDestination:destination];
-        else
+        if (destination.page == page) {
+            // The current destination lies at the top edge of the clip view, under the band of
+            // the toolbar; it goes back there, not below the band (#78).
+            [self keepContentWidthPlaceDuring:^{ [super goToDestination:destination]; }];
+            TSPreviewPutAtTop(self, destination.page, destination.point);
+        } else
             [self goToPage:page];
     }
     [self endKeepingPinnedLinkPreviewOnPage: keepsPopup];
