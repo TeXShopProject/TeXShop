@@ -7,7 +7,10 @@
 #import "TSAnnotationTextPopover.h"
 
 static const CGFloat TSAnnotationBarHeight = 36;
-static const CGFloat TSAnnotationBarToolSize = 28;
+static const CGFloat TSAnnotationBarToolSize = 29;
+static const CGFloat TSAnnotationBarToolHeight = 28;
+// The pictures are drawn on a 20 x 16 sheet and scaled up by this factor.
+static const CGFloat TSAnnotationPictureScale = 1.25;
 
 // The parts of the Preview answer with the annotation selected for editing, and take the
 // actions the bar sends them (MyPDFKitView-Annotations.m).
@@ -75,14 +78,29 @@ static NSString *TSAnnotationToolName(NSUInteger index)
 
 #pragma mark - Pictures
 
+// The colors of the pictures keep the hues of the annotations they make, and come in a light
+// and a dark value, so that each stands out from the gray of the bar in either appearance.
+static NSColor *TSAnnotationPictureColor(CGFloat lr, CGFloat lg, CGFloat lb, CGFloat dr, CGFloat dg, CGFloat db)
+{
+    return [NSColor colorWithName:nil dynamicProvider:^NSColor *(NSAppearance *appearance) {
+        BOOL dark = [appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] == NSAppearanceNameDarkAqua;
+        return dark ? [NSColor colorWithSRGBRed:dr green:dg blue:db alpha:1] : [NSColor colorWithSRGBRed:lr green:lg blue:lb alpha:1];
+    }];
+}
+
 // The picture of a tool, drawn in the colors the tool gives a new annotation.
 static NSImage *TSAnnotationToolImage(NSUInteger index, NSString *name)
 {
-    NSImage *image = [NSImage imageWithSize:NSMakeSize(20, 16) flipped:NO drawingHandler:^BOOL(NSRect rect) {
+    NSImage *image = [NSImage imageWithSize:NSMakeSize(ceil(20 * TSAnnotationPictureScale), ceil(16 * TSAnnotationPictureScale)) flipped:NO drawingHandler:^BOOL(NSRect rect) {
+        NSAffineTransform *scale = [NSAffineTransform transform];
+        [scale scaleBy:TSAnnotationPictureScale];
+        [scale concat];
         NSColor *ink = NSColor.labelColor;
-        NSColor *red = NSColor.systemRedColor;
-        NSColor *green = [NSColor colorWithSRGBRed:0.08 green:0.78 blue:0.08 alpha:1];
-        NSColor *purple = [NSColor colorWithSRGBRed:0.45 green:0.12 blue:0.55 alpha:1];
+        NSColor *red = TSAnnotationPictureColor(0.85, 0.10, 0.10, 1.00, 0.42, 0.40);
+        NSColor *green = TSAnnotationPictureColor(0.00, 0.58, 0.10, 0.30, 0.95, 0.38);
+        // Where black text or lines lie on the green, the green is a light one.
+        NSColor *greenFill = TSAnnotationPictureColor(0.38, 0.86, 0.38, 0.30, 0.95, 0.38);
+        NSColor *purple = TSAnnotationPictureColor(0.45, 0.12, 0.60, 0.80, 0.55, 1.00);
         // The letters of the pictures, in the system's serif design, as text in a page.
         NSFontDescriptor *serifDesign = [[NSFont systemFontOfSize:13].fontDescriptor fontDescriptorWithDesign:NSFontDescriptorSystemDesignSerif];
         NSFont *serifFont = (serifDesign ? [NSFont fontWithDescriptor:serifDesign size:13] : nil) ?: [NSFont systemFontOfSize:13];
@@ -141,7 +159,7 @@ static NSImage *TSAnnotationToolImage(NSUInteger index, NSString *name)
             case 8:
             case 9: {
                 if (index == 9) {
-                    [green setFill];
+                    [greenFill setFill];
                     NSRectFill(NSMakeRect(1, 1, 18, 14));
                 }
                 NSDictionary *sans = @{NSFontAttributeName: [NSFont systemFontOfSize:12],
@@ -155,7 +173,7 @@ static NSImage *TSAnnotationToolImage(NSUInteger index, NSString *name)
                 [path lineToPoint:NSMakePoint(18, 5)]; [path lineToPoint:NSMakePoint(8, 5)];
                 [path lineToPoint:NSMakePoint(4, 1)]; [path lineToPoint:NSMakePoint(4, 5)];
                 [path lineToPoint:NSMakePoint(2, 5)]; [path closePath];
-                [green setFill]; [path fill];
+                [greenFill setFill]; [path fill];
                 [NSColor.blackColor setStroke]; path.lineWidth = 1; [path stroke];
                 path = [NSBezierPath bezierPath];
                 [path moveToPoint:NSMakePoint(5, 11)]; [path lineToPoint:NSMakePoint(15, 11)];
@@ -172,7 +190,9 @@ static NSImage *TSAnnotationToolImage(NSUInteger index, NSString *name)
 
 static NSImage *TSAnnotationSymbol(NSString *symbol, NSString *description)
 {
-    return [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:description] ?: [[NSImage alloc] initWithSize:NSMakeSize(16, 16)];
+    NSImage *image = [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:description];
+    NSImageSymbolConfiguration *size = [NSImageSymbolConfiguration configurationWithPointSize:16 weight:NSFontWeightMedium];
+    return [image imageWithSymbolConfiguration:size] ?: [[NSImage alloc] initWithSize:NSMakeSize(16, 16)];
 }
 
 static NSButton *TSAnnotationIconButton(NSImage *image, NSString *name, id target, SEL action)
@@ -185,7 +205,7 @@ static NSButton *TSAnnotationIconButton(NSImage *image, NSString *name, id targe
     button.toolTip = name;
     button.accessibilityLabel = name;
     [button.widthAnchor constraintEqualToConstant:TSAnnotationBarToolSize].active = YES;
-    [button.heightAnchor constraintEqualToConstant:24].active = YES;
+    [button.heightAnchor constraintEqualToConstant:TSAnnotationBarToolHeight].active = YES;
     return button;
 }
 
