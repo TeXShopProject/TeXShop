@@ -194,8 +194,15 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Pour le modifier dans Réglages Système, choisissez « Raccourcis de l’application » dans la barre latérale.";
 "Inactive for this key" = "Inactif pour cette touche";
 "No command uses this key." = "Aucune commande n’utilise cette touche.";
-"Show Only Custom Shortcuts" = "Afficher uniquement les raccourcis personnalisés";
-"No custom shortcuts." = "Aucun raccourci personnalisé.";
+"Filter Shortcuts" = "Filtrer les raccourcis";
+"Filter Shortcuts: %@" = "Filtrer les raccourcis : %@";
+"Shortcut Filter: All" = "Tous";
+"Shortcut Filter: Assigned" = "Attribués";
+"Shortcut Filter: Unassigned" = "Non attribués";
+"Shortcut Filter: Changed" = "Modifiés";
+"No changed shortcuts." = "Aucun raccourci modifié.";
+"No command has a shortcut." = "Aucune commande n’a de raccourci.";
+"Every command has a shortcut." = "Toutes les commandes ont un raccourci.";
 "Press a key" = "Appuyez sur une touche";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Cette touche ne peut pas servir de raccourci. Utilisez Commande ou Contrôle avec une touche, ou F1–F20.";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Les raccourcis avec la touche Globe (fn) ne peuvent pas être affectés aux commandes de TeXShop.";

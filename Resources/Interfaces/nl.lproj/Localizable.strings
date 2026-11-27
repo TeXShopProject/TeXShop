@@ -191,8 +191,15 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Om dit in Systeeminstellingen te wijzigen, kies je ‘Apps’ in de navigatiekolom.";
 "Inactive for this key" = "Inactief voor deze toets";
 "No command uses this key." = "Geen commando gebruikt deze toets.";
-"Show Only Custom Shortcuts" = "Toon alleen aangepaste toetscombinaties";
-"No custom shortcuts." = "Geen aangepaste toetscombinaties.";
+"Filter Shortcuts" = "Filter toetscombinaties";
+"Filter Shortcuts: %@" = "Filter toetscombinaties: %@";
+"Shortcut Filter: All" = "Alle";
+"Shortcut Filter: Assigned" = "Toegewezen";
+"Shortcut Filter: Unassigned" = "Niet toegewezen";
+"Shortcut Filter: Changed" = "Gewijzigd";
+"No changed shortcuts." = "Geen gewijzigde toetscombinaties.";
+"No command has a shortcut." = "Geen commando heeft een toetscombinatie.";
+"Every command has a shortcut." = "Elk commando heeft een toetscombinatie.";
 "Press a key" = "Druk op een toets";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Deze toets kan niet als toetscombinatie worden gebruikt. Gebruik Command of Control met een toets, of F1–F20.";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Toetscombinaties met de wereldboltoets (fn) kunnen niet aan TeXShop-commando’s worden toegewezen.";
