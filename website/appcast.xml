@@ -4,8 +4,8 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
   <channel>
     <item>
       <title>TeXShop 6.00 RC4</title>
-      <pubDate>Fri, 27 Nov 2026 10:36:25 +0000</pubDate>
-      <sparkle:version>2754</sparkle:version>
+      <pubDate>Fri, 27 Nov 2026 12:58:03 +0000</pubDate>
+      <sparkle:version>2765</sparkle:version>
       <sparkle:shortVersionString>6.00 RC4</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
       <sparkle:channel>prerelease</sparkle:channel>
@@ -23,6 +23,7 @@ If you use a 6.00 beta, RC1, RC2 or RC3 with Settings → Updates → “Update 
 - The shortcuts you changed are shown in bold in Settings → Keyboard, and a filter button narrows the list to the shortcuts you changed, or to those with or without a key ([#76](https://github.com/TeXShopProject/TeXShop/issues/76)).
 - Command Completion Quick Start, a short guide by Herbert Schulz, is in the Help menu.
 - Opening a `.dvi`, `.ps` or `.eps` file no longer freezes TeXShop.
+- In the single window, the arrow next to the document name and Command-click on the name work as in the source window. Reported by [Seiji Zenitani](https://github.com/zenitani) ([#77](https://github.com/TeXShopProject/TeXShop/issues/77)).
 
 ## All changes in TeXShop 6.00
 TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell checking, pinned link previews, a new Settings window and a status bar, and fixes many problems.
@@ -147,6 +148,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Fix the Find commands so they use the search of the Preview while it is active.
 - Fix Preview pages that were drawn under the toolbar on macOS 26 and later.
 - Command-click on the title of a Preview window opens its path menu again ([#73](https://github.com/TeXShopProject/TeXShop/issues/73)).
+- In the single window, the arrow next to the document name and Command-click on the name work as in the source window. Reported by [Seiji Zenitani](https://github.com/zenitani) ([#77](https://github.com/TeXShopProject/TeXShop/issues/77)).
 - Holding Command with a dead key no longer makes the Preview crash. Images in the Preview stay as before.
 - Fix opening a PDF file whose extension is written in capital letters, such as Only.PDF.
 
@@ -208,7 +210,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - TeXShop can be built from an extracted source archive again ([#4](https://github.com/TeXShopProject/TeXShop/issues/4)).
 - Remove files and code that TeXShop did not use from the application and its source.</description>
       <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-rc.4</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-rc.4/TeXShop-6.00-RC4.zip" length="76313131" type="application/octet-stream" sparkle:edSignature="AA/w7COzZW+E+s/KgBLJX/B2f5ye9nSptAP+a2wJLDgcHmQpWZj7RHVx74JllYyWAAUQOudqdvy9beI0JkViAA=="></enclosure>
+      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-rc.4/TeXShop-6.00-RC4.zip" length="76315892" type="application/octet-stream" sparkle:edSignature="nOT9Gh10hhuHu3Y5YI58URpgpttMdTSztEwMr+fVFfYPPz73WNp3DaQNtVvYl98T9/pCUmHUBicYQljKw7X6AQ=="></enclosure>
     </item>
     <item>
       <title>TeXShop 5.59</title>
@@ -224,6 +226,6 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
     <language>en</language>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: C7YWHqPHGhTt/3JTrE8TZzZrdlaVjnLS6ONnT/SmG8DbX8AZXeC3wl6o94VoMrQVCQ1K18u0YE6Lt3PE4nmmAA==
-length: 31718
+edSignature: Vw7TAlqmmellKDwX8tIjA5OlLagknSJjo4lgvg1UiasU22u+l7e1DY+Kz3QwiIN4Nv+p1nXge0vPhktJvrbyBg==
+length: 32198
 -->
