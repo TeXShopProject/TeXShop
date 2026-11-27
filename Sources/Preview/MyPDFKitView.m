@@ -9719,6 +9719,7 @@ else
     else
         [self removeDarkModeInversionFilter];
     [self updatePreviewPaperColor];
+    [self updateDrawerAppearance];
     _updatingPreviewAppearance = NO;
 // changed by Terada (until this line)
 #endif
@@ -9802,6 +9803,26 @@ else
     TSRedrawPreviewPages(self);
 }
 
+// The drawer follows the Appearance toolbar item: Light and Dark set it, System leaves it to
+// macOS (#79). The drawer is a window of its own, so the window of the Preview does not pass
+// its appearance on to it. Its frame is painted in the window colors of that appearance.
+- (void)updateDrawerAppearance
+{
+    if (!_drawer) return;
+    NSWindow *drawerWindow = _drawer.contentView.window;
+    if (!drawerWindow) return;
+    NSInteger mode = [SUD integerForKey:TSPreviewAppearanceModeKey];
+    NSAppearanceName name = mode == TSPreviewAppearanceLight ? NSAppearanceNameAqua
+                          : mode == TSPreviewAppearanceDark ? NSAppearanceNameDarkAqua : nil;
+    if ([drawerWindow.appearance.name isEqualToString:name] || (!name && !drawerWindow.appearance)) return;
+    drawerWindow.appearance = name ? [NSAppearance appearanceNamed:name] : nil;
+}
+
+- (void)previewDrawerWillOpen:(NSNotification *)notification
+{
+    if (notification.object == _drawer) [self updateDrawerAppearance];
+}
+
 - (void)observePreviewAppearance
 {
     if (_observingPreviewAppearance) return;
@@ -9812,6 +9833,9 @@ else
     // Switching "Show scroll bars" changes an overlay knob for a legacy one, or the reverse.
     [center addObserver:self selector:@selector(previewAppearanceDefaultsChanged:)
         name:NSPreferredScrollerStyleDidChangeNotification object:nil];
+    // The drawer's window may be made only when the drawer first opens.
+    [center addObserver:self selector:@selector(previewDrawerWillOpen:)
+        name:NSDrawerWillOpenNotification object:nil];
 }
 
 - (void)previewAppearanceDefaultsChanged:(NSNotification *)notification
