@@ -521,3 +521,42 @@
 
 /* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
 "In these folders, only the files listed in their ls-R index are searched." = "Nestas pastas, procura-se somente os arquivos do índice ls-R.";
+
+/* File > New from Stationery: window title */
+"Select Stationery" = "Selecionar gabarito";
+
+/* File > New from Stationery: list column and list name */
+"Stationery" = "Modelo";
+
+/* File > New from Stationery: list column */
+"Description" = "Descrição";
+
+/* File > New from Stationery: opens the chosen stationery as a new document */
+"Create" = "Criar";
+
+/* File > New from Stationery: opens the Stationery folder in the Finder */
+"Show in Finder" = "Mostrar no Finder";
+
+/* File > New from Stationery: the + button */
+"Add the Front Document as Stationery" = "Adicionar o Documento em Primeiro Plano como Gabarito";
+
+/* File > New from Stationery: the - button */
+"Move the Stationery to the Trash" = "Mover o Gabarito para o Lixo";
+
+/* File > New from Stationery: title of the sheet that adds the front document */
+"Add as Stationery" = "Adicionar como Gabarito";
+
+/* File > New from Stationery: label of the name of new stationery */
+"Name:" = "Nome:";
+
+/* File > New from Stationery: label of the description of new stationery */
+"Description:" = "Descrição:";
+
+/* File > New from Stationery: adding a stationery with the name of another */
+"A stationery named “%@” already exists. Replace it?" = "Já existe um gabarito chamado “%@”. Deseja substituí-lo?";
+
+/* File > New from Stationery: asked before the - button removes a stationery */
+"Move “%@” to the Trash?" = "Mover “%@” para o Lixo?";
+
+/* File > New from Stationery: removes the stationery */
+"Move to Trash" = "Mover para o Lixo";

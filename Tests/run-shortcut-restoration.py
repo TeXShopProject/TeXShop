@@ -7,7 +7,7 @@ from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
 production=production_source(root)
 paths=sorted((root/'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
-assert len(paths)==36
+assert len(paths)==24  # keyedobjects.nib and keyedobjects-101300.nib in 12 languages
 with tempfile.TemporaryDirectory(prefix='texshop-shortcut-restore-') as td:
     binary=Path(td)/'restore'
     def compile_source(source):

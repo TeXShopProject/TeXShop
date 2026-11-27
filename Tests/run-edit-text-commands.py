@@ -28,8 +28,8 @@ elif mutation == 'exchange-raw-selection':
 elif mutation:
     raise SystemExit('unknown mutation ' + mutation)
 menus = sorted((root / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
-if len(menus) != 36:
-    raise SystemExit('Expected 36 compiled menu variants')
+if len(menus) != 24:
+    raise SystemExit('Expected 24 compiled menu variants')
 utilities = root / 'Sources/Utilities'
 with tempfile.TemporaryDirectory(prefix='texshop-edit-commands-') as tmp:
     (Path(tmp) / 'TSTextViewEditCommands.inc').write_text(section, encoding='utf-8')

@@ -521,3 +521,42 @@
 
 /* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
 "In these folders, only the files listed in their ls-R index are searched." = "In queste cartelle si cercano solo i file elencati nel loro indice ls-R.";
+
+/* File > New from Stationery: window title */
+"Select Stationery" = "Seleziona modulo";
+
+/* File > New from Stationery: list column and list name */
+"Stationery" = "Modulo";
+
+/* File > New from Stationery: list column */
+"Description" = "Descrizione";
+
+/* File > New from Stationery: opens the chosen stationery as a new document */
+"Create" = "Crea";
+
+/* File > New from Stationery: opens the Stationery folder in the Finder */
+"Show in Finder" = "Mostra nel Finder";
+
+/* File > New from Stationery: the + button */
+"Add the Front Document as Stationery" = "Aggiungi il documento in primo piano come modulo";
+
+/* File > New from Stationery: the - button */
+"Move the Stationery to the Trash" = "Sposta il modulo nel Cestino";
+
+/* File > New from Stationery: title of the sheet that adds the front document */
+"Add as Stationery" = "Aggiungi come modulo";
+
+/* File > New from Stationery: label of the name of new stationery */
+"Name:" = "Nome:";
+
+/* File > New from Stationery: label of the description of new stationery */
+"Description:" = "Descrizione:";
+
+/* File > New from Stationery: adding a stationery with the name of another */
+"A stationery named “%@” already exists. Replace it?" = "Esiste già un modulo chiamato “%@”. Vuoi sostituirlo?";
+
+/* File > New from Stationery: asked before the - button removes a stationery */
+"Move “%@” to the Trash?" = "Spostare “%@” nel Cestino?";
+
+/* File > New from Stationery: removes the stationery */
+"Move to Trash" = "Sposta nel Cestino";

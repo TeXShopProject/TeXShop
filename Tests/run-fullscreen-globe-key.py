@@ -37,7 +37,7 @@ def main():
     assert not failures, failures
     print('PASS: TSAppDelegate gives Enter Full Screen Globe-F after the KeyEquivalents.plist of earlier versions, which leaves it alone')
     nibs = sorted((r / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
-    assert len(nibs) == 36, len(nibs)
+    assert len(nibs) == 24, len(nibs)  # keyedobjects.nib and keyedobjects-101300.nib in 12 languages
     with tempfile.TemporaryDirectory(prefix='texshop-fullscreen-globe-') as directory:
         d = Path(directory)
         source = source_file(r, 'TSKeyboardShortcuts.m')

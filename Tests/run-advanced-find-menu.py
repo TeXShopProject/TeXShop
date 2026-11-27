@@ -148,7 +148,7 @@ def run_all(probe, quiet=False):
         return 'behavior'
     macros = root / 'Resources/TeXShop/Macros/Macros_Latex.plist'
     nibs = sorted((root / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
-    assert len(nibs) == 36, len(nibs)
+    assert len(nibs) == 24, len(nibs)  # keyedobjects.nib and keyedobjects-101300.nib in 12 languages
     for nib in nibs:
         lproj = nib.parts[-3][:-len('.lproj')]
         language = 'en' if lproj == 'Base' else lproj

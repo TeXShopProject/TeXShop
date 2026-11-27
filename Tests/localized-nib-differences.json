@@ -22,24 +22,6 @@
  {
   "nib": "MainMenu",
   "change": "extra",
-  "fact": "- | top | NSPanel",
-  "languages": [
-   "de",
-   "es",
-   "fr",
-   "it",
-   "ja",
-   "ko",
-   "nl",
-   "pt",
-   "pt-PT",
-   "ro"
-  ],
-  "reason": "OgreTextFinder instance and Stationery panel delegate: TSAppDelegate turns the OgreKit menu hack off unless OgreKit is the find method, and implements no window delegate methods"
- },
- {
-  "nib": "MainMenu",
-  "change": "extra",
   "fact": "- | top | OgreTextFinder",
   "languages": [
    "de",
@@ -274,24 +256,6 @@
    "zh_CN"
   ],
   "reason": "placeholder items, separators and empty submenus of the Base menu"
- },
- {
-  "nib": "MainMenu",
-  "change": "missing",
-  "fact": "- | top | NSPanel delegate=@delegate",
-  "languages": [
-   "de",
-   "es",
-   "fr",
-   "it",
-   "ja",
-   "ko",
-   "nl",
-   "pt",
-   "pt-PT",
-   "ro"
-  ],
-  "reason": "OgreTextFinder instance and Stationery panel delegate: TSAppDelegate turns the OgreKit menu hack off unless OgreKit is the find method, and implements no window delegate methods"
  },
  {
   "nib": "MainMenu",

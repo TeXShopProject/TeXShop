@@ -124,6 +124,7 @@
     "Editor",
     "Info: %@",
     "Labels",
+    "Name:",
     "Text",
     "Updates",
     "Version:"
@@ -177,6 +178,7 @@
   "fr": {
    "Localizable.strings": [
     "Console",
+    "Description",
     "Labels",
     "Macros",
     "Page %@",
@@ -184,7 +186,6 @@
     "note"
    ],
    "MainMenu.nib": [
-    "Description",
     "Macros",
     "OK",
     "Services",

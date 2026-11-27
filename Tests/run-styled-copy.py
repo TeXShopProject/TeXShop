@@ -85,8 +85,8 @@ assert 'options.excludesParametersFromSpelling' in method(syntax_source, '- (TSM
 assert '[self sourceScannerOptionsWithScheme:scheme]' in text[SYNTAX]
 
 menus = sorted((ROOT / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
-if len(menus) != 36:
-    raise SystemExit('Expected 36 compiled menu variants')
+if len(menus) != 24:
+    raise SystemExit('Expected 24 compiled menu variants')
 syntax = ROOT / 'Sources/Syntax'
 with tempfile.TemporaryDirectory(prefix='texshop-styled-copy-') as tmp:
     tmp = Path(tmp)

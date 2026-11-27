@@ -61,11 +61,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
                     str(root / 'Tests/KeyboardShortcuts.m'), str(root/'Sources/Settings/TSPrefPaneLayout.m'), '-o', str(binary)], check=True)
     subprocess.run([str(binary)], check=True)
     paths = sorted((root / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
-    assert len(paths) == 36
+    assert len(paths) == 24  # keyedobjects.nib and keyedobjects-101300.nib in 12 languages
     for path in paths:
         result = subprocess.run([str(binary), str(path), str(root / "Resources/TeXShop/Macros/Macros_Latex.plist")], capture_output=True, text=True)
         assert result.returncode == 0, (str(path), result.stdout, result.stderr)
-    print('PASS: commands and bundled macro keys in all 36 compiled menu variants (12 languages)')
+    print('PASS: commands and bundled macro keys in all 24 compiled menu variants (12 languages)')
     if '--mutations' in sys.argv:
         cases={
             'report the edited command as its own conflict': (

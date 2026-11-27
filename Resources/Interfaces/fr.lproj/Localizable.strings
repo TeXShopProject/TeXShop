@@ -521,3 +521,42 @@
 
 /* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
 "In these folders, only the files listed in their ls-R index are searched." = "Dans ces dossiers, seuls les fichiers de leur index ls-R sont cherchés.";
+
+/* File > New from Stationery: window title */
+"Select Stationery" = "Sélectionner un modèle";
+
+/* File > New from Stationery: list column and list name */
+"Stationery" = "Modèle";
+
+/* File > New from Stationery: list column */
+"Description" = "Description";
+
+/* File > New from Stationery: opens the chosen stationery as a new document */
+"Create" = "Créer";
+
+/* File > New from Stationery: opens the Stationery folder in the Finder */
+"Show in Finder" = "Afficher dans le Finder";
+
+/* File > New from Stationery: the + button */
+"Add the Front Document as Stationery" = "Ajouter le document au premier plan comme modèle";
+
+/* File > New from Stationery: the - button */
+"Move the Stationery to the Trash" = "Placer le modèle dans la corbeille";
+
+/* File > New from Stationery: title of the sheet that adds the front document */
+"Add as Stationery" = "Ajouter comme modèle";
+
+/* File > New from Stationery: label of the name of new stationery */
+"Name:" = "Nom :";
+
+/* File > New from Stationery: label of the description of new stationery */
+"Description:" = "Description :";
+
+/* File > New from Stationery: adding a stationery with the name of another */
+"A stationery named “%@” already exists. Replace it?" = "Un modèle nommé « %@ » existe déjà. Voulez-vous le remplacer ?";
+
+/* File > New from Stationery: asked before the - button removes a stationery */
+"Move “%@” to the Trash?" = "Placer « %@ » dans la corbeille ?";
+
+/* File > New from Stationery: removes the stationery */
+"Move to Trash" = "Placer dans la corbeille";

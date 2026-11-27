@@ -17,7 +17,6 @@ args = parser.parse_args()
 production = {
     'Sources/Document/TSDocument.m': 'for (NSWindow *panel in @[linePanel ?: (id)NSNull.null, projectPanel ?: (id)NSNull.null, extensionPanel ?: (id)NSNull.null])\n\t\tif ([panel isKindOfClass:NSWindow.class]) TSLayoutDialogButtonRow(panel);',
     'Sources/App/HelpDocuments.m': 'if (packageHelpPanel) TSLayoutDialogButtonRow(packageHelpPanel);\n\tif (openStyleFilePanel) TSLayoutDialogButtonRow(openStyleFilePanel);',
-    'Sources/App/TSStationery.m': 'if (stationeryWindow) TSLayoutDialogButtonRow(stationeryWindow);',
     'Sources/Editor/TextFinder.m': 'TSLayoutBottomActionRow([findTextField window]);',
 }
 for path, call in production.items():

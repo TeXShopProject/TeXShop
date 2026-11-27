@@ -521,3 +521,42 @@
 
 /* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
 "In these folders, only the files listed in their ls-R index are searched." = "În aceste dosare se caută doar fișierele din indexul lor ls-R.";
+
+/* File > New from Stationery: window title */
+"Select Stationery" = "Selectați șablonul";
+
+/* File > New from Stationery: list column and list name */
+"Stationery" = "Șablon";
+
+/* File > New from Stationery: list column */
+"Description" = "Descriere";
+
+/* File > New from Stationery: opens the chosen stationery as a new document */
+"Create" = "Creați";
+
+/* File > New from Stationery: opens the Stationery folder in the Finder */
+"Show in Finder" = "Afișați în Finder";
+
+/* File > New from Stationery: the + button */
+"Add the Front Document as Stationery" = "Adăugați documentul din prim-plan ca șablon";
+
+/* File > New from Stationery: the - button */
+"Move the Stationery to the Trash" = "Mutați șablonul în Coș";
+
+/* File > New from Stationery: title of the sheet that adds the front document */
+"Add as Stationery" = "Adăugați ca șablon";
+
+/* File > New from Stationery: label of the name of new stationery */
+"Name:" = "Nume:";
+
+/* File > New from Stationery: label of the description of new stationery */
+"Description:" = "Descriere:";
+
+/* File > New from Stationery: adding a stationery with the name of another */
+"A stationery named “%@” already exists. Replace it?" = "Există deja un șablon numit „%@”. Doriți să-l înlocuiți?";
+
+/* File > New from Stationery: asked before the - button removes a stationery */
+"Move “%@” to the Trash?" = "Mutați „%@” în Coș?";
+
+/* File > New from Stationery: removes the stationery */
+"Move to Trash" = "Mutați în Coș";

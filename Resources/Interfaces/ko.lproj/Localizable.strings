@@ -521,3 +521,42 @@
 
 /* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
 "In these folders, only the files listed in their ls-R index are searched." = "이 폴더들에서는 ls-R 색인에 있는 파일만 찾습니다.";
+
+/* File > New from Stationery: window title */
+"Select Stationery" = "스테이셔너리 선택";
+
+/* File > New from Stationery: list column and list name */
+"Stationery" = "스테이셔너리";
+
+/* File > New from Stationery: list column */
+"Description" = "설명";
+
+/* File > New from Stationery: opens the chosen stationery as a new document */
+"Create" = "생성";
+
+/* File > New from Stationery: opens the Stationery folder in the Finder */
+"Show in Finder" = "Finder에서 보기";
+
+/* File > New from Stationery: the + button */
+"Add the Front Document as Stationery" = "맨 앞의 문서를 스테이셔너리로 추가";
+
+/* File > New from Stationery: the - button */
+"Move the Stationery to the Trash" = "스테이셔너리를 휴지통으로 이동";
+
+/* File > New from Stationery: title of the sheet that adds the front document */
+"Add as Stationery" = "스테이셔너리로 추가";
+
+/* File > New from Stationery: label of the name of new stationery */
+"Name:" = "이름:";
+
+/* File > New from Stationery: label of the description of new stationery */
+"Description:" = "설명:";
+
+/* File > New from Stationery: adding a stationery with the name of another */
+"A stationery named “%@” already exists. Replace it?" = "‘%@’ 이름의 스테이셔너리가 이미 있습니다. 대치하겠습니까?";
+
+/* File > New from Stationery: asked before the - button removes a stationery */
+"Move “%@” to the Trash?" = "‘%@’을(를) 휴지통으로 이동하겠습니까?";
+
+/* File > New from Stationery: removes the stationery */
+"Move to Trash" = "휴지통으로 이동";
