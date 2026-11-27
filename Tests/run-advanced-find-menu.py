@@ -2,7 +2,7 @@
 """The commands of the Advanced Find panel in the Find submenu (Sources/Find/TSAdvancedFindMenu.m).
 
 Builds Tests/AdvancedFindMenu.m with the Find sources and the production shortcut units into a small application
-bundle with the 12 languages' AdvancedFind.strings, and runs it on all 36 compiled MainMenu nibs (each in its own
+bundle with the 12 languages' AdvancedFind.strings, and runs it on all 24 compiled MainMenu nibs (each in its own
 language) and once for the behavior through the menu. Also checks the strings, the launch order in TSAppDelegate and
 that the five keys are free in every shipped nib. Nothing is displayed.
 
@@ -148,7 +148,7 @@ def run_all(probe, quiet=False):
         return 'behavior'
     macros = root / 'Resources/TeXShop/Macros/Macros_Latex.plist'
     nibs = sorted((root / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
-    assert len(nibs) == 36, len(nibs)
+    assert len(nibs) == 24, len(nibs)  # keyedobjects.nib and keyedobjects-101300.nib in 12 languages
     for nib in nibs:
         lproj = nib.parts[-3][:-len('.lproj')]
         language = 'en' if lproj == 'Base' else lproj

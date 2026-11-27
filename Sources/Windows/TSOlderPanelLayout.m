@@ -159,16 +159,6 @@ void TSFitLabelsBeforePopUps(NSView *view)
     }
 }
 
-void TSRemoveVerticalGridLines(NSView * _Nullable root)
-{
-    if (root == nil) return;
-    if ([root isKindOfClass:NSTableView.class]) {
-        NSTableView *table = (NSTableView *)root;
-        table.gridStyleMask &= ~NSTableViewSolidVerticalGridLineMask;
-    }
-    for (NSView *child in root.subviews) TSRemoveVerticalGridLines(child);
-}
-
 void TSFitToolbarPullDown(NSPopUpButton *button, NSString *title)
 {
     if (button.numberOfItems == 0) [button addItemWithTitle:title];

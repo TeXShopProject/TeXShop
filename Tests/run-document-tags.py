@@ -26,5 +26,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-tags-') as tmp:
             menu_count+=1
         print('PASS',p.parent.name,expected)
         count+=1
-    if count!=12 or menu_count!=36: raise SystemExit(f'Incomplete coverage: {count} locales, {menu_count} menus')
-    print('PASS: 12 document locales and 36 compiled MainMenu variants')
+    if count!=12 or menu_count!=24: raise SystemExit(f'Incomplete coverage: {count} locales, {menu_count} menus')
+    print('PASS: 12 document locales and 24 compiled MainMenu variants')

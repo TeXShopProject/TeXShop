@@ -67,6 +67,23 @@ static NSButton *TSListBottomBarButton(NSString *symbol, NSString *toolTip, id t
 
 @end
 
+@implementation TSListFrameView
+- (BOOL)wantsUpdateLayer { return YES; }
+- (void)updateLayer
+{
+    self.layer.cornerRadius = 6;
+    self.layer.borderWidth = 1;
+    self.layer.masksToBounds = YES;
+    __block CGColorRef border = NULL, background = NULL;
+    [self.effectiveAppearance performAsCurrentDrawingAppearance:^{
+        border = NSColor.separatorColor.CGColor;
+        background = NSColor.controlBackgroundColor.CGColor;
+    }];
+    self.layer.borderColor = border;
+    self.layer.backgroundColor = background;
+}
+@end
+
 const CGFloat TSListSidebarMinimumWidth = 160, TSListSidebarMaximumWidth = 320;
 
 NSVisualEffectView *TSListSidebarView(NSScrollView *list, TSListBottomBar *bar)

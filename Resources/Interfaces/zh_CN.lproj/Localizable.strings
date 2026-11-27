@@ -518,3 +518,75 @@
 
 /* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
 "In these folders, only the files listed in their ls-R index are searched." = "这些文件夹只查找其ls-R索引中的文件。";
+
+/* File > New from Stationery: window title */
+"Select Stationery" = "选择样板";
+
+/* File > New from Stationery: list column and list name */
+"Stationery" = "样板";
+
+/* File > New from Stationery: list column */
+"Description" = "描述";
+
+/* File > New from Stationery: opens the chosen stationery as a new document */
+"Create" = "创建";
+
+/* File > New from Stationery: opens the Stationery folder in the Finder */
+"Show in Finder" = "在访达中显示";
+
+/* File > New from Stationery: the - button */
+"Move the Stationery to the Trash" = "将样板移到废纸篓";
+
+/* File > New from Stationery: asked before the - button removes a stationery */
+"Move “%@” to the Trash?" = "要将“%@”移到废纸篓吗？";
+
+/* File > New from Stationery: removes the stationery */
+"Move to Trash" = "移到废纸篓";
+
+/* File > New from Stationery: the actions menu at the bottom of the list */
+"Stationery Actions" = "样板操作";
+
+/* File > New from Stationery: contextual menu item */
+"Duplicate" = "复制";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Duplicate “%@”" = "复制“%@”";
+
+/* File > New from Stationery: the name of a duplicated stationery */
+"%@ copy" = "%@ 副本";
+
+/* File > New from Stationery: the + button */
+"New Stationery" = "新建样板";
+
+/* File > New from Stationery: the name of a new, empty stationery */
+"Untitled Stationery" = "未命名";
+
+/* File > New from Stationery: contextual menu item that opens the stationery file */
+"Edit Stationery" = "编辑";
+
+/* File > New from Stationery: actions menu item that opens the stationery file */
+"Edit “%@”" = "编辑“%@”";
+
+/* File > New from Stationery: contextual menu item */
+"Rename Stationery" = "重新命名";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Rename “%@”" = "重新命名“%@”";
+
+/* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
+"Show “%@” in Finder" = "在访达中显示“%@”";
+
+/* File > New from Stationery: a name that cannot be a file name */
+"The name “%@” can’t be used." = "不能使用名称“%@”。";
+
+/* File > New from Stationery: below a name with / or : */
+"Try using a name with fewer characters, or with no punctuation marks." = "请尝试使用字符较少，或不含标点符号的名称。";
+
+/* File > New from Stationery: below a name that cannot be used */
+"Names that begin with a dot “.” are reserved for the system." = "以点“.”开头的名称已被系统保留。";
+
+/* File > New from Stationery: a name too long for a file name */
+"The name “%@” can’t be used because it’s too long." = "不能使用名称“%@”，因为它太长。";
+
+/* File > New from Stationery: below a name that is too long */
+"Try using a name with fewer characters." = "请尝试使用字符较少的名称。";

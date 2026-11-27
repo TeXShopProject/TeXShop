@@ -536,3 +536,75 @@
 
 /* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
 "In these folders, only the files listed in their ls-R index are searched." = "これらのフォルダでは、ls-Rの索引にあるファイルだけを探します。";
+
+/* File > New from Stationery: window title */
+"Select Stationery" = "ひな形の選択";
+
+/* File > New from Stationery: list column and list name */
+"Stationery" = "ひな形";
+
+/* File > New from Stationery: list column */
+"Description" = "説明";
+
+/* File > New from Stationery: opens the chosen stationery as a new document */
+"Create" = "作成";
+
+/* File > New from Stationery: opens the Stationery folder in the Finder */
+"Show in Finder" = "Finderに表示";
+
+/* File > New from Stationery: the - button */
+"Move the Stationery to the Trash" = "ひな形をゴミ箱に入れる";
+
+/* File > New from Stationery: asked before the - button removes a stationery */
+"Move “%@” to the Trash?" = "「%@」をゴミ箱に入れますか？";
+
+/* File > New from Stationery: removes the stationery */
+"Move to Trash" = "ゴミ箱に入れる";
+
+/* File > New from Stationery: the actions menu at the bottom of the list */
+"Stationery Actions" = "ひな形の操作";
+
+/* File > New from Stationery: contextual menu item */
+"Duplicate" = "複製";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Duplicate “%@”" = "“%@”を複製";
+
+/* File > New from Stationery: the name of a duplicated stationery */
+"%@ copy" = "%@ のコピー";
+
+/* File > New from Stationery: the + button */
+"New Stationery" = "新規ひな形";
+
+/* File > New from Stationery: the name of a new, empty stationery */
+"Untitled Stationery" = "名称未設定";
+
+/* File > New from Stationery: contextual menu item that opens the stationery file */
+"Edit Stationery" = "編集";
+
+/* File > New from Stationery: actions menu item that opens the stationery file */
+"Edit “%@”" = "“%@”を編集";
+
+/* File > New from Stationery: contextual menu item */
+"Rename Stationery" = "名前を変更";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Rename “%@”" = "“%@”の名前を変更";
+
+/* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
+"Show “%@” in Finder" = "“%@”をFinderに表示";
+
+/* File > New from Stationery: a name that cannot be a file name */
+"The name “%@” can’t be used." = "“%@”という名前は使用できません。";
+
+/* File > New from Stationery: below a name with / or : */
+"Try using a name with fewer characters, or with no punctuation marks." = "もっと少ない文字数にするか、句読点記号のない別の名前を使用してください。";
+
+/* File > New from Stationery: below a name that cannot be used */
+"Names that begin with a dot “.” are reserved for the system." = "“.”（ドット）で始まる名前はシステム用に予約されています。";
+
+/* File > New from Stationery: a name too long for a file name */
+"The name “%@” can’t be used because it’s too long." = "名前“%@”は長すぎるため、使用できません。";
+
+/* File > New from Stationery: below a name that is too long */
+"Try using a name with fewer characters." = "文字数の少ない別の名前を使用してください。";

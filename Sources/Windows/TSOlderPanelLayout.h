@@ -12,9 +12,6 @@ FOUNDATION_EXPORT NSAlert *TSAlertForNoticePanel(NSWindow *panel);
 // A label before a pop-up button, such as Encoding: in an accessory view, at
 // the size of the pop-up's text and centered on it.
 FOUNDATION_EXPORT void TSFitLabelsBeforePopUps(NSView *view);
-// Tables drawn without the vertical lines between their columns, as lists in
-// current macOS; the column headers still separate the columns.
-FOUNDATION_EXPORT void TSRemoveVerticalGridLines(NSView * _Nullable root);
 // A pull-down button of the toolbar (Tags, Labels) titled title, and at least as wide
 // as the title needs: the nibs of some languages give it the width of a shorter word.
 FOUNDATION_EXPORT void TSFitToolbarPullDown(NSPopUpButton *button, NSString *title);
