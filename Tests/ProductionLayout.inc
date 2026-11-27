@@ -53,14 +53,14 @@ static void ApplyProductionLayout(NSString *name, id owner, NSArray *objects) {
         for (NSPopUpButton *tag in @[document->tags, document->stags]) TSFitToolbarPullDown(tag, NSLocalizedString(@"Tags", @"Tags"));
         for (NSPopUpButton *label in @[document->labels, document->slabels]) TSFitToolbarPullDown(label, NSLocalizedString(@"Labels", @"Labels"));
     } else if ([name isEqual:@"MainMenu.nib"]) {
-        // HelpDocuments (two panels) and TSStationery lay out their OK/Cancel panels.
+        // HelpDocuments lays out its two OK/Cancel panels.
         NSUInteger dialogs = 0;
         for (NSWindow *w in windows) {
             BOOL ret = NO, esc = NO;
             for (NSView *v in w.contentView.subviews) if ([v isKindOfClass:NSButton.class]) { ret |= [((NSButton *)v).keyEquivalent isEqual:@"\r"]; esc |= [((NSButton *)v).keyEquivalent isEqual:@"\033"]; }
             if (ret && esc) { TSLayoutDialogButtonRow(w); dialogs++; }
         }
-        if (dialogs != 3) { printf("ERROR MainMenu.nib has %lu OK/Cancel panels, not the three the application lays out\n", (unsigned long)dialogs); exit(2); }
+        if (dialogs != 2) { printf("ERROR MainMenu.nib has %lu OK/Cancel panels, not the two the application lays out\n", (unsigned long)dialogs); exit(2); }
     } else if ([name isEqual:@"CustomModalWindowController.xib"]) {
         // Its constraints space the buttons; lay them out as a window would.
         for (NSWindow *w in windows) [w.contentView layoutSubtreeIfNeeded];
@@ -84,10 +84,8 @@ static void ApplyProductionLayout(NSString *name, id owner, NSArray *objects) {
                 for (NSView *v in [o subviews])
                     if ([v isKindOfClass:NSPopUpButton.class] && [[((NSPopUpButton *)v).itemTitles componentsJoinedByString:@"\n"] containsString:@"JPEG"]) TSFitLabelsBeforePopUps(o);
     } else if ([name isEqual:@"MainMenu.nib"]) {
-        // TSStationery draws its list without vertical grid lines; TSDocumentController fits Encoding: in the open panel.
-        for (id o in objects) {
-            if ([o isKindOfClass:NSWindow.class]) TSRemoveVerticalGridLines([o contentView]);
-            else if ([o isKindOfClass:NSView.class]) TSFitLabelsBeforePopUps(o);
-        }
+        // TSDocumentController fits Encoding: in the open panel.
+        for (id o in objects)
+            if ([o isKindOfClass:NSView.class]) TSFitLabelsBeforePopUps(o);
     }
 }

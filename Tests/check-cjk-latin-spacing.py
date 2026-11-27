@@ -94,8 +94,9 @@ for language in ('ja', 'zh_CN'):
         for text in texts:
             for match in spaced.finditer(text):
                 failures.append(f'{path.relative_to(root)}: {text[max(0, match.start() - 12):match.end() + 12]!r}')
-# 33 since Movie.nib went with TeXShop Demos (#43).
-assert compiled > 32, compiled
+# 33 since Movie.nib went with TeXShop Demos (#43); 31 since MainMenu.nib has no
+# keyedobjects-110000.nib (the stationery panel left it).
+assert compiled > 30, compiled
 
 # The Japanese help lost the same spaces where it quotes the interface (checked by
 # check-settings-guidance.py). The help uses the system font of its stylesheet; a font

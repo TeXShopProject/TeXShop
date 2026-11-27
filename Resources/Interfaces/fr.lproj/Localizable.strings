@@ -521,3 +521,75 @@
 
 /* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
 "In these folders, only the files listed in their ls-R index are searched." = "Dans ces dossiers, seuls les fichiers de leur index ls-R sont cherchés.";
+
+/* File > New from Stationery: window title */
+"Select Stationery" = "Sélectionner un modèle";
+
+/* File > New from Stationery: list column and list name */
+"Stationery" = "Modèle";
+
+/* File > New from Stationery: list column */
+"Description" = "Description";
+
+/* File > New from Stationery: opens the chosen stationery as a new document */
+"Create" = "Créer";
+
+/* File > New from Stationery: opens the Stationery folder in the Finder */
+"Show in Finder" = "Afficher dans le Finder";
+
+/* File > New from Stationery: the - button */
+"Move the Stationery to the Trash" = "Placer le modèle dans la corbeille";
+
+/* File > New from Stationery: asked before the - button removes a stationery */
+"Move “%@” to the Trash?" = "Placer « %@ » dans la corbeille ?";
+
+/* File > New from Stationery: removes the stationery */
+"Move to Trash" = "Placer dans la corbeille";
+
+/* File > New from Stationery: the actions menu at the bottom of the list */
+"Stationery Actions" = "Actions sur les modèles";
+
+/* File > New from Stationery: contextual menu item */
+"Duplicate" = "Dupliquer";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Duplicate “%@”" = "Dupliquer « %@ »";
+
+/* File > New from Stationery: the name of a duplicated stationery */
+"%@ copy" = "%@ copie";
+
+/* File > New from Stationery: the + button */
+"New Stationery" = "Nouveau modèle";
+
+/* File > New from Stationery: the name of a new, empty stationery */
+"Untitled Stationery" = "Sans titre";
+
+/* File > New from Stationery: contextual menu item that opens the stationery file */
+"Edit Stationery" = "Modifier";
+
+/* File > New from Stationery: actions menu item that opens the stationery file */
+"Edit “%@”" = "Modifier « %@ »";
+
+/* File > New from Stationery: contextual menu item */
+"Rename Stationery" = "Renommer";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Rename “%@”" = "Renommer « %@ »";
+
+/* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
+"Show “%@” in Finder" = "Afficher « %@ » dans le Finder";
+
+/* File > New from Stationery: a name that cannot be a file name */
+"The name “%@” can’t be used." = "Le nom « %@ » ne peut être utilisé.";
+
+/* File > New from Stationery: below a name with / or : */
+"Try using a name with fewer characters, or with no punctuation marks." = "Essayez d’utiliser un nom comportant moins de caractères ou ne présentant aucun signe de ponctuation.";
+
+/* File > New from Stationery: below a name that cannot be used */
+"Names that begin with a dot “.” are reserved for the system." = "Les noms débutant par un point « . » sont réservés au système.";
+
+/* File > New from Stationery: a name too long for a file name */
+"The name “%@” can’t be used because it’s too long." = "Le nom « %@ » ne peut être utilisé car il est trop long.";
+
+/* File > New from Stationery: below a name that is too long */
+"Try using a name with fewer characters." = "Utilisez un nom comptant moins de caractères.";

@@ -8,7 +8,7 @@ after loading them (ProductionLayout.inc):
     and 20 points from the edges, and the log meets the window's edges;
   * the two notices (typeset before printing, save before setting a project)
     become alerts with the panel's text on one line and its OK button;
-  * Select Source draws no vertical grid lines, and Encoding: in the open panel's
+  * Encoding: in the open panel's
     accessory and Image Type: in the Save Selection panel's accessory have the size
     of their pop-ups and are centered on them;
   * the sheet that changes the encoding of a file shows its whole label, in the
@@ -45,7 +45,6 @@ PRODUCTION = {
         'result = [TSAlertForNoticePanel(requestWindow) runModal];',
     ],
     'Sources/Document/TSDocumentController.m': ['TSFitLabelsBeforePopUps(encodingView);'],
-    'Sources/App/TSStationery.m': ['TSRemoveVerticalGridLines(stationeryWindow.contentView);'],
     'Sources/Preview/MyPDFKitView.m': ['TSFitLabelsBeforePopUps(self.imageTypeView);'],
     'Sources/Preview/MyPDFView.m': ['TSFitLabelsBeforePopUps(imageTypeView);'],
 }
@@ -178,7 +177,6 @@ MUTATIONS = {
     'space between CJK': ('Sources/Windows/TSOlderPanelLayout.m', 'if (result.length && !(TSIsCJK([result characterAtIndex:result.length - 1]) && TSIsCJK([line characterAtIndex:0])))',
                           'if (result.length)'),
     'small Encoding label': ('Sources/Windows/TSOlderPanelLayout.m', 'nearest.font = [NSFont systemFontOfSize:popUp.font.pointSize ?: NSFont.systemFontSize];', 'nearest.font = [NSFont systemFontOfSize:11];'),
-    'grid lines kept': ('Sources/Windows/TSOlderPanelLayout.m', 'table.gridStyleMask &= ~NSTableViewSolidVerticalGridLineMask;', ''),
     'bold OgreKit button': ('3rdparty/OgreKit-2.1.12-FindPanel/de.lproj/OgreAdvancedFindPanel.xib', '<font key="font" metaFont="smallSystem"/>',
                             '<font key="font" metaFont="titleBar" size="12" textStyle="headline"/>'),
     'not destructive': ('Sources/Settings/TSSettingsThemeList.m', '.hasDestructiveAction = YES;', ';'),

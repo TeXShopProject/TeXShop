@@ -1,7 +1,7 @@
 // Load TSDocument.nib and MainMenu.nib of every localization offscreen, apply
 // what the application applies after loading them (ProductionLayout.inc), and
 // check what TSOlderPanelLayout fits to current macOS: the Log File window, the
-// two notices shown as alerts, the list of Select Source and the labels of the
+// two notices shown as alerts and the labels of the
 // open panel's and the Save Selection panel's accessories. Nothing is ordered on screen and
 // AppKit defaults stay in memory.
 // Usage: OlderPanelLayout <label>|<compiled nib>|<Localizable.strings> ...
@@ -135,14 +135,10 @@ int main(int argc, char **argv) { @autoreleasepool {
             if (!imageType) Fail(label, @"the Image Type accessory is not found");
             checked += 4; notices += 2;
         } else {
-            BOOL table = NO, accessory = NO;
+            BOOL accessory = NO;
             for (id o in objects) {
                 NSView *root = [o isKindOfClass:NSWindow.class] ? [o contentView] : [o isKindOfClass:NSView.class] ? o : nil;
                 for (NSView *v in root ? All(root) : @[]) {
-                    if ([v isKindOfClass:NSTableView.class]) {
-                        table = YES;
-                        if (((NSTableView *)v).gridStyleMask & NSTableViewSolidVerticalGridLineMask) Fail(label, @"the list of Select Source draws vertical grid lines");
-                    }
                     if ([o isKindOfClass:NSView.class] && [v isKindOfClass:NSPopUpButton.class]) {
                         for (NSView *t in v.superview.subviews)
                             if ([t isKindOfClass:NSTextField.class] && !((NSTextField *)t).editable && NSMinX(t.frame) < NSMinX(v.frame) && NSMaxX(t.frame) < NSMidX(v.frame)) {
@@ -156,8 +152,8 @@ int main(int argc, char **argv) { @autoreleasepool {
                     }
                 }
             }
-            if (!table || !accessory) Fail(label, @"the list or the encoding accessory is not found");
-            checked += 2;
+            if (!accessory) Fail(label, @"the encoding accessory is not found");
+            checked += 1;
         }
     }
     if (failures) { printf("FAIL: %d problems\n", failures); return 1; }

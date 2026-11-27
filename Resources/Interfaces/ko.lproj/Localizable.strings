@@ -521,3 +521,75 @@
 
 /* Help > Show Help for Package: below the folders, when all of them are searched through their ls-R index */
 "In these folders, only the files listed in their ls-R index are searched." = "이 폴더들에서는 ls-R 색인에 있는 파일만 찾습니다.";
+
+/* File > New from Stationery: window title */
+"Select Stationery" = "스테이셔너리 선택";
+
+/* File > New from Stationery: list column and list name */
+"Stationery" = "스테이셔너리";
+
+/* File > New from Stationery: list column */
+"Description" = "설명";
+
+/* File > New from Stationery: opens the chosen stationery as a new document */
+"Create" = "생성";
+
+/* File > New from Stationery: opens the Stationery folder in the Finder */
+"Show in Finder" = "Finder에서 보기";
+
+/* File > New from Stationery: the - button */
+"Move the Stationery to the Trash" = "스테이셔너리를 휴지통으로 이동";
+
+/* File > New from Stationery: asked before the - button removes a stationery */
+"Move “%@” to the Trash?" = "‘%@’을(를) 휴지통으로 이동하겠습니까?";
+
+/* File > New from Stationery: removes the stationery */
+"Move to Trash" = "휴지통으로 이동";
+
+/* File > New from Stationery: the actions menu at the bottom of the list */
+"Stationery Actions" = "스테이셔너리 동작";
+
+/* File > New from Stationery: contextual menu item */
+"Duplicate" = "복제";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Duplicate “%@”" = "‘%@’ 복제";
+
+/* File > New from Stationery: the name of a duplicated stationery */
+"%@ copy" = "%@ 복사본";
+
+/* File > New from Stationery: the + button */
+"New Stationery" = "새로운 스테이셔너리";
+
+/* File > New from Stationery: the name of a new, empty stationery */
+"Untitled Stationery" = "무제";
+
+/* File > New from Stationery: contextual menu item that opens the stationery file */
+"Edit Stationery" = "편집";
+
+/* File > New from Stationery: actions menu item that opens the stationery file */
+"Edit “%@”" = "‘%@’ 편집";
+
+/* File > New from Stationery: contextual menu item */
+"Rename Stationery" = "이름 변경";
+
+/* File > New from Stationery: actions menu item, with the name of the selected stationery */
+"Rename “%@”" = "‘%@’ 이름 변경";
+
+/* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
+"Show “%@” in Finder" = "Finder에서 ‘%@’ 보기";
+
+/* File > New from Stationery: a name that cannot be a file name */
+"The name “%@” can’t be used." = "‘%@’(이)라는 이름을 사용할 수 없습니다.";
+
+/* File > New from Stationery: below a name with / or : */
+"Try using a name with fewer characters, or with no punctuation marks." = "더 짧은 문자열이나 구두점이 없는 이름으로 시도해 보십시오.";
+
+/* File > New from Stationery: below a name that cannot be used */
+"Names that begin with a dot “.” are reserved for the system." = "점 ‘.’으로 시작하는 이름은 시스템에서 사용합니다.";
+
+/* File > New from Stationery: a name too long for a file name */
+"The name “%@” can’t be used because it’s too long." = "‘%@’ 이름이 너무 길기 때문에 사용할 수 없습니다.";
+
+/* File > New from Stationery: below a name that is too long */
+"Try using a name with fewer characters." = "짧은 문자열의 이름으로 시도하십시오.";

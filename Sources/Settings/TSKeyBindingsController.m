@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSKeyBindingsController.h"
+#import "TSListBottomBar.h"
 #import "GlobalData.h"
 #import "globals.h"
 #import "TSMarkMenu.h"
@@ -111,7 +112,7 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
 @property (strong, readwrite) NSTableView *tableView;
 @property (strong, readwrite) NSPopUpButton *insertButton;
 @property (strong, readwrite) NSButton *symbolsButton;
-@property (strong) NSSegmentedControl *addRemoveControl;
+@property (strong) TSListBottomBar *listBar;
 @property (strong, nullable) NSPopover *symbolsPopover;
 // A step of Undo or Redo that could not be saved is being put back.
 @property BOOL keepingFailedStep;
@@ -264,18 +265,21 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     scroll.documentView = table;
     scroll.identifier = @"keybindings.list";
 
-    NSSegmentedControl *addRemove = [NSSegmentedControl segmentedControlWithImages:@[(NSImage *)[NSImage imageNamed:NSImageNameAddTemplate], (NSImage *)[NSImage imageNamed:NSImageNameRemoveTemplate]]
-        trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(addOrRemove:)];
-    addRemove.translatesAutoresizingMaskIntoConstraints = NO;
-    addRemove.identifier = @"keybindings.add-remove";
-    [addRemove setToolTip:NSLocalizedString(@"Add", @"Add a key binding") forSegment:0];
-    [addRemove setToolTip:NSLocalizedString(@"Delete", @"Delete the selected key bindings") forSegment:1];
-    [addRemove setWidth:28 forSegment:0];
-    [addRemove setWidth:28 forSegment:1];
-    self.addRemoveControl = addRemove;
+    // +, -, Insert and the symbols help in the bar at the bottom of the list, in a rounded
+    // frame, as the theme list.
+    TSListBottomBar *bar = [[TSListBottomBar alloc] initWithTarget:self
+        addAction:@selector(add:) addToolTip:NSLocalizedString(@"Add", @"Add a key binding")
+        removeAction:@selector(delete:) removeToolTip:NSLocalizedString(@"Delete", @"Delete the selected key bindings")
+        actionsToolTip:@""];
+    [bar.actionsButton removeFromSuperview];
+    bar.translatesAutoresizingMaskIntoConstraints = NO;
+    bar.addButton.identifier = @"keybindings.add";
+    bar.removeButton.identifier = @"keybindings.remove";
+    self.listBar = bar;
 
     NSPopUpButton *insert = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:YES];
     insert.translatesAutoresizingMaskIntoConstraints = NO;
+    insert.bordered = NO;
     insert.identifier = @"keybindings.insert";
     [insert addItemWithTitle:NSLocalizedString(@"Insert", @"Key binding Insert menu")];
     for (NSString *symbol in TSKeyBindingSymbols()) {
@@ -293,6 +297,7 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     NSButton *help = [NSButton buttonWithTitle:@"" target:self action:@selector(showSymbols:)];
     help.translatesAutoresizingMaskIntoConstraints = NO;
     help.bezelStyle = NSBezelStyleHelpButton;
+    help.controlSize = NSControlSizeSmall;
     help.identifier = @"keybindings.symbols";
     help.accessibilityLabel = NSLocalizedString(@"Symbols", @"Key binding symbols help button");
     help.toolTip = help.accessibilityLabel;
@@ -306,7 +311,13 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     pasteNote.selectable = NO;
     [pasteNote setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
 
-    for (NSView *child in @[scroll, addRemove, insert, help, pasteNote]) [body addSubview:child];
+    table.backgroundColor = NSColor.clearColor;
+    TSListFrameView *frame = [TSListFrameView new];
+    frame.translatesAutoresizingMaskIntoConstraints = NO;
+    frame.identifier = @"keybindings.frame";
+    for (NSView *child in @[scroll, bar]) [frame addSubview:child];
+    for (NSView *child in @[insert, help]) [bar addSubview:child];
+    for (NSView *child in @[frame, pasteNote]) [body addSubview:child];
     // At least six rows; a taller window gives the list, and the menu shortcut
     // list, more (TSShortcutPaneController shares the height between them).
     CGFloat minimum = TSKeyBindingMinimumRows * table.rowHeight + 28 + 2;
@@ -319,21 +330,26 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
         [body.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
         [body.topAnchor constraintEqualToAnchor:view.topAnchor],
         [body.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
-        [scroll.topAnchor constraintEqualToAnchor:body.topAnchor],
-        [scroll.leadingAnchor constraintEqualToAnchor:body.leadingAnchor],
-        [scroll.trailingAnchor constraintEqualToAnchor:body.trailingAnchor],
+        [frame.topAnchor constraintEqualToAnchor:body.topAnchor],
+        [frame.leadingAnchor constraintEqualToAnchor:body.leadingAnchor],
+        [frame.trailingAnchor constraintEqualToAnchor:body.trailingAnchor],
+        [scroll.topAnchor constraintEqualToAnchor:frame.topAnchor],
+        [scroll.leadingAnchor constraintEqualToAnchor:frame.leadingAnchor],
+        [scroll.trailingAnchor constraintEqualToAnchor:frame.trailingAnchor],
         height,
-        [addRemove.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:8],
-        [addRemove.leadingAnchor constraintEqualToAnchor:body.leadingAnchor],
-        [pasteNote.topAnchor constraintEqualToAnchor:addRemove.bottomAnchor constant:8],
+        [bar.topAnchor constraintEqualToAnchor:scroll.bottomAnchor],
+        [bar.leadingAnchor constraintEqualToAnchor:frame.leadingAnchor],
+        [bar.trailingAnchor constraintEqualToAnchor:frame.trailingAnchor],
+        [bar.bottomAnchor constraintEqualToAnchor:frame.bottomAnchor],
+        [insert.leadingAnchor constraintEqualToAnchor:bar.removeButton.trailingAnchor constant:12],
+        [insert.centerYAnchor constraintEqualToAnchor:bar.addButton.centerYAnchor],
+        [help.trailingAnchor constraintEqualToAnchor:bar.trailingAnchor constant:-12],
+        [help.centerYAnchor constraintEqualToAnchor:bar.addButton.centerYAnchor],
+        [help.leadingAnchor constraintGreaterThanOrEqualToAnchor:insert.trailingAnchor constant:12],
+        [pasteNote.topAnchor constraintEqualToAnchor:frame.bottomAnchor constant:8],
         [pasteNote.leadingAnchor constraintEqualToAnchor:body.leadingAnchor],
         [pasteNote.trailingAnchor constraintLessThanOrEqualToAnchor:body.trailingAnchor],
-        [pasteNote.bottomAnchor constraintEqualToAnchor:body.bottomAnchor],
-        [insert.leadingAnchor constraintEqualToAnchor:addRemove.trailingAnchor constant:12],
-        [insert.centerYAnchor constraintEqualToAnchor:addRemove.centerYAnchor],
-        [help.trailingAnchor constraintEqualToAnchor:body.trailingAnchor],
-        [help.centerYAnchor constraintEqualToAnchor:addRemove.centerYAnchor],
-        [help.leadingAnchor constraintGreaterThanOrEqualToAnchor:insert.trailingAnchor constant:12]]];
+        [pasteNote.bottomAnchor constraintEqualToAnchor:body.bottomAnchor]]];
     self.view = view;
     [self reloadFromGlobalData];
 }
@@ -479,12 +495,6 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
 }
 
 #pragma mark Actions
-
-- (void)addOrRemove:(NSSegmentedControl *)sender
-{
-    if (sender.selectedSegment == 0) [self add:sender];
-    else [self delete:sender];
-}
 
 - (IBAction)add:(id)sender
 {
@@ -636,7 +646,7 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
 - (void)updateControls
 {
     NSUInteger selected = self.tableView.selectedRowIndexes.count;
-    [self.addRemoveControl setEnabled:selected > 0 forSegment:1];
+    self.listBar.removeButton.enabled = selected > 0;
     self.insertButton.enabled = [self rowForInsertion] >= 0;
 }
 
