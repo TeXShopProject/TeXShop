@@ -11,6 +11,10 @@ static const CGFloat TSAnnotationBarToolSize = 29;
 static const CGFloat TSAnnotationBarToolHeight = 28;
 // The pictures are drawn on a 20 x 16 sheet and scaled up by this factor.
 static const CGFloat TSAnnotationPictureScale = 1.25;
+// On macOS 26 and later the controls sit on pieces of glass, grouped as in the toolbar above.
+static const CGFloat TSAnnotationGlassHeight = 32;
+static const CGFloat TSAnnotationGlassInset = 6;
+static const CGFloat TSAnnotationGlassGap = 8;
 
 // The parts of the Preview answer with the annotation selected for editing, and take the
 // actions the bar sends them (MyPDFKitView-Annotations.m).
@@ -219,6 +223,41 @@ static NSView *TSAnnotationSeparator(void)
     return box;
 }
 
+static BOOL TSAnnotationBarUsesGlass(void)
+{
+    if (@available(macOS 26.0, *))
+        return YES;
+    return NO;
+}
+
+// A group of controls. On glass it is one piece of glass, like a group of items in the
+// toolbar, and the pages scrolling under the bar show blurred around it.
+static NSView *TSAnnotationGroup(NSArray<NSView *> *views, CGFloat spacing)
+{
+    NSStackView *stack = [NSStackView stackViewWithViews:views];
+    stack.orientation = NSUserInterfaceLayoutOrientationHorizontal;
+    stack.alignment = NSLayoutAttributeCenterY;
+    stack.spacing = spacing;
+    stack.detachesHiddenViews = YES;
+    stack.translatesAutoresizingMaskIntoConstraints = NO;
+    if (@available(macOS 26.0, *)) {
+        stack.edgeInsets = NSEdgeInsetsMake(0, TSAnnotationGlassInset, 0, TSAnnotationGlassInset);
+        NSGlassEffectView *glass = [[NSGlassEffectView alloc] init];
+        glass.translatesAutoresizingMaskIntoConstraints = NO;
+        glass.cornerRadius = TSAnnotationGlassHeight / 2;
+        glass.contentView = stack;
+        [glass.heightAnchor constraintEqualToConstant:TSAnnotationGlassHeight].active = YES;
+        [NSLayoutConstraint activateConstraints:@[
+            [stack.leadingAnchor constraintEqualToAnchor:glass.leadingAnchor],
+            [stack.trailingAnchor constraintEqualToAnchor:glass.trailingAnchor],
+            [stack.topAnchor constraintEqualToAnchor:glass.topAnchor],
+            [stack.bottomAnchor constraintEqualToAnchor:glass.bottomAnchor],
+        ]];
+        return glass;
+    }
+    return stack;
+}
+
 static BOOL TSIsSharedPanel(NSWindow *window)
 {
     return [window isKindOfClass:NSColorPanel.class] || [window isKindOfClass:NSFontPanel.class];
@@ -271,11 +310,8 @@ static BOOL TSIsSharedPanel(NSWindow *window)
     _host = host;
     _textPopover = [[TSAnnotationTextPopover alloc] init];
     self.layoutAttribute = NSLayoutAttributeBottom;
-    // The pages scroll on under the bar. With the soft edge of the toolbar they only blur, and
-    // a heading behind the bar stays dark enough to hide its icons; the hard edge gives the
-    // toolbar and the bar one even background while the bar is shown.
-    if (@available(macOS 26.1, *))
-        self.preferredScrollEdgeEffectStyle = NSScrollEdgeEffectStyle.hardStyle;
+    // The pages scroll on under the bar with the soft edge of the toolbar: they show blurred
+    // around the pieces of glass, and the icons stay on the glass, clear of a heading behind.
     [self view];
     return self;
 }
@@ -332,35 +368,55 @@ static BOOL TSIsSharedPanel(NSWindow *window)
     _closeButton.toolTip = closeName;
     _closeButton.accessibilityLabel = closeName;
 
-    NSMutableArray<NSView *> *views = [NSMutableArray arrayWithObject:_editModeButton];
-    [views addObject:TSAnnotationSeparator()];
-    for (NSUInteger i = 0; i < tools.count; i++) {
-        if (i == 3 || i == 7 || i == 8)
-            [views addObject:TSAnnotationSeparator()];
-        [views addObject:tools[i]];
-    }
-    _fullSpacerSeparator = TSAnnotationSeparator();
-    [views addObjectsFromArray:@[_fullSpacerSeparator, _colorButton, _fontButton, _textButton, _moreButton]];
     NSView *spacer = [[NSView alloc] init];
     spacer.translatesAutoresizingMaskIntoConstraints = NO;
     [spacer setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
     [spacer setContentCompressionResistancePriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
-    [views addObjectsFromArray:@[spacer, _saveButton, _saveAllCheckBox, _overflowButton, _closeButton]];
-    _fullOnly = @[_fullSpacerSeparator, _colorButton, _fontButton, _textButton, _moreButton, _saveButton, _saveAllCheckBox];
+
+    // The groups of the bar, as its separators part them: text markup, shapes, the arrow,
+    // text annotations, then color, font, text and more.
+    NSArray<NSArray<NSView *> *> *toolGroups = @[[tools subarrayWithRange:NSMakeRange(0, 3)], [tools subarrayWithRange:NSMakeRange(3, 4)],
+                                                 [tools subarrayWithRange:NSMakeRange(7, 1)], [tools subarrayWithRange:NSMakeRange(8, 3)]];
+    NSArray<NSView *> *formatGroup = @[_colorButton, _fontButton, _textButton, _moreButton];
+    NSMutableArray<NSView *> *views = [NSMutableArray arrayWithObject:_editModeButton];
+    BOOL glass = TSAnnotationBarUsesGlass();
+    if (glass) {
+        _saveButton.bezelStyle = NSBezelStyleGlass;
+        for (NSArray<NSView *> *group in toolGroups)
+            [views addObject:TSAnnotationGroup(group, 2)];
+        NSView *format = TSAnnotationGroup(formatGroup, 2);
+        NSView *save = TSAnnotationGroup(@[_saveButton, _saveAllCheckBox], 8);
+        [views addObjectsFromArray:@[format, spacer, save, TSAnnotationGroup(@[_overflowButton, _closeButton], 2)]];
+        _fullOnly = @[format, save];
+    } else {
+        [views addObject:TSAnnotationSeparator()];
+        for (NSArray<NSView *> *group in toolGroups) {
+            if (group != toolGroups.firstObject)
+                [views addObject:TSAnnotationSeparator()];
+            [views addObjectsFromArray:group];
+        }
+        _fullSpacerSeparator = TSAnnotationSeparator();
+        [views addObject:_fullSpacerSeparator];
+        [views addObjectsFromArray:formatGroup];
+        [views addObjectsFromArray:@[spacer, _saveButton, _saveAllCheckBox, _overflowButton, _closeButton]];
+        _fullOnly = [@[_fullSpacerSeparator] arrayByAddingObjectsFromArray:[formatGroup arrayByAddingObjectsFromArray:@[_saveButton, _saveAllCheckBox]]];
+    }
 
     _stack = [NSStackView stackViewWithViews:views];
     _stack.orientation = NSUserInterfaceLayoutOrientationHorizontal;
     _stack.alignment = NSLayoutAttributeCenterY;
-    _stack.spacing = 2;
+    _stack.spacing = glass ? TSAnnotationGlassGap : 2;
     _stack.detachesHiddenViews = YES;
     _stack.edgeInsets = NSEdgeInsetsMake(0, 8, 0, 8);
     _stack.translatesAutoresizingMaskIntoConstraints = NO;
     // The full bar must not keep the window from getting narrower: when it does not fit,
     // the narrow layout takes over (see layoutForWidth:).
     [_stack setClippingResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
-    [_stack setCustomSpacing:6 afterView:_editModeButton];
-    [_stack setCustomSpacing:8 afterView:_saveButton];
-    [_stack setCustomSpacing:6 afterView:_saveAllCheckBox];
+    if (!glass) {
+        [_stack setCustomSpacing:6 afterView:_editModeButton];
+        [_stack setCustomSpacing:8 afterView:_saveButton];
+        [_stack setCustomSpacing:6 afterView:_saveAllCheckBox];
+    }
     [view addSubview:_stack];
     [NSLayoutConstraint activateConstraints:@[
         [_stack.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
