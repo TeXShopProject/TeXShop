@@ -2,30 +2,65 @@
 // Replace All and Find All as background tasks: the search runs on a copy of the text, the text views are read-only
 // meanwhile, and the result is applied in one step at the end.
 #import "TSAdvancedFindController+Private.h"
+#import <objc/runtime.h>
 
 #define TSLocalized TSAdvancedFindLocalized
 
 /// Where to put the view back. `character` is the left of the top line, and `pin` is how far that line sits below the
-/// top of the viewport. That line may end before the left edge: a short line scrolled sideways has no character
+/// top of `visibleRect`. That line may end before the left edge: a short line scrolled sideways has no character
 /// there, and the long line under it is what the reader is looking at. `characterX` is the character under the left
-/// edge on the first line that reaches it, and `pinX` is how far that glyph sits from the left edge. `clipX` is only
-/// the fallback when that character cannot be placed (#72).
+/// edge on the first line that reaches it, and `pinX` is how far that glyph sits from the left edge. `clipX` and
+/// `clipY` are the clip origin at that moment. A source under the toolbar scrolls to a negative origin
+/// (`contentInsets`); `visibleRect` is cut off at the text, so `gapX` and `gapY` are what that cuts off
+/// (`visibleRect` origin minus the clip origin). The clip is put back at the line, minus the pin, minus that gap.
+/// `clipX` alone is the fallback when the left-edge character cannot be placed. When `keepsOrigin` is set, every
+/// match kept its length and its line breaks and the source font is fixed-pitch, so the columns do not move and the
+/// clip origin is put back as it was (#72).
 typedef struct {
     NSUInteger character;
     CGFloat pin;
     CGFloat pinX;
     CGFloat clipX;
     NSUInteger characterX;
+    CGFloat clipY;
+    BOOL keepsOrigin;
+    CGFloat gapX;
+    CGFloat gapY;
 } TSScrollAnchor;
 
 static void TSReadHorizontalAnchor(NSTextView *view, TSScrollAnchor *anchor);
+
+/// The top of the text the reader sees. Under a toolbar the clip origin sits `contentInsets.top` above that line.
+/// At the top of the file the clip is already above the text, and `visibleRect` starts on the text. Further down,
+/// `visibleRect` includes the band the toolbar covers, so the first visible line is one inset below its top (#72).
+static CGFloat TSContentTop(NSTextView *view)
+{
+    NSRect visible = view.visibleRect;
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    if (!clip)
+        return NSMinY(visible);
+    CGFloat belowBar = NSMinY(clip.bounds) + view.enclosingScrollView.contentInsets.top;
+    if (belowBar <= NSMinY(visible) + 0.5)
+        return NSMinY(visible);
+    return belowBar;
+}
 
 static TSScrollAnchor TSAnchorForView(NSTextView *view)
 {
     TSScrollAnchor anchor = {NSNotFound, 0, 0, 0, NSNotFound};
     NSClipView *clip = view.enclosingScrollView.contentView;
-    if (clip)
+    if (clip) {
+        // Before any layout. Measuring the top line can resize the text view, and that resize scrolls (#72).
         anchor.clipX = clip.bounds.origin.x;
+        anchor.clipY = clip.bounds.origin.y;
+        // The toolbar inset scrolls the clip above the text. visibleRect then starts at the text, and a pin measured
+        // from it no longer knows how far above the text the clip was (#72).
+        NSRect visible = view.visibleRect;
+        if (!NSIsEmptyRect(visible)) {
+            anchor.gapX = NSMinX(visible) - anchor.clipX;
+            anchor.gapY = NSMinY(visible) - anchor.clipY;
+        }
+    }
     NSLayoutManager *layout = view.layoutManager;
     NSTextContainer *container = view.textContainer;
     if (!layout || !container || view.string.length == 0)
@@ -33,15 +68,17 @@ static TSScrollAnchor TSAnchorForView(NSTextView *view)
     // setTextColor: leaves the first glyphIndexForPoint on another wrap of the line than the one on screen. A theme
     // does that for each part of a split source. The next question returns the wrap that is painted (#72).
     NSRect visible = view.visibleRect;
+    // The line under the toolbar, not the one the bar covers. Pinning the covered line leaves the visible line free
+    // to slip by a wrap when the text above it changes height (#72).
     NSPoint inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x,
-                                      NSMinY(visible) + 1 - view.textContainerOrigin.y);
+                                      TSContentTop(view) + 1 - view.textContainerOrigin.y);
     if (layout.numberOfGlyphs > 0)
         (void)[layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
     if (layout.numberOfGlyphs == 0)
         return anchor;
     visible = view.visibleRect;
     inContainer = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x,
-                              NSMinY(visible) + 1 - view.textContainerOrigin.y);
+                              TSContentTop(view) + 1 - view.textContainerOrigin.y);
     NSUInteger glyph = [layout glyphIndexForPoint:inContainer inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
     if (glyph >= layout.numberOfGlyphs)
         glyph = layout.numberOfGlyphs - 1;
@@ -63,6 +100,7 @@ static void TSReadHorizontalAnchor(NSTextView *view, TSScrollAnchor *anchor)
     if (!layout || !container || layout.numberOfGlyphs == 0)
         return;
     NSRect visible = view.visibleRect;
+    CGFloat contentTop = TSContentTop(view);
     CGFloat originX = view.textContainerOrigin.x;
     NSRect box = NSOffsetRect(visible, -originX, -view.textContainerOrigin.y);
     [layout ensureLayoutForBoundingRect:box inTextContainer:container];
@@ -77,7 +115,10 @@ static void TSReadHorizontalAnchor(NSTextView *view, TSScrollAnchor *anchor)
         (void)textContainer;
         CGFloat usedLeft = originX + NSMinX(used);
         CGFloat usedRight = originX + NSMaxX(used);
-        // A line that ends before the left edge, or starts to the right of it, has nothing to pin there.
+        // A line hidden under the toolbar, or one that ends before the left edge, or one that starts to the right
+        // of it, has nothing to pin on the visible edge.
+        if (view.textContainerOrigin.y + NSMaxY(fragment) <= contentTop + 0.5)
+            return;
         if (usedRight <= NSMinX(visible) + 0.5 || usedLeft > NSMinX(visible) + 1 || glyphs.length == 0)
             return;
         NSPoint point = NSMakePoint(NSMinX(visible) - originX, NSMinY(fragment) + 1);
@@ -141,16 +182,125 @@ static NSMapTable<NSTextView *, NSValue *> *TSAnchorsFollowingEdits(NSMapTable<N
     return mapped;
 }
 
-static CGFloat TSClampScroll(CGFloat value, CGFloat lower, CGFloat upper)
+/// Laying out a replacement resizes the text view. `_resizeTextViewForTextContainer:` then scrolls, and so does
+/// `_scrollRangeToVisible:forceCenter:` for the caret. Both go through `scrollClipView:toPoint:`, which calls
+/// `scrollToPoint:` and `translateOriginToPoint:`. A direct `setBoundsOrigin:` is the other way the frame change
+/// moves the clip. The resize also goes through `_reflectDocumentViewFrameChange` → `_scrollTo:` → `tile` →
+/// `translateOriginToPoint:`, which calls neither of those. With wrapping off, that draws the left edge for one
+/// frame before the anchor is put back, even when the replacement keeps the advance (#72). While a hold is in
+/// force all three do nothing. The anchor restore is the scroll that should happen.
+static IMP TSOriginalScrollClipView;
+static IMP TSOriginalSetBoundsOrigin;
+static IMP TSOriginalTranslateOrigin;
+static int TSClipHoldCount;
+static BOOL TSAllowClipScroll;
+/// Undo managers that still owe a hold to a Replace All redo. The number is how many later undos have stacked
+/// their own redo above that one. Zero means the next redo is the Replace All redo (#72).
+static NSMapTable<NSUndoManager *, NSNumber *> *TSRedoHolds;
+
+static void TSExpectRedoHold(NSUndoManager *undo)
 {
-    if (upper < lower)
-        upper = lower;
-    if (value < lower)
-        return lower;
-    if (value > upper)
-        return upper;
-    return value;
+    if (!undo)
+        return;
+    if (!TSRedoHolds)
+        TSRedoHolds = [NSMapTable weakToStrongObjectsMapTable];
+    // WillUndo for this undo already ran, before the mark existed, so it did not count itself.
+    [TSRedoHolds setObject:@0 forKey:undo];
 }
+
+/// YES when this redo is the Replace All redo and must hold. The caller pushes; the redo handler pops.
+/// A redo stacked above that one returns NO and leaves the mark for the Replace All redo underneath.
+static BOOL TSConsumeRedoHold(NSUndoManager *undo)
+{
+    NSNumber *skip = [TSRedoHolds objectForKey:undo];
+    if (!skip)
+        return NO;
+    NSInteger left = skip.integerValue;
+    if (left > 0) {
+        [TSRedoHolds setObject:@(left - 1) forKey:undo];
+        return NO;
+    }
+    [TSRedoHolds removeObjectForKey:undo];
+    return YES;
+}
+
+static void TSPushClipHold(void);
+static void TSPopClipHold(void);
+
+static void TSHeldScrollClipView(NSScrollView *scroll, SEL _cmd, NSClipView *clip, NSPoint point)
+{
+    if (TSClipHoldCount > 0 && !TSAllowClipScroll)
+        return;
+    ((void (*)(id, SEL, NSClipView *, NSPoint))TSOriginalScrollClipView)(scroll, @selector(scrollClipView:toPoint:), clip, point);
+}
+
+static void TSHeldSetBoundsOrigin(NSClipView *clip, SEL _cmd, NSPoint origin)
+{
+    if (TSClipHoldCount > 0 && !TSAllowClipScroll)
+        return;
+    ((void (*)(id, SEL, NSPoint))TSOriginalSetBoundsOrigin)(clip, @selector(setBoundsOrigin:), origin);
+}
+
+static void TSHeldTranslateOrigin(NSView *view, SEL _cmd, NSPoint point)
+{
+    if (TSClipHoldCount > 0 && !TSAllowClipScroll && [view isKindOfClass:NSClipView.class])
+        return;
+    ((void (*)(id, SEL, NSPoint))TSOriginalTranslateOrigin)(view, @selector(translateOriginToPoint:), point);
+}
+
+static void TSInstallClipHold(void)
+{
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        Method scroll = class_getInstanceMethod(NSScrollView.class, @selector(scrollClipView:toPoint:));
+        TSOriginalScrollClipView = method_setImplementation(scroll, (IMP)TSHeldScrollClipView);
+        Method origin = class_getInstanceMethod(NSClipView.class, @selector(setBoundsOrigin:));
+        TSOriginalSetBoundsOrigin = method_setImplementation(origin, (IMP)TSHeldSetBoundsOrigin);
+        Method translate = class_getInstanceMethod(NSView.class, @selector(translateOriginToPoint:));
+        TSOriginalTranslateOrigin = method_setImplementation(translate, (IMP)TSHeldTranslateOrigin);
+        NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+        [center addObserverForName:NSUndoManagerWillUndoChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            // Posted before the undo handlers. A later undo (typing, after Replace All was undone) stacks its redo
+            // on top of the Replace All redo. Counting it here keeps the hold for that redo, instead of spending it
+            // on a redo that has no place handler and never pops (#72).
+            NSUndoManager *undo = note.object;
+            NSNumber *skip = [TSRedoHolds objectForKey:undo];
+            if (undo.isUndoing && skip)
+                [TSRedoHolds setObject:@(skip.integerValue + 1) forKey:undo];
+        }];
+        [center addObserverForName:NSUndoManagerWillRedoChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            // Posted before the text redo. The place handler runs after that text change, which is too late to stop
+            // its scroll (#72).
+            if (!TSConsumeRedoHold(note.object))
+                return;
+            TSPushClipHold();
+            // The place handler pops before the run loop continues. A redo that has no place handler must not leave
+            // the process-wide hold in place.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                TSPopClipHold();
+            });
+        }];
+        [center addObserverForName:NSUndoManagerDidCloseUndoGroupNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            NSUndoManager *undo = note.object;
+            if (!undo.isUndoing && !undo.isRedoing)
+                [TSRedoHolds removeObjectForKey:undo];
+        }];
+    });
+}
+
+static void TSPushClipHold(void)
+{
+    TSInstallClipHold();
+    TSClipHoldCount++;
+}
+
+static void TSPopClipHold(void)
+{
+    if (TSClipHoldCount > 0)
+        TSClipHoldCount--;
+}
+
+static void TSFinishPlace(NSMapTable<NSTextView *, NSValue *> *anchors);
 
 static void TSScroll(NSTextView *view, CGFloat x, CGFloat y)
 {
@@ -158,11 +308,27 @@ static void TSScroll(NSTextView *view, CGFloat x, CGFloat y)
     NSClipView *clip = scroll.contentView;
     if (!clip)
         return;
-    NSRect frame = view.frame;
-    x = TSClampScroll(x, NSMinX(frame), NSMaxX(frame) - NSWidth(clip.bounds));
-    y = TSClampScroll(y, NSMinY(frame), NSMaxY(frame) - NSHeight(clip.bounds));
+    // The text frame starts at 0, so a clamp to that frame cannot return to the toolbar inset (a negative origin) and
+    // stops short of the bottom by the bottom inset. constrainBoundsRect: is the range the scroller itself uses (#72).
+    NSRect proposed = clip.bounds;
+    proposed.origin = NSMakePoint(x, y);
+    NSPoint point = [clip constrainBoundsRect:proposed].origin;
+    x = point.x;
+    y = point.y;
+    // A correction of less than a point is the scroller's pixel alignment. Applying it moves the clip the test, and
+    // the eye, can see as a jump (#72).
+    if (fabs(x - clip.bounds.origin.x) <= 1 && fabs(y - clip.bounds.origin.y) <= 1) {
+        [scroll.verticalRulerView setNeedsDisplay:YES];
+        [scroll.horizontalRulerView setNeedsDisplay:YES];
+        return;
+    }
+    TSAllowClipScroll = YES;
     [clip scrollToPoint:NSMakePoint(x, y)];
     [scroll reflectScrolledClipView:clip];
+    TSAllowClipScroll = NO;
+    // The line numbers draw from the clip origin. A scroll that the ruler missed leaves them on the old lines (#72).
+    [scroll.verticalRulerView setNeedsDisplay:YES];
+    [scroll.horizontalRulerView setNeedsDisplay:YES];
 }
 
 /// The logical line around `character`, capped so a file that is one long line is not laid out from the start (#72).
@@ -245,7 +411,7 @@ static BOOL TSTopLine(NSTextView *view, NSRange *characterRange, CGFloat *lineTo
     [layout ensureLayoutForBoundingRect:NSOffsetRect(visible, -view.textContainerOrigin.x, -view.textContainerOrigin.y) inTextContainer:container];
     if (layout.numberOfGlyphs == 0)
         return NO;
-    NSPoint point = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x + 1, NSMinY(visible) - view.textContainerOrigin.y + 1);
+    NSPoint point = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x + 1, TSContentTop(view) + 1 - view.textContainerOrigin.y);
     NSUInteger glyph = [layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
     if (glyph >= layout.numberOfGlyphs)
         glyph = layout.numberOfGlyphs - 1;
@@ -274,7 +440,9 @@ static CGFloat TSPinnedClipX(NSTextView *view, TSScrollAnchor anchor)
     // the scroll clamps to the left and the text stays there after the frame catches up.
     if (view.horizontallyResizable && lineRight > NSWidth(view.frame) && lineRight < 1000000)
         [view setFrameSize:NSMakeSize(lineRight, NSHeight(view.frame))];
-    return NSMinX(clip.bounds) + (glyphX - anchor.pinX - NSMinX(view.visibleRect));
+    // Absolute, from the origin that was saved. Adding it to the clip where the edit left the view would keep a jump
+    // that had already happened, including one into the toolbar inset (#72).
+    return glyphX - anchor.pinX - anchor.gapX;
 }
 
 /// After the estimated scroll, step by the lines actually on screen until `character` is on the top line, and at the
@@ -297,6 +465,10 @@ static void TSRefineAnchor(NSTextView *view, TSScrollAnchor anchor)
         if (NSLocationInRange(character, line)) {
             // A fragment that contains the character can still sit several lines away: its rectangle is an estimate
             // until the wrap is laid out, and a nudge of less than one line would leave the old wrap on screen (#72).
+            // The gap is the toolbar inset that visibleRect cuts off. Without it the top of a document under the
+            // toolbar is put at y 0, and the first lines slide under the bar.
+            // From the current visible top, not the gap saved earlier. A wrapped layout renorms its coordinates
+            // (the clip origin changes by the same amount) and the saved gap would follow the old system (#72).
             CGFloat delta = (top - anchor.pin) - NSMinY(view.visibleRect);
             if (fabs(delta) > height * 30)
                 delta = delta < 0 ? -height * 30 : height * 30;
@@ -331,17 +503,93 @@ static void TSApplyAnchors(NSMapTable<NSTextView *, NSValue *> *anchors)
         if (!clip)
             continue;
         TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
-        CGFloat x = TSPinnedClipX(view, anchor);
-        CGFloat y = NSMinY(view.frame);
         CGFloat glyphX = 0, lineTop = 0, lineRight = 0;
-        if (TSPlaceOfCharacter(view, anchor.character, &glyphX, &lineTop, &lineRight))
-            y = NSMinY(clip.bounds) + (lineTop - anchor.pin - NSMinY(view.visibleRect));
+        BOOL placed = anchor.character != NSNotFound && TSPlaceOfCharacter(view, anchor.character, &glyphX, &lineTop, &lineRight);
+        // The clip has not moved: follow the line from where the viewport is now. A wrapped layout can renorm its
+        // coordinates under a clip that did not scroll, and the characters slide unless the origin follows them.
+        // The clip has moved: aim at the saved origin, or an edit that landed inside the toolbar inset stays there.
+        CGFloat y = anchor.clipY;
+        if (placed) {
+            CGFloat relative = NSMinY(clip.bounds) + (lineTop - anchor.pin - NSMinY(view.visibleRect));
+            CGFloat absolute = lineTop - anchor.pin - anchor.gapY;
+            y = fabs(NSMinY(clip.bounds) - anchor.clipY) <= 1 ? relative : absolute;
+        }
+        if (anchor.keepsOrigin) {
+            // The frame can still be the window size when a long line has not been measured again. Grow past the
+            // saved origin first, or constrainBoundsRect: pulls the clip to the corner (#72). A negative origin is
+            // the toolbar inset: the text does not have to grow to reach it.
+            NSEdgeInsets insets = view.enclosingScrollView.contentInsets;
+            CGFloat width = NSWidth(view.frame), height = NSHeight(view.frame);
+            if (view.horizontallyResizable)
+                width = MAX(width, anchor.clipX + NSWidth(clip.bounds) - insets.right + 2);
+            if (view.verticallyResizable && anchor.clipY > 0)
+                height = MAX(height, anchor.clipY + NSHeight(clip.bounds) - insets.bottom + 2);
+            if (width > NSWidth(view.frame) + 0.5 || height > NSHeight(view.frame) + 0.5)
+                [view setFrameSize:NSMakeSize(MAX(width, 0), MAX(height, 0))];
+            // Same columns: keep the origin, unless the layout renormed and the line now sits elsewhere.
+            if (!placed || fabs(y - anchor.clipY) <= 1)
+                y = anchor.clipY;
+            TSScroll(view, anchor.clipX, y);
+            continue;
+        }
+        CGFloat x = TSPinnedClipX(view, anchor);
         TSScroll(view, x, y);
         TSRefineAnchor(view, anchor);
     }
     // Laying out one part of a split source can move the other's estimate. Check again once both have been laid out.
-    for (NSTextView *view in anchors)
-        TSRefineAnchor(view, TSAnchorFromValue([anchors objectForKey:view]));
+    // An origin that was saved exactly is not an estimate, and laying it out again is what scrolls (#72).
+    for (NSTextView *view in anchors) {
+        TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
+        if (!anchor.keepsOrigin)
+            TSRefineAnchor(view, anchor);
+    }
+}
+
+/// The replacement invalidates layout. The next measurement corrects a tall estimate of the height and scrolls to
+/// follow that correction (`_resizeTextViewForTextContainer:` and the caret's `_scrollRangeToVisible:`). Doing the
+/// layout while the hold is up swallows those scrolls; the anchor is what remains (#72).
+static void TSFinishPlace(NSMapTable<NSTextView *, NSValue *> *anchors)
+{
+    // A full layout renorms a wrapped text view whose fragments still sit at a large negative y. The anchor was
+    // measured in that system; laying it out first makes the saved pin aim thousands of points away. The toolbar
+    // inset is only a few dozen points, and that case does need the layout or the next measurement scrolls (#72).
+    BOOL estimated = NO;
+    for (NSTextView *view in anchors) {
+        NSClipView *clip = view.enclosingScrollView.contentView;
+        if (clip && NSMinY(clip.bounds) < -200)
+            estimated = YES;
+    }
+    if (!estimated) {
+        for (NSTextView *view in anchors) {
+            NSLayoutManager *layout = view.layoutManager;
+            NSTextContainer *container = view.textContainer;
+            if (layout && container)
+                [layout ensureLayoutForTextContainer:container];
+        }
+    }
+    TSApplyAnchors(anchors);
+}
+
+/// The origin from before the edit, without laying the document out. The resize tried to show the left edge. The hold
+/// swallows that scroll, and this puts the origin back when the frame can still reach it. A target the frame cannot
+/// reach is left where it is: scrolling there would clamp to the corner. The next turn lays the text out once and
+/// places the anchor (#72).
+static void TSRestoreClipOrigin(NSMapTable<NSTextView *, NSValue *> *anchors)
+{
+    for (NSTextView *view in anchors) {
+        NSClipView *clip = view.enclosingScrollView.contentView;
+        if (!clip)
+            continue;
+        TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
+        NSRect proposed = clip.bounds;
+        proposed.origin = NSMakePoint(anchor.clipX, anchor.clipY);
+        NSPoint reachable = [clip constrainBoundsRect:proposed].origin;
+        // The edit can leave the frame at the window width. Scrolling now would clamp to the corner and draw it.
+        // The next turn grows the frame, then scrolls (#72).
+        if (fabs(reachable.x - anchor.clipX) > 1 || fabs(reachable.y - anchor.clipY) > 1)
+            continue;
+        TSScroll(view, anchor.clipX, anchor.clipY);
+    }
 }
 
 static NSMapTable<NSTextView *, NSArray<NSValue *> *> *TSSelections(NSTextStorage *storage)
@@ -401,14 +649,61 @@ static void TSApplySelections(NSMapTable<NSTextView *, NSArray<NSValue *> *> *se
                 range.length = limit - range.location;
             [clamped addObject:[NSValue valueWithRange:range]];
         }
-        if (clamped.count > 0)
-            view.selectedRanges = clamped;
+        if (clamped.count > 0) {
+            // stillSelecting leaves the caret where it is. The plain setter scrolls it into view, and with the line
+            // only estimated that scroll puts the caret's line at the top of the source (#72).
+            [view setSelectedRanges:clamped affinity:view.selectionAffinity stillSelecting:YES];
+            [view updateInsertionPointStateAndRestartTimer:YES];
+        }
     }
 }
 
-/// One undo step's worth of places. Registered inside the text change's group. Undoing puts `before` back, and that
-/// registers the redo of `after`, which registers this again, so a later undo keeps doing it (#72). The text change
-/// itself is still in the group: the place is put back on the next pass, once that change has been undone or redone.
+static BOOL TSTextViewUsesFixedPitch(NSTextView *view)
+{
+    NSTextStorage *storage = view.textStorage;
+    if (!storage || storage.length == 0)
+        return NO;
+    NSFont *font = [storage attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
+    return font.isFixedPitch;
+}
+
+/// Same length and the same line breaks: in a fixed-pitch source the columns on screen do not move (#72).
+static BOOL TSReplacementsKeepColumns(NSString *text, NSArray<TSRegexFindReplacement *> *replacements)
+{
+    if (replacements.count == 0 || !text)
+        return NO;
+    NSCharacterSet *breaks = NSCharacterSet.newlineCharacterSet;
+    for (TSRegexFindReplacement *replacement in replacements) {
+        NSRange range = replacement.range;
+        NSString *inserted = replacement.string ?: @"";
+        if (inserted.length != range.length || NSMaxRange(range) > text.length)
+            return NO;
+        NSString *previous = [text substringWithRange:range];
+        NSUInteger oldBreaks = 0, newBreaks = 0;
+        for (NSUInteger i = 0; i < previous.length; i++)
+            if ([breaks characterIsMember:[previous characterAtIndex:i]])
+                oldBreaks++;
+        for (NSUInteger i = 0; i < inserted.length; i++)
+            if ([breaks characterIsMember:[inserted characterAtIndex:i]])
+                newBreaks++;
+        if (oldBreaks != newBreaks)
+            return NO;
+    }
+    return YES;
+}
+
+static void TSSetAnchorsKeepOrigin(NSMapTable<NSTextView *, NSValue *> *anchors)
+{
+    for (NSTextView *view in [anchors copy]) {
+        TSScrollAnchor anchor = TSAnchorFromValue([anchors objectForKey:view]);
+        anchor.keepsOrigin = YES;
+        [anchors setObject:TSAnchorValue(anchor) forKey:view];
+    }
+}
+
+/// One undo step's worth of places. Registered inside the text change's group, so this handler runs before the text
+/// is put back. The hold covers that text change. The place is put back when the undo finishes, still inside `-undo`,
+/// and the redo handler does the same the other way once the text has been put forward again (#72).
 static void TSRegisterPlaceUndo(NSUndoManager *undo, NSTextView *view,
                                 NSMapTable<NSTextView *, NSArray<NSValue *> *> *beforeSelections,
                                 NSMapTable<NSTextView *, NSValue *> *beforeAnchors,
@@ -420,22 +715,31 @@ static void TSRegisterPlaceUndo(NSUndoManager *undo, NSTextView *view,
     [undo registerUndoWithTarget:view handler:^(NSTextView *current) {
         NSUndoManager *manager = current.undoManager;
         [manager registerUndoWithTarget:current handler:^(NSTextView *again) {
-            TSRegisterPlaceUndo(again.undoManager, again, beforeSelections, beforeAnchors, afterSelections, afterAnchors);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSUndoManager *redo = again.undoManager;
-                [redo disableUndoRegistration];
-                TSApplySelections(afterSelections);
-                TSApplyAnchors(afterAnchors);
-                [redo enableUndoRegistration];
-            });
+            // WillRedo pushed the hold before the text redo, which is registered ahead of this handler.
+            NSUndoManager *redoUndo = again.undoManager;
+            TSRegisterPlaceUndo(redoUndo, again, beforeSelections, beforeAnchors, afterSelections, afterAnchors);
+            if (TSClipHoldCount == 0)
+                TSPushClipHold();
+            [redoUndo disableUndoRegistration];
+            TSApplySelections(afterSelections);
+            TSFinishPlace(afterAnchors);
+            [redoUndo enableUndoRegistration];
+            TSPopClipHold();
         }];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSUndoManager *back = current.undoManager;
-            [back disableUndoRegistration];
+        TSExpectRedoHold(manager);
+        TSPushClipHold();
+        __block id token = nil;
+        token = [NSNotificationCenter.defaultCenter addObserverForName:NSUndoManagerDidUndoChangeNotification object:manager
+                                                                 queue:nil usingBlock:^(NSNotification *note) {
+            (void)note;
+            [NSNotificationCenter.defaultCenter removeObserver:token];
+            NSUndoManager *undo = current.undoManager;
+            [undo disableUndoRegistration];
             TSApplySelections(beforeSelections);
-            TSApplyAnchors(beforeAnchors);
-            [back enableUndoRegistration];
-        });
+            TSFinishPlace(beforeAnchors);
+            [undo enableUndoRegistration];
+            TSPopClipHold();
+        }];
     }];
 }
 
@@ -471,16 +775,25 @@ static void TSRegisterPlaceUndo(NSUndoManager *undo, NSTextView *view,
         // Rewriting a scope makes NSLayoutManager resize the text view and scroll a stale range into view, so the
         // text jumps (#72). Remember the top line, the character under the left edge (a lower line, when the top line
         // ends sooner), and the carets. The replacement contains the carets, and the text view would otherwise leave
-        // them at the end of the new text.
+        // them at the end of the new text. The hold covers the edit, which is what scrolls onto the caret's line.
         NSTextStorage *storage = textView.textStorage;
+        BOOL keepsColumns = TSTextViewUsesFixedPitch(textView) && storage
+            && TSReplacementsKeepColumns(storage.string, result.replacements);
+        // Measured before the hold. The first glyph query after setTextColor: names the wrong wrap, and blocking the
+        // scroll that query makes leaves the second query wrong too (#72).
         NSMapTable *previousAnchors = storage ? TSAnchors(storage) : [NSMapTable weakToStrongObjectsMapTable];
+        if (keepsColumns)
+            TSSetAnchorsKeepOrigin(previousAnchors);
+        TSPushClipHold();
         NSMapTable *keptAnchors = TSAnchorsFollowingEdits(previousAnchors, result);
         NSMapTable *previous = storage ? TSSelections(storage) : [NSMapTable weakToStrongObjectsMapTable];
         NSMapTable *kept = TSSelectionsAfterReplace(previous, result, textView);
         BOOL applied = [self applyReplacements:result.replacements toTextView:textView selectedRanges:nil
                                     actionName:TSLocalized(@"AdvancedFind.ReplaceAllAction", @"Replace All")];
-        if (!applied)
+        if (!applied) {
+            TSPopClipHold();
             return; // Nothing was registered, so a refused change leaves the redo stack as it was (#72).
+        }
         NSUndoManager *undo = textView.undoManager;
         if (undo && result.replacements.count > 0) {
             // Inside the group the text change opened, so it is the same undo step. It runs before the text is put
@@ -490,8 +803,18 @@ static void TSRegisterPlaceUndo(NSUndoManager *undo, NSTextView *view,
         }
         [undo disableUndoRegistration];
         TSApplySelections(kept);
-        TSApplyAnchors(keptAnchors);
+        // The frame resize already tried to put the clip at the left edge. Put that origin back before this turn
+        // draws. Laying the whole document out here as well as on the next turn is what stalls a long file (#72).
+        TSRestoreClipOrigin(keptAnchors);
         [undo enableUndoRegistration];
+        // Measuring the text after this returns corrects the height estimate and scrolls the caret into view. Lay it
+        // out once, while the hold still swallows that scroll, then put the place back (#72).
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [undo disableUndoRegistration];
+            TSFinishPlace(keptAnchors);
+            [undo enableUndoRegistration];
+            TSPopClipHold();
+        });
         NSString *replaced = TSLocalized(@"AdvancedFind.Replaced", @"%lu replaced");
         [self report:[NSString stringWithFormat:replaced, (unsigned long)result.numberOfMatches] isError:NO];
     }];

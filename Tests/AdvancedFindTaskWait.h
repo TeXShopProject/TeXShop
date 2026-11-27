@@ -13,9 +13,11 @@ static inline BOOL TSTestWaitForTask(TSAdvancedFindController *controller, NSTim
 }
 
 /// Performs `action` and waits for the task it may have started. Returns what -performAction:inTextView: returned.
+/// The extra moment runs the pass Replace All uses to put the clip back after the caret update (#72).
 static inline BOOL TSTestPerform(TSAdvancedFindController *controller, TSAdvancedFindAction action, NSTextView *textView)
 {
     BOOL started = [controller performAction:action inTextView:textView];
     TSTestWaitForTask(controller, 60);
+    [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
     return started;
 }
