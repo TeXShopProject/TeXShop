@@ -29,6 +29,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/// The rounded frame around a list and the bar at its bottom, as the theme list in Settings: a 1-point border in the
+/// separator color of the current appearance around the list's background. The list (with no border or background of
+/// its own) and its bar are placed in it by its owner.
+@interface TSListFrameView : NSView
+@end
+
 /// The narrowest and the widest a sidebar of TSListSidebarView can be.
 FOUNDATION_EXPORT const CGFloat TSListSidebarMinimumWidth, TSListSidebarMaximumWidth;
 

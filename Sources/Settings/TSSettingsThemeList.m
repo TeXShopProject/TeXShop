@@ -12,26 +12,6 @@ static CGFloat TSThemeListInset(NSTableView *table)
     return table.effectiveStyle == NSTableViewStyleInset ? 10 : 0;
 }
 
-/// The rounded frame around the list and its bar, drawn in the separator color of the current appearance.
-@interface TSSettingsThemeListFrame : NSView
-@end
-@implementation TSSettingsThemeListFrame
-- (BOOL)wantsUpdateLayer { return YES; }
-- (void)updateLayer
-{
-    self.layer.cornerRadius = 6;
-    self.layer.borderWidth = 1;
-    self.layer.masksToBounds = YES;
-    __block CGColorRef border = NULL, background = NULL;
-    [self.effectiveAppearance performAsCurrentDrawingAppearance:^{
-        border = NSColor.separatorColor.CGColor;
-        background = NSColor.controlBackgroundColor.CGColor;
-    }];
-    self.layer.borderColor = border;
-    self.layer.backgroundColor = background;
-}
-@end
-
 /// A table that offers files dropped on it to the list, and whose contextual menu names the row clicked.
 @interface TSSettingsThemeTable : NSTableView
 @end
@@ -118,7 +98,8 @@ static CGFloat TSThemeListInset(NSTableView *table)
     _removeButton.identifier = @"settings.theme-list.remove";
     _actionsButton.identifier = @"settings.theme-list.actions";
 
-    NSView *frame = [TSSettingsThemeListFrame new];
+    // The rounded frame around the list and its bar.
+    NSView *frame = [TSListFrameView new];
     frame.translatesAutoresizingMaskIntoConstraints = NO;
     frame.identifier = @"settings.theme-list.frame";
     [frame addSubview:scroll];
