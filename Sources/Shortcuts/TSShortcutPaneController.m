@@ -69,6 +69,23 @@
     }
     [super keyDown:event];
 }
+// The list scrolls at once, as Finder's list view does. With the system's scroll animation, a held
+// arrow key moved the selection faster than the animated scroll followed it: the selected row went
+// out of sight, and the list stopped with it in the middle or out of sight.
+- (void)scrollRowToVisible:(NSInteger)row {
+    NSClipView *clip = self.enclosingScrollView.contentView;
+    if (clip == nil || row < 0 || row >= self.numberOfRows) { [super scrollRowToVisible:row]; return; }
+    NSRect rowRect = [self rectOfRow:row];
+    NSRect bounds = clip.bounds;
+    NSEdgeInsets insets = clip.contentInsets;
+    CGFloat top = NSMinY(bounds) + insets.top, bottom = NSMaxY(bounds) - insets.bottom;
+    NSPoint origin = bounds.origin;
+    if (NSMinY(rowRect) < top) origin.y = NSMinY(rowRect) - insets.top;
+    else if (NSMaxY(rowRect) > bottom) origin.y = NSMaxY(rowRect) - NSHeight(bounds) + insets.bottom;
+    bounds.origin = origin;
+    [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+    [self.enclosingScrollView reflectScrolledClipView:clip];
+}
 @end
 
 // What the filter button keeps in the function list.
@@ -123,6 +140,9 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property (strong, nullable, readonly) NSWindow *window;
 @property NSTextField *hint;
 @property NSTableView *table;
+// The guide under the list came or went: the list's next change of height keeps the selected row in sight.
+@property BOOL keepSelectionThroughResize;
+@property CGFloat listHeight;
 @property (nullable) NSView *highlightedCompletionRow;
 @property NSSearchField *search;
 @property NSArray<TSShortcutCommand *> *visibleCommands;
@@ -226,6 +246,8 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     shortcut.title = NSLocalizedString(@"Shortcut", @""); shortcut.width = 150; shortcut.minWidth = 130;
     [self.table addTableColumn:command]; [self.table addTableColumn:shortcut];
     scroll.documentView = self.table;
+    scroll.contentView.postsFrameChangedNotifications = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(listFrameDidChange:) name:NSViewFrameDidChangeNotification object:scroll.contentView];
     // The command list shows at least six commands and takes, with the key
     // binding list, the height a taller window leaves.
     CGFloat minimum = 6 * (self.table.rowHeight + self.table.intercellSpacing.height) + 28;
@@ -1141,9 +1163,25 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     self.statusText.stringValue = text.length ? text : @" ";
     self.status.arrangedSubviews[0].hidden = error == nil;
     BOOL showSystemSettings = self.systemSettingsLink != nil && error == nil && self.editingCommand == nil && [self selectedRowCannotChange];
+    BOOL guideChanges = self.systemSettingsGuide.hidden == showSystemSettings;
     self.systemSettingsArrow.hidden = !showSystemSettings;
     self.systemSettingsLink.hidden = !showSystemSettings;
     self.systemSettingsGuide.hidden = !showSystemSettings;
+    // The guide makes the list shorter or taller. A selected row in sight stays in sight when the list
+    // takes its new height, as the arrow keys leave it at the edge of the list, as in Finder's list view.
+    self.keepSelectionThroughResize = guideChanges;
+}
+- (void)listFrameDidChange:(NSNotification *)notification {
+    CGFloat height = NSHeight(self.table.enclosingScrollView.contentView.frame);
+    BOOL changed = fabs(height - self.listHeight) > 0.5;
+    self.listHeight = height;
+    if (!changed || !self.keepSelectionThroughResize) return;
+    self.keepSelectionThroughResize = NO;
+    NSInteger row = self.table.selectedRow;
+    if (row < 0 || !NSIntersectsRect(self.table.visibleRect, [self.table rectOfRow:row])) return;
+    // After the layout pass that changed the height, when the list has its new bounds.
+    __weak NSTableView *table = self.table;
+    dispatch_async(dispatch_get_main_queue(), ^{ if (table.selectedRow == row) [table scrollRowToVisible:row]; });
 }
 - (void)showRecordingError:(NSString *)error {
     self.recordingError = error;

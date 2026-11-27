@@ -1218,6 +1218,36 @@ int main(int argc,char **argv){@autoreleasepool{
     if([language hasPrefix:@"ja"])printf("STRIPES %s\n",detail.UTF8String);REQUIRE(menuRowsStriped);}
    [translated.table selectRowIndexes:selected byExtendingSelection:NO];}
   REQUIRE(translated.table.rowHeight==22 && translated.table.style==NSTableViewStyleInset && translated.table.usesAlternatingRowBackgroundColors);
+  // In a window of fixed height, the guide under the list makes the list shorter. The Down Arrow key onto a
+  // row that cannot be changed leaves that row in sight at the bottom, as in Finder's list view.
+  if([language isEqual:@"en.lproj"]){
+   TSShortcutPaneController *fixedPane=[[TSShortcutPaneController alloc]initWithShortcuts:coordinator];fixedPane.settingsHeader=InputHeader();
+   NSWindow *fixedHost=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,520) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+   NSView *paneView=fixedPane.view;paneView.translatesAutoresizingMaskIntoConstraints=NO;[fixedHost.contentView addSubview:paneView];
+   [NSLayoutConstraint activateConstraints:@[[paneView.leadingAnchor constraintEqualToAnchor:fixedHost.contentView.leadingAnchor],[paneView.trailingAnchor constraintEqualToAnchor:fixedHost.contentView.trailingAnchor],[paneView.topAnchor constraintEqualToAnchor:fixedHost.contentView.topAnchor],[paneView.bottomAnchor constraintEqualToAnchor:fixedHost.contentView.bottomAnchor]]];
+   [fixedPane viewDidLayout];[fixedHost.contentView layoutSubtreeIfNeeded];
+   NSTableView *t=fixedPane.table;NSInteger fixed=-1;
+   // Tall rows put the first row that cannot be changed below the first screen of this short fixture list.
+   t.rowHeight=80;[t noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0,(NSUInteger)t.numberOfRows)]];
+   for(NSInteger r=1;r<t.numberOfRows&&fixed<0;r++){[t selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)r] byExtendingSelection:NO];if(!fixedPane.systemSettingsGuide.hidden)fixed=r;}
+   REQUIRE(fixed>0 && NSMinY([t rectOfRow:fixed])>NSHeight(t.enclosingScrollView.contentView.bounds));
+   [t selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)(fixed-1)] byExtendingSelection:NO];
+   [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.05]];[fixedHost.contentView layoutSubtreeIfNeeded];
+   REQUIRE(fixedPane.systemSettingsGuide.hidden);
+   CGFloat listHeight=NSHeight(t.enclosingScrollView.frame);NSClipView *clip=t.enclosingScrollView.contentView;
+   [clip scrollToPoint:NSMakePoint(0,NSMaxY([t rectOfRow:fixed-1])-NSHeight(clip.bounds))];[t.enclosingScrollView reflectScrolledClipView:clip];
+   REQUIRE(NSContainsRect(t.visibleRect,[t rectOfRow:fixed-1]) && !NSContainsRect(t.visibleRect,[t rectOfRow:fixed]));
+   {unichar down=NSDownArrowFunctionKey;NSString *arrow=[NSString stringWithCharacters:&down length:1];
+    [t keyDown:[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagFunction|NSEventModifierFlagNumericPad timestamp:0 windowNumber:fixedHost.windowNumber context:nil characters:arrow charactersIgnoringModifiers:arrow isARepeat:NO keyCode:125]];}
+   // The list scrolls at once, without the system's scroll animation that a held key outran.
+   REQUIRE(t.selectedRow==fixed && NSContainsRect(t.visibleRect,[t rectOfRow:fixed]));
+   [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.05]];[fixedHost.contentView layoutSubtreeIfNeeded];
+   REQUIRE(t.selectedRow==fixed && !fixedPane.systemSettingsGuide.hidden && NSHeight(t.enclosingScrollView.frame)<listHeight);
+   // The row is put in sight again once the shorter list is laid out (as far as the list reaches).
+   [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.05]];
+   REQUIRE(NSContainsRect(NSInsetRect(t.visibleRect,0,-.5),NSIntersectionRect([t rectOfRow:fixed],t.bounds)));
+   [fixedPane.view removeFromSuperview];
+  }
   [translated.table scrollRowToVisible:translated.table.numberOfRows-1];
   REQUIRE(NSIntersectsRect(translated.table.visibleRect,[translated.table rectOfRow:translated.table.numberOfRows-1]));
   TSSettingsSearch *index=[[TSSettingsSearch alloc]initWithBundle:NSBundle.mainBundle categoryOrder:@[@"keyboard"] commandNames:@[]];
