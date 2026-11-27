@@ -352,8 +352,9 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     self.selectedRowKey = [self selectionKeyAtRow:self.table.selectedRow];
     [self updateStatus];
 }
-// A row by its command, or by the path of a menu item or macro with none; the two lists never share a key.
-- (nullable NSString *)selectionKeyAtRow:(NSInteger)row {
+// A row by its command, or by the path of a menu item or macro with none, with which of the rows of that
+// path it is (two macros, or two items of the Window menu, can share one); the two lists never share a key.
+- (nullable NSString *)rowIdentityAtRow:(NSInteger)row {
     if (row < 0) return nil;
     if (self.searchingByKey && self.searchEvent != nil) {
         TSShortcutMatch *match = [self matchAtRow:row];
@@ -366,10 +367,23 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     if (functionRow.command != nil) return [@"function.command:" stringByAppendingString:functionRow.command.commandID];
     return [@"function.item:" stringByAppendingString:functionRow.path];
 }
+- (nullable NSString *)selectionKeyAtRow:(NSInteger)row {
+    NSString *identity = [self rowIdentityAtRow:row];
+    if (identity == nil) return nil;
+    NSUInteger earlier = 0;
+    for (NSInteger other = 0; other < row; other++)
+        if ([[self rowIdentityAtRow:other] isEqualToString:identity]) earlier++;
+    return [identity stringByAppendingFormat:@"#%lu", (unsigned long)earlier];
+}
 - (NSInteger)rowForSelectionKey:(nullable NSString *)key {
     if (key == nil) return -1;
-    for (NSInteger row = 0; row < self.table.numberOfRows; row++)
-        if ([[self selectionKeyAtRow:row] isEqualToString:key]) return row;
+    NSCountedSet<NSString *> *seen = [NSCountedSet set];
+    for (NSInteger row = 0; row < self.table.numberOfRows; row++) {
+        NSString *identity = [self rowIdentityAtRow:row];
+        if (identity == nil) continue;
+        if ([[identity stringByAppendingFormat:@"#%lu", (unsigned long)[seen countForObject:identity]] isEqualToString:key]) return row;
+        [seen addObject:identity];
+    }
     return -1;
 }
 // The function list in menu order. Commands Settings lists stay as they are. A menu item AppKit inserts, such as

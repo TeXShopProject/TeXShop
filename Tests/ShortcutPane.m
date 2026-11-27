@@ -846,6 +846,13 @@ int main(int argc,char **argv){@autoreleasepool{
    [pane setFilterChoice:TSShortcutFilterUnassigned];REQUIRE(pane.table.selectedRow==[pane rowForCommand:secondCommand] && [selectedID() isEqual:secondCommand.commandID]);
    [pane setFilterChoice:TSShortcutFilterAssigned];REQUIRE(pane.table.selectedRow==-1 && !pane.selectionButtons[0].enabled);
    [pane setFilterChoice:TSShortcutFilterAll];REQUIRE(pane.table.selectedRow==-1);
+   // Two items with no command and the same path: the second one stays selected.
+   NSMenuItem *twin=Item(@"Dynamic",@"e",C);twin.identifier=nil;[menu insertItem:twin atIndex:[menu indexOfItem:dynamic]+1];[coordinator refreshMenuAndMacros];
+   NSInteger twinRow=-1,dynamicRow=-1;for(NSInteger row=0;row<pane.table.numberOfRows;row++){NSMenuItem *it=[pane functionRowAtIndex:row].item;if(it==twin)twinRow=row;if(it==dynamic)dynamicRow=row;}
+   REQUIRE(dynamicRow>=0 && twinRow==dynamicRow+1 && [[pane functionRowAtIndex:twinRow].path isEqual:[pane functionRowAtIndex:dynamicRow].path]);
+   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)twinRow] byExtendingSelection:NO];
+   [coordinator refreshMenuAndMacros];REQUIRE(pane.table.selectedRow==twinRow && [pane functionRowAtIndex:pane.table.selectedRow].item==twin);
+   [menu removeItem:twin];[coordinator refreshMenuAndMacros];[pane.table deselectAll:nil];
   }
   REQUIRE([store restoreCommand:secondCommand]==nil);
   REQUIRE([store setKey:@"z" modifiers:C forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
