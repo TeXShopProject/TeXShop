@@ -46,6 +46,9 @@ MUTATIONS = {
     'frame-not-restored': ('window', '    if (frame.length)\n', '    if (NO)\n'),
     'old-state-taken': ('window', " || ![coder containsValueForKey:@\"TSPreviewFirstPageStyle\"]) return NO;", ') return NO;'),
     # The first audit: the pages came back unturned.
+    'mouse-tool-not-kept': ('window', '    if ([first mouseTool] > 0)\n', '    if (NO)\n'),
+    'mouse-tool-not-restored': ('window', '    if ([coder containsValueForKey:@"TSPreviewMouseTool"]) {', '    if (NO) {'),
+    'mouse-tool-toolbars-not-shown': ('window', '            [document showMouseToolInToolbars:tool];\n', ''),
     'rotation-lost': ('window', '    if ([coder containsValueForKey:@"TSPreviewRotation"])\n', '    if (NO)\n'),
     'page-unbounded': ('view', 'MIN((NSUInteger)index, pageCount - 1)', '(NSUInteger)index'),
     'content-width-not-fitted': ('view', '    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)\n        [self fitContentWidth];\n', ''),
@@ -141,11 +144,13 @@ program = r'''
 @interface TestDocument : NSObject
 @property (strong) NSNumber *previewBookOverride, *previewDirectionOverride;
 @property (strong) NSURL *fileURL;
-@property NSInteger invalidations, layoutUpdates;
+@property NSInteger invalidations, layoutUpdates, toolbarTool;
 - (void)invalidateRestorableState;
 - (void)updatePreviewLayoutControls;
+- (void)showMouseToolInToolbars:(NSInteger)tool;
 @end
 @implementation TestDocument
+- (void)showMouseToolInToolbars:(NSInteger)tool { self.toolbarTool = tool; }
 - (void)invalidateRestorableState { self.invalidations++; }
 - (void)updatePreviewLayoutControls { self.layoutUpdates++; }
 @end
@@ -180,6 +185,8 @@ program = r'''
 - (void)encodePreviewStateWithCoder:(NSCoder *)coder prefix:(NSString *)prefix;
 - (BOOL)restorePreviewDisplayWithCoder:(NSCoder *)coder prefix:(NSString *)prefix;
 - (void)finishRestoringPreview;
+- (NSInteger)mouseTool;
+- (void)changeMouseMode:(id)sender;
 - (NSInteger)previewRotation;
 - (void)restorePreviewRotation:(NSInteger)rotation;
 - (BOOL)placePinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame;
@@ -200,6 +207,7 @@ program = r'''
 @property (strong) NSSplitView *pdfKitSplitView;
 @property (strong) TestDocument *myDocument;
 @property NSInteger splits;
+- (void)changeMouseMode:(id)sender;
 - (void)encodePreviewStateWithCoder:(NSCoder *)coder;
 - (BOOL)restorePreviewStateWithCoder:(NSCoder *)coder;
 @end
@@ -228,6 +236,9 @@ void TSContentWidthNoteDrawingDiverged(PDFDocument *document) {}
 
 @implementation MyPDFKitView
 - (void)measureContentLater {}
+// As the production methods: the tool of the mouse, and the choice of one by a menu item's tag.
+- (NSInteger)mouseTool { return mouseMode; }
+- (void)changeMouseMode:(id)sender { mouseMode = [sender tag]; }
 - (NSDrawer *)drawer { return (NSDrawer *)drawerOf(self); }
 - (void)setupPageStyle {
     switch (pageStyle) {
@@ -264,6 +275,10 @@ VIEWMETHODS
     [s adjustSubviews];
 }
 - (void)showActivePart {}
+- (void)changeMouseMode:(id)sender {
+    [(MyPDFKitView *)self.myPDFKitView changeMouseMode:sender];
+    [(MyPDFKitView *)self.myPDFKitView2 changeMouseMode:sender];
+}
 + (void)restoreWindowWithIdentifier:(NSUserInterfaceItemIdentifier)identifier state:(NSCoder *)state
                   completionHandler:(void (^)(NSWindow *, NSError *))completionHandler { completionHandler(nil, nil); }
 WINDOWMETHODS
@@ -600,6 +615,31 @@ int main(void) { @autoreleasepool {
         check([a1 previewRotation] == 90 && [again pageAtIndex:0].rotation == 90 && [again pageAtIndex:6].rotation == 90,
               @"the pages come back turned, once");
         samePlace(one, a1, @"turned pages");
+    }
+
+    {   // The tool of the mouse comes back, for both parts and the toolbars (#71).
+        for (NSNumber *tool in @[@(NEW_MOUSE_MODE_SCROLL), @(NEW_MOUSE_MODE_SELECT_TEXT), @(NEW_MOUSE_MODE_MAG_GLASS_L), @(NEW_MOUSE_MODE_SELECT_PDF)]) {
+            TestWindow *before = preview(pdf);
+            [(MyPDFKitView *)before.myPDFKitView changeMouseMode:({ NSMenuItem *m = [NSMenuItem new]; m.tag = tool.integerValue; m; })];
+            NSData *state = archive(^(NSKeyedArchiver *a) { [before encodePreviewStateWithCoder:a]; });
+            TestWindow *after = preview(pdf);
+            MyPDFKitView *a1 = (MyPDFKitView *)after.myPDFKitView;
+            a1->mouseMode = (tool.integerValue % 5) + 1;
+            [after restorePreviewStateWithCoder:unarchiver(state)]; pump();
+            check(a1->mouseMode == tool.integerValue, [NSString stringWithFormat:@"the tool %@ comes back (not %ld)", tool, (long)a1->mouseMode]);
+            check(((MyPDFKitView *)after.myPDFKitView2)->mouseMode == tool.integerValue, @"the second part follows the tool");
+            check(after.myDocument.toolbarTool == tool.integerValue, @"the toolbars show the tool");
+        }
+        // A state without a tool leaves the one in use.
+        TestWindow *plain = preview(pdf);
+        MyPDFKitView *p1 = (MyPDFKitView *)plain.myPDFKitView;
+        p1->mouseMode = 0;
+        NSData *state = archive(^(NSKeyedArchiver *a) { [plain encodePreviewStateWithCoder:a]; });
+        check(![unarchiver(state) containsValueForKey:@"TSPreviewMouseTool"], @"no tool is saved while none is chosen");
+        TestWindow *after = preview(pdf);
+        ((MyPDFKitView *)after.myPDFKitView)->mouseMode = NEW_MOUSE_MODE_SELECT_TEXT;
+        [after restorePreviewStateWithCoder:unarchiver(state)]; pump();
+        check(((MyPDFKitView *)after.myPDFKitView)->mouseMode == NEW_MOUSE_MODE_SELECT_TEXT, @"a state without a tool keeps the tool in use");
     }
 
     {   // The drawer's outline: open sections, scroll position and the divider come back with the Preview (#71).
