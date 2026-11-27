@@ -3,7 +3,7 @@
 
 Builds the production TSAnnotationBar, TSAnnotationTextPopover and TSDocument's AnnotationBar
 category (with stand-ins for TSDocument, MyPDFKitView and TSPreviewWindow) and checks:
-- the bar in every language: both layouts, their widths (the narrow one at most 480 points),
+- the bar in every language: both layouts, their widths (the narrow one at most 480 points, or 560 with the glass pieces of macOS 26),
   labels that fit, names for VoiceOver, the order of the » menu;
 - edit mode: one way in and out for the document, both parts of the Preview, annotationsExist,
   the annotation menu, the bar shown while in edit mode;
@@ -11,7 +11,8 @@ category (with stand-ins for TSDocument, MyPDFKitView and TSPreviewWindow) and c
   window that shows both, closing a window;
 - the text popover: what commits and what discards (spec §3.6.3), the binding to the annotation;
 - the color and font panels: closed by the bar only while they still serve its document (§3.7);
-- on macOS 26.1 and later, the hard scroll edge under the bar, so pages behind it do not hide its icons.
+- on macOS 26 and later, the controls on pieces of glass grouped as in the toolbar, over the soft
+  scroll edge, so pages behind the bar show blurred around them and do not hide its icons.
 
 --images DIR also writes pictures of the bar (both layouts, light and dark, en and ja).
 --widths prints the width of both layouts in every language.
@@ -37,8 +38,11 @@ MUTATIONS = {
     'hide-keeps-edit-mode': ('TSDocument-AnnotationBar.m',
         '    if (window == nil)\n        return;\n    [self setAnnotationEditMode:NO];\n', '    if (window == nil)\n        return;\n'),
     'no-minimum-width': ('TSAnnotationBar.m', '    minSize.width = MAX(minSize.width, _compactWidth);\n', ''),
-    'soft-edge': ('TSAnnotationBar.m',
-        '        self.preferredScrollEdgeEffectStyle = NSScrollEdgeEffectStyle.hardStyle;\n', '        ;\n'),
+    'no-glass': ('TSAnnotationBar.m',
+        '    if (@available(macOS 26.0, *))\n        return YES;\n    return NO;\n', '    return NO;\n'),
+    'one-glass': ('TSAnnotationBar.m',
+        '        for (NSArray<NSView *> *group in toolGroups)\n            [views addObject:TSAnnotationGroup(group, 2)];\n',
+        '        NSMutableArray *all = [NSMutableArray array];\n        for (NSArray<NSView *> *group in toolGroups)\n            [all addObjectsFromArray:group];\n        [views addObject:TSAnnotationGroup(all, 2)];\n'),
     'close-discards-first': None,
 }
 
@@ -213,7 +217,7 @@ static void WriteImage(NSView *view, NSString *path, NSAppearanceName appearance
 // The views that draw a title in the bar fit it.
 static void CheckLabels(TSAnnotationBar *bar, NSString *lang, NSString *layout) {
     for (NSView *view in @[bar.editModeButton, bar.saveButton, bar.saveAllCheckBox]) {
-        if (view.isHidden || view.superview == nil) continue;
+        if (view.hiddenOrHasHiddenAncestor || view.superview == nil) continue;
         NSButton *b = (NSButton *)view;
         if (b.imagePosition == NSImageOnly) continue;
         Check(NSWidth(b.frame) + 0.5 >= b.intrinsicContentSize.width,
@@ -231,7 +235,10 @@ static void TestBar(NSString *lang, NSString *stringsPath, NSString *images, BOO
     TSAnnotationBar *bar = [[TSAnnotationBar alloc] initWithHost:document];
     Check(bar.saveAllCheckBox.state == NSControlStateValueOn, [lang stringByAppendingString:@": All Pages starts on"]);
     NSView *view = bar.view;
-    Check(bar.compactWidth <= 480, [NSString stringWithFormat:@"%@: the narrow bar is at most 480 points (%.0f)", lang, bar.compactWidth]);
+    CGFloat narrowLimit = 480;
+    if (@available(macOS 26.0, *))
+        narrowLimit = 560; // the glass pieces add their insets and gaps
+    Check(bar.compactWidth <= narrowLimit, [NSString stringWithFormat:@"%@: the narrow bar is at most %.0f points (%.0f)", lang, narrowLimit, bar.compactWidth]);
     Check(bar.compactWidth < bar.fullWidth, [lang stringByAppendingString:@": the narrow bar is narrower"]);
     if (widths) printf("%-6s full %4.0f  narrow %4.0f\n", lang.UTF8String, bar.fullWidth, bar.compactWidth);
     NSWindow *holder = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, bar.fullWidth, 36) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
@@ -243,7 +250,7 @@ static void TestBar(NSString *lang, NSString *stringsPath, NSString *images, BOO
         [view layoutSubtreeIfNeeded];
         [view layoutSubtreeIfNeeded];
         Check(bar.compact == (layout == 1), [NSString stringWithFormat:@"%@: layout %d chosen for its width", lang, layout]);
-        Check(bar.colorButton.isHidden == (layout == 1) && bar.saveButton.isHidden == (layout == 1) && bar.overflowButton.isHidden == (layout == 0),
+        Check(bar.colorButton.hiddenOrHasHiddenAncestor == (layout == 1) && bar.saveButton.hiddenOrHasHiddenAncestor == (layout == 1) && bar.overflowButton.hiddenOrHasHiddenAncestor == (layout == 0),
               [NSString stringWithFormat:@"%@: layout %d shows its controls", lang, layout]);
         for (NSButton *tool in bar.toolButtons)
             Check(!tool.isHidden && NSMaxX([tool convertRect:tool.bounds toView:view]) <= width,
@@ -316,8 +323,37 @@ static void TestEditModeAndTargets(void) {
     Check(preview.minSize.width >= bar.compactWidth && preview.contentMinSize.width >= bar.compactWidth && NSWidth(preview.frame) >= bar.compactWidth,
           @"the window is at least as wide as the narrow bar");
     if (@available(macOS 26.1, *))
-        Check(bar.preferredScrollEdgeEffectStyle == NSScrollEdgeEffectStyle.hardStyle,
-              @"the pages under the bar get the hard edge: one even background behind the toolbar and the bar");
+        Check(bar.preferredScrollEdgeEffectStyle != NSScrollEdgeEffectStyle.hardStyle,
+              @"the pages under the bar get the soft edge of the toolbar, blurred around the glass");
+    if (@available(macOS 26.0, *)) {
+        // Each group of the toolbar's kind is one piece of glass: markup, shapes, arrow, text,
+        // format, save, and » with close.
+        NSView *(^glassOf)(NSView *) = ^NSView *(NSView *v) {
+            for (NSView *up = v.superview; up; up = up.superview)
+                if ([up isKindOfClass:NSGlassEffectView.class]) return up;
+            return nil;
+        };
+        NSArray<NSArray<NSNumber *> *> *groups = @[@[@0, @1, @2], @[@3, @4, @5, @6], @[@7], @[@8, @9, @10]];
+        NSMutableSet *pieces = [NSMutableSet set];
+        for (NSArray<NSNumber *> *group in groups) {
+            NSView *piece = glassOf(bar.toolButtons[group.firstObject.unsignedIntegerValue]);
+            Check(piece != nil, @"the tools sit on glass");
+            for (NSNumber *i in group)
+                Check(glassOf(bar.toolButtons[i.unsignedIntegerValue]) == piece, @"a group of tools shares one piece of glass");
+            if (piece) [pieces addObject:piece];
+        }
+        Check(pieces.count == groups.count, @"each group of tools has its own piece of glass");
+        NSView *format = glassOf(bar.colorButton);
+        Check(format && format == glassOf(bar.fontButton) && format == glassOf(bar.textButton) && format == glassOf(bar.moreButton)
+              && ![pieces containsObject:format], @"color, font, text and more share their own piece of glass");
+        NSView *save = glassOf(bar.saveButton);
+        Check(save && save == glassOf(bar.saveAllCheckBox) && save != format, @"Save Annotations and All Pages share a piece of glass");
+        NSView *close = glassOf(bar.closeButton);
+        Check(close && close == glassOf(bar.overflowButton) && close != save && close != format, @"» and close share a piece of glass");
+        Check(glassOf(bar.editModeButton) == nil, @"the edit mode switch stands on its own");
+        for (NSView *v in bar.view.subviews.firstObject.subviews)
+            Check(![v isKindOfClass:NSBox.class], @"no separators between pieces of glass");
+    }
     [document setAnnotationEditMode:YES];
     Check(first.applied == 1 && second.applied == 1, @"no change, no calls");
     Check(bar.editModeButton.state == NSControlStateValueOn, @"the switch shows edit mode");
