@@ -35,6 +35,7 @@
 #import "UseMitsu.h"
 #import <Carbon/Carbon.h>
 #import <Foundation/Foundation.h>
+#import <objc/runtime.h>
 
 #import "TSDocument.h"
 #import "TSWindowTitles.h"
@@ -11926,6 +11927,35 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 }
 */
 
+// On macOS 26 and later AppKit gives a scroll view that runs under the toolbar its own blur
+// (NSScrollPocket) only when the scroll view has no border. The source scroll view has the
+// nib's bezel border. In a window of its own the window's title bar carries the blur, but
+// in the combined window the source shares the window with the Preview, and then the source
+// has no blur at all and its text stays sharp under the toolbar (#74). The source drops its
+// border in the combined window and gets it back in its own window.
+static const void *TSSourceBorderKey = &TSSourceBorderKey;
+
+- (void) useSourceBorders: (BOOL)combined
+{
+    if (!TSDocumentWindowsUseFullSizeContent())
+        return;
+    NSScrollView *scrolls[] = {scrollView, scrollView2};
+    for (NSUInteger i = 0; i < 2; i++) {
+        NSScrollView *scroll = scrolls[i];
+        if (!scroll)
+            continue;
+        NSNumber *saved = objc_getAssociatedObject(scroll, TSSourceBorderKey);
+        if (combined) {
+            if (!saved)
+                objc_setAssociatedObject(scroll, TSSourceBorderKey, @(scroll.borderType), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            scroll.borderType = NSNoBorder;
+        } else if (saved) {
+            scroll.borderType = (NSBorderType)saved.unsignedIntegerValue;
+            objc_setAssociatedObject(scroll, TSSourceBorderKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+    }
+}
+
 - (void) doMove: (id)sender;
 {
     NSString        *theText;
@@ -11995,6 +12025,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             [textWindow orderOut:self];
             [self.pdfKitWindow orderOut:self];
             useFullSplitWindow = YES;
+            [self useSourceBorders: YES];
             // The PDF is visible in the combined window even though its own
             // window remains hidden. Preserve its position on the next reload.
             self.pdfKitWindow.previewClosed = NO;
@@ -12025,6 +12056,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             if ([myDrawer state] == NSDrawerOpenState)
                 [myDrawer toggle: self];
             useFullSplitWindow = NO;
+            [self useSourceBorders: NO];
             [splitView removeFromSuperview];
             [[textWindow contentView] addSubview: splitView];
             [splitView setFrame: [[textWindow contentView] bounds]];
