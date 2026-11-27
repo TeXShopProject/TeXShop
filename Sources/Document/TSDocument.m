@@ -98,6 +98,8 @@
 #define MAXNUMOFTABS 20
 
 @interface TSDocument ()
+// The constraints that keep the two sides of the single window below the band of the toolbar (#74).
+@property (strong) NSArray<NSLayoutConstraint *> *fullSplitPlacement;
 // Keep external PDF observation independent of source-file watching.
 @property (copy) NSString *externalPDFLoadedSignature;
 // The state of the file when the PDF on display was read, also for a locked PDF, which shows no
@@ -11936,33 +11938,31 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 }
 */
 
-// On macOS 26 and later AppKit gives a scroll view that runs under the toolbar its own blur
-// (NSScrollPocket) only when the scroll view has no border. The source scroll view has the
-// nib's bezel border. In a window of its own the window's title bar carries the blur, but
-// in the combined window the source shares the window with the Preview, and then the source
-// has no blur at all and its text stays sharp under the toolbar (#74). The source drops its
-// border in the combined window and gets it back in its own window.
-static const void *TSSourceBorderKey = &TSSourceBorderKey;
-
-- (void) useSourceBorders: (BOOL)combined
+// On macOS 26 and later the content of a document window runs under the title bar and the toolbar.
+// In the window that shows the source and the Preview, the two sides start below the band of the
+// toolbar, as the source window and the Preview window do: the source's text and background do not
+// run up into the band, and the band looks as it does over those windows (#74).
+- (void) placeFullSplitBelowToolbar
 {
-    if (!TSDocumentWindowsUseFullSizeContent())
+    if (! TSDocumentWindowsUseFullSizeContent() || self.fullSplitPlacement != nil)
         return;
-    NSScrollView *scrolls[] = {scrollView, scrollView2};
-    for (NSUInteger i = 0; i < 2; i++) {
-        NSScrollView *scroll = scrolls[i];
-        if (!scroll)
-            continue;
-        NSNumber *saved = objc_getAssociatedObject(scroll, TSSourceBorderKey);
-        if (combined) {
-            if (!saved)
-                objc_setAssociatedObject(scroll, TSSourceBorderKey, @(scroll.borderType), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-            scroll.borderType = NSNoBorder;
-        } else if (saved) {
-            scroll.borderType = (NSBorderType)saved.unsignedIntegerValue;
-            objc_setAssociatedObject(scroll, TSSourceBorderKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        }
-    }
+    NSView *content = fullSplitWindow.contentView;
+    NSView *sides = leftView;
+    while (sides != nil && sides.superview != content)
+        sides = sides.superview;
+    if (sides == nil)
+        return;
+    NSRect frame = sides.frame, bounds = content.bounds;
+    CGFloat left = NSMinX(frame) - NSMinX(bounds), right = NSMaxX(bounds) - NSMaxX(frame);
+    CGFloat bottom = NSMinY(frame) - NSMinY(bounds);
+    sides.translatesAutoresizingMaskIntoConstraints = NO;
+    self.fullSplitPlacement = @[
+        [sides.topAnchor constraintEqualToAnchor: content.safeAreaLayoutGuide.topAnchor],
+        [sides.leadingAnchor constraintEqualToAnchor: content.leadingAnchor constant: left],
+        [sides.trailingAnchor constraintEqualToAnchor: content.trailingAnchor constant: -right],
+        [sides.bottomAnchor constraintEqualToAnchor: content.bottomAnchor constant: -bottom]];
+    [NSLayoutConstraint activateConstraints: self.fullSplitPlacement];
+    [content layoutSubtreeIfNeeded];
 }
 
 - (void) doMove: (id)sender;
@@ -12022,6 +12022,7 @@ static const void *TSSourceBorderKey = &TSSourceBorderKey;
             
             [self.splitController setWindow: fullSplitWindow];
             [self addWindowController: self.splitController];
+            [self placeFullSplitBelowToolbar];
             NSString *splitPosition = [SUD stringForKey:DocumentSplitWindowPositionKey];
             if ([splitPosition length] > 5)
                [fullSplitWindow setFrameFromString:splitPosition];
@@ -12034,7 +12035,6 @@ static const void *TSSourceBorderKey = &TSSourceBorderKey;
             [textWindow orderOut:self];
             [self.pdfKitWindow orderOut:self];
             useFullSplitWindow = YES;
-            [self useSourceBorders: YES];
             // The PDF is visible in the combined window even though its own
             // window remains hidden. Preserve its position on the next reload.
             self.pdfKitWindow.previewClosed = NO;
@@ -12065,7 +12065,6 @@ static const void *TSSourceBorderKey = &TSSourceBorderKey;
             if ([myDrawer state] == NSDrawerOpenState)
                 [myDrawer toggle: self];
             useFullSplitWindow = NO;
-            [self useSourceBorders: NO];
             [splitView removeFromSuperview];
             [[textWindow contentView] addSubview: splitView];
             [splitView setFrame: [[textWindow contentView] bounds]];
