@@ -29,6 +29,7 @@
 #import "TSDocumentController.h"
 #import "MyPDFKitView.h"
 #import "TSDocumentWindowGlass.h"
+#import "TSPreviewTitlePathMenu.h"
 
 
 
@@ -653,9 +654,13 @@
 
 - (void)sendEvent:(NSEvent *)theEvent
 {
-    
-    
-    
+    // Command-click on the title opens the path menu, as it does in the source window.
+    NSEvent *titleEvent = TSPreviewTitlePathMenuEvent(self, theEvent);
+    if (titleEvent) {
+        [super sendEvent:titleEvent];
+        return;
+    }
+
     //    if (([theEvent type] == NSEventTypeFlagsChanged) && ([theEvent modifierFlags] & NSEventModifierFlagCommand))
     //        NSLog(@"yes");
     

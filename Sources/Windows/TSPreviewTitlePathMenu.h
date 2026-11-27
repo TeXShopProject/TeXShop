@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import <AppKit/AppKit.h>
 
-// In preview windows outside document management, the title NSTextField can consume
-// Command-clicks without opening AppKit's path menu (observed on macOS 27).
+// In preview windows outside document management, and in the window that shows the source and
+// the Preview, the title NSTextField can consume Command-clicks without opening AppKit's path menu
+// (observed on macOS 27).
 // Redirect clicks on the title text to the document icon and let NSWindow handle them.
 // AppKit still builds the menu, handles its items, and consults the window delegate.
 static inline NSEvent *TSPreviewTitlePathMenuEvent(NSWindow *window, NSEvent *event)
