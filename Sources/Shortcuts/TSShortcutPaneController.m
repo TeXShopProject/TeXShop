@@ -71,6 +71,14 @@
 }
 @end
 
+// What the filter button keeps in the function list.
+typedef NS_ENUM(NSInteger, TSShortcutFilter) {
+    TSShortcutFilterAll,
+    TSShortcutFilterAssigned,
+    TSShortcutFilterUnassigned,
+    TSShortcutFilterChanged
+};
+
 typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     TSShortcutSearchByFunction,
     TSShortcutSearchByKey
@@ -94,10 +102,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property (copy) NSString *lastLayout;
 @property (readwrite) BOOL searchingByKey;
 @property (strong) NSSegmentedControl *searchMode;
-// Shows only the commands with a custom shortcut; function search only.
-@property (strong) NSButton *customFilter;
-// Commands the filtered list shows. A command restored to its default stays until the filter or the search changes.
-@property (strong) NSMutableSet<NSString *> *shownCustomCommandIDs;
+// Opens the menu that filters the function list; function search only.
+@property (strong) NSButton *filterButton;
+@property TSShortcutFilter filter;
+// Commands the filtered list shows. A command that no longer matches stays until the filter or the search changes.
+@property (strong) NSMutableSet<NSString *> *shownFilteredCommandIDs;
 @property (strong) TSShortcutKeySearchView *keySearchView;
 @property (weak) NSView *commandsView;
 @property (strong) NSButton *macroButton;
@@ -170,20 +179,19 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     self.searchMode.selectedSegment = TSShortcutSearchByFunction;
     [self.searchMode setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
     [self.searchMode setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
-    NSString *filterTitle = NSLocalizedString(@"Show Only Custom Shortcuts", @"");
-    self.customFilter = [NSButton buttonWithImage:[NSImage imageWithSystemSymbolName:@"line.3.horizontal.decrease.circle" accessibilityDescription:filterTitle] ?: [NSImage new]
-        target:self action:@selector(changeCustomFilter:)];
-    self.customFilter.alternateImage = [NSImage imageWithSystemSymbolName:@"line.3.horizontal.decrease.circle.fill" accessibilityDescription:filterTitle];
-    [self.customFilter setButtonType:NSButtonTypePushOnPushOff];
-    self.customFilter.bordered = NO;
-    self.customFilter.imageScaling = NSImageScaleProportionallyUpOrDown;
-    self.customFilter.symbolConfiguration = [NSImageSymbolConfiguration configurationWithScale:NSImageSymbolScaleLarge];
-    self.customFilter.identifier = @"shortcut.custom-filter";
-    self.customFilter.toolTip = filterTitle;
-    self.customFilter.accessibilityLabel = filterTitle;
-    [self.customFilter setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
-    [self.customFilter setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
-    self.shownCustomCommandIDs = [NSMutableSet set];
+    NSString *filterTitle = NSLocalizedString(@"Filter Shortcuts", @"");
+    self.filterButton = [NSButton buttonWithImage:[NSImage imageWithSystemSymbolName:@"line.3.horizontal.decrease.circle" accessibilityDescription:filterTitle] ?: [NSImage new]
+        target:self action:@selector(showFilterMenu:)];
+    [self.filterButton setButtonType:NSButtonTypeMomentaryChange];
+    self.filterButton.bordered = NO;
+    self.filterButton.imageScaling = NSImageScaleProportionallyUpOrDown;
+    self.filterButton.symbolConfiguration = [NSImageSymbolConfiguration configurationWithScale:NSImageSymbolScaleLarge];
+    self.filterButton.identifier = @"shortcut.filter";
+    self.filterButton.toolTip = filterTitle;
+    self.filterButton.accessibilityLabel = filterTitle;
+    [self.filterButton setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [self.filterButton setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
+    self.shownFilteredCommandIDs = [NSMutableSet set];
     self.keySearchView = [TSShortcutKeySearchView new];
     self.keySearchView.identifier = @"shortcut.key";
     self.keySearchView.hidden = YES;
@@ -267,7 +275,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     NSLayoutConstraint *statusCenter = [self.status.centerXAnchor constraintEqualToAnchor:statusColumn.centerXAnchor];
     statusCenter.priority = NSLayoutPriorityDefaultHigh;
     statusCenter.active = YES;
-    for (NSView *view in @[self.searchMode,self.customFilter,self.search,hint,scroll,statusColumn,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
+    for (NSView *view in @[self.searchMode,self.filterButton,self.search,hint,scroll,statusColumn,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
     content.identifier = @"shortcut.commands"; self.commandsView = content;
     hint.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     [NSLayoutConstraint activateConstraints:@[
@@ -280,9 +288,9 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         [self.keySearchView.topAnchor constraintEqualToAnchor:self.search.topAnchor],
         [self.keySearchView.bottomAnchor constraintEqualToAnchor:self.search.bottomAnchor],
         [self.search.leadingAnchor constraintEqualToAnchor:content.leadingAnchor constant:12],
-        [self.search.trailingAnchor constraintEqualToAnchor:self.customFilter.leadingAnchor constant:-6],
-        [self.customFilter.trailingAnchor constraintEqualToAnchor:self.searchMode.leadingAnchor constant:-8],
-        [self.customFilter.centerYAnchor constraintEqualToAnchor:self.search.centerYAnchor],
+        [self.search.trailingAnchor constraintEqualToAnchor:self.filterButton.leadingAnchor constant:-6],
+        [self.filterButton.trailingAnchor constraintEqualToAnchor:self.searchMode.leadingAnchor constant:-8],
+        [self.filterButton.centerYAnchor constraintEqualToAnchor:self.search.centerYAnchor],
         [hint.topAnchor constraintEqualToAnchor:self.search.bottomAnchor constant:6],
         [hint.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor], [hint.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-12],
         [scroll.topAnchor constraintEqualToAnchor:hint.bottomAnchor constant:4],
@@ -314,7 +322,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         }
         self.view = settingsHeader;
     }
-    [self updateCustomFilter];
+    [self updateFilterButton];
     [self reloadCommands];
 }
 - (NSView *)viewWithIdentifier:(NSString *)identifier inView:(NSView *)view {
@@ -340,16 +348,18 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     for (TSShortcutCommand *command in self.store.commands) [byItem setObject:command forKey:command.item];
     NSMutableArray<TSShortcutCommand *> *visible = [NSMutableArray array];
     NSMutableArray<TSShortcutFunctionRow *> *rows = [NSMutableArray array];
-    BOOL customOnly = [self filteringCustomShortcuts];
-    TSShortcutStore *store = self.store;
-    NSSet<NSString *> *shownCustom = self.shownCustomCommandIDs.copy;
+    TSShortcutFilter filter = [self activeFilter];
+    NSSet<NSString *> *shownFiltered = self.shownFilteredCommandIDs.copy;
+    __block BOOL anyMatch = NO;
     TSVisitMenu(self.store.menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item.submenu != nil || item.action == TSMacroAction()) return;
         if (item.hidden) { if (!item.allowsKeyEquivalentWhenHidden) return; }
         TSShortcutCommand *command = [byItem objectForKey:item];
         // An item with no command and no shortcut is not a row of this list.
         if (command == nil && item.keyEquivalent.length == 0) return;
-        if (customOnly && (command == nil || !([store commandIsCustomized:command] || [shownCustom containsObject:command.commandID]))) return;
+        BOOL matches = [self command:command item:item matchesFilter:filter];
+        if (matches) anyMatch = YES;
+        if (!matches && !(command != nil && [shownFiltered containsObject:command.commandID])) return;
         NSString *name = command != nil ? command.path : path;
         if (tokens.count && !TSSettingsTextMatches(name, tokens)) return;
         TSShortcutFunctionRow *row = [TSShortcutFunctionRow new];
@@ -359,12 +369,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     });
     self.visibleCommands = visible;
     self.functionRows = rows;
-    if (customOnly) {
-        [self.shownCustomCommandIDs addObjectsFromArray:[visible valueForKey:@"commandID"]];
-        BOOL anyCustom = NO;
-        for (TSShortcutCommand *command in store.commands) if ([store commandIsCustomized:command]) { anyCustom = YES; break; }
-        // Only when no command has one; a search that matches none of them leaves the list empty, as without the filter.
-        if (!anyCustom && rows.count == 0) self.hint.stringValue = NSLocalizedString(@"No custom shortcuts.", @"");
+    if (filter != TSShortcutFilterAll) {
+        [self.shownFilteredCommandIDs addObjectsFromArray:[visible valueForKey:@"commandID"]];
+        // Only when no row matches the filter at all; a search that matches none of them leaves the list empty, as without the filter.
+        if (!anyMatch && rows.count == 0) self.hint.stringValue = filter == TSShortcutFilterChanged ? NSLocalizedString(@"No changed shortcuts.", @"")
+            : filter == TSShortcutFilterAssigned ? NSLocalizedString(@"No command has a shortcut.", @"") : NSLocalizedString(@"Every command has a shortcut.", @"");
     }
     [self reloadTable];
     for (NSButton *button in self.selectionButtons) button.enabled = [self selectedCommand] != nil && ![self selectedCommand].managedBySystem;
@@ -383,18 +392,61 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     TSShortcutFunctionRow *row = [self functionRowAtIndex:self.table.selectedRow];
     return row != nil && (row.command == nil || row.command.managedBySystem);
 }
-- (void)controlTextDidChange:(NSNotification *)notification { if (!self.searchingByKey) { [self forgetShownCustomCommands]; [self reloadCommands]; } }
-- (BOOL)filteringCustomShortcuts { return !self.searchingByKey && self.customFilter.state == NSControlStateValueOn; }
-// The filtered list is worked out again from the custom shortcuts there are now.
-- (void)forgetShownCustomCommands { [self.shownCustomCommandIDs removeAllObjects]; }
-- (void)updateCustomFilter {
-    self.customFilter.enabled = !self.searchingByKey;
-    self.customFilter.contentTintColor = self.customFilter.state == NSControlStateValueOn ? NSColor.controlAccentColor : nil;
+- (void)controlTextDidChange:(NSNotification *)notification { if (!self.searchingByKey) { [self forgetShownFilteredCommands]; [self reloadCommands]; } }
+- (TSShortcutFilter)activeFilter { return self.searchingByKey ? TSShortcutFilterAll : self.filter; }
+// A row's shortcut as the list shows it decides Assigned and Unassigned. A menu item with no command has a
+// shortcut, or it would not be a row, and it is never changed.
+- (BOOL)command:(nullable TSShortcutCommand *)command item:(NSMenuItem *)item matchesFilter:(TSShortcutFilter)filter {
+    if (filter == TSShortcutFilterAll) return YES;
+    if (command == nil) return filter == TSShortcutFilterAssigned;
+    TSShortcutCommand *known = command;
+    if (filter == TSShortcutFilterChanged) return [self.store commandIsCustomized:known];
+    BOOL assigned = [self.store shownBindingForCommand:known].key.length > 0;
+    return assigned == (filter == TSShortcutFilterAssigned);
 }
-- (void)changeCustomFilter:(id)sender {
+// The filtered list is worked out again from the shortcuts there are now.
+- (void)forgetShownFilteredCommands { [self.shownFilteredCommandIDs removeAllObjects]; }
++ (NSString *)titleForFilter:(TSShortcutFilter)filter {
+    switch (filter) {
+        case TSShortcutFilterAll: return NSLocalizedString(@"Shortcut Filter: All", @"");
+        case TSShortcutFilterAssigned: return NSLocalizedString(@"Shortcut Filter: Assigned", @"");
+        case TSShortcutFilterUnassigned: return NSLocalizedString(@"Shortcut Filter: Unassigned", @"");
+        case TSShortcutFilterChanged: return NSLocalizedString(@"Shortcut Filter: Changed", @"");
+    }
+    return @"";
+}
+- (void)updateFilterButton {
+    BOOL on = self.filter != TSShortcutFilterAll;
+    self.filterButton.enabled = !self.searchingByKey;
+    // VoiceOver reads the button cell, which names the button after its image, so the image names the filter in use.
+    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"Filter Shortcuts: %@", @""), [TSShortcutPaneController titleForFilter:self.filter]];
+    self.filterButton.image = [NSImage imageWithSystemSymbolName:on ? @"line.3.horizontal.decrease.circle.fill" : @"line.3.horizontal.decrease.circle"
+        accessibilityDescription:title] ?: [NSImage new];
+    self.filterButton.contentTintColor = on ? NSColor.controlAccentColor : nil;
+    self.filterButton.toolTip = title;
+    self.filterButton.accessibilityLabel = title;
+}
+- (NSMenu *)filterMenu {
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Filter Shortcuts", @"")];
+    for (TSShortcutFilter filter = TSShortcutFilterAll; filter <= TSShortcutFilterChanged; filter++) {
+        NSMenuItem *item = [menu addItemWithTitle:[TSShortcutPaneController titleForFilter:filter] action:@selector(chooseFilter:) keyEquivalent:@""];
+        item.target = self; item.tag = filter;
+        item.state = filter == self.filter ? NSControlStateValueOn : NSControlStateValueOff;
+        if (filter == TSShortcutFilterAll) [menu addItem:[NSMenuItem separatorItem]];
+    }
+    return menu;
+}
+- (void)showFilterMenu:(NSButton *)sender {
     [self endRecording];
-    [self forgetShownCustomCommands];
-    [self updateCustomFilter];
+    NSRect bounds = sender.bounds;
+    [[self filterMenu] popUpMenuPositioningItem:nil atLocation:NSMakePoint(NSMinX(bounds), sender.isFlipped ? NSMaxY(bounds) + 4 : NSMinY(bounds) - 4) inView:sender];
+}
+- (void)chooseFilter:(NSMenuItem *)sender { [self setFilterChoice:(TSShortcutFilter)sender.tag]; }
+- (void)setFilterChoice:(TSShortcutFilter)filter {
+    [self endRecording];
+    self.filter = filter;
+    [self forgetShownFilteredCommands];
+    [self updateFilterButton];
     [self reloadCommands];
 }
 - (void)reloadCommands {
@@ -406,8 +458,8 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     if (self.searchingByKey) { [self stopKeySearch]; return; }
     self.textQuery = self.search.stringValue;
     self.searchingByKey = YES;
-    [self forgetShownCustomCommands];
-    [self updateCustomFilter];
+    [self forgetShownFilteredCommands];
+    [self updateFilterButton];
     self.search.editable = NO;
     self.searchEvent = nil;
     self.keySearchView.hidden = NO;
@@ -422,8 +474,8 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     [self clearCompletionHighlight];
     if (!self.searchingByKey) { return; }
     self.searchingByKey = NO;
-    [self forgetShownCustomCommands];
-    [self updateCustomFilter];
+    [self forgetShownFilteredCommands];
+    [self updateFilterButton];
     self.searchMode.selectedSegment = TSShortcutSearchByFunction;
     self.searchEvent = nil; self.searchMatches = @[];
     self.keySearchView.hidden = YES;
@@ -829,8 +881,8 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         dispatch_async(dispatch_get_main_queue(), ^{ [deferringSelf restoreAll:nil]; });
         return;
     }
-    // Restore All empties the filtered list.
-    [self forgetShownCustomCommands];
+    // After Restore All the filtered list is worked out again.
+    [self forgetShownFilteredCommands];
     [self.store restoreAll]; [self refreshMenuAndMacros];
 }
 - (NSTextField *)shortcutLabel:(NSString *)text {
@@ -1142,12 +1194,12 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     if (!self.isViewLoaded) return;
     if (filter) {
         if (self.functionQueryBeforeGlobalSearch == nil) self.functionQueryBeforeGlobalSearch = self.search.stringValue;
-        // The command Search Settings found is shown, custom or not.
-        self.customFilter.state = NSControlStateValueOff; [self updateCustomFilter];
-        self.search.stringValue = query; [self forgetShownCustomCommands]; [self reloadFunctionCommands];
+        // The command Search Settings found is shown, whatever the filter.
+        self.filter = TSShortcutFilterAll; [self updateFilterButton];
+        self.search.stringValue = query; [self forgetShownFilteredCommands]; [self reloadFunctionCommands];
     } else {
         NSString *previous = self.functionQueryBeforeGlobalSearch;
-        if (previous != nil) { self.search.stringValue = previous; self.functionQueryBeforeGlobalSearch = nil; [self forgetShownCustomCommands]; [self reloadFunctionCommands]; }
+        if (previous != nil) { self.search.stringValue = previous; self.functionQueryBeforeGlobalSearch = nil; [self forgetShownFilteredCommands]; [self reloadFunctionCommands]; }
     }
     [self.view layoutSubtreeIfNeeded];
 }

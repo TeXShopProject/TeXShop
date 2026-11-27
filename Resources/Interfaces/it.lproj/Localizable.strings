@@ -194,8 +194,15 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Per modificarlo in Impostazioni di Sistema, scegli «Scorciatoie app» nella barra laterale.";
 "Inactive for this key" = "Inattivo per questo tasto";
 "No command uses this key." = "Nessun comando usa questo tasto.";
-"Show Only Custom Shortcuts" = "Mostra solo le scorciatoie personalizzate";
-"No custom shortcuts." = "Nessuna scorciatoia personalizzata.";
+"Filter Shortcuts" = "Filtra scorciatoie";
+"Filter Shortcuts: %@" = "Filtra scorciatoie: %@";
+"Shortcut Filter: All" = "Tutte";
+"Shortcut Filter: Assigned" = "Assegnate";
+"Shortcut Filter: Unassigned" = "Non assegnate";
+"Shortcut Filter: Changed" = "Modificate";
+"No changed shortcuts." = "Nessuna scorciatoia modificata.";
+"No command has a shortcut." = "Nessun comando ha una scorciatoia.";
+"Every command has a shortcut." = "Tutti i comandi hanno una scorciatoia.";
 "Press a key" = "Premi un tasto";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Questo tasto non può essere usato come scorciatoia. Usa Comando o Controllo con un tasto, oppure F1–F20.";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Le scorciatoie con il tasto Globo (fn) non possono essere assegnate ai comandi di TeXShop.";

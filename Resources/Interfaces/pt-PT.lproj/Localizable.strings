@@ -193,8 +193,15 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Para alterar nas Definições do Sistema, escolha “Atalhos de aplicações” na barra lateral.";
 "Inactive for this key" = "Inativo para esta tecla";
 "No command uses this key." = "Nenhum comando usa esta tecla.";
-"Show Only Custom Shortcuts" = "Mostrar apenas atalhos personalizados";
-"No custom shortcuts." = "Nenhum atalho personalizado.";
+"Filter Shortcuts" = "Filtrar atalhos";
+"Filter Shortcuts: %@" = "Filtrar atalhos: %@";
+"Shortcut Filter: All" = "Todos";
+"Shortcut Filter: Assigned" = "Atribuídos";
+"Shortcut Filter: Unassigned" = "Não atribuídos";
+"Shortcut Filter: Changed" = "Alterados";
+"No changed shortcuts." = "Nenhum atalho alterado.";
+"No command has a shortcut." = "Nenhum comando tem atalho.";
+"Every command has a shortcut." = "Todos os comandos têm atalho.";
 "Press a key" = "Prima uma tecla";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla não pode ser usada como atalho. Use Comando ou Controlo com uma tecla, ou F1–F20.";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Os atalhos com a tecla Globo (fn) não podem ser atribuídos a comandos do TeXShop.";

@@ -175,8 +175,15 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "To change it in System Settings, choose “App Shortcuts” in the sidebar.";
 "Inactive for this key" = "Inactive for this key";
 "No command uses this key." = "No command uses this key.";
-"Show Only Custom Shortcuts" = "Show Only Custom Shortcuts";
-"No custom shortcuts." = "No custom shortcuts.";
+"Filter Shortcuts" = "Filter Shortcuts";
+"Filter Shortcuts: %@" = "Filter Shortcuts: %@";
+"Shortcut Filter: All" = "All";
+"Shortcut Filter: Assigned" = "Assigned";
+"Shortcut Filter: Unassigned" = "Unassigned";
+"Shortcut Filter: Changed" = "Changed";
+"No changed shortcuts." = "No changed shortcuts.";
+"No command has a shortcut." = "No command has a shortcut.";
+"Every command has a shortcut." = "Every command has a shortcut.";
 "Press a key" = "Press a key";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands.";
