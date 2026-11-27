@@ -251,6 +251,7 @@
 - (IBAction) toggleDrawer: (id) sender;
 - (void) takeDestinationFromOutline: (id) sender;
 - (void) changeMouseMode: (id)sender;
+- (NSInteger) mouseTool;
 - (void) mouseDown: (NSEvent *) theEvent;
 - (void) mouseUp: (NSEvent *) theEvent;
 - (void) mouseDragged: (NSEvent *) theEvent;

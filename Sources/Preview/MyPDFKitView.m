@@ -4240,6 +4240,12 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 	}
 }
 
+// The tool chosen for the mouse (a NEW_MOUSE_MODE value), 0 while none is.
+- (NSInteger) mouseTool
+{
+	return mouseMode;
+}
+
 - (void) changeMouseMode: (id)sender
 {
 	NSInteger	oldMouseMode;
