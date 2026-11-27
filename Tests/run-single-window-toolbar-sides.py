@@ -21,7 +21,8 @@ MUTATIONS = {
     'spaces-right': ('    while (index > 0 && index < identifiers.count && [identifiers[index] isEqual: NSToolbarSpaceItemIdentifier])\n        index++;\n', ''),
     'swap-ignored': ('    if (previewOnLeft) {', '    if (NO) {'),
     'always': ('    return TSDocumentWindowsUseFullSizeContent();\n}', '    return YES;\n}'),
-    'inserted-twice': ('    if ([identifiers containsObject: skSidesTID])\n        return;\n', ''),
+    'inserted-twice': ('    if (divider == NSNotFound) {', '    if (YES) {'),
+    'sides-not-swapped': ('    if (previewOnLeft ? before <= after : after <= before)\n        return;\n', '    return;\n'),
     'other-divider': ('splitView: sides dividerIndex: 0]', 'splitView: [[NSSplitView alloc] init] dividerIndex: 0]'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
@@ -86,6 +87,7 @@ static NSUserDefaults *defaults;
 #define SUD defaults
 static NSString *SwitchSidesKey = @"SwitchSides";
 static BOOL fullSize = YES;
+static int layoutUpdates;
 static BOOL TSDocumentWindowsUseFullSizeContent(void) { return fullSize; }
 CONSTANTS
 SIDES
@@ -94,6 +96,7 @@ SIDES
 @implementation TSDocument
 - (BOOL)sharingExists { return YES; }
 - (NSWindow *)fullSplitWindow { return window; }
+- (void)updatePreviewLayoutControls { layoutUpdates++; }
 METHODS
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdent willBeInsertedIntoToolbar:(BOOL)inserted
 {
@@ -171,6 +174,21 @@ int main(void) {
         [saved removeItemAtIndex:[identifiers(saved) indexOfObject:skSidesTID]];
         [d keepSidesInFullSplitToolbar];
         check(count(identifiers(saved), skSidesTID) == 1, @"a toolbar that lost the item gets it back");
+
+        // The source and the Preview change sides: the groups of items before and after the divider change places.
+        NSArray *before = identifiers(saved);
+        NSUInteger at = [before indexOfObject:skSidesTID];
+        NSArray *sourceGroup = [before subarrayWithRange:NSMakeRange(0, at)], *previewGroup = [before subarrayWithRange:NSMakeRange(at + 1, before.count - at - 1)];
+        [defaults setBool:YES forKey:SwitchSidesKey];
+        [d keepSidesInFullSplitToolbar];
+        NSMutableArray *expected = [previewGroup mutableCopy]; [expected addObject:skSidesTID]; [expected addObjectsFromArray:sourceGroup];
+        check([identifiers(saved) isEqual:expected], @"with the Preview on the left the Preview's items come first, each group in its own order");
+        check(layoutUpdates == 1, @"the layout items show the Preview's state again");
+        [d keepSidesInFullSplitToolbar];
+        check([identifiers(saved) isEqual:expected] && layoutUpdates == 1, @"and they stay so");
+        [defaults setBool:NO forKey:SwitchSidesKey];
+        [d keepSidesInFullSplitToolbar];
+        check([identifiers(saved) isEqual:before], @"back on the right, the Preview's items follow the divider again");
         [defaults removePersistentDomainForName:[NSString stringWithFormat:@"org.texshop.test.sides.%d", getpid()]];
         printf("%d checks\n", checks);
     }

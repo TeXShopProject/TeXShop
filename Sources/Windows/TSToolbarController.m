@@ -301,12 +301,18 @@ static BOOL TSFullSplitToolbarFollowsSides(void)
     return TSDocumentWindowsUseFullSizeContent();
 }
 
+// The items of the single window's toolbar that belong to the source.
+static NSSet<NSString *> *TSFullSplitSourceItems(void)
+{
+    return [NSSet setWithObjects: skTypesetTID, skProgramTID, skMacrosTID, skTagsTID, skLabelsTID,
+            skTemplatesID, skSharingTID, kSplitID, skAutoCompleteID, nil];
+}
+
 // Where the item that follows the divider goes: after the last item of the source and the spaces
 // after it, or, with the Preview on the left, before the first item of the source.
 static NSUInteger TSFullSplitSidesIndex(NSArray<NSString *> *identifiers, BOOL previewOnLeft)
 {
-    NSSet *source = [NSSet setWithObjects: skTypesetTID, skProgramTID, skMacrosTID, skTagsTID, skLabelsTID,
-                     skTemplatesID, skSharingTID, kSplitID, skAutoCompleteID, nil];
+    NSSet *source = TSFullSplitSourceItems();
     if (previewOnLeft) {
         for (NSUInteger i = 0; i < identifiers.count; i++)
             if ([source containsObject: identifiers[i]])
@@ -1729,15 +1735,42 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 
 // A toolbar of the single window without the item, saved before it followed the divider or with the
 // item taken out in the customization sheet, gets it at its place when the window is put together.
+// When the source and the Preview have changed sides (Switch Sides), the items before and after the
+// divider change places too, each group in its own order, so that the source's items stay above the
+// source.
 - (void) keepSidesInFullSplitToolbar
 {
     NSToolbar *toolbar = [[self fullSplitWindow] toolbar];
     if (! TSFullSplitToolbarFollowsSides() || toolbar == nil)
         return;
-    NSArray *identifiers = [[toolbar items] valueForKey: @"itemIdentifier"];
-    if ([identifiers containsObject: skSidesTID])
+    BOOL previewOnLeft = [SUD boolForKey: SwitchSidesKey];
+    NSArray<NSString *> *identifiers = [[toolbar items] valueForKey: @"itemIdentifier"];
+    NSUInteger divider = [identifiers indexOfObject: skSidesTID];
+    if (divider == NSNotFound) {
+        [toolbar insertItemWithItemIdentifier: skSidesTID atIndex: TSFullSplitSidesIndex(identifiers, previewOnLeft)];
         return;
-    [toolbar insertItemWithItemIdentifier: skSidesTID atIndex: TSFullSplitSidesIndex(identifiers, [SUD boolForKey: SwitchSidesKey])];
+    }
+    NSSet *source = TSFullSplitSourceItems();
+    NSUInteger before = 0, after = 0;
+    for (NSUInteger i = 0; i < identifiers.count; i++)
+        if ([source containsObject: identifiers[i]]) {
+            if (i < divider)
+                before++;
+            else
+                after++;
+        }
+    if (previewOnLeft ? before <= after : after <= before)
+        return;
+    NSArray *first = [identifiers subarrayWithRange: NSMakeRange(0, divider)];
+    NSArray *second = [identifiers subarrayWithRange: NSMakeRange(divider + 1, identifiers.count - divider - 1)];
+    NSMutableArray *arranged = [second mutableCopy];
+    [arranged addObject: skSidesTID];
+    [arranged addObjectsFromArray: first];
+    while (toolbar.items.count > 0)
+        [toolbar removeItemAtIndex: toolbar.items.count - 1];
+    for (NSString *identifier in arranged)
+        [toolbar insertItemWithItemIdentifier: identifier atIndex: toolbar.items.count];
+    [self updatePreviewLayoutControls];
 }
 
 - (NSArray *) defaultItemIdentifiersOfToolbar: (NSToolbar *) toolbar {
