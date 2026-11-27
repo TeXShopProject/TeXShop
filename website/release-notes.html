@@ -70,6 +70,7 @@
 <ul>
 <li>A new app icon, and the Dock icon while TeXShop is running can be one of the earlier designs. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> and <a href="https://github.com/martignoni">Nicolas Martignoni</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).<figure class="note-shot"><img class="shot-light" src="assets/whats-new/en/dock-icons.png" width="600" height="450" alt="The choice of Dock icons in the General category of Settings" loading="lazy"><img class="shot-dark" src="assets/whats-new/en/dock-icons-dark.png" width="600" height="450" alt="The choice of Dock icons in the General category of Settings" loading="lazy"></figure></li>
 <li>On macOS 26 and later, TeXShop has the Liquid Glass appearance.</li>
+<li>On macOS 26 and later, the source and the Preview of the single window are seen blurred under the toolbar, which is divided at the divider between them as in Mail. With the source on the right, the items of the toolbar change sides too. Reported by <a href="https://github.com/MaartenS11">MaartenS11</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/74">#74</a>).</li>
 <li>The digits of line numbers line up, and the Matrix and LaTeX panels are easier to read in Dark Mode.</li>
 <li>Comments and other colors of the bundled themes are easier to read.</li>
 <li>Settings → Themes lists the themes: add, duplicate, rename, delete, restore, export and import them there.</li>
@@ -99,6 +100,7 @@
 <li><strong>Open Style File:</strong> it has moved from the Help menu to the File menu.</li>
 <li><strong>Demo movies:</strong> the two movies in the Help menu are removed. Reported by <a href="https://github.com/herbs">Herb Schulz</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/43">#43</a>).</li>
 <li><strong>Fullscreen (Old Method):</strong> this item of the Window menu is removed. Use Window → Enter Full Screen instead.</li>
+<li><strong>Full-screen Preview:</strong> a Preview window in full screen is dark, as in Apple’s Preview, even when the system is light. Light pages stay light.</li>
 <li><strong>Smooth text and line art:</strong> this setting is removed.</li>
 <li><strong>Save PostScript File and -dALLOWPSTRANSPARENCY:</strong> these settings are removed.</li>
 <li><strong>Obsolete settings:</strong> settings that had no effect are removed.</li>
@@ -124,12 +126,15 @@
 <li>On macOS 27, Page Up and Page Down turn the page again in single-page and two-page layouts.</li>
 <li>Clicking an entry of the outline in the drawer goes to its page again after the Preview window is closed and opened again, and after a new document is typeset for the first time. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/59">#59</a>).</li>
 <li>A closed Preview window opens again at the same place, with Command-1 or after typesetting, and with its pinned link previews if the PDF has not changed. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/70">#70</a>).</li>
-<li>When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and each Preview window comes back as before, with its drawer, its open sections and its scroll position. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/71">#71</a>).</li>
+<li>When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and each Preview window comes back as before, with its drawer, its open sections, its scroll position and its mouse tool. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/71">#71</a>).</li>
 <li>Fit to Content Width fits a long document in one step. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/62">#62</a>).</li>
 <li>Fix the Find commands so they use the search of the Preview while it is active.</li>
 <li>Fix Preview pages that were drawn under the toolbar on macOS 26 and later.</li>
 <li>Command-click on the title of a Preview window opens its path menu again (<a href="https://github.com/TeXShopProject/TeXShop/issues/73">#73</a>).</li>
 <li>In the single window, the arrow next to the document name and Command-click on the name work as in the source window. Reported by <a href="https://github.com/zenitani">Seiji Zenitani</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/77">#77</a>).</li>
+<li>In a magnified Preview, a link target or an outline entry of the drawer is shown below the toolbar instead of behind it, and Back, Forward and a change of the page layout keep the place. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/78">#78</a>).</li>
+<li>The drawer follows the Light or Dark choice of the Appearance item in the Preview toolbar. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/79">#79</a>).</li>
+<li>In Dark Mode, the scroll knob stays visible on a light Preview page.</li>
 <li>Holding Command with a dead key no longer makes the Preview crash. Images in the Preview stay as before.</li>
 <li>Fix opening a PDF file whose extension is written in capital letters, such as Only.PDF.</li>
 </ul>
@@ -166,7 +171,7 @@
 <li>Links in the credits open the current web pages of the projects they name.</li>
 <li>About TeXShop opens the TeXShop web site from a link at the top of its credits. Suggested by <a href="https://github.com/zenitani">Seiji Zenitani</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/69">#69</a>).</li>
 <li>The Help menu starts with TeXShop Help, the manual and First Steps with TeXShop, followed by the documents on features of TeXShop, the TeX documentation and the notes of this release; the older documents are in its Older Documents submenu. The Short Course has a submenu of its own, which also opens each of its lists of symbols. Items that open a document in English tell so in every language, and the item that copied the Short Course files of an older version is removed.</li>
-<li>Add Command Completion Quick Start to the Help menu, a short guide to using command completion written by Herbert Schulz. It is in English, and the quick start that comes with the command completion list is the same guide.</li>
+<li>Add Command Completion Quick Start to the Help menu, a short guide to using command completion written by Herbert Schulz. It is in English, and the quick start that comes with the command completion list is the same guide. The quick start in French is updated for TeXShop 6 as well, and the Help menu opens it when TeXShop is shown in French.</li>
 <li>First Steps with TeXShop, About This Release, File Encoding and the manual describe TeXShop 6.00, and the older documents tell when they were written. TeXShop Help explains spell checking, and the difference between key bindings, macros and command completion.</li>
 <li>The help in all five languages is rewritten for TeXShop 6.00, with a new look that follows dark mode, and the Korean help is now in Korean. The manual is revised for 6.00.</li>
 <li>TeXShop Help can be read in French, Italian, Dutch, Portuguese (Brazil and Portugal), Romanian and Simplified Chinese.</li>
