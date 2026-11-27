@@ -55,7 +55,7 @@
 \newcommand{\TSVersion}{2.30}
 \newcommand{\CCT}{\texttt{CommandCompletion.txt}}
 
-\title{Complètement de commande\\ avec \TS\ 6+\\ pour l’impatient}
+\title{Complétion des commandes\\ avec \TS\ 6+\\ pour l’impatient}
 \author{Herbert Schulz\thanks{Traduit par René Fritz le 26 décembre 2016 ; mis à jour pour \TS\ 6 en novembre 2026.}\\\small\href{mailto:herbs2@mac.com}{herbs2@mac.com}}
 \date{2026/11/18}
 
@@ -65,7 +65,7 @@
 
 \section*{Introduction}
 
-Le balisage de \LaTeX\ est plutôt prolixe, ce qui est agréable, car il décrit ce qu’il est censé faire, mais un peu pénible à écrire. Le complètement de commande vous permet d’insérer des environnements complets et des commandes en quelques frappes suivies d’une pression sur la touche de «~déclenchement~» (qui est, par défaut, \cmd{Esc} mais peut être remplacée par \cmd{Tab} dans \mnu{TeXShop}\To\mnu{Réglages}\To\mnu{Clavier}).
+Le balisage de \LaTeX\ est plutôt prolixe, ce qui est agréable, car il décrit ce qu’il est censé faire, mais un peu pénible à écrire. La complétion des commandes vous permet d’insérer des environnements complets et des commandes en quelques frappes suivies d’une pression sur la touche de «~déclenchement~» (qui est, par défaut, \cmd{Esc} mais peut être remplacée par \cmd{Tab} dans \mnu{TeXShop}\To\mnu{Réglages}\To\mnu{Clavier}).
 
 Les commandes avec arguments ont généralement un repère (\texttt{•}) placé à la place de chaque argument. Pour aller à l’argument suivant, utilisez la commande \mnu{Édition}\To\mnu{Repères}\To\mnu{Repère suivant} (\cmd{Ctl-Cmd-F} [ou \cmd{Opt-déclenchement}]). Ceci sélectionne en même temps le repère, pour qu’il soit automatiquement remplacé par l’information saisie. Voir la documentation complète, avec les listes de commandes et d’abréviations fournies avec \TS, dans le dossier \path{~/Library/TeXShop/CommandCompletion/}, pour plus d’informations. Vous pouvez ouvrir \path{~/Library/TeXShop} avec la commande \mnu{Ouvrir \textasciitilde/Bibliothèque/TeXShop} du menu \mnu{TeXShop}.
 
@@ -75,7 +75,7 @@ Un grand nombre de commandes et d’environnements peuvent être facilement comp
 
 Bien que la liste des abréviations soit assez vaste, il vous suffira d’apprendre celles que vous utilisez souvent et de retenir progressivement les autres au fur et à mesure de vos besoins. En outre, il suffit d’appuyer plusieurs fois sur la touche de déclenchement pour obtenir les mêmes commandes ou environnements avec un nombre différent d’options, etc.
 
-\subsection*{Complètement de commande}
+\subsection*{Complétion des commandes}
 
 Vous pouvez compléter de nombreuses commandes en commençant à les saisir puis en appuyant sur la touche de déclenchement. Les variantes qui diffèrent par leur nombre d’arguments optionnels sont générées par des pressions successives sur la touche de déclenchement. Ainsi, taper \verb|\sec| sur une nouvelle ligne, puis la touche de déclenchement, produit
 \begin{verbatim}
@@ -93,7 +93,7 @@ avec l’argument optionnel.
 
 \subsection*{Abréviations}
 
-Outre le complètement des commandes entrées partiellement, il y a aussi de nombreuses abréviations. Celles-ci sont de courts mnémoniques pour accéder à des substitutions complètes.
+Outre la complétion des commandes entrées partiellement, il y a aussi de nombreuses abréviations. Celles-ci sont de courts mnémoniques pour accéder à des substitutions complètes.
 
 Toutes les abréviations d’environnements commencent par un «~\texttt{b}~». Pour obtenir l’environnement \cmd{itemize} complet, entrez \verb|\bite| seul sur une ligne et appuyez sur la touche de déclenchement, ce qui produira
 \begin{verbatim}
@@ -159,7 +159,7 @@ Si ces exemples ne fonctionnent pas, c’est probablement que vous devez laisser
 
 \section*{Tables des commandes et environnements fournis}
 
-Cette section contient une liste, que l’on espère complète, des commandes et abréviations fournies dans \CCT. Elle est divisée en environnements, commandes et déclarations, et lettres grecques. Si vous saisissez le début d’une abréviation, la recherche commence à la première correspondance, et des pressions successives sur \esckey\ parcourent la liste tant qu’il y a une correspondance ; par exemple, si vous tapez \texttt{be}, des pressions successives sur \esckey\ donneront \texttt{benu}, \texttt{benuo}, \texttt{bequ}, \texttt{bequs}, \texttt{beqn} et \texttt{beqns} avant de revenir au \texttt{be} initial. En ajoutant des lettres à l’abréviation, vous atteindrez le complètement voulu avec moins de pressions sur \esckey. En réalité, certaines commandes et déclarations sont dispersées parmi les environnements dans le fichier \CCT, si bien qu’il peut parfois y avoir des éléments supplémentaires. Les tables n’indiquent ni les complètements ordinaires ni les versions des abréviations commençant par «~\verb"\"~».
+Cette section contient une liste, que l’on espère complète, des commandes et abréviations fournies dans \CCT. Elle est divisée en environnements, commandes et déclarations, et lettres grecques. Si vous saisissez le début d’une abréviation, la recherche commence à la première correspondance, et des pressions successives sur \esckey\ parcourent la liste tant qu’il y a une correspondance ; par exemple, si vous tapez \texttt{be}, des pressions successives sur \esckey\ donneront \texttt{benu}, \texttt{benuo}, \texttt{bequ}, \texttt{bequs}, \texttt{beqn} et \texttt{beqns} avant de revenir au \texttt{be} initial. En ajoutant des lettres à l’abréviation, vous atteindrez la complétion voulue avec moins de pressions sur \esckey. En réalité, certaines commandes et déclarations sont dispersées parmi les environnements dans le fichier \CCT, si bien qu’il peut parfois y avoir des éléments supplémentaires. Les tables n’indiquent ni les complétions ordinaires ni les versions des abréviations commençant par «~\verb"\"~».
 
 \textbf{À nouveau : la liste peut paraître un peu intimidante. Inutile de «~mémoriser~» toutes ces abréviations ; apprenez-en le minimum, au fur et à mesure de vos besoins. De plus, les variantes d’une abréviation s’obtiennent par des pressions successives sur \esckey ; voir par exemple la figure~\ref{fig:sec}.}
 \begin{figure}\centering
