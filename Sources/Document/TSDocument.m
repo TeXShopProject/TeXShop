@@ -98,8 +98,6 @@
 #define MAXNUMOFTABS 20
 
 @interface TSDocument ()
-// The constraints that keep the two sides of the single window below the band of the toolbar (#74).
-@property (strong) NSArray<NSLayoutConstraint *> *fullSplitPlacement;
 // Keep external PDF observation independent of source-file watching.
 @property (copy) NSString *externalPDFLoadedSignature;
 // The state of the file when the PDF on display was read, also for a locked PDF, which shows no
@@ -11942,33 +11940,6 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 }
 */
 
-// On macOS 26 and later the content of a document window runs under the title bar and the toolbar.
-// In the window that shows the source and the Preview, the two sides start below the band of the
-// toolbar, as the source window and the Preview window do: the source's text and background do not
-// run up into the band, and the band looks as it does over those windows (#74).
-- (void) placeFullSplitBelowToolbar
-{
-    if (! TSDocumentWindowsUseFullSizeContent() || self.fullSplitPlacement != nil)
-        return;
-    NSView *content = fullSplitWindow.contentView;
-    NSView *sides = leftView;
-    while (sides != nil && sides.superview != content)
-        sides = sides.superview;
-    if (sides == nil)
-        return;
-    NSRect frame = sides.frame, bounds = content.bounds;
-    CGFloat left = NSMinX(frame) - NSMinX(bounds), right = NSMaxX(bounds) - NSMaxX(frame);
-    CGFloat bottom = NSMinY(frame) - NSMinY(bounds);
-    sides.translatesAutoresizingMaskIntoConstraints = NO;
-    self.fullSplitPlacement = @[
-        [sides.topAnchor constraintEqualToAnchor: content.safeAreaLayoutGuide.topAnchor],
-        [sides.leadingAnchor constraintEqualToAnchor: content.leadingAnchor constant: left],
-        [sides.trailingAnchor constraintEqualToAnchor: content.trailingAnchor constant: -right],
-        [sides.bottomAnchor constraintEqualToAnchor: content.bottomAnchor constant: -bottom]];
-    [NSLayoutConstraint activateConstraints: self.fullSplitPlacement];
-    [content layoutSubtreeIfNeeded];
-}
-
 - (void) doMove: (id)sender;
 {
     NSString        *theText;
@@ -12026,7 +11997,10 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             
             [self.splitController setWindow: fullSplitWindow];
             [self addWindowController: self.splitController];
-            [self placeFullSplitBelowToolbar];
+            // The source and the Preview run under the band of the toolbar, which follows the divider
+            // between them (#74). Parts of the Preview side by side start below the band.
+            [self keepSidesInFullSplitToolbar];
+            [self.pdfKitWindow placeSplitViewForToolbar];
             NSString *splitPosition = [SUD stringForKey:DocumentSplitWindowPositionKey];
             if ([splitPosition length] > 5)
                [fullSplitWindow setFrameFromString:splitPosition];
@@ -12073,6 +12047,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             [[textWindow contentView] addSubview: splitView];
             [splitView setFrame: [[textWindow contentView] bounds]];
             [self.sourceStatusBar placeBelowView: splitView];
+            // The placement below the band in the single window goes with the split view.
+            [self.pdfKitWindow releaseSplitViewPlacement];
             [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];
             [[self.pdfKitWindow contentView] addSubview: self.pdfKitWindow.pdfKitSplitView];
             [self.pdfKitWindow.pdfKitSplitView setFrame: [[self.pdfKitWindow contentView] bounds]];

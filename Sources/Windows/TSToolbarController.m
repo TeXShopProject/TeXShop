@@ -146,6 +146,7 @@ static NSString *   skSharingTID       = @"SharingSplit";
 static NSString*    skSearchTID          = @"SearchKITSplit";
 static NSString*    skMouseModeTID         = @"MouseModeKITSplit";
 static NSString*    skBackForthKKTID       = @"BackForthKITSplit";
+static NSString*    skSidesTID             = @"SidesSplit";
 
 // HtmlWindow special toolbar items
 static NSString*    kHtmlPreviousPageButtonTID  = @"HtmlPreviousPageButton";
@@ -287,6 +288,44 @@ static void TSInstallSplitToggleOptionMonitor(void)
                     TSSplitToggleItemsFollow(window, NSEvent.modifierFlags);
             }];
     });
+}
+
+// On macOS 26 and later the source and the Preview of the single window run under the title bar
+// and the toolbar, and each is blurred there on its own, as the columns of Mail are. AppKit blurs
+// one scroll view in each part of the band, and it parts the band only at a divider that the
+// toolbar follows (NSTrackingSeparatorToolbarItem). So the toolbar of the single window follows
+// the divider between the source and the Preview, right after the source's items: the source's
+// items stay above the source and the Preview's above the Preview, while they fit there.
+static BOOL TSFullSplitToolbarFollowsSides(void)
+{
+    return TSDocumentWindowsUseFullSizeContent();
+}
+
+// The items of the single window's toolbar that belong to the source.
+static NSSet<NSString *> *TSFullSplitSourceItems(void)
+{
+    return [NSSet setWithObjects: skTypesetTID, skProgramTID, skMacrosTID, skTagsTID, skLabelsTID,
+            skTemplatesID, skSharingTID, kSplitID, skAutoCompleteID, nil];
+}
+
+// Where the item that follows the divider goes: after the last item of the source and the spaces
+// after it, or, with the Preview on the left, before the first item of the source.
+static NSUInteger TSFullSplitSidesIndex(NSArray<NSString *> *identifiers, BOOL previewOnLeft)
+{
+    NSSet *source = TSFullSplitSourceItems();
+    if (previewOnLeft) {
+        for (NSUInteger i = 0; i < identifiers.count; i++)
+            if ([source containsObject: identifiers[i]])
+                return i;
+        return identifiers.count;
+    }
+    NSUInteger index = 0;
+    for (NSUInteger i = 0; i < identifiers.count; i++)
+        if ([source containsObject: identifiers[i]])
+            index = i + 1;
+    while (index > 0 && index < identifiers.count && [identifiers[index] isEqual: NSToolbarSpaceItemIdentifier])
+        index++;
+    return index;
 }
 
 @implementation TSDocument (ToolbarSupport)
@@ -724,6 +763,7 @@ if (@available(macOS 11.0, *))
     [[self fullSplitWindow] setToolbar: [self makeToolbar: kFullWindowToolbarIdentifier]];
     [self keepOnePreviewPagePairInToolbar: self.pdfKitWindow.toolbar];
     [self keepOnePreviewPagePairInToolbar: [[self fullSplitWindow] toolbar]];
+    [self keepSidesInFullSplitToolbar];
 // added by Terada (from this line)
     for (NSString *identifier in @[kPDFKitToolbarIdentifier, kFullWindowToolbarIdentifier]) {
         NSToolbar *previewToolbar = [identifier isEqual:kPDFKitToolbarIdentifier]
@@ -942,6 +982,12 @@ static NSString *TSPreviewPageItemKey(NSString *itemIdent)
     NSSearchToolbarItem  *mySearchToolbarItem;
 
     
+    if ([itemIdent isEqual: skSidesTID]) {
+        NSSplitView *sides = (NSSplitView *)[leftView superview];
+        if (! TSFullSplitToolbarFollowsSides() || ! [sides isKindOfClass: [NSSplitView class]])
+            return nil;
+        return [NSTrackingSeparatorToolbarItem trackingSeparatorToolbarItemWithIdentifier: itemIdent splitView: sides dividerIndex: 0];
+    }
     if ([itemIdent isEqual:TSPreviewLayoutToolbarID] || [itemIdent isEqual:TSPreviewArrangementToolbarID])
         return TSPreviewLayoutItem(self, itemIdent);
     if ([itemIdent isEqual:kContentZoomKKTID])
@@ -1679,6 +1725,59 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // -----------------------------------------------------------------------------
 
 - (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *) toolbar {
+    NSArray *identifiers = [self defaultItemIdentifiersOfToolbar: toolbar];
+    if (! [[toolbar identifier] isEqual: kFullWindowToolbarIdentifier] || ! TSFullSplitToolbarFollowsSides())
+        return identifiers;
+    NSMutableArray *withSides = [identifiers mutableCopy];
+    [withSides insertObject: skSidesTID atIndex: TSFullSplitSidesIndex(identifiers, [SUD boolForKey: SwitchSidesKey])];
+    return withSides;
+}
+
+// A toolbar of the single window without the item, saved before it followed the divider or with the
+// item taken out in the customization sheet, gets it at its place when the window is put together.
+// When the source and the Preview have changed sides (Switch Sides), the items before and after the
+// divider change places too, each group in its own order, so that the source's items stay above the
+// source.
+- (void) keepSidesInFullSplitToolbar
+{
+    NSToolbar *toolbar = [[self fullSplitWindow] toolbar];
+    if (! TSFullSplitToolbarFollowsSides() || toolbar == nil)
+        return;
+    BOOL previewOnLeft = [SUD boolForKey: SwitchSidesKey];
+    NSArray<NSString *> *identifiers = [[toolbar items] valueForKey: @"itemIdentifier"];
+    NSUInteger divider = [identifiers indexOfObject: skSidesTID];
+    if (divider == NSNotFound) {
+        [toolbar insertItemWithItemIdentifier: skSidesTID atIndex: TSFullSplitSidesIndex(identifiers, previewOnLeft)];
+        return;
+    }
+    NSSet *source = TSFullSplitSourceItems();
+    NSUInteger before = 0, after = 0;
+    for (NSUInteger i = 0; i < identifiers.count; i++)
+        if ([source containsObject: identifiers[i]]) {
+            if (i < divider)
+                before++;
+            else
+                after++;
+        }
+    if (previewOnLeft ? before <= after : after <= before)
+        return;
+    NSArray *first = [identifiers subarrayWithRange: NSMakeRange(0, divider)];
+    NSArray *second = [identifiers subarrayWithRange: NSMakeRange(divider + 1, identifiers.count - divider - 1)];
+    NSMutableArray *arranged = [second mutableCopy];
+    [arranged addObject: skSidesTID];
+    [arranged addObjectsFromArray: first];
+    // The search item gets a new field; the other items keep their views.
+    NSString *search = [myFullSearchField stringValue];
+    while (toolbar.items.count > 0)
+        [toolbar removeItemAtIndex: toolbar.items.count - 1];
+    for (NSString *identifier in arranged)
+        [toolbar insertItemWithItemIdentifier: identifier atIndex: toolbar.items.count];
+    if (search.length > 0)
+        [myFullSearchField setStringValue: search];
+    [self updatePreviewLayoutControls];
+}
+
+- (NSArray *) defaultItemIdentifiersOfToolbar: (NSToolbar *) toolbar {
 	// Required delegate method   Returns the ordered list of items to be shown in the toolbar by default
 	// If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
 	// user chooses to revert to the default items self set will be used

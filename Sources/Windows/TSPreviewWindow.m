@@ -1626,19 +1626,25 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 // parts side by side start below the toolbar. Running under it, each part brings its own
 // band under the toolbar, AppKit blurs only one of them, and the divider runs up through
 // the toolbar. The Preview window is full-size on macOS 26 and later, so side-by-side parts
-// start below its toolbar too. A single part, and parts one above the other, fill the
-// content view and run under the toolbar. Earlier systems are not full-size, so this
+// start below its toolbar too, and so do they in the single window, where the Preview runs
+// under the toolbar beside the source (#74). A single part, and parts one above the other,
+// fill their place and run under the toolbar. Earlier systems are not full-size, so this
 // placement is unused and the content view already starts below the toolbar. The split
 // view follows the band when it changes height, as when the annotation toolbar is shown
 // or in full screen.
-// The frame the split view gets back when its parts stop being side by side: the content view's
-// bounds with the outsets it had before they went side by side (in the nib, 2 points below the
-// bottom edge).
+// The frame the split view gets back when its parts stop being side by side: in this window
+// the content view's bounds with the outsets it had before they went side by side (in the nib,
+// 2 points below the bottom edge), in the single window the bounds of its side.
 - (void) fitSplitViewToContent
 {
     NSSplitView *split = self.pdfKitSplitView;
-    if (split.superview != self.contentView || self.splitViewPlacement != nil)
+    NSView *host = split.superview;
+    if (host == nil || self.splitViewPlacement != nil)
         return;
+    if (host != self.contentView) {
+        split.frame = host.bounds;
+        return;
+    }
     NSRect bounds = self.contentView.bounds;
     NSEdgeInsets outsets = self.splitViewOutsets;
     split.frame = NSMakeRect(NSMinX(bounds) - outsets.left, NSMinY(bounds) - outsets.bottom,
@@ -1648,14 +1654,15 @@ static void TSPreviewPlacePartByFrame(NSView *part)
 - (void) placeSplitViewForToolbar
 {
     NSSplitView *split = self.pdfKitSplitView;
-    NSView *content = self.contentView;
-    BOOL here = split != nil && split.superview == content;
-    BOOL below = here && (self.styleMask & NSWindowStyleMaskFullSizeContentView) && self.windowIsSplit && split.isVertical;
+    NSView *host = split.superview;
+    // In this window the split view is in the content view; in the single window it is in its side.
+    BOOL ownWindow = host != nil && host == self.contentView;
+    BOOL below = host != nil && (host.window.styleMask & NSWindowStyleMaskFullSizeContentView) && self.windowIsSplit && split.isVertical;
     if (! below) {
         [self releaseSplitViewPlacement];
         // In this window with one part, or parts one above the other: the next split side by side
         // starts from the frame the split view then has, as in RC1.
-        if (here)
+        if (ownWindow)
             self.splitViewOutsetsTaken = NO;
         return;
     }
@@ -1663,23 +1670,24 @@ static void TSPreviewPlacePartByFrame(NSView *part)
         return;
     // How far the frame reaches beyond the content view when the parts first go side by side. A
     // move into the combined window and back with the parts side by side keeps it, so they keep
-    // reaching so far at the sides and the bottom, and get that frame back when unsplit.
-    if (! self.splitViewOutsetsTaken) {
-        NSRect frame = split.frame, bounds = content.bounds;
+    // reaching so far at the sides and the bottom, and get that frame back when unsplit. In the
+    // single window the split view fills its side.
+    if (ownWindow && ! self.splitViewOutsetsTaken) {
+        NSRect frame = split.frame, bounds = host.bounds;
         self.splitViewOutsets = NSEdgeInsetsMake(NSMaxY(frame) - NSMaxY(bounds), NSMinX(bounds) - NSMinX(frame),
                                                  NSMinY(bounds) - NSMinY(frame), NSMaxX(frame) - NSMaxX(bounds));
         self.splitViewOutsetsTaken = YES;
     }
     split.translatesAutoresizingMaskIntoConstraints = NO;
     // Below the band; at the sides and the bottom as before.
-    NSEdgeInsets outsets = self.splitViewOutsets;
+    NSEdgeInsets outsets = ownWindow ? self.splitViewOutsets : NSEdgeInsetsZero;
     self.splitViewPlacement = @[
-        [split.topAnchor constraintEqualToAnchor: content.safeAreaLayoutGuide.topAnchor],
-        [split.leadingAnchor constraintEqualToAnchor: content.leadingAnchor constant: -outsets.left],
-        [split.trailingAnchor constraintEqualToAnchor: content.trailingAnchor constant: outsets.right],
-        [split.bottomAnchor constraintEqualToAnchor: content.bottomAnchor constant: outsets.bottom]];
+        [split.topAnchor constraintEqualToAnchor: host.safeAreaLayoutGuide.topAnchor],
+        [split.leadingAnchor constraintEqualToAnchor: host.leadingAnchor constant: -outsets.left],
+        [split.trailingAnchor constraintEqualToAnchor: host.trailingAnchor constant: outsets.right],
+        [split.bottomAnchor constraintEqualToAnchor: host.bottomAnchor constant: outsets.bottom]];
     [NSLayoutConstraint activateConstraints: self.splitViewPlacement];
-    [content layoutSubtreeIfNeeded];
+    [host layoutSubtreeIfNeeded];
 }
 
 - (void) releaseSplitViewPlacement
