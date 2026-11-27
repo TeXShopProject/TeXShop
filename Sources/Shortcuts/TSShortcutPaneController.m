@@ -397,16 +397,12 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 // A row's shortcut as the list shows it decides Assigned and Unassigned. A menu item with no command has a
 // shortcut, or it would not be a row, and it is never changed.
 - (BOOL)command:(nullable TSShortcutCommand *)command item:(NSMenuItem *)item matchesFilter:(TSShortcutFilter)filter {
-    switch (filter) {
-        case TSShortcutFilterAll: return YES;
-        case TSShortcutFilterChanged: return command != nil && [self.store commandIsCustomized:command];
-        case TSShortcutFilterAssigned:
-        case TSShortcutFilterUnassigned: {
-            BOOL assigned = command == nil || [self.store shownBindingForCommand:command].key.length > 0;
-            return assigned == (filter == TSShortcutFilterAssigned);
-        }
-    }
-    return YES;
+    if (filter == TSShortcutFilterAll) return YES;
+    if (command == nil) return filter == TSShortcutFilterAssigned;
+    TSShortcutCommand *known = command;
+    if (filter == TSShortcutFilterChanged) return [self.store commandIsCustomized:known];
+    BOOL assigned = [self.store shownBindingForCommand:known].key.length > 0;
+    return assigned == (filter == TSShortcutFilterAssigned);
 }
 // The filtered list is worked out again from the shortcuts there are now.
 - (void)forgetShownFilteredCommands { [self.shownFilteredCommandIDs removeAllObjects]; }
@@ -422,10 +418,13 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 - (void)updateFilterButton {
     BOOL on = self.filter != TSShortcutFilterAll;
     self.filterButton.enabled = !self.searchingByKey;
+    // VoiceOver reads the button cell, which names the button after its image, so the image names the filter in use.
+    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"Filter Shortcuts: %@", @""), [TSShortcutPaneController titleForFilter:self.filter]];
     self.filterButton.image = [NSImage imageWithSystemSymbolName:on ? @"line.3.horizontal.decrease.circle.fill" : @"line.3.horizontal.decrease.circle"
-        accessibilityDescription:NSLocalizedString(@"Filter Shortcuts", @"")] ?: [NSImage new];
+        accessibilityDescription:title] ?: [NSImage new];
     self.filterButton.contentTintColor = on ? NSColor.controlAccentColor : nil;
-    self.filterButton.accessibilityValueDescription = [TSShortcutPaneController titleForFilter:self.filter];
+    self.filterButton.toolTip = title;
+    self.filterButton.accessibilityLabel = title;
 }
 - (NSMenu *)filterMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Filter Shortcuts", @"")];

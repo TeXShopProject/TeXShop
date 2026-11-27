@@ -194,6 +194,7 @@
 "Inactive for this key" = "Für diese Taste inaktiv";
 "No command uses this key." = "Kein Befehl verwendet diese Taste.";
 "Filter Shortcuts" = "Kurzbefehle filtern";
+"Filter Shortcuts: %@" = "Kurzbefehle filtern: %@";
 "Shortcut Filter: All" = "Alle";
 "Shortcut Filter: Assigned" = "Zugewiesen";
 "Shortcut Filter: Unassigned" = "Nicht zugewiesen";

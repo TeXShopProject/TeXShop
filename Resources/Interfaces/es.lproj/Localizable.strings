@@ -194,6 +194,7 @@
 "Inactive for this key" = "Inactivo para esta tecla";
 "No command uses this key." = "Ningún comando usa esta tecla.";
 "Filter Shortcuts" = "Filtrar atajos";
+"Filter Shortcuts: %@" = "Filtrar atajos: %@";
 "Shortcut Filter: All" = "Todos";
 "Shortcut Filter: Assigned" = "Asignados";
 "Shortcut Filter: Unassigned" = "Sin asignar";

@@ -706,7 +706,7 @@ int main(int argc,char **argv){@autoreleasepool{
   NSInteger shortcutColumn=[pane.table columnWithIdentifier:@"shortcut"],all=pane.table.numberOfRows;
   NSTextField *(^shortcutCell)(NSInteger)=^NSTextField *(NSInteger row){return (NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[(NSUInteger)shortcutColumn] row:row];};
   BOOL (^isBold)(NSTextField *)=^BOOL(NSTextField *field){return [field isKindOfClass:NSTextField.class] && ([NSFontManager.sharedFontManager traitsOfFont:field.font]&NSBoldFontMask)!=0;};
-  REQUIRE(pane.filterButton.enabled && pane.filter==TSShortcutFilterAll && [pane.filterButton.toolTip isEqual:NSLocalizedString(@"Filter Shortcuts",@"")]);
+  REQUIRE(pane.filterButton.enabled && pane.filter==TSShortcutFilterAll && [pane.filterButton.toolTip isEqual:[NSString stringWithFormat:NSLocalizedString(@"Filter Shortcuts: %@",@""),NSLocalizedString(@"Shortcut Filter: All",@"")]]);
   // With no custom shortcut, the filtered list is empty and says so.
   // The button shows the filled symbol while it is on: far more of it is inked than the outline.
   NSUInteger (^inked)(void)=^NSUInteger{NSButton *b=pane.filterButton;NSBitmapImageRep *rep=[b bitmapImageRepForCachingDisplayInRect:b.bounds];[b cacheDisplayInRect:b.bounds toBitmapImageRep:rep];NSUInteger n=0;for(NSInteger y=0;y<rep.pixelsHigh;y++)for(NSInteger x=0;x<rep.pixelsWide;x++)if([rep colorAtX:x y:y].alphaComponent>.5)n++;return n;};
@@ -793,8 +793,11 @@ int main(int argc,char **argv){@autoreleasepool{
   REQUIRE([filterMenu itemWithTag:TSShortcutFilterAll].state==NSControlStateValueOn && [filterMenu itemWithTag:TSShortcutFilterChanged].state==NSControlStateValueOff);
   [pane chooseFilter:[filterMenu itemWithTag:TSShortcutFilterUnassigned]];
   REQUIRE(pane.filter==TSShortcutFilterUnassigned && [[pane filterMenu] itemWithTag:TSShortcutFilterUnassigned].state==NSControlStateValueOn && [[pane filterMenu] itemWithTag:TSShortcutFilterAll].state==NSControlStateValueOff);
-  REQUIRE([pane.filterButton.accessibilityValueDescription isEqual:filterTitles[TSShortcutFilterUnassigned]] && inked()>outlineInk*2);
-  [pane setFilterChoice:TSShortcutFilterAll];REQUIRE(inked()==outlineInk && [pane.filterButton.accessibilityValueDescription isEqual:filterTitles[TSShortcutFilterAll]]);
+  // VoiceOver reads the button cell, and its label names the filter in use.
+  NSString *(^spokenLabel)(void)=^NSString *{id element=NSAccessibilityUnignoredDescendant(pane.filterButton);return [element accessibilityLabel];};
+  NSString *(^labelFor)(TSShortcutFilter)=^NSString *(TSShortcutFilter f){return [NSString stringWithFormat:NSLocalizedString(@"Filter Shortcuts: %@",@""),filterTitles[(NSUInteger)f]];};
+  REQUIRE([spokenLabel() isEqual:labelFor(TSShortcutFilterUnassigned)] && [pane.filterButton.toolTip isEqual:labelFor(TSShortcutFilterUnassigned)] && inked()>outlineInk*2);
+  [pane setFilterChoice:TSShortcutFilterAll];REQUIRE(inked()==outlineInk && [spokenLabel() isEqual:labelFor(TSShortcutFilterAll)]);
   // Assigned and Unassigned follow the key the list shows; a menu item with no command has one and is never changed.
   REQUIRE([store setKey:@"" modifiers:0 forCommand:secondCommand]==nil);[coordinator refreshMenuAndMacros];
   NSInteger dynamicRow=-1;for(NSInteger row=0;row<pane.table.numberOfRows;row++)if([pane functionRowAtIndex:row].item==dynamic)dynamicRow=row;

@@ -192,6 +192,7 @@
 "Inactive for this key" = "Inactief voor deze toets";
 "No command uses this key." = "Geen commando gebruikt deze toets.";
 "Filter Shortcuts" = "Filter toetscombinaties";
+"Filter Shortcuts: %@" = "Filter toetscombinaties: %@";
 "Shortcut Filter: All" = "Alle";
 "Shortcut Filter: Assigned" = "Toegewezen";
 "Shortcut Filter: Unassigned" = "Niet toegewezen";

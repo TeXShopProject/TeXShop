@@ -192,6 +192,7 @@
 "Inactive for this key" = "此按键无效";
 "No command uses this key." = "没有命令使用此按键。";
 "Filter Shortcuts" = "筛选快捷键";
+"Filter Shortcuts: %@" = "筛选快捷键：%@";
 "Shortcut Filter: All" = "全部";
 "Shortcut Filter: Assigned" = "已分配";
 "Shortcut Filter: Unassigned" = "未分配";

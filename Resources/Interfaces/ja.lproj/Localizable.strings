@@ -218,6 +218,7 @@
 "Inactive for this key" = "このキーでは無効";
 "No command uses this key." = "このキーを使うコマンドはありません。";
 "Filter Shortcuts" = "ショートカットを絞り込む";
+"Filter Shortcuts: %@" = "ショートカットを絞り込む：%@";
 "Shortcut Filter: All" = "すべて";
 "Shortcut Filter: Assigned" = "割り当てあり";
 "Shortcut Filter: Unassigned" = "割り当てなし";

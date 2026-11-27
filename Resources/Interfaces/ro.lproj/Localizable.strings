@@ -195,6 +195,7 @@
 "Inactive for this key" = "Inactiv pentru această tastă";
 "No command uses this key." = "Nicio comandă nu folosește această tastă.";
 "Filter Shortcuts" = "Filtrați scurtăturile";
+"Filter Shortcuts: %@" = "Filtrați scurtăturile: %@";
 "Shortcut Filter: All" = "Toate";
 "Shortcut Filter: Assigned" = "Atribuite";
 "Shortcut Filter: Unassigned" = "Neatribuite";

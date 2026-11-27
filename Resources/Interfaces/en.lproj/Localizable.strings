@@ -176,6 +176,7 @@
 "Inactive for this key" = "Inactive for this key";
 "No command uses this key." = "No command uses this key.";
 "Filter Shortcuts" = "Filter Shortcuts";
+"Filter Shortcuts: %@" = "Filter Shortcuts: %@";
 "Shortcut Filter: All" = "All";
 "Shortcut Filter: Assigned" = "Assigned";
 "Shortcut Filter: Unassigned" = "Unassigned";
