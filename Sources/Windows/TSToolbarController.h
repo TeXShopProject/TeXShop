@@ -39,5 +39,6 @@ void TSSplitToggleItemsFollowSplit(void);
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar;
 - (void) toolbarWillAddItem: (NSNotification *) notif;
 - (void) toolbarDidRemoveItem: (NSNotification *) notif;
+- (void) keepSidesInFullSplitToolbar;
 - (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem;
 @end

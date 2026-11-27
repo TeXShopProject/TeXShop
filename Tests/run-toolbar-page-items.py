@@ -39,9 +39,12 @@ signatures = ['static NSString *TSPreviewPageItemKey(NSString *itemIdent)',
               '- (NSToolbarItem *)makePreviewPageItemWithItemIdentifier:',
               '- (void)keepOnePreviewPagePairInToolbar:',
               '- (void)doPreviousPageKK:', '- (void)doNextPageKK:',
-              '- (NSArray *) toolbarDefaultItemIdentifiers:', '- (NSArray *) toolbarAllowedItemIdentifiers:',
+              '- (NSArray *) toolbarDefaultItemIdentifiers:', '- (NSArray *) defaultItemIdentifiersOfToolbar:',
+              '- (NSArray *) toolbarAllowedItemIdentifiers:',
               '- (BOOL) validateToolbarItem:']
 methods = '\n'.join(method(s) for s in signatures)
+# The single window's toolbar follows the divider between the source and the Preview (#74).
+sides = span('static BOOL TSFullSplitToolbarFollowsSides(void)', '    return index;\n}')
 
 # The full delegate method needs the whole document; check that it routes every
 # page identifier through the helper compiled below.
@@ -108,6 +111,8 @@ static BOOL atLeastMonterey = YES;
 static BOOL sharing = YES;
 enum { isTeX = 0, isOther = 1, isPDF = 2, isJPG = 4, isTIFF = 5 };
 CONSTANTS
+static BOOL TSDocumentWindowsUseFullSizeContent(void) { return YES; }
+SIDES
 @interface PageView : NSObject
 @property NSInteger previous, next;
 @end
@@ -317,7 +322,7 @@ table = '@{' + ', '.join('@"%s": @[%s]' % (language, ', '.join('@[%s]' % ', '.jo
                          for language, items in expected.items()) + '}'
 languages = sorted(p.parent.stem for p in (root/'Resources/Interfaces').glob('*.lproj/ToolbarItems.strings'))
 assert len(languages) == 12 and set(expected) <= set(languages)
-program = program.replace('CONSTANTS', constants).replace('METHODS', methods).replace('EXPECTED_TEXT', table)
+program = program.replace('CONSTANTS', constants).replace('SIDES', sides).replace('METHODS', methods).replace('EXPECTED_TEXT', table)
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory(prefix='TeXShop-toolbar-pages-') as tmp:
