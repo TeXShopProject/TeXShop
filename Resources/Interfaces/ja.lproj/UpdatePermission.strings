@@ -1,0 +1,6 @@
+/* The question whether updates are checked automatically. Languages without this table use Sparkle's text. */
+"UpdatePermissionTitle" = "アップデートを自動的に確認しますか?";
+"UpdatePermissionMessage" = "アップデートは“%1$@”メニューからいつでも手動で確認できます。";
+"UpdatePermissionCheck" = "自動的に確認";
+"UpdatePermissionDontCheck" = "確認しない";
+"UpdatePermissionDownloads" = "アップデートを自動的にダウンロードしてインストール";

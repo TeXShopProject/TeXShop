@@ -2,6 +2,7 @@
 #import "TSSparkleController.h"
 #import "globals.h"
 #import "TSKeyboardShortcuts.h"
+#import "TSUpdatePermissionAlert.h"
 
 NSString *const TSSparklePrereleaseChannel = @"prerelease";
 NSNotificationName const TSSparkleUpdateCheckDidFinishNotification = @"TSSparkleUpdateCheckDidFinishNotification";
@@ -11,6 +12,10 @@ static TSSparkleController *mainUpdaterController;
 @interface TSSparkleController ()
 @property (nonatomic, strong, nullable) id quitKeyMonitor;
 @property (nonatomic) BOOL quitRequested;
+@property (nonatomic, strong, nullable) TSUpdatePermissionAlert *permissionAlert;
+@end
+
+@interface SPUUpdater (TSUpdatePermissionTarget) <TSUpdatePermissionTarget>
 @end
 
 // The Quit item of the main menu, wherever it is and whatever key it has.
@@ -84,6 +89,30 @@ static NSMenuItem *TSQuitMenuItem(NSMenu *menu)
 - (NSSet<NSString *> *)allowedChannelsForUpdater:(SPUUpdater *)updater
 {
     return [TSSparkleController allowedChannelsWithDefaults:SUD];
+}
+
+// Sparkle's own window for this question has small text, so TeXShop asks with a standard alert
+// at the same time instead: on the second launch, until the question is answered.
+- (BOOL)updaterShouldPromptForPermissionToCheckForUpdates:(SPUUpdater *)updater
+{
+    if ([TSUpdatePermissionAlert shouldAskWithDefaults:SUD]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showUpdatePermissionAlertForUpdater:updater];
+        });
+    }
+    return NO;
+}
+
+- (void)showUpdatePermissionAlertForUpdater:(SPUUpdater *)updater
+{
+    if (self.permissionAlert != nil) return;
+    __weak TSSparkleController *weakSelf = self;
+    self.permissionAlert = [[TSUpdatePermissionAlert alloc] initWithTarget:updater
+                                                                appBundle:[NSBundle mainBundle]
+                                                            sparkleBundle:[NSBundle bundleForClass:SPUUpdater.class]
+                                                              downloadsOn:[SUD boolForKey:@"SUAutomaticallyUpdate"]
+                                                               completion:^{ weakSelf.permissionAlert = nil; }];
+    [self.permissionAlert show];
 }
 
 - (void)updater:(SPUUpdater *)updater didFinishUpdateCycleForUpdateCheck:(SPUUpdateCheck)updateCheck error:(NSError *)error
