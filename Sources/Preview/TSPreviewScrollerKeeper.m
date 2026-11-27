@@ -651,7 +651,10 @@ void TSPreviewViewDidLayout(PDFView *view)
 // screen points: a link target or an outline entry lay under the toolbar (#78). The band is
 // taken from the window's safe area and the place of the view in the window, not from the
 // inset, so the part of a split window or of the window that shows the source and the
-// Preview gets its own share of the band.
+// Preview gets its own share of the band. A place that PDFKit put some way below its inset,
+// as the top of the next page below the gap between pages, keeps that distance below the band,
+// as at unit scale; one that PDFKit could not put at its inset, at an end of the document,
+// goes right below the band.
 void TSPreviewRevealBelowToolbar(PDFView *view, PDFPage *page, NSPoint point)
 {
     NSScrollView *scroll = TSScroll(view);
@@ -661,8 +664,35 @@ void TSPreviewRevealBelowToolbar(PDFView *view, PDFPage *page, NSPoint point)
     if (below < 1)
         return;
     CGFloat distance = TSTextBelowTop(view, scroll, (TSPreviewText){YES, page, point});
-    if (isfinite(distance) && distance < below - 0.5)
-        TSMoveTextUp(scroll, distance - below);
+    if (!isfinite(distance) || distance >= below - 0.5)
+        return;
+    CGFloat inset = fmax(0, scroll.contentInsets.top);
+    TSMoveTextUp(scroll, -fmax(below - inset, below - distance));
+}
+
+// Puts a point back at the top edge of the clip view, under the band, where the point that
+// PDFKit names the current destination lies. PDFKit puts such a point at its top inset.
+void TSPreviewPutAtTop(PDFView *view, PDFPage *page, NSPoint point)
+{
+    NSScrollView *scroll = TSScroll(view);
+    if (!scroll || !page || page.document != view.document || NSIsEmptyRect(scroll.contentView.bounds))
+        return;
+    CGFloat distance = TSTextBelowTop(view, scroll, (TSPreviewText){YES, page, point});
+    if (isfinite(distance))
+        TSMoveTextUp(scroll, distance);
+}
+
+// Back and Forward go to the current destination noted before a move, the point at the top
+// edge of the clip view, under the band. PDFKit puts it at its top inset, so the view came
+// back lower by the inset taken as screen points, at every magnification (#78).
+void TSPreviewHistoryPlaceToTop(PDFView *view)
+{
+    NSScrollView *scroll = TSScroll(view);
+    if (!scroll || TSToolbarBand(view) <= 0 || NSIsEmptyRect(scroll.contentView.bounds))
+        return;
+    CGFloat inset = scroll.contentInsets.top;
+    if (inset > 0.5)
+        TSMoveTextUp(scroll, inset);
 }
 
 void TSPreviewPlaceChosenByProgram(PDFView *view)

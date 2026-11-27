@@ -65,6 +65,13 @@ void TSPreviewPlaceChosenByProgram(PDFView *view);
 // band of the toolbar, so that it shows right below the band (#78).
 void TSPreviewRevealBelowToolbar(PDFView *view, PDFPage *page, NSPoint point);
 
+// Puts a point at the top edge of the clip view, as a current destination noted before a
+// change of the layout was (#78).
+void TSPreviewPutAtTop(PDFView *view, PDFPage *page, NSPoint point);
+
+// After Back or Forward: the noted place goes back to the top edge of the clip view (#78).
+void TSPreviewHistoryPlaceToTop(PDFView *view);
+
 // The scroll position of a clip view for the bounds, as far as the document allows; only
 // the vertical position is limited. PDFKit's clip view answers a place one scroller
 // higher in the document when AppKit lays the scrollers over the content, as it does in a

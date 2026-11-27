@@ -2301,6 +2301,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goBack:sender];
+	// The place noted before the move comes back where it was, not lower by the band (#78).
+	TSPreviewHistoryPlaceToTop(self);
 }
 
 - (void) goForward: sender
@@ -2310,6 +2312,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goForward:sender];
+	// The place noted before the move comes back where it was, not lower by the band (#78).
+	TSPreviewHistoryPlaceToTop(self);
 }
 
 // added by Terada (from this line)
@@ -2950,6 +2954,14 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     TSPreviewPlaceChosenByProgram(self);
 }
 
+// The top of the page that a page turn went to shows below the toolbar (#78).
+- (void)revealCurrentPageBelowToolbar
+{
+    PDFPage *page = self.currentPage;
+    if (page)
+        TSPreviewRevealBelowToolbar(self, page, NSMakePoint(0, NSMaxY([page boundsForBox:self.displayBox])));
+}
+
 - (void)goToPage:(PDFPage *)page
 {
     [self keepHorizontalPositionDuring:^{ [super goToPage:page]; }];
@@ -3024,6 +3036,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     if ([self isPageTurnFromScrolling:_cmd])
         return;
     [self keepHorizontalPositionDuring:^{ [super goToNextPage:sender]; }];
+    [self revealCurrentPageBelowToolbar];
 }
 
 - (void)goToPreviousPage:(id)sender
@@ -3031,16 +3044,19 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     if ([self isPageTurnFromScrolling:_cmd])
         return;
     [self keepHorizontalPositionDuring:^{ [super goToPreviousPage:sender]; }];
+    [self revealCurrentPageBelowToolbar];
 }
 
 - (void)goToFirstPage:(id)sender
 {
     [self keepHorizontalPositionDuring:^{ [super goToFirstPage:sender]; }];
+    [self revealCurrentPageBelowToolbar];
 }
 
 - (void)goToLastPage:(id)sender
 {
     [self keepHorizontalPositionDuring:^{ [super goToLastPage:sender]; }];
+    [self revealCurrentPageBelowToolbar];
 }
 
 // SyncTeX and Find show their result with scrollSelectionToVisible:. On macOS 27
@@ -3298,9 +3314,12 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     if (page && [self.document indexForPage:page] != NSNotFound) {
         // currentDestination can belong to the previous page at the bottom of
         // a continuous view or to the left page of a spread.
-        if (destination.page == page)
-            [self goToDestination:destination];
-        else
+        if (destination.page == page) {
+            // The current destination lies at the top edge of the clip view, under the band of
+            // the toolbar; it goes back there, not below the band (#78).
+            [self keepContentWidthPlaceDuring:^{ [super goToDestination:destination]; }];
+            TSPreviewPutAtTop(self, destination.page, destination.point);
+        } else
             [self goToPage:page];
     }
     [self endKeepingPinnedLinkPreviewOnPage: keepsPopup];

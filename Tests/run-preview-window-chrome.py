@@ -30,7 +30,7 @@ view_methods = [method(view_source, signature) for signature in (
     '- (void)setDisplayMode:(PDFDisplayMode)mode',
     '- (void)keepHorizontalPositionDuring:(void (NS_NOESCAPE ^)(void))navigation',
     '- (BOOL)scrollingKeepsPage', '- (BOOL)isPageTurnFromScrolling:(SEL)selector',
-    '- (void)goToNextPage:(id)sender',
+    '- (void)revealCurrentPageBelowToolbar', '- (void)goToNextPage:(id)sender',
     '- (NSMenu *)menuForEvent:(NSEvent *)theEvent',
     '- (MyPDFKitView *)previewPartForMenuEvent: (NSEvent *)theEvent',
     '- (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint',

@@ -23,7 +23,7 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void)keepHorizontalPositionDuring:', '- (BOOL)scrollingKeepsPage', '- (BOOL)isPageTurnFromScrolling:',
     '- (void)performSelector:(SEL)selector withObject:(id)argument afterDelay:(NSTimeInterval)delay\n{',
     '- (void)performSelector:(SEL)selector withObject:(id)argument afterDelay:(NSTimeInterval)delay\n                inModes:',
-    '- (void)goToNextPage:', '- (void)goToPreviousPage:'))
+    '- (void)revealCurrentPageBelowToolbar', '- (void)goToNextPage:', '- (void)goToPreviousPage:'))
 def mutate(old, new, count=1):
     global methods
     assert methods.count(old) == count, old

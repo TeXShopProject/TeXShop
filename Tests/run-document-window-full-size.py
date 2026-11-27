@@ -99,8 +99,16 @@ MUTATIONS = {
         ''),
     # A link target or an outline entry stays where PDFKit puts it, under the toolbar (#78).
     'destination-under-toolbar': ('TSPreviewScrollerKeeper.m',
-        '    if (isfinite(distance) && distance < below - 0.5)\n',
-        '    if (NO)\n'),
+        '    if (!isfinite(distance) || distance >= below - 0.5)\n',
+        '    if (YES)\n'),
+    # Back comes back lower by the top inset (#78).
+    'history-place-lower': ('TSPreviewScrollerKeeper.m',
+        '    if (inset > 0.5)\n        TSMoveTextUp(scroll, inset);\n',
+        ''),
+    # A change of the layout puts the place it kept below the band, lower by the band (#78).
+    'layout-place-lower': ('TSPreviewScrollerKeeper.m',
+        '    if (isfinite(distance))\n        TSMoveTextUp(scroll, distance);\n',
+        ''),
     # setupToolbar's trio skips the Preview window, so it is never prepared.
     'preview-not-prepared': ('TSDocumentWindowGlass.m',
         '        TSDocumentWindowPrepare(window);\n',
@@ -116,7 +124,15 @@ text = {name: source_file(root, name).read_text(encoding='latin1') for name in n
 preview = source_file(root, 'MyPDFKitView.m').read_text(encoding='latin1')
 assert preview.count('[TSPreviewScrollerKeeper installInView:self];') >= 2, 'the preview installs the scroller keeper'
 # Links, outline entries, page jumps and SyncTeX or search results show below the toolbar (#78).
-for signature, call in (('- (void)goToDestination:(PDFDestination *)destination', 'TSPreviewRevealBelowToolbar(self, page, point);'),
+for signature, call in (('- (void) goBack:sender', 'TSPreviewHistoryPlaceToTop(self);'),
+                        ('- (void) goForward: sender', 'TSPreviewHistoryPlaceToTop(self);'),
+                        ('- (void)goToNextPage:(id)sender', '[self revealCurrentPageBelowToolbar];'),
+                        ('- (void)goToPreviousPage:(id)sender', '[self revealCurrentPageBelowToolbar];'),
+                        ('- (void)goToFirstPage:(id)sender', '[self revealCurrentPageBelowToolbar];'),
+                        ('- (void)goToLastPage:(id)sender', '[self revealCurrentPageBelowToolbar];'),
+                        ('- (void)revealCurrentPageBelowToolbar', 'TSPreviewRevealBelowToolbar(self, page, '),
+                        ('- (void)performPreviewLayoutChange:(void (^)(void))change', 'TSPreviewPutAtTop(self, destination.page, destination.point);'),
+                        ('- (void)goToDestination:(PDFDestination *)destination', 'TSPreviewRevealBelowToolbar(self, page, point);'),
                         ('- (void)goToPage:(PDFPage *)page', 'TSPreviewRevealBelowToolbar(self, page, '),
                         ('- (void)revealSelectionBelowToolbar', 'TSPreviewRevealBelowToolbar(self, page, '),
                         ('- (void)scrollSelectionToVisible:(id)sender', '[self revealSelectionBelowToolbar];')):
@@ -435,6 +451,38 @@ int main(int argc, char **argv) { @autoreleasepool {
             TSPreviewRevealBelowToolbar(pv, target, point);
             Check(fabs(UnderBar() - shown) < 0.1,
                   [NSString stringWithFormat:@"a target already below the toolbar stays where it is%@", nibName]);
+            // Back: PDFKit puts the place noted before the move, the point at the top edge of the
+            // clip view, at its top inset; it goes back to the top edge.
+            {
+                PDFPage *first = [pdf pageAtIndex:0];
+                [pv goToPage:first];
+                ScrollTop(previewScroll); Settle(pw);
+                NSClipView *clip = previewScroll.contentView;
+                NSPoint o = clip.bounds.origin; o.y += (clip.isFlipped ? 1 : -1) * 150; [clip scrollToPoint:o]; [previewScroll reflectScrolledClipView:clip]; Settle(pw);
+                NSPoint probe = [pv convertPoint:NSMakePoint(NSMidX(clip.bounds), NSMidY(clip.bounds)) fromView:clip];
+                PDFPage *probePage = [pv pageForPoint:probe nearest:YES];
+                NSPoint probePoint = [pv convertPoint:probe toPage:probePage];
+                CGFloat (^Probe)(void) = ^CGFloat{ return [pv convertPoint:[pv convertPoint:probePoint fromPage:probePage] toView:nil].y; };
+                CGFloat seen = Probe();
+                PDFDestination *noted = pv.currentDestination;
+                [pv goToDestination:[[PDFDestination alloc] initWithPage:target atPoint:point]];
+                Settle(pw);
+                [pv goBack:nil];
+                Settle(pw);
+                CGFloat byPDFKit = Probe() - seen;
+                TSPreviewHistoryPlaceToTop(pv);
+                Settle(pw);
+                printf("  Back moved the view by %.1f with PDFKit alone, %.1f after\n", byPDFKit, Probe() - seen);
+                Check(fabs(Probe() - seen) < 1,
+                      [NSString stringWithFormat:@"Back at twice the scale shows the place where it was (%.1f)%@", Probe() - seen, nibName]);
+                // A change of the layout goes to the current destination noted before it.
+                [pv goToDestination:noted];
+                Settle(pw);
+                TSPreviewPutAtTop(pv, noted.page, noted.point);
+                Settle(pw);
+                Check(fabs(Probe() - seen) < 1,
+                      [NSString stringWithFormat:@"the current destination goes back to the top edge, where it was (%.1f)%@", Probe() - seen, nibName]);
+            }
             [pv setScaleFactor:2];
             ScrollTop(previewScroll);
             Settle(pw);
