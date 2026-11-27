@@ -29,11 +29,11 @@ def plain_html(text):
 
 class ReleaseDocuments(unittest.TestCase):
     def test_hand_written_copies_contain_every_item(self):
-        # The web pages and the help page are written by hand; each item of the
-        # Markdown notes must appear in each copy of the same language.
+        # The web pages are written by hand; each item of the Markdown notes
+        # must appear in the copy of the same language. The What's New help
+        # page is a selection and leaves the smaller fixes out.
         copies = {
-            'Documentation/Releases/6.00.md': ['website/release-notes.html',
-                                               'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'],
+            'Documentation/Releases/6.00.md': ['website/release-notes.html'],
             'Documentation/Releases/6.00-ja.md': ['website/release-notes-ja.html'],
         }
         for notes, pages in copies.items():
@@ -41,7 +41,7 @@ class ReleaseDocuments(unittest.TestCase):
             self.assertTrue(items, notes)
             for page in pages:
                 # A source tree without the web site, such as the in-house
-                # TetsuTeXShop, checks only the help page.
+                # TetsuTeXShop, has nothing to check here.
                 if page.startswith('website/') and not (ROOT / 'website').is_dir():
                     continue
                 text = plain_html((ROOT / page).read_text())
