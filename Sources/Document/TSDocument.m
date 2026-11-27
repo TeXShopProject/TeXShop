@@ -573,6 +573,15 @@ withDarkColors = NO;
     
 }
 
+// AppKit puts the document's title menu (the arrow next to the name, #77) and its sheets on this window. While the
+// source and the Preview share one window, that window is the one the user sees, not the hidden source window.
+- (NSWindow *)windowForSheet
+{
+    if (self.splitController != nil && [self.windowControllers containsObject: self.splitController])
+        return fullSplitWindow;
+    return [super windowForSheet];
+}
+
 #pragma mark Replace All in the TeX sources of a root
 
 // While a Replace All of the window "Find in TeX Sources" puts its replacements in this document's text, a part at a
