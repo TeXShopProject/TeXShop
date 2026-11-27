@@ -96,6 +96,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \begin{itemize}
 \item A new app icon, and the Dock icon while TeXShop is running can be one of the earlier designs. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} and \href{https://github.com/martignoni}{Nicolas Martignoni} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
 \item On macOS 26 and later, TeXShop has the Liquid Glass appearance.
+\item On macOS 26 and later, the source and the Preview of the single window are seen blurred under the toolbar, which is divided at the divider between them as in Mail. With the source on the right, the items of the toolbar change sides too. Reported by \href{https://github.com/MaartenS11}{MaartenS11} (\href{https://github.com/TeXShopProject/TeXShop/issues/74}{\#74}).
 \item The digits of line numbers line up, and the Matrix and LaTeX panels are easier to read in Dark Mode.
 \item Comments and other colors of the bundled themes are easier to read.
 \item Settings \(\rightarrow\) Themes lists the themes: add, duplicate, rename, delete, restore, export and import them there.
@@ -156,12 +157,14 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item On macOS 27, Page Up and Page Down turn the page again in single-page and two-page layouts.
 \item Clicking an entry of the outline in the drawer goes to its page again after the Preview window is closed and opened again, and after a new document is typeset for the first time. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/59}{\#59}).
 \item A closed Preview window opens again at the same place, with Command-1 or after typesetting, and with its pinned link previews if the PDF has not changed. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/70}{\#70}).
-\item When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and each Preview window comes back as before, with its drawer, its open sections and its scroll position. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/71}{\#71}).
+\item When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and each Preview window comes back as before, with its drawer, its open sections, its scroll position and its mouse tool. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/71}{\#71}).
 \item Fit to Content Width fits a long document in one step. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/62}{\#62}).
 \item Fix the Find commands so they use the search of the Preview while it is active.
 \item Fix Preview pages that were drawn under the toolbar on macOS 26 and later.
 \item Command-click on the title of a Preview window opens its path menu again (\href{https://github.com/TeXShopProject/TeXShop/issues/73}{\#73}).
 \item In the single window, the arrow next to the document name and Command-click on the name work as in the source window. Reported by \href{https://github.com/zenitani}{Seiji Zenitani} (\href{https://github.com/TeXShopProject/TeXShop/issues/77}{\#77}).
+\item In a magnified Preview, a link target or an outline entry of the drawer is shown below the toolbar instead of behind it, and Back, Forward and a change of the page layout keep the place. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/78}{\#78}).
+\item The drawer follows the Light or Dark choice of the Appearance item in the Preview toolbar. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/79}{\#79}).
 \item Holding Command with a dead key no longer makes the Preview crash. Images in the Preview stay as before.
 \item Fix opening a PDF file whose extension is written in capital letters, such as Only.PDF.
 \end{itemize}
@@ -204,7 +207,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Links in the credits open the current web pages of the projects they name.
 \item About TeXShop opens the TeXShop web site from a link at the top of its credits. Suggested by \href{https://github.com/zenitani}{Seiji Zenitani} (\href{https://github.com/TeXShopProject/TeXShop/issues/69}{\#69}).
 \item The Help menu starts with TeXShop Help, the manual and First Steps with TeXShop, followed by the documents on features of TeXShop, the TeX documentation and the notes of this release; the older documents are in its Older Documents submenu. The Short Course has a submenu of its own, which also opens each of its lists of symbols. Items that open a document in English tell so in every language, and the item that copied the Short Course files of an older version is removed.
-\item Add Command Completion Quick Start to the Help menu, a short guide to using command completion written by Herbert Schulz. It is in English, and the quick start that comes with the command completion list is the same guide.
+\item Add Command Completion Quick Start to the Help menu, a short guide to using command completion written by Herbert Schulz. It is in English, and the quick start that comes with the command completion list is the same guide. The quick start in French is updated for TeXShop 6 as well.
 \item First Steps with TeXShop, About This Release, File Encoding and the manual describe TeXShop 6.00, and the older documents tell when they were written. TeXShop Help explains spell checking, and the difference between key bindings, macros and command completion.
 \item The help in all five languages is rewritten for TeXShop 6.00, with a new look that follows dark mode, and the Korean help is now in Korean. The manual is revised for 6.00.
 \item TeXShop Help can be read in French, Italian, Dutch, Portuguese (Brazil and Portugal), Romanian and Simplified Chinese.
