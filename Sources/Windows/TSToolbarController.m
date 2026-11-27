@@ -460,7 +460,9 @@ else
 // The tool of the mouse as the toolbars of the document show it.
 - (void) showMouseToolInToolbars: (NSInteger)tool
 {
-    for (NSWindow *window in @[ self.pdfKitWindow ?: [NSNull null], [self textWindow] ?: [NSNull null] ]) {
+    // The single window (fullSplitWindow) has the tool in its own toolbar.
+    for (NSWindow *window in @[ self.pdfKitWindow ?: [NSNull null], [self textWindow] ?: [NSNull null],
+                                (NSWindow *)self.fullSplitWindow ?: [NSNull null] ]) {
         if (![window isKindOfClass: [NSWindow class]]) continue;
         for (NSToolbarItem *item in window.toolbar.items) {
             if ([item.view isKindOfClass: [NSSegmentedControl class]] &&
