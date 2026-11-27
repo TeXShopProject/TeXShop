@@ -938,6 +938,7 @@
 		4089E4AD2604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/Changes.pdf; sourceTree = "<group>"; };
 		4089E4AE2604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/CommentLines.pdf; sourceTree = "<group>"; };
 		C0C0C004C0C0C0C0C0C0C0C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = "en.lproj/Command Completion Quick Start.pdf"; sourceTree = "<group>"; };
+		C0C0C005C0C0C0C0C0C0C0C0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = "fr.lproj/Command Completion Quick Start.pdf"; sourceTree = "<group>"; };
 		4089E4AF2604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4B12604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4B22604155B00B8A795 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = "en.lproj/File Encoding.pdf"; sourceTree = "<group>"; };
@@ -2664,6 +2665,7 @@
 		C0C0C002C0C0C0C0C0C0C0C0 /* Command Completion Quick Start.pdf */ = {
 			isa = PBXVariantGroup;
 			children = (
+				C0C0C005C0C0C0C0C0C0C0C0 /* fr */,
 				C0C0C004C0C0C0C0C0C0C0C0 /* en */,
 				C0C0C003C0C0C0C0C0C0C0C0 /* Base */,
 			);
