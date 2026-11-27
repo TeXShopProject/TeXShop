@@ -44,7 +44,7 @@ ENGLISH_ONLY = {'displayThisRelease', 'displayChanges', 'displayTeXLiveDocumenta
                 'displayGettingStartedLatex'}
 # Documents a language has in its own words (TeX Live Documentation of pt-PT falls back to pt).
 OWN = {'es': {'displayTeXLiveDocumentation'}, 'pt': {'displayTeXLiveDocumentation'}, 'pt-PT': {'displayTeXLiveDocumentation'},
-       'fr': {'displayTeXLiveDocumentation', 'displayFileEncoding', 'displayTipsandTricks'}}
+       'fr': {'displayTeXLiveDocumentation', 'displayFileEncoding', 'displayTipsandTricks', 'displayCommandCompletionQuickStart'}}
 MUTATIONS = {
     # The supplements item comes back in Base.
     'supplements': ('Resources/Interfaces/Base.lproj/MainMenu.nib/designable.nib',
@@ -52,6 +52,8 @@ MUTATIONS = {
                     '<menuItem isSeparatorItem="YES" id="GrC-00-Sep"/>\n<menuItem title="Short Course Supplements" id="719" identifier="TSShortcut.supplementsToDesktop:.0"><connections><action selector="supplementsToDesktop:" target="705" id="778"/></connections></menuItem>'),
     # Japanese loses the English mark on Changes.
     'mark-missing': ('Resources/Interfaces/ja.lproj/MainMenu.nib/designable.nib', 'title="更新履歴（英語）"', 'title="更新履歴"'),
+    # French marks its own command completion quick start as English.
+    'fr-quick-start-marked': ('Resources/Interfaces/fr.lproj/MainMenu.nib/designable.nib', 'title="Démarrage rapide de la complétion des commandes"', 'title="Démarrage rapide de la complétion des commandes (en anglais)"'),
     # French marks its own Tips and Tricks as English.
     'mark-on-own': ('Resources/Interfaces/fr.lproj/MainMenu.nib/designable.nib', 'title="Trucs et astuces pour TeXShop"', 'title="Trucs et astuces pour TeXShop (en anglais)"'),
     # The English menu marks a document as English.
