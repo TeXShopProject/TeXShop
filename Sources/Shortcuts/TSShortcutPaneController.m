@@ -112,6 +112,10 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property (strong) NSButton *macroButton;
 @property (copy) NSString *textQuery;
 @property (strong, nullable) NSEvent *searchEvent;
+// The key the key search list was last made for; a list made again for it keeps its selected match.
+@property (strong, nullable) NSEvent *listedSearchEvent;
+// The selected row, kept across a reload of the list. See -selectionKeyAtRow:.
+@property (copy, nullable) NSString *selectedRowKey;
 @property (copy) NSArray<TSShortcutMatch *> *searchMatches;
 @property (copy) NSString *searchMessage;
 @property (copy, nullable) NSString *functionQueryBeforeGlobalSearch;
@@ -330,11 +334,57 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     for (NSView *child in view.subviews) { NSView *found = [self viewWithIdentifier:identifier inView:child]; if (found) return found; }
     return nil;
 }
+// The list is made again whenever the menus are refreshed, as when TeXShop becomes active. The selected
+// row stays selected: the arrow keys go on from it, and a row in sight that moved, as with another filter, stays in sight.
 - (void)reloadTable {
     // A pending macro confirmation keeps its command; the reply checks it again.
     if (self.editingCommand != nil && !self.confirmingRecording) { [self endRecording]; }
+    NSString *selected = self.selectedRowKey;
+    NSInteger before = self.table.selectedRow;
+    // A selected row scrolled out of sight stays out of sight.
+    BOOL beforeShown = before >= 0 && NSIntersectsRect(self.table.visibleRect, [self.table rectOfRow:before]);
     [self.table reloadData];
+    NSInteger row = [self rowForSelectionKey:selected];
+    if (row >= 0) {
+        [self.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] byExtendingSelection:NO];
+        if (row != before && beforeShown) [self.table scrollRowToVisible:row];
+    }
+    self.selectedRowKey = [self selectionKeyAtRow:self.table.selectedRow];
     [self updateStatus];
+}
+// A row by its command, or by the path of a menu item or macro with none, with which of the rows of that
+// path it is (two macros, or two items of the Window menu, can share one); the two lists never share a key.
+- (nullable NSString *)rowIdentityAtRow:(NSInteger)row {
+    if (row < 0) return nil;
+    if (self.searchingByKey && self.searchEvent != nil) {
+        TSShortcutMatch *match = [self matchAtRow:row];
+        if (match == nil) return nil;
+        if (match.command != nil) return [@"key.command:" stringByAppendingString:match.command.commandID];
+        return [(match.macro != nil ? @"key.macro:" : @"key.item:") stringByAppendingString:match.path];
+    }
+    TSShortcutFunctionRow *functionRow = [self functionRowAtIndex:row];
+    if (functionRow == nil) return nil;
+    if (functionRow.command != nil) return [@"function.command:" stringByAppendingString:functionRow.command.commandID];
+    return [@"function.item:" stringByAppendingString:functionRow.path];
+}
+- (nullable NSString *)selectionKeyAtRow:(NSInteger)row {
+    NSString *identity = [self rowIdentityAtRow:row];
+    if (identity == nil) return nil;
+    NSUInteger earlier = 0;
+    for (NSInteger other = 0; other < row; other++)
+        if ([[self rowIdentityAtRow:other] isEqualToString:identity]) earlier++;
+    return [identity stringByAppendingFormat:@"#%lu", (unsigned long)earlier];
+}
+- (NSInteger)rowForSelectionKey:(nullable NSString *)key {
+    if (key == nil) return -1;
+    NSCountedSet<NSString *> *seen = [NSCountedSet set];
+    for (NSInteger row = 0; row < self.table.numberOfRows; row++) {
+        NSString *identity = [self rowIdentityAtRow:row];
+        if (identity == nil) continue;
+        if ([[identity stringByAppendingFormat:@"#%lu", (unsigned long)[seen countForObject:identity]] isEqualToString:key]) return row;
+        [seen addObject:identity];
+    }
+    return -1;
 }
 // The function list in menu order. Commands Settings lists stay as they are. A menu item AppKit inserts, such as
 // Minimize All, has a shortcut and no command: key search already shows it as unchangeable, and so does this list.
@@ -545,6 +595,9 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
     NSString *completionRow = TSCompletionTriggerRowID;
     TSShortcutStore *store = self.store;
     NSEvent *event = self.searchEvent;
+    // A new key selects its first match; the same key again keeps the match selected.
+    BOOL sameKey = event != nil && event == self.listedSearchEvent;
+    self.listedSearchEvent = event;
     self.searchMatches = @[];
     self.searchMessage = NSLocalizedString(@"Press a key", @"");
     if (store != nil && event != nil) {
@@ -598,7 +651,7 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
     }
     [self reloadTable];
     NSInteger first = self.searchMatches.count > 0 ? (self.searchMatches[0].macro != nil ? 1 : 0) : -1;
-    if (first >= 0) { [self.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)first] byExtendingSelection:NO]; [self.table scrollRowToVisible:first]; }
+    if (first >= 0 && !(sameKey && self.table.selectedRow >= 0)) { [self.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)first] byExtendingSelection:NO]; [self.table scrollRowToVisible:first]; }
     [self updateSelectionButtons];
     if (reservedCompletion && self.settingsHeader != nil) {
         NSView *row = [self rowWithIdentifier:completionRow inView:self.settingsHeader];
@@ -759,7 +812,10 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     if (self.searchingByKey && self.searchEvent != nil) { return [self matchAtRow:row].command; }
     return [self functionRowAtIndex:row].command;
 }
-- (void)tableViewSelectionDidChange:(NSNotification *)notification { [self updateSelectionButtons]; }
+- (void)tableViewSelectionDidChange:(NSNotification *)notification {
+    self.selectedRowKey = [self selectionKeyAtRow:self.table.selectedRow];
+    [self updateSelectionButtons];
+}
 - (void)showError:(NSString *)error {
     NSWindow *parent = self.window;
     if (error == nil || parent == nil || parent.attachedSheet != nil) { return; }
