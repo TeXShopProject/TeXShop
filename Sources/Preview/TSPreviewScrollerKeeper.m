@@ -646,6 +646,25 @@ void TSPreviewViewDidLayout(PDFView *view)
     }
 }
 
+// Above unit scale the top inset of a preview under the toolbar is the band divided by the
+// magnification (see TSMag), and PDFKit puts the place it goes to at that inset taken as
+// screen points: a link target or an outline entry lay under the toolbar (#78). The band is
+// taken from the window's safe area and the place of the view in the window, not from the
+// inset, so the part of a split window or of the window that shows the source and the
+// Preview gets its own share of the band.
+void TSPreviewRevealBelowToolbar(PDFView *view, PDFPage *page, NSPoint point)
+{
+    NSScrollView *scroll = TSScroll(view);
+    if (!scroll || !page || page.document != view.document || NSIsEmptyRect(scroll.contentView.bounds))
+        return;
+    CGFloat below = TSReadableBelow(scroll, TSToolbarBand(view));
+    if (below < 1)
+        return;
+    CGFloat distance = TSTextBelowTop(view, scroll, (TSPreviewText){YES, page, point});
+    if (isfinite(distance) && distance < below - 0.5)
+        TSMoveTextUp(scroll, distance - below);
+}
+
 void TSPreviewPlaceChosenByProgram(PDFView *view)
 {
     // The text kept by the last change of the size is not put back once the views are laid out.

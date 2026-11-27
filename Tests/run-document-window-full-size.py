@@ -97,6 +97,10 @@ MUTATIONS = {
     'toolbar-top-clamped': ('TSPreviewScrollerKeeper.m',
         '        if (proposed.origin.y < rect.origin.y)\n            rect.origin.y = fmax(proposed.origin.y, limit);\n',
         ''),
+    # A link target or an outline entry stays where PDFKit puts it, under the toolbar (#78).
+    'destination-under-toolbar': ('TSPreviewScrollerKeeper.m',
+        '    if (isfinite(distance) && distance < below - 0.5)\n',
+        '    if (NO)\n'),
     # setupToolbar's trio skips the Preview window, so it is never prepared.
     'preview-not-prepared': ('TSDocumentWindowGlass.m',
         '        TSDocumentWindowPrepare(window);\n',
@@ -111,6 +115,13 @@ names = ('TSDocumentWindowGlass.m', 'TSDocument.m', 'TSPreviewScrollerKeeper.m')
 text = {name: source_file(root, name).read_text(encoding='latin1') for name in names}
 preview = source_file(root, 'MyPDFKitView.m').read_text(encoding='latin1')
 assert preview.count('[TSPreviewScrollerKeeper installInView:self];') >= 2, 'the preview installs the scroller keeper'
+# Links, outline entries, page jumps and SyncTeX or search results show below the toolbar (#78).
+for signature, call in (('- (void)goToDestination:(PDFDestination *)destination', 'TSPreviewRevealBelowToolbar(self, page, point);'),
+                        ('- (void)goToPage:(PDFPage *)page', 'TSPreviewRevealBelowToolbar(self, page, '),
+                        ('- (void)revealSelectionBelowToolbar', 'TSPreviewRevealBelowToolbar(self, page, '),
+                        ('- (void)scrollSelectionToVisible:(id)sender', '[self revealSelectionBelowToolbar];')):
+    assert call in method(preview, signature), signature
+assert method(preview, '- (void)scrollSelectionToVisible:(id)sender').count('[self revealSelectionBelowToolbar];') == 2, 'both ways of showing a result'
 split_method = method(text['TSDocument.m'], '- (void) splitWindow: sender')
 fragments = [('complete method: splitWindow:', text['TSDocument.m'], split_method)]
 if args.mutation:
@@ -402,6 +413,33 @@ int main(int argc, char **argv) { @autoreleasepool {
         Check(fabs(previewScroll.contentInsets.top * magnification - previewBand) < 1.5,
               [NSString stringWithFormat:@"the top inset times the magnification is the toolbar band (%.1f, %.1f)%@",
                previewScroll.contentInsets.top * magnification, previewBand, nibName]);
+        // #78: above unit scale PDFKit puts a link target at the top inset taken as screen
+        // points, which is the band divided by the magnification: under the toolbar. The
+        // target goes right below the band.
+        {
+            PDFPage *target = [pdf pageAtIndex:pdf.pageCount > 1 ? 1 : 0];
+            NSPoint point = NSMakePoint(100, NSMidY([target boundsForBox:kPDFDisplayBoxCropBox]));
+            CGFloat (^UnderBar)(void) = ^CGFloat{
+                NSPoint w = [pv convertPoint:[pv convertPoint:point fromPage:target] toView:nil];
+                return w.y - NSMaxY(pw.contentLayoutRect);
+            };
+            [pv goToDestination:[[PDFDestination alloc] initWithPage:target atPoint:point]];
+            Settle(pw);
+            CGFloat byPDFKit = UnderBar();
+            TSPreviewRevealBelowToolbar(pv, target, point);
+            Settle(pw);
+            CGFloat shown = UnderBar();
+            printf("  link target above the bottom of the toolbar: %.1f by PDFKit, %.1f shown\n", byPDFKit, shown);
+            Check(shown <= 0.6 && shown > -2,
+                  [NSString stringWithFormat:@"at twice the scale a link target shows right below the toolbar (%.1f)%@", shown, nibName]);
+            TSPreviewRevealBelowToolbar(pv, target, point);
+            Check(fabs(UnderBar() - shown) < 0.1,
+                  [NSString stringWithFormat:@"a target already below the toolbar stays where it is%@", nibName]);
+            [pv setScaleFactor:2];
+            ScrollTop(previewScroll);
+            Settle(pw);
+        }
+
         NSView *shield = ToolbarShield(previewScroll);
         BOOL shieldOK = shield && !shield.hidden && shield.clipsToBounds
             && NSHeight(shield.bounds) >= previewBand && NSHeight(shield.bounds) <= previewBand + 30;

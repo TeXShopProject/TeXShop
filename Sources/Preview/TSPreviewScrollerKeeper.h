@@ -61,6 +61,10 @@ void TSPreviewViewDidLayout(PDFView *view);
 // window are switched: the text kept by the last change of the size is not put back.
 void TSPreviewPlaceChosenByProgram(PDFView *view);
 
+// Moves the view down when a point on a page that the program has just gone to lies under the
+// band of the toolbar, so that it shows right below the band (#78).
+void TSPreviewRevealBelowToolbar(PDFView *view, PDFPage *page, NSPoint point);
+
 // The scroll position of a clip view for the bounds, as far as the document allows; only
 // the vertical position is limited. PDFKit's clip view answers a place one scroller
 // higher in the document when AppKit lays the scrollers over the content, as it does in a

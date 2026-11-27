@@ -20,7 +20,7 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void)keepHorizontalPositionDuring:', '- (BOOL)scrollingKeepsPage', '- (BOOL)isPageTurnFromScrolling:',
     '- (void)goToPage:(PDFPage *)page', '- (void)goToNextPage:',
     '- (void)goToPreviousPage:', '- (void)goToFirstPage:', '- (void)goToLastPage:',
-    '- (void)scrollSelectionToVisible:', '- (void)stepPageForward:', '- (void) previousPage:', '- (void) nextPage:',
+    '- (void)revealSelectionBelowToolbar', '- (void)scrollSelectionToVisible:', '- (void)stepPageForward:', '- (void) previousPage:', '- (void) nextPage:',
     '- (BOOL)paginatedScrollMinimum:', '- (BOOL)scrollVerticalArrowWithinPage:', '- (BOOL)pageKeyInPaginatedView:', '- (void)keyDown:'))
 def mutate(old, new):
     global methods
