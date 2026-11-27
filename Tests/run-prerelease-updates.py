@@ -50,7 +50,7 @@ def run(mutation=None):
         exe = Path(tmp) / 'prerelease-updates'
         subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-F', str(frameworks), '-framework', 'Sparkle',
                         '-Wl,-rpath,' + str(frameworks), '-I', str(root / 'Tests'), *include_args(root),
-                        str(root / 'Tests/PrereleaseUpdates.m'), str(source), str(source_file(root, 'globals.m')),
+                        str(root / 'Tests/PrereleaseUpdates.m'), str(source), str(source_file(root, 'TSUpdatePermissionAlert.m')), str(source_file(root, 'globals.m')),
                         # The controller matches the key of Quit with the shortcut units (#68).
                         '-framework', 'Carbon', *[str(source_file(root, n)) for n in NAMES], *companion_sources(root), '-o', str(exe)],
                        check=True)

@@ -61,7 +61,7 @@ def build(directory, source):
                     *include_args(root), '-I', str(root / 'Tests'), '-F', str(root / 'Frameworks'),
                     '-framework', 'Cocoa', '-framework', 'Carbon', '-framework', 'Sparkle',
                     '-Wl,-rpath,@executable_path/../Frameworks',
-                    str(root / 'Tests/SparkleQuitKey.m'), str(source), str(source_file(root, 'globals.m')),
+                    str(root / 'Tests/SparkleQuitKey.m'), str(source), str(source_file(root, 'TSUpdatePermissionAlert.m')), str(source_file(root, 'globals.m')),
                     *sources, *companion_sources(root), '-o', str(macos / 'SparkleQuitKey')], check=True)
     subprocess.run(['codesign', '--force', '--deep', '--sign', '-', str(app)], check=True, capture_output=True)
     return app
