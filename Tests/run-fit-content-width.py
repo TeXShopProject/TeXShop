@@ -63,7 +63,7 @@ view_methods = [method(view_source, s) for s in (
     '- (void)setFrameSize:(NSSize)newSize', '- (void)setDocument:(PDFDocument *)document',
     '- (void)keepContentWidthPlaceDuring:(void (NS_NOESCAPE ^)(void))navigation', '- (void)goToDestination:(PDFDestination *)destination',
     '- (void)keepHorizontalPositionDuring:(void (NS_NOESCAPE ^)(void))navigation', '- (void)goToPage:(PDFPage *)page', '- (void)layout\n{',
-    '- (void)scrollSelectionToVisible:(id)sender')]
+    '- (void)revealSelectionBelowToolbar', '- (void)scrollSelectionToVisible:(id)sender')]
 fragments = [('complete method: ' + t.split('\n')[0], view_source, t) for t in view_methods]
 fragments.append(('header without #pragma once: TSContentZoom.h', zoom_path.read_text(), zoom_text))
 view_text = '\n'.join(view_methods)
