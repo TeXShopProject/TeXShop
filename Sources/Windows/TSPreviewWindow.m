@@ -1834,6 +1834,9 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
     if (drawerState.count)
         [coder encodeObject:drawerState forKey:@"TSPreviewDrawerLayout"];
     [coder encodeInteger:[first previewRotation] forKey:@"TSPreviewRotation"];
+    // The tool of the mouse, which both parts share.
+    if ([first mouseTool] > 0)
+        [coder encodeInteger:[first mouseTool] forKey:@"TSPreviewMouseTool"];
     [coder encodeInteger:TSPreviewOverrideCode(self.myDocument.previewDirectionOverride) forKey:@"TSPreviewDirection"];
     [coder encodeInteger:TSPreviewOverrideCode(self.myDocument.previewBookOverride) forKey:@"TSPreviewBook"];
     NSSplitView *splitView = self.pdfKitSplitView;
@@ -1863,6 +1866,16 @@ static NSNumber *TSPreviewOverrideValue(NSInteger code)
         document.previewBookOverride = TSPreviewOverrideValue([coder decodeIntegerForKey:@"TSPreviewBook"]);
         [first applyPreviewArrangement];
         [second applyPreviewArrangement];
+    }
+    if ([coder containsValueForKey:@"TSPreviewMouseTool"]) {
+        NSInteger tool = [coder decodeIntegerForKey:@"TSPreviewMouseTool"];
+        if (tool >= NEW_MOUSE_MODE_SCROLL && tool <= NEW_MOUSE_MODE_SELECT_PDF) {
+            // As if chosen in the Tools menu, which both parts, the menu and the toolbars follow.
+            NSMenuItem *choice = [[NSMenuItem alloc] init];
+            choice.tag = tool;
+            [self changeMouseMode:choice];
+            [document showMouseToolInToolbars:tool];
+        }
     }
     // The pages turned as they were, before any place on them is put back.
     if ([coder containsValueForKey:@"TSPreviewRotation"])

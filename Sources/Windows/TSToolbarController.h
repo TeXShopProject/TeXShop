@@ -33,6 +33,7 @@ void TSSplitToggleItemsFollowSplit(void);
 @interface TSDocument (ToolbarSupport)
 
 - (void) setupToolbar;
+- (void) showMouseToolInToolbars: (NSInteger)tool;
 - (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted;
 - (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *) toolbar;
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar;

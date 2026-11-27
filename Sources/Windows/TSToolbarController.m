@@ -457,6 +457,19 @@ else
     return toolbarItem;
 }
 
+// The tool of the mouse as the toolbars of the document show it.
+- (void) showMouseToolInToolbars: (NSInteger)tool
+{
+    for (NSWindow *window in @[ self.pdfKitWindow ?: [NSNull null], [self textWindow] ?: [NSNull null] ]) {
+        if (![window isKindOfClass: [NSWindow class]]) continue;
+        for (NSToolbarItem *item in window.toolbar.items) {
+            if ([item.view isKindOfClass: [NSSegmentedControl class]] &&
+                ([item.itemIdentifier isEqual: kMouseModeKKTID] || [item.itemIdentifier isEqual: skMouseModeTID]))
+                [(NSSegmentedControl *)item.view selectSegmentWithTag: tool];
+        }
+    }
+}
+
 - (NSToolbarItem*) makeMouseModeItemWithItemIdentifier: (NSString *)itemIdent key:(NSString *)itemKey customView: (NSView *)theView
 {
     NSToolbarItem *theToolbarItem;
@@ -487,6 +500,9 @@ else
             for (NSInteger segment = 0; segment < 5; segment++)
                 [mySegmentedControl setToolTip: NSLocalizedStringFromTable(toolTipKeys[segment], @"ToolbarItems", nil)
                                     forSegment: segment];
+            // The tool in use is marked also in an item that is made later (a toolbar customized).
+            NSInteger tool = [(MyPDFKitView *)self.pdfKitWindow.myPDFKitView mouseTool];
+            [mySegmentedControl selectSegmentWithTag: tool ?: [SUD integerForKey: PdfKitMouseModeKey]];
             theToolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:mySegmentedControl];
             // Each tool has its own tool tip, so the item has none of its own.
             theToolbarItem.toolTip = nil;
