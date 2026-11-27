@@ -22,6 +22,7 @@ MUTATIONS = {
     'swap-ignored': ('    if (previewOnLeft) {', '    if (NO) {'),
     'always': ('    return TSDocumentWindowsUseFullSizeContent();\n}', '    return YES;\n}'),
     'inserted-twice': ('    if (divider == NSNotFound) {', '    if (YES) {'),
+    'search-lost': ('        [myFullSearchField setStringValue: search];\n', ''),
     'sides-not-swapped': ('    if (previewOnLeft ? before <= after : after <= before)\n        return;\n', '    return;\n'),
     'other-divider': ('splitView: sides dividerIndex: 0]', 'splitView: [[NSSplitView alloc] init] dividerIndex: 0]'),
 }
@@ -91,7 +92,7 @@ static int layoutUpdates;
 static BOOL TSDocumentWindowsUseFullSizeContent(void) { return fullSize; }
 CONSTANTS
 SIDES
-@interface TSDocument : NSObject <NSToolbarDelegate> { @public NSView *leftView; NSWindow *window; }
+@interface TSDocument : NSObject <NSToolbarDelegate> { @public NSView *leftView; NSWindow *window; NSSearchField *myFullSearchField; }
 @end
 @implementation TSDocument
 - (BOOL)sharingExists { return YES; }
@@ -100,7 +101,13 @@ SIDES
 METHODS
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdent willBeInsertedIntoToolbar:(BOOL)inserted
 {
-BRANCH    return [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
+BRANCH    if ([itemIdent isEqual:skSearchTID]) {
+        // As the production item: a new field each time, which becomes the document's search field.
+        NSSearchToolbarItem *search = [[NSSearchToolbarItem alloc] initWithItemIdentifier:itemIdent];
+        myFullSearchField = search.searchField;
+        return search;
+    }
+    return [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
 }
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return [self toolbarDefaultItemIdentifiers:toolbar]; }
 @end
@@ -179,8 +186,10 @@ int main(void) {
         NSArray *before = identifiers(saved);
         NSUInteger at = [before indexOfObject:skSidesTID];
         NSArray *sourceGroup = [before subarrayWithRange:NSMakeRange(0, at)], *previewGroup = [before subarrayWithRange:NSMakeRange(at + 1, before.count - at - 1)];
+        d->myFullSearchField.stringValue = @"theorem";
         [defaults setBool:YES forKey:SwitchSidesKey];
         [d keepSidesInFullSplitToolbar];
+        check([d->myFullSearchField.stringValue isEqual:@"theorem"], @"the search field keeps what was typed in it");
         NSMutableArray *expected = [previewGroup mutableCopy]; [expected addObject:skSidesTID]; [expected addObjectsFromArray:sourceGroup];
         check([identifiers(saved) isEqual:expected], @"with the Preview on the left the Preview's items come first, each group in its own order");
         check(layoutUpdates == 1, @"the layout items show the Preview's state again");

@@ -1766,10 +1766,14 @@ if ([itemIdent isEqual: kSplitKKTID]) {
     NSMutableArray *arranged = [second mutableCopy];
     [arranged addObject: skSidesTID];
     [arranged addObjectsFromArray: first];
+    // The search item gets a new field; the other items keep their views.
+    NSString *search = [myFullSearchField stringValue];
     while (toolbar.items.count > 0)
         [toolbar removeItemAtIndex: toolbar.items.count - 1];
     for (NSString *identifier in arranged)
         [toolbar insertItemWithItemIdentifier: identifier atIndex: toolbar.items.count];
+    if (search.length > 0)
+        [myFullSearchField setStringValue: search];
     [self updatePreviewLayoutControls];
 }
 
