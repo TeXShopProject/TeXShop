@@ -34,7 +34,7 @@ MUTATIONS = {
         '\t[super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];\n\t[TSAdvancedFindHighlights drawInLayoutManager:self forGlyphRange:glyphsToShow atPoint:origin];',
         '\t[TSAdvancedFindHighlights drawInLayoutManager:self forGlyphRange:glyphsToShow atPoint:origin];\n\t[super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];'),
     'highlights do not follow edits': ('TSAdvancedFindHighlights.m',
-        '    if (!(storage.editedMask & NSTextStorageEditedCharacters) || self.ranges.count == 0)', '    if (YES)'),
+        '    if (!(storage.editedMask & NSTextStorageEditedCharacters))\n        return;\n', '    if (YES)\n        return;\n'),
     'TSLayoutManager draws no highlights': ('TSLayoutManager.m',
         '\t[TSAdvancedFindHighlights drawInLayoutManager:self forGlyphRange:glyphsToShow atPoint:origin];\n', ''),
     'replacements are not registered for undo': ('TSAdvancedFindController.m',
@@ -61,6 +61,15 @@ MUTATIONS = {
         'NSString *findString = self.settings.findString;'),
     'Replace All leaves the text where it jumped': ('TSAdvancedFindController+Tasks.m',
         '    [clip scrollToPoint:NSMakePoint(x, y)];\n', ''),
+    'a later undo steals the Replace All scroll hold': ('TSAdvancedFindController+Tasks.m',
+        '            if (undo.isUndoing && skip)\n                [TSRedoHolds setObject:@(skip.integerValue + 1) forKey:undo];\n',
+        '            if (undo.isUndoing && skip)\n                ;\n'),
+    'a width change draws the left edge': ('TSAdvancedFindController+Tasks.m',
+        '    if (TSClipHoldCount > 0 && !TSAllowClipScroll && [view isKindOfClass:NSClipView.class])\n        return;\n',
+        '    if (TSClipHoldCount > 0 && !TSAllowClipScroll && [view isKindOfClass:NSClipView.class])\n        ;\n'),
+    'Replace All lays the document out twice': ('TSAdvancedFindController+Tasks.m',
+        '        TSRestoreClipOrigin(keptAnchors);\n',
+        '        TSFinishPlace(keptAnchors);\n'),
 }
 
 

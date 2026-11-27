@@ -3,6 +3,7 @@
 // menu, the highlights drawn by the real TSLayoutManager (checked in pixels), and the panel's layout and images.
 // Built by Tests/run-advanced-find-panel.py; no window is ever shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
+#import <objc/message.h>
 #import <objc/runtime.h>
 #import <string.h>
 #import "TestAppKitIsolation.h"
@@ -863,6 +864,7 @@ static BOOL MakeScrolledSource(NSString *text, BOOL clipping, CGFloat clipX, NST
 
 static void TestWrappedMiddleKeepsPlace(void);
 static void TestHorizontalLock(void);
+static void TestSameLengthKeepsScreen(void);
 static void TestReplaceAllKeepsPlace(void)
 {
     NSUInteger beeps = 0;
@@ -1033,6 +1035,7 @@ static void TestReplaceAllKeepsPlace(void)
           @"a source that became read-only leaves the text and the redo");
     TestHorizontalLock();
     TestWrappedMiddleKeepsPlace();
+    TestSameLengthKeepsScreen();
 }
 
 /// The display line at the top of the viewport, not the whole logical line. A wrapped line has several.
@@ -1528,6 +1531,851 @@ static void TestWrappedMiddleKeepsPlace(void)
     }
     CheckWrappedPlace(mixed, YES);
     CheckWrappedPlace(mixed, NO);
+}
+
+/// Lines of `copies` times "aaa ", so a same-length replacement has somewhere to land, including past column 217.
+static NSString *WideLines(NSUInteger lines, NSUInteger copies)
+{
+    NSMutableString *text = [NSMutableString string];
+    for (NSUInteger i = 0; i < lines; i++) {
+        [text appendFormat:@"L%03lu ", (unsigned long)i];
+        for (NSUInteger k = 0; k < copies; k++)
+            [text appendString:@"aaa "];
+        [text appendString:@"\n"];
+    }
+    return text;
+}
+
+static NSUInteger IndexOnLine(NSString *text, NSUInteger lineNumber, CGFloat along)
+{
+    NSUInteger index = 0, number = 0;
+    while (index < text.length) {
+        NSRange line = [text lineRangeForRange:NSMakeRange(index, 0)];
+        if (number == lineNumber) {
+            NSUInteger span = line.length;
+            if (span > 0 && [text characterAtIndex:NSMaxRange(line) - 1] == '\n')
+                span--;
+            if (span == 0)
+                return line.location;
+            NSUInteger offset = (NSUInteger)llround((double)(span - 1) * (double)MIN(MAX(along, 0), 1));
+            return line.location + MIN(offset, span - 1);
+        }
+        number++;
+        index = NSMaxRange(line);
+    }
+    return text.length > 0 ? text.length - 1 : 0;
+}
+
+static NSUInteger LogicalLineCount(NSString *text)
+{
+    if (text.length == 0)
+        return 0;
+    NSUInteger count = 0, index = 0;
+    while (index < text.length) {
+        count++;
+        NSRange line = [text lineRangeForRange:NSMakeRange(index, 0)];
+        if (NSMaxRange(line) <= index)
+            break;
+        index = NSMaxRange(line);
+    }
+    return count;
+}
+
+/// Non-contiguous layout leaves the text view's frame origin far above the used rect. The clip then shows a
+/// different line than the one `lineTop` names. A real document at the top of the file has the frame at 0 and the
+/// clip at minus the toolbar inset (#72).
+static void NormalizeTextFrame(NSTextView *view)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container)
+        return;
+    BOOL noncontiguous = layout.allowsNonContiguousLayout;
+    layout.allowsNonContiguousLayout = NO;
+    [layout ensureLayoutForTextContainer:container];
+    NSRect used = [layout usedRectForTextContainer:container];
+    NSSize clipSize = view.enclosingScrollView.contentView.bounds.size;
+    CGFloat width = MAX(clipSize.width, ceil(NSMaxX(used) + view.textContainerOrigin.x));
+    CGFloat height = MAX(clipSize.height, ceil(NSMaxY(used) + view.textContainerOrigin.y));
+    layout.allowsNonContiguousLayout = noncontiguous;
+    [view setFrame:NSMakeRect(0, 0, MAX(width, 1), MAX(height, 1))];
+}
+
+/// Puts `character` at a fraction of the viewport. Clipping scrolls sideways. Wrapping keeps x at 0 and uses the
+/// character's display line for the vertical fraction: the middle of a wrapped line is how far across that line the
+/// reader is.
+static BOOL PlaceGlyph(NSTextView *view, NSUInteger character, CGFloat viewportX, CGFloat viewportY)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    if (!layout || view.string.length == 0 || character >= view.string.length)
+        return NO;
+    [layout ensureLayoutForTextContainer:view.textContainer];
+    if (view.horizontallyResizable)
+        [view sizeToFit];
+    NormalizeTextFrame(view);
+    NSRange line = [view.string lineRangeForRange:NSMakeRange(character, 0)];
+    [layout ensureLayoutForCharacterRange:line];
+    NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:character];
+    if (glyph >= layout.numberOfGlyphs)
+        return NO;
+    NSRect fragment = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+    NSPoint location = [layout locationForGlyphAtIndex:glyph];
+    CGFloat glyphX = view.textContainerOrigin.x + NSMinX(fragment) + location.x;
+    CGFloat lineTop = view.textContainerOrigin.y + NSMinY(fragment);
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    if (!clip)
+        return NO;
+    NSRect bounds = clip.bounds;
+    bounds.origin.x = view.horizontallyResizable ? glyphX - viewportX * NSWidth(bounds) : 0;
+    bounds.origin.y = lineTop - viewportY * NSHeight(bounds);
+    [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+    [view.enclosingScrollView reflectScrolledClipView:clip];
+    [view.window display];
+    return YES;
+}
+
+/// The character under a point in the viewport. (0, 0) is the top left, just inside the edge.
+static NSUInteger CharacterAtViewport(NSTextView *view, CGFloat xFraction, CGFloat yFraction)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0 || layout.numberOfGlyphs == 0)
+        return NSNotFound;
+    NSRect visible = view.visibleRect;
+    CGFloat x = xFraction <= 0 ? 1 : NSWidth(visible) * xFraction;
+    CGFloat y = yFraction <= 0 ? 1 : NSHeight(visible) * yFraction;
+    NSPoint point = NSMakePoint(NSMinX(visible) + x - view.textContainerOrigin.x, NSMinY(visible) + y - view.textContainerOrigin.y);
+    (void)[layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    NSUInteger glyph = [layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (glyph >= layout.numberOfGlyphs)
+        glyph = layout.numberOfGlyphs - 1;
+    return [layout characterIndexForGlyphAtIndex:glyph];
+}
+
+/// `lines` display lines under the top of the viewport, then `column` on that logical line. The caret in the report
+/// sat on line 5 while line 1 was the top line.
+static NSUInteger LocationLinesBelow(NSTextView *view, NSInteger lines, NSUInteger column)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSRange top = TopFragmentRange(view);
+    if (!layout || top.location == NSNotFound || top.location >= view.string.length)
+        return 0;
+    NSUInteger laid = MIN(view.string.length - top.location, 12000);
+    [layout ensureLayoutForCharacterRange:NSMakeRange(top.location, laid)];
+    NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:top.location];
+    NSRange glyphs = NSMakeRange(glyph, 1);
+    for (NSInteger i = 0; i < lines; i++) {
+        NSUInteger next = NSMaxRange(glyphs);
+        if (next >= layout.numberOfGlyphs)
+            break;
+        [layout lineFragmentRectForGlyphAtIndex:next effectiveRange:&glyphs];
+    }
+    NSRange characters = [layout characterRangeForGlyphRange:glyphs actualGlyphRange:NULL];
+    if (characters.location >= view.string.length)
+        return view.string.length > 0 ? view.string.length - 1 : 0;
+    NSRange logical = [view.string lineRangeForRange:NSMakeRange(characters.location, 0)];
+    NSUInteger span = logical.length;
+    if (span > 0 && [view.string characterAtIndex:NSMaxRange(logical) - 1] == '\n')
+        span--;
+    return logical.location + MIN(column, span > 0 ? span - 1 : 0);
+}
+
+/// Sets the caret, then puts the clip back. Assigning selectedRange scrolls the caret into view.
+static void SetCaretKeepingPlace(NSTextView *view, NSUInteger location)
+{
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    NSPoint origin = clip.bounds.origin;
+    view.selectedRange = NSMakeRange(MIN(location, view.string.length), 0);
+    NSRect bounds = clip.bounds;
+    bounds.origin = origin;
+    [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+    [view.enclosingScrollView reflectScrolledClipView:clip];
+    [view.window display];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
+    bounds = clip.bounds;
+    bounds.origin = origin;
+    [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+    [view.enclosingScrollView reflectScrolledClipView:clip];
+    [view.window display];
+}
+
+static NSString *BreakModeName(NSLineBreakMode mode)
+{
+    if (mode == NSLineBreakByClipping)
+        return @"no wrap";
+    if (mode == NSLineBreakByWordWrapping)
+        return @"word wrap";
+    return @"character wrap";
+}
+
+/// Same-length Replace All must not move the clip at any scroll, not only by the time the run loop settles (#72).
+static IMP TSWatchedClipScroll;
+static BOOL TSWatchClip;
+static BOOL TSClipMoved;
+
+static void TSWatchScrollPoint(NSClipView *clip, SEL _cmd, NSPoint point)
+{
+    NSPoint before = clip.bounds.origin;
+    ((void (*)(id, SEL, NSPoint))TSWatchedClipScroll)(clip, _cmd, point);
+    if (!TSWatchClip)
+        return;
+    NSPoint after = clip.bounds.origin;
+    if (fabs(after.x - before.x) >= 1 || fabs(after.y - before.y) >= 1)
+        TSClipMoved = YES;
+}
+
+static void TSInstallClipWatch(void)
+{
+    if (TSWatchedClipScroll)
+        return;
+    Method method = class_getInstanceMethod(NSClipView.class, @selector(scrollToPoint:));
+    TSWatchedClipScroll = method_setImplementation(method, (IMP)TSWatchScrollPoint);
+}
+
+/// One split source, the caret four display lines below the top (column 217, as in the report), then Replace All.
+static void CheckPlacedReplace(NSString *text, NSLineBreakMode mode, NSString *place, NSUInteger lineNumber, CGFloat along,
+                               CGFloat viewportX, CGFloat viewportY, NSString *replace, BOOL expectStill)
+{
+    NSString *modeName = BreakModeName(mode);
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat ignoredY = 0;
+    Check(MakeScrolledSourceMode(text, mode, 0, &upper, &lower, &ignoredY, &ignoredY),
+          [NSString stringWithFormat:@"%@ / %@: the split source scrolls", modeName, place]);
+    NSTextView *views[2] = {upper, lower};
+    NSUInteger featureLine = lineNumber == NSNotFound ? LogicalLineCount(text) / 2 : lineNumber;
+    NSPoint origin[2];
+    NSUInteger center[2], top[2], caret[2];
+    CGFloat pinX[2], pinY[2], edgePinX[2], edgePinY[2];
+    NSUInteger edge[2];
+    for (NSUInteger v = 0; v < 2; v++) {
+        NSTextView *view = views[v];
+        NSUInteger feature = IndexOnLine(text, featureLine, along);
+        Check(PlaceGlyph(view, feature, viewportX, viewportY),
+              [NSString stringWithFormat:@"%@ / %@: part %lu is placed", modeName, place, (unsigned long)v]);
+        NSUInteger caretLocation = LocationLinesBelow(view, 4, 217);
+        SetCaretKeepingPlace(view, caretLocation);
+        origin[v] = NSMakePoint(ScrollX(view), ScrollY(view));
+        center[v] = CharacterAtViewport(view, 0.5, 0.5);
+        top[v] = TopFragmentRange(view).location;
+        caret[v] = view.selectedRange.location;
+        edge[v] = LeftEdgeCharacter(view);
+        CharacterPins(view, center[v], &pinX[v], &pinY[v]);
+        CharacterPins(view, edge[v], &edgePinX[v], &edgePinY[v]);
+        NSRange topFragment = TopFragmentRange(view);
+        Check(top[v] != NSNotFound && center[v] != NSNotFound && edge[v] != NSNotFound
+              && !NSLocationInRange(caret[v], topFragment),
+              [NSString stringWithFormat:@"%@ / %@: part %lu shows text and the caret is not on the top line (top %lu, caret %lu)",
+               modeName, place, (unsigned long)v, (unsigned long)top[v], (unsigned long)caret[v]]);
+    }
+    controller.settings.findString = @"aaa";
+    controller.settings.replaceString = replace;
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    TSClipMoved = NO;
+    TSWatchClip = expectStill;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper),
+          [NSString stringWithFormat:@"%@ / %@: Replace All aaa -> %@", modeName, place, replace]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    TSWatchClip = NO;
+    for (NSUInteger v = 0; v < 2; v++) {
+        NSTextView *view = views[v];
+        NSUInteger centerNow = CharacterAtViewport(view, 0.5, 0.5);
+        NSUInteger topNow = TopFragmentRange(view).location;
+        NSRange topFragment = TopFragmentRange(view);
+        BOOL caretOnTop = topFragment.location != NSNotFound && NSLocationInRange(view.selectedRange.location, topFragment);
+        if (expectStill) {
+            CGFloat centerX = 0, centerY = 0;
+            CharacterPins(view, center[v], &centerX, &centerY);
+            Check(fabs(ScrollX(view) - origin[v].x) < 1 && fabs(ScrollY(view) - origin[v].y) < 1
+                  && centerNow == center[v] && topNow == top[v]
+                  && fabs(centerX - pinX[v]) < 1 && fabs(centerY - pinY[v]) < 1
+                  && view.selectedRange.location == caret[v] && !caretOnTop && !TSClipMoved,
+                  [NSString stringWithFormat:@"%@ / %@: aaa -> %@ does not move part %lu (scroll %.1f,%.1f -> %.1f,%.1f, center %lu -> %lu, top %lu -> %lu, caret %lu, jumped %d)",
+                   modeName, place, replace, (unsigned long)v,
+                   origin[v].x, origin[v].y, ScrollX(view), ScrollY(view),
+                   (unsigned long)center[v], (unsigned long)centerNow,
+                   (unsigned long)top[v], (unsigned long)topNow, (unsigned long)view.selectedRange.location, TSClipMoved]);
+        } else {
+            NSUInteger moved = IndexAfterLiteralReplace(text, edge[v], @"aaa", replace);
+            CGFloat nowX = 0, nowY = 0;
+            CharacterPins(view, moved, &nowX, &nowY);
+            NSInteger direction = (NSInteger)replace.length - (NSInteger)@"aaa".length;
+            BOOL sideways = mode != NSLineBreakByClipping || origin[v].x <= 80
+                || (direction < 0 ? ScrollX(view) < origin[v].x - 20 : ScrollX(view) > origin[v].x + 20);
+            // Wrapping has no horizontal scroll. A shorter or longer match before the left edge reflows that
+            // character to another column of the same display line, so its x pin moves while the line stays.
+            BOOL xPinned = mode == NSLineBreakByClipping ? fabs(nowX - edgePinX[v]) < 2 : ScrollX(view) < 5;
+            Check(xPinned && fabs(nowY - edgePinY[v]) < 2 && sideways && !caretOnTop,
+                  [NSString stringWithFormat:@"%@ / %@: aaa -> %@ keeps the left-edge character on part %lu (pin %.1f,%.1f -> %.1f,%.1f, scroll %.1f,%.1f -> %.1f,%.1f, caret %lu on top %d)",
+                   modeName, place, replace, (unsigned long)v,
+                   edgePinX[v], edgePinY[v], nowX, nowY,
+                   origin[v].x, origin[v].y, ScrollX(view), ScrollY(view),
+                   (unsigned long)view.selectedRange.location, caretOnTop]);
+        }
+    }
+    if (!expectStill)
+        return;
+    TSWatchClip = YES;
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    Check([upper.string isEqualToString:text],
+          [NSString stringWithFormat:@"%@ / %@: undo restores the text", modeName, place]);
+    for (NSUInteger v = 0; v < 2; v++) {
+        Check(fabs(ScrollX(views[v]) - origin[v].x) < 1 && fabs(ScrollY(views[v]) - origin[v].y) < 1
+              && views[v].selectedRange.location == caret[v] && !TSClipMoved,
+              [NSString stringWithFormat:@"%@ / %@: undo puts part %lu back (scroll %.1f,%.1f, caret %lu, jumped %d)",
+               modeName, place, (unsigned long)v, ScrollX(views[v]), ScrollY(views[v]),
+               (unsigned long)views[v].selectedRange.location, TSClipMoved]);
+    }
+    [upper.undoManager redo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    TSWatchClip = NO;
+    for (NSUInteger v = 0; v < 2; v++) {
+        Check(fabs(ScrollX(views[v]) - origin[v].x) < 1 && fabs(ScrollY(views[v]) - origin[v].y) < 1
+              && CharacterAtViewport(views[v], 0.5, 0.5) == center[v] && !TSClipMoved,
+              [NSString stringWithFormat:@"%@ / %@: redo keeps part %lu still (scroll %.1f,%.1f, center %lu, jumped %d)",
+               modeName, place, (unsigned long)v, ScrollX(views[v]), ScrollY(views[v]),
+               (unsigned long)CharacterAtViewport(views[v], 0.5, 0.5), TSClipMoved]);
+    }
+}
+
+static void ScrollToProposed(NSTextView *view, CGFloat x, CGFloat y)
+{
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    NSRect bounds = clip.bounds;
+    bounds.origin = NSMakePoint(x, y);
+    [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+    [view.enclosingScrollView reflectScrolledClipView:clip];
+    [view.window display];
+}
+
+static void ApplyInsets(NSTextView *view, NSEdgeInsets insets)
+{
+    NSScrollView *scroll = view.enclosingScrollView;
+    scroll.automaticallyAdjustsContentInsets = NO;
+    scroll.contentInsets = insets;
+    [view.window display];
+}
+
+/// A document window draws the source under the toolbar, so the clip origin at the top of the file is minus the
+/// top inset, and the bottom inset lets the clip go past the text frame. The old clamp used the frame and dropped
+/// both. The other half of the split has no inset, as in the real window (#72).
+static void TestInsetPlace(NSString *place, NSLineBreakMode mode, NSEdgeInsets insets, CGFloat proposeX, CGFloat proposeY,
+                           NSString *replace, BOOL expectStill, BOOL expectPastFrame)
+{
+    NSString *modeName = BreakModeName(mode);
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSString *text = WideLines(40, 50);
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat ignored = 0;
+    Check(MakeScrolledSourceMode(text, mode, 0, &upper, &lower, &ignored, &ignored),
+          [NSString stringWithFormat:@"inset %@ / %@: the split source scrolls", modeName, place]);
+    // The caret scroll above lands in the estimated coordinate system (frame origin far above 0). Put both panes
+    // back on a frame that starts at 0, which is where a document window rests, then apply the toolbar inset (#72).
+    NormalizeTextFrame(upper);
+    NormalizeTextFrame(lower);
+    ApplyInsets(upper, insets);
+    ScrollToProposed(upper, proposeX, proposeY);
+    ScrollToProposed(lower, 0, 0);
+    SetCaretKeepingPlace(upper, LocationLinesBelow(upper, 4, 217));
+    ScrollToProposed(upper, proposeX, proposeY);
+    NSPoint upperOrigin = NSMakePoint(ScrollX(upper), ScrollY(upper));
+    NSPoint lowerOrigin = NSMakePoint(ScrollX(lower), ScrollY(lower));
+    if (proposeY < -1000) {
+        Check(fabs(upperOrigin.y + insets.top) <= 2,
+              [NSString stringWithFormat:@"inset %@ / %@: the top rests on the inset (y %.1f, inset %.1f)",
+               modeName, place, upperOrigin.y, insets.top]);
+    } else if (proposeY < 0) {
+        Check(upperOrigin.y < -20 && upperOrigin.y > -insets.top - 1,
+              [NSString stringWithFormat:@"inset %@ / %@: between the inset and the text stays there (y %.1f)",
+               modeName, place, upperOrigin.y]);
+    } else if (proposeY < 1e8) {
+        Check(fabs(upperOrigin.y - proposeY) < 2,
+              [NSString stringWithFormat:@"inset %@ / %@: the proposed line is where it was put (y %.1f)",
+               modeName, place, upperOrigin.y]);
+    }
+    if (proposeX > 100 && mode == NSLineBreakByClipping) {
+        Check(upperOrigin.x > 100,
+              [NSString stringWithFormat:@"inset %@ / %@: the view is scrolled across (x %.1f)", modeName, place, upperOrigin.x]);
+    }
+    if (expectPastFrame) {
+        CGFloat naive = NSMaxY(upper.frame) - NSHeight(upper.enclosingScrollView.contentView.bounds);
+        Check(upperOrigin.y > naive + 10,
+              [NSString stringWithFormat:@"inset %@ / %@: the bottom passes the frame clamp (y %.1f, clamp %.1f)",
+               modeName, place, upperOrigin.y, naive]);
+    }
+    NSUInteger edgeUpper = LeftEdgeCharacter(upper), edgeLower = LeftEdgeCharacter(lower);
+    CGFloat edgeUX = 0, edgeUY = 0, edgeLX = 0, edgeLY = 0;
+    CharacterPins(upper, edgeUpper, &edgeUX, &edgeUY);
+    CharacterPins(lower, edgeLower, &edgeLX, &edgeLY);
+    NSUInteger caret = upper.selectedRange.location;
+    controller.settings.findString = @"aaa";
+    controller.settings.replaceString = replace;
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    TSClipMoved = NO;
+    TSWatchClip = YES;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper),
+          [NSString stringWithFormat:@"inset %@ / %@: Replace All aaa -> %@", modeName, place, replace]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    TSWatchClip = NO;
+    if (expectStill) {
+        Check(fabs(ScrollX(upper) - upperOrigin.x) < 1 && fabs(ScrollY(upper) - upperOrigin.y) < 1
+              && fabs(ScrollX(lower) - lowerOrigin.x) < 1 && fabs(ScrollY(lower) - lowerOrigin.y) < 1
+              && upper.selectedRange.location == caret && !TSClipMoved,
+              [NSString stringWithFormat:@"inset %@ / %@: aaa -> %@ does not move (upper %.1f,%.1f -> %.1f,%.1f, lower %.1f,%.1f -> %.1f,%.1f, jumped %d)",
+               modeName, place, replace,
+               upperOrigin.x, upperOrigin.y, ScrollX(upper), ScrollY(upper),
+               lowerOrigin.x, lowerOrigin.y, ScrollX(lower), ScrollY(lower), TSClipMoved]);
+        TSWatchClip = YES;
+        [upper.undoManager undo];
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+        Check([upper.string isEqualToString:text]
+              && fabs(ScrollX(upper) - upperOrigin.x) < 1 && fabs(ScrollY(upper) - upperOrigin.y) < 1
+              && fabs(ScrollX(lower) - lowerOrigin.x) < 1 && fabs(ScrollY(lower) - lowerOrigin.y) < 1
+              && upper.selectedRange.location == caret && !TSClipMoved,
+              [NSString stringWithFormat:@"inset %@ / %@: undo puts the inset place back (upper %.1f,%.1f, lower %.1f,%.1f, jumped %d)",
+               modeName, place, ScrollX(upper), ScrollY(upper), ScrollX(lower), ScrollY(lower), TSClipMoved]);
+        [upper.undoManager redo];
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+        TSWatchClip = NO;
+        Check(fabs(ScrollX(upper) - upperOrigin.x) < 1 && fabs(ScrollY(upper) - upperOrigin.y) < 1
+              && fabs(ScrollX(lower) - lowerOrigin.x) < 1 && fabs(ScrollY(lower) - lowerOrigin.y) < 1
+              && !TSClipMoved,
+              [NSString stringWithFormat:@"inset %@ / %@: redo keeps the inset place (upper %.1f,%.1f, lower %.1f,%.1f, jumped %d)",
+               modeName, place, ScrollX(upper), ScrollY(upper), ScrollX(lower), ScrollY(lower), TSClipMoved]);
+        return;
+    }
+    NSUInteger movedUpper = IndexAfterLiteralReplace(text, edgeUpper, @"aaa", replace);
+    NSUInteger movedLower = IndexAfterLiteralReplace(text, edgeLower, @"aaa", replace);
+    CGFloat nowUX = 0, nowUY = 0, nowLX = 0, nowLY = 0;
+    CharacterPins(upper, movedUpper, &nowUX, &nowUY);
+    CharacterPins(lower, movedLower, &nowLX, &nowLY);
+    Check(fabs(ScrollY(upper) - upperOrigin.y) < 2 && fabs(ScrollY(lower) - lowerOrigin.y) < 2
+          && fabs(nowUX - edgeUX) < 2 && fabs(nowUY - edgeUY) < 2
+          && fabs(nowLX - edgeLX) < 2 && fabs(nowLY - edgeLY) < 2,
+          [NSString stringWithFormat:@"inset %@ / %@: aaa -> %@ keeps the clip and the left edge (upper %.1f -> %.1f, pin %.1f,%.1f -> %.1f,%.1f)",
+           modeName, place, replace, upperOrigin.y, ScrollY(upper), edgeUX, edgeUY, nowUX, nowUY]);
+}
+
+/// The first pixel below the toolbar. `visibleRect` includes the band the bar covers once the clip has left the top.
+static CGFloat ContentTop(NSTextView *view)
+{
+    NSRect visible = view.visibleRect;
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    if (!clip)
+        return NSMinY(visible);
+    CGFloat belowBar = NSMinY(clip.bounds) + view.enclosingScrollView.contentInsets.top;
+    if (belowBar <= NSMinY(visible) + 0.5)
+        return NSMinY(visible);
+    return belowBar;
+}
+
+static NSUInteger CharacterAtContentTop(NSTextView *view)
+{
+    NSLayoutManager *layout = view.layoutManager;
+    NSTextContainer *container = view.textContainer;
+    if (!layout || !container || view.string.length == 0 || layout.numberOfGlyphs == 0)
+        return NSNotFound;
+    NSRect visible = view.visibleRect;
+    NSPoint point = NSMakePoint(NSMinX(visible) - view.textContainerOrigin.x + 1,
+                                ContentTop(view) + 1 - view.textContainerOrigin.y);
+    (void)[layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    NSUInteger glyph = [layout glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+    if (glyph >= layout.numberOfGlyphs)
+        glyph = layout.numberOfGlyphs - 1;
+    return [layout characterIndexForGlyphAtIndex:glyph];
+}
+
+/// YES when the clip can still move. A leaked Replace All hold swallows `scrollClipView:toPoint:` for every window.
+/// `scrollToPoint:` itself is not one of the two methods the hold replaces, so it cannot see the leak (#72).
+static BOOL ClipStillScrolls(NSTextView *view)
+{
+    NSScrollView *scroll = view.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    if (!clip)
+        return NO;
+    CGFloat y = NSMinY(clip.bounds);
+    NSRect proposed = clip.bounds;
+    proposed.origin.y = y - 200;
+    [scroll scrollClipView:clip toPoint:[clip constrainBoundsRect:proposed].origin];
+    if (fabs(NSMinY(clip.bounds) - y) > 30)
+        return YES;
+    proposed = clip.bounds;
+    proposed.origin.y = y + 200;
+    [scroll scrollClipView:clip toPoint:[clip constrainBoundsRect:proposed].origin];
+    return fabs(NSMinY(clip.bounds) - y) > 30;
+}
+
+/// Typing, then Replace All, then undo of both and redo of the typing. The hold belongs to the Replace All redo
+/// only. Spending it on the typing redo leaves every window unable to scroll (#72).
+static void TestRedoHoldDoesNotLeak(void)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSMutableString *text = [NSMutableString string];
+    for (int i = 0; i < 80; i++)
+        [text appendFormat:@"line %03d alpha word\n", i];
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat ignored = 0;
+    Check(MakeScrolledSource(text, NO, 0, &upper, &lower, &ignored, &ignored), @"scrolled before the redo-hold sequence");
+    [upper insertText:@"Q" replacementRange:NSMakeRange(0, 0)];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    NSString *afterQ = [upper.string copy];
+    [upper insertText:@"Z" replacementRange:NSMakeRange(upper.string.length, 0)];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    NSString *afterZ = [upper.string copy];
+    controller.settings.findString = @"alpha";
+    controller.settings.replaceString = @"X";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper), @"Replace All before the extra undos");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    NSString *replacedTop = [VisibleTopLine(upper) copy];
+    NSString *replaced = [upper.string copy];
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([upper.string isEqualToString:afterZ], @"the first undo is Replace All");
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    [upper.undoManager undo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    Check([upper.string isEqualToString:text] || [upper.string isEqualToString:afterQ],
+          @"undoing the typing does not undo past the typed characters");
+    // Redo the typing only, and look before the run loop. A backstop pops a leaked hold on the next turn; the hold
+    // must not be taken in the first place, or this redo is already stuck.
+    NSPoint upperOrigin = upper.enclosingScrollView.contentView.bounds.origin;
+    NSPoint lowerOrigin = lower.enclosingScrollView.contentView.bounds.origin;
+    [upper.undoManager redo];
+    Check(ClipStillScrolls(upper) && ClipStillScrolls(lower),
+          @"after undo undo redo, both panes still scroll");
+    ScrollToProposed(upper, upperOrigin.x, upperOrigin.y);
+    ScrollToProposed(lower, lowerOrigin.x, lowerOrigin.y);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    while (upper.undoManager.canRedo && ![upper.string isEqualToString:replaced])
+        [upper.undoManager redo];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    Check([upper.string isEqualToString:replaced] && [VisibleTopLine(upper) isEqualToString:replacedTop],
+          [NSString stringWithFormat:@"the Replace All redo still puts the line back (%@)",
+           [VisibleTopLine(upper) stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet]]);
+    Check(ClipStillScrolls(upper), @"scrolling works after the Replace All redo as well");
+}
+
+/// A tall split, so the upper pane still has several lines under a 68pt toolbar. The stock harness panes are 100pt.
+static void ResizePanes(NSTextView *upper, NSTextView *lower, CGFloat width, CGFloat paneHeight)
+{
+    NSWindow *window = upper.window;
+    [window setContentSize:NSMakeSize(width, paneHeight * 2)];
+    upper.enclosingScrollView.frame = NSMakeRect(0, paneHeight, width, paneHeight);
+    lower.enclosingScrollView.frame = NSMakeRect(0, 0, width, paneHeight);
+    [window display];
+    for (NSTextView *view in @[upper, lower]) {
+        if (!view.textContainer.widthTracksTextView)
+            continue;
+        CGFloat containerWidth = NSWidth(view.enclosingScrollView.contentView.bounds);
+        view.textContainer.containerSize = NSMakeSize(MAX(containerWidth, 1), CGFLOAT_MAX);
+    }
+}
+
+/// Puts the start of logical `lineNumber` on the first line the reader sees, under the toolbar when there is one.
+static void PlaceLineStartAtContentTop(NSTextView *view, NSUInteger lineNumber)
+{
+    NSString *text = view.string;
+    NSUInteger index = 0, number = 0;
+    while (index < text.length) {
+        NSRange line = [text lineRangeForRange:NSMakeRange(index, 0)];
+        if (number == lineNumber) {
+            index = line.location;
+            break;
+        }
+        number++;
+        index = NSMaxRange(line);
+    }
+    NSLayoutManager *layout = view.layoutManager;
+    [layout ensureLayoutForCharacterRange:NSMakeRange(index, 1)];
+    NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:MIN(index, text.length - 1)];
+    NSRect fragment = [layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL];
+    CGFloat lineTop = NSMinY(fragment) + view.textContainerOrigin.y;
+    ScrollToProposed(view, 0, lineTop - view.enclosingScrollView.contentInsets.top);
+}
+
+/// Length-changing Replace All on a wrapped source, far enough down that the toolbar covers earlier wraps of the
+/// long lines, and far enough above the end that the scroller can still move. The line just below the bar must
+/// stay. Pinning the line the bar covers lets that visible line slip by one wrap (#72).
+static void TestWrappedEndBelowToolbar(NSLineBreakMode mode, NSString *replace)
+{
+    NSString *modeName = BreakModeName(mode);
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSString *text = WideLines(48, 70);
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat ignored = 0;
+    Check(MakeScrolledSourceMode(text, mode, 0, &upper, &lower, &ignored, &ignored),
+          [NSString stringWithFormat:@"wrapped end %@: the split source scrolls", modeName]);
+    ResizePanes(upper, lower, 700, 360);
+    NormalizeTextFrame(upper);
+    NormalizeTextFrame(lower);
+    NSEdgeInsets bar = NSEdgeInsetsMake(68, 0, 18, 0);
+    ApplyInsets(upper, bar);
+    PlaceLineStartAtContentTop(upper, 30);
+    PlaceLineStartAtContentTop(lower, 30);
+    NSTextView *views[2] = {upper, lower};
+    NSUInteger edge[2];
+    CGFloat pinX[2], pinY[2];
+    for (NSUInteger v = 0; v < 2; v++) {
+        CGFloat y = ScrollY(views[v]);
+        ScrollToProposed(views[v], 0, y + 400);
+        BOOL canMoveDown = ScrollY(views[v]) > y + 30;
+        ScrollToProposed(views[v], 0, y);
+        CGFloat band = ContentTop(views[v]) - NSMinY(views[v].visibleRect);
+        edge[v] = CharacterAtContentTop(views[v]);
+        CharacterPins(views[v], edge[v], &pinX[v], &pinY[v]);
+        Check(canMoveDown && edge[v] != NSNotFound && (v == 1 || band > 40),
+              [NSString stringWithFormat:@"wrapped end %@ / part %lu: room below the line, and the bar covers text (band %.1f)",
+               modeName, (unsigned long)v, band]);
+    }
+    controller.settings.findString = @"aaa";
+    controller.settings.replaceString = replace;
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper),
+          [NSString stringWithFormat:@"wrapped end %@: Replace All aaa -> %@", modeName, replace]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    for (NSUInteger v = 0; v < 2; v++) {
+        NSUInteger moved = IndexAfterLiteralReplace(text, edge[v], @"aaa", replace);
+        CGFloat nowX = 0, nowY = 0;
+        CharacterPins(views[v], moved, &nowX, &nowY);
+        Check(fabs(nowY - pinY[v]) < 2 && (mode == NSLineBreakByClipping || fabs(ScrollX(views[v])) < 5),
+              [NSString stringWithFormat:@"wrapped end %@ / part %lu: aaa -> %@ keeps the line below the bar (pin %.1f -> %.1f, scroll %.1f)",
+               modeName, (unsigned long)v, replace, pinY[v], nowY, ScrollY(views[v])]);
+    }
+}
+
+/// The lowest clip x reached while `block` runs. The clip must be posting bounds notifications.
+static CGFloat LowestClipXDuring(NSTextView *upper, NSTextView *lower, dispatch_block_t block)
+{
+    NSClipView *upperClip = upper.enclosingScrollView.contentView;
+    NSClipView *lowerClip = lower.enclosingScrollView.contentView;
+    __block CGFloat lowest = MIN(NSMinX(upperClip.bounds), NSMinX(lowerClip.bounds));
+    upperClip.postsBoundsChangedNotifications = YES;
+    lowerClip.postsBoundsChangedNotifications = YES;
+    id token = [NSNotificationCenter.defaultCenter addObserverForName:NSViewBoundsDidChangeNotification object:nil
+                                                                queue:nil usingBlock:^(NSNotification *note) {
+        if (note.object != upperClip && note.object != lowerClip)
+            return;
+        lowest = MIN(lowest, NSMinX(((NSView *)note.object).bounds));
+    }];
+    block();
+    [NSNotificationCenter.defaultCenter removeObserver:token];
+    return lowest;
+}
+
+/// The audit's left-edge jump is `-[NSClipView _selfBoundsChanged]` calling `translateOriginToPoint:`. A plain
+/// text view's `setFrameSize:` does not reach that while `scrollClipView:toPoint:` is held. The document window's
+/// tile does. Call it once the frame is narrower than the scroll position (#72).
+static void PullClipToTheLeftEdge(NSTextView *view)
+{
+    NSClipView *clip = view.enclosingScrollView.contentView;
+    SEL sel = NSSelectorFromString(@"_selfBoundsChanged");
+    if (!clip || ![clip respondsToSelector:sel])
+        return;
+    void (*call)(id, SEL) = (void (*)(id, SEL))objc_msgSend;
+    call(clip, sel);
+}
+
+/// After the edit's `endEditing` returns, and before Replace All pops the hold, narrow both text views and run the
+/// clip's own bounds adjustment. That adjustment pulls a too-narrow frame to the left edge through
+/// `translateOriginToPoint:`, which `scrollClipView:toPoint:` does not. Inside `endEditing` the adjustment is
+/// skipped, so this waits until that returns. The pop is queued after this (#72).
+static void AfterEditingNarrowTheFrame(NSTextView *upper, NSTextView *lower, dispatch_block_t block)
+{
+    __block BOOL queued = NO;
+    id token = [NSNotificationCenter.defaultCenter addObserverForName:NSTextStorageDidProcessEditingNotification
+                                                                object:upper.textStorage queue:nil
+                                                            usingBlock:^(NSNotification *note) {
+        if (queued)
+            return;
+        queued = YES;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            upper.horizontallyResizable = NO;
+            lower.horizontallyResizable = NO;
+            [upper setFrameSize:NSMakeSize(200, NSHeight(upper.frame))];
+            [lower setFrameSize:NSMakeSize(200, NSHeight(lower.frame))];
+            PullClipToTheLeftEdge(upper);
+            PullClipToTheLeftEdge(lower);
+            upper.horizontallyResizable = YES;
+            lower.horizontallyResizable = YES;
+            [upper sizeToFit];
+            [lower sizeToFit];
+        });
+    }];
+    block();
+    [NSNotificationCenter.defaultCenter removeObserver:token];
+}
+
+/// Helvetica 12, no wrap, both panes scrolled sideways on a long line. The two panes do not share a layout
+/// manager, so each one has to be laid out before it can scroll (#72).
+static void TestNoWrapDoesNotFlashLeftEdge(void)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    // 24 lines is enough to scroll vertically. 800 copies of "aaa " is about the width of the document that
+    // drew the left edge (frame about 15000pt, clip x about 1000).
+    NSString *text = WideLines(24, 800);
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat ignored = 0;
+    Check(MakeScrolledSourceMode(text, NSLineBreakByClipping, 0, &upper, &lower, &ignored, &ignored),
+          @"no-wrap source scrolls");
+    NSFont *font = [NSFont fontWithName:@"Helvetica" size:12];
+    Check(font != nil, @"Helvetica 12 is available");
+    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+    style.lineBreakMode = NSLineBreakByClipping;
+    [upper.textStorage setAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: style}
+                                range:NSMakeRange(0, upper.string.length)];
+    [upper.layoutManager ensureLayoutForTextContainer:upper.textContainer];
+    [lower.layoutManager ensureLayoutForTextContainer:lower.textContainer];
+    [upper sizeToFit];
+    [lower sizeToFit];
+    ScrollToProposed(upper, 1000, ScrollY(upper));
+    ScrollToProposed(lower, 1000, ScrollY(lower));
+    CGFloat upperX = ScrollX(upper);
+    CGFloat lowerX = ScrollX(lower);
+    Check(upperX > 400 && lowerX > 400, @"the source is scrolled sideways");
+    controller.settings.findString = @"aaa";
+    controller.settings.replaceString = @"ddd";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    CGFloat lowest = LowestClipXDuring(upper, lower, ^{
+        AfterEditingNarrowTheFrame(upper, lower, ^{
+            Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper), @"sideways Replace All");
+        });
+    });
+    Check(lowest > 200,
+          [NSString stringWithFormat:@"Replace All does not draw the left edge (lowest x %.1f, was %.1f and %.1f)",
+           lowest, upperX, lowerX]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.08]];
+    Check(ScrollX(upper) > 200 && ScrollX(lower) > 200, @"the sideways place is still there after the run loop");
+    lowest = LowestClipXDuring(upper, lower, ^{
+        [upper.undoManager undo];
+    });
+    Check(lowest > 200, [NSString stringWithFormat:@"undo does not draw the left edge (lowest x %.1f)", lowest]);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    lowest = LowestClipXDuring(upper, lower, ^{
+        [upper.undoManager redo];
+    });
+    Check(lowest > 200, [NSString stringWithFormat:@"redo does not draw the left edge (lowest x %.1f)", lowest]);
+}
+
+/// Counts `ensureLayoutForTextContainer:` on these two panes. That call is the whole-document layout (#72).
+static IMP TSOriginalEnsureContainerLayout;
+static NSHashTable<NSTextContainer *> *TSCountedContainers;
+static NSUInteger TSContainerLayoutCount;
+
+static void TSCountedEnsureContainerLayout(NSLayoutManager *layout, SEL _cmd, NSTextContainer *container)
+{
+    if (container && [TSCountedContainers containsObject:container])
+        TSContainerLayoutCount++;
+    ((void (*)(id, SEL, NSTextContainer *))TSOriginalEnsureContainerLayout)(layout, @selector(ensureLayoutForTextContainer:), container);
+}
+
+static NSUInteger ContainerLayoutsDuring(NSTextView *upper, NSTextView *lower, dispatch_block_t block)
+{
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        Method method = class_getInstanceMethod(NSLayoutManager.class, @selector(ensureLayoutForTextContainer:));
+        TSOriginalEnsureContainerLayout = method_setImplementation(method, (IMP)TSCountedEnsureContainerLayout);
+        TSCountedContainers = [NSHashTable weakObjectsHashTable];
+    });
+    [TSCountedContainers removeAllObjects];
+    [TSCountedContainers addObject:upper.textContainer];
+    [TSCountedContainers addObject:lower.textContainer];
+    TSContainerLayoutCount = 0;
+    block();
+    NSUInteger count = TSContainerLayoutCount;
+    [TSCountedContainers removeAllObjects];
+    return count;
+}
+
+/// Replace All lays each pane out once, on the turn after the edit. Doing it again before returning is the stall on
+/// a long file. Two panes, so the count is 2 (#72).
+static void TestReplaceAllLaysOutOnce(void)
+{
+    NSUInteger beeps = 0;
+    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    NSString *text = WideLines(48, 40);
+    NSTextView *upper = nil, *lower = nil;
+    CGFloat ignored = 0;
+    Check(MakeScrolledSourceMode(text, NSLineBreakByClipping, 0, &upper, &lower, &ignored, &ignored),
+          @"layout-count source scrolls");
+    controller.settings.findString = @"aaa";
+    controller.settings.replaceString = @"ddd";
+    controller.settings.options = 0;
+    controller.settings.inSelection = NO;
+    NSUInteger layouts = ContainerLayoutsDuring(upper, lower, ^{
+        Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, upper), @"Replace All for the layout count");
+    });
+    Check(layouts == 2,
+          [NSString stringWithFormat:@"Replace All lays the document out once (laid out %lu times)", (unsigned long)layouts]);
+}
+
+/// Same-length Replace All must not move either axis. A shorter or longer replacement keeps the character that was
+/// under the left edge. The caret starts four lines below the top, which is where the view was jumping.
+static void TestSameLengthKeepsScreen(void)
+{
+    TSInstallClipWatch();
+    NSFont *font = [NSFont userFixedPitchFontOfSize:13] ?: [NSFont systemFontOfSize:13];
+    CGFloat a = [@"a" sizeWithAttributes:@{NSFontAttributeName: font}].width;
+    CGFloat d = [@"d" sizeWithAttributes:@{NSFontAttributeName: font}].width;
+    Check(fabs(a - d) < 0.01, @"the fixed-pitch source font draws aaa and ddd at the same width");
+    NSString *text = WideLines(60, 80);
+    NSLineBreakMode modes[] = {NSLineBreakByClipping, NSLineBreakByWordWrapping, NSLineBreakByCharWrapping};
+    struct {
+        NSString *name;
+        NSUInteger line;
+        CGFloat along;
+        CGFloat viewportX;
+        CGFloat viewportY;
+    } places[] = {
+        {@"top left", 0, 0, 0, 0},
+        {@"vertical middle, left", NSNotFound, 0, 0, 0.5},
+        {@"top, horizontal middle", 0, 0.5, 0.5, 0},
+        {@"vertical and horizontal middle", NSNotFound, 0.5, 0.5, 0.5},
+    };
+    for (NSUInteger m = 0; m < sizeof modes / sizeof modes[0]; m++) {
+        for (NSUInteger p = 0; p < sizeof places / sizeof places[0]; p++) {
+            CheckPlacedReplace(text, modes[m], places[p].name, places[p].line, places[p].along,
+                               places[p].viewportX, places[p].viewportY, @"ddd", YES);
+            CheckPlacedReplace(text, modes[m], places[p].name, places[p].line, places[p].along,
+                               places[p].viewportX, places[p].viewportY, @"aa", NO);
+            CheckPlacedReplace(text, modes[m], places[p].name, places[p].line, places[p].along,
+                               places[p].viewportX, places[p].viewportY, @"aaaa", NO);
+        }
+    }
+    // Longer than the layout window used to place one line, viewport at the start, caret on line 5 column 217.
+    CheckPlacedReplace(WideLines(30, 2100), NSLineBreakByClipping, @"long line, top left", 0, 0, 0, 0, @"ddd", YES);
+    // The source sits under the toolbar. 68 and 18 are the insets measured on a document window; 32 is the toolbar hidden.
+    NSEdgeInsets bar = NSEdgeInsetsMake(68, 0, 18, 0);
+    NSEdgeInsets hiddenBar = NSEdgeInsetsMake(32, 0, 0, 0);
+    TestInsetPlace(@"top", NSLineBreakByClipping, bar, 0, -1e9, @"ddd", YES, NO);
+    TestInsetPlace(@"near top", NSLineBreakByClipping, bar, 0, -30, @"ddd", YES, NO);
+    TestInsetPlace(@"middle", NSLineBreakByClipping, bar, 400, 400, @"ddd", YES, NO);
+    TestInsetPlace(@"bottom", NSLineBreakByClipping, bar, 0, 1e9, @"ddd", YES, YES);
+    TestInsetPlace(@"top, shorter", NSLineBreakByClipping, bar, 0, -1e9, @"aa", NO, NO);
+    TestInsetPlace(@"bottom, longer", NSLineBreakByClipping, bar, 0, 1e9, @"aaaa", NO, YES);
+    TestInsetPlace(@"top", NSLineBreakByWordWrapping, bar, 0, -1e9, @"ddd", YES, NO);
+    TestInsetPlace(@"top", NSLineBreakByCharWrapping, bar, 0, -1e9, @"ddd", YES, NO);
+    TestInsetPlace(@"toolbar hidden", NSLineBreakByClipping, hiddenBar, 0, -1e9, @"ddd", YES, NO);
+    TestInsetPlace(@"video, top and across", NSLineBreakByClipping, bar, 500, -1e9, @"ddd", YES, NO);
+    TestRedoHoldDoesNotLeak();
+    TestWrappedEndBelowToolbar(NSLineBreakByWordWrapping, @"aa");
+    TestWrappedEndBelowToolbar(NSLineBreakByCharWrapping, @"aa");
+    TestWrappedEndBelowToolbar(NSLineBreakByWordWrapping, @"aaaa");
+    TestWrappedEndBelowToolbar(NSLineBreakByCharWrapping, @"aaaa");
+    TestNoWrapDoesNotFlashLeftEdge();
+    TestReplaceAllLaysOutOnce();
 }
 
 #pragma mark Main
