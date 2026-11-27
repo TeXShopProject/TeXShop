@@ -173,7 +173,6 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     NSString *filterTitle = NSLocalizedString(@"Show Only Custom Shortcuts", @"");
     self.customFilter = [NSButton buttonWithImage:[NSImage imageWithSystemSymbolName:@"line.3.horizontal.decrease.circle" accessibilityDescription:filterTitle] ?: [NSImage new]
         target:self action:@selector(changeCustomFilter:)];
-    self.customFilter.alternateImage = [NSImage imageWithSystemSymbolName:@"line.3.horizontal.decrease.circle.fill" accessibilityDescription:filterTitle];
     [self.customFilter setButtonType:NSButtonTypePushOnPushOff];
     self.customFilter.bordered = NO;
     self.customFilter.imageScaling = NSImageScaleProportionallyUpOrDown;
@@ -388,8 +387,12 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 // The filtered list is worked out again from the custom shortcuts there are now.
 - (void)forgetShownCustomCommands { [self.shownCustomCommandIDs removeAllObjects]; }
 - (void)updateCustomFilter {
+    BOOL on = self.customFilter.state == NSControlStateValueOn;
     self.customFilter.enabled = !self.searchingByKey;
-    self.customFilter.contentTintColor = self.customFilter.state == NSControlStateValueOn ? NSColor.controlAccentColor : nil;
+    // An unbordered push-on/push-off button never draws its alternate image, so the filled symbol is set here.
+    self.customFilter.image = [NSImage imageWithSystemSymbolName:on ? @"line.3.horizontal.decrease.circle.fill" : @"line.3.horizontal.decrease.circle"
+        accessibilityDescription:NSLocalizedString(@"Show Only Custom Shortcuts", @"")] ?: [NSImage new];
+    self.customFilter.contentTintColor = on ? NSColor.controlAccentColor : nil;
 }
 - (void)changeCustomFilter:(id)sender {
     [self endRecording];

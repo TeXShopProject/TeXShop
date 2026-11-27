@@ -708,9 +708,15 @@ int main(int argc,char **argv){@autoreleasepool{
   BOOL (^isBold)(NSTextField *)=^BOOL(NSTextField *field){return [field isKindOfClass:NSTextField.class] && ([NSFontManager.sharedFontManager traitsOfFont:field.font]&NSBoldFontMask)!=0;};
   REQUIRE(pane.customFilter.enabled && pane.customFilter.state==NSControlStateValueOff && [pane.customFilter.toolTip isEqual:NSLocalizedString(@"Show Only Custom Shortcuts",@"")]);
   // With no custom shortcut, the filtered list is empty and says so.
+  // The button shows the filled symbol while it is on: far more of it is inked than the outline.
+  NSUInteger (^inked)(void)=^NSUInteger{NSButton *b=pane.customFilter;NSBitmapImageRep *rep=[b bitmapImageRepForCachingDisplayInRect:b.bounds];[b cacheDisplayInRect:b.bounds toBitmapImageRep:rep];NSUInteger n=0;for(NSInteger y=0;y<rep.pixelsHigh;y++)for(NSInteger x=0;x<rep.pixelsWide;x++)if([rep colorAtX:x y:y].alphaComponent>.5)n++;return n;};
+  NSUInteger outlineInk=inked();
   pane.customFilter.state=NSControlStateValueOn;[pane changeCustomFilter:pane.customFilter];
   REQUIRE(pane.table.numberOfRows==0 && [pane.hint.stringValue isEqual:NSLocalizedString(@"No custom shortcuts.",@"")]);
+  NSUInteger filledInk=inked();
+  REQUIRE(outlineInk>0 && filledInk>outlineInk*2);
   pane.customFilter.state=NSControlStateValueOff;[pane changeCustomFilter:pane.customFilter];
+  REQUIRE(inked()==outlineInk);
   REQUIRE(pane.table.numberOfRows==all && ![pane.hint.stringValue isEqual:NSLocalizedString(@"No custom shortcuts.",@"")]);
   // A changed key and a removed key are custom; both are bold, a default is not.
   REQUIRE([store setKey:@"k" modifiers:C forCommand:firstCommand]==nil && [store setKey:@"" modifiers:0 forCommand:secondCommand]==nil);
