@@ -119,6 +119,7 @@ static NSEvent *Key(NSString *characters, NSEventModifierFlags flags, unsigned s
     return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0 windowNumber:0 context:nil
                           characters:characters charactersIgnoringModifiers:characters isARepeat:NO keyCode:code];
 }
+static NSButton *CancelButtonOf(TSStationery *s) { for (NSView *v in s.stationeryWindow.contentView.subviews) if ([v.identifier isEqual:@"stationery.cancel"]) return (NSButton *)v; return nil; }
 static NSString *Read(NSString *path) { return [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil]; }
 
 static void Write(NSString *path, NSString *text) {
@@ -248,13 +249,55 @@ static void Behavior(NSString *work) {
     Select(s, @"Untitled 2.tex");
     Write([folder stringByAppendingPathComponent:@"Untitled 2.comment"], @"Second");
     [s reloadStationery];
-    for (NSString *bad in @[@"", @"a/b", @"a:b", @".hidden"]) {
+    // Empty: the old name comes back, nothing is said.
+    LastAlert = nil;
+    [s renameStationery:nil];
+    NSTableCellView *named = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+    named.textField.stringValue = @"  ";
+    [panel makeFirstResponder:s.tableView];
+    Check(LastAlert == nil && [Names(s) containsObject:@"Untitled 2.tex"] && [named.textField.stringValue isEqualToString:@"Untitled 2"], @"an empty name brings back the old one");
+    // Names that cannot be file names: the reason, as the Finder gives it, then the name typed is edited again.
+    NSString *(^L)(NSString *) = ^(NSString *key) { return Table[key] ?: key; };
+    NSString *longName = [@"" stringByPaddingToLength:90 withString:@"長" startingAtIndex:0];
+    NSDictionary *refused = @{@"a/b": @"Try using a name with fewer characters, or with no punctuation marks.",
+                              @"a:b": @"Try using a name with fewer characters, or with no punctuation marks.",
+                              @".hidden": @"Names that begin with a dot “.” are reserved for the system.",
+                              longName: @"Try using a name with fewer characters."};
+    for (NSString *bad in refused) {
+        LastAlert = nil;
         [s renameStationery:nil];
-        NSTableCellView *renamed = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
-        renamed.textField.stringValue = bad;
+        named = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+        named.textField.stringValue = bad;
         [panel makeFirstResponder:s.tableView];
-        Check([Names(s) containsObject:@"Untitled 2.tex"] && [renamed.textField.stringValue isEqualToString:@"Untitled 2"], [NSString stringWithFormat:@"the name '%@' is refused and the old one comes back", bad]);
+        NSString *expected = [bad isEqual:longName] ? [NSString stringWithFormat:L(@"The name “%@” can’t be used because it’s too long."), bad] : [NSString stringWithFormat:L(@"The name “%@” can’t be used."), bad];
+        Check(LastAlert && [LastAlert.messageText isEqualToString:expected] && [LastAlert.informativeText isEqualToString:L(refused[bad])],
+              [NSString stringWithFormat:@"the name '%@' is refused with the Finder's reason", bad.length > 20 ? @"(90 kanji)" : bad]);
+        Check([Names(s) containsObject:@"Untitled 2.tex"] && [named.textField.stringValue isEqualToString:@"Untitled 2"], @"and nothing is renamed");
+        AlertHandler(NSAlertFirstButtonReturn);
+        NSText *editor = [panel.firstResponder isKindOfClass:NSText.class] ? (NSText *)panel.firstResponder : nil;
+        Check(editor && [editor.string isEqualToString:bad] && editor.selectedRange.length == bad.length, @"after the alert the name typed is edited again, selected");
+        Check(s.createButton.keyEquivalent.length == 0 && [CancelButtonOf(s) keyEquivalent].length == 0, @"while it is edited again, Return and Escape are not Create and Cancel");
+        Check([named.textField.delegate control:named.textField textView:(NSTextView *)editor doCommandBySelector:@selector(cancelOperation:)] && [named.textField.stringValue isEqualToString:@"Untitled 2"], @"and Escape brings back the old name");
     }
+    // Line breaks and tabs become spaces; the extension typed with the name is dropped.
+    Select(s, @"Untitled 2.tex");
+    [s renameStationery:nil];
+    named = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+    named.textField.stringValue = @"Two\nlines\there.TEX";
+    [panel makeFirstResponder:s.tableView];
+    Check([Names(s) containsObject:@"Two lines here.tex"], [NSString stringWithFormat:@"line breaks become spaces and a typed .tex is dropped: %@", Names(s)]);
+    Select(s, @"Two lines here.tex");
+    [s renameStationery:nil];
+    named = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+    named.textField.stringValue = @"Untitled 2.ltx";
+    [panel makeFirstResponder:s.tableView];
+    Check([Names(s) containsObject:@"Untitled 2.ltx.tex"], @"another extension is part of the name");
+    Select(s, @"Untitled 2.ltx.tex");
+    [s renameStationery:nil];
+    named = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];
+    named.textField.stringValue = @"Untitled 2";
+    [panel makeFirstResponder:s.tableView];
+    Check([Names(s) containsObject:@"Untitled 2.tex"], @"(back to Untitled 2)");
     LastAlert = nil;
     [s renameStationery:nil];
     NSTableCellView *renamed = [s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES];

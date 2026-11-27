@@ -499,12 +499,6 @@ static NSString *TSStationeryOneLine(NSString *text)
 - (NSButton *)plusButton { return self.listBar.addButton; }
 - (NSButton *)minusButton { return self.listBar.removeButton; }
 
-- (BOOL)isValidStationeryName:(NSString *)name
-{
-	name = [name stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-	return name.length > 0 && ![name hasPrefix:@"."] && [name rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"/:"]].location == NSNotFound;
-}
-
 // Files of the folder whose name without extension is name, the .comment file aside.
 - (NSArray<NSString *> *)stationeryFilesNamed:(NSString *)name
 {
@@ -559,33 +553,96 @@ static NSString *TSStationeryOneLine(NSString *text)
 	[self.tableView editColumn:[self.tableView columnWithIdentifier:TSStationeryNameColumn] row:(NSInteger)row withEvent:nil select:YES];
 }
 
-// Renames the file and its .comment file; a name in use is refused, as in the Finder.
-- (BOOL)renameFile:(NSString *)file to:(NSString *)name
+// The name typed for a stationery, made usable: line breaks and tabs become spaces, the ends are
+// trimmed, and the extension of the file, if typed too (foo.tex for foo.tex), is dropped.
+- (NSString *)nameFromTyped:(NSString *)typed forFile:(NSString *)file
+{
+	NSArray *parts = [typed componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r\t\u2028\u2029"]];
+	NSString *name = [[parts componentsJoinedByString:@" "] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
+	if (file.pathExtension.length && [name.pathExtension caseInsensitiveCompare:file.pathExtension] == NSOrderedSame && name.stringByDeletingPathExtension.length)
+		name = name.stringByDeletingPathExtension;
+	return name;
+}
+
+// Why name cannot be the name of file, as the Finder says it; nil when it can.
+- (NSAlert *)alertForName:(NSString *)name ofFile:(NSString *)file
+{
+	NSString *message = nil, *information = nil;
+	if ([name hasPrefix:@"."]) {
+		message = [NSString stringWithFormat:NSLocalizedString(@"The name “%@” can’t be used.", @"File > New from Stationery: a name that cannot be a file name"), name];
+		information = NSLocalizedString(@"Names that begin with a dot “.” are reserved for the system.", @"File > New from Stationery: below a name that cannot be used");
+	} else if ([name rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"/:"]].location != NSNotFound) {
+		message = [NSString stringWithFormat:NSLocalizedString(@"The name “%@” can’t be used.", @"File > New from Stationery: a name that cannot be a file name"), name];
+		information = NSLocalizedString(@"Try using a name with fewer characters, or with no punctuation marks.", @"File > New from Stationery: below a name with / or :");
+	} else {
+		// A file name holds at most 255 bytes, the .comment file's too.
+		NSString *renamed = file.pathExtension.length ? [name stringByAppendingPathExtension:file.pathExtension] : name;
+		NSString *comment = [name stringByAppendingPathExtension:@"comment"];
+		NSUInteger longest = MAX(strlen(renamed.fileSystemRepresentation), comment ? strlen(comment.fileSystemRepresentation) : 0);
+		if (longest > NAME_MAX) {
+			message = [NSString stringWithFormat:NSLocalizedString(@"The name “%@” can’t be used because it’s too long.", @"File > New from Stationery: a name too long for a file name"), name];
+			information = NSLocalizedString(@"Try using a name with fewer characters.", @"File > New from Stationery: below a name that is too long");
+		}
+	}
+	if (message == nil) return nil;
+	NSAlert *alert = [NSAlert new];
+	alert.messageText = message;
+	alert.informativeText = information;
+	return alert;
+}
+
+// Renames the file and its .comment file. A name that cannot be used, or that another stationery
+// has, is explained, and the name typed is edited again, as in the Finder.
+- (void)renameFile:(NSString *)file typed:(NSString *)typed
 {
 	NSString *old = file.stringByDeletingPathExtension;
-	if ([name isEqualToString:old] || ![self isValidStationeryName:name]) return NO;
+	NSString *name = [self nameFromTyped:typed forFile:file];
+	if (name.length == 0 || [name isEqualToString:old]) {
+		[self showName:old ofFile:file];
+		return;
+	}
+	NSAlert *refusal = [self alertForName:name ofFile:file];
 	NSString *renamed = file.pathExtension.length ? [name stringByAppendingPathExtension:file.pathExtension] : name;
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSString *oldComment = [[self.folderPath stringByAppendingPathComponent:old] stringByAppendingPathExtension:@"comment"];
 	NSString *newComment = [[self.folderPath stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"comment"];
-	BOOL caseOnly = [name caseInsensitiveCompare:old] == NSOrderedSame;
-	NSMutableArray *others = [[self stationeryFilesNamed:name] mutableCopy];
-	[others removeObject:file];
-	if (others.count || (!caseOnly && [fileManager fileExistsAtPath:newComment])) {
-		[self showError:[NSError errorWithDomain:NSCocoaErrorDomain code:NSFileWriteFileExistsError userInfo:@{NSFilePathErrorKey: [self.folderPath stringByAppendingPathComponent:renamed]}]];
-		return NO;
+	if (refusal == nil) {
+		BOOL caseOnly = [name caseInsensitiveCompare:old] == NSOrderedSame;
+		NSMutableArray *others = [[self stationeryFilesNamed:name] mutableCopy];
+		[others removeObject:file];
+		if (others.count || (!caseOnly && [fileManager fileExistsAtPath:newComment]))
+			refusal = [NSAlert alertWithError:[NSError errorWithDomain:NSCocoaErrorDomain code:NSFileWriteFileExistsError userInfo:@{NSFilePathErrorKey: [self.folderPath stringByAppendingPathComponent:renamed]}]];
 	}
 	NSError *error = nil;
-	if (![fileManager moveItemAtPath:[self.folderPath stringByAppendingPathComponent:file] toPath:[self.folderPath stringByAppendingPathComponent:renamed] error:&error]) {
-		[self showError:error];
-		return NO;
+	if (refusal == nil && ![fileManager moveItemAtPath:[self.folderPath stringByAppendingPathComponent:file] toPath:[self.folderPath stringByAppendingPathComponent:renamed] error:&error])
+		refusal = [NSAlert alertWithError:error];
+	if (refusal) {
+		[self showName:old ofFile:file];
+		[refusal beginSheetModalForWindow:self.stationeryWindow completionHandler:^(NSModalResponse response) {
+			// The name typed, to be corrected.
+			[self selectFile:file];
+			[self beginRenamingFile:file];
+			NSText *editor = [self.stationeryWindow fieldEditor:NO forObject:nil];
+			if ([self.stationeryWindow.firstResponder isKindOfClass:NSText.class]) editor = (NSText *)self.stationeryWindow.firstResponder;
+			editor.string = typed;
+			[editor selectAll:nil];
+		}];
+		return;
 	}
 	// The description goes with it, unless another stationery of the old name keeps it.
 	if ([fileManager fileExistsAtPath:oldComment] && [self stationeryFilesNamed:old].count == 0)
 		[fileManager moveItemAtPath:oldComment toPath:newComment error:nil];
 	[self reloadStationery];
 	[self selectFile:renamed];
-	return YES;
+}
+
+// The name shown in the list for file.
+- (void)showName:(NSString *)name ofFile:(NSString *)file
+{
+	NSUInteger row = [self.fullSourceData indexOfObject:file];
+	if (row == NSNotFound) return;
+	NSTableCellView *cell = [self.tableView viewAtColumn:[self.tableView columnWithIdentifier:TSStationeryNameColumn] row:(NSInteger)row makeIfNecessary:NO];
+	cell.textField.stringValue = name;
 }
 
 // name.comment holds the description on one line; an empty description removes it.
@@ -741,7 +798,13 @@ static NSString *TSStationeryOneLine(NSString *text)
 // While a name or description is edited, Return and Escape end the editing, not the panel.
 - (void)beginEditingField:(NSTextField *)field
 {
-	self.textBeforeEditing = field.stringValue;
+	// Escape brings back the name or description in the list, also after a refused name is edited again.
+	NSInteger row = [self.tableView rowForView:field];
+	BOOL isName = [self.tableView columnForView:field] == [self.tableView columnWithIdentifier:TSStationeryNameColumn];
+	if (row >= 0 && row < (NSInteger)self.fullSourceData.count)
+		self.textBeforeEditing = isName ? [self titleAtRow:row] : self.commentData[row];
+	else
+		self.textBeforeEditing = field.stringValue;
 	self.createButton.keyEquivalent = @"";
 	[self cancelButton].keyEquivalent = @"";
 }
@@ -775,8 +838,7 @@ static NSString *TSStationeryOneLine(NSString *text)
 	NSInteger row = [self.tableView rowForView:field];
 	if (row < 0 || row >= (NSInteger)self.fullSourceData.count) return;
 	if ([self.tableView columnForView:field] == [self.tableView columnWithIdentifier:TSStationeryNameColumn]) {
-		NSString *name = [field.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-		if (![self renameFile:self.fullSourceData[row] to:name]) field.stringValue = [self titleAtRow:row];
+		[self renameFile:self.fullSourceData[row] typed:field.stringValue];
 		return;
 	}
 	NSString *description = TSStationeryOneLine(field.stringValue);

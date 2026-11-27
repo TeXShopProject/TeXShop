@@ -578,3 +578,18 @@
 
 /* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
 "Show “%@” in Finder" = "Afișați „%@” în Finder";
+
+/* File > New from Stationery: a name that cannot be a file name */
+"The name “%@” can’t be used." = "Numele „%@” nu poate fi utilizat.";
+
+/* File > New from Stationery: below a name with / or : */
+"Try using a name with fewer characters, or with no punctuation marks." = "Încercați utilizarea unui nume cu mai puține caractere sau fără semne de punctuație.";
+
+/* File > New from Stationery: below a name that cannot be used */
+"Names that begin with a dot “.” are reserved for the system." = "Numele care încep cu un punct „.” sunt rezervate pentru sistem.";
+
+/* File > New from Stationery: a name too long for a file name */
+"The name “%@” can’t be used because it’s too long." = "Numele „%@” nu poate fi utilizat deoarece este prea lung.";
+
+/* File > New from Stationery: below a name that is too long */
+"Try using a name with fewer characters." = "Încercați utilizarea unui nume cu mai puține caractere.";

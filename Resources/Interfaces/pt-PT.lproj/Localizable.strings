@@ -578,3 +578,18 @@
 
 /* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
 "Show “%@” in Finder" = "Mostrar “%@” no Finder";
+
+/* File > New from Stationery: a name that cannot be a file name */
+"The name “%@” can’t be used." = "Não é possível usar o nome “%@”.";
+
+/* File > New from Stationery: below a name with / or : */
+"Try using a name with fewer characters, or with no punctuation marks." = "Experimente usar um nome com menos caracteres, ou sem sinais de pontuação.";
+
+/* File > New from Stationery: below a name that cannot be used */
+"Names that begin with a dot “.” are reserved for the system." = "Os nomes iniciados com um ponto “.” estão reservados para o sistema.";
+
+/* File > New from Stationery: a name too long for a file name */
+"The name “%@” can’t be used because it’s too long." = "Não é possível usar o nome “%@”, porque é demasiado longo.";
+
+/* File > New from Stationery: below a name that is too long */
+"Try using a name with fewer characters." = "Experimente utilizar um nome com menos caracteres.";
