@@ -194,8 +194,14 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "시스템 설정에서 바꾸려면 사이드바에서 “앱 단축키”를 선택합니다.";
 "Inactive for this key" = "이 키에서는 비활성";
 "No command uses this key." = "이 키를 사용하는 명령이 없습니다.";
-"Show Only Custom Shortcuts" = "사용자 지정 단축키만 보기";
-"No custom shortcuts." = "사용자 지정 단축키가 없습니다.";
+"Filter Shortcuts" = "단축키 필터";
+"Shortcut Filter: All" = "모두";
+"Shortcut Filter: Assigned" = "할당됨";
+"Shortcut Filter: Unassigned" = "할당 안 됨";
+"Shortcut Filter: Changed" = "변경됨";
+"No changed shortcuts." = "변경한 단축키가 없습니다.";
+"No command has a shortcut." = "단축키가 있는 명령이 없습니다.";
+"Every command has a shortcut." = "모든 명령에 단축키가 있습니다.";
 "Press a key" = "키를 누르세요";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "이 키는 단축키로 사용할 수 없습니다. Command 또는 Control과 조합하거나 F1–F20을 사용하세요.";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "지구본(fn) 키를 사용하는 단축키는 TeXShop 명령에 할당할 수 없습니다.";

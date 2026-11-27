@@ -194,8 +194,14 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Pentru a schimba în Configurări sistem, alegeți „Scurtături aplicații” în bara laterală.";
 "Inactive for this key" = "Inactiv pentru această tastă";
 "No command uses this key." = "Nicio comandă nu folosește această tastă.";
-"Show Only Custom Shortcuts" = "Afișați doar scurtăturile personalizate";
-"No custom shortcuts." = "Nu există scurtături personalizate.";
+"Filter Shortcuts" = "Filtrați scurtăturile";
+"Shortcut Filter: All" = "Toate";
+"Shortcut Filter: Assigned" = "Atribuite";
+"Shortcut Filter: Unassigned" = "Neatribuite";
+"Shortcut Filter: Changed" = "Modificate";
+"No changed shortcuts." = "Nu există scurtături modificate.";
+"No command has a shortcut." = "Nicio comandă nu are scurtătură.";
+"Every command has a shortcut." = "Toate comenzile au scurtătură.";
 "Press a key" = "Apăsați o tastă";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Această tastă nu poate fi folosită drept scurtătură. Folosiți Comandă sau Control cu o tastă, ori F1–F20.";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Scurtăturile cu tasta Glob (fn) nu pot fi atribuite comenzilor TeXShop.";

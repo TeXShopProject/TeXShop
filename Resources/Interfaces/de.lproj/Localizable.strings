@@ -193,8 +193,14 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "Zum Ändern in den Systemeinstellungen „App-Kurzbefehle“ in der Seitenleiste wählen.";
 "Inactive for this key" = "Für diese Taste inaktiv";
 "No command uses this key." = "Kein Befehl verwendet diese Taste.";
-"Show Only Custom Shortcuts" = "Nur eigene Kurzbefehle anzeigen";
-"No custom shortcuts." = "Keine eigenen Kurzbefehle.";
+"Filter Shortcuts" = "Kurzbefehle filtern";
+"Shortcut Filter: All" = "Alle";
+"Shortcut Filter: Assigned" = "Zugewiesen";
+"Shortcut Filter: Unassigned" = "Nicht zugewiesen";
+"Shortcut Filter: Changed" = "Geändert";
+"No changed shortcuts." = "Keine geänderten Kurzbefehle.";
+"No command has a shortcut." = "Kein Befehl hat einen Kurzbefehl.";
+"Every command has a shortcut." = "Jeder Befehl hat einen Kurzbefehl.";
 "Press a key" = "Taste drücken";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Diese Taste kann nicht als Kurzbefehl verwendet werden. Verwenden Sie Command oder Control mit einer Taste oder F1–F20.";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "Kurzbefehle mit der Globus-Taste (fn) können TeXShop-Befehlen nicht zugewiesen werden.";

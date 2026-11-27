@@ -191,8 +191,14 @@
 "To change it in System Settings, choose “App Shortcuts” in the sidebar." = "要在系统设置中更改，请在侧边栏中选择“App快捷键”。";
 "Inactive for this key" = "此按键无效";
 "No command uses this key." = "没有命令使用此按键。";
-"Show Only Custom Shortcuts" = "仅显示自定快捷键";
-"No custom shortcuts." = "没有自定快捷键。";
+"Filter Shortcuts" = "筛选快捷键";
+"Shortcut Filter: All" = "全部";
+"Shortcut Filter: Assigned" = "已分配";
+"Shortcut Filter: Unassigned" = "未分配";
+"Shortcut Filter: Changed" = "已更改";
+"No changed shortcuts." = "没有已更改的快捷键。";
+"No command has a shortcut." = "没有命令有快捷键。";
+"Every command has a shortcut." = "所有命令都有快捷键。";
 "Press a key" = "请按键";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与Command或Control组合使用，或使用F1–F20。";
 "Shortcuts with the Globe key (fn) can't be assigned to TeXShop commands." = "使用地球仪(fn)键的快捷键不能分配给TeXShop命令。";
