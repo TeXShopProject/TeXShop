@@ -698,7 +698,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         NSString *text = !isCommand ? (matchCommand != nil ? [self.store displayKeyForCommand:matchCommand] : [TSShortcutStore displayKey:key modifiers:flags])
             : reason == nil ? [match.path stringByAppendingFormat:@" — %@", status] : match.path;
         NSTextField *label = isCommand || match.command == nil || match.command.managedBySystem ? [NSTextField labelWithString:text] : [self shortcutLabel:text]; label.lineBreakMode = NSLineBreakByTruncatingMiddle; label.toolTip = text;
-        if (!isCommand && matchCommand != nil) [self markCustomShortcut:label command:matchCommand];
+        if (matchCommand != nil) [self markCustomShortcut:label command:matchCommand];
         if (unchangeable) label.textColor = NSColor.disabledControlTextColor;
         if (!isCommand || reason == nil) { return label; }
         NSView *cell = [NSView new]; cell.identifier = @"shortcut.inactive-command";
@@ -734,12 +734,12 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     // A command whose shortcut macOS keeps is dimmed and not recorded, as alternates are in Xcode.
     NSTextField *label = isCommand || command.managedBySystem ? [NSTextField labelWithString:text] : [self shortcutLabel:text];
     if (command.managedBySystem) label.textColor = NSColor.disabledControlTextColor;
-    if (!isCommand) [self markCustomShortcut:label command:command];
+    [self markCustomShortcut:label command:command];
     label.lineBreakMode = NSLineBreakByTruncatingMiddle;
     label.toolTip = command.path;
     return label;
 }
-// A custom shortcut is bold, in the full list too.
+// A custom shortcut is bold with the name of its command, in the full list too.
 - (void)markCustomShortcut:(NSTextField *)label command:(TSShortcutCommand *)command {
     if (![self.store commandIsCustomized:command]) return;
     label.font = [NSFont boldSystemFontOfSize:label.font.pointSize];

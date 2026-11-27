@@ -723,7 +723,10 @@ int main(int argc,char **argv){@autoreleasepool{
   [coordinator refreshMenuAndMacros];
   REQUIRE([store commandIsCustomized:firstCommand] && [store commandIsCustomized:secondCommand] && ![store commandIsCustomized:equalsCommand]);
   REQUIRE(isBold(shortcutCell([pane rowForCommand:firstCommand])) && isBold(shortcutCell([pane rowForCommand:secondCommand])) && !isBold(shortcutCell([pane rowForCommand:equalsCommand])));
-  REQUIRE(!isBold((NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:[pane rowForCommand:firstCommand]]));
+  // The name of a custom command is bold too; the name of a default one is not.
+  REQUIRE(isBold((NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:[pane rowForCommand:firstCommand]]));
+  REQUIRE(isBold((NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:[pane rowForCommand:secondCommand]]));
+  REQUIRE(!isBold((NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:[pane rowForCommand:equalsCommand]]));
   [pane setFilterChoice:TSShortcutFilterChanged];
   REQUIRE(pane.table.numberOfRows==2 && [pane rowForCommand:firstCommand]>=0 && [pane rowForCommand:secondCommand]>=0 && [pane rowForCommand:equalsCommand]<0);
   REQUIRE(![pane.hint.stringValue isEqual:NSLocalizedString(@"No changed shortcuts.",@"")]);
