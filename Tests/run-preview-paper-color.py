@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""The theme's Preview color is the paper of pages shown light (Issue #39).
+"""The theme's Preview color is the paper of pages shown light (Issue #39), and the
+drawer follows the Appearance toolbar item (Issue #79).
 
 Compiles the production drawing and paper methods of MyPDFKitView into a small PDFView
 with the state they use, and the production OverView, then checks without showing a
 window: the paper of light pages on screen in Light, System and dark windows, white paper
 inverted for pages shown dark, nothing added to printing, rotated and cropped pages, redrawing
-only when the paper changes, and the magnifying glass. Defaults stay in memory.
+only when the paper changes, and the magnifying glass. The drawer's window takes Light or
+Dark from the Appearance item and nothing for System, also when that window is made only as
+the drawer opens; the drawer is a stand-in whose content view is in a window never shown.
+Defaults stay in memory.
 """
 from pathlib import Path
 import argparse, os, re, subprocess, tempfile
@@ -14,10 +18,13 @@ from source_tree import include_args
 MUTATIONS = {
     'no-screen-fill': ('MyPDFKitView.m', 'TSFillPreviewPaper(NSGraphicsContext.currentContext.CGContext, page, self.displayBox, self.previewPaperColor);', ';'),
     'paper-while-dark': ('TSPreviewAppearance.h', 'return TSPreviewShouldInvert(mode, systemAppearance) ? nil : themeColor;', 'return themeColor;'),
-    'inversion-keeps-paper': ('MyPDFKitView.m', '    [self updatePreviewPaperColor];\n    _updatingPreviewAppearance = NO;', '    _updatingPreviewAppearance = NO;'),
+    'inversion-keeps-paper': ('MyPDFKitView.m', '    [self updatePreviewPaperColor];\n    [self updateDrawerAppearance];', '    [self updateDrawerAppearance];'),
     'redraw-always': ('MyPDFKitView.m', '    if (old == paper || [old isEqual:paper]) return;\n    self.previewPaperColor = paper;', '    self.previewPaperColor = paper;'),
     'window-theme-ignored': ('MyPDFKitView.m', 'fromDictionary:(dark ? darkColors : liteColors) isWindowDark:dark];', 'fromDictionary:liteColors isWindowDark:NO];'),
     'unrotated-fill': ('TSPreviewAppearance.h', '    CGContextConcatCTM(context, [page transformForBox:box]);\n', ''),
+    'drawer-ignored': ('MyPDFKitView.m', '    [self updateDrawerAppearance];\n    _updatingPreviewAppearance = NO;', '    _updatingPreviewAppearance = NO;'),
+    'drawer-system-light': ('MyPDFKitView.m', ': mode == TSPreviewAppearanceDark ? NSAppearanceNameDarkAqua : nil;', ': mode == TSPreviewAppearanceDark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua;'),
+    'drawer-open-ignored': ('MyPDFKitView.m', '    if (notification.object == _drawer) [self updateDrawerAppearance];', '    (void)notification;'),
     'lens-white': ('OverView.m', '[(self.magnifiedPaperColor ?: [NSColor whiteColor]) set];', '[[NSColor whiteColor] set];'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
@@ -36,6 +43,9 @@ color = (root/'Sources/Editor/TSDocument-Color.m').read_text(encoding='utf-8', e
 change = color[color.index('- (void) changeColorsUsingDictionary:'):color.index('- (void) changeColorsFromNotification:')]
 assert '[self.myPDFKitView updatePreviewPaperColor];' in change and '[self.myPDFKitView2 updatePreviewPaperColor];' in change, 'theme changes reach both preview parts'
 assert 'PreviewBackgroundColor' not in color, 'no process-wide preview color'
+observe = texts['MyPDFKitView.m']
+observe = observe[observe.index('- (void)observePreviewAppearance'):observe.index('- (void)previewAppearanceDefaultsChanged:')]
+assert re.search(r'addObserver:self selector:@selector\(previewDrawerWillOpen:\)\s*name:NSDrawerWillOpenNotification', observe), 'the drawer is set as it opens'
 glass = (root/'Sources/Preview/MyPDFKitView-Magnification.m').read_text(encoding='utf-8', errors='replace')
 assert '[[self overView] setMagnifiedPaperColor: self.previewPaperColor];' in glass, 'the document glass takes the paper'
 
@@ -52,6 +62,8 @@ methods = '\n'.join([
     method(view, '- (void)removeDarkModeInversionFilter'),
     method(view, '- (void)updateDarkModeInversion'),
     method(view, '- (void)updatePreviewPaperColor'),
+    method(view, '- (void)updateDrawerAppearance'),
+    method(view, '- (void)previewDrawerWillOpen:(NSNotification *)notification'),
 ])
 overview = texts['OverView.m']
 overview = overview.replace('#import "OverView.h"', '#import "OverView.h"\n#import "TSMagnifyingGlass.h"', 1) if 'TSMagnifyingGlass.h' not in overview else overview
@@ -91,7 +103,15 @@ static NSDictionary *liteColors, *darkColors;
 @end
 @implementation DocumentFixture
 @end
+// A drawer whose content view is in a window that is never shown.
+@interface StandInDrawer : NSDrawer
+@property (strong) NSView *content;
+@end
+@implementation StandInDrawer
+- (NSView *)contentView { return self.content; }
+@end
 @interface MyPDFKitView : PDFView {
+    @public NSDrawer *_drawer;
     BOOL _pdfViewReady, _updatingPreviewAppearance;
     NSInteger pageIndexForMark; NSRect pageBoundsForMark; BOOL drawMark, oldSync;
     NSRect syncRect[200]; int numberSyncRect;
@@ -101,6 +121,7 @@ static NSDictionary *liteColors, *darkColors;
 @property (atomic, strong, readonly) NSColor *previewPaperColor;
 - (void)updatePreviewPaperColor;
 - (void)updateDarkModeInversion;
+- (void)previewDrawerWillOpen:(NSNotification *)notification;
 @end
 @interface MyPDFKitView ()
 @property (atomic, strong, readwrite) NSColor *previewPaperColor;
@@ -225,6 +246,33 @@ int main(void) { @autoreleasepool {
     NSBitmapImageRep *glass = [lens bitmapImageRepForCachingDisplayInRect:lens.bounds];
     [lens cacheDisplayInRect:lens.bounds toBitmapImageRep:glass];
     check(same([glass colorAtX:glass.pixelsWide/2 y:glass.pixelsHigh/2], NSColor.greenColor), @"The lens has the preview's paper");
+    // The drawer follows the Appearance item: Light and Dark, and System leaves it to macOS (#79).
+    NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    StandInDrawer *drawer = [[StandInDrawer alloc] initWithContentSize:NSMakeSize(200, 400) preferredEdge:NSMinXEdge];
+    drawer.content = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 200, 400)];
+    view->_drawer = drawer;
+    [SUD setInteger:TSPreviewAppearanceDark forKey:TSPreviewAppearanceModeKey];
+    [view updateDarkModeInversion];  // a drawer whose window is not made yet is left alone
+    NSWindow *drawerWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 400)
+        styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:YES];
+    drawerWindow.releasedWhenClosed = NO;
+    [drawerWindow.contentView addSubview:drawer.content];
+    StandInDrawer *otherDrawer = [[StandInDrawer alloc] initWithContentSize:NSMakeSize(200, 400) preferredEdge:NSMinXEdge];
+    [view previewDrawerWillOpen:[NSNotification notificationWithName:NSDrawerWillOpenNotification object:otherDrawer]];
+    check(drawerWindow.appearance == nil, @"Another window's drawer opening does not set this drawer");
+    [view previewDrawerWillOpen:[NSNotification notificationWithName:NSDrawerWillOpenNotification object:drawer]];
+    check([drawerWindow.appearance.name isEqualToString:NSAppearanceNameDarkAqua], @"Dark: the drawer is dark when it opens");
+    [SUD setInteger:TSPreviewAppearanceLight forKey:TSPreviewAppearanceModeKey];
+    NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    [view updateDarkModeInversion];
+    check([drawerWindow.appearance.name isEqualToString:NSAppearanceNameAqua], @"Light: the drawer is light in a dark system");
+    [SUD setInteger:TSPreviewAppearanceSystem forKey:TSPreviewAppearanceModeKey];
+    [view updateDarkModeInversion];
+    check(drawerWindow.appearance == nil, @"System: the drawer follows macOS again");
+    [SUD setInteger:TSPreviewAppearanceDark forKey:TSPreviewAppearanceModeKey];
+    NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    [view updateDarkModeInversion];
+    check([drawerWindow.effectiveAppearance.name isEqualToString:NSAppearanceNameDarkAqua], @"Dark: the drawer is dark in a light system");
     printf("PASS: %d preview paper checks\n", checks);
 } return 0; }
 '''
