@@ -103,8 +103,12 @@ MUTATIONS = {
         '    if (YES)\n'),
     # Back comes back lower by the top inset (#78).
     'history-place-lower': ('TSPreviewScrollerKeeper.m',
-        '    if (inset > 0.5)\n        TSMoveTextUp(scroll, inset);\n',
-        ''),
+        '    TSMoveTextUp(scroll, inset);\n}',
+        '}'),
+    # Back to the top of the document hides the top of the first page under the band (#78).
+    'history-top-of-document': ('TSPreviewScrollerKeeper.m',
+        '        if (noted.point.y >= pageTop - 1) {\n',
+        '        if (NO) {\n'),
     # A change of the layout puts the place it kept below the band, lower by the band (#78).
     'layout-place-lower': ('TSPreviewScrollerKeeper.m',
         '    if (isfinite(distance))\n        TSMoveTextUp(scroll, distance);\n',
@@ -475,6 +479,23 @@ int main(int argc, char **argv) { @autoreleasepool {
                 printf("  Back moved the view by %.1f with PDFKit alone, %.1f after\n", byPDFKit, Probe() - seen);
                 Check(fabs(Probe() - seen) < 1,
                       [NSString stringWithFormat:@"Back at twice the scale shows the place where it was (%.1f)%@", Probe() - seen, nibName]);
+                // Back to the top of the document: the noted point is the top of the first page.
+                {
+                    ScrollTop(previewScroll); Settle(pw);
+                    NSPoint top = NSMakePoint(0, NSMaxY([first boundsForBox:kPDFDisplayBoxCropBox]));
+                    CGFloat (^Top)(void) = ^CGFloat{ return [pv convertPoint:[pv convertPoint:top fromPage:first] toView:nil].y; };
+                    CGFloat atTop = Top();
+                    [pv goToDestination:[[PDFDestination alloc] initWithPage:target atPoint:point]];
+                    Settle(pw);
+                    [pv goBack:nil];
+                    Settle(pw);
+                    TSPreviewHistoryPlaceToTop(pv);
+                    Settle(pw);
+                    Check(fabs(Top() - atTop) < 1,
+                          [NSString stringWithFormat:@"Back to the top of the document shows the first page where it was (%.1f)%@", Top() - atTop, nibName]);
+                    [pv goToDestination:noted];
+                    Settle(pw);
+                }
                 // A change of the layout goes to the current destination noted before it.
                 [pv goToDestination:noted];
                 Settle(pw);

@@ -684,15 +684,34 @@ void TSPreviewPutAtTop(PDFView *view, PDFPage *page, NSPoint point)
 
 // Back and Forward go to the current destination noted before a move, the point at the top
 // edge of the clip view, under the band. PDFKit puts it at its top inset, so the view came
-// back lower by the inset taken as screen points, at every magnification (#78).
+// back lower by the inset taken as screen points, at every magnification (#78). Where the top
+// edge lay above a page, the noted point is the top of that page instead, which was in view
+// below the band: it goes right below the band again, or to the top of the document above the
+// first page.
 void TSPreviewHistoryPlaceToTop(PDFView *view)
 {
     NSScrollView *scroll = TSScroll(view);
     if (!scroll || TSToolbarBand(view) <= 0 || NSIsEmptyRect(scroll.contentView.bounds))
         return;
     CGFloat inset = scroll.contentInsets.top;
-    if (inset > 0.5)
-        TSMoveTextUp(scroll, inset);
+    if (inset <= 0.5)
+        return;
+    TSPreviewText noted = TSTextAt(view, scroll, inset);
+    if (noted.valid) {
+        CGFloat pageTop = NSMaxY([noted.page boundsForBox:view.displayBox]);
+        if (noted.point.y >= pageTop - 1) {
+            // Above the first page the view was at the top of the document.
+            if ([view.document indexForPage:noted.page] == 0) {
+                TSMoveTextUp(scroll, -1e7);
+                return;
+            }
+            CGFloat below = TSReadableBelow(scroll, TSToolbarBand(view));
+            noted.point.y = pageTop;
+            TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, noted) - below);
+            return;
+        }
+    }
+    TSMoveTextUp(scroll, inset);
 }
 
 void TSPreviewPlaceChosenByProgram(PDFView *view)

@@ -2296,24 +2296,28 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 // Back and Forward go to another place: the pinned popup of this part stays on its page (#35).
 - (void) goBack:sender
 {
-	if ([self canGoBack])
+	BOOL moves = [self canGoBack];
+	if (moves)
 		[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goBack:sender];
 	// The place noted before the move comes back where it was, not lower by the band (#78).
-	TSPreviewHistoryPlaceToTop(self);
+	if (moves)
+		TSPreviewHistoryPlaceToTop(self);
 }
 
 - (void) goForward: sender
 {
-	if ([self canGoForward])
+	BOOL moves = [self canGoForward];
+	if (moves)
 		[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goForward:sender];
 	// The place noted before the move comes back where it was, not lower by the band (#78).
-	TSPreviewHistoryPlaceToTop(self);
+	if (moves)
+		TSPreviewHistoryPlaceToTop(self);
 }
 
 // added by Terada (from this line)
