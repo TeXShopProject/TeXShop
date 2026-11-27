@@ -3,33 +3,28 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 --><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <item>
-      <title>TeXShop 6.00 RC3</title>
-      <pubDate>Wed, 25 Nov 2026 13:39:53 +0000</pubDate>
-      <sparkle:version>2659</sparkle:version>
-      <sparkle:shortVersionString>6.00 RC3</sparkle:shortVersionString>
+      <title>TeXShop 6.00 RC4</title>
+      <pubDate>Fri, 27 Nov 2026 10:36:25 +0000</pubDate>
+      <sparkle:version>2754</sparkle:version>
+      <sparkle:shortVersionString>6.00 RC4</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
       <sparkle:channel>prerelease</sparkle:channel>
-      <description xml:lang="en" sparkle:format="markdown">This is the third **release candidate** of TeXShop 6.00, for testing before the release. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
+      <description xml:lang="en" sparkle:format="markdown">This is the fourth **release candidate** of TeXShop 6.00, for testing before the release. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
 
 ## Installation
 
-If you use a 6.00 beta, RC1 or RC2 with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this release candidate through its automatic updates. Otherwise download `TeXShop-6.00-RC3.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59, an earlier beta, RC1 or RC2), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
+If you use a 6.00 beta, RC1, RC2 or RC3 with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this release candidate through its automatic updates. Otherwise download `TeXShop-6.00-RC4.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59, an earlier beta, RC1, RC2 or RC3), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
 
-## Changes since RC2
+## Changes since RC3
 
-- Text Statistics can count the characters without line endings or whitespace, after a Unicode normalization, or as Unicode scalars, UTF-16 code units or the bytes of an encoding.
-- When Japanese is the first preferred language of macOS, TeXShop offers LuaLaTeX (Japanese); otherwise it offers pdfLaTeX.
-- TeXShop shows which menu items cannot be changed, and how to change them in System Settings. A shortcut that uses the Globe key is not saved. A shortcut saved with a menu title from 5.59 or 6.00 RC2 still works after the title changes.
-- The Macro Editor saves each change and has no Save or Cancel button. Bundled macros get names that tell their use; macros that you did not edit get the new names and keep their shortcuts. A shortcut set for an old name in System Settings must be set again for the new name.
-- Enter Full Screen is Globe-F (🌐F). Control-Command-F is now only Next Mark. The Font menu has Show Fonts, Bigger and Smaller.
-- A closed Preview window opens again at the same place, and a PDF opened by itself comes back after TeXShop is quit with its windows kept ([#70](https://github.com/TeXShopProject/TeXShop/issues/70), [#71](https://github.com/TeXShopProject/TeXShop/issues/71)).
-- Fit to Content Width fits a long document in one step ([#62](https://github.com/TeXShopProject/TeXShop/issues/62)). Find in the Preview uses the Preview search. On macOS 26 and later, Preview pages are no longer drawn under the toolbar. Command-click on the title of a Preview window opens its path menu again ([#73](https://github.com/TeXShopProject/TeXShop/issues/73)).
-- Replace All in the Advanced Find panel no longer moves the source ([#72](https://github.com/TeXShopProject/TeXShop/issues/72)). The text color of a new window is the theme color from the start.
-- TeXShop Help can be read in French, Italian, Dutch, Portuguese (Brazil and Portugal), Romanian and Simplified Chinese.
-- Paste Spreadsheet Cells, Set Root File…, Run LaTeX, dvips and ps2pdf, PreTeXt-Validate and Extract Pages from PDF… are fixed, and TeXShop no longer comes with inactive engines that need programs TeX Live and macOS do not provide.
+- Replace All in the Advanced Find panel, and its Undo and Redo, keep the source where it was, also when the lines are long ([#72](https://github.com/TeXShopProject/TeXShop/issues/72)).
+- After TeXShop is quit with its windows kept, the drawer of a PDF opened by itself and the open sections and scroll position of the outline in the drawer come back ([#71](https://github.com/TeXShopProject/TeXShop/issues/71)).
+- Command completion can be turned off: choose None for Completion trigger in Settings → Keyboard ([#75](https://github.com/TeXShopProject/TeXShop/issues/75)).
+- The shortcuts you changed are shown in bold in Settings → Keyboard, and a filter button narrows the list to the shortcuts you changed, or to those with or without a key ([#76](https://github.com/TeXShopProject/TeXShop/issues/76)).
+- Command Completion Quick Start, a short guide by Herbert Schulz, is in the Help menu.
+- Opening a `.dvi`, `.ps` or `.eps` file no longer freezes TeXShop.
 
 ## All changes in TeXShop 6.00
-
 TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell checking, pinned link previews, a new Settings window and a status bar, and fixes many problems.
 
 ## Main changes
@@ -55,7 +50,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 
 - Link previews are easier to read and show the page number at the lower right, which Settings can turn off; pin one with the Option key, and turn previews on or off with the Control key. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#7](https://github.com/TeXShopProject/TeXShop/issues/7), [#10](https://github.com/TeXShopProject/TeXShop/issues/10), [#12](https://github.com/TeXShopProject/TeXShop/issues/12), [#14](https://github.com/TeXShopProject/TeXShop/issues/14), [#17](https://github.com/TeXShopProject/TeXShop/issues/17), [#30](https://github.com/TeXShopProject/TeXShop/issues/30), [#35](https://github.com/TeXShopProject/TeXShop/issues/35)).
 - In a split Preview window, show a link’s target in the other part or switch the two parts; after unsplitting, the part you were using stays, and the pages usually stay in place on the screen when MultiPage display is first split into a top and a bottom part. In a window that is not split, Switch Views changes between two views, each with its own magnification, display format and pinned link popup. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#14](https://github.com/TeXShopProject/TeXShop/issues/14), [#25](https://github.com/TeXShopProject/TeXShop/issues/25), [#31](https://github.com/TeXShopProject/TeXShop/issues/31), [#52](https://github.com/TeXShopProject/TeXShop/issues/52), [#60](https://github.com/TeXShopProject/TeXShop/issues/60), [#66](https://github.com/TeXShopProject/TeXShop/issues/66)). The single window opens with the divider where it was last, suggested by [Felix Finster](https://github.com/felix-finster) ([#26](https://github.com/TeXShopProject/TeXShop/issues/26)).
-- Annotate with an annotation toolbar under the toolbar of the Preview window (Preview › Show Annotation Toolbar). Its tools work on the document of that window, also in the window that shows the source and the Preview. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#49](https://github.com/TeXShopProject/TeXShop/issues/49)).
+- Annotate with an annotation toolbar under the toolbar of the Preview window (Preview › Show Annotation Toolbar). Its tools work on the document of that window, also in the window that shows the source and the Preview. Its tools are easy to see. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#49](https://github.com/TeXShopProject/TeXShop/issues/49)).
 - Zoom to Content Width and Fit to Content Width, scrolling that does not turn pages and a magnifying glass at any magnification are added, and the outline in the drawer stays as it was after typesetting. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) and [svb-bit](https://github.com/svb-bit) ([#9](https://github.com/TeXShopProject/TeXShop/issues/9), [#19](https://github.com/TeXShopProject/TeXShop/issues/19), [#33](https://github.com/TeXShopProject/TeXShop/issues/33)). When another application such as latexmk rewrites the PDF, the preview is updated at the same place. Press Return in the drawer to go to the entry chosen with the keyboard, suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#61](https://github.com/TeXShopProject/TeXShop/issues/61)).
 - The preview toolbar has the icons of Apple’s Preview, tool tips and page layout menus; click the word next to its magnification field to open the Magnification menu. Suggested by Bruno Voisin and [Uwe Schmock](https://github.com/Uwe-Schmock) ([#28](https://github.com/TeXShopProject/TeXShop/issues/28), [#34](https://github.com/TeXShopProject/TeXShop/issues/34), [#54](https://github.com/TeXShopProject/TeXShop/issues/54)).
 - Print from the Preview as Apple’s Preview does: with Auto Rotate and Scale to Fit in the print panel, each page is turned and made to fit the paper. Suggested by Bruno Voisin.
@@ -72,6 +67,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - The encoding of a source file is detected automatically.
 - Experiment typesets with the document’s pictures and references, and its source looks like the document’s source. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#8](https://github.com/TeXShopProject/TeXShop/issues/8), [#20](https://github.com/TeXShopProject/TeXShop/issues/20)).
 - Complete the reference names that the document defines, and BibDesk citations, with a new item in the Edit menu. Settings → Keyboard shows the Option and Control mark keys, and Experiment uses the same completion key as the source window.
+- Command completion can be turned off: choose None for Completion trigger in Settings → Keyboard. Suggested by [marquinho78](https://github.com/marquinho78) ([#75](https://github.com/TeXShopProject/TeXShop/issues/75)).
 - The Tags menu is always up to date, and Character Info shows details of a character.
 - The Matrix panel is easier to use: type entries directly in its table, move with Return, Tab and the arrow keys, and copy and paste entries with other applications. A matrix can be far bigger, and so can the panel.
 - Text Statistics in the status bar can count the characters without line endings or whitespace, after a Unicode normalization, or as Unicode scalars, UTF-16 code units or the bytes of an encoding.
@@ -82,6 +78,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Detect Paths… sets the TeX and Ghostscript installations automatically.
 - The index program and MetaPost can be set.
 - Change the shortcut of any menu command and the key bindings in Settings → Keyboard; Duplicate and Close All, which macOS adds to the File menu, can also be changed. Reported by [Herb Schulz](https://github.com/herbs) ([#46](https://github.com/TeXShopProject/TeXShop/issues/46)).
+- The shortcuts you changed are shown in bold in Settings → Keyboard, and a filter button narrows the list to the shortcuts you changed, or to those with or without a key. Suggested by [marquinho78](https://github.com/marquinho78) ([#76](https://github.com/TeXShopProject/TeXShop/issues/76)).
 - Settings → Updates can include betas. The keyboard shortcut of Quit works while the message that TeXShop is up to date is shown. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#68](https://github.com/TeXShopProject/TeXShop/issues/68)).
 - Autosave and Versions can be turned off, the first page can be shown alone as a cover, @ can count as part of command names, expl3 and index highlighting can be on at opening, the markers for invisible characters can be chosen, the left and right arrow keys can always turn pages, the Preview can keep its magnification, display format and split in full screen, the Advanced Find panel can be kept on top, and window opacity can also be typed as a number.
 - In Settings → Preview and Settings → Editor, the settings for how a document opens are put together in one group, When a Document Opens.
@@ -145,7 +142,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - On macOS 27, Page Up and Page Down turn the page again in single-page and two-page layouts.
 - Clicking an entry of the outline in the drawer goes to its page again after the Preview window is closed and opened again, and after a new document is typeset for the first time. Reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#59](https://github.com/TeXShopProject/TeXShop/issues/59)).
 - A closed Preview window opens again at the same place, with Command-1 or after typesetting, and with its pinned link previews if the PDF has not changed. Reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#70](https://github.com/TeXShopProject/TeXShop/issues/70)).
-- When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and each Preview window comes back as before. Reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#71](https://github.com/TeXShopProject/TeXShop/issues/71)).
+- When TeXShop is quit with its windows kept, a PDF opened by itself is opened again the next time TeXShop starts, and each Preview window comes back as before, with its drawer, its open sections and its scroll position. Reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#71](https://github.com/TeXShopProject/TeXShop/issues/71)).
 - Fit to Content Width fits a long document in one step. Reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#62](https://github.com/TeXShopProject/TeXShop/issues/62)).
 - Fix the Find commands so they use the search of the Preview while it is active.
 - Fix Preview pages that were drawn under the toolbar on macOS 26 and later.
@@ -158,6 +155,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - The cursor no longer jumps in files synced by OneDrive, Google Drive and similar services, document windows open again in Romanian, and TeXShop notices changes saved by other editors. Reported by [Steuard](https://github.com/Steuard) and [Tom](https://github.com/yo3iti) ([#29](https://github.com/TeXShopProject/TeXShop/issues/29), [#42](https://github.com/TeXShopProject/TeXShop/issues/42)), with a contribution from [Daisuke Nishihama](https://github.com/ddd3h) in [PR #1](https://github.com/TeXShopProject/TeXShop/pull/1).
 - Fix reading and saving in several encodings: UTF-8 with a byte order mark, UTF-16, GB 2312, the backslash and the tilde in Japanese encodings, the encoding menu in the Save dialog, the automatic conversion of UTF-8-MAC to UTF-8 and the conversion to otf package `\UTF` / `\CID` work correctly, and Select TeXShop as Default TeX Editor works for `.tex` files.
 - With Show Full Path in Window Title on in the toolbar, the source window, the Preview window and the console show the full path in their title, and it no longer goes back to the file name after an autosave or when the PDF is read again.
+- Opening a `.dvi`, `.ps` or `.eps` file no longer freezes TeXShop: the conversion to PDF runs without blocking the window, and one that does not finish is stopped with a message.
 
 ## Fixes: editing and other
 
@@ -185,6 +183,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Links in the credits open the current web pages of the projects they name.
 - About TeXShop opens the TeXShop web site from a link at the top of its credits. Suggested by [Seiji Zenitani](https://github.com/zenitani) ([#69](https://github.com/TeXShopProject/TeXShop/issues/69)).
 - The Help menu starts with TeXShop Help, the manual and First Steps with TeXShop, followed by the documents on features of TeXShop, the TeX documentation and the notes of this release; the older documents are in its Older Documents submenu. The Short Course has a submenu of its own, which also opens each of its lists of symbols. Items that open a document in English tell so in every language, and the item that copied the Short Course files of an older version is removed.
+- Add Command Completion Quick Start to the Help menu, a short guide to using command completion written by Herbert Schulz. It is in English, and the quick start that comes with the command completion list is the same guide.
 - First Steps with TeXShop, About This Release, File Encoding and the manual describe TeXShop 6.00, and the older documents tell when they were written. TeXShop Help explains spell checking, and the difference between key bindings, macros and command completion.
 - The help in all five languages is rewritten for TeXShop 6.00, with a new look that follows dark mode, and the Korean help is now in Korean. The manual is revised for 6.00.
 - TeXShop Help can be read in French, Italian, Dutch, Portuguese (Brazil and Portugal), Romanian and Simplified Chinese.
@@ -208,8 +207,8 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Update the bundled latexmk to 4.89, provided by Herbert Schulz.
 - TeXShop can be built from an extracted source archive again ([#4](https://github.com/TeXShopProject/TeXShop/issues/4)).
 - Remove files and code that TeXShop did not use from the application and its source.</description>
-      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-rc.3</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-rc.3/TeXShop-6.00-RC3.zip" length="75926553" type="application/octet-stream" sparkle:edSignature="y19wkRdoNJDPb1upNCyfPRphjco1rSnG78Xnin278VemLn2ToSlNVQpE+v+60TaNJ4NU2aWOM/9B1bZCyA0aCw=="></enclosure>
+      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-rc.4</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-rc.4/TeXShop-6.00-RC4.zip" length="76313131" type="application/octet-stream" sparkle:edSignature="AA/w7COzZW+E+s/KgBLJX/B2f5ye9nSptAP+a2wJLDgcHmQpWZj7RHVx74JllYyWAAUQOudqdvy9beI0JkViAA=="></enclosure>
     </item>
     <item>
       <title>TeXShop 5.59</title>
@@ -225,6 +224,6 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
     <language>en</language>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: JlI2EtCo7ntLSDtI5cgw/5Uywm+67tZ2r6yHUZMpVJCy/L0NQZrQ2lsvM/sOdvZiiYqWSjVKGaRwznoywkRwAA==
-length: 31870
+edSignature: C7YWHqPHGhTt/3JTrE8TZzZrdlaVjnLS6ONnT/SmG8DbX8AZXeC3wl6o94VoMrQVCQ1K18u0YE6Lt3PE4nmmAA==
+length: 31718
 -->
