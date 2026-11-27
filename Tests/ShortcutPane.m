@@ -476,6 +476,10 @@ int main(int argc,char **argv){@autoreleasepool{
  for(NSString *key in @[@"q",@"w",@",",@"h",@"[",@"]"]){fixtureCharacters=key;REQUIRE([shell.window performKeyEquivalent:Event(key,C,0)] && pane.searchingByKey && [shell.history.currentIdentifier isEqual:TSSettingsCategoryKeyboard]);}
  fixtureCharacters=@"f";[shell.window keyDown:Event(@"f",C,3)];REQUIRE(pane.searchMatches.count==3 && pane.table.selectedRow==0 && [pane macroHeaderRow]==2);
  REQUIRE(pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
+ // A refresh of the menus, as when TeXShop becomes active, lists the same key again and keeps the match selected.
+ [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:1] byExtendingSelection:NO];TSShortcutMatch *keptMatch=[pane matchAtRow:1];
+ [coordinator refreshMenuAndMacros];REQUIRE(pane.searchMatches.count==3 && pane.table.selectedRow==1 && [[pane matchAtRow:1].path isEqual:keptMatch.path]);
+ [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
  // A macro file can name a key that recording refuses (Control-Escape belongs to the marks): it never runs, and the list says why.
  { NSArray<TSShortcutMatch *> *refused=[TSShortcutSearch matchesKey:@"\x1b" modifiers:NSEventModifierFlagControl store:coordinator.store macros:@[Macro(@"Control-Escape",@"\x1b",NSEventModifierFlagControl,80)]];
    REQUIRE(refused.count==1 && refused[0].macro!=nil && !refused[0].winner);
@@ -827,7 +831,22 @@ int main(int argc,char **argv){@autoreleasepool{
   pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];
   REQUIRE(pane.searchingByKey && !pane.filterButton.enabled && [pane activeFilter]==TSShortcutFilterAll);
   [pane stopKeySearch];REQUIRE(pane.filterButton.enabled && pane.filter==TSShortcutFilterAssigned && pane.table.numberOfRows==assignedRows);
-  [pane setFilterChoice:TSShortcutFilterAll];
+  // A refresh of the menus keeps the selected row, and the arrow keys go on from it; another filter keeps
+  // the selected command while it lists it.
+  {
+   [pane setFilterChoice:TSShortcutFilterAll];[shell.window makeFirstResponder:pane.table];
+   NSString *(^selectedID)(void)=^NSString *{return [pane selectedCommand].commandID;};
+   NSString *down=[NSString stringWithFormat:@"%C",(unichar)NSDownArrowFunctionKey];
+   NSInteger secondRow=[pane rowForCommand:secondCommand];
+   REQUIRE(secondRow>=0 && secondRow+1<pane.table.numberOfRows);
+   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)secondRow] byExtendingSelection:NO];
+   [coordinator refreshMenuAndMacros];REQUIRE(pane.table.selectedRow==secondRow && [selectedID() isEqual:secondCommand.commandID] && pane.selectionButtons[0].enabled);
+   [pane.table keyDown:Event(down,NSEventModifierFlagFunction|NSEventModifierFlagNumericPad,125)];REQUIRE(pane.table.selectedRow==secondRow+1);
+   [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)secondRow] byExtendingSelection:NO];
+   [pane setFilterChoice:TSShortcutFilterUnassigned];REQUIRE(pane.table.selectedRow==[pane rowForCommand:secondCommand] && [selectedID() isEqual:secondCommand.commandID]);
+   [pane setFilterChoice:TSShortcutFilterAssigned];REQUIRE(pane.table.selectedRow==-1 && !pane.selectionButtons[0].enabled);
+   [pane setFilterChoice:TSShortcutFilterAll];REQUIRE(pane.table.selectedRow==-1);
+  }
   REQUIRE([store restoreCommand:secondCommand]==nil);
   REQUIRE([store setKey:@"z" modifiers:C forCommand:firstCommand]==nil);[coordinator refreshMenuAndMacros];
   puts("PASS: filter menu (all, assigned, unassigned, changed); custom shortcuts are bold, filtered, kept after a restore until the search or filter changes, and unfiltered in key search");
