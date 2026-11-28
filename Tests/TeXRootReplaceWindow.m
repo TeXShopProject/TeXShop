@@ -608,6 +608,10 @@ static void TestRoundOne(void)
 static void TestMainThread(void)
 {
     // A 10 MB open document with 100,000 matches, and a file on the disk with a 2 MB insertion (spec §2.9).
+    // The first NSAlert of a process takes AppKit some 110 ms to make, whatever the alert, and the confirmation is
+    // the first alert of this one; in TeXShop alerts and sheets have been shown before. Made once here, so that the
+    // pauses measured are those of Replace All.
+    (void)[NSAlert new];
     MakeProject();
     NSMutableString *big = [NSMutableString stringWithString:@"% !TEX root = ../thesis.tex\n"];
     while (big.length < 10000000)

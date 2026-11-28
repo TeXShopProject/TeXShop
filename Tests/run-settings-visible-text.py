@@ -106,9 +106,10 @@ def main():
             base = {r['text'] for r in json.loads((folder/'Base.json').read_text())}
             allowance = json.loads((ROOT/'Tests/Fixtures/SettingsVisibleTextAllowlist.json').read_text())
             found = failures('fr', json.loads((changed/'fr.json').read_text()), base, allowance)
-            assert found and all(r['text'] == 'Typing' and r['category'] == 'editor' for r in found), found
+            assert found and all((r['text'], r['category']) in {('Typing', 'editor'), ('New Theme', 'appearance')} for r in found), found
+            assert any(r['text'] == 'New Theme' and r['role'] == 'button-label' for r in found), found
             (output/'detected.json').write_text(json.dumps(found, ensure_ascii=False, indent=2)+'\n')
-            print('DETECTED: fr group.editor.2.title -> Typing in actual production view')
+            print('DETECTED: fr group.editor.2.title -> Typing, and the + of the theme list read as New Theme, in actual production view')
             spaced = output/'whitespace-mutation'
             probe(spaced, args.app, 'fr', '--visible-text-whitespace-mutation')
             base_records = json.loads((folder/'Base.json').read_text())

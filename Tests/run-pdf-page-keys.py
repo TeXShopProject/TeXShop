@@ -6,7 +6,9 @@ Single page and two pages display: a page or spread that fits turns by one page 
 scrolls by a screen, and from its bottom Page Down shows the next page or spread from its top, from its
 top Page Up shows the previous one from its bottom. The first and last pages keep the key. Continuous
 display is left to PDFKit. All of it also with a top content inset as under the toolbar, where PDFKit on
-macOS 27 does neither on its own. Modified keys are left to PDFKit.
+macOS 27 does neither on its own. As in the Preview window (TSPreviewScrollerKeeper placeToolbarGround), the
+band is 82 points on screen: above unit scale the inset is the band divided by the magnification, in clip
+bounds; at unit scale and below it is the band in screen points. Modified keys are left to PDFKit.
 
   --mutation NAME   break one rule; the test must then fail"""
 import argparse
@@ -24,7 +26,8 @@ MUTATIONS = {
                        '    if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagOption |\n                               NSEventModifierFlagControl | NSEventModifierFlagShift))\n        return NO;\n    NSString *characters = event.charactersIgnoringModifiers;\n    if (characters.length != 1) return NO;\n    unichar key = [characters characterAtIndex:0];\n    if (key != NSPageUpFunctionKey'),
     'screen-and-a-half': ('CGFloat step = visible - overlap > 0 ? visible - overlap : visible;', 'CGFloat step = 1.5 * visible;'),
     'no-overlap': ('CGFloat step = visible - overlap > 0 ? visible - overlap : visible;', 'CGFloat step = visible;'),
-    'insets-ignored': ('CGFloat visible = NSHeight(clip.bounds) - (fabs(insets.top) + fabs(insets.bottom)) / magnification;', 'CGFloat visible = NSHeight(clip.bounds);'),
+    'top-inset-in-screen-points': ('CGFloat visible = NSHeight(clip.bounds) - fabs(insets.top) - fabs(insets.bottom) / magnification;', 'CGFloat visible = NSHeight(clip.bounds) - (fabs(insets.top) + fabs(insets.bottom)) / magnification;'),
+    'insets-ignored': ('CGFloat visible = NSHeight(clip.bounds) - fabs(insets.top) - fabs(insets.bottom) / magnification;', 'CGFloat visible = NSHeight(clip.bounds);'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -86,9 +89,17 @@ static PDFDocument *document(void) {
 // the scroll range (the page's bottom in view).
 // One press moves the page by the visible height on screen less the part that stays in view, as AppKit
 // pages a scroll view: measured in screen points, away from the ends where the move is cut short.
+static CGFloat band=0;
 static CGFloat ExpectedStep(PDFView *v) {
  NSScrollView *scroll=v.documentView.enclosingScrollView;
- return NSHeight(scroll.contentView.frame)-scroll.contentInsets.top-scroll.contentInsets.bottom-scroll.verticalPageScroll;
+ return NSHeight(scroll.contentView.frame)-band-scroll.contentInsets.bottom-scroll.verticalPageScroll;
+}
+// The top inset of the Preview window for a band of that many points on screen.
+static void PlaceBand(NSScrollView *scroll, CGFloat points) {
+ band=points; if(points<=0) return;
+ CGFloat m=scroll.magnification; if(!isfinite(m)||m<=0) m=1;
+ scroll.automaticallyAdjustsContentInsets=NO;
+ scroll.contentInsets=NSEdgeInsetsMake(m>1?points/m:points,0,0,0);
 }
 static void CheckStep(PDFView *v, CGFloat before, NSString *what) {
  NSScrollView *scroll=v.documentView.enclosingScrollView;
@@ -120,7 +131,7 @@ int main(void) { @autoreleasepool {
   v.document=doc;v.displayMode=mode;
   if(zoomed){v.autoScales=NO;v.scaleFactor=scale.doubleValue;}else v.autoScales=YES;
   NSScrollView *scroll=v.documentView.enclosingScrollView;
-  if(inset.doubleValue>0){scroll.automaticallyAdjustsContentInsets=NO;scroll.contentInsets=NSEdgeInsetsMake(inset.doubleValue,0,0,0);}
+  band=0; if(inset.doubleValue>0){[v layoutDocumentView];pump();PlaceBand(scroll,inset.doubleValue);}
   [v goToPage:[doc pageAtIndex:4]];[v layoutDocumentView];pump();
   if(zoomed) check(scroll.verticalPageScroll>0,@"the scroll view keeps part of the screen in view");
   if(!paginated) {
