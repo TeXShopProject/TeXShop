@@ -34,6 +34,7 @@ program=r'''
 #import "MemoryDefaults.h"
 #import "TSPrefPreviewController.h"
 #import "TSPreviewScrollerKeeper.h"
+#import "TSContentWidth.h"
 #import "TSPreviewAppearance.h"
 #import "TSLinkPreviewGeometry.h"
 #import "TSLinkPreviewView.h"
@@ -85,7 +86,7 @@ static inline BOOL TSContentAllMeasured(PDFDocument *document, PDFDisplayBox box
 @end
 BACKFORWARDITEM
 @interface MyPDFKitView : PDFView {
- @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1; BOOL _pdfViewReady, _fittingContentWidth;
+ @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1; BOOL _pdfViewReady, _fittingContentWidth, _measuringContent;
  TSLinkPreviewView *pinnedLinkPreview;
  BOOL keepsPinnedLinkPreviewOnPage;
 }
@@ -108,6 +109,8 @@ BACKFORWARDITEM
 // Fit to Content Width has its own test, run-fit-content-width.py.
 - (void)fitContentWidth {}
 - (void)measureContentLater {}
+// As production, without the sideways place of Fit to Content Width (run-fit-content-width.py).
+- (void)keepContentWidthPlaceDuring:(void (NS_NOESCAPE ^)(void))navigation { navigation(); TSPreviewPlaceChosenByProgram(self); }
 VIEWMETHODS
 @end
 @implementation TSDocument
@@ -362,7 +365,7 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  for l in ('en','ja'):
   res=app/f'Contents/Resources/{l}.lproj';res.mkdir(parents=True);shutil.copy(root/f'Resources/Interfaces/{l}.lproj/ToolbarItems.strings',res)
  source=Path(tmp)/'Test.m';source.write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules',*include_args(root),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','Quartz','-framework','PDFKit',str(source),*map(str,sources(root,['Preview'])),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),str(root/'Sources/Preview/TSLinkPreviewView.m'),str(root/'Sources/Windows/TSDocumentWindowGlass.m'),'-o',str(mac/'LayoutTest')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules',*include_args(root),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','Quartz','-framework','PDFKit',str(source),*map(str,sources(root,['Preview'])),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),str(root/'Sources/Preview/TSContentWidth.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),str(root/'Sources/Preview/TSLinkPreviewView.m'),str(root/'Sources/Windows/TSDocumentWindowGlass.m'),'-o',str(mac/'LayoutTest')],check=True)
  fixture=Path(tmp)/'Fixtures';fixture.mkdir()
  nib=next(b for b in bundles(root,fixture,names=['Preview']) if b.stem==('Base' if lang=='en' else lang))
  snapshot=next((a.split('=',1)[1] for a in sys.argv if a.startswith('--snapshots=')),None)

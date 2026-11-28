@@ -63,6 +63,8 @@ static void TSRecordOwnTextFileKind(NSURL *url, TSOwnTextFileKind kind) {}
 WATCH
 REVERT
 - (void)setupTags {}
+// The Preview title after a revert has its own test (run-preview-console-full-path-title.py).
+- (void)refreshPreviewTitle {}
 - (void)colorizeAll {}
 - (BOOL)hasUnautosavedChanges {return self.dirty;}
 - (BOOL)isBeingReplacedIn {return self.replacing;}

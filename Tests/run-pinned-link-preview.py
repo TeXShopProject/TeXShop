@@ -336,6 +336,8 @@ program = r'''
 #import "TSLinkPreviewView.h"
 #import "TSScrollPageTurn.h"
 #import "TSPreviewScrollerKeeper.h"
+#import "TSContentWidth.h"
+#import "TSAdvancedFindController.h"
 #import "TSPreviewAppearance.h"
 #import "TSDocumentWindowGlass.h"
 #define SUD NSUserDefaults.standardUserDefaults
@@ -449,6 +451,7 @@ DOCUMENTMETHODS
     NSInteger pageStyle,firstPageStyle,resizeOption;
     NSRect oldVisibleRect,rect,selectedRect;
     BOOL _pdfViewReady;
+    BOOL _measuringContent;
     id linkPreviewEventMonitor;
     TSLinkPreviewView *linkPreview;
     TSLinkPreviewView *pinnedLinkPreview;
@@ -526,6 +529,11 @@ DOCUMENTMETHODS
 // Fit to Content Width has its own test, run-fit-content-width.py.
 - (void)fitContentWidth {}
 - (void)measureContentLater {}
+// Without a drawer the production method returns at once; the drawer's Find has its own test.
+- (void)observePreviewDrawerFind {}
+// The probe has no toolbar search field and no drawer: the Find commands are disabled, as in production.
+- (NSSearchField *)previewToolbarSearchField { return nil; }
+- (id)drawerSearchOwner { return nil; }
 - (void)centreContentRowLater {}
 - (void)updateBackground:(NSRect)rect {}
 - (void)setDrawMark:(BOOL)value { drawMark=value; }
@@ -2248,7 +2256,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
     exe = temporary / 'probe'
     subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-framework','Quartz','-framework','PDFKit',
                     *include_args(root),'-I'+str(root/'Tests'),str(native),
-                    str(root/'Sources/Preview/OverView.m'),str(preview_file),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),
+                    str(root/'Sources/Preview/OverView.m'),str(preview_file),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),str(root/'Sources/Preview/TSContentWidth.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),
                     str(root/'Sources/Windows/TSDocumentWindowGlass.m'),'-o',str(exe)],check=True)
     home = temporary/'home'
     (home/'Library/Preferences').mkdir(parents=True)

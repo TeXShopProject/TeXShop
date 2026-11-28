@@ -7,7 +7,7 @@ root=Path(__file__).resolve().parents[1]
 s=(root/'Sources/Preview/MyPDFKitView.m').read_bytes().decode('utf-8', errors='replace')
 def method(signature):
     start=s.rindex(signature);return s[start:s.index('\n}',start)+2]
-methods='\n'.join(method(x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:'])
+methods='\n'.join(method(x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:', '- (void)contentWidthPagesChanged'])
 window_source=(root/'Sources/Windows/TSPreviewWindow.m').read_text()
 def window_method(signature):
     start=window_source.index(signature)
@@ -20,6 +20,7 @@ program=r'''
 #import "TSExternalPDFReload.h"
 #import "TSPreviewAppearance.h"
 #import "TSPreviewScrollerKeeper.h"
+#import "TSContentWidth.h"
 static BOOL atLeastHighSierra=YES,atLeastMojave=YES;
 #define SUD NSUserDefaults.standardUserDefaults
 #define FlashFixKey @"flash"
@@ -93,6 +94,7 @@ WINDOW_METHODS
     NSRect secondVisibleRect,secondFullRect;
     TSExternalPDFPosition secondViewport;
     NSView *pinnedLinkPreview;
+    BOOL _measuringContent;
 }
 @property BOOL firstTime,oldUsed,doScroll,skipLinks,globalLongTerm;
 @property NSInteger handlingLink,timerNumber,stringAlignment;
@@ -129,6 +131,8 @@ WINDOW_METHODS
 // Fit to Content Width has its own test, run-fit-content-width.py.
 -(void)fitContentWidth{}
 -(void)measureContentLater{}
+// Without a drawer the production method returns at once; the drawer's Find has its own test.
+-(void)observePreviewDrawerFind{}
 -(void)setupOutline{}
 // The drawer has its own test, run-preview-reopen-outline.py.
 -(void)showActivePartInOutline{}
@@ -211,5 +215,5 @@ int main(int argc,char**argv){@autoreleasepool{
 with tempfile.TemporaryDirectory(prefix='texshop-recovery-') as directory:
     p=Path(directory);(p/'test.m').write_text(program)
     (p/'home'/'Library'/'Preferences').mkdir(parents=True)
-    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','Quartz','-framework','PDFKit',*include_args(root),str(p/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),'-o',str(p/'test')],check=True)
+    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','Quartz','-framework','PDFKit',*include_args(root),str(p/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),str(root/'Sources/Preview/TSContentWidth.m'),'-o',str(p/'test')],check=True)
     subprocess.run([str(p/'test'),*(sys.argv[1:] or [str(p/'good.pdf'),str(p/'bad.pdf')]),str(p/'live.pdf')],env=dict(os.environ,HOME=str(p/'home'),CFFIXED_USER_HOME=str(p/'home')),check=True)
