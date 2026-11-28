@@ -35,6 +35,7 @@
 // The actions menu at the bottom of the list, and the contextual menu of a row.
 - (IBAction)editStationery:(id)sender;
 - (IBAction)renameStationery:(id)sender;
+- (IBAction)changeStationeryDescription:(id)sender;
 - (IBAction)duplicateStationery:(id)sender;
 - (IBAction)revealStationeryInFinder:(id)sender;
 // Reads the folder again, keeping the selected file selected when it is still there.

@@ -15,7 +15,8 @@
 static NSUserInterfaceItemIdentifier const TSStationeryNameColumn = @"Source";
 static NSUserInterfaceItemIdentifier const TSStationeryDescriptionColumn = @"Description";
 
-// The list: Space shows the selected stationery in Quick Look, as in the Finder.
+// The list: Space shows the selected stationery in Quick Look, as in the Finder; Return and
+// Enter create a document from it; Delete moves it to the Trash, as the - button.
 @interface TSStationeryTableView : NSTableView
 @property (weak) TSStationery *stationery;
 @end
@@ -23,6 +24,8 @@ static NSUserInterfaceItemIdentifier const TSStationeryDescriptionColumn = @"Des
 @interface TSStationery () <QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuDelegate>
 - (NSURL *)selectedStationeryURL;
 - (void)toggleQuickLook;
+- (IBAction)okForStationeryPanel:(id)sender;
+- (IBAction)removeSelectedStationery:(id)sender;
 @end
 
 @implementation TSStationeryTableView
@@ -31,6 +34,19 @@ static NSUserInterfaceItemIdentifier const TSStationeryDescriptionColumn = @"Des
 	BOOL plain = (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagOption | NSEventModifierFlagControl)) == 0;
 	if (plain && [event.charactersIgnoringModifiers isEqualToString:@" "]) {
 		[self.stationery toggleQuickLook];
+		return;
+	}
+	// Return (36) and Enter (76): the table would otherwise keep them.
+	if (plain && (event.keyCode == 36 || event.keyCode == 76)) {
+		if (self.selectedRow >= 0) [self.stationery okForStationeryPanel:self];
+		else NSBeep();
+		return;
+	}
+	// Delete (51) and Forward Delete (117), alone or with Command, as in the Finder.
+	BOOL commandAtMost = (event.modifierFlags & (NSEventModifierFlagOption | NSEventModifierFlagControl | NSEventModifierFlagShift)) == 0;
+	if (commandAtMost && (event.keyCode == 51 || event.keyCode == 117)) {
+		if (self.selectedRow >= 0) [self.stationery removeSelectedStationery:self];
+		else NSBeep();
 		return;
 	}
 	[super keyDown:event];
@@ -332,9 +348,9 @@ static NSString *TSStationeryOneLine(NSString *text)
 		cell.identifier = tableColumn.identifier;
 		TSStationeryEditableField *field = [TSStationeryEditableField labelWithString:@""];
 		field.lineBreakMode = NSLineBreakByTruncatingTail;
-		// The name and the description are edited in place, as the names of the theme list: the
-		// name renames the file, the description is kept in the .comment file.
-		field.editable = YES;
+		// The name and the description are edited in place, from the actions and contextual
+		// menus and after +: the name renames the file, the description is kept in the
+		// .comment file. A click does not edit them, so that a double click always creates.
 		field.delegate = self;
 		__weak TSStationery *weakSelf = self;
 		field.willEdit = ^(NSTextField *edited) { [weakSelf beginEditingField:edited]; };
@@ -350,6 +366,7 @@ static NSString *TSStationeryOneLine(NSString *text)
 	BOOL isName = [tableColumn.identifier isEqualToString:TSStationeryNameColumn];
 	NSString *text = isName ? [self titleAtRow:row] : self.commentData[row];
 	cell.textField.stringValue = text;
+	cell.textField.editable = NO;
 	// A long description is cut at the end of its column; the tooltip shows it whole.
 	cell.textField.toolTip = (!isName && text.length) ? text : nil;
 	return cell;
@@ -548,9 +565,19 @@ static NSString *TSStationeryOneLine(NSString *text)
 
 - (void)beginRenamingFile:(NSString *)file
 {
+	[self beginEditingColumn:TSStationeryNameColumn ofFile:file];
+}
+
+// The field of the name or the description is editable only while it is edited.
+- (void)beginEditingColumn:(NSUserInterfaceItemIdentifier)identifier ofFile:(NSString *)file
+{
 	NSUInteger row = [self.fullSourceData indexOfObject:file];
 	if (row == NSNotFound || self.stationeryWindow == nil) return;
-	[self.tableView editColumn:[self.tableView columnWithIdentifier:TSStationeryNameColumn] row:(NSInteger)row withEvent:nil select:YES];
+	NSInteger column = [self.tableView columnWithIdentifier:identifier];
+	[self.tableView scrollRowToVisible:(NSInteger)row];
+	NSTableCellView *cell = [self.tableView viewAtColumn:column row:(NSInteger)row makeIfNecessary:YES];
+	cell.textField.editable = YES;
+	[self.tableView editColumn:column row:(NSInteger)row withEvent:nil select:YES];
 }
 
 // The name typed for a stationery, made usable: line breaks and tabs become spaces, the ends are
@@ -718,6 +745,8 @@ static NSString *TSStationeryOneLine(NSString *text)
 		  NSLocalizedString(@"Edit “%@”", @"File > New from Stationery: actions menu item that opens the stationery file"), NSStringFromSelector(@selector(editStationery:))],
 		@[NSLocalizedString(@"Rename Stationery", @"File > New from Stationery: contextual menu item"),
 		  NSLocalizedString(@"Rename “%@”", @"File > New from Stationery: actions menu item, with the name of the selected stationery"), NSStringFromSelector(@selector(renameStationery:))],
+		@[NSLocalizedString(@"Change Description", @"File > New from Stationery: contextual menu item that edits the description in the list"),
+		  NSLocalizedString(@"Change Description of “%@”", @"File > New from Stationery: actions menu item that edits the description of the selected stationery in the list"), NSStringFromSelector(@selector(changeStationeryDescription:))],
 		@[NSLocalizedString(@"Duplicate", @"File > New from Stationery: contextual menu item"),
 		  NSLocalizedString(@"Duplicate “%@”", @"File > New from Stationery: actions menu item, with the name of the selected stationery"), NSStringFromSelector(@selector(duplicateStationery:))],
 		@[NSLocalizedString(@"Show in Finder", @"File > New from Stationery: opens the Stationery folder in the Finder"),
@@ -732,7 +761,7 @@ static NSString *TSStationeryOneLine(NSString *text)
 
 - (BOOL)validateMenuItem:(NSMenuItem *)item
 {
-	if (item.action == @selector(duplicateStationery:) || item.action == @selector(editStationery:) || item.action == @selector(renameStationery:) || item.action == @selector(revealStationeryInFinder:))
+	if (item.action == @selector(duplicateStationery:) || item.action == @selector(editStationery:) || item.action == @selector(renameStationery:) || item.action == @selector(changeStationeryDescription:) || item.action == @selector(revealStationeryInFinder:))
 		return [self.fullSourceData containsObject:item.representedObject];
 	return YES;
 }
@@ -771,6 +800,14 @@ static NSString *TSStationeryOneLine(NSString *text)
 	if (file == nil) return;
 	[self selectFile:file];
 	[self beginRenamingFile:file];
+}
+
+- (IBAction)changeStationeryDescription:(id)sender
+{
+	NSString *file = [self fileOfSender:sender];
+	if (file == nil) return;
+	[self selectFile:file];
+	[self beginEditingColumn:TSStationeryDescriptionColumn ofFile:file];
 }
 
 // A copy of the stationery and its description, named as the theme list names a copy, and selected.
@@ -833,6 +870,7 @@ static NSString *TSStationeryOneLine(NSString *text)
 - (void)controlTextDidEndEditing:(NSNotification *)notification
 {
 	NSTextField *field = notification.object;
+	field.editable = NO;
 	self.createButton.keyEquivalent = @"\r";
 	[self cancelButton].keyEquivalent = @"\033";
 	NSInteger row = [self.tableView rowForView:field];
