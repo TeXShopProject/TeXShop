@@ -9,7 +9,7 @@ The history in this repository begins with an import of Richard Koch's TeXShop 5
 ## Release status
 
 - **Current release: TeXShop 5.59**, based on TeXShop 5.58 Golden Gate. Download the signed and notarized application from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v.5.59). Later versions can be installed with the app's built-in automatic updates (Sparkle).
-- **Release candidate: TeXShop 6.00 RC4**, for testing. Download it from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-rc.4). Later prereleases are offered through automatic updates when Settings › Updates › “Update to prereleases when available” is on. The changes are listed in the 6.00 release notes ([English](Documentation/Releases/6.00.md), [Japanese](Documentation/Releases/6.00-ja.md)) and in [What's New in TeXShop 6](https://texshop.app/whats-new.html).
+- **Release candidate: TeXShop 6.00 RC5**, for testing. Download it from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-rc.5). Later prereleases are offered through automatic updates when Settings › Updates › “Update to prereleases when available” is on. The changes are listed in the 6.00 release notes ([English](Documentation/Releases/6.00.md), [Japanese](Documentation/Releases/6.00-ja.md)) and in [What's New in TeXShop 6](https://texshop.app/whats-new.html).
 
 The official website is [texshop.app](https://texshop.app/).
 
