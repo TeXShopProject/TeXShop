@@ -60,10 +60,23 @@ program = r'''
 #import "TSPreviewLayout.h"
 #import "TSPreviewAppearance.h"
 #define MITSU_PDF 1
+#define SUD [NSUserDefaults standardUserDefaults]
 static BOOL atLeastMonterey = YES;
+static NSString *PdfKitMouseModeKey = @"PdfKitMouseMode";
 CONSTANTS
+// The Mouse Mode item marks the tool of the Preview (#71): no Preview window here, so the
+// item falls back to the tool of the settings.
+@interface MyPDFKitView : NSView
+- (NSInteger)mouseTool;
+@end
+@interface TSPreviewWindowStub : NSObject
+@property (nullable) id myPDFKitView;
+@end
+@implementation TSPreviewWindowStub
+@end
 @interface TSDocument : NSObject <NSToolbarDelegate>
 @property NSInteger mode;
+@property (nullable) TSPreviewWindowStub *pdfKitWindow;
 @end
 @implementation TSDocument
 - (void)changeMouseMode:(id)sender { self.mode = [sender selectedTag]; }
