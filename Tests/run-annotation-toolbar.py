@@ -327,7 +327,7 @@ static void TestEditModeAndTargets(void) {
               @"the pages under the bar get the soft edge of the toolbar, blurred around the glass");
     if (@available(macOS 26.0, *)) {
         // Each group of the toolbar's kind is one piece of glass: markup, shapes, arrow, text,
-        // format, save, and » with close.
+        // and format. Save Annotations, » and close stand on no piece of glass.
         NSView *(^glassOf)(NSView *) = ^NSView *(NSView *v) {
             for (NSView *up = v.superview; up; up = up.superview)
                 if ([up isKindOfClass:NSGlassEffectView.class]) return up;
@@ -346,10 +346,9 @@ static void TestEditModeAndTargets(void) {
         NSView *format = glassOf(bar.colorButton);
         Check(format && format == glassOf(bar.fontButton) && format == glassOf(bar.textButton) && format == glassOf(bar.moreButton)
               && ![pieces containsObject:format], @"color, font, text and more share their own piece of glass");
-        NSView *save = glassOf(bar.saveButton);
-        Check(save && save == glassOf(bar.saveAllCheckBox) && save != format, @"Save Annotations and All Pages share a piece of glass");
-        NSView *close = glassOf(bar.closeButton);
-        Check(close && close == glassOf(bar.overflowButton) && close != save && close != format, @"» and close share a piece of glass");
+        Check(glassOf(bar.saveButton) == nil && glassOf(bar.saveAllCheckBox) == nil && bar.saveButton.bezelStyle == NSBezelStyleGlass,
+              @"Save Annotations is a glass button with All Pages beside it, on no piece of glass");
+        Check(glassOf(bar.closeButton) == nil && glassOf(bar.overflowButton) == nil, @"» and close stand on no piece of glass");
         Check(glassOf(bar.editModeButton) == nil, @"the edit mode switch stands on its own");
         for (NSView *v in bar.view.subviews.firstObject.subviews)
             Check(![v isKindOfClass:NSBox.class], @"no separators between pieces of glass");
