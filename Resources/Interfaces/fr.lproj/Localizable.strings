@@ -583,6 +583,12 @@
 /* File > New from Stationery: actions menu item, with the name of the selected stationery */
 "Rename “%@”" = "Renommer « %@ »";
 
+/* File > New from Stationery: contextual menu item that edits the description in the list */
+"Change Description" = "Modifier la description";
+
+/* File > New from Stationery: actions menu item that edits the description of the selected stationery in the list */
+"Change Description of “%@”" = "Modifier la description de « %@ »";
+
 /* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
 "Show “%@” in Finder" = "Afficher « %@ » dans le Finder";
 

@@ -71,6 +71,9 @@ MUTATIONS = {
     'open stationery missed': ('if ([document respondsToSelector:@selector(isSameFileAs:)] && [(TSDocument *)document isSameFileAs:url]) return YES;', ''),
     'copy without its description': ('\tif ([fileManager fileExistsAtPath:comment])\n\t\t[fileManager copyItemAtPath:comment', '\tif (NO)\n\t\t[fileManager copyItemAtPath:comment'),
     'copy over the first copy': ('for (NSUInteger number = 2; [self stationeryFilesNamed:name].count ||', 'for (NSUInteger number = 2; NO &&'),
+    'Delete ignored': ('\tif (commandAtMost && (event.keyCode == 51 || event.keyCode == 117)) {', '\tif (NO) {'),
+    'a click edits': ('\tcell.textField.editable = NO;\n', '\tcell.textField.editable = YES;\n'),
+    'no Change Description': ('\t[self beginEditingColumn:TSStationeryDescriptionColumn ofFile:file];', '\t;'),
     'folder not created': ('if (![[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error]) {',
                            'if (NO) {'),
 }
