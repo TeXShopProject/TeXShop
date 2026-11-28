@@ -66,7 +66,7 @@ if result.returncode != 0:
 
 # Each guard is needed: taking away either one makes its preview throw.
 mutations = {
-    'PDF guard removed': ('NSCommandKeyMask) && [[theEvent characters] length] > 0) {', 'NSCommandKeyMask)) {'),
+    'PDF guard removed': ('NSEventModifierFlagCommand) && [[theEvent characters] length] > 0) {', 'NSEventModifierFlagCommand)) {'),
     'image guard removed': ('NSEventTypeKeyDown && [[theEvent characters] length] > 0) {', 'NSEventTypeKeyDown) {'),
 }
 for name, (old, new) in mutations.items():

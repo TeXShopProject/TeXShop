@@ -28,7 +28,7 @@ load = load[:load.index('\n}\n')]
 assert 'TSLibraryFileIsUsable' not in load and 'macrosCheck(candidateData, nil)' in load and 'myData = candidateData;' in load, \
     'loadMacros checks the data it uses'
 # texdoc: started with -launchAndReturnError:, never -launch.
-assert '[displayPackageHelpTask launch]' not in help_documents and '[displayPackageHelpTask launchAndReturnError:NULL]' in help_documents, \
+assert '[displayPackageHelpTask launch]' not in help_documents and '[displayPackageHelpTask launchAndReturnError:&launchError]' in help_documents, \
     'texdoc is started without raising'
 assert '[scriptTask launch]' not in menu, 'ScriptRunner is started without raising'
 
