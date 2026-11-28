@@ -230,9 +230,8 @@ static BOOL TSAnnotationBarUsesGlass(void)
     return NO;
 }
 
-// A group of controls. On glass it is one piece of glass, like a group of items in the
-// toolbar, and the pages scrolling under the bar show blurred around it.
-static NSView *TSAnnotationGroup(NSArray<NSView *> *views, CGFloat spacing)
+// A row of controls side by side.
+static NSStackView *TSAnnotationRow(NSArray<NSView *> *views, CGFloat spacing)
 {
     NSStackView *stack = [NSStackView stackViewWithViews:views];
     stack.orientation = NSUserInterfaceLayoutOrientationHorizontal;
@@ -240,6 +239,14 @@ static NSView *TSAnnotationGroup(NSArray<NSView *> *views, CGFloat spacing)
     stack.spacing = spacing;
     stack.detachesHiddenViews = YES;
     stack.translatesAutoresizingMaskIntoConstraints = NO;
+    return stack;
+}
+
+// A group of controls. On glass it is one piece of glass, like a group of items in the
+// toolbar, and the pages scrolling under the bar show blurred around it.
+static NSView *TSAnnotationGroup(NSArray<NSView *> *views, CGFloat spacing)
+{
+    NSStackView *stack = TSAnnotationRow(views, spacing);
     if (@available(macOS 26.0, *)) {
         stack.edgeInsets = NSEdgeInsetsMake(0, TSAnnotationGlassInset, 0, TSAnnotationGlassInset);
         NSGlassEffectView *glass = [[NSGlassEffectView alloc] init];
@@ -385,8 +392,10 @@ static BOOL TSIsSharedPanel(NSWindow *window)
         for (NSArray<NSView *> *group in toolGroups)
             [views addObject:TSAnnotationGroup(group, 2)];
         NSView *format = TSAnnotationGroup(formatGroup, 2);
-        NSView *save = TSAnnotationGroup(@[_saveButton, _saveAllCheckBox], 8);
-        [views addObjectsFromArray:@[format, spacer, save, TSAnnotationGroup(@[_overflowButton, _closeButton], 2)]];
+        // Save Annotations is a glass button itself, and close is a round button: they stand
+        // on the bar without a piece of glass under them, which would draw a second outline.
+        NSView *save = TSAnnotationRow(@[_saveButton, _saveAllCheckBox], 8);
+        [views addObjectsFromArray:@[format, spacer, save, TSAnnotationRow(@[_overflowButton, _closeButton], 2)]];
         _fullOnly = @[format, save];
     } else {
         [views addObject:TSAnnotationSeparator()];
