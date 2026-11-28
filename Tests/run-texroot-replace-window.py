@@ -49,7 +49,8 @@ MUTATIONS = {
     'Stop in check 1 does not cancel the collection': ('TSTeXRootSearchWindowController+Replace.m', '    [self.checkCollector cancel];\n', ''),
     'Stop in check 2 waits for it': ('TSTeXRootReplaceRun.m', '    TSTeXRootProjectCollector *collector = self.checkCollector;\n    if (collector) {', '    TSTeXRootProjectCollector *collector = self.checkCollector;\n    if (NO) {'),
     'a backup in UTF-8 is not told when all is replaced': ('TSTeXRootSearchWindowController+Replace.m', '            if (!report.allApplied || report.backupNotes.count)', '            if (!report.allApplied)'),
-    "the confirmation says the panel's Replace": ('TSTeXRootSearchWindowController+Replace.m', 'TSLocalized(@"TeXRootSearch.Confirm.Replace", @"Replace")', 'TSLocalized(@"AdvancedFind.Replace", @"Replace")', 'language'),
+    # "the confirmation says the panel's Replace" is gone: since each command has one name in each language (11-24),
+    # TeXRootSearch.Confirm.Replace and AdvancedFind.Replace are the same text everywhere, so the mutation changed nothing.
     'every file is guarded from typesetting': ('TSTeXRootDocumentApplier.m', '    return [TSProjectPaths containsObject:(NSString *_Nonnull)path];', '    return YES;'),
     'the backup is made on the main thread': ('TSTeXRootReplaceRun.m', '    dispatch_async(self.queue, ^{\n        NSError *error = nil;', '    ((void (^)(dispatch_queue_t, dispatch_block_t))^(dispatch_queue_t q, dispatch_block_t b) { b(); })(self.queue, ^{\n        NSError *error = nil;'),
     'a document opened again is replaced in': ('TSTeXRootReplaceRun.m', '    if (!approved || view.textStorage != approved)\n        view = nil;\n', ''),
