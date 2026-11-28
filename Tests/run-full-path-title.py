@@ -22,7 +22,7 @@ DOCUMENT = 'Sources/Document/TSDocument.m'
 
 MUTATIONS = {
     # The controller gives AppKit's name: saves bring the file name back.
-    'controller-gives-file-name': (CONTROLLER, 'if ([document isKindOfClass:[TSDocument class]]', 'if (NO && [document isKindOfClass:[TSDocument class]]'),
+    'controller-gives-file-name': (CONTROLLER, 'if ([document isKindOfClass:[TSDocument class]]\n        && (((TSDocument', 'if (NO && [document isKindOfClass:[TSDocument class]]\n        && (((TSDocument'),
     # The single window of source and preview keeps AppKit's name.
     'single-window-keeps-name': (CONTROLLER, ' || ((TSDocument *)document).splitController == self', ''),
     # Every controller of the class shows the full path, not only the document's two.
