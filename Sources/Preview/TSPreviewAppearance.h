@@ -318,9 +318,11 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     NSArray *filters = invert ? TSPreviewInversionFilters() : @[];
     for (NSView *subview in scrollView.subviews) {
-        // The band above the first page paints the window color. Aqua or a filter here
-        // would lighten that band and the toolbar with it.
-        if ([NSStringFromClass(subview.class) containsString:@"TSPreviewToolbarShield"]) {
+        // The band above the first page paints the window color, and the blur under the band of
+        // the single window takes the window's look. Aqua or a filter here would lighten that
+        // band and the toolbar with it.
+        if ([NSStringFromClass(subview.class) containsString:@"TSPreviewToolbarShield"] ||
+            [NSStringFromClass(subview.class) containsString:@"TSPreviewBandGround"]) {
             subview.appearance = nil;
             subview.contentFilters = @[];
             continue;
