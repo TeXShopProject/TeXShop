@@ -47,7 +47,7 @@ static CGFloat TSContentTop(NSTextView *view)
 
 static TSScrollAnchor TSAnchorForView(NSTextView *view)
 {
-    TSScrollAnchor anchor = {NSNotFound, 0, 0, 0, NSNotFound};
+    TSScrollAnchor anchor = {.character = NSNotFound, .characterX = NSNotFound};
     NSClipView *clip = view.enclosingScrollView.contentView;
     if (clip) {
         // Before any layout. Measuring the top line can resize the text view, and that resize scrolls (#72).
@@ -148,7 +148,7 @@ static NSValue *TSAnchorValue(TSScrollAnchor anchor)
 
 static TSScrollAnchor TSAnchorFromValue(NSValue *value)
 {
-    TSScrollAnchor anchor = {NSNotFound, 0, 0, 0, NSNotFound};
+    TSScrollAnchor anchor = {.character = NSNotFound, .characterX = NSNotFound};
     if (value)
         [value getValue:&anchor size:sizeof anchor];
     return anchor;

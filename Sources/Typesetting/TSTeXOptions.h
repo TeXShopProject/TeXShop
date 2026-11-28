@@ -21,6 +21,12 @@
 #define TSTeXArgumentRange @"range"
 #define TSTeXArgumentOffsets @"offsets"
 
+// The value of a word made by the functions below; every word they make has one.
+static inline NSString *TSTeXWordValue(NSDictionary *word)
+{
+    return (NSString * _Nonnull)word[TSTeXArgumentValue];
+}
+
 static inline NSArray<NSNumber *> *TSTeXOffsets(NSUInteger from, NSUInteger count)
 {
     NSMutableArray<NSNumber *> *offsets = [NSMutableArray arrayWithCapacity:count];
@@ -127,7 +133,7 @@ static inline NSString *TSTeXCommandProgram(NSString *command)
 {
     NSMutableArray<NSString *> *words = [NSMutableArray array];
     for (NSDictionary *argument in TSTeXCommandArguments(command))
-        [words addObject:argument[TSTeXArgumentValue]];
+        [words addObject:TSTeXWordValue(argument)];
     NSSet *withValue = [NSSet setWithObjects:@"-u", @"-P", @"-L", @"-U", @"-C", @"--unset", @"--chdir", nil];
     BOOL afterEnv = NO;
     while (words.count) {
@@ -143,7 +149,7 @@ static inline NSString *TSTeXCommandProgram(NSString *command)
                 // env -S of macOS also takes \\_ for a blank between words.
                 string = [string stringByReplacingOccurrencesOfString:@"\\_" withString:@" "];
                 for (NSDictionary *w in TSTeXShellWords(string, NSMakeRange(0, string.length)))
-                    [inner addObject:w[TSTeXArgumentValue]];
+                    [inner addObject:TSTeXWordValue(w)];
                 [words replaceObjectsInRange:NSMakeRange(0, 0) withObjectsFromArray:inner];
                 continue;
             }
@@ -199,7 +205,7 @@ static inline NSArray<NSDictionary *> *TSTeXOptionArguments(NSString *command)
             NSMutableArray<NSNumber *> *places = [NSMutableArray array];
             for (NSNumber *n in w[TSTeXArgumentOffsets])
                 [places addObject:offsets[n.unsignedIntegerValue]];
-            [all addObject:@{TSTeXArgumentValue: w[TSTeXArgumentValue], TSTeXArgumentRange: [NSValue valueWithRange:NSMakeRange(from, to - from)],
+            [all addObject:@{TSTeXArgumentValue: TSTeXWordValue(w), TSTeXArgumentRange: [NSValue valueWithRange:NSMakeRange(from, to - from)],
                              TSTeXArgumentOffsets: places}];
         }
     }
