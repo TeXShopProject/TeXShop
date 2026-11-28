@@ -12044,6 +12044,46 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
         }
 }
 
+// Settings › General › Source position in the combined window: an open combined window puts the
+// source and the Preview on their sides at once, with the toolbar items over them. The source keeps
+// its width; the field with the keyboard keeps it.
+- (void) followSourceSideInFullSplitWindow
+{
+    if (! useFullSplitWindow || fullSplitWindow == nil)
+        return;
+    BOOL interchange = [SUD boolForKey: SwitchSidesKey];
+    NSView *sourceSide = interchange ? rightView : leftView;
+    NSView *previewSide = interchange ? leftView : rightView;
+    NSView *preview = self.pdfKitWindow.pdfKitSplitView;
+    if (splitView.superview == sourceSide || preview == nil)
+        return;
+    NSSplitView *sides = (NSSplitView *)leftView.superview;
+    BOOL keepWidth = [sides isKindOfClass: [NSSplitView class]] && sides.isVertical && sides.subviews.count == 2
+        && ! [sides isSubviewCollapsed: leftView] && ! [sides isSubviewCollapsed: rightView];
+    CGFloat sourceWidth = NSWidth(splitView.superview.frame);
+    NSResponder *focus = fullSplitWindow.firstResponder;
+    if ([focus isKindOfClass: [NSText class]] && [(NSText *)focus isFieldEditor])
+        focus = (NSResponder *)[(NSText *)focus delegate];
+    [self.pdfKitWindow releaseSplitViewPlacement];
+    [splitView removeFromSuperview];
+    [preview removeFromSuperview];
+    // The divider first, so that each side has its new width when its view comes.
+    if (keepWidth) {
+        CGFloat shared = NSWidth(sides.bounds) - sides.dividerThickness;
+        [sides setPosition: round(interchange ? shared - sourceWidth : sourceWidth) ofDividerAtIndex: 0];
+    }
+    [sourceSide addSubview: splitView];
+    [splitView setFrame: [sourceSide bounds]];
+    [self.sourceStatusBar placeBelowView: splitView];
+    [previewSide addSubview: preview];
+    [preview setFrame: [previewSide bounds]];
+    [self keepSidesInFullSplitToolbar];
+    [self.pdfKitWindow placeSplitViewForToolbar];
+    [self annotationBarFollowWindowChange];
+    if ([focus isKindOfClass: [NSView class]] && [(NSView *)focus window] == fullSplitWindow)
+        [fullSplitWindow makeFirstResponder: focus];
+}
+
 // The divider between the source and the Preview goes back to where the user last left it.
 - (void) restoreFullSplitDivider
 {

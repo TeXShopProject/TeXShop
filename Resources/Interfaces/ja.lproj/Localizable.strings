@@ -591,6 +591,12 @@
 /* File > New from Stationery: actions menu item, with the name of the selected stationery */
 "Rename “%@”" = "“%@”の名前を変更";
 
+/* File > New from Stationery: contextual menu item that edits the description in the list */
+"Change Description" = "説明を変更";
+
+/* File > New from Stationery: actions menu item that edits the description of the selected stationery in the list */
+"Change Description of “%@”" = "“%@”の説明を変更";
+
 /* File > New from Stationery: actions menu item that shows the stationery file in the Finder */
 "Show “%@” in Finder" = "“%@”をFinderに表示";
 

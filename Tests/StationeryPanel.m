@@ -3,7 +3,8 @@
 //     .comment files, hidden files or folders, each with the text of its .comment file
 //     on one line;
 //   * Create is enabled only while a stationery is selected; Return and Escape are
-//     Create and Cancel; a double click on a row opens it;
+//     Create and Cancel; Return and Enter in the list create too; a double click on a row
+//     opens it; a click does not edit a name or a description;
 //   * the list is read again when the panel opens and when it becomes key, and the
 //     selected file stays selected while it is there;
 //   * Create opens the selected file as an untitled, edited document; when the file is
@@ -15,13 +16,14 @@
 //     document's text with its extension and the description as name.comment; a name
 //     in use asks before replacing;
 //   * - is enabled with a stationery selected, asks before moving it and its
-//     .comment file to the Trash, and selects the next one;
+//     .comment file to the Trash, and selects the next one; Delete and Command-Delete in
+//     the list do the same;
 //   * the actions menu at the bottom of the list duplicates the selected stationery and its
 //     description as "name copy", "name copy 2" ..., and selects the copy; the contextual
 //     menu does it for the row clicked;
 //   * Space shows the selected stationery in Quick Look and hides it again; the preview
 //     follows the selection and grows from the selected row;
-//   * a description edited in the list is written to the .comment file (an empty one
+//   * Change Description of the menus edits the description in the list; it is written to the .comment file (an empty one
 //     removes it); while it is edited Return and Escape end the editing, not the panel;
 //   * the title, the column titles and the buttons are translated and fit, with
 //     Show in Finder at the left and Cancel and Create at the right, at the usual
@@ -169,6 +171,8 @@ static void Behavior(NSString *work) {
     for (NSView *v in views) if ([v.identifier isEqual:@"stationery.cancel"]) cancel = (NSButton *)v;
     Check([cancel.keyEquivalent isEqualToString:@"\033"], @"Escape is Cancel");
     Check(s.tableView.doubleAction == NSSelectorFromString(@"openClickedRow:") && s.tableView.target == s, @"a double click on a row opens it");
+    for (NSInteger column = 0; column < 2; column++)
+        Check(![[s.tableView viewAtColumn:column row:0 makeIfNecessary:YES] textField].editable, @"a click does not edit a name or a description: the fields are not editable");
 
     [s.tableView deselectAll:nil];
     Check(!s.createButton.enabled, @"Create is disabled with nothing selected");
@@ -209,6 +213,17 @@ static void Behavior(NSString *work) {
     [s.tableView deselectAll:nil];
     [s okForStationeryPanel:nil];
     Check(OpenedDocuments.count == 1, @"Create with nothing selected opens nothing");
+    // Return and Enter in the list.
+    Select(s, @"c.md");
+    [s.tableView keyDown:Key(@"\r", 0, 36)];
+    Check(OpenedDocuments.count == 2 && [OpenedDocuments.lastObject.lastPathComponent isEqualToString:@"c.md"], @"Return in the list creates from the selected stationery");
+    Check(panel.firstResponder == s.tableView && ![[s.tableView viewAtColumn:0 row:s.tableView.selectedRow makeIfNecessary:YES] textField].currentEditor, @"Return does not edit the name");
+    [s.tableView keyDown:Key(@"\003", 0, 76)];
+    Check(OpenedDocuments.count == 3, @"Enter in the list creates too");
+    [s.tableView deselectAll:nil];
+    [s.tableView keyDown:Key(@"\r", 0, 36)];
+    Check(OpenedDocuments.count == 3, @"Return with nothing selected creates nothing");
+    [OpenedDocuments removeObjectsInRange:NSMakeRange(1, 2)];
 
     // Show in Finder.
     [s showStationeryInFinder:nil];
@@ -338,6 +353,16 @@ static void Behavior(NSString *work) {
     Check(LastAlert && [LastAlert.messageText containsString:@"“A”"] && LastAlert.buttons.count == 2 && LastAlert.buttons[0].hasDestructiveAction, @"- asks before moving the stationery to the Trash");
     AlertHandler(NSAlertSecondButtonReturn);
     Check([fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"A.tex"]], @"Cancel keeps the stationery");
+    for (NSNumber *flags in @[@0, @(NSEventModifierFlagCommand)]) {
+        LastAlert = nil;
+        [s.tableView keyDown:Key(@"\177", flags.unsignedIntegerValue, 51)];
+        Check(LastAlert && [LastAlert.messageText containsString:@"“A”"], flags.integerValue ? @"Command-Delete in the list asks as -" : @"Delete in the list asks as -");
+        AlertHandler(NSAlertSecondButtonReturn);
+    }
+    LastAlert = nil;
+    [s.tableView keyDown:Key(@"\177", NSEventModifierFlagOption, 51)];
+    Check(LastAlert == nil, @"Option-Delete is left alone");
+    Check([fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"A.tex"]], @"Cancel keeps the stationery");
     NSUInteger before = [Names(s) indexOfObject:@"A.tex"];
     [Trashed removeAllObjects];
     AlertHandler(NSAlertFirstButtonReturn);
@@ -357,8 +382,8 @@ static void Behavior(NSString *work) {
     NSMenuItem *duplicate = ItemFor(actions, @selector(duplicateStationery:));
     NSMutableArray *order = [NSMutableArray array];
     for (NSMenuItem *item in [actions.itemArray subarrayWithRange:NSMakeRange(1, actions.numberOfItems - 1)]) [order addObject:NSStringFromSelector(item.action)];
-    Check([order isEqual:(@[@"editStationery:", @"renameStationery:", @"duplicateStationery:", @"revealStationeryInFinder:"])], [NSString stringWithFormat:@"the actions menu is Edit, Rename, Duplicate, Show in Finder: %@", order]);
-    Check(actions.numberOfItems == 5 && ItemFor(actions, @selector(editStationery:)) && ItemFor(actions, @selector(renameStationery:)) && ItemFor(actions, @selector(revealStationeryInFinder:)),
+    Check([order isEqual:(@[@"editStationery:", @"renameStationery:", @"changeStationeryDescription:", @"duplicateStationery:", @"revealStationeryInFinder:"])], [NSString stringWithFormat:@"the actions menu is Edit, Rename, Change Description, Duplicate, Show in Finder: %@", order]);
+    Check(actions.numberOfItems == 6 && ItemFor(actions, @selector(editStationery:)) && ItemFor(actions, @selector(renameStationery:)) && ItemFor(actions, @selector(revealStationeryInFinder:)),
           @"the actions menu has Edit, Rename, Duplicate and Show in Finder");
     for (NSMenuItem *item in [actions.itemArray subarrayWithRange:NSMakeRange(1, actions.numberOfItems - 1)])
         Check([item.title containsString:@"0"] && [(id)s validateMenuItem:item], [NSString stringWithFormat:@"%@ names the selected stationery", item.title]);
@@ -431,8 +456,14 @@ static void Behavior(NSString *work) {
     NSInteger row = s.tableView.selectedRow;
     NSTableCellView *edited = [s.tableView viewAtColumn:1 row:row makeIfNecessary:YES];
     NSTextField *field = edited.textField;
-    Check(field.editable, @"the description can be edited");
-    Check([panel makeFirstResponder:field], @"the description takes the keyboard");
+    [panel makeFirstResponder:field];
+    Check(!field.editable && field.currentEditor == nil, @"the description is not edited without the menu");
+    [panel makeFirstResponder:s.tableView];
+    [actions.delegate menuNeedsUpdate:actions];
+    NSMenuItem *describe = ItemFor(actions, @selector(changeStationeryDescription:));
+    Check([describe.title containsString:@"c"] && [(id)s validateMenuItem:describe], @"Change Description names the selected stationery");
+    [NSApp sendAction:describe.action to:describe.target from:describe];
+    Check(field.editable && field.currentEditor != nil && panel.firstResponder == field.currentEditor, @"Change Description edits the description in the list");
     Check(s.createButton.keyEquivalent.length == 0, @"while it is edited, Return does not press Create");
     field.stringValue = @"Changed\nhere";
     NSTextView *editor = (NSTextView *)[panel fieldEditor:YES forObject:field];
@@ -441,10 +472,11 @@ static void Behavior(NSString *work) {
     [field.delegate controlTextDidEndEditing:[NSNotification notificationWithName:NSControlTextDidEndEditingNotification object:field]];
     Check([Read([folder stringByAppendingPathComponent:@"c.comment"]) isEqualToString:@"Changed here"], @"the edited description is written to the .comment file");
     Check([s.createButton.keyEquivalent isEqualToString:@"\r"], @"after the editing Return is Create again");
+    Check(!field.editable, @"after the editing the description is not editable by a click");
     Check([s.commentData[[Names(s) indexOfObject:@"c.md"]] isEqualToString:@"Changed here"], @"the list shows the new description");
     edited = [s.tableView viewAtColumn:1 row:[Names(s) indexOfObject:@"c.md"] makeIfNecessary:YES];
     field = edited.textField;
-    [panel makeFirstResponder:field];
+    [s changeStationeryDescription:nil];
     field.stringValue = @"Not kept";
     Check([field.delegate control:field textView:editor doCommandBySelector:@selector(cancelOperation:)], @"Escape ends the editing");
     Check([field.stringValue isEqualToString:@"Changed here"], @"Escape brings the description back");
@@ -452,15 +484,16 @@ static void Behavior(NSString *work) {
     Check([Read([folder stringByAppendingPathComponent:@"c.comment"]) isEqualToString:@"Changed here"], @"Escape leaves the .comment file as it was");
     edited = [s.tableView viewAtColumn:1 row:[Names(s) indexOfObject:@"c.md"] makeIfNecessary:YES];
     field = edited.textField;
-    [panel makeFirstResponder:field];
+    [s changeStationeryDescription:nil];
     field.stringValue = @"   ";
     [field.delegate controlTextDidEndEditing:[NSNotification notificationWithName:NSControlTextDidEndEditingNotification object:field]];
     Check(![fm fileExistsAtPath:[folder stringByAppendingPathComponent:@"c.comment"]], @"an emptied description removes the .comment file");
     // A description added where there was none.
     NSUInteger zero = [Names(s) indexOfObject:@"Untitled Note.tex"];
+    Select(s, @"Untitled Note.tex");
     edited = [s.tableView viewAtColumn:1 row:zero makeIfNecessary:YES];
     field = edited.textField;
-    [panel makeFirstResponder:field];
+    [s changeStationeryDescription:nil];
     field.stringValue = @"Notes";
     [field.delegate controlTextDidEndEditing:[NSNotification notificationWithName:NSControlTextDidEndEditingNotification object:field]];
     Check([Read([folder stringByAppendingPathComponent:@"Untitled Note.comment"]) isEqualToString:@"Notes"], @"a description given to a stationery without one creates its .comment file");
@@ -490,7 +523,7 @@ static void Layout(NSString *language, NSString *folder, NSString *pngs) {
     NSButton *cancel = nil;
     for (NSView *v in views) if ([v.identifier isEqual:@"stationery.cancel"]) cancel = (NSButton *)v;
     for (NSString *key in @[@"New Stationery", @"Untitled Stationery", @"Move the Stationery to the Trash", @"Move “%@” to the Trash?", @"Move to Trash",
-                            @"Edit Stationery", @"Edit “%@”", @"Rename Stationery", @"Rename “%@”", @"Show “%@” in Finder"])
+                            @"Edit Stationery", @"Edit “%@”", @"Rename Stationery", @"Rename “%@”", @"Change Description", @"Change Description of “%@”", @"Show “%@” in Finder"])
         Check(Table[key] != nil, [NSString stringWithFormat:@"%@: %@ is translated", language, key]);
     for (NSString *key in @[@"Stationery Actions", @"Duplicate", @"Duplicate “%@”", @"%@ copy"])
         Check(Table[key] != nil, [NSString stringWithFormat:@"%@: %@ is translated", language, key]);

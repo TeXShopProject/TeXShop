@@ -834,6 +834,7 @@ enum RootCommand
 - (NSPopUpButton *)programButton;
 - (BOOL) useDVI;
 - (void) doMove: sender;
+- (void) followSourceSideInFullSplitWindow;
 - (void) doSeparateWindows: sender;
 - (void) doAssociatedWindow;
 - (void) makeWindowControllers;
