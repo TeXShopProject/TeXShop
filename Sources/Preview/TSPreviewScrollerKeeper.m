@@ -225,6 +225,34 @@ static CGFloat TSReadableBelow(NSScrollView *scroll, CGFloat band)
 
 static void *TSPreviewToolbarShieldKey = &TSPreviewToolbarShieldKey;
 
+// Blurs the pages under the whole band of the single window (macOS 26 and later). There the
+// toolbar follows the divider between the source and the Preview, and AppKit blurs the
+// Preview's part of the band as a column of Mail: its blur fades out and stops about 8 points
+// above the bottom of the band, so the pages showed sharp under the lower part of the
+// toolbar (measured on macOS 27.2). This view lies under that blur and covers the band, as
+// the band of the Preview window and of the source are covered. Clicks pass through.
+@interface TSPreviewBandGround : NSVisualEffectView
+@end
+
+@implementation TSPreviewBandGround
+- (NSView *)hitTest:(NSPoint)point { (void)point; return nil; }
+- (BOOL)mouseDownCanMoveWindow { return YES; }
+@end
+
+static void *TSPreviewBandGroundKey = &TSPreviewBandGroundKey;
+// Set on AppKit's blur under the band while TSPreviewBandGround hides it.
+static void *TSPreviewHiddenPocketKey = &TSPreviewHiddenPocketKey;
+
+// AppKit's blur under the band in a scroll view (NSScrollPocket).
+static NSArray<NSView *> *TSScrollPockets(NSScrollView *scroll)
+{
+    NSMutableArray<NSView *> *pockets = [NSMutableArray array];
+    for (NSView *subview in scroll.subviews)
+        if ([NSStringFromClass(subview.class) isEqualToString:@"NSScrollPocket"])
+            [pockets addObject:subview];
+    return pockets;
+}
+
 @interface TSPreviewScrollerKeeper ()
 @property (weak) PDFView *view;
 // Held so that the observation can always be removed.
@@ -461,6 +489,7 @@ static void *TSPreviewToolbarShieldKey = &TSPreviewToolbarShieldKey;
             view.autoScales = YES;
         }
     }
+    [self placeBandGroundInScroll:scroll band:underToolbar ? band : 0];
     TSPreviewToolbarShield *shield = objc_getAssociatedObject(scroll, TSPreviewToolbarShieldKey);
     if (!underToolbar || band < 1) {
         shield.hidden = YES;
@@ -500,6 +529,58 @@ static void *TSPreviewToolbarShieldKey = &TSPreviewToolbarShieldKey;
                                 : NSMakeRect(NSMinX(scroll.bounds), pageEdge, NSWidth(scroll.bounds), height);
     }
     self.placingGround = NO;
+}
+
+// Covers the part of the band over a Preview of the single window (TSPreviewBandGround).
+- (void)placeBandGroundInScroll:(NSScrollView *)scroll band:(CGFloat)band
+{
+    TSPreviewBandGround *ground = objc_getAssociatedObject(scroll, TSPreviewBandGroundKey);
+    BOOL wanted = NO;
+    if (@available(macOS 26.0, *))
+        wanted = band >= 1 && [scroll.window isKindOfClass:NSClassFromString(@"TSFullSplitWindow")];
+    // In full screen the toolbar is in a window of its own, taller than the part of it on the
+    // screen by the place kept for the menu bar. AppKit gives the Preview's blur the height of
+    // that window, so it hung 16 points below the band of the toolbar, while the source's blur
+    // ends with the band (measured on macOS 27.2). A blur longer than the band is hidden then,
+    // and the band is painted in the window's color, as the band over the source looks.
+    BOOL pocketTooLong = NO;
+    for (NSView *pocket in TSScrollPockets(scroll)) {
+        BOOL tooLong = wanted && NSHeight(pocket.frame) > band + 0.5;
+        BOOL hiddenHere = objc_getAssociatedObject(pocket, TSPreviewHiddenPocketKey) != nil;
+        if (tooLong) {
+            pocketTooLong = YES;
+            if (!pocket.hidden) {
+                pocket.hidden = YES;
+                objc_setAssociatedObject(pocket, TSPreviewHiddenPocketKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            }
+        } else if (hiddenHere) {
+            objc_setAssociatedObject(pocket, TSPreviewHiddenPocketKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            pocket.hidden = NO;
+        }
+    }
+    if (!wanted) {
+        ground.hidden = YES;
+        return;
+    }
+    if (!ground) {
+        ground = [[TSPreviewBandGround alloc] initWithFrame:NSZeroRect];
+        ground.blendingMode = NSVisualEffectBlendingModeWithinWindow;
+        ground.state = NSVisualEffectStateFollowsWindowActiveState;
+        ground.autoresizingMask = NSViewNotSizable;
+        objc_setAssociatedObject(scroll, TSPreviewBandGroundKey, ground, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    // Right above the pages, so AppKit's blur, the scroll bars and the band painted above the
+    // first page stay above it.
+    NSClipView *clip = scroll.contentView;
+    NSArray<NSView *> *subviews = scroll.subviews;
+    NSUInteger clipIndex = [subviews indexOfObjectIdenticalTo:clip];
+    if (clipIndex == NSNotFound || clipIndex + 1 >= subviews.count || subviews[clipIndex + 1] != ground)
+        [scroll addSubview:ground positioned:NSWindowAbove relativeTo:clipIndex == NSNotFound ? nil : clip];
+    ground.material = pocketTooLong ? NSVisualEffectMaterialWindowBackground : NSVisualEffectMaterialTitlebar;
+    NSRect bounds = scroll.bounds;
+    ground.frame = scroll.isFlipped ? NSMakeRect(NSMinX(bounds), NSMinY(bounds), NSWidth(bounds), band)
+                                    : NSMakeRect(NSMinX(bounds), NSMaxY(bounds) - band, NSWidth(bounds), band);
+    ground.hidden = NO;
 }
 
 - (void)clipBoundsChanged:(NSNotification *)notification
