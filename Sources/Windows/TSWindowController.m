@@ -44,12 +44,13 @@
 }
 
 // AppKit names the window again whenever the document changes (saves, autosaves, Edited); with Show Full Path
-// the name it gives the source window is the full path, so it never falls back to the file name.
-// The single window of source and preview keeps AppKit's name.
+// the name it gives the source window, and the single window of the source and the Preview, is the full path,
+// so it never falls back to the file name.
 - (NSString *)windowTitleForDocumentDisplayName:(NSString *)displayName
 {
     NSDocument *document = self.document;
-    if ([document isKindOfClass:[TSDocument class]] && ((TSDocument *)document).standardController == self
+    if ([document isKindOfClass:[TSDocument class]]
+        && (((TSDocument *)document).standardController == self || ((TSDocument *)document).splitController == self)
         && [(TSDocument *)document showsFullPath] && document.fileURL != nil)
         return document.fileURL.path;
     return [super windowTitleForDocumentDisplayName:displayName];

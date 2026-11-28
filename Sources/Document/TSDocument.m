@@ -8438,6 +8438,8 @@ if (! useFullSplitWindow) {
 	[self fixShowFullPathButton];
 	[SUD setBool:showFullPath forKey:ShowFullPathEnabledKey];
 	[self.standardController synchronizeWindowTitleWithDocumentName];
+	if ([self.windowControllers containsObject: self.splitController])
+		[self.splitController synchronizeWindowTitleWithDocumentName];
 	[self refreshPreviewTitle];
 	[self refreshConsoleTitle];
 }
@@ -8446,6 +8448,23 @@ if (! useFullSplitWindow) {
 - (BOOL) showsFullPath
 {
 	return showFullPath;
+}
+
+// The single window's toolbar has its own Show Full Path button, made like the source window's.
+- (NSButton *) showFullPathSplitButton
+{
+	if (self.fullPathSplitButton == nil) {
+		NSButton *button = [NSButton checkboxWithTitle: (showFullPathButton ? [showFullPathButton title] : NSLocalizedStringFromTable(@"tiLabelShowFullPath", @"ToolbarItems", @"ShowFullPath"))
+												target: self action: @selector(changeShowFullPath:)];
+		if (showFullPathButton) {
+			[button setFont: [showFullPathButton font]];
+			[button setControlSize: [showFullPathButton controlSize]];
+			[button setFrameSize: [showFullPathButton frame].size];
+		}
+		[button setState: showFullPath ? NSControlStateValueOn : NSControlStateValueOff];
+		self.fullPathSplitButton = button;
+	}
+	return self.fullPathSplitButton;
 }
 
 // The Preview window and the console keep the path they show, so that their titles can follow
@@ -8758,14 +8777,15 @@ if (! useFullSplitWindow) {
 - (void) fixShowFullPathButton
 {
 	[showFullPathButton setState: showFullPath];
-	NSEnumerator* enumerator = [[[textWindow toolbar] items] objectEnumerator];
-	id anObject;
-	while ((anObject = [enumerator nextObject])) {
-		if ([[anObject itemIdentifier] isEqual: @"ShowFullPath"]) {
+	[self.fullPathSplitButton setState: showFullPath];
+	NSMutableArray *items = [NSMutableArray arrayWithArray: [[textWindow toolbar] items] ?: @[]];
+	[items addObjectsFromArray: [[fullSplitWindow toolbar] items] ?: @[]];
+	for (NSToolbarItem *item in items) {
+		if ([[item itemIdentifier] isEqual: @"ShowFullPath"] || [[item itemIdentifier] isEqual: @"ShowFullPathSplit"]) {
 			if (showFullPath)
-				[[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSControlStateValueOn];
+				[[[[item menuFormRepresentation] submenu] itemAtIndex:0] setState: NSControlStateValueOn];
 			else
-				[[[[anObject menuFormRepresentation] submenu] itemAtIndex:0] setState: NSControlStateValueOff];
+				[[[[item menuFormRepresentation] submenu] itemAtIndex:0] setState: NSControlStateValueOff];
 		}
 	}
 }
