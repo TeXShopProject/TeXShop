@@ -59,6 +59,7 @@ mutations = {
     'nothing at the caret by hand': ('category', '	if (string.length == 0 && selected) {', '	if (string.length == 0 && !selected) { *answer = YES; return YES; }\n	if (string.length == 0 && selected) {'),
     'high surrogates not found': ('globaldata', 'if (![starts containsIndex:[text characterAtIndex:index]]) { index++; continue; }', 'if (![starts containsIndex:[text characterAtIndex:index]] || CFStringIsSurrogateHighCharacter([text characterAtIndex:index])) { index++; continue; }'),
     'not for #PASTE#': ('extras', '        [clipboard replaceLineEndingsWithLF];\n', ''),
+    'only under the new name of plain text': ('category', ' && ! [type isEqualToString: @"NSStringPboardType"]', ''),
     '#PASTE# without ConvertLF': ('extras', 'if ([NSUserDefaults.standardUserDefaults boolForKey:@"ConvertLF"])', 'if (YES)'),
 }
 
