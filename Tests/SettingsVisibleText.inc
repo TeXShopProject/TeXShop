@@ -16,11 +16,19 @@ static void CollectSettingsVisibleText(NSView *view, NSString *category, NSMutab
         if (!userData) for (NSMenuItem *item in ((NSPopUpButton *)view).itemArray)
             record(item.title,dictionary && [item.representedObject isKindOfClass:NSString.class] ? @"language" : @"choice");
     } else if ([view isKindOfClass:NSButton.class]) {
-        record(((NSButton *)view).title,@"button");
+        NSButton *button=(NSButton *)view;
+        // A button that shows only its image has no visible title: AppKit's "Button" is not shown.
+        // What VoiceOver reads for it is its text then.
+        if (button.imagePosition==NSImageOnly)
+            record(button.accessibilityLabel.length ? button.accessibilityLabel : (button.image.accessibilityDescription ?: button.toolTip),@"button-label");
+        else
+            record(button.title,@"button");
     } else if ([view isKindOfClass:NSTextField.class]) {
         NSTextField *field=(NSTextField *)view;
         if (!userData && !field.editable) record(field.stringValue,@"label");
         record(field.placeholderString,@"placeholder");
+        // The parts inside a search field (its magnifying glass and cancel buttons) are AppKit's own.
+        if ([view isKindOfClass:NSSearchField.class]) return;
     } else if ([view isKindOfClass:NSSegmentedControl.class]) {
         NSSegmentedControl *control=(NSSegmentedControl *)view;
         for (NSInteger i=0;i<control.segmentCount;i++) record([control labelForSegment:i],@"segment");

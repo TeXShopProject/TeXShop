@@ -33,6 +33,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
    values=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(path)]))
    assert values['group.editor.2.title']=='Saisie'
    values['group.editor.2.title']='Typing' if a.visible_text_mutation else ' Saisie '
+   # An image-only button read by its accessibility label: the + of the theme list left in English.
+   if a.visible_text_mutation:
+    assert values['theme.list.add']=='Nouveau thème'
+    values['theme.list.add']='New Theme'
    path.write_text('\n'.join(json.dumps(k,ensure_ascii=False)+' = '+json.dumps(v,ensure_ascii=False)+';' for k,v in values.items())+'\n')
   env=dict(os.environ)
   env['TS_TEST_BUNDLED_THEMES']=str(r/'Resources/TeXShop/Themes')
