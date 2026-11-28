@@ -25,7 +25,7 @@ static PDFDocument *MaybeSnapshot(NSString *p,NSString *s){return failSnapshots?
 fixture=fixture.replace('#define FlashFixKey', '#define PdfKitMouseModeKey @"mouse"\n#define PreviewDrawerOpenKey @"drawer"\n#define FlashFixKey')
 fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)makeKeyAndOrderFront:(id)sender {}')
 fixture=fixture.replace('-(void)setup{', '-(void)toggleDrawer:(id)sender {}\n-(void)setup{')
-methods='\n'.join(method(x) for x in ['- (void) showWithPath:', '- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
+methods='\n'.join(method(x) for x in ['- (void) showWithPath:', '- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)contentWidthPagesChanged'])
 methods=methods.replace('TSInitialPDFSnapshot(','MaybeSnapshot(')
 # --mutation=nofallback restores loading only the snapshot while the PDF is watched.
 if '--mutation=nofallback' in sys.argv:
@@ -86,7 +86,7 @@ int main(int argc,char**argv){@autoreleasepool{
 with tempfile.TemporaryDirectory(prefix='texshop-pdf-load-') as td:
     t=Path(td);(t/'test.m').write_text(program)
     base=['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',*include_args(root)]
-    subprocess.run(base+[str(t/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),'-o',str(t/'test')],check=True)
+    subprocess.run(base+[str(t/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),str(root/'Sources/Preview/TSContentWidth.m'),'-o',str(t/'test')],check=True)
     for mode in ['fail-show','fail-reload','locked-show','locked-reload']:
         subprocess.run([str(t/'test'),str(t/'locked.pdf'),mode],check=True)
     if '--locked-only' in sys.argv: sys.exit(0)
