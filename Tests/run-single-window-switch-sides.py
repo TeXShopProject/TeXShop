@@ -19,7 +19,7 @@ MUTATIONS = {
     'width-lost': ('        [sides setPosition: round(interchange ? shared - sourceWidth : sourceWidth) ofDividerAtIndex: 0];\n', ''),
     'collapsed-forced': ('        && ! [sides isSubviewCollapsed: leftView] && ! [sides isSubviewCollapsed: rightView]', ''),
     'toolbar-stays': ('    [self keepSidesInFullSplitToolbar];\n    [self.pdfKitWindow placeSplitViewForToolbar];\n', '    [self.pdfKitWindow placeSplitViewForToolbar];\n'),
-    'focus-lost': ('        [fullSplitWindow makeFirstResponder: focus];\n', ''),
+    'focus-lost': ('        [fullSplitWindow makeFirstResponder: focus];\n', '        ;\n'),
     'status-bar-left': ('    [self.sourceStatusBar placeBelowView: splitView];\n    [previewSide', '    [previewSide'),
     'redone-each-time': ('    if (splitView.superview == sourceSide || preview == nil)\n        return;\n', '    if (preview == nil)\n        return;\n'),
 }
