@@ -93,8 +93,8 @@ view_mutations = {
                            '    [preview removeFromSuperview];\n    return preview;'),
     'attach-keeps-old-tool': ('        return view && view->mouseMode == NEW_MOUSE_MODE_SCROLL;\n    };\n    [documentView addSubview:pinnedLinkPreview];',
                               '        return NO;\n    };\n    [documentView addSubview:pinnedLinkPreview];'),
-    'attach-replaces-pin': ('    if (!preview || !documentView || [self hasPinnedLinkPreview]) return;', '    if (!preview || !documentView) return;'),
-    'not-kept-in-view': ('    if ([self hasPinnedLinkPreview]) [pinnedLinkPreview keepInView];', ''),
+    'attach-replaces-pin': ('    if (!preview || !documentView || [self hasPinnedLinkPreview]) return NO;', '    if (!preview || !documentView) return NO;'),
+    'not-kept-in-view': ('    if (![pinnedLinkPreview returnToPlaceIfAway]) [pinnedLinkPreview keepInView];', '    [pinnedLinkPreview returnToPlaceIfAway];'),
     'escape-ignores-active-part': ('        if (![self isActivePreviewPart])\n            return event;\n', ''),
     # The behavior before: with none in the active part, Escape went to the other part (#14).
     'escape-falls-to-other-part': ('        if (![self isActivePreviewPart])\n            return event;\n',
@@ -111,13 +111,13 @@ view_mutations = {
                         '\t\t\tif ([self internalLinkDestinationAtPoint: [self convertPoint: [theEvent locationInWindow] fromView: nil]])\n\t\t\t\t[self closePinnedLinkPreview];\n'),
     'outline-closes-pin': ('\tif (destination)\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\tif (destination)\n\t\t[self closePinnedLinkPreview];\n'),
     'empty-outline-kills-pin': ('\tif (destination)\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\t[self closePinnedLinkPreview];\n'),
-    'back-closes-pin': ('\tif ([self canGoBack])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\tif ([self canGoBack])\n\t\t[self closePinnedLinkPreview];\n'),
-    'stuck-back-kills-pin': ('\tif ([self canGoForward])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\t[self closePinnedLinkPreview];\n'),
+    'back-closes-pin': ('\tBOOL moves = [self canGoBack];\n\tif (moves)\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\tBOOL moves = [self canGoBack];\n\tif (moves)\n\t\t[self closePinnedLinkPreview];\n'),
+    'stuck-back-kills-pin': ('\tBOOL moves = [self canGoForward];\n\tif (moves)\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\tBOOL moves = [self canGoForward];\n\t[self closePinnedLinkPreview];\n'),
     # The behavior that the first audit found: in Single Page and Double Page display Back and
     # Forward cleaned up the marquee with the pinned popup, also with nowhere to go.
-    'stuck-single-page-kills-pin': ('\tif ([self canGoBack])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
-                                    '\tif ([self canGoBack])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarquee: YES];'),
-    'forward-closes-pin': ('\tif ([self canGoForward])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\tif ([self canGoForward])\n\t\t[self closePinnedLinkPreview];\n'),
+    'stuck-single-page-kills-pin': ('\tBOOL moves = [self canGoBack];\n\tif (moves)\n\t\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
+                                    '\tBOOL moves = [self canGoBack];\n\tif (moves)\n\t\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarquee: YES];'),
+    'forward-closes-pin': ('\tBOOL moves = [self canGoForward];\n\tif (moves)\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\tBOOL moves = [self canGoForward];\n\tif (moves)\n\t\t[self closePinnedLinkPreview];\n'),
     'page-number-closes-pin': ('\t// A page number goes to another place: the pinned popup of this part stays on its page (#35).\n\t[self keepPinnedLinkPreviewThroughMove];\n',
                                '\t[self closePinnedLinkPreview];\n'),
     'last-page-closes-pin': ('- (void) lastPage: (id)sender\n{\n\t[self keepPinnedLinkPreviewThroughMove];\n', '- (void) lastPage: (id)sender\n{\n\t[self closePinnedLinkPreview];\n'),
@@ -133,7 +133,7 @@ view_mutations = {
     'page-turn-forgets-place': ('\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];\n\t[self stepPageForward:YES sender:sender];\n',
                                 '\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];\n\t[self stepPageForward:YES sender:sender];\n\t[self keepPinnedLinkPreviewInView];\n'),
     # e7623b40: turning a page back to the page of a popup away from its place kept it in view instead.
-    'page-turn-stays-away': ('    if (![pinnedLinkPreview returnToPlaceIfAway]) [pinnedLinkPreview keepInView];\n', '    [pinnedLinkPreview keepInView];\n'),
+    'page-turn-stays-away': ('    if ([self hasPinnedLinkPreview] && ![pinnedLinkPreview returnToPlaceOnPage])\n        [pinnedLinkPreview keepInView];\n', '    if ([self hasPinnedLinkPreview])\n        [pinnedLinkPreview keepInView];\n'),
     # The place is taken before the move, but the popup never goes back to it.
     'move-not-restored': ('            [view endKeepingPinnedLinkPreviewOnPage: YES];\n', '            ;\n'),
     'zoom-kills-pin': ('\t// A pinned popup stays, growing and shrinking with the page it is on (#35).\n\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
@@ -233,8 +233,8 @@ preview_mutations = {
     'away-forgets-place': ('        _placePage = page;\n        _awayFromPlace = YES;\n        return NO;\n', '        return NO;\n'),
     'unpinned-interactive': ('return self.pinned ? [super hitTest:point] : nil;', 'return [super hitTest:point];'),
     'pinned-transparent': ('return self.pinned ? [super hitTest:point] : nil;', 'return nil;'),
-    'scroll-moves-frame': ('    [self setNeedsDisplay:YES];\n}\n\n@end', '    self.frame = NSOffsetRect(self.frame, 0.1, 0);\n    [self setNeedsDisplay:YES];\n}\n\n@end'),
-    'scroll-chains': ('    [self setNeedsDisplay:YES];\n}\n\n@end', '    [self setNeedsDisplay:YES];\n    [super scrollWheel:event];\n}\n\n@end'),
+    'scroll-moves-frame': ('    [self setNeedsDisplay:YES];\n    [self.window invalidateRestorableState];\n}\n\n@end', '    self.frame = NSOffsetRect(self.frame, 0.1, 0);\n    [self setNeedsDisplay:YES];\n    [self.window invalidateRestorableState];\n}\n\n@end'),
+    'scroll-chains': ('    [self setNeedsDisplay:YES];\n    [self.window invalidateRestorableState];\n}\n\n@end', '    [self setNeedsDisplay:YES];\n    [self.window invalidateRestorableState];\n    [super scrollWheel:event];\n}\n\n@end'),
     'hand-selects': ('return _pageCount && !(self.usesHandTool && self.usesHandTool());', 'return _pageCount != 0;'),
     'no-selection': ('} else if ([self selectsText] && [self isTextOnPage:page atPoint:pagePoint]) {', '} else if (NO) {'),
     'move-confined': ('frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], [self keptSizeForFrame:frame], flipped);',
@@ -336,6 +336,8 @@ program = r'''
 #import "TSLinkPreviewView.h"
 #import "TSScrollPageTurn.h"
 #import "TSPreviewScrollerKeeper.h"
+#import "TSContentWidth.h"
+#import "TSAdvancedFindController.h"
 #import "TSPreviewAppearance.h"
 #import "TSDocumentWindowGlass.h"
 #define SUD NSUserDefaults.standardUserDefaults
@@ -449,6 +451,7 @@ DOCUMENTMETHODS
     NSInteger pageStyle,firstPageStyle,resizeOption;
     NSRect oldVisibleRect,rect,selectedRect;
     BOOL _pdfViewReady;
+    BOOL _measuringContent;
     id linkPreviewEventMonitor;
     TSLinkPreviewView *linkPreview;
     TSLinkPreviewView *pinnedLinkPreview;
@@ -526,6 +529,11 @@ DOCUMENTMETHODS
 // Fit to Content Width has its own test, run-fit-content-width.py.
 - (void)fitContentWidth {}
 - (void)measureContentLater {}
+// Without a drawer the production method returns at once; the drawer's Find has its own test.
+- (void)observePreviewDrawerFind {}
+// The probe has no toolbar search field and no drawer: the Find commands are disabled, as in production.
+- (NSSearchField *)previewToolbarSearchField { return nil; }
+- (id)drawerSearchOwner { return nil; }
 - (void)centreContentRowLater {}
 - (void)updateBackground:(NSRect)rect {}
 - (void)setDrawMark:(BOOL)value { drawMark=value; }
@@ -2248,7 +2256,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
     exe = temporary / 'probe'
     subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-framework','Quartz','-framework','PDFKit',
                     *include_args(root),'-I'+str(root/'Tests'),str(native),
-                    str(root/'Sources/Preview/OverView.m'),str(preview_file),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),
+                    str(root/'Sources/Preview/OverView.m'),str(preview_file),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),str(root/'Sources/Preview/TSContentWidth.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),
                     str(root/'Sources/Windows/TSDocumentWindowGlass.m'),'-o',str(exe)],check=True)
     home = temporary/'home'
     (home/'Library/Preferences').mkdir(parents=True)
@@ -2291,7 +2299,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'kill-leaves-view':'closing removes the popup view', 'cursor-overridden':'shows an open hand',
                     'resize-scales':'resizing keeps the text size',
                     'magnifier-kills-pin':'a click with the magnifying glass keeps a pinned popup',
-                    'switch-kills-pin':('another window becoming main keeps a pinned popup', 'zoom keeps the pinned popup'),
+                    'switch-kills-pin':('another window becoming main keeps a pinned popup', 'zoom keeps the pinned popup', 'in Single Page display a page number brings the pinned popup into view on the page shown'),
                     'keep-marquee':'another window becoming main still removes the marquee',
                     'contains-unpinned':'an ordinary popup is not moved',
                     'contains-hidden-part':'the hidden part of a pinned popup is not taken for a click',
@@ -2318,10 +2326,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'link-closes-pin':'following an internal link keeps the pinned popup at its place on its page',
                     'outline-closes-pin':'the outline keeps the pinned popup at its place on its page',
                     'empty-outline-kills-pin':'an outline item without a target keeps the pinned popup',
-                    'back-closes-pin':'Back keeps the pinned popup at its place on its page',
+                    'back-closes-pin':('Back keeps the pinned popup at its place on its page', 'in Single Page display Back to its page after turning a page brings the pinned popup back to its place'),
                     'forward-closes-pin':('Forward keeps the pinned popup at its place on its page', 'Forward comes back to the pinned popup at its place on its page'),
                     'stuck-back-kills-pin':('Forward with nowhere to go keeps the pinned popup', 'Forward comes back to the pinned popup at its place on its page'),
-                    'stuck-single-page-kills-pin':('Forward with nowhere to go keeps the pinned popup', 'Back with nowhere to go keeps the pinned popup'),
+                    'stuck-single-page-kills-pin':('Forward with nowhere to go keeps the pinned popup', 'Back with nowhere to go keeps the pinned popup', 'in Single Page display Back to its page after turning a page brings the pinned popup back to its place'),
                     'page-number-closes-pin':'a page number keeps the pinned popup at its place on its page',
                     'last-page-closes-pin':'going to the last page keeps the pinned popup at its place on its page',
                     'sync-closes-pin':'a sync from the source keeps the pinned popup at its place on its page',
@@ -2330,11 +2338,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'replaced-pin-moved':'the move of a replaced popup leaves the new one where it was pinned',
                     'repin-not-taken':('a popup pinned while a move back is to finish is brought into view on the page shown', 'a popup pinned while a move back is to finish goes back to its own place'),
                     'page-turn-forgets-place':('in Single Page display a page number back to its page after turning a page brings the pinned popup back to its place', 'in Single Page display Back to its page after turning a page brings the pinned popup back to its place'),
-                    'page-turn-stays-away':'in Single Page display turning pages back to its page brings the pinned popup back to its place',
+                    'page-turn-stays-away':('in Single Page display turning pages back to its page brings the pinned popup back to its place', 'a page number keeps the pinned popup at its place on its page', 'the outline keeps the pinned popup at its place on its page'),
                     'move-not-restored':('in Single Page display a page number brings the pinned popup into view on the page shown',),
                     'zoom-kills-pin':'zoom keeps the pinned popup',
                     'zoom-moves-into-view':('zoom leaves the pinned popup at its place on its page', 'zoom leaves a pinned popup out of view at its place on its page'),
-                    'next-page-kills-pin':'the next page keeps the pinned popup',
+                    'next-page-kills-pin':('the next page keeps the pinned popup', 'in Single Page display turning to a smaller page brings the pinned popup into view'),
                     'popup-side-fitted':('in the continuous displays the popup stays below the link, or above it with Shift', 'Shift puts the popup above the link'),
                     'popup-side-always-kept':'in Single Page and Double Page display a popup that does not fit moves to the other side',
                     'no-next-page':'in the continuous displays the popup goes on with the next page',

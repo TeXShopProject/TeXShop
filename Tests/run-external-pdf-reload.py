@@ -17,7 +17,7 @@ def method(s, signature):
 window_source=(root/'Sources/Windows/TSPreviewWindow.m').read_text()
 window_methods='\n'.join(method(window_source,x) for x in ['- (void)close', '- (void)orderWindow:'])
 fixture=fixture.replace('WINDOW_METHODS',window_methods.replace('TSDocument *theDocument', 'TestDocument *theDocument'))
-methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:'])
+methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:', '- (void)contentWidthPagesChanged'])
 fixture=fixture.replace('METHODS',methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf'))
 fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (void)makeKeyAndOrderFront:(id)sender {[self orderWindow:NSWindowAbove relativeTo:0];}')
 s=(root/'Sources/Document/TSDocument.m').read_text()
@@ -550,5 +550,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-external-pdf-') as td:
   assert header.count(old)==1 and header.count('%lld:%ld", path')==1
   (p/'TSExternalPDFReload.h').write_text(header.replace(old,'info->st_mtimespec.tv_nsec, (long long)info->st_ctimespec.tv_sec, info->st_ctimespec.tv_nsec];').replace('%lld:%ld", path','%lld:%ld:%lld:%ld", path'))
  elif mutation and mutation not in mutations: raise SystemExit('unknown mutation')
- subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','Quartz','-framework','PDFKit',*include_args(root),str(p/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Settings/TSPreferenceProfile.m'),str(root/'Sources/App/globals.m'),str(snapshot),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','Quartz','-framework','PDFKit',*include_args(root),str(p/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Settings/TSPreferenceProfile.m'),str(root/'Sources/App/globals.m'),str(snapshot),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),str(root/'Sources/Preview/TSContentWidth.m'),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test'),td]+(['--ltr'] if '--ltr' in sys.argv else []),env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')),check=True)

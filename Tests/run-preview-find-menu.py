@@ -12,10 +12,14 @@ import subprocess
 import sys
 
 MUTATIONS = {
+    'find-one-ignores-shift': (
+        'Sources/Preview/MyPDFKitView.m', '- (void) doFindOne:',
+        'if (flags & NSEventModifierFlagShift)',
+        'if (NO)'),
     'again-follows-shift': (
         'Sources/Preview/MyPDFKitView.m', '- (void) doFindAgain',
         'backwards = previewFindBackwards;\n    previewFindBackwards = NO;',
-        'backwards = ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask) != 0;'),
+        'backwards = ([[NSApp currentEvent] modifierFlags] & NSEventModifierFlagShift) != 0;'),
     'all-stays-closed': (
         'Sources/Preview/MyPDFKitView.m', '- (void)focusDrawerSearchField',
         '        [drawer open:owner];',
@@ -142,7 +146,7 @@ expect(0 <= again.find('if (searchSelection != NULL)') <
        'toolbar search no longer keeps the pinned link popup on its page')
 for signature in ('- (void) doFindOne:', '- (void) doFindOneFullWindow:'):
     body = method(kit, signature)
-    expect('NSShiftKeyMask' in body, f'{signature} no longer searches backward on Shift-Return')
+    expect('flags & NSEventModifierFlagShift' in body and 'NSBackwardsSearch' in body, f'{signature} no longer searches backward on Shift-Return')
 
 keys = method(kit, '- (BOOL)performPreviewFindKeyEquivalent:(NSEvent *)theEvent')
 for tag in (1, 2, 3):

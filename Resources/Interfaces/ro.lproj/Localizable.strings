@@ -500,6 +500,13 @@
 
 /* Help > Show Help for Package: the path of texdoc and its exit status */
 "%@ ended with status %d." = "%@ s-a încheiat cu starea %d.";
+"%@ could not be started." = "%@ nu a putut fi pornit.";
+"%@ did not finish in %d seconds and was stopped." = "%1$@ nu s-a încheiat în %2$d secunde și a fost oprit.";
+"%@ ended with an error." = "%@ s-a încheiat cu o eroare.";
+"The conversion to PDF failed." = "Conversia în PDF a eșuat.";
+"The tool that converts PostScript to PDF is missing from the application." = "Instrumentul care convertește PostScript în PDF lipsește din aplicație.";
+"dvips was not found. Choose Detect Paths in Settings > Typesetting." = "dvips nu a fost găsit. Alegeți „Detectați căile” în Configurări > Compilare.";
+"dvipdfmx was not found. Choose Detect Paths in Settings > Typesetting." = "dvipdfmx nu a fost găsit. Alegeți „Detectați căile” în Configurări > Compilare.";
 
 /* Help > Show Help for Package: kpsewhich did not tell where texdoc looked; %@ is the path of texdoc */
 "The folders that %@ searched could not be determined." = "Nu s-au putut determina dosarele în care a căutat %@.";

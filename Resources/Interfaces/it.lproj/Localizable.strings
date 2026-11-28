@@ -500,6 +500,13 @@
 
 /* Help > Show Help for Package: the path of texdoc and its exit status */
 "%@ ended with status %d." = "%@ è terminato con lo stato %d.";
+"%@ could not be started." = "Impossibile avviare %@.";
+"%@ did not finish in %d seconds and was stopped." = "%1$@ non è terminato entro %2$d secondi ed è stato interrotto.";
+"%@ ended with an error." = "%@ è terminato con un errore.";
+"The conversion to PDF failed." = "La conversione in PDF non è riuscita.";
+"The tool that converts PostScript to PDF is missing from the application." = "Lo strumento che converte PostScript in PDF manca nell’app.";
+"dvips was not found. Choose Detect Paths in Settings > Typesetting." = "dvips non è stato trovato. Scegli «Rileva percorsi» in Impostazioni > Compilazione.";
+"dvipdfmx was not found. Choose Detect Paths in Settings > Typesetting." = "dvipdfmx non è stato trovato. Scegli «Rileva percorsi» in Impostazioni > Compilazione.";
 
 /* Help > Show Help for Package: kpsewhich did not tell where texdoc looked; %@ is the path of texdoc */
 "The folders that %@ searched could not be determined." = "Non è stato possibile determinare le cartelle in cui ha cercato %@.";

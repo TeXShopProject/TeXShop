@@ -162,25 +162,41 @@ with tempfile.TemporaryDirectory(prefix='texshop-ghostscript-') as temp:
 # Where Ghostscript is needed, TeXShop looks for it first.
 jobs = (ROOT / 'Sources/Typesetting/TSDocument-Jobs.m').read_text(encoding='latin1')
 if mutation == 'ps-by-setting':
-    jobs = jobs.replace('''			enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];''', '''			if ([SUD boolForKey:UseTransparencyKey])
-				enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
-			else
-				enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdfwrap" ofType:nil inDirectory:@"Shellscripts"];''')
+    before = '''		enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];'''
+    assert jobs.count(before) == 1, 'mutation ps-by-setting applies'
+    jobs = jobs.replace(before, '''		if ([SUD boolForKey:UseTransparencyKey])
+			enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
+		else
+			enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdfwrap" ofType:nil inDirectory:@"Shellscripts"];''')
 if mutation == 'distiller-options-added':
     jobs = jobs.replace('myEngine = [[SUD stringForKey:TexGSCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)\n\t\t\t\t\t\t}', 'myEngine = [[SUD stringForKey:TexGSCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)\n\t\t\t\t\t\t\tmyEngine = [myEngine stringByAppendingString: @" --distilleropts \\"-dALLOWPSTRANSPARENCY\\" "];\n\t\t\t\t\t\t}', 1)
 if mutation == 'no-eps-check':
-    jobs = jobs.replace('''			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
-				self.texTask = nil;
+    before = '''		if (! [self ghostscriptIsAvailableAlsoIn: nil])
+			return;
+		enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap"'''
+    assert jobs.count(before) == 1, 'mutation no-eps-check applies'
+    jobs = jobs.replace(before, '''		enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap"''')
+if mutation == 'dvips-no-check':
+    before = '''			if (! [self ghostscriptIsAvailableAlsoIn: nil])
 				return;
-			}
-			enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap"''', '''			enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap"''')
+			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
+			enginePath = @"/bin/sh";'''
+    assert jobs.count(before) == 1, 'mutation dvips-no-check applies'
+    jobs = jobs.replace(before, '''			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
+			enginePath = @"/bin/sh";''')
 assert '#include "TSGhostscriptCheck.inc"' in jobs
 convert = jobs[jobs.index('- (void) convertDocument'):jobs.index('- (void) saveFinished:')]
-for kind, marker in [('dvi', 'isEqualToString:@"dvi"]) {\n\t\t\t[self testGSCommandKey];'), ('ps', 'isEqualToString:@"ps"]) {'), ('eps', 'isEqualToString:@"eps"]) {')]:
-    branch = convert[convert.index(marker):]
-    branch = branch[:branch.index('} else if') if kind != 'eps' else branch.index('\n\t\t}')]
-    guard = 'TSGhostscriptFoldersForCommand(enginePath, args);\n\t\t\tif ((ghostscriptFolders != nil) && ! [self ghostscriptIsAvailableAlsoIn: ghostscriptFolders])' if kind == 'dvi' else '! [self ghostscriptIsAvailableAlsoIn: nil]'
-    assert guard in branch and 'self.texTask = nil;\n\t\t\t\treturn;' in branch, (kind, 'opening the file looks for Ghostscript first')
+branches = convert[convert.index('if ([[myFileName pathExtension] isEqualToString:@"dvi"]) {\n\t\t// The command of Settings'):]
+dvi = branches[:branches.index('} else if ([[myFileName pathExtension] isEqualToString:@"ps"]) {')]
+# A .dvi is converted by dvipdfmx, which needs no Ghostscript; only the LaTeX - Dvips - Ghostscript profile
+# converts it with dvips and Ghostscript, and looks for Ghostscript first.
+dvips = dvi[dvi.index('TSEngineProfileLaTeXDvipsGhostscript'):dvi.index('} else {')]
+assert 'if (! [self ghostscriptIsAvailableAlsoIn: nil])\n\t\t\t\treturn;' in dvips and dvips.index('ghostscriptIsAvailableAlsoIn') < dvips.index('enginePath = @"/bin/sh";'), ('dvi', 'the dvips conversion looks for Ghostscript first')
+assert 'ghostscriptIsAvailableAlsoIn' not in dvi[dvi.index('} else {'):], ('dvi', 'the dvipdfmx conversion does not ask for Ghostscript')
+for kind, marker, end in [('ps', '} else if ([[myFileName pathExtension] isEqualToString:@"ps"]) {', '} else if  ([[myFileName pathExtension] isEqualToString:@"eps"]) {'), ('eps', '} else if  ([[myFileName pathExtension] isEqualToString:@"eps"]) {', '\n\t}\n')]:
+    branch = branches[branches.index(marker) + len(marker):]
+    branch = branch[:branch.index(end)]
+    assert branch.startswith('\n\t\tif (! [self ghostscriptIsAvailableAlsoIn: nil])\n\t\t\treturn;'), (kind, 'opening the file looks for Ghostscript first')
 typeset = jobs[jobs.index('- (void) saveFinished:'):]
 start = typeset.index('[self startTask: self.texTask running: enginePath')
 assert '(theScript == kTypesetViaGhostScript) ? TSGhostscriptFoldersForCommand(enginePath, args) : nil;\n\t\t\tif ((ghostscriptFolders != nil) && ! [self ghostscriptIsAvailableAlsoIn: ghostscriptFolders])' in typeset[start - 400:start], 'Via DVI typesetting looks for Ghostscript first, also where the command looks'
@@ -200,4 +216,4 @@ for language in ('en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt-PT', 'pt', 
     table = json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(ROOT / f'Resources/Interfaces/{language}.lproj/Localizable.strings')]))
     value = table.get(key, '')
     assert 'Ghostscript' in value and (language == 'en' or value != key), (language, 'the message is translated')
-print('PASS: .ps, .eps and .dvi files and Via DVI typesetting look for Ghostscript first; the message exists in 12 languages')
+print('PASS: .ps and .eps files, a .dvi converted with dvips and Via DVI typesetting look for Ghostscript first (dvipdfmx needs none); the message exists in 12 languages')
