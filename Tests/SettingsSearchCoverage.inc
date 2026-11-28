@@ -18,6 +18,9 @@ static void CheckSearchText(TSSettingsSearch *index,NSString *text,NSString *cat
 }
 static void SearchViews(NSView *view,NSString *category,TSSettingsSearch *index) {
  if(view==searchExcludedView || [view isKindOfClass:TSSettingsChangeNote.class])return;
+ // The + and − of the key binding list (buttons in its bottom bar since RC5) say only Add and
+ // Delete, as their segments did before, which were not searched either.
+ if([@[@"keybindings.add",@"keybindings.remove"] containsObject:view.identifier ?: @""])return;
  if([view isKindOfClass:NSSearchField.class])CheckSearchText(index,[(NSSearchField *)view placeholderString] ?: @"",category);
  CheckSearchText(index,view.toolTip ?: @"",category);
  BOOL data=[view.accessibilityIdentifier isEqual:@"settings.user-data"];
