@@ -1916,6 +1916,10 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     else
         result = YES;
     [SUD setBool:result forKey:SwitchSidesKey];
+    // Open combined windows change sides at once.
+    for (id document in NSDocumentController.sharedDocumentController.documents)
+        if ([document isKindOfClass:TSDocument.class])
+            [(TSDocument *)document followSourceSideInFullSplitWindow];
 }
 
 
