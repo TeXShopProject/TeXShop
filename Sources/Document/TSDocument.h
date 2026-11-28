@@ -547,6 +547,7 @@ enum RootCommand
 
 @property (retain)  TSWindowController  *standardController;
 @property (retain)  TSWindowController  *splitController;
+@property (strong)  NSButton            *fullPathSplitButton;
     
 @property           BOOL            useTabs;
 @property           BOOL            useTabsWithFiles;
@@ -726,6 +727,7 @@ enum RootCommand
 - (void) fixShowFullPathButton; // added by Terada
 - (NSString*) fileTitleName; // added by Terada
 - (BOOL) showsFullPath;
+- (NSButton *) showFullPathSplitButton;
 - (void) showPreviewTitleForPath: (NSString *)path;
 - (void) showConsoleTitleForPath: (NSString *)path;
 - (void) refreshPreviewTitle;

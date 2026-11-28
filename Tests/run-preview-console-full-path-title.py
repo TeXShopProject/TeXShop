@@ -149,6 +149,7 @@ STUB_DOCUMENT = r'''
 }
 @property (strong) NSWindow *pdfKitWindow;
 @property (strong) TSWindowController *standardController;
+@property (strong) TSWindowController *splitController;
 @property (strong) TestConsole *experimentConsole;
 @property (copy) NSString *previewTitlePath, *consoleTitlePath, *imageTitlePath;
 - (BOOL) showsFullPath;

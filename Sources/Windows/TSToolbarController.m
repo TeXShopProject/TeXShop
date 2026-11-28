@@ -142,6 +142,7 @@ static NSString*    skLabelsTID           = @"LabelsSplit";        //NDS added d
 static NSString*	skGotoPageKKTID 	= @"GotoPageSplit";
 static NSString*    skMagnificationKKTID = @"MagnificationSplit";
 static NSString*	skAutoCompleteID	 = @"AutoCompleteSplit";
+static NSString*	skShowFullPathID	 = @"ShowFullPathSplit";
 static NSString *   skSharingTID       = @"SharingSplit";
 static NSString*    skSearchTID          = @"SearchKITSplit";
 static NSString*    skMouseModeTID         = @"MouseModeKITSplit";
@@ -305,7 +306,7 @@ static BOOL TSFullSplitToolbarFollowsSides(void)
 static NSSet<NSString *> *TSFullSplitSourceItems(void)
 {
     return [NSSet setWithObjects: skTypesetTID, skProgramTID, skMacrosTID, skTagsTID, skLabelsTID,
-            skTemplatesID, skSharingTID, kSplitID, skAutoCompleteID, nil];
+            skTemplatesID, skSharingTID, kSplitID, skAutoCompleteID, skShowFullPathID, nil];
 }
 
 // Where the item that follows the divider goes: after the last item of the source and the spaces
@@ -1268,6 +1269,23 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 		return toolbarItem;
 	}
 	///////////// added by Terada (until this line) ////////////////
+
+	// The single window has a button of its own, since a view is in one toolbar at a time.
+	// It has the labels of the source window's item.
+	if ([itemIdent isEqual: skShowFullPathID]) {
+		toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:kShowFullPathID
+												   customView:[self showFullPathSplitButton]];
+		menuFormRep = [[NSMenuItem alloc] init];
+		submenu = [[NSMenu alloc] init];
+		submenuItem = [[NSMenuItem alloc] initWithTitle: NSLocalizedString(@"ShowFullPath", @"ShowFullPath")
+												  action: @selector(changeShowFullPath:) keyEquivalent:@""];
+		[submenuItem setState: [self showsFullPath] ? NSControlStateValueOn : NSControlStateValueOff];
+		[submenu addItem: submenuItem];
+		[menuFormRep setSubmenu: submenu];
+		[menuFormRep setTitle: [toolbarItem label]];
+		[toolbarItem setMenuFormRepresentation: menuFormRep];
+		return toolbarItem;
+	}
 	
 	// added by mitsu --(H) Macro menu; macroButton
 	if ([itemIdent isEqual: kMacrosTID]) {
@@ -2250,6 +2268,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                     skSearchTID,
 					kSplitKKTID,
                     skAutoCompleteID,
+                    skShowFullPathID,
 					NSToolbarPrintItemIdentifier,
 					NSToolbarCustomizeToolbarItemIdentifier,
 					NSToolbarFlexibleSpaceItemIdentifier,
@@ -2284,6 +2303,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                     skSearchTID,
 					kSplitKKTID,
  					skAutoCompleteID,
+                    skShowFullPathID,
 					NSToolbarPrintItemIdentifier,
 					NSToolbarCustomizeToolbarItemIdentifier,
 					NSToolbarFlexibleSpaceItemIdentifier,
