@@ -41,7 +41,7 @@ LANGUAGES = ['Base', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'r
 PRODUCTION = {
     'Sources/Document/TSDocument.m': [
         'if (self.logWindow) TSLayoutLogWindow(self.logWindow);',
-        'result = [TSAlertForNoticePanel(printRequestPanel) runModal];',
+        '[TSAlertForNoticePanel(printRequestPanel) runModal];',
         'result = [TSAlertForNoticePanel(requestWindow) runModal];',
     ],
     'Sources/Document/TSDocumentController.m': ['TSFitLabelsBeforePopUps(encodingView);'],

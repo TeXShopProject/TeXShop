@@ -32,7 +32,7 @@ elif mutation == 'setting-ignored':
     methods = methods.replace('\tif ([SUD boolForKey:AggressiveTrashAUXKey])\n\t\taggressiveTrash = YES;\n', '')
 
 # Trash Aux & Typeset (tag -2, or Option held when typesetting) asks for the document's files alone.
-typeset = jobs[jobs.index('(modifiers == NSAlternateKeyMask)'):][:200]
+typeset = jobs[jobs.index('(modifiers == NSEventModifierFlagOption)'):][:200]
 typesetPlain = '[self trashAUXFilesAggressively:NO];' in typeset
 
 # Every branch of the root lookup that hands the task to the root document forwards the flag.

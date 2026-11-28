@@ -23,11 +23,12 @@ retired={'fullscreen:','supplementsToDesktop:','displayTeXShopConfusion:'}
 font_style_selectors={entry['selector'] for entry in font_styles}
 # Commands added to the Edit menu later (Copy with Style in 6.00 beta 8), and Source > Show Status Bar and
 # Source > Highlight Index Entries (6.00), and the symbol tables of George Grätzer's Short Course, which joined its
-# Help submenu in 6.00; they are outside the fixed contract.
+# Help submenu in 6.00, and Help > Command Completion Quick Start (6.00 RC4); they are outside the fixed contract.
 added={'displayHG:','displayBinary:','displayMoreBinary:','displayNegatedBinary:','displayBinaryOperations:','displayArrows:','displayMiscSymbols:',
        'displayDelimiters:','displayOperators:','displayLargeOperators:','displayMathAccents:','displayMathSpacing:','displayEuropean:',
        'displayTextAccents:','displayTextSizes:','displayTextSymbols:','displayTextSpacing:','convertCharacterType:','normalizeSelectedString:','exchangePaste:','toggleStatusBar:','toggleIndexColor:',
-       'copyWithLightTheme:','copyWithLightThemeAndBackground:','copyWithDarkTheme:','copyWithDarkThemeAndBackground:'}
+       'copyWithLightTheme:','copyWithLightThemeAndBackground:','copyWithDarkTheme:','copyWithDarkThemeAndBackground:',
+       'displayCommandCompletionQuickStart:'}
 # Fit to Content Width (tag 6 of the magnifications) and the zooms to the content width joined Preview > Magnification in 6.00.
 added_items={('zoomToContentWidth:','0'),('zoomToContent:','0'),('changePDFViewSize:','6')}
 # Find and Replace… joined the Find submenu of the other languages in 6.00; the Base menu always had it.
