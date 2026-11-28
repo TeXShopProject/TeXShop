@@ -67,6 +67,35 @@
     "TOUCH zh_CN.lproj/FindPanel.nib/* [查找] NSTextField \"全部替换范围\" and NSTextField \"\" are 2.5 points apart (need 4)",
     "TOUCH zh_CN.lproj/FindPanel.nib/* [查找] NSTextField \"查找选项\" and NSTextField \"\" are 2.5 points apart (need 4)"
    ]
+  },
+  {
+   "reason": "Console window (TSDocument.nib): the square bars of 5.59 overlap their neighbours by 1 point so that the borders are shared; by design since 2026-11-26.",
+   "problems": [
+    "TOUCH Base.lproj/TSDocument.nib/* [Console] (smallest size) NSButton \"Abort\" and NSButton \"Trash Aux Files\" are -1.0 points apart (need 4)",
+    "TOUCH Base.lproj/TSDocument.nib/* [Console] NSButton \"Abort\" and NSButton \"Trash Aux Files\" are -1.0 points apart (need 4)",
+    "TOUCH de.lproj/TSDocument.nib/* [Konsole] (smallest size) NSButton \"Abbrechen\" and NSButton \"Aux-Dateien in den Papierkorb legen\" are -1.0 points apart (need 4)",
+    "TOUCH de.lproj/TSDocument.nib/* [Konsole] NSButton \"Abbrechen\" and NSButton \"Aux-Dateien in den Papierkorb legen\" are -1.0 points apart (need 4)",
+    "TOUCH es.lproj/TSDocument.nib/* [Consola] (smallest size) NSButton \"Abortar\" and NSButton \"Borrar archivos aux\" are -1.0 points apart (need 4)",
+    "TOUCH es.lproj/TSDocument.nib/* [Consola] NSButton \"Abortar\" and NSButton \"Borrar archivos aux\" are -1.0 points apart (need 4)",
+    "TOUCH fr.lproj/TSDocument.nib/* [Console] (smallest size) NSButton \"Arrêter\" and NSButton \"Fichiers AUX à la corbeille\" are -1.0 points apart (need 4)",
+    "TOUCH fr.lproj/TSDocument.nib/* [Console] NSButton \"Arrêter\" and NSButton \"Fichiers AUX à la corbeille\" are -1.0 points apart (need 4)",
+    "TOUCH it.lproj/TSDocument.nib/* [Console] (smallest size) NSButton \"Interrompi\" and NSButton \"Cestina file ausiliari\" are -1.0 points apart (need 4)",
+    "TOUCH it.lproj/TSDocument.nib/* [Console] NSButton \"Interrompi\" and NSButton \"Cestina file ausiliari\" are -1.0 points apart (need 4)",
+    "TOUCH ja.lproj/TSDocument.nib/* [コンソール] (smallest size) NSButton \"中断\" and NSButton \"作業ファイルを削除\" are -1.0 points apart (need 4)",
+    "TOUCH ja.lproj/TSDocument.nib/* [コンソール] NSButton \"中断\" and NSButton \"作業ファイルを削除\" are -1.0 points apart (need 4)",
+    "TOUCH ko.lproj/TSDocument.nib/* [콘솔] (smallest size) NSButton \"중단\" and NSButton \"부수 파일 삭제\" are -1.0 points apart (need 4)",
+    "TOUCH ko.lproj/TSDocument.nib/* [콘솔] NSButton \"중단\" and NSButton \"부수 파일 삭제\" are -1.0 points apart (need 4)",
+    "TOUCH nl.lproj/TSDocument.nib/* [Console] (smallest size) NSButton \"Onderbreek\" and NSButton \"Wis Aux-bestanden\" are -1.0 points apart (need 4)",
+    "TOUCH nl.lproj/TSDocument.nib/* [Console] NSButton \"Onderbreek\" and NSButton \"Wis Aux-bestanden\" are -1.0 points apart (need 4)",
+    "TOUCH pt-PT.lproj/TSDocument.nib/* [Consola] (smallest size) NSButton \"Interromper\" and NSButton \"Apagar ficheiros aux.\" are -1.0 points apart (need 4)",
+    "TOUCH pt-PT.lproj/TSDocument.nib/* [Consola] NSButton \"Interromper\" and NSButton \"Apagar ficheiros aux.\" are -1.0 points apart (need 4)",
+    "TOUCH pt.lproj/TSDocument.nib/* [Console] (smallest size) NSButton \"Abortar\" and NSButton \"Limpar arquivos auxiliares\" are -1.0 points apart (need 4)",
+    "TOUCH pt.lproj/TSDocument.nib/* [Console] NSButton \"Abortar\" and NSButton \"Limpar arquivos auxiliares\" are -1.0 points apart (need 4)",
+    "TOUCH ro.lproj/TSDocument.nib/* [Consolă] (smallest size) NSButton \"Abandonați\" and NSButton \"Ștergeți fișierele aux\" are -1.0 points apart (need 4)",
+    "TOUCH ro.lproj/TSDocument.nib/* [Consolă] NSButton \"Abandonați\" and NSButton \"Ștergeți fișierele aux\" are -1.0 points apart (need 4)",
+    "TOUCH zh_CN.lproj/TSDocument.nib/* [控制台] (smallest size) NSButton \"中断\" and NSButton \"删除Aux文件\" are -1.0 points apart (need 4)",
+    "TOUCH zh_CN.lproj/TSDocument.nib/* [控制台] NSButton \"中断\" and NSButton \"删除Aux文件\" are -1.0 points apart (need 4)"
+   ]
   }
  ]
 }

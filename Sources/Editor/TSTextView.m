@@ -3209,7 +3209,9 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 // otherwise YES, with what readSelectionFromPasteboard:type: answers in answer.
 - (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings answer:(BOOL *)answer
 {
-	if (! [type isEqualToString: NSPasteboardTypeString])
+	// AppKit asks for plain text under the old name NSStringPboardType, the value of that constant,
+	// not under NSPasteboardTypeString (public.utf8-plain-text): both are plain text.
+	if (! [type isEqualToString: NSPasteboardTypeString] && ! [type isEqualToString: @"NSStringPboardType"])
 		return NO;
 	BOOL convertLF = [SUD boolForKey:ConvertLFKey];
 	TSFilterMode filter = japaneseFilter ? g_shouldFilter : kNoFilterMode;
