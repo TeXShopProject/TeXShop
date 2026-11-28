@@ -497,6 +497,13 @@
 
 /* Help > Show Help for Package: the path of texdoc and its exit status */
 "%@ ended with status %d." = "“%@”以状态%d结束。";
+"%@ could not be started." = "无法启动“%@”。";
+"%@ did not finish in %d seconds and was stopped." = "“%1$@”未在%2$d秒内完成，已停止。";
+"%@ ended with an error." = "“%@”因错误而结束。";
+"The conversion to PDF failed." = "转换为PDF失败。";
+"The tool that converts PostScript to PDF is missing from the application." = "应用程序中缺少将PostScript转换为PDF的工具。";
+"dvips was not found. Choose Detect Paths in Settings > Typesetting." = "未找到dvips。请在设置 > 排版中选择“自动检测路径”。";
+"dvipdfmx was not found. Choose Detect Paths in Settings > Typesetting." = "未找到dvipdfmx。请在设置 > 排版中选择“自动检测路径”。";
 
 /* Help > Show Help for Package: kpsewhich did not tell where texdoc looked; %@ is the path of texdoc */
 "The folders that %@ searched could not be determined." = "无法确定“%@”查找过的文件夹。";
