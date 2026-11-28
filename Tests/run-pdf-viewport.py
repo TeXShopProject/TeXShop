@@ -85,9 +85,25 @@ static NSRect shiftingConstrain(NSClipView *self, SEL _cmd, NSRect proposed) {
         result.origin.y = fmin(result.origin.y + 13.5, top);
     return result;
 }
-static void installShiftingClip(void) {
-    Method method = class_getInstanceMethod(NSClipView.class, @selector(constrainBoundsRect:));
-    nativeConstrain = (void *)method_setImplementation(method, (IMP)shiftingConstrain);
+// The clip view of a PDFView is usually a subclass made at run time (key-value observing makes
+// NSKVONotifying_NSClipView), whose own constrainBoundsRect: is what the restoration calls. The
+// stand-in goes on the class of the clip view in use, not on NSClipView.
+static Class shiftingClass;
+static void removeShiftingClip(void) {
+    if (!shiftingClass) return;
+    method_setImplementation(class_getInstanceMethod(shiftingClass, @selector(constrainBoundsRect:)), (IMP)nativeConstrain);
+    shiftingClass = Nil;
+}
+static void installShiftingClip(NSClipView *clip) {
+    Class class = object_getClass(clip);
+    if (class == shiftingClass) return;
+    removeShiftingClip();
+    SEL selector = @selector(constrainBoundsRect:);
+    Method method = class_getInstanceMethod(class, selector);
+    nativeConstrain = (void *)method_getImplementation(method);
+    if (!class_addMethod(class, selector, (IMP)shiftingConstrain, method_getTypeEncoding(method)))
+        method_setImplementation(method, (IMP)shiftingConstrain);
+    shiftingClass = class;
 }
 @interface ViewportToolbar : NSObject <NSToolbarDelegate> @end
 @implementation ViewportToolbar
@@ -200,7 +216,6 @@ int main(void) { @autoreleasepool {
         sameViewport(before,view,@"appending pages retains formerly final page viewport");
         view.document=nil;[view removeFromSuperview];[window close];
     }
-    installShiftingClip();
     for (NSInteger mode=0;mode<4;mode++) for (NSNumber *scale in @[@1.25,@2]) {
         context=[NSString stringWithFormat:@"shifting clip mode=%ld scale=%@",mode,scale];
         NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,500,500)
@@ -220,7 +235,11 @@ int main(void) { @autoreleasepool {
         NSClipView *clip=view.documentView.enclosingScrollView.contentView;
         NSRect bounds=clip.bounds; bounds.origin.x+=40; bounds.origin.y+=60;
         [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];pump();
+        installShiftingClip(clip);
         shiftingClip=clip;
+        // The stand-in really shifts an interior origin: otherwise the restoration below is not tested.
+        NSRect probe=clip.bounds;
+        check(fabs([clip constrainBoundsRect:probe].origin.y-probe.origin.y)>13,@"the shifting stand-in is in place for this clip view");
         TSExternalPDFPosition before=TSExternalPDFCapture(view);
         for (NSUInteger n=0;n<3;n++) {
             [view reShowWithDocument:document(bytes,4,0)];pump();
@@ -234,8 +253,7 @@ int main(void) { @autoreleasepool {
         shiftingClip=nil;
         view.document=nil;[view removeFromSuperview];[window close];
     }
-    method_setImplementation(class_getInstanceMethod(NSClipView.class, @selector(constrainBoundsRect:)),
-                             (IMP)nativeConstrain);
+    removeShiftingClip();
     // A new typeset PDF may use smaller paper. Keeping the old page coordinates
     // must not scroll the entire replacement page out of view.
     for (NSInteger mode=0;mode<4;mode++) {
